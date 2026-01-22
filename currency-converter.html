@@ -1,1 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Currency Converter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+   <!-- External CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/saratoffice/Hosting-Currency@latest/style.css">
 
+</head>
+<body>
+
+<div id="site-header"></div>
+
+
+<!-- CONTENT -->
+  <div class="converter-container">
+    <h2>Currency Converter</h2>
+
+    <div class="input-amount-container">
+      <input class="input-amount" placeholder="Enter amount" type="number" value="1.00" />
+    </div>
+
+    <div class="currency-section">
+      <div class="dropdown-container" id="from">
+        <div class="input-container">
+          <img class="input-flag" src="https://www.countryflagicons.com/FLAT/64/US.png" />
+          <input class="currency-input" type="text" value="USD - U.S. Dollar" />
+        </div>
+        <div class="options"></div>
+      </div>
+
+      <div class="swap-btn">
+        <svg width="24" height="24" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <div class="dropdown-container" id="to">
+        <div class="input-container">
+          <img class="input-flag" src="https://www.countryflagicons.com/FLAT/64/EU.png" />
+          <input class="currency-input" type="text" value="EUR - Euro" />
+        </div>
+        <div class="options"></div>
+      </div>
+    </div>
+
+    <div class="result"><span class="result-currency">USD</span> 00</div>
+  </div>
+
+  <!-- JS -->
+  <!-- External JavaScript -->
+    <script src="https://cdn.jsdelivr.net/gh/saratoffice/Hosting-Currency@latest/script.js" defer></script>
+  <!-- FOOTER -->
+<div id="site-footer"></div>
+<script>
+/* Load Header */
+fetch('header.html')
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById('site-header').innerHTML = html;
+
+    /* Load Navigation */
+    fetch('nav.html')
+      .then(res => res.text())
+      .then(nav => {
+        document.getElementById('main-nav').innerHTML = nav;
+      });
+  });
+
+/* Load Footer */
+fetch('footer.html')
+  .then(res => res.text())
+  .then(footer => {
+    document.getElementById('site-footer').innerHTML = footer;
+  });
+</script>
+<script>
+/* ===== MOBILE MENU LOGIC ===== */
+document.addEventListener("click", function (e) {
+
+  /* Toggle main menu */
+  if (e.target.classList.contains("menu-toggle")) {
+    const menu = document.querySelector(".menu");
+    if (menu) {
+      menu.classList.toggle("open");
+    }
+  }
+
+  /* Toggle dropdowns on mobile */
+  const dropdownLink = e.target.closest(".dropdown > a");
+  if (dropdownLink && window.innerWidth <= 900) {
+    e.preventDefault();
+    dropdownLink.parentElement.classList.toggle("open");
+  }
+
+});
+</script>
+</body>
+</html>
