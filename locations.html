@@ -1,12 +1,10 @@
-
-<script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys&callback=initMap"
-  async
-  defer>
-</script>
-
-
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sarat Office</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 <style>
 #map {
   width: 100%;
@@ -27,9 +25,18 @@
   min-width: 220px;
 }
 </style>
+</head>
+<body>
 
+<div id="site-header"></div>
 
+<!-- CONTENT -->
 
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys&callback=initMap"
+  async
+  defer>
+</script>
 
 <div class="map-controls">
  <!-- Searchable Block selector -->
@@ -204,5 +211,51 @@ blockSearch.addEventListener("input", applyFilters);
 codeSearch.addEventListener("keyup", applyFilters);
 nameSearch.addEventListener("keyup", applyFilters);
 </script>
+ <!-- FOOTER -->
+<div id="site-footer"></div>
 
 
+<script>
+/* Load Header */
+fetch('header.html')
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById('site-header').innerHTML = html;
+
+    /* Load Navigation */
+    fetch('nav.html')
+      .then(res => res.text())
+      .then(nav => {
+        document.getElementById('main-nav').innerHTML = nav;
+      });
+  });
+
+/* Load Footer */
+fetch('footer.html')
+  .then(res => res.text())
+  .then(footer => {
+    document.getElementById('site-footer').innerHTML = footer;
+  });
+</script>
+<script>
+/* ===== MOBILE MENU LOGIC ===== */
+document.addEventListener("click", function (e) {
+
+  /* Toggle main menu */
+  if (e.target.classList.contains("menu-toggle")) {
+    const menu = document.querySelector(".menu");
+    if (menu) {
+      menu.classList.toggle("open");
+    }
+  }
+
+  /* Toggle dropdowns on mobile */
+  const dropdownLink = e.target.closest(".dropdown > a");
+  if (dropdownLink && window.innerWidth <= 900) {
+    e.preventDefault();
+    dropdownLink.parentElement.classList.toggle("open");
+  }
+
+});
+</script></body>
+</html>
