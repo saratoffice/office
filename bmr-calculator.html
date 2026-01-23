@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sarat Office | BMR Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style>
+  /* Hide unwanted elements */
+  #comments, #respond, .comment-form, .title-wrap, .comments-title, .no-message, .entry-title {
+    display: none !important;
+  }
+
+  .bmr-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+  }
+
+  .bmr-calculator {
+    max-width: 600px;
+    width: 100%;
+    font-family: "Roboto", sans-serif;
+    padding: 24px;
+    box-shadow: 0 4px 8px -3px rgba(0, 0, 0, 0.3);
+    background: #fff;
+    border-radius: 8px;
+  }
+
+  h2 {
+    text-align: center;
+    background: #4CAF50;
+    color: #fff;
+    margin: -24px -24px 20px;
+    padding: 20px;
+    font-size: 24px;
+  }
+
+  h3 {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 8px;
+  }
+
+  .input-group {
+    margin: 15px 0;
+  }
+
+  .input-group select,
+  .input-group input {
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+  }
+
+  .input-group input:focus,
+  .input-group select:focus {
+    outline: none;
+    border-color: #4CAF50;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+  }
+
+  .input-row .input-group {
+    flex: 1;
+  }
+
+  .gender-options {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 10px 0;
+  }
+
+  .gender-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+
+ .gender-option input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 5px;
+  height: 20px;
+  border: 2px solid #333;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.gender-option input[type="radio"]:checked::before {
+  content: '';
+  position: absolute;
+  width: 14px;          /* increased size */
+  height: 14px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #4CAF50;
+  border-radius: 50%;
+}
+
+
+  .result {
+    text-align: center;
+    margin-top: 25px;
+  }
+
+  .calculate-btn {
+    width: 100%;
+    padding: 12px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  .calculate-btn:hover {
+    background: #45a049;
+    transform: scale(1.02);
+  }
+
+  .calories {
+    display: block;
+    font-size: 32px;
+    color: #333;
+    margin: 15px 0;
+    font-weight: bold;
+  }
+
+  .error-message {
+    color: #ff4444;
+    font-size: 14px;
+    display: none;
+  }
+
+  .error-message.active {
+    display: block;
+  }
+
+  .invalid {
+    border-color: #ff4444 !important;
+  }
+</style>
+</head>
+
+<body>
+
+<div id="site-header"></div>
+
+
+<!-- CONTENT -->
+<div class="bmr-wrapper">
+  <div class="bmr-calculator">
+    <h2>BMR Calculator</h2>
+    <div class="controls">
+      <form>
+
+        <div class="input-group">
+          <h3>Age</h3>
+          <select id="age">
+            <option value="">Select age</option>
+            <!-- JS will populate options -->
+          </select>
+        </div>
+
+        <div class="input-group">
+          <h3>Gender</h3>
+          <div class="gender-options">
+            <label class="gender-option">
+              <input type="radio" name="gender" value="male" checked>
+              <span>Male</span>
+            </label>
+            <label class="gender-option">
+              <input type="radio" name="gender" value="female">
+              <span>Female</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="input-row">
+          <div class="input-group">
+            <h3>Height (cm)</h3>
+            <input type="number" id="height" value="180">
+          </div>
+
+          <div class="input-group">
+            <h3>Weight (kg)</h3>
+            <input type="number" id="weight" value="65">
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="result">
+      <button class="calculate-btn" type="button">Calculate BMR</button>
+      <div class="result-message">
+        <span class="calories">1,640</span>
+        <span>Calories/day</span>
+      </div>
+      <div class="error-message">Please enter all the details correctly.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Populate age options dynamically
+  const ageSelect = document.getElementById("age");
+  for (let i = 10; i <= 100; i++) {
+    const option = document.createElement("option");
+    option.value = i;
+    option.textContent = i;
+    if (i === 28) option.selected = true; // default
+    ageSelect.appendChild(option);
+  }
+
+  const elements = {
+    calories: document.querySelector('.calories'),
+    calculateBtn: document.querySelector('.calculate-btn'),
+    age: document.getElementById('age'),
+    height: document.getElementById('height'),
+    weight: document.getElementById('weight'),
+    errorMessage: document.querySelector('.error-message'),
+  };
+
+  const calculateBMR = (weight, height, age, isMale) => {
+    return isMale
+      ? 10 * weight + 6.25 * height - 5 * age + 5
+      : 10 * weight + 6.25 * height - 5 * age - 161;
+  };
+
+  const updateValidation = (input, min, max) => {
+    const val = parseFloat(input.value);
+    const isValid = !isNaN(val) && val >= min && val <= max;
+    input.classList.toggle('invalid', !isValid);
+    return isValid;
+  };
+
+  elements.calculateBtn.addEventListener('click', () => {
+    const ageVal = parseInt(elements.age.value);
+    const heightValid = updateValidation(elements.height, 50, 300);
+    const weightValid = updateValidation(elements.weight, 20, 500);
+    const isMale = document.querySelector('input[name="gender"]:checked').value === 'male';
+
+    if (isNaN(ageVal) || !heightValid || !weightValid) {
+      elements.errorMessage.classList.add('active');
+      return;
+    }
+
+    elements.errorMessage.classList.remove('active');
+    const BMR = calculateBMR(
+      Number(elements.weight.value),
+      Number(elements.height.value),
+      ageVal,
+      isMale
+    );
+    elements.calories.textContent = BMR.toLocaleString('en-US');
+  });
+</script>
+  <!-- FOOTER -->
+<div id="site-footer"></div>
+
+
+<script>
+/* Load Header */
+fetch('header.html')
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById('site-header').innerHTML = html;
+
+    /* Load Navigation */
+    fetch('nav.html')
+      .then(res => res.text())
+      .then(nav => {
+        document.getElementById('main-nav').innerHTML = nav;
+      });
+  });
+
+/* Load Footer */
+fetch('footer.html')
+  .then(res => res.text())
+  .then(footer => {
+    document.getElementById('site-footer').innerHTML = footer;
+  });
+</script>
+<script>
+/* ===== MOBILE MENU LOGIC ===== */
+document.addEventListener("click", function (e) {
+
+  /* Toggle main menu */
+  if (e.target.classList.contains("menu-toggle")) {
+    const menu = document.querySelector(".menu");
+    if (menu) {
+      menu.classList.toggle("open");
+    }
+  }
+
+  /* Toggle dropdowns on mobile */
+  const dropdownLink = e.target.closest(".dropdown > a");
+  if (dropdownLink && window.innerWidth <= 900) {
+    e.preventDefault();
+    dropdownLink.parentElement.classList.toggle("open");
+  }
+
+});
+</script></body>
+</html>
