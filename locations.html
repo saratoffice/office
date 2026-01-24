@@ -2,260 +2,204 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sarat Office</title>
+  <title>Sarat Office | Work Place Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-<style>
-#map {
-  width: 100%;
-  height: 500px;
-}
+ <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
 
-/* Controls */
-.map-controls {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
+    .map-controls {
+      padding: 10px;
+      background: #f5f5f5;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #ddd;
+    }
 
-.map-controls input {
-  padding: 6px;
-  font-size: 14px;
-  min-width: 220px;
-}
-</style>
+    .map-controls input {
+      padding: 8px;
+      font-size: 14px;
+      width: 220px;
+    }
+
+    #map {
+      width: 100%;
+      height: calc(100vh - 60px);
+    }
+  </style>
 </head>
+
 <body>
 
-<div id="site-header"></div>
+  <!-- 🔍 FILTER CONTROLS -->
+  <div class="map-controls">
+    <input id="blockSearch" list="blockList" placeholder="Type / Select Block Name" />
+    <datalist id="blockList"></datalist>
 
-<!-- CONTENT -->
+    <input id="codeSearch" placeholder="Search Work Place Code" />
+    <input id="nameSearch" placeholder="Search Work Place Name" />
+  </div>
 
-<script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys&callback=initMap"
-  async
-  defer>
-</script>
+  <!-- 🗺 MAP -->
+  <div id="map"></div>
 
-<div class="map-controls">
- <!-- Searchable Block selector -->
- <input id="blockSearch" list="blockList" type="text" placeholder="Type / Select Block Name" />
-<datalist id="blockList"></datalist>
+  <!-- 🔗 Marker Clusterer -->
+  <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
 
- <input id="codeSearch" type="text" placeholder="Search Work Place Code" />
- <input id="nameSearch" type="text" placeholder="Search Work Place Name" />
-</div>
+  <!-- 🔗 Google Maps API (LOAD ONLY ONCE) -->
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys">
+  </script>
 
+  <script>
+    let map;
+    let markers = [];
+    let markerCluster;
 
+    /* 🎨 ONLY 3 PRIMARY COLORS */
+    const blockColors = {};
+    const primaryColors = ["#d32f2f", "#1976d2", "#fbc02d"];
+    let colorIndex = 0;
 
-<div id="map"></div>
-
-
-<!-- Google Maps + Clusterer -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys"></script>
-
-
-<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
-
-
-
-<script>
-let map;
-let markers = [];
-let markerCluster;
-
-/* 🎨 ONLY 3 PRIMARY COLORS (auto per block) */
-const blockColors = {};
-const primaryColors = [
-  "#d32f2f", // Red
-  "#1976d2", // Blue
-  "#fbc02d"  // Yellow
-];
-let colorIndex = 0;
-
-function getBlockColor(block) {
-  if (!blockColors[block]) {
-    blockColors[block] = primaryColors[colorIndex % primaryColors.length];
-    colorIndex++;
-  }
-  return blockColors[block];
-}
-
-/* Category → Letter */
-function getCategoryLetter(cat) {
-  if (cat === "PPC") return "P";
-  if (cat === "Rice Mill") return "M";
-  if (cat === "FPS") return "F";
-  if (cat === "Godown") return "G";
-  return "?";
-}
-
-/* 📍 Pin with LINE bottom end */
-function linePin(color) {
-  return {
-    path: "M12 1C8.1 1 5 4.1 5 8.2c0 3.7 3.4 6.8 6 9.3V28h2V17.5c2.6-2.5 6-5.6 6-9.3C19 4.1 15.9 1 12 1z",
-    fillColor: color,
-    fillOpacity: 1,
-    strokeColor: "#000",
-    strokeWeight: 1,
-    scale: 1.1,
-    labelOrigin: new google.maps.Point(12, 9)
-  };
-}
-
-/* INIT MAP AFTER PAGE LOAD */
-window.addEventListener("load", function () {
-
-  map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 11,
-    center: { lat: 20.97, lng: 83.53 },
-    gestureHandling: "greedy",
-    fullscreenControl: false,
-    mapTypeControl: false,
-    streetViewControl: false
-  });
-
-  const sheetURL =
-    "https://docs.google.com/spreadsheets/d/1HI5Wjjwo5OObDaS4W7QaOVc_RcqgREu8pHEQxSjYhUg/gviz/tq?tqx=out:json";
-
-  fetch(sheetURL)
-    .then(r => r.text())
-    .then(text => {
-
-      const json = JSON.parse(text.substring(47).slice(0, -2));
-      const rows = json.table.rows;
-
-      const infoWindow = new google.maps.InfoWindow();
-      const blockSet = new Set();
-
-      rows.forEach(r => {
-        if (!r.c || !r.c[3]?.v || !r.c[4]?.v) return;
-
-        const block = r.c[0].v;
-        const name  = r.c[1].v;
-        const code  = r.c[2].v;
-        const lat   = r.c[3].v;
-        const lng   = r.c[4].v;
-        const cat   = r.c[5].v;
-
-        blockSet.add(block);
-
-        const marker = new google.maps.Marker({
-          position: { lat, lng },
-          map: map,
-          icon: linePin(getBlockColor(block)),
-          label: {
-            text: getCategoryLetter(cat),
-            color: "white",
-            fontWeight: "bold",
-            fontSize: "11px"
-          },
-          title: name
-        });
-
-        marker.meta = {
-          block: block.toUpperCase(),
-          code: code.toUpperCase(),
-          name: name.toUpperCase()
-        };
-
-        marker.addListener("click", () => {
-          infoWindow.setContent(
-            "<strong>Name:</strong> " + name + "<br>" +
-            "<strong>Code:</strong> " + code + "<br>" +
-            "<strong>Block:</strong> " + block + "<br>" +
-            "<strong>Category:</strong> " + cat
-          );
-          infoWindow.open(map, marker);
-        });
-
-        markers.push(marker);
-      });
-
-      markerCluster = new MarkerClusterer({ map, markers });
-      populateBlockList(blockSet);
-    });
-});
-
-/* Populate block datalist */
-function populateBlockList(blockSet) {
-  const list = document.getElementById("blockList");
-  list.innerHTML = "";
-  [...blockSet].sort().forEach(b => {
-    const opt = document.createElement("option");
-    opt.value = b;
-    list.appendChild(opt);
-  });
-}
-
-/* Filters */
-function applyFilters() {
-  const blockVal = blockSearch.value.trim().toUpperCase();
-  const codeVal  = codeSearch.value.trim().toUpperCase();
-  const nameVal  = nameSearch.value.trim().toUpperCase();
-
-  markers.forEach(m => {
-    const blockMatch = !blockVal || m.meta.block.includes(blockVal);
-    const codeMatch  = !codeVal  || m.meta.code.includes(codeVal);
-    const nameMatch  = !nameVal  || m.meta.name.includes(nameVal);
-
-    m.setVisible(blockMatch && codeMatch && nameMatch);
-  });
-
-  markerCluster.repaint();
-}
-
-/* Events */
-blockSearch.addEventListener("input", applyFilters);
-codeSearch.addEventListener("keyup", applyFilters);
-nameSearch.addEventListener("keyup", applyFilters);
-</script>
- <!-- FOOTER -->
-<div id="site-footer"></div>
-
-
-<script>
-/* Load Header */
-fetch('header.html')
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('site-header').innerHTML = html;
-
-    /* Load Navigation */
-    fetch('nav.html')
-      .then(res => res.text())
-      .then(nav => {
-        document.getElementById('main-nav').innerHTML = nav;
-      });
-  });
-
-/* Load Footer */
-fetch('footer.html')
-  .then(res => res.text())
-  .then(footer => {
-    document.getElementById('site-footer').innerHTML = footer;
-  });
-</script>
-<script>
-/* ===== MOBILE MENU LOGIC ===== */
-document.addEventListener("click", function (e) {
-
-  /* Toggle main menu */
-  if (e.target.classList.contains("menu-toggle")) {
-    const menu = document.querySelector(".menu");
-    if (menu) {
-      menu.classList.toggle("open");
+    function getBlockColor(block) {
+      if (!blockColors[block]) {
+        blockColors[block] = primaryColors[colorIndex % primaryColors.length];
+        colorIndex++;
+      }
+      return blockColors[block];
     }
-  }
 
-  /* Toggle dropdowns on mobile */
-  const dropdownLink = e.target.closest(".dropdown > a");
-  if (dropdownLink && window.innerWidth <= 900) {
-    e.preventDefault();
-    dropdownLink.parentElement.classList.toggle("open");
-  }
+    /* Category → Letter */
+    function getCategoryLetter(cat) {
+      if (cat === "PPC") return "P";
+      if (cat === "Rice Mill") return "M";
+      if (cat === "FPS") return "F";
+      if (cat === "Godown") return "G";
+      return "?";
+    }
 
-});
-</script></body>
+    /* 📍 Custom Pin */
+    function linePin(color) {
+      return {
+        path: "M12 1C8.1 1 5 4.1 5 8.2c0 3.7 3.4 6.8 6 9.3V28h2V17.5c2.6-2.5 6-5.6 6-9.3C19 4.1 15.9 1 12 1z",
+        fillColor: color,
+        fillOpacity: 1,
+        strokeColor: "#000",
+        strokeWeight: 1,
+        scale: 1.1,
+        labelOrigin: new google.maps.Point(12, 9)
+      };
+    }
+
+    /* 🚀 INIT AFTER PAGE LOAD */
+    window.addEventListener("load", () => {
+
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 11,
+        center: { lat: 20.97, lng: 83.53 },
+        gestureHandling: "greedy",
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false
+      });
+
+      const sheetURL =
+        "https://docs.google.com/spreadsheets/d/1HI5Wjjwo5OObDaS4W7QaOVc_RcqgREu8pHEQxSjYhUg/gviz/tq?tqx=out:json";
+
+      fetch(sheetURL)
+        .then(r => r.text())
+        .then(text => {
+          const json = JSON.parse(text.substring(47).slice(0, -2));
+          const rows = json.table.rows;
+
+          const infoWindow = new google.maps.InfoWindow();
+          const blockSet = new Set();
+
+          rows.forEach(r => {
+            if (!r.c || !r.c[3]?.v || !r.c[4]?.v) return;
+
+            const block = r.c[0].v;
+            const name  = r.c[1].v;
+            const code  = r.c[2].v;
+            const lat   = r.c[3].v;
+            const lng   = r.c[4].v;
+            const cat   = r.c[5].v;
+
+            blockSet.add(block);
+
+            const marker = new google.maps.Marker({
+              position: { lat, lng },
+              icon: linePin(getBlockColor(block)),
+              label: {
+                text: getCategoryLetter(cat),
+                color: "white",
+                fontSize: "11px",
+                fontWeight: "bold"
+              },
+              title: name
+            });
+
+            marker.meta = {
+              block: block.toUpperCase(),
+              code: code.toUpperCase(),
+              name: name.toUpperCase()
+            };
+
+            marker.addListener("click", () => {
+              infoWindow.setContent(
+                `<strong>Name:</strong> ${name}<br>
+                 <strong>Code:</strong> ${code}<br>
+                 <strong>Block:</strong> ${block}<br>
+                 <strong>Category:</strong> ${cat}`
+              );
+              infoWindow.open(map, marker);
+            });
+
+            markers.push(marker);
+          });
+
+          markerCluster = new markerClusterer.MarkerClusterer({
+            map,
+            markers
+          });
+
+          populateBlockList(blockSet);
+        });
+    });
+
+    function populateBlockList(blockSet) {
+      const list = document.getElementById("blockList");
+      list.innerHTML = "";
+      [...blockSet].sort().forEach(b => {
+        const opt = document.createElement("option");
+        opt.value = b;
+        list.appendChild(opt);
+      });
+    }
+
+    function applyFilters() {
+      const blockVal = blockSearch.value.toUpperCase();
+      const codeVal  = codeSearch.value.toUpperCase();
+      const nameVal  = nameSearch.value.toUpperCase();
+
+      markers.forEach(m => {
+        const visible =
+          (!blockVal || m.meta.block.includes(blockVal)) &&
+          (!codeVal  || m.meta.code.includes(codeVal)) &&
+          (!nameVal  || m.meta.name.includes(nameVal));
+        m.setVisible(visible);
+      });
+
+      markerCluster.repaint();
+    }
+
+    blockSearch.addEventListener("input", applyFilters);
+    codeSearch.addEventListener("input", applyFilters);
+    nameSearch.addEventListener("input", applyFilters);
+  </script>
+</body>
 </html>
