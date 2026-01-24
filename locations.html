@@ -1,664 +1,1186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Sarat Office | Work Place Map</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarat Office | Work Place Map</title>
     
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f8f9fa;
-      padding: 20px;
-    }
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
     
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
+    <!-- Marker Cluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
     
-    .header {
-      background: linear-gradient(135deg, #2c3e50, #4a6491);
-      color: white;
-      padding: 20px 30px;
-      border-bottom: 3px solid #3498db;
-    }
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    .header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .header h1:before {
-      content: "📍";
-      font-size: 1.5rem;
-    }
-    
-    .header p {
-      margin: 5px 0 0 0;
-      opacity: 0.9;
-      font-size: 0.95rem;
-    }
-    
-    /* Controls */
-    .map-controls {
-      padding: 20px 30px;
-      background: #f8f9fa;
-      border-bottom: 1px solid #e9ecef;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-    }
-    
-    .control-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    
-    .control-group label {
-      font-size: 0.85rem;
-      color: #555;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    
-    .control-group label:before {
-      font-size: 1rem;
-    }
-    
-    #blockSearch-label:before { content: "🗺️"; }
-    #codeSearch-label:before { content: "🏷️"; }
-    #nameSearch-label:before { content: "🏢"; }
-    
-    .map-controls input {
-      padding: 12px 15px;
-      font-size: 0.95rem;
-      border: 2px solid #e1e5e9;
-      border-radius: 8px;
-      background: white;
-      transition: all 0.3s ease;
-      width: 100%;
-    }
-    
-    .map-controls input:focus {
-      outline: none;
-      border-color: #3498db;
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-    }
-    
-    /* Map */
-    #map {
-      width: 100%;
-      height: 600px;
-    }
-    
-    /* Legend */
-    .legend {
-      padding: 15px 30px;
-      background: white;
-      border-top: 1px solid #e9ecef;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      align-items: center;
-    }
-    
-    .legend-title {
-      font-weight: 600;
-      color: #2c3e50;
-    }
-    
-    .legend-items {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-    
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .legend-color {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      border: 2px solid white;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-    
-    /* Stats */
-    .stats {
-      padding: 15px 30px;
-      background: #2c3e50;
-      color: white;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 25px;
-    }
-    
-    .stat-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .stat-value {
-      font-weight: bold;
-      color: #3498db;
-      font-size: 1.1rem;
-    }
-    
-    /* Loading & Error */
-    #loading {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(255, 255, 255, 0.95);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      transition: opacity 0.3s ease;
-    }
-    
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid #3498db;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 20px;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .error-message {
-      background: #ffe6e6;
-      color: #d63031;
-      padding: 20px;
-      border-radius: 8px;
-      border-left: 4px solid #d63031;
-      margin: 20px;
-      display: none;
-    }
-    
-    .error-message h3 {
-      margin-top: 0;
-    }
-    
-    .error-message a {
-      color: #3498db;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    
-    .error-message a:hover {
-      text-decoration: underline;
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-      body {
-        padding: 10px;
-      }
-      
-      .map-controls {
-        grid-template-columns: 1fr;
-        padding: 15px;
-      }
-      
-      #map {
-        height: 500px;
-      }
-      
-      .stats {
-        justify-content: center;
-      }
-    }
-    
-    /* Custom marker cluster styles */
-    .cluster {
-      background: #3498db;
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      border: 3px solid white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      font-family: inherit;
-    }
-    
-    .cluster-small { width: 40px; height: 40px; font-size: 14px; }
-    .cluster-medium { width: 50px; height: 50px; font-size: 16px; background: #2980b9; }
-    .cluster-large { width: 60px; height: 60px; font-size: 18px; background: #1c5a80; }
-  </style>
-</head>
-
-<body>
-  <!-- Loading Screen -->
-  <div id="loading">
-    <div class="spinner"></div>
-    <h3>Loading Map...</h3>
-    <p>Please wait while we load your locations</p>
-  </div>
-  
-  <!-- Error Message -->
-  <div class="error-message" id="errorMessage"></div>
-  
-  <div class="container">
-    <header class="header">
-      <h1>Sarat Office - Work Place Map</h1>
-      <p>Interactive map of all workplace locations with filtering capabilities</p>
-    </header>
-    
-    <div class="map-controls">
-      <div class="control-group">
-        <label id="blockSearch-label" for="blockSearch">Block / Area</label>
-        <input id="blockSearch" list="blockList" type="text" placeholder="Type or select block name" />
-        <datalist id="blockList"></datalist>
-      </div>
-      
-      <div class="control-group">
-        <label id="codeSearch-label" for="codeSearch">Workplace Code</label>
-        <input id="codeSearch" type="text" placeholder="Search by workplace code" />
-      </div>
-      
-      <div class="control-group">
-        <label id="nameSearch-label" for="nameSearch">Workplace Name</label>
-        <input id="nameSearch" type="text" placeholder="Search by workplace name" />
-      </div>
-    </div>
-    
-    <div id="map"></div>
-    
-    <div class="legend">
-      <div class="legend-title">Block Colors:</div>
-      <div class="legend-items" id="legendItems">
-        <!-- Dynamically populated -->
-      </div>
-    </div>
-    
-    <div class="stats">
-      <div class="stat-item">
-        <span>📍 Total Locations:</span>
-        <span class="stat-value" id="totalLocations">0</span>
-      </div>
-      <div class="stat-item">
-        <span>👁️ Visible:</span>
-        <span class="stat-value" id="visibleLocations">0</span>
-      </div>
-      <div class="stat-item">
-        <span>🎨 Blocks:</span>
-        <span class="stat-value" id="blockCount">0</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- IMPORTANT: REPLACE WITH YOUR GOOGLE MAPS API KEY -->
-  <script>
-    // Configuration
-    const CONFIG = {
-      // ⚠️ REPLACE THIS WITH YOUR ACTUAL GOOGLE MAPS API KEY ⚠️
-      GOOGLE_MAPS_API_KEY: 'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys',
-      
-      // Google Sheets URL (no changes needed)
-      SHEET_URL: 'https://docs.google.com/spreadsheets/d/1HI5Wjjwo5OObDaS4W7QaOVc_RcqgREu8pHEQxSjYhUg/gviz/tq?tqx=out:json',
-      
-      // Initial map center (Bolangir, Odisha)
-      MAP_CENTER: { lat: 20.97, lng: 83.53 },
-      MAP_ZOOM: 11
-    };
-    
-    // Show error if API key is not set
-    if (!CONFIG.GOOGLE_MAPS_API_KEY || CONFIG.GOOGLE_MAPS_API_KEY === 'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys') {
-      document.getElementById('loading').innerHTML = `
-        <div class="error-message" style="display: block; max-width: 600px;">
-          <h3>⚠️ Google Maps API Key Required</h3>
-          <p>To use this map on GitHub Pages, you need to:</p>
-          <ol style="margin: 10px 0 10px 20px;">
-            <li>Get a free API key from <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">Google Cloud Console</a></li>
-            <li>Enable "Maps JavaScript API" for your project</li>
-            <li>Add billing information (first $200/month is free)</li>
-            <li>Replace <code>AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys</code> in the code with your actual key</li>
-            <li>Restrict the API key to your GitHub Pages domain</li>
-          </ol>
-          <p><strong>Or use the OpenStreetMap version</strong> (no API key needed) by copying the code from the previous response.</p>
-        </div>
-      `;
-      throw new Error('Google Maps API key not configured');
-    }
-  </script>
-  
-  <!-- Load Google Maps API with your key -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys&callback=initMap" async defer></script>
-  
-  <!-- Marker Clusterer -->
-  <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
-
-  <script>
-    // Global variables
-    let map;
-    let markers = [];
-    let markerCluster;
-    let infoWindow;
-    
-    // Color management
-    const blockColors = {};
-    const primaryColors = ["#d32f2f", "#1976d2", "#fbc02d", "#388e3c", "#7b1fa2", "#f57c00"];
-    let colorIndex = 0;
-    
-    // Get color for a block
-    function getBlockColor(block) {
-      if (!blockColors[block]) {
-        blockColors[block] = primaryColors[colorIndex % primaryColors.length];
-        colorIndex++;
-      }
-      return blockColors[block];
-    }
-    
-    // Get category letter
-    function getCategoryLetter(cat) {
-      if (!cat) return "?";
-      if (cat.includes("PPC")) return "P";
-      if (cat.includes("Rice") || cat.includes("Mill")) return "M";
-      if (cat.includes("FPS")) return "F";
-      if (cat.includes("Godown")) return "G";
-      return cat.charAt(0).toUpperCase();
-    }
-    
-    // Custom pin icon
-    function createPinIcon(color) {
-      return {
-        path: google.maps.SymbolPath.CIRCLE,
-        fillColor: color,
-        fillOpacity: 0.9,
-        strokeColor: "#000",
-        strokeWeight: 1.5,
-        scale: 10,
-        labelOrigin: new google.maps.Point(0, 0)
-      };
-    }
-    
-    // Initialize map
-    function initMap() {
-      try {
-        // Hide loading screen
-        document.getElementById('loading').style.opacity = '0';
-        setTimeout(() => {
-          document.getElementById('loading').style.display = 'none';
-        }, 300);
-        
-        // Create map
-        map = new google.maps.Map(document.getElementById("map"), {
-          zoom: CONFIG.MAP_ZOOM,
-          center: CONFIG.MAP_CENTER,
-          gestureHandling: "greedy",
-          fullscreenControl: true,
-          mapTypeControl: true,
-          streetViewControl: true,
-          zoomControl: true,
-          styles: [
-            {
-              featureType: "poi.business",
-              stylers: [{ visibility: "off" }]
-            },
-            {
-              featureType: "transit",
-              elementType: "labels.icon",
-              stylers: [{ visibility: "off" }]
-            }
-          ]
-        });
-        
-        infoWindow = new google.maps.InfoWindow({
-          maxWidth: 300
-        });
-        
-        // Load data from Google Sheets
-        loadSheetData();
-        
-      } catch (error) {
-        showError('Failed to initialize map: ' + error.message);
-      }
-    }
-    
-    // Load data from Google Sheets
-    async function loadSheetData() {
-      try {
-        const response = await fetch(CONFIG.SHEET_URL);
-        const text = await response.text();
-        const json = JSON.parse(text.substring(47).slice(0, -2));
-        const rows = json.table.rows;
-        
-        const blockSet = new Set();
-        markers = [];
-        
-        // Process each row
-        rows.forEach((r, index) => {
-          if (!r.c || !r.c[3]?.v || !r.c[4]?.v) return;
-          
-          const block = (r.c[0]?.v || "Unknown").trim();
-          const name = (r.c[1]?.v || "Unnamed").trim();
-          const code = (r.c[2]?.v || "N/A").trim();
-          const lat = parseFloat(r.c[3].v);
-          const lng = parseFloat(r.c[4].v);
-          const cat = (r.c[5]?.v || "Other").trim();
-          
-          if (isNaN(lat) || isNaN(lng)) return;
-          
-          blockSet.add(block);
-          
-          const markerColor = getBlockColor(block);
-          
-          const marker = new google.maps.Marker({
-            position: { lat, lng },
-            map: map,
-            icon: createPinIcon(markerColor),
-            label: {
-              text: getCategoryLetter(cat),
-              color: "white",
-              fontWeight: "bold",
-              fontSize: "11px"
-            },
-            title: `${name} (${code})`,
-            animation: google.maps.Animation.DROP
-          });
-          
-          // Store metadata for filtering
-          marker.meta = {
-            block: block.toUpperCase(),
-            name: name.toUpperCase(),
-            code: code.toUpperCase(),
-            category: cat,
-            color: markerColor
-          };
-          
-          // Add click listener
-          marker.addListener("click", () => {
-            infoWindow.setContent(`
-              <div style="padding: 10px; min-width: 200px;">
-                <h3 style="margin: 0 0 10px 0; color: #2c3e50;">${name}</h3>
-                <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
-                  <p style="margin: 5px 0;"><strong>Code:</strong> ${code}</p>
-                  <p style="margin: 5px 0;"><strong>Block:</strong> ${block}</p>
-                  <p style="margin: 5px 0;"><strong>Category:</strong> ${cat}</p>
-                </div>
-                <div style="color: #666; font-size: 0.9em;">
-                  <p style="margin: 5px 0;">Coordinates: ${lat.toFixed(4)}, ${lng.toFixed(4)}</p>
-                  <p style="margin: 5px 0;">Click on map to close</p>
-                </div>
-              </div>
-            `);
-            infoWindow.open(map, marker);
-          });
-          
-          markers.push(marker);
-        });
-        
-        // Create marker cluster
-        markerCluster = new markerClusterer.MarkerClusterer({
-          map,
-          markers,
-          renderer: {
-            render: ({ count, position }) => {
-              // Custom cluster icon
-              const size = count < 10 ? 'small' : count < 50 ? 'medium' : 'large';
-              return new google.maps.Marker({
-                position,
-                icon: {
-                  url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-                    <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="30" cy="30" r="25" fill="#3498db" stroke="white" stroke-width="3"/>
-                      <text x="30" y="35" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-weight="bold" font-size="18">${count}</text>
-                    </svg>
-                  `)}`,
-                  scaledSize: new google.maps.Size(40, 40),
-                  anchor: new google.maps.Point(20, 20)
-                },
-                label: null
-              });
-            }
-          }
-        });
-        
-        // Populate filters and update UI
-        populateBlockList(blockSet);
-        updateLegend();
-        updateStatistics();
-        
-        // Fit bounds to show all markers
-        if (markers.length > 0) {
-          const bounds = new google.maps.LatLngBounds();
-          markers.forEach(marker => bounds.extend(marker.getPosition()));
-          map.fitBounds(bounds, { padding: 50 });
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
-      } catch (error) {
-        console.error('Error loading data:', error);
-        showError('Failed to load location data. Please check your Google Sheets URL.');
-      }
-    }
-    
-    // Populate block dropdown
-    function populateBlockList(blockSet) {
-      const list = document.getElementById("blockList");
-      list.innerHTML = "";
-      const sortedBlocks = [...blockSet].sort();
-      
-      sortedBlocks.forEach(block => {
-        const opt = document.createElement("option");
-        opt.value = block;
-        list.appendChild(opt);
-      });
-      
-      document.getElementById('blockCount').textContent = sortedBlocks.length;
-    }
-    
-    // Update legend
-    function updateLegend() {
-      const legendItems = document.getElementById('legendItems');
-      legendItems.innerHTML = '';
-      
-      Object.keys(blockColors).sort().forEach(block => {
-        const item = document.createElement('div');
-        item.className = 'legend-item';
-        item.innerHTML = `
-          <div class="legend-color" style="background: ${blockColors[block]};"></div>
-          <span>${block}</span>
-        `;
-        legendItems.appendChild(item);
-      });
-    }
-    
-    // Update statistics
-    function updateStatistics() {
-      document.getElementById('totalLocations').textContent = markers.length;
-      updateVisibleCount();
-    }
-    
-    // Update visible count
-    function updateVisibleCount() {
-      const visible = markers.filter(m => m.getVisible()).length;
-      document.getElementById('visibleLocations').textContent = visible;
-    }
-    
-    // Apply filters
-    function applyFilters() {
-      const blockVal = document.getElementById('blockSearch').value.trim().toUpperCase();
-      const codeVal = document.getElementById('codeSearch').value.trim().toUpperCase();
-      const nameVal = document.getElementById('nameSearch').value.trim().toUpperCase();
-      
-      markers.forEach(marker => {
-        const meta = marker.meta;
-        const blockMatch = !blockVal || meta.block.includes(blockVal);
-        const codeMatch = !codeVal || meta.code.includes(codeVal);
-        const nameMatch = !nameVal || meta.name.includes(nameVal);
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
         
-        marker.setVisible(blockMatch && codeMatch && nameMatch);
-      });
-      
-      // Update marker clusters
-      if (markerCluster) {
-        markerCluster.repaint();
-      }
-      
-      updateVisibleCount();
-    }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .header h1 i {
+            color: #3498db;
+            font-size: 2rem;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 800px;
+        }
+        
+        /* Controls Panel */
+        .controls-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .controls-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f2f6;
+        }
+        
+        .controls-header h2 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .controls-header h2 i {
+            color: #3498db;
+        }
+        
+        .stats-badge {
+            background: #3498db;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .control-group label {
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .control-group label i {
+            color: #3498db;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .control-group input {
+            padding: 14px 18px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .control-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.15);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #2c3e50;
+            border: 2px solid #e1e5e9;
+        }
+        
+        .btn-secondary:hover {
+            background: #e9ecef;
+            border-color: #3498db;
+        }
+        
+        /* Map Container */
+        .map-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            height: 650px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+        }
+        
+        /* Legend */
+        .legend {
+            position: absolute;
+            bottom: 25px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-width: 300px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .legend-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f2f6;
+        }
+        
+        .legend-header h3 {
+            color: #2c3e50;
+            font-size: 1.2rem;
+        }
+        
+        .legend-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .legend-color {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .legend-text {
+            color: #2c3e50;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        
+        /* Footer Stats */
+        .footer-stats {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+        
+        .stat-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        /* Loading Screen */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loader {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 25px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .loading-subtext {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+        }
+        
+        /* Error Message */
+        .error-message {
+            background: rgba(231, 76, 60, 0.95);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px;
+            display: none;
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .error-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .error-header i {
+            font-size: 1.8rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .map-container {
+                height: 550px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-container {
+                height: 500px;
+            }
+            
+            .legend {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                max-width: 100%;
+                margin: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .controls-panel {
+                padding: 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .map-container {
+                height: 400px;
+            }
+        }
+        
+        /* Custom Marker Styles */
+        .custom-div-icon {
+            background: transparent;
+            border: none;
+        }
+        
+        .custom-marker {
+            width: 40px;
+            height: 40px;
+            background: #3498db;
+            border: 3px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .custom-marker:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .cluster-marker {
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 4px solid white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading">
+        <div class="loader"></div>
+        <div class="loading-text">Loading Workplace Map</div>
+        <div class="loading-subtext">Powered by OpenStreetMap</div>
+    </div>
     
-    // Show error message
-    function showError(message) {
-      const errorDiv = document.getElementById('errorMessage');
-      errorDiv.innerHTML = `<h3>Error</h3><p>${message}</p>`;
-      errorDiv.style.display = 'block';
-      
-      // Hide loading screen
-      document.getElementById('loading').style.display = 'none';
-    }
+    <!-- Error Message -->
+    <div class="error-message" id="errorMessage" style="display: none;">
+        <div class="error-header">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Error Loading Data</h3>
+        </div>
+        <p id="errorText">Unable to load location data. Please try again later.</p>
+    </div>
     
-    // Event listeners
-    document.addEventListener('DOMContentLoaded', function() {
-      // Setup filter event listeners
-      document.getElementById('blockSearch').addEventListener('input', applyFilters);
-      document.getElementById('codeSearch').addEventListener('input', applyFilters);
-      document.getElementById('nameSearch').addEventListener('input', applyFilters);
-      
-      // Close info window when clicking on map
-      google.maps.event.addListener(map, 'click', function() {
-        infoWindow.close();
-      });
-    });
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1><i class="fas fa-map-marked-alt"></i> Sarat Office - Workplace Locations</h1>
+            <p>Interactive map showing all workplace locations with real-time filtering and search capabilities. No API key required!</p>
+        </header>
+        
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <div class="controls-header">
+                <h2><i class="fas fa-filter"></i> Filter Locations</h2>
+                <div class="stats-badge" id="visibleCount">0 Locations</div>
+            </div>
+            
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label for="blockSearch"><i class="fas fa-layer-group"></i> Block / Area</label>
+                    <input list="blockList" id="blockSearch" type="text" placeholder="Search or select block name">
+                    <datalist id="blockList"></datalist>
+                </div>
+                
+                <div class="control-group">
+                    <label for="codeSearch"><i class="fas fa-hashtag"></i> Workplace Code</label>
+                    <input type="text" id="codeSearch" placeholder="Search by workplace code (e.g., SO-001)">
+                </div>
+                
+                <div class="control-group">
+                    <label for="nameSearch"><i class="fas fa-building"></i> Workplace Name</label>
+                    <input type="text" id="nameSearch" placeholder="Search by workplace name">
+                </div>
+                
+                <div class="control-group">
+                    <label for="typeFilter"><i class="fas fa-tag"></i> Category Type</label>
+                    <select id="typeFilter">
+                        <option value="">All Categories</option>
+                        <option value="PPC">PPC</option>
+                        <option value="Rice Mill">Rice Mill</option>
+                        <option value="FPS">FPS</option>
+                        <option value="Godown">Godown</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="searchButton">
+                    <i class="fas fa-search"></i> Apply Filters
+                </button>
+                <button class="btn btn-secondary" id="resetButton">
+                    <i class="fas fa-redo"></i> Reset Filters
+                </button>
+                <button class="btn btn-secondary" id="zoomOutButton">
+                    <i class="fas fa-search-minus"></i> Zoom to All
+                </button>
+            </div>
+        </div>
+        
+        <!-- Map Container -->
+        <div class="map-container">
+            <div id="map"></div>
+            
+            <!-- Legend -->
+            <div class="legend">
+                <div class="legend-header">
+                    <i class="fas fa-palette"></i>
+                    <h3>Block Colors</h3>
+                </div>
+                <div class="legend-content" id="legendContent">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Stats -->
+        <div class="footer-stats">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Locations</h3>
+                        <div class="stat-value" id="totalLocations">0</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="stat-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Unique Blocks</h3>
+                        <div class="stat-value" id="blockCount">0</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <div class="stat-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Currently Visible</h3>
+                        <div class="stat-value" id="visibleLocations">0</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <div class="stat-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Categories</h3>
+                        <div class="stat-value" id="categoryCount">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
-    // Handle Google Maps API errors
-    window.gm_authFailure = function() {
-      showError('Google Maps authentication failed. Please check your API key.');
-    };
-  </script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    
+    <!-- Marker Cluster Plugin -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    
+    <script>
+        // Configuration
+        const CONFIG = {
+            // Google Sheets URL for data (same as your original)
+            SHEET_URL: 'https://docs.google.com/spreadsheets/d/1HI5Wjjwo5OObDaS4W7QaOVc_RcqgREu8pHEQxSjYhUg/gviz/tq?tqx=out:json',
+            
+            // Initial map center (Bolangir, Odisha)
+            MAP_CENTER: [20.97, 83.53],
+            MAP_ZOOM: 11,
+            
+            // Color palette for blocks
+            COLOR_PALETTE: [
+                '#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6',
+                '#1abc9c', '#d35400', '#c0392b', '#8e44ad', '#27ae60',
+                '#2980b9', '#16a085', '#e67e22', '#7f8c8d', '#2c3e50'
+            ]
+        };
+        
+        // Global variables
+        let map;
+        let markers = [];
+        let markerCluster;
+        let locationsData = [];
+        let blockColors = {};
+        
+        // Initialize the map
+        function initMap() {
+            try {
+                // Create map with OpenStreetMap tiles
+                map = L.map('map').setView(CONFIG.MAP_CENTER, CONFIG.MAP_ZOOM);
+                
+                // Add OpenStreetMap tile layer
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    maxZoom: 19,
+                    detectRetina: true
+                }).addTo(map);
+                
+                // Add additional tile layer for variety (optional)
+                L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team',
+                    maxZoom: 19,
+                    opacity: 0.7
+                }).addTo(map);
+                
+                // Load data from Google Sheets
+                loadSheetData();
+                
+                // Hide loading screen after a short delay
+                setTimeout(() => {
+                    document.getElementById('loading').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('loading').style.display = 'none';
+                    }, 500);
+                }, 1500);
+                
+            } catch (error) {
+                showError('Failed to initialize map: ' + error.message);
+            }
+        }
+        
+        // Load data from Google Sheets
+        async function loadSheetData() {
+            try {
+                document.getElementById('loading').querySelector('.loading-text').textContent = 'Loading location data...';
+                
+                const response = await fetch(CONFIG.SHEET_URL);
+                const text = await response.text();
+                
+                // Parse the Google Sheets JSON response
+                const json = JSON.parse(text.substring(47).slice(0, -2));
+                const rows = json.table.rows;
+                
+                locationsData = [];
+                const blockSet = new Set();
+                const categorySet = new Set();
+                
+                // Process each row
+                rows.forEach((row, index) => {
+                    if (!row.c || !row.c[3]?.v || !row.c[4]?.v) return;
+                    
+                    const block = (row.c[0]?.v || "Unknown").trim();
+                    const name = (row.c[1]?.v || "Unnamed Location").trim();
+                    const code = (row.c[2]?.v || "N/A").trim();
+                    const lat = parseFloat(row.c[3].v);
+                    const lng = parseFloat(row.c[4].v);
+                    const category = (row.c[5]?.v || "Other").trim();
+                    
+                    if (isNaN(lat) || isNaN(lng)) return;
+                    
+                    blockSet.add(block);
+                    categorySet.add(category);
+                    
+                    const location = {
+                        id: index + 1,
+                        block: block,
+                        name: name,
+                        code: code,
+                        lat: lat,
+                        lng: lng,
+                        category: category,
+                        searchableBlock: block.toLowerCase(),
+                        searchableName: name.toLowerCase(),
+                        searchableCode: code.toLowerCase()
+                    };
+                    
+                    locationsData.push(location);
+                });
+                
+                // Assign colors to blocks
+                assignBlockColors([...blockSet]);
+                
+                // Display markers on map
+                displayMarkers(locationsData);
+                
+                // Update UI
+                updateBlockList([...blockSet]);
+                updateCategoryList([...categorySet]);
+                updateStatistics();
+                updateLegend();
+                
+                // Fit map to show all markers
+                if (markers.length > 0) {
+                    const bounds = L.latLngBounds(markers.map(m => m.getLatLng()));
+                    map.fitBounds(bounds, { padding: [50, 50] });
+                }
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showError('Failed to load location data. Using sample data instead.');
+                useSampleData();
+            }
+        }
+        
+        // Use sample data if Google Sheets fails
+        function useSampleData() {
+            // Sample data for demonstration
+            const sampleData = [
+                {
+                    id: 1,
+                    block: "Central Block",
+                    name: "Sarat Office HQ",
+                    code: "SO-001",
+                    lat: 20.97,
+                    lng: 83.53,
+                    category: "Office"
+                },
+                {
+                    id: 2,
+                    block: "East Block",
+                    name: "Warehouse Facility",
+                    code: "SO-002",
+                    lat: 20.90,
+                    lng: 83.60,
+                    category: "Warehouse"
+                },
+                {
+                    id: 3,
+                    block: "West Block",
+                    name: "Production Center",
+                    code: "SO-003",
+                    lat: 21.05,
+                    lng: 83.45,
+                    category: "Factory"
+                },
+                {
+                    id: 4,
+                    block: "Central Block",
+                    name: "Retail Store",
+                    code: "SO-004",
+                    lat: 20.95,
+                    lng: 83.50,
+                    category: "Store"
+                },
+                {
+                    id: 5,
+                    block: "North Block",
+                    name: "Distribution Center",
+                    code: "SO-005",
+                    lat: 21.10,
+                    lng: 83.55,
+                    category: "Godown"
+                },
+                {
+                    id: 6,
+                    block: "South Block",
+                    name: "Regional Office",
+                    code: "SO-006",
+                    lat: 20.85,
+                    lng: 83.40,
+                    category: "Office"
+                }
+            ];
+            
+            locationsData = sampleData;
+            
+            // Assign colors to blocks
+            const blockSet = new Set(sampleData.map(loc => loc.block));
+            assignBlockColors([...blockSet]);
+            
+            // Display markers
+            displayMarkers(sampleData);
+            
+            // Update UI
+            updateBlockList([...blockSet]);
+            updateStatistics();
+            updateLegend();
+            
+            // Fit map to show all markers
+            if (markers.length > 0) {
+                const bounds = L.latLngBounds(markers.map(m => m.getLatLng()));
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+        
+        // Assign colors to blocks
+        function assignBlockColors(blocks) {
+            blockColors = {};
+            blocks.forEach((block, index) => {
+                blockColors[block] = CONFIG.COLOR_PALETTE[index % CONFIG.COLOR_PALETTE.length];
+            });
+        }
+        
+        // Display markers on the map
+        function displayMarkers(locations) {
+            // Clear existing markers
+            if (markerCluster) {
+                markerCluster.clearLayers();
+            }
+            markers = [];
+            
+            // Create marker cluster group
+            markerCluster = L.markerClusterGroup({
+                chunkedLoading: true,
+                chunkDelay: 100,
+                spiderfyOnMaxZoom: true,
+                showCoverageOnHover: false,
+                zoomToBoundsOnClick: true,
+                maxClusterRadius: 80,
+                iconCreateFunction: function(cluster) {
+                    const count = cluster.getChildCount();
+                    let size = 'small';
+                    if (count >= 10) size = 'medium';
+                    if (count >= 50) size = 'large';
+                    
+                    return L.divIcon({
+                        html: `<div class="cluster-marker" style="
+                            width: ${size === 'small' ? 40 : size === 'medium' ? 50 : 60}px;
+                            height: ${size === 'small' ? 40 : size === 'medium' ? 50 : 60}px;
+                            font-size: ${size === 'small' ? 14 : size === 'medium' ? 16 : 18}px;
+                            background: ${count >= 50 ? '#2c3e50' : count >= 10 ? '#2980b9' : '#3498db'};
+                        ">${count}</div>`,
+                        className: 'custom-cluster',
+                        iconSize: L.point(
+                            size === 'small' ? 40 : size === 'medium' ? 50 : 60,
+                            size === 'small' ? 40 : size === 'medium' ? 50 : 60
+                        )
+                    });
+                }
+            });
+            
+            // Add each location as a marker
+            locations.forEach(location => {
+                const marker = createMarker(location);
+                markers.push(marker);
+                markerCluster.addLayer(marker);
+            });
+            
+            // Add marker cluster to map
+            map.addLayer(markerCluster);
+        }
+        
+        // Create a marker for a location
+        function createMarker(location) {
+            const color = blockColors[location.block] || CONFIG.COLOR_PALETTE[0];
+            
+            // Get category abbreviation
+            const getCategoryAbbr = (cat) => {
+                if (!cat) return "?";
+                if (cat.includes("PPC")) return "P";
+                if (cat.includes("Rice") || cat.includes("Mill")) return "M";
+                if (cat.includes("FPS")) return "F";
+                if (cat.includes("Godown")) return "G";
+                return cat.charAt(0).toUpperCase();
+            };
+            
+            // Create custom HTML marker
+            const markerHtml = `
+                <div class="custom-marker" style="background: ${color};">
+                    ${getCategoryAbbr(location.category)}
+                </div>
+            `;
+            
+            const icon = L.divIcon({
+                html: markerHtml,
+                className: 'custom-div-icon',
+                iconSize: [40, 40],
+                iconAnchor: [20, 40],
+                popupAnchor: [0, -40]
+            });
+            
+            const marker = L.marker([location.lat, location.lng], { icon });
+            
+            // Create popup content
+            const popupContent = `
+                <div style="min-width: 250px; padding: 10px;">
+                    <div style="
+                        background: ${color};
+                        color: white;
+                        padding: 8px 12px;
+                        border-radius: 8px 8px 0 0;
+                        margin: -10px -10px 10px -10px;
+                        font-weight: bold;
+                        font-size: 16px;
+                    ">
+                        ${location.name}
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <p style="margin: 8px 0;"><strong>Code:</strong> ${location.code}</p>
+                        <p style="margin: 8px 0;"><strong>Block:</strong> ${location.block}</p>
+                        <p style="margin: 8px 0;"><strong>Category:</strong> ${location.category}</p>
+                    </div>
+                    
+                    <div style="
+                        background: #f8f9fa;
+                        padding: 10px;
+                        border-radius: 6px;
+                        font-size: 13px;
+                        color: #666;
+                        border-left: 3px solid ${color};
+                    ">
+                        <p style="margin: 5px 0;"><i class="fas fa-map-pin"></i> Coordinates: ${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}</p>
+                    </div>
+                    
+                    <div style="margin-top: 15px; text-align: center;">
+                        <button onclick="zoomToLocation(${location.lat}, ${location.lng})" 
+                                style="
+                                    background: ${color};
+                                    color: white;
+                                    border: none;
+                                    padding: 8px 15px;
+                                    border-radius: 6px;
+                                    cursor: pointer;
+                                    font-weight: bold;
+                                    transition: all 0.3s ease;
+                                "
+                                onmouseover="this.style.opacity='0.8'"
+                                onmouseout="this.style.opacity='1'">
+                            <i class="fas fa-search-location"></i> Zoom to Location
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            marker.bindPopup(popupContent);
+            return marker;
+        }
+        
+        // Update block list dropdown
+        function updateBlockList(blocks) {
+            const datalist = document.getElementById('blockList');
+            datalist.innerHTML = '';
+            
+            blocks.sort().forEach(block => {
+                const option = document.createElement('option');
+                option.value = block;
+                datalist.appendChild(option);
+            });
+        }
+        
+        // Update category list
+        function updateCategoryList(categories) {
+            const select = document.getElementById('typeFilter');
+            // Keep the first option (All Categories)
+            while (select.options.length > 1) {
+                select.remove(1);
+            }
+            
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                select.appendChild(option);
+            });
+        }
+        
+        // Update statistics
+        function updateStatistics() {
+            document.getElementById('totalLocations').textContent = locationsData.length;
+            document.getElementById('blockCount').textContent = Object.keys(blockColors).length;
+            document.getElementById('categoryCount').textContent = new Set(locationsData.map(l => l.category)).size;
+            updateVisibleCount();
+        }
+        
+        // Update visible count
+        function updateVisibleCount() {
+            const visibleMarkers = markers.filter(marker => marker._icon && marker._icon.style.display !== 'none');
+            document.getElementById('visibleCount').textContent = `${visibleMarkers.length} Locations`;
+            document.getElementById('visibleLocations').textContent = visibleMarkers.length;
+        }
+        
+        // Update legend
+        function updateLegend() {
+            const legendContent = document.getElementById('legendContent');
+            legendContent.innerHTML = '';
+            
+            Object.keys(blockColors).sort().forEach(block => {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = `
+                    <div class="legend-color" style="background: ${blockColors[block]};"></div>
+                    <div class="legend-text">${block}</div>
+                `;
+                legendContent.appendChild(item);
+            });
+        }
+        
+        // Apply filters
+        function applyFilters() {
+            const blockFilter = document.getElementById('blockSearch').value.trim().toLowerCase();
+            const codeFilter = document.getElementById('codeSearch').value.trim().toLowerCase();
+            const nameFilter = document.getElementById('nameSearch').value.trim().toLowerCase();
+            const categoryFilter = document.getElementById('typeFilter').value;
+            
+            markers.forEach(marker => {
+                const location = locationsData.find(loc => 
+                    loc.lat === marker.getLatLng().lat && 
+                    loc.lng === marker.getLatLng().lng
+                );
+                
+                if (!location) {
+                    marker.setOpacity(0.3);
+                    return;
+                }
+                
+                const blockMatch = !blockFilter || location.searchableBlock.includes(blockFilter);
+                const codeMatch = !codeFilter || location.searchableCode.includes(codeFilter);
+                const nameMatch = !nameFilter || location.searchableName.includes(nameFilter);
+                const categoryMatch = !categoryFilter || location.category === categoryFilter;
+                
+                const isVisible = blockMatch && codeMatch && nameMatch && categoryMatch;
+                
+                // Show/hide marker
+                if (marker._icon) {
+                    marker._icon.style.display = isVisible ? '' : 'none';
+                }
+                
+                // Also control opacity for better UX
+                marker.setOpacity(isVisible ? 1 : 0.3);
+            });
+            
+            // Update marker clusters
+            if (markerCluster) {
+                markerCluster.refreshClusters();
+            }
+            
+            updateVisibleCount();
+        }
+        
+        // Reset all filters
+        function resetFilters() {
+            document.getElementById('blockSearch').value = '';
+            document.getElementById('codeSearch').value = '';
+            document.getElementById('nameSearch').value = '';
+            document.getElementById('typeFilter').value = '';
+            
+            applyFilters();
+        }
+        
+        // Zoom to show all markers
+        function zoomToAll() {
+            if (markers.length > 0) {
+                const bounds = L.latLngBounds(markers.map(m => m.getLatLng()));
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+        
+        // Zoom to specific location (global function for popup buttons)
+        window.zoomToLocation = function(lat, lng) {
+            map.flyTo([lat, lng], 15, {
+                duration: 1.5,
+                easeLinearity: 0.25
+            });
+            
+            // Open popup if available
+            markers.forEach(marker => {
+                if (marker.getLatLng().lat === lat && marker.getLatLng().lng === lng) {
+                    marker.openPopup();
+                }
+            });
+        };
+        
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            
+            errorText.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Hide loading screen
+            document.getElementById('loading').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+            }, 500);
+            
+            // Auto-hide error after 10 seconds
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 10000);
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize map
+            initMap();
+            
+            // Set up event listeners
+            document.getElementById('searchButton').addEventListener('click', applyFilters);
+            document.getElementById('resetButton').addEventListener('click', resetFilters);
+            document.getElementById('zoomOutButton').addEventListener('click', zoomToAll);
+            
+            // Apply filters on input (with debounce)
+            let filterTimeout;
+            ['blockSearch', 'codeSearch', 'nameSearch'].forEach(id => {
+                document.getElementById(id).addEventListener('input', function() {
+                    clearTimeout(filterTimeout);
+                    filterTimeout = setTimeout(applyFilters, 300);
+                });
+            });
+            
+            document.getElementById('typeFilter').addEventListener('change', applyFilters);
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'r') {
+                    e.preventDefault();
+                    resetFilters();
+                }
+                if (e.key === 'Escape') {
+                    map.closePopup();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
