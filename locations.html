@@ -1,72 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Sarat Office | Work Place Map</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Optional external CSS -->
-  <link rel="stylesheet" href="style.css">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
-
-    .map-controls {
-      padding: 10px;
-      background: #f5f5f5;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .map-controls input {
-      padding: 8px;
-      font-size: 14px;
-      width: 220px;
-    }
-
-    #map {
-      width: 100%;
-      height: calc(100vh - 60px);
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- Controls -->
-  <div class="map-controls">
-    <input list="blockList" id="blockSearch" placeholder="Type / Select Block Name">
-    <datalist id="blockList"></datalist>
-
-    <input type="text" id="codeSearch" placeholder="Search Work Place Code">
-    <input type="text" id="nameSearch" placeholder="Search Work Place Name">
-  </div>
-
-  <!-- Map -->
-  <div id="map"></div>
-
-  <!-- Marker Clusterer (must load before map.js uses it) -->
-  <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
-
-  <!-- Your custom map logic -->
-  <script src="https://cdn.jsdelivr.net/gh/saratoffice/locations@v1.3/map.js"></script>
-
-  <!-- Google Maps loader -->
-  <script>
-    (function () {
-      const script = document.createElement("script");
-      script.src =
-        "https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys&callback=initMap";
-      script.async = true;
-      script.defer = true;
-      document.head.appendChild(script);
-    })();
-  </script>
-
-</body>
-</html>
+<script>
+  // Load everything in proper order
+  function loadScripts() {
+    // Load Google Maps
+    const gmapScript = document.createElement('script');
+    gmapScript.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys";
+    gmapScript.onload = function() {
+      // Load MarkerClusterer
+      const clusterScript = document.createElement('script');
+      clusterScript.src = "https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js";
+      clusterScript.onload = function() {
+        // Load your map.js
+        const mapScript = document.createElement('script');
+        mapScript.src = "https://cdn.jsdelivr.net/gh/saratoffice/locations@v1.3/map.js";
+        document.head.appendChild(mapScript);
+      };
+      document.head.appendChild(clusterScript);
+    };
+    document.head.appendChild(gmapScript);
+  }
+  
+  // Start loading when page is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadScripts);
+  } else {
+    loadScripts();
+  }
+</script>
