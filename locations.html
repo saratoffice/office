@@ -5,232 +5,742 @@
   <title>Sarat Office | Work Place Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin="" />
+  
+  <!-- Marker Cluster CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
   <style>
-    body {
+    * {
       margin: 0;
-      font-family: Arial, sans-serif;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f8f9fa;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #2c3e50, #4a6491);
+      color: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header h1 i {
+      font-size: 1.5rem;
+    }
+
+    .controls-container {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.08);
     }
 
     .map-controls {
-      padding: 10px;
-      background: #f5f5f5;
       display: flex;
-      gap: 10px;
+      gap: 15px;
       flex-wrap: wrap;
-      border-bottom: 1px solid #ddd;
+      align-items: center;
     }
 
-    .map-controls input {
-      padding: 8px;
-      font-size: 14px;
-      width: 200px;
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .control-group label {
+      font-size: 0.85rem;
+      color: #555;
+      font-weight: 600;
+    }
+
+    .control-group input, .control-group select {
+      padding: 10px 12px;
+      border: 2px solid #e1e5e9;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    .control-group input:focus, .control-group select:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    .stats-bar {
+      background: #2c3e50;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      border-top: 3px solid #3498db;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-value {
+      font-weight: bold;
+      color: #3498db;
+      font-size: 1.1rem;
     }
 
     #map {
       width: 100%;
-      height: calc(100vh - 60px);
+      height: calc(100vh - 220px);
+      border-radius: 8px;
+      margin: 1rem;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+      z-index: 1;
     }
 
     #loading {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       z-index: 1000;
+      transition: opacity 0.3s ease;
     }
 
-    .error {
-      color: red;
-      padding: 20px;
-      text-align: center;
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
     }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error-message {
+      background: #ffe6e6;
+      color: #d63031;
+      padding: 1rem;
+      border-radius: 6px;
+      border-left: 4px solid #d63031;
+      margin: 1rem;
+      display: none;
+    }
+
+    .legend {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+      max-width: 250px;
+    }
+
+    .legend h4 {
+      margin: 0 0 10px 0;
+      color: #2c3e50;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+    }
+
+    @media (max-width: 768px) {
+      .map-controls {
+        flex-direction: column;
+      }
+      
+      .control-group {
+        width: 100%;
+      }
+      
+      #map {
+        height: calc(100vh - 280px);
+        margin: 0.5rem;
+      }
+      
+      .stats-bar {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
+    }
+
+    /* Custom marker styles */
+    .custom-marker {
+      background: #3498db;
+      border: 3px solid white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .custom-marker:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .custom-marker.office { background: #2ecc71; }
+    .custom-marker.warehouse { background: #e74c3c; }
+    .custom-marker.factory { background: #f39c12; }
+    .custom-marker.store { background: #9b59b6; }
+    .custom-marker.headquarters { background: #1abc9c; }
   </style>
 </head>
 
 <body>
-  <div id="loading">Loading map...</div>
-  
-  <div class="map-controls" style="display: none;">
-    <input list="blockList" id="blockSearch" placeholder="Type / Select Block Name">
-    <datalist id="blockList"></datalist>
-    <input type="text" id="codeSearch" placeholder="Search Work Place Code">
-    <input type="text" id="nameSearch" placeholder="Search Work Place Name">
+  <!-- Loading Screen -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <h3>Loading Map...</h3>
+    <p>Please wait while we load your locations</p>
   </div>
 
-  <div id="map" style="display: none;"></div>
+  <!-- Header -->
+  <header class="header">
+    <h1>
+      <span>📍</span>
+      Sarat Office - Work Place Map
+    </h1>
+  </header>
+
+  <!-- Controls -->
+  <div class="controls-container">
+    <div class="map-controls">
+      <div class="control-group">
+        <label for="blockSearch">Block / Area</label>
+        <input list="blockList" id="blockSearch" placeholder="Search by block name">
+        <datalist id="blockList"></datalist>
+      </div>
+      
+      <div class="control-group">
+        <label for="codeSearch">Workplace Code</label>
+        <input type="text" id="codeSearch" placeholder="Search by code (e.g., SO-001)">
+      </div>
+      
+      <div class="control-group">
+        <label for="nameSearch">Workplace Name</label>
+        <input type="text" id="nameSearch" placeholder="Search by name">
+      </div>
+      
+      <div class="control-group">
+        <label for="typeFilter">Location Type</label>
+        <select id="typeFilter">
+          <option value="">All Types</option>
+          <option value="office">Office</option>
+          <option value="warehouse">Warehouse</option>
+          <option value="factory">Factory</option>
+          <option value="store">Store</option>
+          <option value="headquarters">Headquarters</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Bar -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span>📍 Total Locations:</span>
+      <span class="stat-value" id="totalLocations">0</span>
+    </div>
+    <div class="stat-item">
+      <span>🏢 Offices:</span>
+      <span class="stat-value" id="officeCount">0</span>
+    </div>
+    <div class="stat-item">
+      <span>🔍 Visible:</span>
+      <span class="stat-value" id="visibleCount">0</span>
+    </div>
+    <div class="stat-item">
+      <button id="resetView" style="background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+        Reset View
+      </button>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-message" id="errorMessage"></div>
+
+  <!-- Map Container -->
+  <div id="map"></div>
+
+  <!-- Legend -->
+  <div class="legend" id="legend">
+    <h4>Location Types</h4>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #2ecc71;"></div>
+      <span>Office</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #e74c3c;"></div>
+      <span>Warehouse</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #f39c12;"></div>
+      <span>Factory</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #9b59b6;"></div>
+      <span>Store</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #1abc9c;"></div>
+      <span>Headquarters</span>
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+          crossorigin=""></script>
+  
+  <!-- Marker Cluster Plugin -->
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
   <script>
-    // Configuration - ADD YOUR OWN API KEY HERE
-    const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY_HERE';
-    const MAP_DATA_URL = 'https://cdn.jsdelivr.net/gh/saratoffice/locations@v1.3/map.js';
-    
-    // Local fallback data (in case CDN fails)
-    const fallbackLocations = [
-      // Add your locations here as backup
-      // Example: {name: "Office 1", lat: 28.6139, lng: 77.2090, code: "ABC123"}
+    // Sample data - REPLACE THIS WITH YOUR ACTUAL DATA
+    const sampleLocations = [
+      {
+        id: 1,
+        name: "Sarat Office HQ",
+        code: "SO-001",
+        block: "Central Business District",
+        type: "headquarters",
+        lat: 28.6139,
+        lng: 77.2090, // Delhi
+        address: "123 Business Street, Delhi, India",
+        website: "https://saratoffice.in",
+        phone: "+91 1234567890",
+        email: "info@saratoffice.in"
+      },
+      {
+        id: 2,
+        name: "Mumbai Branch Office",
+        code: "SO-002",
+        block: "Nariman Point",
+        type: "office",
+        lat: 19.0760,
+        lng: 72.8777, // Mumbai
+        address: "456 Marine Drive, Mumbai, India",
+        website: "https://saratoffice.in",
+        phone: "+91 9876543210"
+      },
+      {
+        id: 3,
+        name: "Bangalore Development Center",
+        code: "SO-003",
+        block: "Electronic City",
+        type: "office",
+        lat: 12.9716,
+        lng: 77.5946, // Bangalore
+        address: "789 Tech Park, Bangalore, India"
+      },
+      {
+        id: 4,
+        name: "Chennai Warehouse",
+        code: "SO-004",
+        block: "Industrial Estate",
+        type: "warehouse",
+        lat: 13.0827,
+        lng: 80.2707, // Chennai
+        address: "321 Industrial Area, Chennai, India"
+      },
+      {
+        id: 5,
+        name: "Kolkata Factory",
+        code: "SO-005",
+        block: "Manufacturing Zone",
+        type: "factory",
+        lat: 22.5726,
+        lng: 88.3639, // Kolkata
+        address: "654 Production Road, Kolkata, India"
+      },
+      {
+        id: 6,
+        name: "Hyderabad Retail Store",
+        code: "SO-006",
+        block: "Commercial Center",
+        type: "store",
+        lat: 17.3850,
+        lng: 78.4867, // Hyderabad
+        address: "987 Market Street, Hyderabad, India"
+      },
+      {
+        id: 7,
+        name: "Pune Office",
+        code: "SO-007",
+        block: "Hinjewadi",
+        type: "office",
+        lat: 18.5204,
+        lng: 73.8567, // Pune
+        address: "147 IT Park, Pune, India"
+      },
+      {
+        id: 8,
+        name: "Ahmedabad Warehouse",
+        code: "SO-008",
+        block: "Industrial Corridor",
+        type: "warehouse",
+        lat: 23.0225,
+        lng: 72.5714, // Ahmedabad
+        address: "258 Logistics Park, Ahmedabad, India"
+      }
     ];
 
+    // Global variables
+    let map;
+    let markers = [];
+    let markerCluster;
+    let currentLocations = [];
+    
+    // Color mapping for location types
+    const typeColors = {
+      'office': '#2ecc71',
+      'warehouse': '#e74c3c',
+      'factory': '#f39c12',
+      'store': '#9b59b6',
+      'headquarters': '#1abc9c',
+      'default': '#3498db'
+    };
+
+    // Initialize the map
     function initMap() {
-      const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 4,
-        center: { lat: 20.5937, lng: 78.9629 }, // Center on India
-        mapTypeId: "terrain",
-      });
-
-      // Try to load your map.js script
-      loadExternalMapScript(map);
-    }
-
-    function loadExternalMapScript(map) {
-      fetch(MAP_DATA_URL)
-        .then(response => {
-          if (!response.ok) throw new Error('Failed to load data');
-          return response.text();
-        })
-        .then(scriptText => {
-          // Extract locations from the script
-          const locations = extractLocationsFromScript(scriptText);
-          if (locations && locations.length > 0) {
-            addMarkersToMap(map, locations);
-            setupControls(locations);
-            showMap();
-          } else {
-            useFallbackData(map);
-          }
-        })
-        .catch(error => {
-          console.error('Error loading external data:', error);
-          useFallbackData(map);
-        });
-    }
-
-    function extractLocationsFromScript(scriptText) {
-      // Try to find locations array in the script
-      // This regex looks for locations = [...]
-      const match = scriptText.match(/locations\s*=\s*(\[[\s\S]*?\])/);
-      if (match) {
-        try {
-          // Remove trailing semicolon if present
-          const arrayStr = match[1].replace(/;\s*$/, '');
-          return eval(`(${arrayStr})`);
-        } catch (e) {
-          console.error('Error parsing locations:', e);
-        }
+      try {
+        // Create map centered on India
+        map = L.map('map').setView([20.5937, 78.9629], 5);
+        
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 19,
+        }).addTo(map);
+        
+        // Load locations
+        loadLocations();
+        
+        // Hide loading screen
+        setTimeout(() => {
+          document.getElementById('loading').style.opacity = '0';
+          setTimeout(() => {
+            document.getElementById('loading').style.display = 'none';
+          }, 300);
+        }, 1000);
+        
+      } catch (error) {
+        showError('Failed to initialize map: ' + error.message);
       }
-      return null;
     }
 
-    function addMarkersToMap(map, locations) {
-      const markers = locations.map(location => {
-        const marker = new google.maps.Marker({
-          position: { lat: location.lat, lng: location.lng },
-          map: map,
-          title: location.name || location.code,
-        });
+    // Load locations from your data source
+    async function loadLocations() {
+      try {
+        // Try to load from your GitHub data file
+        const externalDataUrl = 'https://cdn.jsdelivr.net/gh/saratoffice/locations@v1.3/locations.json';
+        
+        let locations;
+        try {
+          const response = await fetch(externalDataUrl);
+          if (response.ok) {
+            locations = await response.json();
+            console.log('Loaded locations from external source:', locations.length);
+          } else {
+            throw new Error('External data not available');
+          }
+        } catch (externalError) {
+          console.log('Using sample data:', externalError.message);
+          // Use sample data if external data fails
+          locations = sampleLocations;
+        }
+        
+        currentLocations = locations;
+        displayLocations(locations);
+        updateStatistics(locations);
+        populateFilters(locations);
+        
+      } catch (error) {
+        showError('Failed to load locations: ' + error.message);
+        // Fallback to sample data
+        currentLocations = sampleLocations;
+        displayLocations(sampleLocations);
+        updateStatistics(sampleLocations);
+        populateFilters(sampleLocations);
+      }
+    }
 
-        // Add info window
-        const infoWindow = new google.maps.InfoWindow({
-          content: `
-            <div style="padding: 10px; min-width: 200px;">
-              <h3 style="margin: 0 0 10px 0;">${location.name || 'Unnamed Location'}</h3>
-              <p><strong>Code:</strong> ${location.code || 'N/A'}</p>
-              <p><strong>Block:</strong> ${location.block || 'N/A'}</p>
-              <p><strong>Type:</strong> ${location.type || 'N/A'}</p>
-              ${location.address ? `<p><strong>Address:</strong> ${location.address}</p>` : ''}
-              ${location.website ? `<p><a href="${location.website}" target="_blank">Visit Website</a></p>` : ''}
-            </div>
-          `
-        });
-
-        marker.addListener("click", () => {
-          infoWindow.open(map, marker);
-        });
-
-        return marker;
+    // Display locations on map
+    function displayLocations(locations) {
+      // Clear existing markers
+      if (markerCluster) {
+        markerCluster.clearLayers();
+      }
+      
+      markers = [];
+      
+      // Create marker cluster group
+      markerCluster = L.markerClusterGroup({
+        chunkedLoading: true,
+        chunkDelay: 100,
+        spiderfyOnMaxZoom: true,
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true,
+        maxClusterRadius: 80,
+        iconCreateFunction: function(cluster) {
+          const count = cluster.getChildCount();
+          const size = count < 10 ? 'small' : count < 50 ? 'medium' : 'large';
+          return L.divIcon({
+            html: `<div class="cluster cluster-${size}">${count}</div>`,
+            className: 'marker-cluster',
+            iconSize: L.point(40, 40)
+          });
+        }
       });
-
-      // Add marker clustering
-      new markerClusterer.MarkerClusterer({ map, markers });
+      
+      // Add each location as a marker
+      locations.forEach(location => {
+        const marker = createMarker(location);
+        markers.push(marker);
+        markerCluster.addLayer(marker);
+      });
+      
+      // Add cluster group to map
+      map.addLayer(markerCluster);
+      
+      // Fit bounds to show all markers
+      if (markers.length > 0) {
+        const group = new L.featureGroup(markers);
+        map.fitBounds(group.getBounds().pad(0.1));
+      }
     }
 
-    function setupControls(locations) {
-      // Populate block list
+    // Create a custom marker for a location
+    function createMarker(location) {
+      const color = typeColors[location.type] || typeColors.default;
+      
+      // Create custom HTML for marker
+      const markerHtml = `
+        <div class="custom-marker ${location.type}" 
+             style="background: ${color}; width: 35px; height: 35px; font-size: 14px;">
+          ${location.code ? location.code.substring(0, 2) : 'SO'}
+        </div>
+      `;
+      
+      const icon = L.divIcon({
+        html: markerHtml,
+        className: 'custom-div-icon',
+        iconSize: [35, 35],
+        iconAnchor: [17, 35],
+        popupAnchor: [0, -35]
+      });
+      
+      const marker = L.marker([location.lat, location.lng], { icon });
+      
+      // Create popup content
+      const popupContent = `
+        <div style="padding: 10px; min-width: 250px; max-width: 300px;">
+          <h3 style="margin: 0 0 10px 0; color: #2c3e50; border-bottom: 2px solid ${color}; padding-bottom: 5px;">
+            ${location.name}
+          </h3>
+          
+          <div style="margin-bottom: 10px;">
+            <strong>Code:</strong> ${location.code || 'N/A'}<br>
+            <strong>Type:</strong> <span style="color: ${color}; font-weight: bold;">${location.type || 'N/A'}</span><br>
+            <strong>Block:</strong> ${location.block || 'N/A'}<br>
+          </div>
+          
+          ${location.address ? `<p><strong>📍 Address:</strong><br>${location.address}</p>` : ''}
+          
+          <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee;">
+            ${location.phone ? `<p><strong>📞 Phone:</strong> ${location.phone}</p>` : ''}
+            ${location.email ? `<p><strong>✉️ Email:</strong> ${location.email}</p>` : ''}
+            ${location.website ? `<p><strong>🌐 Website:</strong> <a href="${location.website}" target="_blank">${location.website}</a></p>` : ''}
+          </div>
+          
+          <div style="margin-top: 15px; text-align: center;">
+            <button onclick="zoomToLocation(${location.lat}, ${location.lng})" 
+                    style="background: ${color}; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">
+              Zoom to Location
+            </button>
+          </div>
+        </div>
+      `;
+      
+      marker.bindPopup(popupContent);
+      return marker;
+    }
+
+    // Update statistics
+    function updateStatistics(locations) {
+      document.getElementById('totalLocations').textContent = locations.length;
+      
+      const typeCounts = locations.reduce((acc, loc) => {
+        acc[loc.type] = (acc[loc.type] || 0) + 1;
+        return acc;
+      }, {});
+      
+      document.getElementById('officeCount').textContent = 
+        (typeCounts.office || 0) + (typeCounts.headquarters || 0);
+      document.getElementById('visibleCount').textContent = locations.length;
+    }
+
+    // Populate filter dropdowns
+    function populateFilters(locations) {
       const blockList = [...new Set(locations.map(loc => loc.block).filter(Boolean))];
       const datalist = document.getElementById('blockList');
+      datalist.innerHTML = '';
+      
       blockList.forEach(block => {
         const option = document.createElement('option');
         option.value = block;
         datalist.appendChild(option);
       });
+    }
 
-      // Setup search functionality
-      document.getElementById('blockSearch').addEventListener('input', filterMarkers);
-      document.getElementById('codeSearch').addEventListener('input', filterMarkers);
-      document.getElementById('nameSearch').addEventListener('input', filterMarkers);
-
-      function filterMarkers() {
-        // Implement filtering logic here
-        const blockQuery = document.getElementById('blockSearch').value.toLowerCase();
-        const codeQuery = document.getElementById('codeSearch').value.toLowerCase();
-        const nameQuery = document.getElementById('nameSearch').value.toLowerCase();
+    // Filter locations based on search criteria
+    function filterLocations() {
+      const blockQuery = document.getElementById('blockSearch').value.toLowerCase();
+      const codeQuery = document.getElementById('codeSearch').value.toLowerCase();
+      const nameQuery = document.getElementById('nameSearch').value.toLowerCase();
+      const typeQuery = document.getElementById('typeFilter').value;
+      
+      const filtered = currentLocations.filter(location => {
+        const matchesBlock = !blockQuery || 
+          (location.block && location.block.toLowerCase().includes(blockQuery));
+        const matchesCode = !codeQuery || 
+          (location.code && location.code.toLowerCase().includes(codeQuery));
+        const matchesName = !nameQuery || 
+          (location.name && location.name.toLowerCase().includes(nameQuery));
+        const matchesType = !typeQuery || location.type === typeQuery;
         
-        // You'll need to track markers and show/hide them based on filters
-      }
-    }
-
-    function useFallbackData(map) {
-      if (fallbackLocations.length > 0) {
-        addMarkersToMap(map, fallbackLocations);
-        showMap();
-      } else {
-        document.getElementById('loading').innerHTML = 
-          '<div class="error">Unable to load map data. Please try again later.</div>';
-      }
-    }
-
-    function showMap() {
-      document.getElementById('loading').style.display = 'none';
-      document.querySelector('.map-controls').style.display = 'flex';
-      document.getElementById('map').style.display = 'block';
-    }
-
-    // Load everything
-    function initialize() {
-      if (!GOOGLE_MAPS_API_KEY || GOOGLE_MAPS_API_KEY === 'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys') {
-        document.getElementById('loading').innerHTML = `
-          <div class="error">
-            <h3>API Key Required</h3>
-            <p>Please add your Google Maps API key to the code.</p>
-            <p>Get a free API key from: <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">Google Cloud Console</a></p>
-          </div>
-        `;
-        return;
-      }
-
-      // Load Google Maps API
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initMap`;
-      script.async = true;
-      script.defer = true;
+        return matchesBlock && matchesCode && matchesName && matchesType;
+      });
       
-      // Load MarkerClusterer
-      const clusterScript = document.createElement('script');
-      clusterScript.src = "https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js";
-      clusterScript.onload = () => document.head.appendChild(script);
-      
-      document.head.appendChild(clusterScript);
+      displayLocations(filtered);
+      updateStatistics(filtered);
     }
 
-    // Start when page loads
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initialize);
-    } else {
-      initialize();
+    // Zoom to specific location
+    function zoomToLocation(lat, lng) {
+      map.flyTo([lat, lng], 15, {
+        duration: 1.5,
+        easeLinearity: 0.25
+      });
     }
+
+    // Show error message
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      initMap();
+      
+      // Setup event listeners for filters
+      document.getElementById('blockSearch').addEventListener('input', filterLocations);
+      document.getElementById('codeSearch').addEventListener('input', filterLocations);
+      document.getElementById('nameSearch').addEventListener('input', filterLocations);
+      document.getElementById('typeFilter').addEventListener('change', filterLocations);
+      
+      // Reset view button
+      document.getElementById('resetView').addEventListener('click', function() {
+        if (markers.length > 0) {
+          const group = new L.featureGroup(markers);
+          map.fitBounds(group.getBounds().pad(0.1));
+        }
+        
+        // Clear filters
+        document.getElementById('blockSearch').value = '';
+        document.getElementById('codeSearch').value = '';
+        document.getElementById('nameSearch').value = '';
+        document.getElementById('typeFilter').value = '';
+        
+        // Show all locations
+        displayLocations(currentLocations);
+        updateStatistics(currentLocations);
+      });
+      
+      // Add custom cluster styles
+      const style = document.createElement('style');
+      style.textContent = `
+        .cluster {
+          background: #3498db;
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          border: 3px solid white;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .cluster-small { width: 40px; height: 40px; font-size: 14px; }
+        .cluster-medium { width: 50px; height: 50px; font-size: 16px; background: #2980b9; }
+        .cluster-large { width: 60px; height: 60px; font-size: 18px; background: #1c5a80; }
+        .marker-cluster {
+          background: transparent !important;
+        }
+      `;
+      document.head.appendChild(style);
+    });
   </script>
 </body>
 </html>
