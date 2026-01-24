@@ -1,28 +1,236 @@
-<script>
-  // Load everything in proper order
-  function loadScripts() {
-    // Load Google Maps
-    const gmapScript = document.createElement('script');
-    gmapScript.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys";
-    gmapScript.onload = function() {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sarat Office | Work Place Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .map-controls {
+      padding: 10px;
+      background: #f5f5f5;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .map-controls input {
+      padding: 8px;
+      font-size: 14px;
+      width: 200px;
+    }
+
+    #map {
+      width: 100%;
+      height: calc(100vh - 60px);
+    }
+
+    #loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .error {
+      color: red;
+      padding: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loading">Loading map...</div>
+  
+  <div class="map-controls" style="display: none;">
+    <input list="blockList" id="blockSearch" placeholder="Type / Select Block Name">
+    <datalist id="blockList"></datalist>
+    <input type="text" id="codeSearch" placeholder="Search Work Place Code">
+    <input type="text" id="nameSearch" placeholder="Search Work Place Name">
+  </div>
+
+  <div id="map" style="display: none;"></div>
+
+  <script>
+    // Configuration - ADD YOUR OWN API KEY HERE
+    const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY_HERE';
+    const MAP_DATA_URL = 'https://cdn.jsdelivr.net/gh/saratoffice/locations@v1.3/map.js';
+    
+    // Local fallback data (in case CDN fails)
+    const fallbackLocations = [
+      // Add your locations here as backup
+      // Example: {name: "Office 1", lat: 28.6139, lng: 77.2090, code: "ABC123"}
+    ];
+
+    function initMap() {
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 4,
+        center: { lat: 20.5937, lng: 78.9629 }, // Center on India
+        mapTypeId: "terrain",
+      });
+
+      // Try to load your map.js script
+      loadExternalMapScript(map);
+    }
+
+    function loadExternalMapScript(map) {
+      fetch(MAP_DATA_URL)
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to load data');
+          return response.text();
+        })
+        .then(scriptText => {
+          // Extract locations from the script
+          const locations = extractLocationsFromScript(scriptText);
+          if (locations && locations.length > 0) {
+            addMarkersToMap(map, locations);
+            setupControls(locations);
+            showMap();
+          } else {
+            useFallbackData(map);
+          }
+        })
+        .catch(error => {
+          console.error('Error loading external data:', error);
+          useFallbackData(map);
+        });
+    }
+
+    function extractLocationsFromScript(scriptText) {
+      // Try to find locations array in the script
+      // This regex looks for locations = [...]
+      const match = scriptText.match(/locations\s*=\s*(\[[\s\S]*?\])/);
+      if (match) {
+        try {
+          // Remove trailing semicolon if present
+          const arrayStr = match[1].replace(/;\s*$/, '');
+          return eval(`(${arrayStr})`);
+        } catch (e) {
+          console.error('Error parsing locations:', e);
+        }
+      }
+      return null;
+    }
+
+    function addMarkersToMap(map, locations) {
+      const markers = locations.map(location => {
+        const marker = new google.maps.Marker({
+          position: { lat: location.lat, lng: location.lng },
+          map: map,
+          title: location.name || location.code,
+        });
+
+        // Add info window
+        const infoWindow = new google.maps.InfoWindow({
+          content: `
+            <div style="padding: 10px; min-width: 200px;">
+              <h3 style="margin: 0 0 10px 0;">${location.name || 'Unnamed Location'}</h3>
+              <p><strong>Code:</strong> ${location.code || 'N/A'}</p>
+              <p><strong>Block:</strong> ${location.block || 'N/A'}</p>
+              <p><strong>Type:</strong> ${location.type || 'N/A'}</p>
+              ${location.address ? `<p><strong>Address:</strong> ${location.address}</p>` : ''}
+              ${location.website ? `<p><a href="${location.website}" target="_blank">Visit Website</a></p>` : ''}
+            </div>
+          `
+        });
+
+        marker.addListener("click", () => {
+          infoWindow.open(map, marker);
+        });
+
+        return marker;
+      });
+
+      // Add marker clustering
+      new markerClusterer.MarkerClusterer({ map, markers });
+    }
+
+    function setupControls(locations) {
+      // Populate block list
+      const blockList = [...new Set(locations.map(loc => loc.block).filter(Boolean))];
+      const datalist = document.getElementById('blockList');
+      blockList.forEach(block => {
+        const option = document.createElement('option');
+        option.value = block;
+        datalist.appendChild(option);
+      });
+
+      // Setup search functionality
+      document.getElementById('blockSearch').addEventListener('input', filterMarkers);
+      document.getElementById('codeSearch').addEventListener('input', filterMarkers);
+      document.getElementById('nameSearch').addEventListener('input', filterMarkers);
+
+      function filterMarkers() {
+        // Implement filtering logic here
+        const blockQuery = document.getElementById('blockSearch').value.toLowerCase();
+        const codeQuery = document.getElementById('codeSearch').value.toLowerCase();
+        const nameQuery = document.getElementById('nameSearch').value.toLowerCase();
+        
+        // You'll need to track markers and show/hide them based on filters
+      }
+    }
+
+    function useFallbackData(map) {
+      if (fallbackLocations.length > 0) {
+        addMarkersToMap(map, fallbackLocations);
+        showMap();
+      } else {
+        document.getElementById('loading').innerHTML = 
+          '<div class="error">Unable to load map data. Please try again later.</div>';
+      }
+    }
+
+    function showMap() {
+      document.getElementById('loading').style.display = 'none';
+      document.querySelector('.map-controls').style.display = 'flex';
+      document.getElementById('map').style.display = 'block';
+    }
+
+    // Load everything
+    function initialize() {
+      if (!GOOGLE_MAPS_API_KEY || GOOGLE_MAPS_API_KEY === 'YOUR_GOOGLE_MAPS_API_KEY_HERE') {
+        document.getElementById('loading').innerHTML = `
+          <div class="error">
+            <h3>API Key Required</h3>
+            <p>Please add your Google Maps API key to the code.</p>
+            <p>Get a free API key from: <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">Google Cloud Console</a></p>
+          </div>
+        `;
+        return;
+      }
+
+      // Load Google Maps API
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initMap`;
+      script.async = true;
+      script.defer = true;
+      
       // Load MarkerClusterer
       const clusterScript = document.createElement('script');
       clusterScript.src = "https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js";
-      clusterScript.onload = function() {
-        // Load your map.js
-        const mapScript = document.createElement('script');
-        mapScript.src = "https://cdn.jsdelivr.net/gh/saratoffice/locations@v1.3/map.js";
-        document.head.appendChild(mapScript);
-      };
+      clusterScript.onload = () => document.head.appendChild(script);
+      
       document.head.appendChild(clusterScript);
-    };
-    document.head.appendChild(gmapScript);
-  }
-  
-  // Start loading when page is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadScripts);
-  } else {
-    loadScripts();
-  }
-</script>
+    }
+
+    // Start when page loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initialize);
+    } else {
+      initialize();
+    }
+  </script>
+</body>
+</html>
