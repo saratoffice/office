@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Sarat Office | Work Place Map</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Optional external CSS -->
+  <link rel="stylesheet" href="style.css">
 
   <style>
     body {
@@ -47,128 +50,15 @@
   <!-- Map -->
   <div id="map"></div>
 
-  <!-- MarkerClusterer -->
+  <!-- Marker Clusterer (must load before map.js uses it) -->
   <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
 
+  <!-- Your custom map logic -->
+  <script src="https://cdn.jsdelivr.net/gh/saratoffice/locations@v1.3/map.js"></script>
+
+  <!-- Google Maps loader -->
   <script>
-    /* =====================================================
-       GLOBAL VARIABLES (IMPORTANT: only once)
-    ===================================================== */
-    let map;
-    let markers = [];
-    let cluster;
-
-    /* =====================================================
-       SAMPLE LOCATION DATA
-       (Replace this with your real data or CDN JSON)
-    ===================================================== */
-    const locations = [
-      {
-        name: "Office A",
-        code: "A001",
-        block: "Block 1",
-        lat: 20.2961,
-        lng: 85.8245
-      },
-      {
-        name: "Office B",
-        code: "B002",
-        block: "Block 2",
-        lat: 20.9517,
-        lng: 85.0985
-      },
-      {
-        name: "Office C",
-        code: "C003",
-        block: "Block 1",
-        lat: 21.1458,
-        lng: 83.9701
-      }
-    ];
-
-    /* =====================================================
-       GOOGLE MAP CALLBACK (CALLED ONCE)
-    ===================================================== */
-    function initMap() {
-      console.log("initMap called ONCE");
-
-      map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: 20.8, lng: 84.5 },
-        zoom: 7
-      });
-
-      createMarkers(locations);
-      setupFilters();
-    }
-
-    /* =====================================================
-       CREATE MARKERS (NO RE-INIT, NO CLEAR BUG)
-    ===================================================== */
-    function createMarkers(data) {
-      // Clear previous markers safely
-      if (cluster) cluster.clearMarkers();
-      markers.forEach(m => m.setMap(null));
-      markers = [];
-
-      data.forEach(loc => {
-        const marker = new google.maps.Marker({
-          position: { lat: loc.lat, lng: loc.lng },
-          title: loc.name
-        });
-
-        marker.meta = loc; // attach data
-        markers.push(marker);
-      });
-
-      cluster = new markerClusterer.MarkerClusterer({
-        map,
-        markers
-      });
-
-      populateBlockList(data);
-    }
-
-    /* =====================================================
-       FILTER LOGIC (NON-DESTRUCTIVE)
-    ===================================================== */
-    function setupFilters() {
-      document.getElementById("blockSearch").addEventListener("input", filterMarkers);
-      document.getElementById("codeSearch").addEventListener("input", filterMarkers);
-      document.getElementById("nameSearch").addEventListener("input", filterMarkers);
-    }
-
-    function filterMarkers() {
-      const block = blockSearch.value.toLowerCase();
-      const code = codeSearch.value.toLowerCase();
-      const name = nameSearch.value.toLowerCase();
-
-      const filtered = locations.filter(loc =>
-        (!block || loc.block.toLowerCase().includes(block)) &&
-        (!code || loc.code.toLowerCase().includes(code)) &&
-        (!name || loc.name.toLowerCase().includes(name))
-      );
-
-      createMarkers(filtered);
-    }
-
-    /* =====================================================
-       BLOCK DROPDOWN
-    ===================================================== */
-    function populateBlockList(data) {
-      const list = document.getElementById("blockList");
-      list.innerHTML = "";
-
-      [...new Set(data.map(l => l.block))].forEach(block => {
-        const opt = document.createElement("option");
-        opt.value = block;
-        list.appendChild(opt);
-      });
-    }
-
-    /* =====================================================
-       GOOGLE MAPS LOADER (ONLY ONCE)
-    ===================================================== */
-    (function loadGoogleMaps() {
+    (function () {
       const script = document.createElement("script");
       script.src =
         "https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys&callback=initMap";
