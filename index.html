@@ -5,319 +5,595 @@
   <title>Sarat Office</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <style>
+ <style>
     /* =================================
-   INDEX PAGE – HERO SECTION
-   ================================= */
+       GLOBAL STYLES
+       ================================= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-.hero {
-  padding: 60px 30px;
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 40px;
-  background: #ffffff;
-  align-items: center;
-}
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f8fafc;
+    }
 
-/* LEFT TEXT */
-.hero-text h2 {
-  font-size: 36px;
-  margin-bottom: 20px;
-}
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
 
-.hero-text p {
-  font-size: 18px;
-  margin-bottom: 15px;
-  text-align: justify;   /* REQUIRED */
-  line-height: 1.7;
-  color: #333;
-}
+    /* =================================
+       HERO SECTION
+       ================================= */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      padding: 60px 5%;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      position: relative;
+      overflow: hidden;
+    }
 
-/* BUTTON */
-.hero-btn {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 14px 28px;
-  border-radius: 30px;
-  background: linear-gradient(135deg, #7CFF00, #0033cc);
-  color: #ffffff;
-  font-weight: bold;
-  text-decoration: none;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><rect width="60" height="60" fill="none"/><path d="M0,0 L60,60 M60,0 L0,60" stroke="rgba(124, 255, 0, 0.05)" stroke-width="1"/></svg>');
+    }
 
-.hero-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-}
+    .hero-content {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
 
-/* RIGHT IMAGE */
-.hero-image img {
-  width: 100%;
-  border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-}
+    .hero-text {
+      padding-right: 20px;
+    }
 
-/* ================================
-   RESPONSIVE
-   ================================ */
-@media (max-width: 900px) {
-  .hero {
-    grid-template-columns: 1fr;
-    padding: 40px 20px;
-  }
+    .hero-text h1 {
+      font-size: 3.2rem;
+      margin-bottom: 24px;
+      color: #1a202c;
+      background: linear-gradient(135deg, #0033cc, #7CFF00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
 
-  .hero-text h2 {
-    font-size: 28px;
-  }
+    .hero-text p {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      color: #4a5568;
+      line-height: 1.8;
+    }
 
-  .hero-text p {
-    text-align: left;
-  }
-}
+    .highlight {
+      background: linear-gradient(120deg, rgba(124, 255, 0, 0.15) 0%, rgba(124, 255, 0, 0) 100%);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
 
-/* ================================
-   ABOUT HIGHLIGHT SECTION
-   ================================ */
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 30px;
+      padding: 16px 32px;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #0033cc, #7CFF00);
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 51, 204, 0.2);
+    }
 
-.about-highlight {
-  background: #ffffff;
-  padding: 70px 20px;
-}
+    .hero-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 51, 204, 0.3);
+    }
 
-.about-wrapper {
-  max-width: 1200px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: 420px 1fr;
-  gap: 50px;
-  align-items: center;
-}
+    .hero-btn i {
+      transition: transform 0.3s ease;
+    }
 
-/* IMAGE */
-.about-photo {
-  text-align: center;
-}
+    .hero-btn:hover i {
+      transform: translateX(5px);
+    }
 
-.about-photo img {
-  width: 100%;
-  max-width: 360px;
-  border-radius: 50%;
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
-}
+    .hero-image {
+      position: relative;
+    }
 
-/* Hover pop-out */
-.about-photo img:hover {
-  transform: scale(1.06);
-  box-shadow: 0 18px 40px rgba(0,0,0,0.25);
-}
+    .hero-image img {
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      transition: transform 0.5s ease;
+    }
 
-/* SOCIAL ICONS */
-.about-social {
-  margin-top: 18px;
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
+    .hero-image:hover img {
+      transform: scale(1.02);
+    }
 
-.about-social a {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #8b5cf6, #4c1d95);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: bold;
-  transition: transform 0.3s ease;
-}
+    .image-badge {
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      background: white;
+      padding: 15px 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      font-weight: 600;
+      color: #0033cc;
+    }
 
-.about-social a:hover {
-  transform: translateY(-3px);
-}
+    /* =================================
+       ABOUT SECTION
+       ================================= */
+    .about-section {
+      padding: 100px 5%;
+      background: white;
+    }
 
-/* TEXT */
-.about-text h2 {
-  font-size: 28px;
-  margin-bottom: 18px;
-  letter-spacing: 1px;
-}
+    .about-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 60px;
+      align-items: start;
+    }
 
-.about-text p {
-  margin-bottom: 18px;
-  line-height: 1.7;
-  text-align: justify;   /* REQUIRED */
-  color: #333;
-}
+    .profile-card {
+      position: sticky;
+      top: 100px;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
 
-/* BUTTON */
-.about-btn {
-  display: inline-block;
-  margin-top: 15px;
-  padding: 14px 26px;
-  border-radius: 30px;
-  background: #6ee777;
-  color: #ffffff;
-  font-weight: bold;
-  text-decoration: none;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
+    .profile-card:hover {
+      transform: translateY(-10px);
+    }
 
-.about-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.2);
-}
+    .profile-image {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 25px;
+      border: 5px solid #f1f5f9;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
 
-/* ================================
-   RESPONSIVE
-   ================================ */
-@media (max-width: 900px) {
-  .about-wrapper {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #1a202c;
+    }
 
-  .about-text p {
-    text-align: left;
-  }
-}
+    .profile-title {
+      color: #7CFF00;
+      font-weight: 600;
+      margin-bottom: 25px;
+    }
 
-    
+    .social-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 25px;
+    }
+
+    .social-link {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+      color: #4a5568;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+      background: linear-gradient(135deg, #0033cc, #7CFF00);
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .about-content {
+      padding-left: 20px;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      color: #1a202c;
+      position: relative;
+      padding-bottom: 15px;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #7CFF00, #0033cc);
+      border-radius: 2px;
+    }
+
+    .about-text p {
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+      color: #4a5568;
+      line-height: 1.8;
+    }
+
+    .quote {
+      padding: 30px;
+      margin: 40px 0;
+      background: linear-gradient(135deg, rgba(124, 255, 0, 0.05), rgba(0, 51, 204, 0.05));
+      border-left: 5px solid #7CFF00;
+      border-radius: 10px;
+      font-style: italic;
+      font-size: 1.2rem;
+    }
+
+    .about-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+      padding: 16px 32px;
+      border-radius: 50px;
+      background: #6ee777;
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(110, 231, 119, 0.2);
+    }
+
+    .about-btn:hover {
+      background: #5cd565;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(110, 231, 119, 0.3);
+    }
+
+    /* =================================
+       RESPONSIVE DESIGN
+       ================================= */
+    @media (max-width: 1024px) {
+      .hero-content,
+      .about-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      
+      .hero-text {
+        padding-right: 0;
+        text-align: center;
+      }
+      
+      .hero-text h1 {
+        font-size: 2.8rem;
+      }
+      
+      .about-content {
+        padding-left: 0;
+      }
+      
+      .profile-card {
+        position: static;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        padding: 40px 5%;
+        min-height: auto;
+      }
+      
+      .hero-text h1 {
+        font-size: 2.2rem;
+      }
+      
+      .hero-text p {
+        font-size: 1rem;
+      }
+      
+      .section-title {
+        font-size: 2rem;
+      }
+      
+      .about-section {
+        padding: 60px 5%;
+      }
+      
+      .image-badge {
+        position: relative;
+        bottom: 0;
+        right: 0;
+        margin-top: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-text h1 {
+        font-size: 1.8rem;
+      }
+      
+      .hero-btn,
+      .about-btn {
+        padding: 14px 24px;
+        font-size: 1rem;
+      }
+      
+      .social-link {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+    }
+
+    /* =================================
+       ANIMATIONS
+       ================================= */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-content,
+    .about-container {
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    /* =================================
+       FEATURES GRID (Optional addition)
+       ================================= */
+    .features {
+      padding: 80px 5%;
+      background: #f1f5f9;
+      text-align: center;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 40px auto 0;
+    }
+
+    .feature-card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      color: #0033cc;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      margin-bottom: 15px;
+      color: #1a202c;
+    }
   </style>
 </head>
 
 <body>
 
-<div id="site-header"></div>
-
-
-<section class="hero">
-
-  <!-- LEFT CONTENT -->
-  <div class="hero-text">
-    <h2>Welcome to Sarat Office</h2>
-
-    <p>
-      At Sarat Office, we are dedicated to making valuable information accessible to everyone.
-      Our blog serves as a comprehensive resource for individuals seeking PDF versions of
-      government documents, forms, and reports. We understand that navigating official channels
-      can be time-consuming, so we've compiled a curated collection of essential documents to
-      streamline your search.
-    </p>
-
-    <p>
-      We highlight other useful websites offering reliable information on various topics, from
-      legal resources to educational materials. Whether you're looking for important policy
-      papers, public health guidelines, or forms for government services, you'll find them here.
-    </p>
-
-    <a href="about-me.html" class="hero-btn">So, Who Am I?</a>
-  </div>
-
-  <!-- RIGHT IMAGE -->
-  <div class="hero-image">
-    <img src="assets/images/Sub-Collector-Balangir.jpeg" alt="Sarat Office" loading="lazy">
-  </div>
-
-</section>
-
-
-<section class="about-highlight">
-
-  <div class="about-wrapper">
-
-    <!-- LEFT: IMAGE + SOCIAL -->
-    <div class="about-photo">
-      <img src="assets/images/Profile.jpg" alt="Sarat Rout" loading="lazy">
-
-      <div class="about-social">
-        <a href="https://www.facebook.com/saratoffice/" title="Facebook">f</a>
-        <a href="https://in.pinterest.com/saratoffice/" title="Pinterest">P</a>
-        <a href="https://x.com/saratoffice" title="X">X</a>
-        <a href="https://www.instagram.com/saratoffice" title="Instagram">I</a>
-        <a href="https://www.youtube.com/@saratoffice" title="YouTube">Y</a>
-        <a href="https://www.linkedin.com/in/routsaratkumar/" title="LinkedIn">in</a>
-        <a href="https://github.com/saratoffice" title="GitHub">GH</a>
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>Welcome to Sarat Office</h1>
+        
+        <p>
+          At <span class="highlight">Sarat Office</span>, we are dedicated to making valuable information accessible to everyone.
+          Our blog serves as a comprehensive resource for individuals seeking PDF versions of
+          government documents, forms, and reports.
+        </p>
+        
+        <p>
+          We understand that navigating official channels can be time-consuming, so we've compiled
+          a curated collection of essential documents to streamline your search.
+        </p>
+        
+        <p>
+          We highlight other useful websites offering reliable information on various topics, from
+          legal resources to educational materials.
+        </p>
+        
+        <a href="about-me.html" class="hero-btn">
+          So, Who Am I?
+          <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+      
+      <div class="hero-image">
+        <img src="assets/images/Sub-Collector-Balangir.jpeg" alt="Sarat Office" loading="lazy">
+        <div class="image-badge">
+          <i class="fas fa-file-pdf"></i> PDF Resources Hub
+        </div>
       </div>
     </div>
+  </section>
 
-    <!-- RIGHT: TEXT -->
-    <div class="about-text">
-      <h2>A LIFE BETWEEN DUTY AND DEVOTION:</h2>
-
-      <p>
-        Nature, to me, is a sacred reflection of the divine — a living expression of beauty,
-        balance, and higher purpose. In its quiet resilience and boundless generosity, I find
-        spiritual grounding. Every tree preserved, every plant nurtured, deepens my connection
-        to something greater than myself. Rather than take from nature, I strive to care for it —
-        believing that true reverence lies not in ritual, but in responsibility.
-      </p>
-
-      <p>
-        Knowledge, too, is a sacred tool — not just to inform, but to elevate. When used with
-        intention, it unlocks the potential to inspire, transform systems, and create meaningful
-        change in the world around us.
-      </p>
-
-      <p>
-        My approach to public service is rooted in quiet, consistent action — in refining the
-        unnoticed details, solving everyday challenges, and respecting the dignity of every
-        living being. Governance, for me, is not a position of power but a practice of purpose.
-      </p>
-
-      <a href="about-me.html" class="about-btn">Know More About Me</a>
+  <!-- OPTIONAL FEATURES SECTION (Uncomment if needed) -->
+  <!--
+  <section class="features">
+    <h2 class="section-title">What We Offer</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-file-pdf"></i>
+        </div>
+        <h3>Government Documents</h3>
+        <p>Curated collection of essential government PDFs and forms</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-link"></i>
+        </div>
+        <h3>Useful Resources</h3>
+        <p>Verified links to reliable information sources</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-search"></i>
+        </div>
+        <h3>Easy Navigation</h3>
+        <p>Streamlined search for time-saving access</p>
+      </div>
     </div>
+  </section>
+  -->
 
-  </div>
+  <!-- ABOUT SECTION -->
+  <section class="about-section">
+    <div class="about-container">
+      <div class="profile-card">
+        <img src="assets/images/Profile.jpg" alt="Sarat Rout" class="profile-image" loading="lazy">
+        <h3 class="profile-name">Sarat Rout</h3>
+        <div class="profile-title">Public Servant & Information Curator</div>
+        
+        <div class="social-links">
+          <a href="https://www.facebook.com/saratoffice/" class="social-link" title="Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://in.pinterest.com/saratoffice/" class="social-link" title="Pinterest">
+            <i class="fab fa-pinterest-p"></i>
+          </a>
+          <a href="https://x.com/saratoffice" class="social-link" title="X">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="https://www.instagram.com/saratoffice" class="social-link" title="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://www.youtube.com/@saratoffice" class="social-link" title="YouTube">
+            <i class="fab fa-youtube"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/routsaratkumar/" class="social-link" title="LinkedIn">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a href="https://github.com/saratoffice" class="social-link" title="GitHub">
+            <i class="fab fa-github"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="about-content">
+        <h2 class="section-title">A Life Between Duty and Devotion</h2>
+        
+        <div class="about-text">
+          <p>
+            Nature, to me, is a sacred reflection of the divine — a living expression of beauty,
+            balance, and higher purpose. In its quiet resilience and boundless generosity, I find
+            spiritual grounding.
+          </p>
+          
+          <div class="quote">
+            "Every tree preserved, every plant nurtured, deepens my connection to something greater than myself."
+          </div>
+          
+          <p>
+            Rather than take from nature, I strive to care for it — believing that true reverence lies
+            not in ritual, but in responsibility.
+          </p>
+          
+          <p>
+            Knowledge, too, is a sacred tool — not just to inform, but to elevate. When used with
+            intention, it unlocks the potential to inspire, transform systems, and create meaningful
+            change in the world around us.
+          </p>
+          
+          <p>
+            My approach to public service is rooted in quiet, consistent action — in refining the
+            unnoticed details, solving everyday challenges, and respecting the dignity of every
+            living being. Governance, for me, is not a position of power but a practice of purpose.
+          </p>
+          
+          <a href="about-me.html" class="about-btn">
+            Know More About Me
+            <i class="fas fa-user-circle"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-</section>  
-<div id="site-footer"></div>
+  <script>
+    // Simple fade-in animation on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
 
-
-<script>
-/* Load Header */
-fetch('header.html')
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('site-header').innerHTML = html;
-
-    /* Load Navigation */
-    fetch('nav.html')
-      .then(res => res.text())
-      .then(nav => {
-        document.getElementById('main-nav').innerHTML = nav;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
       });
-  });
+    }, observerOptions);
 
-/* Load Footer */
-fetch('footer.html')
-  .then(res => res.text())
-  .then(footer => {
-    document.getElementById('site-footer').innerHTML = footer;
-  });
-</script>
-<script>
-/* ===== MOBILE MENU LOGIC ===== */
-document.addEventListener("click", function (e) {
+    // Observe elements for animation
+    document.addEventListener('DOMContentLoaded', () => {
+      const elements = document.querySelectorAll('.hero-content, .about-container, .feature-card');
+      elements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+      });
+    });
+  </script>
 
-  /* Toggle main menu */
-  if (e.target.classList.contains("menu-toggle")) {
-    const menu = document.querySelector(".menu");
-    if (menu) {
-      menu.classList.toggle("open");
-    }
-  }
-
-  /* Toggle dropdowns on mobile */
-  const dropdownLink = e.target.closest(".dropdown > a");
-  if (dropdownLink && window.innerWidth <= 900) {
-    e.preventDefault();
-    dropdownLink.parentElement.classList.toggle("open");
-  }
-
-});
-</script>
 </body>
 </html>
