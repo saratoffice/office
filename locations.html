@@ -1,558 +1,141 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Sarat Office | Work Place Map</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
+<!-- Container -->
+<div class="map-controls">
+  <input id="blockSearch" list="blockList" type="text" placeholder="Type / Select Block Name" />
+  <datalist id="blockList"></datalist>
+  <input id="codeSearch" type="text" placeholder="Search Work Place Code" />
+  <input id="nameSearch" type="text" placeholder="Search Work Place Name" />
+</div>
+
+<div id="map" style="width: 100%; height: 500px; background: #eee;"></div>
+
+<style>
+.map-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.map-controls input { padding: 8px; font-size: 14px; min-width: 200px; border: 1px solid #ccc; border-radius: 4px; }
+#map { border-radius: 8px; margin-top: 10px; }
+</style>
+
+<!-- Load Google Maps & Marker Clusterer -->
+<!-- Replace YOUR_API_KEY with your actual key -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys"></script>
+<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+
+<script>
+(function() {
+  let map, markerCluster;
+  let markers = [];
+  const blockColors = {};
+  const primaryColors = ["#d32f2f", "#1976d2", "#fbc02d"];
+  let colorIndex = 0;
+
+  function getBlockColor(block) {
+    if (!blockColors[block]) {
+      blockColors[block] = primaryColors[colorIndex % primaryColors.length];
+      colorIndex++;
     }
+    return blockColors[block];
+  }
 
-    .map-controls {
-      padding: 10px;
-      background: #f5f5f5;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      border-bottom: 1px solid #ddd;
-      align-items: center;
-    }
+  function getCategoryLetter(cat) {
+    const map = { "PPC": "P", "Rice Mill": "M", "FPS": "F", "Godown": "G" };
+    return map[cat] || "?";
+  }
 
-    .map-controls input, .map-controls select {
-      padding: 8px;
-      font-size: 14px;
-      width: 180px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-
-    .map-controls button {
-      padding: 8px 16px;
-      background: #4285F4;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .map-controls button:hover {
-      background: #3367D6;
-    }
-
-    .map-controls button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-
-    #map {
-      width: 100%;
-      height: calc(100vh - 60px);
-    }
-
-    #loading {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 20px 30px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      z-index: 1000;
-      text-align: center;
-    }
-
-    .error {
-      color: red;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .info-panel {
-      position: absolute;
-      top: 70px;
-      right: 10px;
-      background: white;
-      padding: 15px;
-      border-radius: 5px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      z-index: 100;
-      max-width: 300px;
-      display: none;
-    }
-
-    .stats {
-      margin: 10px 0;
-      padding: 10px;
-      background: #f8f9fa;
-      border-radius: 4px;
-    }
-
-    @media (max-width: 768px) {
-      .map-controls {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      
-      .map-controls input, .map-controls select, .map-controls button {
-        width: 100%;
-      }
-    }
-  </style>
-  
-  <!-- Load MarkerClusterer CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/@googlemaps/markerclusterer/dist/styles.min.css">
-</head>
-
-<body>
-  <div id="loading">
-    <div>Loading map...</div>
-    <div id="loadingMessage" style="font-size: 12px; color: #666; margin-top: 10px;"></div>
-  </div>
-  
-  <div class="map-controls" style="display: none;">
-    <select id="blockFilter">
-      <option value="">All Blocks</option>
-      <!-- Blocks will be populated dynamically -->
-    </select>
-    
-    <select id="typeFilter">
-      <option value="">All Types</option>
-      <!-- Types will be populated dynamically -->
-    </select>
-    
-    <input type="text" id="nameSearch" placeholder="Search by name or code">
-    
-    <button id="clearFilters">Clear Filters</button>
-    <button id="refreshData" title="Refresh data from Google Sheet">Refresh</button>
-    
-    <div class="stats">
-      <span id="locationCount">0</span> locations
-    </div>
-  </div>
-
-  <div class="info-panel" id="infoPanel">
-    <div id="infoContent"></div>
-  </div>
-
-  <div id="map" style="display: none;"></div>
-
-  <script>
-    // Configuration - USE YOUR API KEY HERE
-    const GOOGLE_MAPS_API_KEY = 'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys';
-    const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1HI5Wjjwo5OObDaS4W7QaOVc_RcqgREu8pHEQxSjYhUg/gviz/tq?tqx=out:json';
-    
-    // Global variables
-    let map;
-    let markers = [];
-    let markerCluster;
-    let allLocations = [];
-    let infoWindow;
-
-    // Color coding for different types
-    const typeColors = {
-      'Office': '#4285F4',
-      'Factory': '#EA4335',
-      'Warehouse': '#34A853',
-      'Store': '#FBBC05',
-      'Branch': '#8B5CF6',
-      'default': '#5F6368'
+  function linePin(color) {
+    return {
+      path: "M12 1C8.1 1 5 4.1 5 8.2c0 3.7 3.4 6.8 6 9.3V28h2V17.5c2.6-2.5 6-5.6 6-9.3C19 4.1 15.9 1 12 1z",
+      fillColor: color,
+      fillOpacity: 1,
+      strokeColor: "#000",
+      strokeWeight: 1,
+      scale: 1.2,
+      labelOrigin: new google.maps.Point(12, 9)
     };
+  }
 
-    // Default fallback data
-    const fallbackLocations = [
-      {
-        name: "Sarat Office - Delhi",
-        lat: 28.6139,
-        lng: 77.2090,
-        code: "DEL001",
-        block: "North Block",
-        type: "Office",
-        address: "New Delhi, India",
-        contact: "011-12345678",
-        manager: "Rajesh Kumar"
-      },
-      {
-        name: "Sarat Office - Mumbai",
-        lat: 19.0760,
-        lng: 72.8777,
-        code: "MUM001",
-        block: "West Block",
-        type: "Office",
-        address: "Mumbai, Maharashtra",
-        contact: "022-98765432",
-        manager: "Priya Sharma"
-      },
-      {
-        name: "Sarat Warehouse - Bangalore",
-        lat: 12.9716,
-        lng: 77.5946,
-        code: "BLR001",
-        block: "South Block",
-        type: "Warehouse",
-        address: "Bangalore, Karnataka",
-        contact: "080-87654321",
-        manager: "Arun Patel"
-      }
-    ];
+  function initMap() {
+    const mapEl = document.getElementById("map");
+    if (!mapEl) return;
 
-    function initMap() {
-      updateLoadingMessage("Initializing map...");
-      
-      map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 5,
-        center: { lat: 20.5937, lng: 78.9629 },
-        mapTypeId: "roadmap",
-        mapTypeControl: true,
-        streetViewControl: true,
-        fullscreenControl: true,
-        zoomControl: true,
-      });
+    map = new google.maps.Map(mapEl, {
+      zoom: 10,
+      center: { lat: 20.97, lng: 83.53 },
+      gestureHandling: "greedy",
+      mapTypeControl: false
+    });
 
-      // Initialize info window
-      infoWindow = new google.maps.InfoWindow();
-      
-      // Load data from Google Sheet
-      loadDataFromGoogleSheet();
-    }
+    const sheetURL = "https://docs.google.com/spreadsheets/d/1HI5Wjjwo5OObDaS4W7QaOVc_RcqgREu8pHEQxSjYhUg/gviz/tq?tqx=out:json";
 
-    function loadDataFromGoogleSheet() {
-      updateLoadingMessage("Fetching data from Google Sheet...");
-      
-      fetch(GOOGLE_SHEET_URL)
-        .then(response => response.text())
-        .then(text => {
-          // Remove the unwanted characters from the response
-          const jsonStr = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
-          return JSON.parse(jsonStr);
-        })
-        .then(data => {
-          const locations = parseSheetData(data);
-          if (locations && locations.length > 0) {
-            allLocations = locations;
-            addMarkersToMap(allLocations);
-            setupControls();
-            showMap();
-            updateLoadingMessage(`Loaded ${locations.length} locations successfully`);
-          } else {
-            throw new Error('No valid locations found in sheet');
-          }
-        })
-        .catch(error => {
-          console.error('Error loading Google Sheet data:', error);
-          updateLoadingMessage(`Error: ${error.message}. Using fallback data...`);
-          useFallbackData();
-        });
-    }
+    fetch(sheetURL)
+      .then(res => res.text())
+      .then(text => {
+        const json = JSON.parse(text.substring(47).slice(0, -2));
+        const rows = json.table.rows;
+        const infoWindow = new google.maps.InfoWindow();
+        const blockSet = new Set();
 
-    function parseSheetData(data) {
-      if (!data.table || !data.table.rows) {
-        console.error('Invalid sheet data structure:', data);
-        return null;
-      }
+        rows.forEach(r => {
+          if (!r.c || !r.c[3] || !r.c[4]) return;
 
-      const locations = [];
-      const rows = data.table.rows;
-      
-      // Assuming first row is headers
-      // Let's try to identify column indices
-      const cols = data.table.cols || [];
-      console.log('Available columns:', cols.map(col => col.label));
-      
-      // Process each row (skip header row if needed)
-      for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        const cells = row.c;
-        
-        if (!cells || cells.length < 2) continue;
-        
-        try {
-          // Try to extract data - adjust indices based on your sheet structure
-          const location = {
-            name: cells[0] ? cells[0].v : '',
-            code: cells[1] ? cells[1].v : '',
-            lat: parseFloat(cells[2] ? cells[2].v : 0),
-            lng: parseFloat(cells[3] ? cells[3].v : 0),
-            block: cells[4] ? cells[4].v : '',
-            type: cells[5] ? cells[5].v : 'Office',
-            address: cells[6] ? cells[6].v : '',
-            contact: cells[7] ? cells[7].v : '',
-            manager: cells[8] ? cells[8].v : '',
-            notes: cells[9] ? cells[9].v : ''
-          };
-          
-          // Only add if we have valid coordinates
-          if (location.lat && location.lng) {
-            locations.push(location);
-          }
-        } catch (e) {
-          console.warn('Error parsing row', i, ':', e);
-        }
-      }
-      
-      console.log(`Parsed ${locations.length} locations from sheet`);
-      return locations;
-    }
+          const block = r.c[0]?.v || "Unknown";
+          const name  = r.c[1]?.v || "No Name";
+          const code  = r.c[2]?.v || "N/A";
+          const lat   = parseFloat(r.c[3].v);
+          const lng   = parseFloat(r.c[4].v);
+          const cat   = r.c[5]?.v || "";
 
-    function addMarkersToMap(locations) {
-      // Clear existing markers
-      markers.forEach(marker => marker.setMap(null));
-      markers = [];
-      
-      if (markerCluster) {
-        markerCluster.clearMarkers();
-      }
+          blockSet.add(block);
 
-      locations.forEach(location => {
-        const markerColor = typeColors[location.type] || typeColors.default;
-        
-        const marker = new google.maps.Marker({
-          position: { lat: location.lat, lng: location.lng },
-          map: map,
-          title: `${location.name} (${location.code})`,
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 10,
-            fillColor: markerColor,
-            fillOpacity: 0.9,
-            strokeWeight: 2,
-            strokeColor: '#FFFFFF'
-          },
-          animation: google.maps.Animation.DROP
-        });
-
-        // Create info window content
-        const infoContent = `
-          <div style="padding: 10px; min-width: 250px; max-width: 300px;">
-            <h3 style="margin: 0 0 10px 0; color: ${markerColor};">${location.name}</h3>
-            <div style="margin-bottom: 10px;">
-              <strong>Code:</strong> ${location.code}<br>
-              <strong>Block:</strong> ${location.block || 'N/A'}<br>
-              <strong>Type:</strong> ${location.type || 'Office'}<br>
-              ${location.manager ? `<strong>Manager:</strong> ${location.manager}<br>` : ''}
-              ${location.contact ? `<strong>Contact:</strong> ${location.contact}<br>` : ''}
-            </div>
-            ${location.address ? `<div style="margin: 10px 0; padding: 8px; background: #f5f5f5; border-radius: 4px;">
-              <strong>Address:</strong><br>${location.address}
-            </div>` : ''}
-            ${location.notes ? `<div style="margin-top: 10px; font-style: italic; color: #666;">
-              ${location.notes}
-            </div>` : ''}
-            <div style="margin-top: 15px; font-size: 12px; color: #999;">
-              Lat: ${location.lat.toFixed(6)}, Lng: ${location.lng.toFixed(6)}
-            </div>
-          </div>
-        `;
-
-        marker.addListener("click", () => {
-          infoWindow.setContent(infoContent);
-          infoWindow.open(map, marker);
-          
-          // Center map on marker
-          map.panTo(marker.getPosition());
-          
-          // Bounce animation
-          marker.setAnimation(google.maps.Animation.BOUNCE);
-          setTimeout(() => {
-            marker.setAnimation(null);
-          }, 1500);
-        });
-
-        markers.push(marker);
-      });
-
-      // Create marker cluster
-      if (window.markerClusterer) {
-        markerCluster = new markerClusterer.MarkerClusterer({ 
-          map, 
-          markers,
-          renderer: {
-            render: ({ count, position }) => {
-              const size = Math.min(10 + Math.sqrt(count) * 5, 40);
-              return new google.maps.Marker({
-                position,
-                icon: {
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: size,
-                  fillColor: "#4285F4",
-                  fillOpacity: 0.8,
-                  strokeWeight: 3,
-                  strokeColor: "#FFFFFF"
-                },
-                label: {
-                  text: String(count),
-                  color: "#FFFFFF",
-                  fontSize: "14px",
-                  fontWeight: "bold"
-                }
-              });
-            }
-          }
-        });
-      }
-      
-      // Update location count
-      document.getElementById('locationCount').textContent = locations.length;
-      
-      // Fit map bounds to show all markers
-      if (markers.length > 0) {
-        const bounds = new google.maps.LatLngBounds();
-        markers.forEach(marker => bounds.extend(marker.getPosition()));
-        map.fitBounds(bounds, { padding: 50 });
-        
-        // Don't zoom in too much if only one marker
-        if (markers.length === 1) {
-          google.maps.event.addListenerOnce(map, 'bounds_changed', function() {
-            if (this.getZoom() > 15) {
-              this.setZoom(15);
-            }
+          const marker = new google.maps.Marker({
+            position: { lat, lng },
+            icon: linePin(getBlockColor(block)),
+            label: { text: getCategoryLetter(cat), color: "white", fontWeight: "bold", fontSize: "11px" },
+            title: name
           });
-        }
-      }
-    }
 
-    function setupControls() {
-      // Populate block filter
-      const blockFilter = document.getElementById('blockFilter');
-      const typeFilter = document.getElementById('typeFilter');
-      
-      const blocks = [...new Set(allLocations.map(loc => loc.block).filter(Boolean).sort())];
-      const types = [...new Set(allLocations.map(loc => loc.type).filter(Boolean).sort())];
-      
-      // Add block options
-      blocks.forEach(block => {
-        const option = document.createElement('option');
-        option.value = block;
-        option.textContent = block;
-        blockFilter.appendChild(option);
-      });
-      
-      // Add type options
-      types.forEach(type => {
-        const option = document.createElement('option');
-        option.value = type;
-        option.textContent = type;
-        option.style.color = typeColors[type] || '#000';
-        typeFilter.appendChild(option);
+          marker.meta = { block: block.toUpperCase(), code: String(code).toUpperCase(), name: name.toUpperCase() };
+
+          marker.addListener("click", () => {
+            infoWindow.setContent(`<strong>${name}</strong><br>Code: ${code}<br>Block: ${block}<br>Category: ${cat}`);
+            infoWindow.open(map, marker);
+          });
+
+          markers.push(marker);
+        });
+
+        // Initialize modern MarkerClusterer
+        markerCluster = new markerClusterer.MarkerClusterer({ map, markers });
+        
+        // Populate Datalist
+        const list = document.getElementById("blockList");
+        [...blockSet].sort().forEach(b => {
+          const opt = document.createElement("option");
+          opt.value = b;
+          list.appendChild(opt);
+        });
       });
 
-      // Setup event listeners
-      blockFilter.addEventListener('change', filterMarkers);
-      typeFilter.addEventListener('change', filterMarkers);
-      document.getElementById('nameSearch').addEventListener('input', filterMarkers);
-      document.getElementById('clearFilters').addEventListener('click', clearFilters);
-      document.getElementById('refreshData').addEventListener('click', refreshData);
-    }
+    // Filtering Logic
+    const filters = ["blockSearch", "codeSearch", "nameSearch"];
+    filters.forEach(id => {
+      document.getElementById(id).addEventListener("input", () => {
+        const bV = document.getElementById("blockSearch").value.toUpperCase();
+        const cV = document.getElementById("codeSearch").value.toUpperCase();
+        const nV = document.getElementById("nameSearch").value.toUpperCase();
 
-    function filterMarkers() {
-      const blockValue = document.getElementById('blockFilter').value;
-      const typeValue = document.getElementById('typeFilter').value;
-      const searchValue = document.getElementById('nameSearch').value.toLowerCase();
-      
-      const filteredLocations = allLocations.filter(location => {
-        // Filter by block
-        if (blockValue && location.block !== blockValue) return false;
+        markers.forEach(m => {
+          const match = m.meta.block.includes(bV) && m.meta.code.includes(cV) && m.meta.name.includes(nV);
+          m.setMap(match ? map : null);
+        });
         
-        // Filter by type
-        if (typeValue && location.type !== typeValue) return false;
-        
-        // Filter by search term (name or code)
-        if (searchValue) {
-          const nameMatch = location.name && location.name.toLowerCase().includes(searchValue);
-          const codeMatch = location.code && location.code.toLowerCase().includes(searchValue);
-          if (!nameMatch && !codeMatch) return false;
-        }
-        
-        return true;
+        // Refresh clusters after filtering
+        markerCluster.clearMarkers();
+        markerCluster.addMarkers(markers.filter(m => m.getMap() !== null));
       });
-      
-      addMarkersToMap(filteredLocations);
-      
-      // Close any open info window
-      infoWindow.close();
-    }
-    
-    function clearFilters() {
-      document.getElementById('blockFilter').value = '';
-      document.getElementById('typeFilter').value = '';
-      document.getElementById('nameSearch').value = '';
-      addMarkersToMap(allLocations);
-      infoWindow.close();
-    }
-    
-    function refreshData() {
-      document.getElementById('refreshData').disabled = true;
-      document.getElementById('refreshData').textContent = 'Refreshing...';
-      updateLoadingMessage("Refreshing data from Google Sheet...");
-      
-      loadDataFromGoogleSheet();
-      
-      setTimeout(() => {
-        document.getElementById('refreshData').disabled = false;
-        document.getElementById('refreshData').textContent = 'Refresh';
-      }, 3000);
-    }
+    });
+  }
 
-    function useFallbackData() {
-      console.log('Using fallback data');
-      allLocations = fallbackLocations;
-      addMarkersToMap(allLocations);
-      setupControls();
-      showMap();
-    }
-
-    function showMap() {
-      document.getElementById('loading').style.display = 'none';
-      document.querySelector('.map-controls').style.display = 'flex';
-      document.getElementById('map').style.display = 'block';
-    }
-    
-    function updateLoadingMessage(message) {
-      const loadingMessage = document.getElementById('loadingMessage');
-      if (loadingMessage) {
-        loadingMessage.textContent = message;
-      }
-    }
-
-    // Load everything
-    function initialize() {
-      if (!GOOGLE_MAPS_API_KEY || GOOGLE_MAPS_API_KEY.includes('YOUR_GOOGLE_MAPS_API_KEY_HERE')) {
-        document.getElementById('loading').innerHTML = `
-          <div class="error">
-            <h3>API Key Required</h3>
-            <p>Please add your Google Maps API key to the code.</p>
-            <p>Get a free API key from: <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">Google Cloud Console</a></p>
-          </div>
-        `;
-        return;
-      }
-
-      // Load Google Maps API first
-      const gmapScript = document.createElement('script');
-      gmapScript.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initMap&libraries=places`;
-      gmapScript.async = true;
-      gmapScript.defer = true;
-      
-      // Load MarkerClusterer after Google Maps
-      gmapScript.onload = () => {
-        const clusterScript = document.createElement('script');
-        clusterScript.src = "https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js";
-        document.head.appendChild(clusterScript);
-      };
-      
-      document.head.appendChild(gmapScript);
-    }
-
-    // Start when page loads
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initialize);
-    } else {
-      initialize();
-    }
-  </script>
-</body>
-</html>
+  // Load map on DOM ready
+  if (document.readyState === "complete") { initMap(); } 
+  else { window.addEventListener("load", initMap); }
+})();
+</script>
