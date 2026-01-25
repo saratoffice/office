@@ -1,1300 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sarat Office | Work Place Map</title>
-    
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-          crossorigin=""/>
-    
-    <!-- Marker Cluster CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-    
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 15px;
-        }
-        
-        .header {
-            background: white;
-            border-radius: 15px;
-            padding: 20px 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-            border-left: 6px solid #2c5aa0;
-        }
-        
-        .header h1 {
-            color: #2c3e50;
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .header h1 i {
-            color: #2c5aa0;
-            font-size: 1.6rem;
-        }
-        
-        .header p {
-            color: #5d6d7e;
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-        
-        /* Controls Panel */
-        .controls-panel {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        }
-        
-        .controls-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #eaeaea;
-        }
-        
-        .controls-header h2 {
-            color: #2c3e50;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .controls-header h2 i {
-            color: #2c5aa0;
-        }
-        
-        .stats-badge {
-            background: linear-gradient(135deg, #2c5aa0 0%, #3498db 100%);
-            color: white;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            box-shadow: 0 3px 10px rgba(44, 90, 160, 0.2);
-        }
-        
-        .controls-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        
-        .control-group label {
-            color: #2c3e50;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .control-group label i {
-            color: #2c5aa0;
-            width: 18px;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-        
-        .control-group input,
-        .control-group select {
-            padding: 12px 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            background: white;
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
-        
-        .control-group input:focus,
-        .control-group select:focus {
-            outline: none;
-            border-color: #2c5aa0;
-            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: inherit;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #2c5aa0 0%, #3498db 100%);
-            color: white;
-            box-shadow: 0 3px 10px rgba(44, 90, 160, 0.2);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(44, 90, 160, 0.3);
-        }
-        
-        .btn-secondary {
-            background: #f8f9fa;
-            color: #2c3e50;
-            border: 2px solid #e1e5e9;
-        }
-        
-        .btn-secondary:hover {
-            background: #e9ecef;
-            border-color: #2c5aa0;
-        }
-        
-        /* Map Container */
-        .map-container {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-            height: 600px;
-            position: relative;
-        }
-        
-        #map {
-            width: 100%;
-            height: 100%;
-            border-radius: 15px;
-        }
-        
-        /* Legend */
-        .legend {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            max-width: 280px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .legend-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eaeaea;
-        }
-        
-        .legend-header h3 {
-            color: #2c3e50;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-        
-        .legend-content {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .legend-text {
-            color: #2c3e50;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-        
-        /* Footer Stats */
-        .footer-stats {
-            background: white;
-            border-radius: 15px;
-            padding: 15px 25px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        
-        .stat-card {
-            background: linear-gradient(135deg, #2c5aa0 0%, #3498db 100%);
-            padding: 20px;
-            border-radius: 12px;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            box-shadow: 0 5px 15px rgba(44, 90, 160, 0.2);
-            transition: transform 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-3px);
-        }
-        
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-        
-        .stat-info h3 {
-            font-size: 0.95rem;
-            margin-bottom: 5px;
-            opacity: 0.9;
-            font-weight: 500;
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            line-height: 1;
-        }
-        
-        /* Loading Screen */
-        #loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #2c5aa0 0%, #3498db 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
-        
-        .loader {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 20px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .loading-text {
-            color: white;
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-        
-        .loading-subtext {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.95rem;
-        }
-        
-        /* Error Message */
-        .error-message {
-            background: rgba(231, 76, 60, 0.95);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin: 15px;
-            display: none;
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .error-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-        
-        .error-header i {
-            font-size: 1.5rem;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .container {
-                padding: 12px;
-            }
-            
-            .map-container {
-                height: 550px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.5rem;
-            }
-            
-            .controls-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .map-container {
-                height: 450px;
-            }
-            
-            .legend {
-                position: relative;
-                bottom: auto;
-                right: auto;
-                max-width: 100%;
-                margin: 15px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .header {
-                padding: 15px;
-            }
-            
-            .header h1 {
-                font-size: 1.3rem;
-            }
-            
-            .controls-panel {
-                padding: 15px;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .map-container {
-                height: 400px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stat-card {
-                padding: 15px;
-            }
-        }
-        
-        /* Custom Marker Styles */
-        .custom-div-icon {
-            background: transparent;
-            border: none;
-        }
-        
-        .custom-marker {
-            width: 35px;
-            height: 35px;
-            background: #2c5aa0;
-            border: 2px solid white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .custom-marker:hover {
-            transform: scale(1.1);
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
-        }
-        
-        .cluster-marker {
-            background: #2c5aa0;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            border: 3px solid white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-        
-        /* Location Search Highlight */
-        .location-highlight {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Sarat Office | Work Place Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .map-controls {
+      padding: 10px;
+      background: #f5f5f5;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .map-controls input {
+      padding: 8px;
+      font-size: 14px;
+      width: 200px;
+    }
+
+    #map {
+      width: 100%;
+      height: calc(100vh - 60px);
+    }
+
+    #loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .error {
+      color: red;
+      padding: 20px;
+      text-align: center;
+    }
+  </style>
+  
+  <!-- Load MarkerClusterer CSS (optional) -->
+  <link rel="stylesheet" href="https://unpkg.com/@googlemaps/markerclusterer/dist/styles.min.css">
 </head>
+
 <body>
-    <!-- Loading Screen -->
-    <div id="loading">
-        <div class="loader"></div>
-        <div class="loading-text">Loading Workplace Map</div>
-        <div class="loading-subtext">Centered on Bolangir District</div>
-    </div>
+  <div id="loading">Loading map...</div>
+  
+  <div class="map-controls" style="display: none;">
+    <input list="blockList" id="blockSearch" placeholder="Type / Select Block Name">
+    <datalist id="blockList"></datalist>
+    <input type="text" id="codeSearch" placeholder="Search Work Place Code">
+    <input type="text" id="nameSearch" placeholder="Search Work Place Name">
+  </div>
+
+  <div id="map" style="display: none;"></div>
+
+  <script>
+    // Configuration - USE YOUR API KEY HERE
+    const GOOGLE_MAPS_API_KEY = 'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys';
+    const MAP_DATA_URL = 'https://cdn.jsdelivr.net/gh/saratoffice/locations@v1.3/map.js';
     
-    <!-- Error Message -->
-    <div class="error-message" id="errorMessage" style="display: none;">
-        <div class="error-header">
-            <i class="fas fa-exclamation-triangle"></i>
-            <h3>Error Loading Data</h3>
-        </div>
-        <p id="errorText">Unable to load location data. Please try again later.</p>
-    </div>
-    
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <h1><i class="fas fa-map-marker-alt"></i> Sarat Office - Workplace Locations</h1>
-            <p>Interactive map showing workplace locations in Bolangir district and surrounding areas</p>
-        </header>
-        
-        <!-- Controls Panel -->
-        <div class="controls-panel">
-            <div class="controls-header">
-                <h2><i class="fas fa-search"></i> Search & Filter Locations</h2>
-                <div class="stats-badge" id="visibleCount">0 Locations</div>
-            </div>
-            
-            <div class="controls-grid">
-                <div class="control-group">
-                    <label for="locationSearch"><i class="fas fa-map-pin"></i> Search Location</label>
-                    <input list="locationList" id="locationSearch" type="text" placeholder="Search by location name">
-                    <datalist id="locationList"></datalist>
-                </div>
-                
-                <div class="control-group">
-                    <label for="blockSearch"><i class="fas fa-layer-group"></i> Block / Area</label>
-                    <input list="blockList" id="blockSearch" type="text" placeholder="Search by block name">
-                    <datalist id="blockList"></datalist>
-                </div>
-                
-                <div class="control-group">
-                    <label for="codeSearch"><i class="fas fa-hashtag"></i> Workplace Code</label>
-                    <input type="text" id="codeSearch" placeholder="Search by workplace code">
-                </div>
-                
-                <div class="control-group">
-                    <label for="typeFilter"><i class="fas fa-tag"></i> Category Type</label>
-                    <select id="typeFilter">
-                        <option value="">All Categories</option>
-                        <option value="PPC">PPC (P)</option>
-                        <option value="Rice Mill">Rice Mill (M)</option>
-                        <option value="FPS">FPS (F)</option>
-                        <option value="Godown">Godown (G)</option>
-                        <option value="Other">Other (?)</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="action-buttons">
-                <button class="btn btn-primary" id="searchButton">
-                    <i class="fas fa-search"></i> Search Locations
-                </button>
-                <button class="btn btn-secondary" id="resetButton">
-                    <i class="fas fa-redo"></i> Reset All
-                </button>
-                <button class="btn btn-secondary" id="zoomToAreaButton">
-                    <i class="fas fa-globe-asia"></i> View Bolangir Area
-                </button>
-            </div>
-        </div>
-        
-        <!-- Map Container -->
-        <div class="map-container">
-            <div id="map"></div>
-            
-            <!-- Legend -->
-            <div class="legend">
-                <div class="legend-header">
-                    <i class="fas fa-key"></i>
-                    <h3>Location Types</h3>
-                </div>
-                <div class="legend-content">
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #2c5aa0;"></div>
-                        <div class="legend-text">Default Locations</div>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #27ae60;"></div>
-                        <div class="legend-text">PPC (P)</div>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #e74c3c;"></div>
-                        <div class="legend-text">FPS (F)</div>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #f39c12;"></div>
-                        <div class="legend-text">Rice Mill (M)</div>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #9b59b6;"></div>
-                        <div class="legend-text">Godown (G)</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Footer Stats -->
-        <div class="footer-stats">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>Total Locations</h3>
-                        <div class="stat-value" id="totalLocations">0</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">
-                    <div class="stat-icon">
-                        <i class="fas fa-industry"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>PPC Locations</h3>
-                        <div class="stat-value" id="ppcCount">0</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
-                    <div class="stat-icon">
-                        <i class="fas fa-store"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>FPS Locations</h3>
-                        <div class="stat-value" id="fpsCount">0</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card" style="background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);">
-                    <div class="stat-icon">
-                        <i class="fas fa-warehouse"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>Godown Locations</h3>
-                        <div class="stat-value" id="godownCount">0</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
-    
-    <!-- Marker Cluster Plugin -->
-    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-    
-    <script>
-        // Configuration - CENTERED ON BOLANGIR AREA
-        const CONFIG = {
-            // Google Sheets URL for data
-            SHEET_URL: 'https://docs.google.com/spreadsheets/d/1HI5Wjjwo5OObDaS4W7QaOVc_RcqgREu8pHEQxSjYhUg/gviz/tq?tqx=out:json',
-            
-            // Initial map center - Bolangir, Odisha coordinates
-            MAP_CENTER: [20.97, 83.53],
-            MAP_ZOOM: 12,  // Zoomed in to show the specific area
-            
-            // Known locations in Bolangir area (from your list)
-            KNOWN_LOCATIONS: [
-                { name: "Khairmal", lat: 20.95, lng: 83.58 },
-                { name: "Numabhatta", lat: 20.92, lng: 83.55 },
-                { name: "Sulekha", lat: 20.98, lng: 83.50 },
-                { name: "Ichna", lat: 21.02, lng: 83.60 },
-                { name: "Chakki", lat: 20.90, lng: 83.48 },
-                { name: "Ostali Reserve Forest", lat: 21.05, lng: 83.45 }
-            ],
-            
-            // Color coding for different types
-            TYPE_COLORS: {
-                'PPC': '#27ae60',      // Green
-                'FPS': '#e74c3c',      // Red
-                'Rice Mill': '#f39c12', // Orange
-                'Godown': '#9b59b6',   // Purple
-                'default': '#2c5aa0'   // Blue
-            }
-        };
-        
-        // Global variables
-        let map;
-        let markers = [];
-        let markerCluster;
-        let locationsData = [];
-        let blockColors = {};
-        
-        // Initialize the map
-        function initMap() {
-            try {
-                // Create map centered on Bolangir
-                map = L.map('map').setView(CONFIG.MAP_CENTER, CONFIG.MAP_ZOOM);
-                
-                // Add OpenStreetMap tile layer
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                    maxZoom: 19,
-                    detectRetina: true
-                }).addTo(map);
-                
-                // Add a subtle terrain layer for better context
-                L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 17,
-                    opacity: 0.3,
-                    attribution: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap'
-                }).addTo(map);
-                
-                // Add district boundary highlighting
-                addDistrictBoundaries();
-                
-                // Load data from Google Sheets
-                loadSheetData();
-                
-                // Hide loading screen
-                setTimeout(() => {
-                    document.getElementById('loading').style.opacity = '0';
-                    setTimeout(() => {
-                        document.getElementById('loading').style.display = 'none';
-                    }, 500);
-                }, 1000);
-                
-            } catch (error) {
-                showError('Failed to initialize map: ' + error.message);
-            }
-        }
-        
-        // Add district boundaries for context
-        function addDistrictBoundaries() {
-            // Approximate Bolangir district boundaries
-            const bolangirBounds = [
-                [21.2, 83.2],  // Northwest
-                [21.2, 84.0],  // Northeast
-                [20.5, 84.0],  // Southeast
-                [20.5, 83.2]   // Southwest
-            ];
-            
-            // Draw a subtle polygon for Bolangir district
-            L.polygon(bolangirBounds, {
-                color: '#2c5aa0',
-                weight: 2,
-                opacity: 0.3,
-                fillColor: '#2c5aa0',
-                fillOpacity: 0.05,
-                dashArray: '5, 5'
-            }).addTo(map);
-            
-            // Add label for Bolangir
-            L.marker([20.97, 83.53], {
-                icon: L.divIcon({
-                    html: `<div style="
-                        background: rgba(44, 90, 160, 0.8);
-                        color: white;
-                        padding: 4px 10px;
-                        border-radius: 12px;
-                        font-weight: bold;
-                        font-size: 14px;
-                        border: 2px solid white;
-                    ">Bolangir District</div>`,
-                    className: 'district-label',
-                    iconSize: [150, 40]
-                })
-            }).addTo(map);
-        }
-        
-        // Load data from Google Sheets
-        async function loadSheetData() {
-            try {
-                document.getElementById('loading').querySelector('.loading-text').textContent = 'Loading location data...';
-                
-                const response = await fetch(CONFIG.SHEET_URL);
-                const text = await response.text();
-                
-                // Parse the Google Sheets JSON response
-                const json = JSON.parse(text.substring(47).slice(0, -2));
-                const rows = json.table.rows;
-                
-                locationsData = [];
-                const locationSet = new Set();
-                const blockSet = new Set();
-                
-                // Process each row
-                rows.forEach((row, index) => {
-                    if (!row.c || !row.c[3]?.v || !row.c[4]?.v) return;
-                    
-                    const block = (row.c[0]?.v || "Unknown").trim();
-                    const name = (row.c[1]?.v || "Unnamed Location").trim();
-                    const code = (row.c[2]?.v || "N/A").trim();
-                    const lat = parseFloat(row.c[3].v);
-                    const lng = parseFloat(row.c[4].v);
-                    const category = (row.c[5]?.v || "Other").trim();
-                    
-                    if (isNaN(lat) || isNaN(lng)) return;
-                    
-                    locationSet.add(name);
-                    blockSet.add(block);
-                    
-                    const location = {
-                        id: index + 1,
-                        block: block,
-                        name: name,
-                        code: code,
-                        lat: lat,
-                        lng: lng,
-                        category: category,
-                        searchableName: name.toLowerCase(),
-                        searchableBlock: block.toLowerCase(),
-                        searchableCode: code.toLowerCase()
-                    };
-                    
-                    locationsData.push(location);
-                });
-                
-                // Add known locations if not in data
-                CONFIG.KNOWN_LOCATIONS.forEach(loc => {
-                    if (!Array.from(locationSet).includes(loc.name)) {
-                        locationSet.add(loc.name);
-                    }
-                });
-                
-                // Assign colors to blocks
-                assignBlockColors([...blockSet]);
-                
-                // Display markers on map
-                displayMarkers(locationsData);
-                
-                // Update UI
-                updateLocationList([...locationSet]);
-                updateBlockList([...blockSet]);
-                updateStatistics();
-                
-                // Add known location markers
-                addKnownLocationMarkers();
-                
-            } catch (error) {
-                console.error('Error loading data:', error);
-                showError('Failed to load location data. Using sample data instead.');
-                useSampleData();
-            }
-        }
-        
-        // Add markers for known locations
-        function addKnownLocationMarkers() {
-            CONFIG.KNOWN_LOCATIONS.forEach(location => {
-                // Check if location already exists in data
-                const exists = locationsData.some(loc => 
-                    loc.name.toLowerCase() === location.name.toLowerCase()
-                );
-                
-                if (!exists) {
-                    const marker = L.marker([location.lat, location.lng], {
-                        icon: L.divIcon({
-                            html: `<div class="custom-marker" style="background: #95a5a6; border: 2px solid white;">
-                                <i class="fas fa-info" style="font-size: 10px;"></i>
-                            </div>`,
-                            className: 'custom-div-icon',
-                            iconSize: [35, 35],
-                            iconAnchor: [17, 35],
-                            popupAnchor: [0, -35]
-                        })
-                    });
-                    
-                    marker.bindPopup(`
-                        <div style="min-width: 200px; padding: 10px;">
-                            <div style="color: #2c5aa0; font-weight: bold; margin-bottom: 8px;">
-                                ${location.name}
-                            </div>
-                            <div style="font-size: 13px; color: #666;">
-                                <p><i class="fas fa-map-marker-alt"></i> Known location in Bolangir area</p>
-                                <p><i class="fas fa-info-circle"></i> Data not available in spreadsheet</p>
-                            </div>
-                        </div>
-                    `);
-                    
-                    marker.addTo(map);
-                }
-            });
-        }
-        
-        // Use sample data if Google Sheets fails
-        function useSampleData() {
-            // Sample data based on known Bolangir locations
-            const sampleData = CONFIG.KNOWN_LOCATIONS.map((loc, index) => ({
-                id: index + 1,
-                block: "Bolangir",
-                name: loc.name,
-                code: `BLG-${String(index + 1).padStart(3, '0')}`,
-                lat: loc.lat,
-                lng: loc.lng,
-                category: index % 3 === 0 ? "PPC" : index % 3 === 1 ? "FPS" : "Rice Mill",
-                searchableName: loc.name.toLowerCase(),
-                searchableBlock: "bolangir",
-                searchableCode: `blg-${String(index + 1).padStart(3, '0')}`
-            }));
-            
-            locationsData = sampleData;
-            
-            // Display markers
-            displayMarkers(sampleData);
-            
-            // Update UI
-            updateLocationList(CONFIG.KNOWN_LOCATIONS.map(l => l.name));
-            updateStatistics();
-            
-            // Fit map to show all markers
-            if (markers.length > 0) {
-                const bounds = L.latLngBounds(markers.map(m => m.getLatLng()));
-                map.fitBounds(bounds, { padding: [50, 50] });
-            }
-        }
-        
-        // Assign colors to blocks
-        function assignBlockColors(blocks) {
-            blockColors = {};
-            const colors = ['#2c5aa0', '#3498db', '#2980b9', '#1f618d', '#154360'];
-            blocks.forEach((block, index) => {
-                blockColors[block] = colors[index % colors.length];
-            });
-        }
-        
-        // Display markers on the map
-        function displayMarkers(locations) {
-            // Clear existing markers
-            if (markerCluster) {
-                markerCluster.clearLayers();
-            }
-            markers = [];
-            
-            // Create marker cluster group
-            markerCluster = L.markerClusterGroup({
-                chunkedLoading: true,
-                chunkDelay: 100,
-                spiderfyOnMaxZoom: true,
-                showCoverageOnHover: false,
-                zoomToBoundsOnClick: true,
-                maxClusterRadius: 60,
-                iconCreateFunction: createClusterIcon
-            });
-            
-            // Add each location as a marker
-            locations.forEach(location => {
-                const marker = createMarker(location);
-                markers.push(marker);
-                markerCluster.addLayer(marker);
-            });
-            
-            // Add marker cluster to map
-            map.addLayer(markerCluster);
-        }
-        
-        // Create cluster icon
-        function createClusterIcon(cluster) {
-            const count = cluster.getChildCount();
-            let size = 40;
-            let fontSize = 14;
-            let bgColor = '#2c5aa0';
-            
-            if (count >= 10) {
-                size = 50;
-                fontSize = 16;
-                bgColor = '#2980b9';
-            }
-            if (count >= 50) {
-                size = 60;
-                fontSize = 18;
-                bgColor = '#1f618d';
-            }
-            
-            return L.divIcon({
-                html: `<div class="cluster-marker" style="
-                    width: ${size}px;
-                    height: ${size}px;
-                    font-size: ${fontSize}px;
-                    background: ${bgColor};
-                    line-height: ${size}px;
-                ">${count}</div>`,
-                className: 'custom-cluster',
-                iconSize: L.point(size, size)
-            });
-        }
-        
-        // Create a marker for a location
-        function createMarker(location) {
-            const color = CONFIG.TYPE_COLORS[location.category] || CONFIG.TYPE_COLORS.default;
-            
-            // Get category abbreviation
-            const getCategoryAbbr = (cat) => {
-                if (!cat) return "?";
-                if (cat.includes("PPC")) return "P";
-                if (cat.includes("Rice") || cat.includes("Mill")) return "M";
-                if (cat.includes("FPS")) return "F";
-                if (cat.includes("Godown")) return "G";
-                return cat.charAt(0).toUpperCase();
-            };
-            
-            const markerHtml = `
-                <div class="custom-marker" style="background: ${color};">
-                    ${getCategoryAbbr(location.category)}
-                </div>
-            `;
-            
-            const icon = L.divIcon({
-                html: markerHtml,
-                className: 'custom-div-icon',
-                iconSize: [35, 35],
-                iconAnchor: [17, 35],
-                popupAnchor: [0, -35]
-            });
-            
-            const marker = L.marker([location.lat, location.lng], { icon });
-            
-            // Create popup content
-            const popupContent = `
-                <div style="min-width: 250px; padding: 10px;">
-                    <div style="
-                        background: ${color};
-                        color: white;
-                        padding: 8px 12px;
-                        border-radius: 8px 8px 0 0;
-                        margin: -10px -10px 10px -10px;
-                        font-weight: bold;
-                        font-size: 15px;
-                    ">
-                        ${location.name}
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <p style="margin: 8px 0; font-size: 14px;">
-                            <strong style="color: #2c5aa0;">Code:</strong> ${location.code}
-                        </p>
-                        <p style="margin: 8px 0; font-size: 14px;">
-                            <strong style="color: #2c5aa0;">Block:</strong> ${location.block}
-                        </p>
-                        <p style="margin: 8px 0; font-size: 14px;">
-                            <strong style="color: #2c5aa0;">Category:</strong> ${location.category}
-                        </p>
-                        <p style="margin: 8px 0; font-size: 14px;">
-                            <strong style="color: #2c5aa0;">Coordinates:</strong> 
-                            ${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}
-                        </p>
-                    </div>
-                    
-                    <div style="margin-top: 15px; text-align: center;">
-                        <button onclick="zoomToLocation(${location.lat}, ${location.lng}, '${location.name}')" 
-                                style="
-                                    background: ${color};
-                                    color: white;
-                                    border: none;
-                                    padding: 8px 15px;
-                                    border-radius: 6px;
-                                    cursor: pointer;
-                                    font-weight: bold;
-                                    transition: all 0.3s ease;
-                                    font-size: 13px;
-                                ">
-                            <i class="fas fa-search-location"></i> Zoom to Location
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            marker.bindPopup(popupContent);
-            
-            // Store reference to location data
-            marker.locationData = location;
-            
-            return marker;
-        }
-        
-        // Update location search list
-        function updateLocationList(locations) {
-            const datalist = document.getElementById('locationList');
-            datalist.innerHTML = '';
-            
-            locations.sort().forEach(location => {
-                const option = document.createElement('option');
-                option.value = location;
-                datalist.appendChild(option);
-            });
-        }
-        
-        // Update block list
-        function updateBlockList(blocks) {
-            const datalist = document.getElementById('blockList');
-            datalist.innerHTML = '';
-            
-            blocks.sort().forEach(block => {
-                const option = document.createElement('option');
-                option.value = block;
-                datalist.appendChild(option);
-            });
-        }
-        
-        // Update statistics
-        function updateStatistics() {
-            const total = locationsData.length;
-            const ppcCount = locationsData.filter(l => l.category === 'PPC').length;
-            const fpsCount = locationsData.filter(l => l.category === 'FPS').length;
-            const godownCount = locationsData.filter(l => l.category === 'Godown').length;
-            
-            document.getElementById('totalLocations').textContent = total;
-            document.getElementById('ppcCount').textContent = ppcCount;
-            document.getElementById('fpsCount').textContent = fpsCount;
-            document.getElementById('godownCount').textContent = godownCount;
-            
-            updateVisibleCount();
-        }
-        
-        // Update visible count
-        function updateVisibleCount() {
-            const visibleMarkers = markers.filter(marker => {
-                const icon = marker._icon;
-                return icon && icon.style.display !== 'none';
-            }).length;
-            
-            document.getElementById('visibleCount').textContent = `${visibleMarkers} Locations`;
-        }
-        
-        // Apply filters
-        function applyFilters() {
-            const locationFilter = document.getElementById('locationSearch').value.trim().toLowerCase();
-            const blockFilter = document.getElementById('blockSearch').value.trim().toLowerCase();
-            const codeFilter = document.getElementById('codeSearch').value.trim().toLowerCase();
-            const categoryFilter = document.getElementById('typeFilter').value;
-            
-            markers.forEach(marker => {
-                const location = marker.locationData;
-                if (!location) return;
-                
-                const locationMatch = !locationFilter || location.searchableName.includes(locationFilter);
-                const blockMatch = !blockFilter || location.searchableBlock.includes(blockFilter);
-                const codeMatch = !codeFilter || location.searchableCode.includes(codeFilter);
-                const categoryMatch = !categoryFilter || location.category === categoryFilter;
-                
-                const isVisible = locationMatch && blockMatch && codeMatch && categoryMatch;
-                
-                // Show/hide marker
-                if (marker._icon) {
-                    marker._icon.style.display = isVisible ? '' : 'none';
-                    marker.setOpacity(isVisible ? 1 : 0.3);
-                }
-                
-                // Highlight if it's a location search match
-                if (locationFilter && location.searchableName.includes(locationFilter)) {
-                    marker._icon.classList.add('location-highlight');
-                } else {
-                    marker._icon.classList.remove('location-highlight');
-                }
-            });
-            
-            // Update marker clusters
-            if (markerCluster) {
-                markerCluster.refreshClusters();
-            }
-            
-            updateVisibleCount();
-            
-            // If location search has exact match, zoom to it
-            if (locationFilter) {
-                const exactMatch = locationsData.find(l => 
-                    l.searchableName === locationFilter
-                );
-                if (exactMatch) {
-                    zoomToLocation(exactMatch.lat, exactMatch.lng, exactMatch.name);
-                }
-            }
-        }
-        
-        // Reset all filters
-        function resetFilters() {
-            document.getElementById('locationSearch').value = '';
-            document.getElementById('blockSearch').value = '';
-            document.getElementById('codeSearch').value = '';
-            document.getElementById('typeFilter').value = '';
-            
-            applyFilters();
-            
-            // Zoom back to Bolangir area
-            map.flyTo(CONFIG.MAP_CENTER, CONFIG.MAP_ZOOM, {
-                duration: 1
-            });
-        }
-        
-        // Zoom to Bolangir area
-        function zoomToBolangirArea() {
-            map.flyTo(CONFIG.MAP_CENTER, CONFIG.MAP_ZOOM, {
-                duration: 1.5,
-                easeLinearity: 0.25
-            });
-        }
-        
-        // Global function to zoom to location
-        window.zoomToLocation = function(lat, lng, name = '') {
-            map.flyTo([lat, lng], 15, {
-                duration: 1.5,
-                easeLinearity: 0.25
-            });
-            
-            // Open popup if available
-            markers.forEach(marker => {
-                if (marker.getLatLng().lat === lat && marker.getLatLng().lng === lng) {
-                    marker.openPopup();
-                    
-                    // Add highlight animation
-                    marker._icon.classList.add('location-highlight');
-                    setTimeout(() => {
-                        if (marker._icon) {
-                            marker._icon.classList.remove('location-highlight');
-                        }
-                    }, 3000);
-                }
-            });
-            
-            if (name) {
-                document.getElementById('locationSearch').value = name;
-                applyFilters();
-            }
-        };
-        
-        // Show error message
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            const errorText = document.getElementById('errorText');
-            
-            errorText.textContent = message;
-            errorDiv.style.display = 'block';
-            
-            document.getElementById('loading').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('loading').style.display = 'none';
-            }, 500);
-        }
-        
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize map
-            initMap();
-            
-            // Set up event listeners
-            document.getElementById('searchButton').addEventListener('click', applyFilters);
-            document.getElementById('resetButton').addEventListener('click', resetFilters);
-            document.getElementById('zoomToAreaButton').addEventListener('click', zoomToBolangirArea);
-            
-            // Apply filters on input (with debounce)
-            let filterTimeout;
-            ['locationSearch', 'blockSearch', 'codeSearch'].forEach(id => {
-                document.getElementById(id).addEventListener('input', function() {
-                    clearTimeout(filterTimeout);
-                    filterTimeout = setTimeout(applyFilters, 300);
-                });
-            });
-            
-            document.getElementById('typeFilter').addEventListener('change', applyFilters);
-            
-            // Enter key to search
-            document.getElementById('locationSearch').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    applyFilters();
-                }
-            });
-            
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                if (e.ctrlKey && e.key === 'r') {
-                    e.preventDefault();
-                    resetFilters();
-                }
-                if (e.key === 'Escape') {
-                    map.closePopup();
-                }
-            });
+    // Global variables
+    let map;
+    let markers = [];
+    let markerCluster;
+    let allLocations = [];
+
+    // Local fallback data (in case CDN fails)
+    const fallbackLocations = [
+      {
+        name: "Example Office 1",
+        lat: 28.6139,
+        lng: 77.2090,
+        code: "DEL001",
+        block: "North Block",
+        type: "Office",
+        address: "New Delhi, India"
+      },
+      {
+        name: "Example Office 2",
+        lat: 19.0760,
+        lng: 72.8777,
+        code: "MUM001",
+        block: "West Block",
+        type: "Office",
+        address: "Mumbai, India"
+      },
+      {
+        name: "Example Office 3",
+        lat: 12.9716,
+        lng: 77.5946,
+        code: "BLR001",
+        block: "South Block",
+        type: "Office",
+        address: "Bangalore, India"
+      }
+    ];
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 5,
+        center: { lat: 20.5937, lng: 78.9629 }, // Center on India
+        mapTypeId: "terrain",
+      });
+
+      // Try to load your map.js script
+      loadExternalMapScript();
+    }
+
+    function loadExternalMapScript() {
+      fetch(MAP_DATA_URL)
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to load data');
+          return response.text();
+        })
+        .then(scriptText => {
+          // Extract locations from the script
+          const locations = extractLocationsFromScript(scriptText);
+          if (locations && locations.length > 0) {
+            allLocations = locations;
+            addMarkersToMap(allLocations);
+            setupControls();
+            showMap();
+          } else {
+            useFallbackData();
+          }
+        })
+        .catch(error => {
+          console.error('Error loading external data:', error);
+          useFallbackData();
         });
-    </script>
+    }
+
+    function extractLocationsFromScript(scriptText) {
+      console.log('Parsing script text...');
+      
+      // Try different patterns to find locations
+      const patterns = [
+        /locations\s*=\s*(\[[\s\S]*?\])\s*;?/,
+        /var\s+locations\s*=\s*(\[[\s\S]*?\])\s*;?/,
+        /let\s+locations\s*=\s*(\[[\s\S]*?\])\s*;?/,
+        /const\s+locations\s*=\s*(\[[\s\S]*?\])\s*;?/,
+        /window\.locations\s*=\s*(\[[\s\S]*?\])\s*;?/
+      ];
+      
+      for (const pattern of patterns) {
+        const match = scriptText.match(pattern);
+        if (match) {
+          try {
+            // Clean the string - remove comments and fix common issues
+            let jsonStr = match[1]
+              .replace(/\/\/.*/g, '') // Remove single line comments
+              .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
+              .replace(/([{,]\s*)(\w+)(\s*:)/g, '$1"$2"$3') // Add quotes to property names
+              .replace(/'/g, '"'); // Replace single quotes with double quotes
+            
+            // Fix trailing commas
+            jsonStr = jsonStr.replace(/,\s*}/g, '}').replace(/,\s*\]/g, ']');
+            
+            const locations = JSON.parse(jsonStr);
+            console.log(`Successfully parsed ${locations.length} locations`);
+            return locations;
+          } catch (e) {
+            console.error('Error parsing JSON:', e);
+            console.log('Attempting eval as fallback...');
+            try {
+              return eval(`(${match[1]})`);
+            } catch (e2) {
+              console.error('Eval also failed:', e2);
+            }
+          }
+        }
+      }
+      
+      // If no pattern matches, check if the entire file is JSON
+      try {
+        const locations = JSON.parse(scriptText.trim());
+        if (Array.isArray(locations)) {
+          console.log(`Parsed ${locations.length} locations as direct JSON`);
+          return locations;
+        }
+      } catch (e) {
+        console.log('File is not direct JSON');
+      }
+      
+      return null;
+    }
+
+    function addMarkersToMap(locations) {
+      // Clear existing markers
+      markers.forEach(marker => marker.setMap(null));
+      markers = [];
+      
+      if (markerCluster) {
+        markerCluster.clearMarkers();
+      }
+
+      locations.forEach(location => {
+        const marker = new google.maps.Marker({
+          position: { lat: parseFloat(location.lat), lng: parseFloat(location.lng) },
+          map: map,
+          title: location.name || location.code,
+        });
+
+        // Add info window
+        const infoWindow = new google.maps.InfoWindow({
+          content: `
+            <div style="padding: 10px; min-width: 200px;">
+              <h3 style="margin: 0 0 10px 0;">${location.name || 'Unnamed Location'}</h3>
+              <p><strong>Code:</strong> ${location.code || 'N/A'}</p>
+              <p><strong>Block:</strong> ${location.block || 'N/A'}</p>
+              <p><strong>Type:</strong> ${location.type || 'N/A'}</p>
+              ${location.address ? `<p><strong>Address:</strong> ${location.address}</p>` : ''}
+              ${location.website ? `<p><a href="${location.website}" target="_blank">Visit Website</a></p>` : ''}
+            </div>
+          `
+        });
+
+        marker.addListener("click", () => {
+          infoWindow.open(map, marker);
+        });
+
+        markers.push(marker);
+      });
+
+      // Create marker cluster
+      markerCluster = new markerClusterer.MarkerClusterer({ 
+        map, 
+        markers,
+        renderer: {
+          render: ({ count, position }) => {
+            // Custom cluster icon
+            return new google.maps.Marker({
+              position,
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 10 + Math.min(count, 10),
+                fillColor: "#4285F4",
+                fillOpacity: 0.8,
+                strokeWeight: 2,
+                strokeColor: "#FFFFFF"
+              },
+              label: {
+                text: String(count),
+                color: "#FFFFFF",
+                fontSize: "12px"
+              }
+            });
+          }
+        }
+      });
+      
+      // Fit map bounds to show all markers
+      if (markers.length > 0) {
+        const bounds = new google.maps.LatLngBounds();
+        markers.forEach(marker => bounds.extend(marker.getPosition()));
+        map.fitBounds(bounds);
+        
+        // Don't zoom in too much if only one marker
+        if (markers.length === 1) {
+          google.maps.event.addListenerOnce(map, 'bounds_changed', function() {
+            if (this.getZoom() > 15) {
+              this.setZoom(15);
+            }
+          });
+        }
+      }
+    }
+
+    function setupControls() {
+      // Populate block list
+      const blockList = [...new Set(allLocations.map(loc => loc.block).filter(Boolean))];
+      const datalist = document.getElementById('blockList');
+      datalist.innerHTML = '';
+      blockList.forEach(block => {
+        const option = document.createElement('option');
+        option.value = block;
+        datalist.appendChild(option);
+      });
+
+      // Setup search functionality
+      document.getElementById('blockSearch').addEventListener('input', filterMarkers);
+      document.getElementById('codeSearch').addEventListener('input', filterMarkers);
+      document.getElementById('nameSearch').addEventListener('input', filterMarkers);
+      
+      // Add clear button
+      const clearButton = document.createElement('button');
+      clearButton.textContent = 'Clear Filters';
+      clearButton.style.padding = '8px 16px';
+      clearButton.style.cursor = 'pointer';
+      clearButton.addEventListener('click', clearFilters);
+      document.querySelector('.map-controls').appendChild(clearButton);
+    }
+
+    function filterMarkers() {
+      const blockQuery = document.getElementById('blockSearch').value.toLowerCase();
+      const codeQuery = document.getElementById('codeSearch').value.toLowerCase();
+      const nameQuery = document.getElementById('nameSearch').value.toLowerCase();
+      
+      const filteredLocations = allLocations.filter(location => {
+        const matchesBlock = !blockQuery || 
+          (location.block && location.block.toLowerCase().includes(blockQuery));
+        const matchesCode = !codeQuery || 
+          (location.code && location.code.toLowerCase().includes(codeQuery));
+        const matchesName = !nameQuery || 
+          (location.name && location.name.toLowerCase().includes(nameQuery));
+        
+        return matchesBlock && matchesCode && matchesName;
+      });
+      
+      addMarkersToMap(filteredLocations);
+    }
+    
+    function clearFilters() {
+      document.getElementById('blockSearch').value = '';
+      document.getElementById('codeSearch').value = '';
+      document.getElementById('nameSearch').value = '';
+      addMarkersToMap(allLocations);
+    }
+
+    function useFallbackData() {
+      console.log('Using fallback data');
+      allLocations = fallbackLocations;
+      addMarkersToMap(allLocations);
+      setupControls();
+      showMap();
+    }
+
+    function showMap() {
+      document.getElementById('loading').style.display = 'none';
+      document.querySelector('.map-controls').style.display = 'flex';
+      document.getElementById('map').style.display = 'block';
+    }
+
+    // Load everything
+    function initialize() {
+      if (!GOOGLE_MAPS_API_KEY || GOOGLE_MAPS_API_KEY.includes('YOUR_GOOGLE_MAPS_API_KEY_HERE')) {
+        document.getElementById('loading').innerHTML = `
+          <div class="error">
+            <h3>API Key Required</h3>
+            <p>Please add your Google Maps API key to the code.</p>
+            <p>Get a free API key from: <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">Google Cloud Console</a></p>
+          </div>
+        `;
+        return;
+      }
+
+      // Load Google Maps API first
+      const gmapScript = document.createElement('script');
+      gmapScript.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initMap`;
+      gmapScript.async = true;
+      gmapScript.defer = true;
+      
+      // Load MarkerClusterer after Google Maps
+      gmapScript.onload = () => {
+        const clusterScript = document.createElement('script');
+        clusterScript.src = "https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js";
+        clusterScript.onload = () => {
+          console.log('All scripts loaded successfully');
+        };
+        document.head.appendChild(clusterScript);
+      };
+      
+      document.head.appendChild(gmapScript);
+    }
+
+    // Start when page loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initialize);
+    } else {
+      initialize();
+    }
+  </script>
 </body>
 </html>
