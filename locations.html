@@ -6,22 +6,20 @@
   <input id="nameSearch" type="text" placeholder="Search Work Place Name" />
 </div>
 
-<div id="map" style="width: 100%; height: 500px; background: #eee;"></div>
+<div id="map" style="width: 100%; height: 500px; background: #eee; border-radius: 8px;"></div>
 
 <style>
 .map-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
 .map-controls input { padding: 8px; font-size: 14px; min-width: 200px; border: 1px solid #ccc; border-radius: 4px; }
-#map { border-radius: 8px; margin-top: 10px; }
+#map { margin-top: 10px; }
 </style>
 
-<!-- Load Google Maps & Marker Clusterer -->
-<!-- Replace YOUR_API_KEY with your actual key -->
+<!-- Load Google Maps API ONLY (MarkerClusterer removed) -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys"></script>
-<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
 
 <script>
 (function() {
-  let map, markerCluster;
+  let map;
   let markers = [];
   const blockColors = {};
   const primaryColors = ["#d32f2f", "#1976d2", "#fbc02d"];
@@ -36,8 +34,8 @@
   }
 
   function getCategoryLetter(cat) {
-    const map = { "PPC": "P", "Rice Mill": "M", "FPS": "F", "Godown": "G" };
-    return map[cat] || "?";
+    const catMap = { "PPC": "P", "Rice Mill": "M", "FPS": "F", "Godown": "G" };
+    return catMap[cat] || "?";
   }
 
   function linePin(color) {
@@ -47,7 +45,7 @@
       fillOpacity: 1,
       strokeColor: "#000",
       strokeWeight: 1,
-      scale: 1.2,
+      scale: 1.1,
       labelOrigin: new google.maps.Point(12, 9)
     };
   }
@@ -57,7 +55,7 @@
     if (!mapEl) return;
 
     map = new google.maps.Map(mapEl, {
-      zoom: 10,
+      zoom: 11,
       center: { lat: 20.97, lng: 83.53 },
       gestureHandling: "greedy",
       mapTypeControl: false
@@ -85,8 +83,10 @@
 
           blockSet.add(block);
 
+          // Create marker and set map: map immediately to show individually
           const marker = new google.maps.Marker({
             position: { lat, lng },
+            map: map, 
             icon: linePin(getBlockColor(block)),
             label: { text: getCategoryLetter(cat), color: "white", fontWeight: "bold", fontSize: "11px" },
             title: name
@@ -102,10 +102,6 @@
           markers.push(marker);
         });
 
-        // Initialize modern MarkerClusterer
-        markerCluster = new markerClusterer.MarkerClusterer({ map, markers });
-        
-        // Populate Datalist
         const list = document.getElementById("blockList");
         [...blockSet].sort().forEach(b => {
           const opt = document.createElement("option");
@@ -114,7 +110,7 @@
         });
       });
 
-    // Filtering Logic
+    // Simplified Filtering Logic (No Cluster Refresh Needed)
     const filters = ["blockSearch", "codeSearch", "nameSearch"];
     filters.forEach(id => {
       document.getElementById(id).addEventListener("input", () => {
@@ -124,17 +120,12 @@
 
         markers.forEach(m => {
           const match = m.meta.block.includes(bV) && m.meta.code.includes(cV) && m.meta.name.includes(nV);
-          m.setMap(match ? map : null);
+          m.setVisible(match);
         });
-        
-        // Refresh clusters after filtering
-        markerCluster.clearMarkers();
-        markerCluster.addMarkers(markers.filter(m => m.getMap() !== null));
       });
     });
   }
 
-  // Load map on DOM ready
   if (document.readyState === "complete") { initMap(); } 
   else { window.addEventListener("load", initMap); }
 })();
