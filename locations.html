@@ -1,132 +1,35 @@
-<!-- Container -->
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys&callback=initMap"
+  async
+  defer>
+</script>
+
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/saratoffice/host-work-locations@main/maps.css">
+
 <div class="map-controls">
-  <input id="blockSearch" list="blockList" type="text" placeholder="Type / Select Block Name" />
+  <!-- Use a custom focus handler to ensure the dropdown always opens fully -->
+  <input id="blockSearch" list="blockList" type="text" placeholder="Type / Select Block Name" onfocus="this.value=''" onchange="this.blur();" />
   <datalist id="blockList"></datalist>
+  
   <input id="codeSearch" type="text" placeholder="Search Work Place Code" />
-  <input id="nameSearch" type="text" placeholder="Search Work Place Name" />
+  <input id="nameSearch" type="text"placeholder="Search Work Place Name" />
 </div>
 
 <div id="map" style="width: 100%; height: 500px; background: #eee; border-radius: 8px;"></div>
 
-<style>
-.map-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-.map-controls input { padding: 8px; font-size: 14px; min-width: 200px; border: 1px solid #ccc; border-radius: 4px; }
-#map { margin-top: 10px; }
-</style>
+<!-- Dynamic Location Counts Container -->
+<div id="locationCounts" style="margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; border: 1px solid #e0e0e0;">
+  <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 25px; margin-bottom: 10px;">
+    <span style="font-weight: bold; color: #1976d2;">Total Locations: <span id="totalCount" style="color: #333;">0</span></span>
+    <!-- Dynamic categories will be inserted here -->
+  </div>
+  <div style="text-align: center; font-size: 12px; color: #666; font-style: italic;">
+    <span id="filterStatus">Showing all locations</span>
+  </div>
+</div>
 
-<!-- Load Google Maps API ONLY (MarkerClusterer removed) -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys"></script>
+<!-- Google Maps + Clusterer -->
+<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/saratoffice/host-work-locations@main/map.js"></script>
 
-<script>
-(function() {
-  let map;
-  let markers = [];
-  const blockColors = {};
-  const primaryColors = ["#d32f2f", "#1976d2", "#fbc02d"];
-  let colorIndex = 0;
-
-  function getBlockColor(block) {
-    if (!blockColors[block]) {
-      blockColors[block] = primaryColors[colorIndex % primaryColors.length];
-      colorIndex++;
-    }
-    return blockColors[block];
-  }
-
-  function getCategoryLetter(cat) {
-    const catMap = { "PPC": "P", "Rice Mill": "M", "FPS": "F", "Godown": "G" };
-    return catMap[cat] || "?";
-  }
-
-  function linePin(color) {
-    return {
-      path: "M12 1C8.1 1 5 4.1 5 8.2c0 3.7 3.4 6.8 6 9.3V28h2V17.5c2.6-2.5 6-5.6 6-9.3C19 4.1 15.9 1 12 1z",
-      fillColor: color,
-      fillOpacity: 1,
-      strokeColor: "#000",
-      strokeWeight: 1,
-      scale: 1.1,
-      labelOrigin: new google.maps.Point(12, 9)
-    };
-  }
-
-  function initMap() {
-    const mapEl = document.getElementById("map");
-    if (!mapEl) return;
-
-    map = new google.maps.Map(mapEl, {
-      zoom: 11,
-      center: { lat: 20.97, lng: 83.53 },
-      gestureHandling: "greedy",
-      mapTypeControl: false
-    });
-
-    const sheetURL = "https://docs.google.com/spreadsheets/d/1HI5Wjjwo5OObDaS4W7QaOVc_RcqgREu8pHEQxSjYhUg/gviz/tq?tqx=out:json";
-
-    fetch(sheetURL)
-      .then(res => res.text())
-      .then(text => {
-        const json = JSON.parse(text.substring(47).slice(0, -2));
-        const rows = json.table.rows;
-        const infoWindow = new google.maps.InfoWindow();
-        const blockSet = new Set();
-
-        rows.forEach(r => {
-          if (!r.c || !r.c[3] || !r.c[4]) return;
-
-          const block = r.c[0]?.v || "Unknown";
-          const name  = r.c[1]?.v || "No Name";
-          const code  = r.c[2]?.v || "N/A";
-          const lat   = parseFloat(r.c[3].v);
-          const lng   = parseFloat(r.c[4].v);
-          const cat   = r.c[5]?.v || "";
-
-          blockSet.add(block);
-
-          // Create marker and set map: map immediately to show individually
-          const marker = new google.maps.Marker({
-            position: { lat, lng },
-            map: map, 
-            icon: linePin(getBlockColor(block)),
-            label: { text: getCategoryLetter(cat), color: "white", fontWeight: "bold", fontSize: "11px" },
-            title: name
-          });
-
-          marker.meta = { block: block.toUpperCase(), code: String(code).toUpperCase(), name: name.toUpperCase() };
-
-          marker.addListener("click", () => {
-            infoWindow.setContent(`<strong>${name}</strong><br>Code: ${code}<br>Block: ${block}<br>Category: ${cat}`);
-            infoWindow.open(map, marker);
-          });
-
-          markers.push(marker);
-        });
-
-        const list = document.getElementById("blockList");
-        [...blockSet].sort().forEach(b => {
-          const opt = document.createElement("option");
-          opt.value = b;
-          list.appendChild(opt);
-        });
-      });
-
-    // Simplified Filtering Logic (No Cluster Refresh Needed)
-    const filters = ["blockSearch", "codeSearch", "nameSearch"];
-    filters.forEach(id => {
-      document.getElementById(id).addEventListener("input", () => {
-        const bV = document.getElementById("blockSearch").value.toUpperCase();
-        const cV = document.getElementById("codeSearch").value.toUpperCase();
-        const nV = document.getElementById("nameSearch").value.toUpperCase();
-
-        markers.forEach(m => {
-          const match = m.meta.block.includes(bV) && m.meta.code.includes(cV) && m.meta.name.includes(nV);
-          m.setVisible(match);
-        });
-      });
-    });
-  }
-
-  if (document.readyState === "complete") { initMap(); } 
-  else { window.addEventListener("load", initMap); }
-})();
-</script>
