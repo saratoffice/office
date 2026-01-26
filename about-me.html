@@ -116,10 +116,72 @@
         }
 
         /* =================================
+           FULL WIDTH "TIME TO KNOW ME" HEADER
+        ================================= */
+        .full-width-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: var(--white);
+            padding: 40px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .full-width-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 255, 0.05) 10px,
+                rgba(255, 255, 255, 0.05) 20px
+            );
+            pointer-events: none;
+        }
+
+        .full-width-header h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        .full-width-header h1 span {
+            background: linear-gradient(135deg, var(--primary-green), #00ffaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .full-width-header p {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        /* =================================
            HERO PROFILE SECTION
         ================================= */
         .profile-hero {
-            padding: 120px 0 80px;
+            padding: 60px 0 80px;
             background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
         }
 
@@ -476,6 +538,18 @@
             overflow: hidden;
             box-shadow: var(--shadow-strong);
             background: #f5f5f5;
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Ensure all iframes have minimum height */
+        .social-iframe iframe,
+        .youtube-container,
+        .youtube-video {
+            min-height: 450px !important;
+            height: 100% !important;
+            flex: 1;
         }
 
         /* Platform specific colors */
@@ -518,6 +592,10 @@
            RESPONSIVE DESIGN
         ================================= */
         @media (max-width: 992px) {
+            .full-width-header h1 {
+                font-size: 3.5rem;
+            }
+
             .profile-container {
                 grid-template-columns: 1fr;
                 text-align: center;
@@ -560,6 +638,18 @@
         }
 
         @media (max-width: 768px) {
+            .full-width-header {
+                padding: 30px 0;
+            }
+
+            .full-width-header h1 {
+                font-size: 2.8rem;
+            }
+
+            .full-width-header p {
+                font-size: 1.2rem;
+            }
+
             .section-header h2 {
                 font-size: 2.2rem;
             }
@@ -594,9 +684,22 @@
             .social-about h3 {
                 font-size: 1.5rem;
             }
+
+            .social-iframe {
+                min-height: 400px;
+            }
         }
 
         @media (max-width: 480px) {
+            .full-width-header h1 {
+                font-size: 2.2rem;
+                letter-spacing: 2px;
+            }
+
+            .full-width-header p {
+                font-size: 1rem;
+            }
+
             .profile-name {
                 font-size: 2rem;
             }
@@ -620,6 +723,10 @@
 
             .youtube-title {
                 font-size: 1.5rem;
+            }
+
+            .social-iframe {
+                min-height: 350px;
             }
         }
 
@@ -652,6 +759,12 @@
 </head>
 <body>
     <div id="site-header"></div>
+
+    <!-- FULL WIDTH "TIME TO KNOW ME" HEADER -->
+    <header class="full-width-header">
+        <h1><span>IT'S TIME TO KNOW ME</span></h1>
+        <p>Discover the journey, values, and mission of Sarat Rout - A dedicated public servant</p>
+    </header>
 
     <main>
         <!-- HERO PROFILE SECTION -->
@@ -858,10 +971,10 @@
                     <div class="social-iframe facebook-iframe">
                         <h2 style="color: var(--accent-light-blue); text-align: center; padding: 15px 0; margin: 0; background: var(--white);">Facebook</h2>
                         <iframe 
-                            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fsaratoffice&tabs=timeline&width=400&height=250&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false&appId=247255709091238" 
+                            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fsaratoffice&tabs=timeline&width=400&height=450&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false&appId=247255709091238" 
                             width="100%" 
                             height="450" 
-                            style="border:none;overflow:hidden" 
+                            style="border:none;overflow:hidden; min-height: 450px;" 
                             scrolling="no" 
                             frameborder="0" 
                             allowfullscreen="true" 
@@ -890,7 +1003,8 @@
                             src='https://widgets.sociablekit.com/twitter-feed/iframe/25482632' 
                             frameborder='0' 
                             width='100%' 
-                            height='450'>
+                            height='450'
+                            style="min-height: 450px;">
                         </iframe>
                     </div>
                 </div>
@@ -899,11 +1013,11 @@
                 <div class="social-platform">
                     <div class="social-iframe instagram-iframe">
                         <h2 style="color: var(--accent-pink); text-align: center; padding: 15px 0; margin: 0; background: var(--white);">Instagram</h2>
-                        <div style="padding: 20px; background: var(--white); text-align: center;">
+                        <div style="padding: 20px; background: var(--white); text-align: center; min-height: 450px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                             <i class="fab fa-instagram" style="font-size: 3rem; color: var(--accent-pink); margin-bottom: 15px;"></i>
                             <h3>@saratoffice</h3>
                             <p>Follow on Instagram for visual stories and updates</p>
-                            <a href="https://www.instagram.com/saratoffice/" class="btn btn-primary" target="_blank" style="background: linear-gradient(135deg, #E4405F, #833AB4);">
+                            <a href="https://www.instagram.com/saratoffice/" class="btn btn-primary" target="_blank" style="background: linear-gradient(135deg, #E4405F, #833AB4); margin-top: 20px;">
                                 <i class="fab fa-instagram"></i>
                                 Visit Instagram
                             </a>
@@ -927,11 +1041,11 @@
                     </div>
                     <div class="social-iframe linkedin-iframe">
                         <h2 style="color: #0A66C2; text-align: center; padding: 15px 0; margin: 0; background: var(--white);">LinkedIn</h2>
-                        <div style="padding: 20px; background: var(--white); text-align: center; height: 450px; display: flex; flex-direction: column; justify-content: center;">
+                        <div style="padding: 20px; background: var(--white); text-align: center; min-height: 450px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                             <i class="fab fa-linkedin" style="font-size: 3rem; color: #0A66C2; margin-bottom: 15px;"></i>
                             <h3>Sarat Office</h3>
                             <p>Connect professionally on LinkedIn</p>
-                            <a href="https://linkedin.com/in/saratoffice" class="btn btn-primary" target="_blank" style="background: #0A66C2;">
+                            <a href="https://linkedin.com/in/saratoffice" class="btn btn-primary" target="_blank" style="background: #0A66C2; margin-top: 20px;">
                                 <i class="fab fa-linkedin"></i>
                                 Connect on LinkedIn
                             </a>
@@ -943,11 +1057,11 @@
                 <div class="social-platform">
                     <div class="social-iframe github-iframe">
                         <h2 style="color: #181717; text-align: center; padding: 15px 0; margin: 0; background: var(--white);">GitHub</h2>
-                        <div style="padding: 20px; background: var(--white); text-align: center; height: 450px; display: flex; flex-direction: column; justify-content: center;">
+                        <div style="padding: 20px; background: var(--white); text-align: center; min-height: 450px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                             <i class="fab fa-github" style="font-size: 3rem; color: #181717; margin-bottom: 15px;"></i>
                             <h3>saratoffice</h3>
                             <p>Open source projects and code sharing</p>
-                            <a href="https://github.com/saratoffice" class="btn btn-primary" target="_blank" style="background: #181717;">
+                            <a href="https://github.com/saratoffice" class="btn btn-primary" target="_blank" style="background: #181717; margin-top: 20px;">
                                 <i class="fab fa-github"></i>
                                 View GitHub
                             </a>
