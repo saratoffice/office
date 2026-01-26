@@ -1,1211 +1,1002 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Sarat Office - Government Resources & Tools</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Comprehensive platform for government documents, converters, and useful tools for citizens and professionals.">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    /* =================================
-       GLOBAL VARIABLES & RESET
-    ================================= */
-    :root {
-      --primary-green: #7CFF00;
-      --primary-blue: #0033cc;
-      --accent-purple: #8b5cf6;
-      --accent-orange: #FF6B35;
-      --accent-teal: #00B4D8;
-      --dark-blue: #4c1d95;
-      --text-dark: #2d3748;
-      --text-medium: #4a5568;
-      --text-light: #718096;
-      --white: #ffffff;
-      --light-bg: #f8fafc;
-      --card-bg: #ffffff;
-      --shadow-light: 0 10px 25px rgba(0, 0, 0, 0.05);
-      --shadow-medium: 0 15px 35px rgba(0, 0, 0, 0.1);
-      --shadow-strong: 0 20px 40px rgba(0, 0, 0, 0.15);
-      --border-radius: 16px;
-      --border-radius-sm: 8px;
-      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: var(--text-dark);
-      background-color: var(--light-bg);
-      line-height: 1.6;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-    }
-
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    section {
-      padding: 80px 0;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 60px;
-    }
-
-    .section-header h2 {
-      font-size: 2.8rem;
-      margin-bottom: 15px;
-      background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-weight: 800;
-      position: relative;
-      display: inline-block;
-    }
-
-    .section-header h2::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary-green), var(--accent-purple));
-      border-radius: 2px;
-    }
-
-    .section-header p {
-      font-size: 1.2rem;
-      color: var(--text-medium);
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 30px;
-      border-radius: 50px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: var(--transition);
-      cursor: pointer;
-      border: none;
-      font-size: 1rem;
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
-      color: var(--white);
-      box-shadow: var(--shadow-light);
-    }
-
-    .btn-primary::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
-      transition: left 0.5s ease;
-      z-index: -1;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-strong);
-    }
-
-    .btn-primary:hover::before {
-      left: 0;
-    }
-
-    .btn-secondary {
-      background: linear-gradient(135deg, var(--accent-purple), var(--primary-blue));
-      color: var(--white);
-      box-shadow: var(--shadow-light);
-    }
-
-    .btn-secondary:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-strong);
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--primary-blue);
-      border: 2px solid var(--primary-blue);
-    }
-
-    .btn-outline:hover {
-      background: var(--primary-blue);
-      color: var(--white);
-      transform: translateY(-3px);
-    }
-
-    /* =================================
-       HERO SECTION
-    ================================= */
-    .hero {
-      padding: 120px 40px 80px;
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 60px;
-      background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -100px;
-      right: -100px;
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(124, 255, 0, 0.1) 0%, rgba(0, 51, 204, 0.05) 70%, transparent 100%);
-      border-radius: 50%;
-      z-index: 0;
-    }
-
-    .hero-text {
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero-text h1 {
-      font-size: 3.8rem;
-      margin-bottom: 25px;
-      background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-weight: 900;
-      line-height: 1.1;
-      letter-spacing: -0.5px;
-    }
-
-    .hero-text p {
-      font-size: 1.2rem;
-      margin-bottom: 25px;
-      line-height: 1.8;
-      color: var(--text-medium);
-      text-align: justify;
-    }
-
-    .hero-stats {
-      display: flex;
-      gap: 40px;
-      margin-top: 40px;
-      flex-wrap: wrap;
-    }
-
-    .stat-item {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .stat-label {
-      font-size: 0.9rem;
-      color: var(--text-light);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-top: 5px;
-    }
-
-    .hero-image {
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero-image img {
-      width: 100%;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-strong);
-      transition: var(--transition);
-      transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
-      border: 12px solid var(--white);
-    }
-
-    .hero-image img:hover {
-      transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1.02);
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
-    }
-
-    /* =================================
-       TOOLS SECTION
-    ================================= */
-    .tools-section {
-      background: var(--white);
-    }
-
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      margin-top: 40px;
-    }
-
-    .tool-card {
-      background: var(--card-bg);
-      border-radius: var(--border-radius);
-      padding: 35px 30px;
-      box-shadow: var(--shadow-light);
-      transition: var(--transition);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .tool-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 5px;
-      height: 100%;
-      background: linear-gradient(to bottom, var(--primary-green), var(--primary-blue));
-      transition: width 0.3s ease;
-    }
-
-    .tool-card:hover {
-      transform: translateY(-10px);
-      box-shadow: var(--shadow-strong);
-    }
-
-    .tool-card:hover::before {
-      width: 8px;
-    }
-
-    .tool-icon {
-      width: 70px;
-      height: 70px;
-      background: linear-gradient(135deg, rgba(124, 255, 0, 0.1), rgba(0, 51, 204, 0.1));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 25px;
-      font-size: 28px;
-      color: var(--primary-blue);
-    }
-
-    .tool-card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-      color: var(--text-dark);
-    }
-
-    .tool-card p {
-      color: var(--text-medium);
-      margin-bottom: 20px;
-      line-height: 1.7;
-    }
-
-    /* =================================
-       LEGAL DOCUMENTS SECTION
-    ================================= */
-    .documents-section {
-      background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
-    }
-
-    .documents-tabs {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 40px;
-      flex-wrap: wrap;
-    }
-
-    .tab-btn {
-      padding: 12px 28px;
-      background: var(--white);
-      border: 2px solid #e2e8f0;
-      border-radius: 50px;
-      font-weight: 600;
-      color: var(--text-medium);
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .tab-btn.active,
-    .tab-btn:hover {
-      background: var(--primary-blue);
-      color: var(--white);
-      border-color: var(--primary-blue);
-    }
-
-    .documents-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 30px;
-    }
-
-    .document-card {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      overflow: hidden;
-      box-shadow: var(--shadow-light);
-      transition: var(--transition);
-    }
-
-    .document-card:hover {
-      transform: translateY(-8px);
-      box-shadow: var(--shadow-strong);
-    }
-
-    .document-header {
-      padding: 25px;
-      background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
-      color: var(--white);
-    }
-
-    .document-header h3 {
-      font-size: 1.4rem;
-      margin-bottom: 10px;
-    }
-
-    .document-body {
-      padding: 25px;
-    }
-
-    .document-body p {
-      color: var(--text-medium);
-      margin-bottom: 20px;
-      line-height: 1.7;
-    }
-
-    .document-meta {
-      display: flex;
-      justify-content: space-between;
-      color: var(--text-light);
-      font-size: 0.9rem;
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid #e2e8f0;
-    }
-
-    /* =================================
-       RESOURCES SECTION
-    ================================= */
-    .resources-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 30px;
-    }
-
-    .resource-card {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      padding: 30px;
-      text-align: center;
-      box-shadow: var(--shadow-light);
-      transition: var(--transition);
-      border: 2px solid transparent;
-    }
-
-    .resource-card:hover {
-      border-color: var(--primary-green);
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-medium);
-    }
-
-    .resource-icon {
-      font-size: 2.5rem;
-      color: var(--primary-blue);
-      margin-bottom: 20px;
-    }
-
-    .resource-card h3 {
-      font-size: 1.4rem;
-      margin-bottom: 15px;
-      color: var(--text-dark);
-    }
-
-    .resource-card p {
-      color: var(--text-medium);
-      margin-bottom: 20px;
-    }
-
-    /* =================================
-       ABOUT HIGHLIGHT SECTION
-    ================================= */
-    .about-highlight {
-      background: linear-gradient(135deg, var(--white) 0%, #f8fafc 100%);
-      position: relative;
-    }
-
-    .about-highlight::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary-green), var(--primary-blue), var(--accent-purple));
-    }
-
-    .about-wrapper {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 70px;
-      align-items: center;
-    }
-
-    .about-photo {
-      text-align: center;
-      position: relative;
-    }
-
-    .about-photo::before {
-      content: '';
-      position: absolute;
-      width: 110%;
-      height: 110%;
-      top: -5%;
-      left: -5%;
-      background: linear-gradient(135deg, var(--primary-green) 0%, transparent 50%, var(--primary-blue) 100%);
-      border-radius: 50%;
-      z-index: 0;
-      opacity: 0.1;
-    }
-
-    .about-photo img {
-      width: 100%;
-      max-width: 380px;
-      border-radius: 50%;
-      transition: var(--transition);
-      position: relative;
-      z-index: 1;
-      border: 10px solid var(--white);
-      box-shadow: var(--shadow-strong);
-    }
-
-    .about-photo img:hover {
-      transform: scale(1.08) rotate(5deg);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-    }
-
-    .about-social {
-      margin-top: 25px;
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 2;
-    }
-
-    .about-text h2 {
-      font-size: 2.5rem;
-      margin-bottom: 25px;
-      color: var(--text-dark);
-      font-weight: 800;
-      line-height: 1.2;
-      position: relative;
-      padding-bottom: 15px;
-    }
-
-    .about-text h2::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 80px;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary-green), var(--accent-purple));
-      border-radius: 2px;
-    }
-
-    .about-text p {
-      margin-bottom: 25px;
-      line-height: 1.8;
-      color: var(--text-medium);
-      font-size: 1.125rem;
-      position: relative;
-      padding-left: 20px;
-      border-left: 3px solid rgba(124, 255, 0, 0.3);
-    }
-
-    /* =================================
-       CTA SECTION
-    ================================= */
-    .cta-section {
-      background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
-      color: var(--white);
-      text-align: center;
-      padding: 100px 40px;
-      border-radius: var(--border-radius);
-      margin: 80px auto;
-      max-width: 1200px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-section::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"/></svg>');
-      background-size: cover;
-      opacity: 0.1;
-    }
-
-    .cta-content {
-      position: relative;
-      z-index: 1;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .cta-content h2 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      font-weight: 800;
-    }
-
-    .cta-content p {
-      font-size: 1.3rem;
-      margin-bottom: 40px;
-      opacity: 0.9;
-    }
-
-    .cta-buttons {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .cta-btn {
-      background: var(--white);
-      color: var(--primary-blue);
-      padding: 16px 36px;
-      border-radius: 50px;
-      font-weight: 700;
-      text-decoration: none;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .cta-btn:hover {
-      background: var(--primary-green);
-      color: var(--white);
-      transform: translateY(-3px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    /* =================================
-       RESPONSIVE DESIGN
-    ================================= */
-    @media (max-width: 1100px) {
-      .hero {
-        gap: 40px;
-        padding: 100px 30px 60px;
-      }
-      
-      .hero-text h1 {
-        font-size: 3rem;
-      }
-      
-      .about-wrapper {
-        gap: 50px;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: 1fr;
-        text-align: center;
-        padding: 80px 20px 40px;
-        gap: 40px;
-      }
-      
-      .hero-text h1 {
-        font-size: 2.5rem;
-      }
-      
-      .hero-text p {
-        text-align: left;
-      }
-      
-      .hero-image img {
-        transform: none;
-        max-width: 600px;
-        margin: 0 auto;
-      }
-      
-      .hero-stats {
-        justify-content: center;
-      }
-      
-      .about-highlight,
-      .tools-section,
-      .documents-section {
-        padding: 60px 0;
-      }
-      
-      .about-wrapper {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 40px;
-      }
-      
-      .about-text h2::after {
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      
-      .about-text p {
-        padding-left: 0;
-        border-left: none;
-        text-align: left;
-        padding-top: 15px;
-        border-top: 3px solid rgba(124, 255, 0, 0.3);
-      }
-      
-      .cta-section {
-        padding: 60px 20px;
-        margin: 40px 20px;
-      }
-      
-      .cta-content h2 {
-        font-size: 2.2rem;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .hero-text h1 {
-        font-size: 2rem;
-      }
-      
-      .hero-text p,
-      .about-text p {
-        font-size: 1rem;
-      }
-      
-      .section-header h2 {
-        font-size: 2rem;
-      }
-      
-      .tools-grid,
-      .documents-grid,
-      .resources-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .stat-number {
-        font-size: 2rem;
-      }
-      
-      .cta-buttons {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .cta-btn {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-
-    /* =================================
-       ANIMATIONS
-    ================================= */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .hero-text,
-    .hero-image,
-    .tool-card,
-    .document-card,
-    .resource-card,
-    .about-photo,
-    .about-text {
-      animation: fadeInUp 0.8s ease-out forwards;
-      opacity: 0;
-    }
-
-    .hero-image { animation-delay: 0.2s; }
-    .tool-card:nth-child(1) { animation-delay: 0.1s; }
-    .tool-card:nth-child(2) { animation-delay: 0.2s; }
-    .tool-card:nth-child(3) { animation-delay: 0.3s; }
-    .document-card:nth-child(1) { animation-delay: 0.1s; }
-    .document-card:nth-child(2) { animation-delay: 0.2s; }
-    .document-card:nth-child(3) { animation-delay: 0.3s; }
-    .about-photo { animation-delay: 0.3s; }
-    .about-text { animation-delay: 0.4s; }
-
-    /* =================================
-       SCROLL ANIMATIONS
-    ================================= */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>About Sarat Rout - Civil Supplies Officer & Public Servant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn about Sarat Rout, an Assistant Civil Supplies Officer dedicated to public service, duty, and making information accessible to all.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* =================================
+           ABOUT ME PAGE STYLES
+        ================================= */
+        :root {
+            --primary-green: #7CFF00;
+            --primary-blue: #0033cc;
+            --accent-purple: #8b5cf6;
+            --accent-orange: #FF6B35;
+            --accent-teal: #00B4D8;
+            --dark-blue: #4c1d95;
+            --text-dark: #2d3748;
+            --text-medium: #4a5568;
+            --text-light: #718096;
+            --white: #ffffff;
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --shadow-light: 0 10px 25px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 15px 35px rgba(0, 0, 0, 0.1);
+            --shadow-strong: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--light-bg);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--accent-purple));
+            border-radius: 2px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+            color: var(--white);
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        /* =================================
+           HERO PROFILE SECTION
+        ================================= */
+        .profile-hero {
+            padding: 120px 0 80px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+        }
+
+        .profile-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .profile-image {
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-image img {
+            width: 100%;
+            max-width: 450px;
+            border-radius: 50%;
+            border: 12px solid var(--white);
+            box-shadow: var(--shadow-strong);
+            transition: var(--transition);
+        }
+
+        .profile-image img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+        }
+
+        .profile-title {
+            font-size: 1.2rem;
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .profile-name {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .profile-tagline {
+            font-size: 1.5rem;
+            color: var(--text-medium);
+            margin-bottom: 30px;
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        .profile-bio {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--text-medium);
+            margin-bottom: 30px;
+            padding-left: 20px;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .profile-contact {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-medium);
+        }
+
+        .contact-item i {
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+        }
+
+        /* =================================
+           PHILOSOPHY SECTION
+        ================================= */
+        .philosophy-section {
+            background: var(--white);
+        }
+
+        .philosophy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .philosophy-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow-light);
+            transition: var(--transition);
+            text-align: center;
+            border-top: 5px solid var(--primary-green);
+        }
+
+        .philosophy-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        .philosophy-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(124, 255, 0, 0.1), rgba(0, 51, 204, 0.1));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 32px;
+            color: var(--primary-blue);
+        }
+
+        .philosophy-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .philosophy-card p {
+            color: var(--text-medium);
+            line-height: 1.7;
+        }
+
+        /* =================================
+           WORK EXPERIENCE SECTION
+        ================================= */
+        .experience-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary-green), var(--primary-blue));
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 50px;
+            padding-left: 80px;
+        }
+
+        .timeline-date {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-align: center;
+            line-height: 1.2;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .timeline-content {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow-light);
+            transition: var(--transition);
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .timeline-content:hover {
+            transform: translateX(10px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        .timeline-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .timeline-content .position {
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .timeline-content .location {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timeline-content .location i {
+            color: var(--primary-green);
+        }
+
+        .timeline-content p {
+            color: var(--text-medium);
+            line-height: 1.7;
+        }
+
+        /* =================================
+           EDUCATION SECTION
+        ================================= */
+        .education-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .education-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 35px 30px;
+            box-shadow: var(--shadow-light);
+            transition: var(--transition);
+            text-align: center;
+            border-top: 5px solid var(--accent-purple);
+        }
+
+        .education-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        .education-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(108, 92, 231, 0.1));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 28px;
+            color: var(--accent-purple);
+        }
+
+        .education-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .education-card .degree {
+            color: var(--accent-purple);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .education-card .years {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .education-card p {
+            color: var(--text-medium);
+            line-height: 1.7;
+        }
+
+        /* =================================
+           SOCIAL MEDIA SECTION
+        ================================= */
+        .social-section {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: var(--white);
+        }
+
+        .social-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .social-header h2 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: var(--white);
+        }
+
+        .social-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 50px;
+        }
+
+        .social-link {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: var(--shadow-strong);
+        }
+
+        .social-link.facebook { background: linear-gradient(135deg, #1877F2, #0d5fcc); }
+        .social-link.pinterest { background: linear-gradient(135deg, #E60023, #cc001f); }
+        .social-link.twitter { background: linear-gradient(135deg, #000000, #333333); }
+        .social-link.instagram { background: linear-gradient(135deg, #E4405F, #d42c53); }
+        .social-link.youtube { background: linear-gradient(135deg, #FF0000, #cc0000); }
+        .social-link.linkedin { background: linear-gradient(135deg, #0A66C2, #0855a3); }
+        .social-link.github { background: linear-gradient(135deg, #181717, #333333); }
+        .social-link.blog { background: linear-gradient(135deg, #FF6B35, #E4405F); }
+
+        .social-feeds {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .social-feed {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feed-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .feed-header i {
+            font-size: 1.8rem;
+        }
+
+        .feed-header h3 {
+            font-size: 1.4rem;
+            color: var(--white);
+        }
+
+        .feed-content {
+            height: 400px;
+            overflow: hidden;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .feed-placeholder {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-sm);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .feed-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .feed-placeholder p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+        }
+
+        /* =================================
+           RESPONSIVE DESIGN
+        ================================= */
+        @media (max-width: 992px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 40px;
+            }
+
+            .profile-bio {
+                padding-left: 0;
+                border-left: none;
+                border-top: 4px solid var(--primary-green);
+                padding-top: 20px;
+            }
+
+            .profile-contact {
+                justify-content: center;
+            }
+
+            .timeline::before {
+                left: 25px;
+            }
+
+            .timeline-item {
+                padding-left: 60px;
+            }
+
+            .timeline-date {
+                width: 50px;
+                height: 50px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-header h2 {
+                font-size: 2.2rem;
+            }
+
+            .profile-name {
+                font-size: 2.5rem;
+            }
+
+            .profile-tagline {
+                font-size: 1.2rem;
+            }
+
+            .social-header h2 {
+                font-size: 2.2rem;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                padding-left: 50px;
+            }
+
+            .timeline-date {
+                width: 40px;
+                height: 40px;
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-name {
+                font-size: 2rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .social-links {
+                gap: 15px;
+            }
+
+            .social-link {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+
+            .timeline-content {
+                padding: 20px;
+            }
+
+            .education-card,
+            .philosophy-card {
+                padding: 25px 20px;
+            }
+        }
+
+        /* Social icons mobile fix */
+        @media (max-width: 768px) {
+            .social-links {
+                overflow-x: auto;
+                overflow-y: hidden;
+                justify-content: flex-start;
+                padding: 10px 0;
+                width: 100%;
+                flex-wrap: nowrap;
+                gap: 15px;
+            }
+
+            .social-links::-webkit-scrollbar {
+                height: 4px;
+            }
+
+            .social-links::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 2px;
+            }
+
+            .social-links::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 2px;
+            }
+
+            .social-link {
+                flex-shrink: 0;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <div id="site-header"></div>
 
-<div id="site-header"></div>
+    <main>
+        <!-- HERO PROFILE SECTION -->
+        <section class="profile-hero">
+            <div class="container">
+                <div class="profile-container">
+                    <div class="profile-image">
+                        <img src="https://images.unsplash.com/photo-1557862921-37829c790f19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
+                             alt="Sarat Rout - Civil Supplies Officer">
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-title">Assistant Civil Supplies Officer</div>
+                        <h1 class="profile-name">Sarat Rout</h1>
+                        <div class="profile-tagline">"Duty is God"</div>
+                        
+                        <div class="profile-bio">
+                            I am always in peace, as my intentions are good and my heart is pure. 
+                            I believe in serving the people with dedication and integrity, 
+                            making essential commodities accessible to all, and ensuring transparent 
+                            governance. My work in the Civil Supplies Department is not just a job, 
+                            but a commitment to public welfare.
+                        </div>
+                        
+                        <div class="profile-contact">
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Bolangir, Odisha, India</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-building"></i>
+                                <span>Civil Supply Office, Bolangir</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>Serving since December 2020</span>
+                            </div>
+                        </div>
+                        
+                        <a href="#contact" class="btn btn-primary" style="margin-top: 30px;">
+                            <i class="fas fa-envelope"></i>
+                            <span>Connect With Me</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<main>
-  <!-- HERO SECTION -->
-  <section class="hero container">
-    <div class="hero-text">
-      <h1>Empowering Citizens Through Accessible Information</h1>
-      
-      <p>
-        At Sarat Office, we bridge the gap between government resources and public accessibility. 
-        Our comprehensive platform provides curated government documents, essential tools, and 
-        reliable information to simplify bureaucratic processes for everyone.
-      </p>
-      
-      <p>
-        From legal acts and regulations to practical utilities like currency converters and 
-        password generators, we've created a one-stop solution for citizens, professionals, 
-        and researchers alike.
-      </p>
-      
-      <div class="hero-stats">
-        <div class="stat-item">
-          <span class="stat-number">50+</span>
-          <span class="stat-label">Resources</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">10+</span>
-          <span class="stat-label">Tools</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">24/7</span>
-          <span class="stat-label">Access</span>
-        </div>
-      </div>
-      
-      <a href="#tools" class="btn btn-primary">
-        <span>Explore Our Tools</span>
-        <i class="fas fa-arrow-down"></i>
-      </a>
-    </div>
-    
-    <div class="hero-image">
-      <img src="assets/images/Sub-Collector-Balangir.jpeg" alt="Government Resources & Tools Platform" loading="lazy">
-    </div>
-  </section>
+        <!-- PERSONAL PHILOSOPHY SECTION -->
+        <section class="philosophy-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>My Philosophy & Values</h2>
+                    <p>The principles that guide my work and life</p>
+                </div>
+                
+                <div class="philosophy-grid">
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon">
+                            <i class="fas fa-hands-helping"></i>
+                        </div>
+                        <h3>Service Before Self</h3>
+                        <p>I believe true fulfillment comes from serving others. My role in civil supplies is about ensuring that essential commodities reach every citizen, especially those in need.</p>
+                    </div>
+                    
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h3>Integrity in Action</h3>
+                        <p>Transparency and honesty are not just professional requirements but personal values. Every decision I make is guided by ethical principles and fairness.</p>
+                    </div>
+                    
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <h3>Nature & Spirituality</h3>
+                        <p>Nature is my sanctuary and spiritual guide. It teaches resilience, balance, and the importance of nurturing life in all its forms.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <!-- TOOLS SECTION -->
-  <section id="tools" class="tools-section container">
-    <div class="section-header">
-      <h2>Useful Tools & Calculators</h2>
-      <p>Practical utilities designed to simplify everyday tasks and calculations</p>
-    </div>
-    
-    <div class="tools-grid">
-      <div class="tool-card">
-        <div class="tool-icon">
-          <i class="fas fa-money-bill-wave"></i>
-        </div>
-        <h3>Currency Converter</h3>
-        <p>Real-time currency conversion with up-to-date exchange rates. Perfect for travelers, importers, and financial calculations.</p>
-        <a href="currency-converter.html" class="btn btn-outline">Use Converter</a>
-      </div>
-      
-      <div class="tool-card">
-        <div class="tool-icon">
-          <i class="fas fa-weight-scale"></i>
-        </div>
-        <h3>Density Converter</h3>
-        <p>Convert between different density units instantly. Essential for scientific calculations, engineering, and academic purposes.</p>
-        <a href="density-converter.html" class="btn btn-outline">Convert Density</a>
-      </div>
-      
-      <div class="tool-card">
-        <div class="tool-icon">
-          <i class="fas fa-lightbulb"></i>
-        </div>
-        <h3>Electricity Calculator</h3>
-        <p>Calculate electricity bills, estimate power consumption, and understand tariff structures for better energy management.</p>
-        <a href="electricity-bill.html" class="btn btn-outline">Calculate Bill</a>
-      </div>
-      
-      <div class="tool-card">
-        <div class="tool-icon">
-          <i class="fas fa-key"></i>
-        </div>
-        <h3>Password Generator</h3>
-        <p>Generate strong, secure passwords with customizable options for length, characters, and special symbols.</p>
-        <a href="password-generator.html" class="btn btn-outline">Generate Password</a>
-      </div>
-    </div>
-  </section>
+        <!-- WORK EXPERIENCE SECTION -->
+        <section class="experience-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Professional Journey</h2>
+                    <p>My career in public service and civil supplies</p>
+                </div>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">2020<br>Present</div>
+                        <div class="timeline-content">
+                            <h3>Civil Supply Office, Bolangir</h3>
+                            <div class="position">Assistant Civil Supplies Officer</div>
+                            <div class="location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Bolangir district, Odisha</span>
+                            </div>
+                            <p>Managing essential commodities distribution, ensuring fair price shops operation, implementing government schemes, and monitoring supply chain efficiency in the district.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2019<br>2020</div>
+                        <div class="timeline-content">
+                            <h3>Odisha State Civil Supplies Office</h3>
+                            <div class="position">Incharge - Multiple Blocks</div>
+                            <div class="location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Ganjam, Chatrapur, Odisha</span>
+                            </div>
+                            <p>Served as Incharge in Aska Block, Dharakote Block, and supervised essential commodities distribution across multiple blocks in Ganjam district.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2018<br>2019</div>
+                        <div class="timeline-content">
+                            <h3>Food Supplies & Consumer Welfare Department</h3>
+                            <div class="position">Inspector of Supplies</div>
+                            <div class="location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Various locations, Odisha</span>
+                            </div>
+                            <p>Worked as Inspector of Supplies in Sheragada Block, Surada Block, and FSCW District Head Office in Chatrapur, ensuring compliance and efficient distribution systems.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2017<br>2018</div>
+                        <div class="timeline-content">
+                            <h3>Food Supplies & Consumer Welfare Department</h3>
+                            <div class="position">Inspector of Supplies</div>
+                            <div class="location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Bhubaneswar, Odisha</span>
+                            </div>
+                            <p>Started my career in public service with the Food Supplies Department, learning the intricacies of public distribution systems and consumer welfare initiatives.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <!-- LEGAL DOCUMENTS SECTION -->
-  <section class="documents-section container">
-    <div class="section-header">
-      <h2>Legal Documents & Acts</h2>
-      <p>Comprehensive collection of important government acts and regulations</p>
-    </div>
-    
-    <div class="documents-tabs">
-      <button class="tab-btn active" data-tab="petroleum">Petroleum Acts</button>
-      <button class="tab-btn" data-tab="environment">Environment Acts</button>
-      <button class="tab-btn" data-tab="other">Other Resources</button>
-    </div>
-    
-    <div class="documents-grid">
-      <div class="document-card">
-        <div class="document-header">
-          <h3>Petroleum Act 1934</h3>
-          <p>Historical petroleum legislation</p>
-        </div>
-        <div class="document-body">
-          <p>The Petroleum Act, 1934 regulates the import, transport, storage, production, and refining of petroleum in India.</p>
-          <div class="document-meta">
-            <span><i class="far fa-calendar"></i> Enacted: 1934</span>
-            <span><i class="far fa-file-pdf"></i> PDF Available</span>
-          </div>
-          <a href="petroleum-act-1934.html" class="btn btn-primary">View Details</a>
-        </div>
-      </div>
-      
-      <div class="document-card">
-        <div class="document-header">
-          <h3>Petroleum Rules 2002</h3>
-          <p>Modern petroleum regulations</p>
-        </div>
-        <div class="document-body">
-          <p>Detailed rules and safety regulations for handling petroleum products under the Petroleum Act, 1934.</p>
-          <div class="document-meta">
-            <span><i class="far fa-calendar"></i> Updated: 2002</span>
-            <span><i class="far fa-file-pdf"></i> PDF Available</span>
-          </div>
-          <a href="petroleum-rules-2002.html" class="btn btn-primary">View Rules</a>
-        </div>
-      </div>
-      
-      <div class="document-card">
-        <div class="document-header">
-          <h3>Environment Conservation Act 1955</h3>
-          <p>Environmental protection legislation</p>
-        </div>
-        <div class="document-body">
-          <p>Early environmental protection legislation addressing pollution control and conservation of natural resources.</p>
-          <div class="document-meta">
-            <span><i class="far fa-calendar"></i> Enacted: 1955</span>
-            <span><i class="far fa-file-pdf"></i> PDF Available</span>
-          </div>
-          <a href="ec-act-1955.html" class="btn btn-primary">Read Act</a>
-        </div>
-      </div>
-    </div>
-  </section>
+        <!-- EDUCATION SECTION -->
+        <section class="container">
+            <div class="section-header">
+                <h2>Education & Foundation</h2>
+                <p>The learning journey that shaped my perspective</p>
+            </div>
+            
+            <div class="education-grid">
+                <div class="education-card">
+                    <div class="education-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h3>Upendra Nath College</h3>
+                    <div class="degree">Bachelor of Science (Mathematics)</div>
+                    <div class="years">Higher Education</div>
+                    <p>Completed my graduation with Mathematics, developing analytical and problem-solving skills that I apply in my administrative work.</p>
+                </div>
+                
+                <div class="education-card">
+                    <div class="education-icon">
+                        <i class="fas fa-school"></i>
+                    </div>
+                    <h3>Sabira High School</h3>
+                    <div class="degree">Secondary Education</div>
+                    <div class="years">8th, 9th and 10th Standards</div>
+                    <p>Completed my high school education, building the foundation for higher studies and developing values of discipline and hard work.</p>
+                </div>
+                
+                <div class="education-card">
+                    <div class="education-icon">
+                        <i class="fas fa-book-reader"></i>
+                    </div>
+                    <h3>Early Education</h3>
+                    <div class="degree">Primary & Upper Primary</div>
+                    <div class="years">Salampur M.E. & U.P. School</div>
+                    <p>Studied 6th and 7th standards at Salampur M.E. School and completed upper primary education at Salampur U.P. School, laying the foundation of my educational journey.</p>
+                </div>
+            </div>
+        </section>
 
-  <!-- RESOURCES SECTION -->
-  <section class="container">
-    <div class="section-header">
-      <h2>Additional Resources</h2>
-      <p>More useful tools and information for various needs</p>
-    </div>
-    
-    <div class="resources-grid">
-      <div class="resource-card">
-        <div class="resource-icon">
-          <i class="fas fa-file-shield"></i>
-        </div>
-        <h3>Guard File System</h3>
-        <p>Secure document management and protection system for important files and records.</p>
-        <a href="guard-file.html" class="btn btn-outline">Access System</a>
-      </div>
-      
-      <div class="resource-card">
-        <div class="resource-icon">
-          <i class="fas fa-map-marker-alt"></i>
-        </div>
-        <h3>Office Locations</h3>
-        <p>Find government office locations, contact information, and service details.</p>
-        <a href="locations.html" class="btn btn-outline">Find Locations</a>
-      </div>
-      
-      <div class="resource-card">
-        <div class="resource-icon">
-          <i class="fas fa-link"></i>
-        </div>
-        <h3>Useful Web Links</h3>
-        <p>Curated collection of reliable websites for government services and information.</p>
-        <a href="weblinks.html" class="btn btn-outline">Browse Links</a>
-      </div>
-      
-      <div class="resource-card">
-        <div class="resource-icon">
-          <i class="fas fa-id-card"></i>
-        </div>
-        <h3>HSD License 1979</h3>
-        <p>Information and guidelines for High Speed Diesel licensing under 1979 regulations.</p>
-        <a href="hsd-license-1979.html" class="btn btn-outline">View License Info</a>
-      </div>
-    </div>
-  </section>
+        <!-- SOCIAL MEDIA & CONNECTIONS SECTION -->
+        <section class="social-section" id="contact">
+            <div class="container">
+                <div class="social-header">
+                    <h2>Connect & Follow</h2>
+                    <p>Stay updated with my work, thoughts, and initiatives through social media</p>
+                </div>
+                
+                <div class="social-links">
+                    <a href="https://www.instagram.com/saratoffice/?hl=en" class="social-link instagram" target="_blank" rel="noopener" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://twitter.com/saratoffice" class="social-link twitter" target="_blank" rel="noopener" title="X (Twitter)">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/saratoffice/" class="social-link linkedin" target="_blank" rel="noopener" title="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://www.youtube.com/channel/UCwU1xs0TRC64ziPR-JXNkjQ" class="social-link youtube" target="_blank" rel="noopener" title="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="https://www.facebook.com/saratoffice/" class="social-link facebook" target="_blank" rel="noopener" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://in.pinterest.com/saratoffice/" class="social-link pinterest" target="_blank" rel="noopener" title="Pinterest">
+                        <i class="fab fa-pinterest-p"></i>
+                    </a>
+                    <a href="https://github.com/saratoffice" class="social-link github" target="_blank" rel="noopener" title="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="http://saratoffice.blogspot.in/" class="social-link blog" target="_blank" rel="noopener" title="Blog">
+                        <i class="fas fa-blog"></i>
+                    </a>
+                </div>
+                
+                <div class="social-feeds">
+                    <div class="social-feed">
+                        <div class="feed-header">
+                            <i class="fab fa-instagram" style="color: #E4405F;"></i>
+                            <h3>Latest from Instagram</h3>
+                        </div>
+                        <div class="feed-content">
+                            <div class="feed-placeholder">
+                                <i class="fab fa-instagram"></i>
+                                <p>Follow <strong>@saratoffice</strong> on Instagram for updates about public service initiatives, community work, and insights into civil supplies management.</p>
+                                <a href="https://www.instagram.com/saratoffice/?hl=en" class="btn btn-primary" style="margin-top: 20px; background: #E4405F; border: none;" target="_blank">
+                                    Visit Instagram
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="social-feed">
+                        <div class="feed-header">
+                            <i class="fab fa-twitter" style="color: #000000;"></i>
+                            <h3>Recent Tweets</h3>
+                        </div>
+                        <div class="feed-content">
+                            <div class="feed-placeholder">
+                                <i class="fab fa-twitter"></i>
+                                <p>Follow <strong>@saratoffice</strong> on X (Twitter) for quick updates, thoughts on governance, and information about essential commodities distribution.</p>
+                                <a href="https://twitter.com/saratoffice" class="btn btn-primary" style="margin-top: 20px; background: #000000; border: none;" target="_blank">
+                                    Visit Twitter
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="social-feed">
+                        <div class="feed-header">
+                            <i class="fab fa-youtube" style="color: #FF0000;"></i>
+                            <h3>YouTube Channel</h3>
+                        </div>
+                        <div class="feed-content">
+                            <div class="feed-placeholder">
+                                <i class="fab fa-youtube"></i>
+                                <p>Subscribe to my YouTube channel for informative videos about government services, public welfare initiatives, and educational content.</p>
+                                <a href="https://www.youtube.com/channel/UCwU1xs0TRC64ziPR-JXNkjQ" class="btn btn-primary" style="margin-top: 20px; background: #FF0000; border: none;" target="_blank">
+                                    Visit YouTube
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-  <!-- CTA SECTION -->
-  <section class="cta-section">
-    <div class="cta-content">
-      <h2>Start Exploring Resources Today</h2>
-      <p>Access all our tools, documents, and resources in one place. Simplify your work with our comprehensive platform.</p>
-      <div class="cta-buttons">
-        <a href="page-index.html" class="cta-btn">
-          <i class="fas fa-sitemap"></i>
-          <span>Browse All Pages</span>
-        </a>
-        <a href="#tools" class="cta-btn">
-          <i class="fas fa-tools"></i>
-          <span>Try Our Tools</span>
-        </a>
-      </div>
-    </div>
-  </section>
+    <div id="site-footer"></div>
 
-  <!-- ABOUT HIGHLIGHT SECTION -->
-  <section class="about-highlight container">
-    <div class="about-wrapper">
-      <div class="about-photo">
-        <img src="assets/images/Profile.jpg" alt="Sarat Rout - Public Servant & Information Advocate" loading="lazy">
-        
-        <div class="about-social">
-          <a href="https://www.facebook.com/saratoffice/" title="Facebook" target="_blank" rel="noopener">
-            <i class="fab fa-facebook-f"></i>
-          </a>
-          <a href="https://in.pinterest.com/saratoffice/" title="Pinterest" target="_blank" rel="noopener">
-            <i class="fab fa-pinterest-p"></i>
-          </a>
-          <a href="https://x.com/saratoffice" title="X (Twitter)" target="_blank" rel="noopener">
-            <i class="fab fa-twitter"></i>
-          </a>
-          <a href="https://www.instagram.com/saratoffice" title="Instagram" target="_blank" rel="noopener">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <a href="https://www.youtube.com/@saratoffice" title="YouTube" target="_blank" rel="noopener">
-            <i class="fab fa-youtube"></i>
-          </a>
-          <a href="https://www.linkedin.com/in/routsaratkumar/" title="LinkedIn" target="_blank" rel="noopener">
-            <i class="fab fa-linkedin-in"></i>
-          </a>
-          <a href="https://github.com/saratoffice" title="GitHub" target="_blank" rel="noopener">
-            <i class="fab fa-github"></i>
-          </a>
-        </div>
-      </div>
-      
-      <div class="about-text">
-        <h2>A Life Between Duty and Devotion</h2>
-        
-        <p>
-          Nature, to me, is a sacred reflection of the divine — a living expression of beauty,
-          balance, and higher purpose. In its quiet resilience and boundless generosity, I find
-          spiritual grounding. Every tree preserved, every plant nurtured, deepens my connection
-          to something greater than myself.
-        </p>
-        
-        <p>
-          Knowledge, too, is a sacred tool — not just to inform, but to elevate. When used with
-          intention, it unlocks the potential to inspire, transform systems, and create meaningful
-          change in the world around us.
-        </p>
-        
-        <p>
-          My approach to public service is rooted in quiet, consistent action — in refining the
-          unnoticed details, solving everyday challenges, and respecting the dignity of every
-          living being. Governance, for me, is not a position of power but a practice of purpose.
-        </p>
-        
-        <a href="about-me.html" class="btn btn-secondary">
-          <span>Know More About Me</span>
-          <i class="fas fa-user-circle"></i>
-        </a>
-      </div>
-    </div>
-  </section>
-</main>
+    <script>
+        // Load Header and Footer
+        Promise.all([
+            fetch('header.html').then(res => res.text()),
+            fetch('footer.html').then(res => res.text()),
+            fetch('nav.html').then(res => res.text())
+        ])
+        .then(([headerHtml, footerHtml, navHtml]) => {
+            // Load header
+            document.getElementById('site-header').innerHTML = headerHtml;
+            
+            // Load navigation
+            const header = document.getElementById('site-header');
+            const navPlaceholder = header.querySelector('#main-nav');
+            if (navPlaceholder) {
+                navPlaceholder.innerHTML = navHtml;
+            } else {
+                const navContainer = document.createElement('div');
+                navContainer.id = 'main-nav';
+                navContainer.innerHTML = navHtml;
+                header.appendChild(navContainer);
+            }
+            
+            // Load footer
+            document.getElementById('site-footer').innerHTML = footerHtml;
+            
+            // Initialize mobile menu
+            setTimeout(() => {
+                document.addEventListener("click", function (e) {
+                    if (e.target.classList.contains("menu-toggle")) {
+                        const menu = document.querySelector(".menu");
+                        if (menu) {
+                            menu.classList.toggle("open");
+                            e.stopPropagation();
+                        }
+                    }
 
-<div id="site-footer"></div>
+                    const dropdownLink = e.target.closest(".dropdown > a");
+                    if (dropdownLink && window.innerWidth <= 900) {
+                        e.preventDefault();
+                        dropdownLink.parentElement.classList.toggle("open");
+                    }
 
-<script>
-  // Load Header and Footer
-  Promise.all([
-    fetch('header.html').then(res => res.text()),
-    fetch('footer.html').then(res => res.text()),
-    fetch('nav.html').then(res => res.text())
-  ])
-  .then(([headerHtml, footerHtml, navHtml]) => {
-    // Load header
-    document.getElementById('site-header').innerHTML = headerHtml;
-    
-    // Load navigation
-    const header = document.getElementById('site-header');
-    const navPlaceholder = header.querySelector('#main-nav');
-    if (navPlaceholder) {
-      navPlaceholder.innerHTML = navHtml;
-    } else {
-      // If #main-nav doesn't exist in header, append it
-      const navContainer = document.createElement('div');
-      navContainer.id = 'main-nav';
-      navContainer.innerHTML = navHtml;
-      header.appendChild(navContainer);
-    }
-    
-    // Load footer
-    document.getElementById('site-footer').innerHTML = footerHtml;
-    
-    // Initialize after content is loaded
-    setTimeout(initializePage, 100);
-  })
-  .catch(err => console.error('Error loading components:', err));
-
-  // Initialize page functionality
-  function initializePage() {
-    // Tab functionality for documents section
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const documentCards = document.querySelectorAll('.document-card');
-    
-    tabButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        // Remove active class from all buttons
-        tabButtons.forEach(btn => btn.classList.remove('active'));
-        // Add active class to clicked button
-        button.classList.add('active');
-        
-        // Filter cards (simplified example - in real implementation, you'd filter actual content)
-        const filter = button.getAttribute('data-tab');
-        console.log(`Filtering by: ${filter}`);
-        // Add actual filtering logic here based on your content structure
-      });
-    });
-    
-    // Mobile menu logic
-    document.addEventListener("click", function (e) {
-      /* Toggle main menu */
-      if (e.target.classList.contains("menu-toggle")) {
-        const menu = document.querySelector(".menu");
-        if (menu) {
-          menu.classList.toggle("open");
-          e.stopPropagation();
-        }
-      }
-
-      /* Toggle dropdowns on mobile */
-      const dropdownLink = e.target.closest(".dropdown > a");
-      if (dropdownLink && window.innerWidth <= 900) {
-        e.preventDefault();
-        dropdownLink.parentElement.classList.toggle("open");
-      }
-
-      /* Close menu when clicking outside */
-      if (!e.target.closest('.menu') && !e.target.closest('.menu-toggle')) {
-        const openMenu = document.querySelector('.menu.open');
-        if (openMenu) {
-          openMenu.classList.remove('open');
-        }
-        
-        const openDropdowns = document.querySelectorAll('.dropdown.open');
-        openDropdowns.forEach(dropdown => {
-          dropdown.classList.remove('open');
-        });
-      }
-    });
-
-    // Scroll animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, observerOptions);
-
-    // Observe all fade-in elements
-    document.querySelectorAll('.fade-in').forEach(el => {
-      observer.observe(el);
-    });
-
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop - 80,
-            behavior: 'smooth'
-          });
-        }
-      });
-    });
-
-    // Add keyboard navigation for accessibility
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        const openMenu = document.querySelector('.menu.open');
-        if (openMenu) {
-          openMenu.classList.remove('open');
-        }
-      }
-    });
-  }
-</script>
-
+                    if (!e.target.closest('.menu') && !e.target.closest('.menu-toggle')) {
+                        const openMenu = document.querySelector('.menu.open');
+                        if (openMenu) {
+                            openMenu.classList.remove('open');
+                        }
+                        
+                        const openDropdowns = document.querySelectorAll('.dropdown.open');
+                        openDropdowns.forEach(dropdown => {
+                            dropdown.classList.remove('open');
+                        });
+                    }
+                });
+            }, 100);
+        })
+        .catch(err => console.error('Error loading components:', err));
+    </script>
 </body>
 </html>
