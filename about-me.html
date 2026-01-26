@@ -1,64 +1,1015 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Sarat Office</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Sarat Office - Social Media Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Connect with Sarat Office across all social platforms. Watch educational videos, read updates, and join the community.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* =================================
+           SOCIAL MEDIA HUB STYLES
+        ================================= */
+        :root {
+            --primary-green: #7CFF00;
+            --primary-blue: #0033cc;
+            --accent-purple: #8b5cf6;
+            --accent-red: #FF0000;
+            --accent-pink: #E4405F;
+            --accent-light-blue: #1877F2;
+            --accent-black: #000000;
+            --accent-teal: #00B4D8;
+            --text-dark: #2d3748;
+            --text-medium: #4a5568;
+            --text-light: #718096;
+            --white: #ffffff;
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --shadow-light: 0 10px 25px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 15px 35px rgba(0, 0, 0, 0.1);
+            --shadow-strong: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--light-bg);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-green), var(--accent-purple));
+            border-radius: 2px;
+        }
+
+        .section-header p {
+            font-size: 1.3rem;
+            color: var(--text-medium);
+            max-width: 800px;
+            margin: 30px auto 0;
+        }
+
+        /* =================================
+           SOCIAL PLATFORM SECTIONS
+        ================================= */
+        .social-platform {
+            margin-bottom: 100px;
+            padding: 60px 0;
+            border-radius: var(--border-radius);
+            background: var(--white);
+            box-shadow: var(--shadow-light);
+        }
+
+        .platform-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 0 20px;
+        }
+
+        .platform-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .platform-header .platform-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--white);
+        }
+
+        .platform-header p {
+            font-size: 1.2rem;
+            color: var(--text-medium);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .platform-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        /* Alternate layout for odd sections */
+        .social-platform:nth-child(odd) .platform-content {
+            direction: rtl;
+        }
+
+        .social-platform:nth-child(odd) .platform-content > * {
+            direction: ltr;
+        }
+
+        /* Platform specific colors */
+        .youtube .platform-icon { background: linear-gradient(135deg, var(--accent-red), #cc0000); }
+        .facebook .platform-icon { background: linear-gradient(135deg, var(--accent-light-blue), #0d5fcc); }
+        .twitter .platform-icon { background: linear-gradient(135deg, var(--accent-black), #333333); }
+        .instagram .platform-icon { background: linear-gradient(135deg, var(--accent-pink), #d42c53); }
+        .linkedin .platform-icon { background: linear-gradient(135deg, #0A66C2, #0855a3); }
+        .pinterest .platform-icon { background: linear-gradient(135deg, #E60023, #cc001f); }
+        .github .platform-icon { background: linear-gradient(135deg, #181717, #333333); }
+
+        /* =================================
+           CONTENT SECTIONS
+        ================================= */
+        .content-side {
+            padding: 30px;
+            background: var(--light-bg);
+            border-radius: var(--border-radius);
+            height: 100%;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .content-side h3 {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: var(--text-dark);
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .content-side h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--primary-green);
+            border-radius: 2px;
+        }
+
+        .content-side p {
+            font-size: 1.1rem;
+            color: var(--text-medium);
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .content-side ul {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .content-side li {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+            color: var(--text-medium);
+            line-height: 1.7;
+        }
+
+        .content-side li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary-green);
+            font-weight: bold;
+        }
+
+        .content-side .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* =================================
+           IFRAME SECTIONS
+        ================================= */
+        .iframe-side {
+            height: 500px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-strong);
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: 100%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .iframe-placeholder {
+            text-align: center;
+            padding: 40px;
+            max-width: 500px;
+        }
+
+        .iframe-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 25px;
+            opacity: 0.7;
+        }
+
+        .iframe-placeholder h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .iframe-placeholder p {
+            color: var(--text-medium);
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+            color: var(--white);
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        /* =================================
+           SOCIAL LINKS GRID
+        ================================= */
+        .social-links-section {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: var(--white);
+            border-radius: var(--border-radius);
+            margin: 60px 0;
+            padding: 80px 40px;
+        }
+
+        .social-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .social-link-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 35px 30px;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .social-link-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .social-link-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 1.8rem;
+            color: var(--white);
+        }
+
+        .social-link-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--white);
+        }
+
+        .social-link-card p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        .social-link-card .url {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            word-break: break-all;
+            margin-top: 15px;
+        }
+
+        /* =================================
+           RESPONSIVE DESIGN
+        ================================= */
+        @media (max-width: 1200px) {
+            .section-header h1 {
+                font-size: 3rem;
+            }
+            
+            .platform-content {
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .section-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .platform-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .social-platform:nth-child(odd) .platform-content {
+                direction: ltr;
+            }
+            
+            .content-side {
+                min-height: auto;
+                order: 2;
+            }
+            
+            .iframe-side {
+                height: 400px;
+                order: 1;
+            }
+            
+            .social-links-section {
+                padding: 60px 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 0;
+            }
+            
+            .section-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section-header p {
+                font-size: 1.1rem;
+            }
+            
+            .platform-header h2 {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .platform-header .platform-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            
+            .content-side h3 {
+                font-size: 1.6rem;
+            }
+            
+            .content-side .stats {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .stat-number {
+                font-size: 1.8rem;
+            }
+            
+            .social-links-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .social-platform {
+                padding: 40px 0;
+                margin-bottom: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .platform-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .content-side,
+            .iframe-side {
+                padding: 20px;
+            }
+            
+            .iframe-side {
+                height: 300px;
+            }
+            
+            .social-links-section {
+                padding: 40px 20px;
+            }
+            
+            .social-link-card {
+                padding: 25px 20px;
+            }
+            
+            .social-link-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* =================================
+           ANIMATIONS
+        ================================= */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .social-platform {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .social-platform:nth-child(1) { animation-delay: 0.1s; }
+        .social-platform:nth-child(2) { animation-delay: 0.2s; }
+        .social-platform:nth-child(3) { animation-delay: 0.3s; }
+        .social-platform:nth-child(4) { animation-delay: 0.4s; }
+        .social-platform:nth-child(5) { animation-delay: 0.5s; }
+        .social-platform:nth-child(6) { animation-delay: 0.6s; }
+        .social-platform:nth-child(7) { animation-delay: 0.7s; }
+    </style>
 </head>
-
 <body>
+    <div id="site-header"></div>
 
-<div id="site-header"></div>
+    <main>
+        <!-- HERO SECTION -->
+        <section class="container">
+            <div class="section-header">
+                <h1>Social Media Hub</h1>
+                <p>Connect with Sarat Office across all platforms. Watch educational content, read updates, and join our growing community dedicated to knowledge sharing and public service.</p>
+            </div>
+        </section>
 
+        <!-- YOUTUBE SECTION -->
+        <section class="social-platform youtube">
+            <div class="container">
+                <div class="platform-header">
+                    <h2>
+                        <span class="platform-icon">
+                            <i class="fab fa-youtube"></i>
+                        </span>
+                        YouTube Channel
+                    </h2>
+                    <p>Educational videos on government services, civil supplies, and public welfare initiatives</p>
+                </div>
+                
+                <div class="platform-content">
+                    <div class="content-side">
+                        <h3>Educational Content & Knowledge Sharing</h3>
+                        <p>
+                            Knowledge is power. A person with education can have complete control over their life by using that knowledge. 
+                            Educated persons can easily handle the things in life. Knowledge gives power to human beings to know how to 
+                            control the forces of nature and use them for getting benefits.
+                        </p>
+                        <p>
+                            No person in this world is born with knowledge. All have to gain knowledge from different sources - 
+                            school education, society, work experience, etc. No matter what we plan to achieve, the possibilities 
+                            are endless because our education, knowledge, honesty, and loyalty to our duty are the tools that give 
+                            us power to accomplish our goals.
+                        </p>
+                        <ul>
+                            <li>Government Services Explained</li>
+                            <li>Civil Supplies & Public Distribution</li>
+                            <li>Educational Tutorials & Guides</li>
+                            <li>Public Welfare Initiatives</li>
+                            <li>Knowledge Sharing Sessions</li>
+                        </ul>
+                        
+                        <div class="stats">
+                            <div class="stat-item">
+                                <div class="stat-number">50+</div>
+                                <div class="stat-label">Videos</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">1.2K+</div>
+                                <div class="stat-label">Views</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="iframe-side">
+                        <div class="iframe-container">
+                            <div class="iframe-placeholder">
+                                <i class="fab fa-youtube"></i>
+                                <h4>YouTube Channel</h4>
+                                <p>Watch educational videos about government services, civil supplies management, and public welfare initiatives on our YouTube channel.</p>
+                                <a href="https://www.youtube.com/@saratoffice" class="btn btn-primary" target="_blank">
+                                    <i class="fab fa-youtube"></i>
+                                    Visit Channel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<!-- CONTENT -->
+        <!-- FACEBOOK SECTION -->
+        <section class="social-platform facebook">
+            <div class="container">
+                <div class="platform-header">
+                    <h2>
+                        <span class="platform-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </span>
+                        Facebook Page
+                    </h2>
+                    <p>Daily updates, community engagement, and important announcements</p>
+                </div>
+                
+                <div class="platform-content">
+                    <div class="iframe-side">
+                        <div class="iframe-container">
+                            <div class="iframe-placeholder">
+                                <i class="fab fa-facebook-f"></i>
+                                <h4>Facebook Updates</h4>
+                                <p>Stay updated with the latest news, government schemes, and community initiatives from Sarat Office.</p>
+                                <a href="https://facebook.com/RoutSaratKumar" class="btn btn-primary" target="_blank">
+                                    <i class="fab fa-facebook-f"></i>
+                                    Visit Page
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-side">
+                        <h3>Community Engagement</h3>
+                        <p>
+                            Our Facebook page serves as a bridge between government services and the community. 
+                            We share important updates about civil supplies, public distribution systems, and government schemes.
+                        </p>
+                        <p>
+                            Through regular posts, we aim to educate citizens about their rights, available resources, 
+                            and how to access various government services efficiently.
+                        </p>
+                        <ul>
+                            <li>Daily Government Updates</li>
+                            <li>Scheme Announcements</li>
+                            <li>Public Service Information</li>
+                            <li>Community Discussions</li>
+                            <li>Feedback & Suggestions</li>
+                        </ul>
+                        
+                        <div class="stats">
+                            <div class="stat-item">
+                                <div class="stat-number">500+</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">100+</div>
+                                <div class="stat-label">Posts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <!-- FOOTER -->
-<div id="site-footer"></div>
+        <!-- TWITTER SECTION -->
+        <section class="social-platform twitter">
+            <div class="container">
+                <div class="platform-header">
+                    <h2>
+                        <span class="platform-icon">
+                            <i class="fab fa-twitter"></i>
+                        </span>
+                        Twitter (X) Updates
+                    </h2>
+                    <p>Quick updates, thoughts on governance, and real-time information</p>
+                </div>
+                
+                <div class="platform-content">
+                    <div class="content-side">
+                        <h3>Real-time Updates</h3>
+                        <p>
+                            Twitter serves as our platform for quick updates, sharing thoughts on governance, 
+                            and providing real-time information about essential commodities and public services.
+                        </p>
+                        <p>
+                            Follow us for concise updates, important announcements, and engaging discussions 
+                            about public administration and citizen services.
+                        </p>
+                        <ul>
+                            <li>Quick Policy Updates</li>
+                            <li>Service Announcements</li>
+                            <li>Governance Thoughts</li>
+                            <li>Public Service Alerts</li>
+                            <li>Interactive Discussions</li>
+                        </ul>
+                        
+                        <div class="stats">
+                            <div class="stat-item">
+                                <div class="stat-number">200+</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">300+</div>
+                                <div class="stat-label">Tweets</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="iframe-side">
+                        <div class="iframe-container">
+                            <div class="iframe-placeholder">
+                                <i class="fab fa-twitter"></i>
+                                <h4>Twitter Feed</h4>
+                                <p>Follow us on Twitter for quick updates, thoughts on governance, and real-time information about public services.</p>
+                                <a href="https://twitter.com/saratoffice" class="btn btn-primary" target="_blank" style="background: #000000;">
+                                    <i class="fab fa-twitter"></i>
+                                    Follow on X
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <!-- INSTAGRAM SECTION -->
+        <section class="social-platform instagram">
+            <div class="container">
+                <div class="platform-header">
+                    <h2>
+                        <span class="platform-icon">
+                            <i class="fab fa-instagram"></i>
+                        </span>
+                        Instagram Stories
+                    </h2>
+                    <p>Visual stories, behind-the-scenes, and community moments</p>
+                </div>
+                
+                <div class="platform-content">
+                    <div class="iframe-side">
+                        <div class="iframe-container">
+                            <div class="iframe-placeholder">
+                                <i class="fab fa-instagram"></i>
+                                <h4>Instagram Feed</h4>
+                                <p>Follow us on Instagram for visual stories, behind-the-scenes glimpses, and community engagement moments.</p>
+                                <a href="https://www.instagram.com/saratoffice/" class="btn btn-primary" target="_blank" style="background: linear-gradient(135deg, #E4405F, #833AB4);">
+                                    <i class="fab fa-instagram"></i>
+                                    Follow on Instagram
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-side">
+                        <h3>Visual Engagement</h3>
+                        <p>
+                            Instagram allows us to share the visual side of public service - from field visits 
+                            to community interactions and educational content in a visually appealing format.
+                        </p>
+                        <p>
+                            Our Instagram stories and posts provide a glimpse into the daily work of civil 
+                            supplies officers and the impact of government services on communities.
+                        </p>
+                        <ul>
+                            <li>Field Visit Photos</li>
+                            <li>Community Interactions</li>
+                            <li>Educational Infographics</li>
+                            <li>Behind-the-Scenes</li>
+                            <li>Service Highlights</li>
+                        </ul>
+                        
+                        <div class="stats">
+                            <div class="stat-item">
+                                <div class="stat-number">300+</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">50+</div>
+                                <div class="stat-label">Posts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<script>
-/* Load Header */
-fetch('header.html')
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('site-header').innerHTML = html;
+        <!-- LINKEDIN SECTION -->
+        <section class="social-platform linkedin">
+            <div class="container">
+                <div class="platform-header">
+                    <h2>
+                        <span class="platform-icon">
+                            <i class="fab fa-linkedin-in"></i>
+                        </span>
+                        LinkedIn Profile
+                    </h2>
+                    <p>Professional network, career updates, and industry insights</p>
+                </div>
+                
+                <div class="platform-content">
+                    <div class="content-side">
+                        <h3>Professional Network</h3>
+                        <p>
+                            LinkedIn serves as our professional platform for sharing career achievements, 
+                            industry insights, and connecting with fellow professionals in public service.
+                        </p>
+                        <p>
+                            Follow our LinkedIn profile for updates about career progression, professional 
+                            development, and insights into civil supplies management and public administration.
+                        </p>
+                        <ul>
+                            <li>Career Updates</li>
+                            <li>Professional Articles</li>
+                            <li>Industry Insights</li>
+                            <li>Network Building</li>
+                            <li>Skill Development</li>
+                        </ul>
+                        
+                        <div class="stats">
+                            <div class="stat-item">
+                                <div class="stat-number">100+</div>
+                                <div class="stat-label">Connections</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">20+</div>
+                                <div class="stat-label">Posts</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="iframe-side">
+                        <div class="iframe-container">
+                            <div class="iframe-placeholder">
+                                <i class="fab fa-linkedin-in"></i>
+                                <h4>LinkedIn Profile</h4>
+                                <p>Connect with us on LinkedIn for professional updates, career insights, and networking opportunities in public service.</p>
+                                <a href="https://linkedin.com/in/saratoffice" class="btn btn-primary" target="_blank" style="background: #0A66C2;">
+                                    <i class="fab fa-linkedin-in"></i>
+                                    Connect on LinkedIn
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    /* Load Navigation */
-    fetch('nav.html')
-      .then(res => res.text())
-      .then(nav => {
-        document.getElementById('main-nav').innerHTML = nav;
-      });
-  });
+        <!-- SOCIAL LINKS GRID -->
+        <section class="social-links-section">
+            <div class="container">
+                <div class="section-header" style="color: white;">
+                    <h1 style="color: white; -webkit-text-fill-color: white; background: none;">All Social Links</h1>
+                    <p style="color: rgba(255, 255, 255, 0.9);">Connect with Sarat Office across all platforms</p>
+                </div>
+                
+                <div class="social-links-grid">
+                    <div class="social-link-card">
+                        <div class="social-link-icon" style="background: linear-gradient(135deg, #FF0000, #cc0000);">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <h3>YouTube</h3>
+                        <p>Educational videos on government services and public welfare</p>
+                        <div class="url">youtube.com/@saratoffice</div>
+                        <a href="https://www.youtube.com/@saratoffice" class="btn btn-primary" target="_blank" style="margin-top: 15px;">
+                            Subscribe
+                        </a>
+                    </div>
+                    
+                    <div class="social-link-card">
+                        <div class="social-link-icon" style="background: linear-gradient(135deg, #1877F2, #0d5fcc);">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                        <h3>Facebook</h3>
+                        <p>Daily updates and community engagement</p>
+                        <div class="url">facebook.com/RoutSaratKumar</div>
+                        <a href="https://facebook.com/RoutSaratKumar" class="btn btn-primary" target="_blank" style="margin-top: 15px;">
+                            Like Page
+                        </a>
+                    </div>
+                    
+                    <div class="social-link-card">
+                        <div class="social-link-icon" style="background: linear-gradient(135deg, #000000, #333333);">
+                            <i class="fab fa-twitter"></i>
+                        </div>
+                        <h3>Twitter (X)</h3>
+                        <p>Quick updates and governance thoughts</p>
+                        <div class="url">twitter.com/saratoffice</div>
+                        <a href="https://twitter.com/saratoffice" class="btn btn-primary" target="_blank" style="margin-top: 15px; background: #000000;">
+                            Follow
+                        </a>
+                    </div>
+                    
+                    <div class="social-link-card">
+                        <div class="social-link-icon" style="background: linear-gradient(135deg, #0A66C2, #0855a3);">
+                            <i class="fab fa-linkedin-in"></i>
+                        </div>
+                        <h3>LinkedIn</h3>
+                        <p>Professional network and career updates</p>
+                        <div class="url">linkedin.com/in/saratoffice</div>
+                        <a href="https://linkedin.com/in/saratoffice" class="btn btn-primary" target="_blank" style="margin-top: 15px; background: #0A66C2;">
+                            Connect
+                        </a>
+                    </div>
+                    
+                    <div class="social-link-card">
+                        <div class="social-link-icon" style="background: linear-gradient(135deg, #E4405F, #833AB4);">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <h3>Instagram</h3>
+                        <p>Visual stories and community moments</p>
+                        <div class="url">instagram.com/saratoffice</div>
+                        <a href="https://www.instagram.com/saratoffice/" class="btn btn-primary" target="_blank" style="margin-top: 15px; background: linear-gradient(135deg, #E4405F, #833AB4);">
+                            Follow
+                        </a>
+                    </div>
+                    
+                    <div class="social-link-card">
+                        <div class="social-link-icon" style="background: linear-gradient(135deg, #E60023, #cc001f);">
+                            <i class="fab fa-pinterest-p"></i>
+                        </div>
+                        <h3>Pinterest</h3>
+                        <p>Visual collections and idea sharing</p>
+                        <div class="url">in.pinterest.com/saratoffice</div>
+                        <a href="https://in.pinterest.com/saratoffice/" class="btn btn-primary" target="_blank" style="margin-top: 15px; background: #E60023;">
+                            Follow
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-/* Load Footer */
-fetch('footer.html')
-  .then(res => res.text())
-  .then(footer => {
-    document.getElementById('site-footer').innerHTML = footer;
-  });
-</script>
-<script>
-/* ===== MOBILE MENU LOGIC ===== */
-document.addEventListener("click", function (e) {
+    <div id="site-footer"></div>
 
-  /* Toggle main menu */
-  if (e.target.classList.contains("menu-toggle")) {
-    const menu = document.querySelector(".menu");
-    if (menu) {
-      menu.classList.toggle("open");
-    }
-  }
+    <script>
+        // Load Header and Footer
+        Promise.all([
+            fetch('header.html').then(res => res.text()),
+            fetch('footer.html').then(res => res.text()),
+            fetch('nav.html').then(res => res.text())
+        ])
+        .then(([headerHtml, footerHtml, navHtml]) => {
+            // Load header
+            document.getElementById('site-header').innerHTML = headerHtml;
+            
+            // Load navigation
+            const header = document.getElementById('site-header');
+            const navPlaceholder = header.querySelector('#main-nav');
+            if (navPlaceholder) {
+                navPlaceholder.innerHTML = navHtml;
+            } else {
+                const navContainer = document.createElement('div');
+                navContainer.id = 'main-nav';
+                navContainer.innerHTML = navHtml;
+                header.appendChild(navContainer);
+            }
+            
+            // Load footer
+            document.getElementById('site-footer').innerHTML = footerHtml;
+            
+            // Initialize mobile menu
+            setTimeout(() => {
+                document.addEventListener("click", function (e) {
+                    if (e.target.classList.contains("menu-toggle")) {
+                        const menu = document.querySelector(".menu");
+                        if (menu) {
+                            menu.classList.toggle("open");
+                            e.stopPropagation();
+                        }
+                    }
 
-  /* Toggle dropdowns on mobile */
-  const dropdownLink = e.target.closest(".dropdown > a");
-  if (dropdownLink && window.innerWidth <= 900) {
-    e.preventDefault();
-    dropdownLink.parentElement.classList.toggle("open");
-  }
+                    const dropdownLink = e.target.closest(".dropdown > a");
+                    if (dropdownLink && window.innerWidth <= 900) {
+                        e.preventDefault();
+                        dropdownLink.parentElement.classList.toggle("open");
+                    }
 
-});
-</script></body>
+                    if (!e.target.closest('.menu') && !e.target.closest('.menu-toggle')) {
+                        const openMenu = document.querySelector('.menu.open');
+                        if (openMenu) {
+                            openMenu.classList.remove('open');
+                        }
+                        
+                        const openDropdowns = document.querySelectorAll('.dropdown.open');
+                        openDropdowns.forEach(dropdown => {
+                            dropdown.classList.remove('open');
+                        });
+                    }
+                });
+            }, 100);
+        })
+        .catch(err => console.error('Error loading components:', err));
+    </script>
+</body>
 </html>
