@@ -164,6 +164,19 @@
         font-size: 2.2rem;
       }
     }
+    /* ===============================
+   GOOGLE MAP (API)
+   =============================== */
+.fullwidth-map {
+  width: 100%;
+  margin-top: 80px;
+}
+
+#map {
+  width: 100%;
+  height: 450px;
+}
+
   </style>
 </head>
 
@@ -246,20 +259,59 @@
 
 </main>
 
-<!-- FULL WIDTH MAP -->
+<!-- FULL WIDTH GOOGLE MAP -->
 <section class="fullwidth-map">
-  <iframe
-    src="https://www.google.com/maps?markers=Palace%20Line%20Balangir%20Odisha|Soro%20Odisha&zoom=7&output=embed"
-    loading="lazy"
-    referrerpolicy="no-referrer-when-downgrade">
-  </iframe>
+  <div id="map"></div>
 </section>
+
 
 
 <!-- FOOTER -->
 <div id="site-footer"></div>
 
 <!-- LOAD HEADER / NAV / FOOTER -->
+  <script>
+function initMap() {
+
+  // Locations
+  const palaceLine = { lat: 20.7066, lng: 83.4846 }; // Palace Line, Balangir
+  const soro = { lat: 21.2962, lng: 86.6885 };       // Soro, Odisha
+
+  // Create map
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 7,
+    center: { lat: 21.0, lng: 85.0 },
+    mapTypeControl: false,
+    streetViewControl: false,
+    fullscreenControl: true
+  });
+
+  // Markers
+  const marker1 = new google.maps.Marker({
+    position: palaceLine,
+    map: map,
+    title: "Palace Line, Balangir"
+  });
+
+  const marker2 = new google.maps.Marker({
+    position: soro,
+    map: map,
+    title: "Soro, Odisha"
+  });
+
+  // Auto-fit both markers
+  const bounds = new google.maps.LatLngBounds();
+  bounds.extend(palaceLine);
+  bounds.extend(soro);
+  map.fitBounds(bounds);
+}
+</script>
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initMap"
+  async
+  defer>
+</script>
+
 <script>
 fetch('header.html')
   .then(res => res.text())
