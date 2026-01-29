@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download Electricity Bill</title>
-
-    <!-- CSS from Hosting repo via jsDelivr -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/saratoffice/Hosting@main/Electricbill/bill.css">
+  <meta charset="UTF-8">
+  <title>Download Electricity Bill</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  
+    <!-- External CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/saratoffice/Hosting@main/Electricbill/bill.css">
 </head>
+
 <body>
+
+<div id="site-header"></div>
+
+
+<!-- CONTENT -->
 
     <div class="form-container">
         <h1 class="form-title">Download Electricity Bill</h1>
         <div class="divider"></div>
 
-        <!-- month -->
         <div class="form-row">
-            <select id="param1" class="select-with-icon">
+            <select id="param1" class="select-with-icon" title="Select a month">
                 <option value="" disabled selected>Select month</option>
                 <option value="1">January</option>
                 <option value="2">February</option>
@@ -34,9 +39,8 @@
             </select>
         </div>
 
-        <!-- year -->
         <div class="form-row">
-            <select id="param2" class="select-with-icon">
+            <select id="param2" class="select-with-icon" title="Select a year">
                 <option value="" disabled selected>Select year</option>
                 <option value="2015">2015</option>
                 <option value="2016">2016</option>
@@ -50,27 +54,71 @@
                 <option value="2024">2024</option>
                 <option value="2025">2025</option>
                 <option value="2026">2026</option>
+                <option value="2027">2027</option>
+                <option value="2028">2028</option>
+                <option value="2029">2029</option>
+                <option value="2030">2030</option>
             </select>
         </div>
 
-        <!-- consumer -->
         <div class="form-row">
-            <label>Consumer A/c No.:</label>
-            <input type="text" id="param3" maxlength="12"
-                   placeholder="9110000000XX">
+            <label for="param3">Consumer A/c No.:</label>
+            <input type="text" id="param3" placeholder="9110000000XX" title="Enter exactly 12 characters">
         </div>
 
         <div class="form-row">
-            <button type="button" onclick="generateURL()">
-                Download Bill
-            </button>
+            <button onclick="generateURL()">Download Bill</button>
         </div>
     </div>
 
-    <!-- JS from Hosting repo via jsDelivr -->
-    <script
-      src="https://cdn.jsdelivr.net/gh/saratoffice/Hosting@main/Electricbill/bill.js">
-    </script>
+    <!-- External JavaScript -->
+   <script src="https://cdn.jsdelivr.net/gh/saratoffice/Hosting@main/Electricbill/bill.js"></script>
 
-</body>
+  <!-- FOOTER -->
+<div id="site-footer"></div>
+
+
+<script>
+/* Load Header */
+fetch('header.html')
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById('site-header').innerHTML = html;
+
+    /* Load Navigation */
+    fetch('nav.html')
+      .then(res => res.text())
+      .then(nav => {
+        document.getElementById('main-nav').innerHTML = nav;
+      });
+  });
+
+/* Load Footer */
+fetch('footer.html')
+  .then(res => res.text())
+  .then(footer => {
+    document.getElementById('site-footer').innerHTML = footer;
+  });
+</script>
+<script>
+/* ===== MOBILE MENU LOGIC ===== */
+document.addEventListener("click", function (e) {
+
+  /* Toggle main menu */
+  if (e.target.classList.contains("menu-toggle")) {
+    const menu = document.querySelector(".menu");
+    if (menu) {
+      menu.classList.toggle("open");
+    }
+  }
+
+  /* Toggle dropdowns on mobile */
+  const dropdownLink = e.target.closest(".dropdown > a");
+  if (dropdownLink && window.innerWidth <= 900) {
+    e.preventDefault();
+    dropdownLink.parentElement.classList.toggle("open");
+  }
+
+});
+</script></body>
 </html>
