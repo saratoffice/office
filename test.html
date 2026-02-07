@@ -1745,48 +1745,39 @@
                 startAutoSlide();
             });
 
-            // Typing Effect - FIXED
-            const typingText = document.getElementById('typingText');
-            const quotes = [
-                "Your attitude, not your aptitude, will determine your altitude.",
-                "Service is the rent we pay for the privilege of living on this earth.",
-                "Integrity is doing the right thing, even when no one is watching.",
-                "Nature is the greatest teacher, and life is the greatest classroom."
-            ];
-            
-            let quoteIndex = 0;
-            let charIndex = 0;
-            let isDeleting = false;
-            let typingSpeed = 100;
+           // Typing Effect for Footer
+            const typingFooterText = document.getElementById('typing-footer-text');
+            const footerText = "Your attitude, not your aptitude, will determine your altitude.";
+            let footerCharIndex = 0;
+            let isFooterDeleting = false;
+            let isFooterFinished = false;
 
-            function typeEffect() {
-                const currentQuote = quotes[quoteIndex];
+            function typeFooterEffect() {
+                const currentText = footerText.substring(0, footerCharIndex);
+                typingFooterText.innerHTML = `<span class="typed-footer-text">${currentText}</span>`;
                 
-                if (isDeleting) {
-                    typingText.innerHTML = `<span class="typed-text">${currentQuote.substring(0, charIndex)}</span>`;
-                    charIndex--;
-                    typingSpeed = 50;
-                } else {
-                    typingText.innerHTML = `<span class="typed-text">${currentQuote.substring(0, charIndex)}</span>`;
-                    charIndex++;
-                    typingSpeed = 100;
+                if (!isFooterFinished) {
+                    if (!isFooterDeleting && footerCharIndex < footerText.length) {
+                        footerCharIndex++;
+                        setTimeout(typeFooterEffect, 50);
+                    } else if (isFooterDeleting && footerCharIndex > 0) {
+                        footerCharIndex--;
+                        setTimeout(typeFooterEffect, 30);
+                    } else if (!isFooterDeleting && footerCharIndex === footerText.length) {
+                        setTimeout(() => {
+                            isFooterDeleting = true;
+                            typeFooterEffect();
+                        }, 3000); // Keep text visible for 3 seconds
+                    } else if (isFooterDeleting && footerCharIndex === 0) {
+                        isFooterDeleting = false;
+                        setTimeout(typeFooterEffect, 1000);
+                    }
                 }
-
-                if (!isDeleting && charIndex === currentQuote.length) {
-                    isDeleting = true;
-                    typingSpeed = 1500; // Pause at end
-                } else if (isDeleting && charIndex === 0) {
-                    isDeleting = false;
-                    quoteIndex = (quoteIndex + 1) % quotes.length;
-                    typingSpeed = 500; // Pause before next quote
-                }
-
-                setTimeout(typeEffect, typingSpeed);
             }
 
-            // Start typing effect after a delay
-            setTimeout(typeEffect, 1000);
-
+            // Start typing effect for footer
+            typeFooterEffect();
+        });
             // Scroll Animation
             const observerOptions = {
                 threshold: 0.1,
