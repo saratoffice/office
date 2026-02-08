@@ -39,7 +39,7 @@
             --shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             --radius: 20px;
             --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-            --container-width: 1200px;
+            --container-width: 1400px;
         }
 
         /* CSS Reset & Base Styles */
@@ -127,7 +127,7 @@
             height: 100%;
             background: 
                 linear-gradient(135deg, rgba(0, 51, 204, 0.9), rgba(124, 255, 0, 0.7)),
-                url('https://res.cloudinary.com/saratoffice/image/upload/v1744619575/Sarat_at_Meeting_ohjhlt.jpg') center/cover no-repeat;
+                url('https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
             z-index: -1;
             transform: scale(1.1);
             animation: zoomIn 20s linear infinite alternate;
@@ -182,7 +182,7 @@
             margin-bottom: 2.5rem;
         }
 
-        /* Profile Section */
+        /* Enhanced Profile Section with Hover Effect */
         .profile-section {
             background: linear-gradient(135deg, #1a1f3c, #121826);
             position: relative;
@@ -198,23 +198,86 @@
         .profile-image-container {
             position: relative;
             text-align: center;
+            perspective: 1000px;
+        }
+
+        .profile-image-wrapper {
+            position: relative;
+            width: 31.25rem;
+            height: 31.25rem;
+            margin: 0 auto;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .profile-image-wrapper:hover {
+            transform: rotateY(10deg) rotateX(5deg) scale(1.05);
         }
 
         .profile-image {
             width: 100%;
-            max-width: 31.25rem;
-            height: 31.25rem;
+            height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 0.5rem solid transparent;
-            background: linear-gradient(135deg, var(--primary), var(--secondary)) border-box;
+            border: 0.75rem solid transparent;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent)) border-box;
             animation: float 6s ease-in-out infinite;
-            box-shadow: var(--shadow);
+            box-shadow: 
+                0 0 50px rgba(124, 255, 0, 0.3),
+                0 0 100px rgba(0, 51, 204, 0.2),
+                0 0 150px rgba(139, 92, 246, 0.1);
+            transition: all 0.5s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-image-wrapper:hover .profile-image {
+            border-width: 1rem;
+            box-shadow: 
+                0 0 80px rgba(124, 255, 0, 0.5),
+                0 0 150px rgba(0, 51, 204, 0.3),
+                0 0 200px rgba(139, 92, 246, 0.2);
+        }
+
+        .profile-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(45deg, transparent 30%, rgba(124, 255, 0, 0.1) 50%, transparent 70%);
+            animation: rotate 10s linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .profile-image-glow {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(124, 255, 0, 0.1), transparent 70%);
+            filter: blur(20px);
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .profile-image-wrapper:hover .profile-image-glow {
+            opacity: 1;
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-1.25rem); }
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-1.25rem) scale(1.02); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .profile-info {
@@ -224,6 +287,12 @@
             border-radius: var(--radius);
             border: 0.063rem solid rgba(255, 255, 255, 0.1);
             box-shadow: var(--shadow);
+            transform: translateY(0);
+            transition: transform 0.4s ease;
+        }
+
+        .profile-info:hover {
+            transform: translateY(-10px);
         }
 
         .profile-title {
@@ -288,21 +357,21 @@
             font-size: 1.2rem;
         }
 
-        /* Wisdom Cards Slider Section */
+        /* Enhanced Wisdom Cards Slider Section */
         .wisdom-slider-section {
             background: linear-gradient(135deg, #1a1f3c, #121826);
             padding: 6.25rem 0;
         }
 
         .wisdom-slider-container {
-            max-width: 900px;
+            max-width: 1100px;
             margin: 0 auto;
             position: relative;
         }
 
         .wisdom-slider {
             position: relative;
-            height: 500px;
+            height: 600px;
             overflow: hidden;
             border-radius: var(--radius);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -314,10 +383,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            padding: 3.75rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            padding: 4.5rem;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 3rem;
+            align-items: center;
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -346,19 +416,39 @@
             z-index: 1;
         }
 
+        .wisdom-content-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .wisdom-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
         .wisdom-icon {
-            font-size: 3rem;
+            font-size: 3.5rem;
             color: var(--primary);
-            margin-bottom: 2rem;
-            display: inline-block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            background: rgba(124, 255, 0, 0.1);
+            border-radius: 50%;
+            border: 2px solid rgba(124, 255, 0, 0.3);
         }
 
         .wisdom-slide h3 {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             margin-bottom: 1.5rem;
             color: var(--white);
             position: relative;
             padding-bottom: 1rem;
+            line-height: 1.2;
         }
 
         .wisdom-slide h3::after {
@@ -366,157 +456,165 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            width: 60px;
-            height: 3px;
+            width: 80px;
+            height: 4px;
             background: linear-gradient(90deg, var(--primary), var(--accent));
             border-radius: 2px;
         }
 
         .wisdom-content {
-            font-size: 1.2rem;
-            line-height: 1.8;
+            font-size: 1.25rem;
+            line-height: 1.9;
             color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2rem;
         }
 
         .wisdom-quote {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-style: italic;
             color: var(--accent);
-            padding: 1.5rem;
-            margin: 2rem 0;
+            padding: 2rem;
+            margin: 1.5rem 0;
             border-left: 4px solid var(--primary);
             background: rgba(124, 255, 0, 0.1);
-            border-radius: 10px;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wisdom-quote::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            font-size: 5rem;
+            color: rgba(124, 255, 0, 0.1);
+            font-family: serif;
         }
 
         .wisdom-highlight {
             color: var(--primary);
             font-weight: 600;
-            font-size: 1.3rem;
-            padding: 0.5rem 1rem;
-            background: rgba(124, 255, 0, 0.1);
-            border-radius: 5px;
+            font-size: 1.4rem;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(124, 255, 0, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 10px;
             display: inline-block;
             margin: 1rem 0;
+            border: 1px solid rgba(124, 255, 0, 0.2);
+        }
+
+        .wisdom-image-container {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .wisdom-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .wisdom-slide.active .wisdom-image {
+            transform: scale(1.05);
         }
 
         .slider-controls {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 2rem;
+            gap: 2.5rem;
             margin-top: 3rem;
         }
 
         .slider-btn {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.2);
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: var(--transition);
             backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slider-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 0.4s ease;
+            z-index: -1;
         }
 
         .slider-btn:hover {
-            background: var(--primary);
-            border-color: var(--primary);
-            transform: scale(1.1);
+            border-color: transparent;
+            transform: scale(1.15);
+        }
+
+        .slider-btn:hover::before {
+            transform: scale(1);
         }
 
         .slider-dots {
             display: flex;
-            gap: 1rem;
+            gap: 1.2rem;
         }
 
         .slider-dot {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
             cursor: pointer;
             transition: var(--transition);
             border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slider-dot::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 0.3s ease;
         }
 
         .slider-dot.active {
-            background: var(--primary);
-            transform: scale(1.2);
+            transform: scale(1.3);
         }
 
-        .slider-dot:hover {
-            background: var(--primary);
+        .slider-dot.active::before {
+            transform: scale(1);
         }
 
-        /* Slide Transition Animations */
-        .wisdom-slide.slide-in-left {
-            animation: slideInLeft 0.8s ease forwards;
+        .slider-dot:hover::before {
+            transform: scale(1);
         }
 
-        .wisdom-slide.slide-in-right {
-            animation: slideInRight 0.8s ease forwards;
-        }
-
-        .wisdom-slide.slide-out-left {
-            animation: slideOutLeft 0.8s ease forwards;
-        }
-
-        .wisdom-slide.slide-out-right {
-            animation: slideOutRight 0.8s ease forwards;
-        }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-100%);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(100%);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideOutLeft {
-            from {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateX(-100%);
-            }
-        }
-
-        @keyframes slideOutRight {
-            from {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateX(100%);
-            }
-        }
-
-        /* Carousel Section */
+        /* Enhanced Carousel Section */
         .carousel-section {
             background: linear-gradient(135deg, #121826, #1a1f3c);
             position: relative;
@@ -532,7 +630,7 @@
         .carousel-slides {
             display: flex;
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            height: 37.5rem;
+            height: 45rem;
         }
 
         .carousel-slide {
@@ -546,7 +644,7 @@
             height: 100%;
             object-fit: cover;
             filter: brightness(0.7);
-            transition: transform 0.8s ease;
+            transition: transform 1.2s ease;
         }
 
         .carousel-slide.active img {
@@ -559,10 +657,10 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 3.75rem;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+            padding: 4.5rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent 70%);
             transform: translateY(100%);
-            transition: transform 0.6s ease;
+            transition: transform 0.8s ease;
         }
 
         .carousel-slide.active .slide-content {
@@ -570,17 +668,19 @@
         }
 
         .slide-title {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 700;
-            margin-bottom: 0.938rem;
+            margin-bottom: 1.25rem;
             color: var(--primary);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
         .slide-description {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.9);
-            max-width: 37.5rem;
-            line-height: 1.6;
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 45rem;
+            line-height: 1.7;
+            font-weight: 300;
         }
 
         .carousel-controls {
@@ -591,47 +691,69 @@
             transform: translateY(-50%);
             display: flex;
             justify-content: space-between;
-            padding: 0 1.875rem;
+            padding: 0 2.5rem;
             z-index: 10;
         }
 
         .carousel-btn {
-            width: 4.375rem;
-            height: 4.375rem;
+            width: 5rem;
+            height: 5rem;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
-            border: 0.125rem solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: var(--transition);
             backdrop-filter: blur(0.625rem);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 0.4s ease;
+            z-index: -1;
         }
 
         .carousel-btn:hover {
-            background: var(--primary);
-            border-color: var(--primary);
-            transform: scale(1.1);
+            border-color: transparent;
+            transform: scale(1.15);
+        }
+
+        .carousel-btn:hover::before {
+            transform: scale(1);
         }
 
         .carousel-indicators {
             display: flex;
             justify-content: center;
-            gap: 0.938rem;
-            margin-top: 2.5rem;
+            gap: 1.25rem;
+            margin-top: 3rem;
+            position: relative;
+            z-index: 10;
         }
 
         .carousel-indicator {
-            width: 3.75rem;
-            height: 0.25rem;
+            width: 4.5rem;
+            height: 0.375rem;
             background: rgba(255, 255, 255, 0.2);
             cursor: pointer;
             transition: var(--transition);
             position: relative;
             overflow: hidden;
+            border-radius: 3px;
         }
 
         .carousel-indicator::before {
@@ -654,8 +776,19 @@
             transform: translateX(0);
         }
 
-        /* Philosophy Section */
-        .philosophy-section {
+        .carousel-indicator:hover::before {
+            transform: translateX(0);
+        }
+
+        /* Other Sections (keeping existing styles with minor adjustments) */
+        .philosophy-section,
+        .elements-section,
+        .nature-section,
+        .passions-section,
+        .experience-section,
+        .education-section,
+        .social-section,
+        .connect-section {
             background: linear-gradient(135deg, #1a1f3c, #121826);
         }
 
@@ -725,10 +858,6 @@
         }
 
         /* Elements Section */
-        .elements-section {
-            background: linear-gradient(135deg, #121826, #1a1f3c);
-        }
-
         .elements-container {
             position: relative;
         }
@@ -819,10 +948,6 @@
         }
 
         /* Passions Section */
-        .passions-section {
-            background: linear-gradient(135deg, #1a1f3c, #121826);
-        }
-
         .passions-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(18.75rem, 1fr));
@@ -882,10 +1007,6 @@
         }
 
         /* Experience Section */
-        .experience-section {
-            background: linear-gradient(135deg, #121826, #1a1f3c);
-        }
-
         .experience-timeline {
             position: relative;
             max-width: 62.5rem;
@@ -981,10 +1102,6 @@
         }
 
         /* Education Section */
-        .education-section {
-            background: linear-gradient(135deg, #1a1f3c, #121826);
-        }
-
         .education-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(21.875rem, 1fr));
@@ -1041,10 +1158,6 @@
         }
 
         /* Social Section */
-        .social-section {
-            background: linear-gradient(135deg, #121826, #1a1f3c);
-        }
-
         .social-container {
             display: grid;
             gap: 3.75rem;
@@ -1328,6 +1441,15 @@
 
         /* Responsive Design */
         @media (max-width: 1200px) {
+            .wisdom-slider {
+                height: 550px;
+            }
+            
+            .wisdom-slide {
+                padding: 3.5rem;
+                grid-template-columns: 1fr 280px;
+            }
+            
             .elements-orb {
                 width: 31.25rem;
                 height: 31.25rem;
@@ -1342,16 +1464,38 @@
         @media (max-width: 992px) {
             .profile-container {
                 grid-template-columns: 1fr;
-                gap: 2.5rem;
+                gap: 3rem;
             }
             
-            .profile-image {
-                max-width: 25rem;
+            .profile-image-wrapper {
+                width: 25rem;
                 height: 25rem;
             }
             
             .wisdom-slider {
-                height: 450px;
+                height: 500px;
+            }
+            
+            .wisdom-slide {
+                grid-template-columns: 1fr;
+                padding: 3rem;
+            }
+            
+            .wisdom-image-container {
+                height: 300px;
+                order: -1;
+            }
+            
+            .carousel-slides {
+                height: 35rem;
+            }
+            
+            .slide-content {
+                padding: 3rem;
+            }
+            
+            .slide-title {
+                font-size: 2.5rem;
             }
             
             .elements-orb {
@@ -1362,10 +1506,6 @@
             .element-item {
                 width: 6.25rem;
                 height: 6.25rem;
-            }
-            
-            .element-icon {
-                font-size: 2rem;
             }
             
             .timeline-item {
@@ -1386,6 +1526,10 @@
                 left: 1.875rem;
             }
             
+            .social-platform {
+                grid-template-columns: 1fr;
+            }
+            
             .typing-footer-container {
                 grid-template-columns: 1fr;
                 gap: 2.5rem;
@@ -1394,28 +1538,39 @@
 
         @media (max-width: 768px) {
             .section-title {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
             }
             
             .hero-title {
-                font-size: 3rem;
+                font-size: 3.5rem;
             }
             
             .hero-subtitle {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
             }
             
             .profile-name {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
+            }
+            
+            .profile-image-wrapper {
+                width: 22rem;
+                height: 22rem;
             }
             
             .wisdom-slider {
-                height: 400px;
-                padding: 2rem;
+                height: 700px;
+                padding: 0;
+            }
+            
+            .wisdom-slide {
+                padding: 2.5rem;
+                height: 700px;
+                overflow-y: auto;
             }
             
             .wisdom-slide h3 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
             
             .wisdom-content {
@@ -1423,114 +1578,62 @@
             }
             
             .wisdom-quote {
-                font-size: 1.2rem;
-                padding: 1rem;
-            }
-            
-            .carousel-slides {
-                height: 25rem;
-            }
-            
-            .slide-content {
-                padding: 1.875rem;
-            }
-            
-            .slide-title {
-                font-size: 1.8rem;
-            }
-            
-            .social-platform {
-                grid-template-columns: 1fr;
-            }
-            
-            .elements-orb {
-                width: 18.75rem;
-                height: 18.75rem;
-            }
-            
-            .element-item {
-                width: 5rem;
-                height: 5rem;
-                padding: 0.625rem;
-            }
-            
-            .element-icon {
-                font-size: 1.5rem;
-            }
-            
-            .element-name {
-                font-size: 0.9rem;
-            }
-            
-            .element-desc {
-                display: none;
-            }
-            
-            .timeline-item {
-                padding-left: 3.75rem;
-            }
-            
-            .timeline-year {
-                left: -3.75rem;
-                width: 3.75rem;
-                font-size: 0.9rem;
-                padding: 0.5rem 0.625rem;
-            }
-            
-            .timeline-dot {
-                left: 1.563rem;
-                width: 1.25rem;
-                height: 1.25rem;
-            }
-            
-            .typing-footer-text {
-                font-size: 1.5rem;
-            }
-            
-            .connect-title {
-                font-size: 2.5rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            section {
-                padding: 3.75rem 0;
-            }
-            
-            .hero-title {
-                font-size: 2.2rem;
-            }
-            
-            .profile-image {
-                max-width: 18.75rem;
-                height: 18.75rem;
-            }
-            
-            .wisdom-slider {
-                height: 500px;
+                font-size: 1.3rem;
                 padding: 1.5rem;
             }
             
-            .wisdom-slide {
-                padding: 2rem;
+            .wisdom-highlight {
+                font-size: 1.2rem;
             }
             
-            .wisdom-slide h3 {
-                font-size: 1.6rem;
+            .carousel-slides {
+                height: 30rem;
             }
             
-            .wisdom-content {
+            .slide-content {
+                padding: 2.5rem;
+            }
+            
+            .slide-title {
+                font-size: 2.2rem;
+            }
+            
+            .slide-description {
+                font-size: 1.1rem;
+            }
+            
+            .carousel-btn {
+                width: 4rem;
+                height: 4rem;
+                font-size: 1.5rem;
+            }
+            
+            .elements-orb {
+                width: 20rem;
+                height: 20rem;
+            }
+            
+            .element-item {
+                width: 5.5rem;
+                height: 5.5rem;
+            }
+            
+            .element-icon {
+                font-size: 1.8rem;
+            }
+            
+            .element-name {
                 font-size: 1rem;
             }
             
             .slider-controls {
-                gap: 1rem;
+                gap: 1.5rem;
             }
             
             .slider-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
             }
             
             .philosophy-grid,
@@ -1539,24 +1642,163 @@
                 grid-template-columns: 1fr;
             }
             
-            .carousel-slides {
-                height: 18.75rem;
-            }
-            
-            .carousel-btn {
-                width: 3.125rem;
-                height: 3.125rem;
-                font-size: 1.2rem;
-            }
-            
             .social-link {
-                width: 3.125rem;
-                height: 3.125rem;
-                font-size: 1.3rem;
+                width: 3.5rem;
+                height: 3.5rem;
+                font-size: 1.5rem;
             }
             
             .timeline-item {
-                padding-left: 3.125rem;
+                padding-left: 4rem;
+            }
+            
+            .timeline-year {
+                left: -3.5rem;
+                width: 3.5rem;
+                font-size: 0.9rem;
+                padding: 0.5rem 0.75rem;
+            }
+            
+            .timeline-dot {
+                left: 1.5rem;
+                width: 1.2rem;
+                height: 1.2rem;
+            }
+            
+            .experience-timeline::before {
+                left: 2rem;
+            }
+            
+            .typing-footer-text {
+                font-size: 1.5rem;
+            }
+            
+            .connect-title {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            section {
+                padding: 4rem 0;
+            }
+            
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.5rem;
+            }
+            
+            .profile-image-wrapper {
+                width: 18rem;
+                height: 18rem;
+            }
+            
+            .profile-name {
+                font-size: 2.2rem;
+            }
+            
+            .profile-quote {
+                font-size: 1.5rem;
+            }
+            
+            .wisdom-slider {
+                height: 750px;
+            }
+            
+            .wisdom-slide {
+                padding: 2rem;
+                height: 750px;
+            }
+            
+            .wisdom-slide h3 {
+                font-size: 1.8rem;
+            }
+            
+            .wisdom-content {
+                font-size: 1rem;
+            }
+            
+            .wisdom-quote {
+                font-size: 1.2rem;
+                padding: 1.2rem;
+            }
+            
+            .wisdom-highlight {
+                font-size: 1.1rem;
+                padding: 0.8rem 1rem;
+            }
+            
+            .slider-controls {
+                gap: 1rem;
+            }
+            
+            .slider-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+            
+            .slider-dots {
+                gap: 1rem;
+            }
+            
+            .carousel-slides {
+                height: 25rem;
+            }
+            
+            .slide-content {
+                padding: 2rem;
+            }
+            
+            .slide-title {
+                font-size: 1.8rem;
+            }
+            
+            .slide-description {
+                font-size: 1rem;
+            }
+            
+            .carousel-btn {
+                width: 3.5rem;
+                height: 3.5rem;
+                font-size: 1.2rem;
+            }
+            
+            .carousel-indicator {
+                width: 3.5rem;
+                height: 0.3rem;
+            }
+            
+            .elements-orb {
+                width: 16rem;
+                height: 16rem;
+            }
+            
+            .element-item {
+                width: 4.5rem;
+                height: 4.5rem;
+                padding: 0.5rem;
+            }
+            
+            .element-icon {
+                font-size: 1.5rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .element-name {
+                font-size: 0.9rem;
+            }
+            
+            .element-desc {
+                font-size: 0.75rem;
+                display: none;
+            }
+            
+            .timeline-item {
+                padding-left: 3rem;
             }
             
             .timeline-year {
@@ -1564,15 +1806,59 @@
             }
             
             .timeline-dot {
-                left: 1.25rem;
+                left: 1rem;
+                width: 1rem;
+                height: 1rem;
             }
             
             .experience-timeline::before {
-                left: 1.875rem;
+                left: 1.5rem;
             }
             
             .typing-footer-text {
                 font-size: 1.3rem;
+                justify-content: center;
+            }
+            
+            .connect-title {
+                font-size: 2.2rem;
+            }
+            
+            .connect-subtitle {
+                font-size: 1.1rem;
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .profile-image-wrapper {
+                width: 16rem;
+                height: 16rem;
+            }
+            
+            .wisdom-slider {
+                height: 800px;
+            }
+            
+            .wisdom-slide {
+                height: 800px;
+                padding: 1.5rem;
+            }
+            
+            .wisdom-slide h3 {
+                font-size: 1.6rem;
+            }
+            
+            .wisdom-image-container {
+                height: 200px;
             }
         }
 
@@ -1587,8 +1873,17 @@
                 scroll-behavior: auto !important;
             }
             
-            .wisdom-slide {
+            .wisdom-slide,
+            .carousel-slide {
                 transition: none !important;
+            }
+            
+            .profile-image {
+                animation: none;
+            }
+            
+            .elements-orb {
+                animation: none;
             }
         }
     </style>
@@ -1620,9 +1915,13 @@
         <div class="container">
             <div class="profile-container">
                 <div class="profile-image-container">
-                    <img src="https://res.cloudinary.com/saratoffice/image/upload/v1744625310/Sarat_Hill_pkwv7d.webp?auto=format&fit=crop&w=600&q=80"
-     alt="Sarat Rout - Civil Supplies Officer">
-
+                    <div class="profile-image-wrapper">
+                        <img src="https://res.cloudinary.com/saratoffice/image/upload/v1744625310/Sarat_Hill_pkwv7d.webp?auto=format&fit=crop&w=600&q=80"
+                             alt="Sarat Rout - Civil Supplies Officer"
+                             class="profile-image">
+                        <div class="profile-image-overlay"></div>
+                        <div class="profile-image-glow"></div>
+                    </div>
                 </div>
                 <div class="profile-info">
                     <div class="profile-title">Civil Supplies Officer</div>
@@ -1650,93 +1949,275 @@
         </div>
     </section>
 
-    <!-- WISDOM SLIDER SECTION -->
+    <!-- ENHANCED WISDOM SLIDER SECTION (6 Slides) -->
     <section class="wisdom-slider-section animate-on-scroll">
         <div class="container">
             <h2 class="section-title">Words of Wisdom</h2>
-            <p class="section-subtitle">Insights and reflections from my journey</p>
+            <p class="section-subtitle">Insights and reflections from my journey - 6 guiding principles</p>
             
             <div class="wisdom-slider-container">
                 <div class="wisdom-slider" id="wisdomSlider">
-                    <!-- Slide 1: Words of Wisdom -->
-                    <div class="wisdom-slide active" data-slide="1" role="tabpanel" aria-roledescription="slide" aria-label="1 of 3">
-                        <div class="wisdom-icon">
-                            <i class="fas fa-lightbulb" aria-hidden="true"></i>
-                        </div>
-                        <h3>Words of Wisdom</h3>
-                        
-                        <div class="wisdom-content">
-                            <p>
-                                Throughout my journey, I've learned that challenges are opportunities in disguise. 
-                                Every difficult situation has taught me resilience and the importance of maintaining 
-                                a positive attitude.
-                            </p>
-                            
-                            <div class="wisdom-quote">
-                                "I did it before, so I can do it again." - This mindset has helped me overcome 
-                                numerous challenges in public service.
+                    <!-- Slide 1: Overcoming Challenges -->
+                    <div class="wisdom-slide active" data-slide="1" role="tabpanel" aria-roledescription="slide" aria-label="1 of 6">
+                        <div class="wisdom-content-container">
+                            <div class="wisdom-header">
+                                <div class="wisdom-icon">
+                                    <i class="fas fa-lightbulb" aria-hidden="true"></i>
+                                </div>
+                                <h3>Overcoming Challenges</h3>
                             </div>
                             
-                            <p>
-                                Your attitude, not your aptitude, will determine your altitude. Success in public service, 
-                                as in life, comes not just from what you know, but from how you approach each challenge 
-                                with determination and grace.
-                            </p>
+                            <div class="wisdom-content">
+                                <p>
+                                    Throughout my journey, I've learned that challenges are not obstacles but opportunities 
+                                    in disguise. Every difficult situation has been a teacher, imparting lessons of resilience, 
+                                    patience, and the importance of maintaining a positive attitude even in adversity.
+                                </p>
+                                
+                                <div class="wisdom-quote">
+                                    "I did it before, so I can do it again." - This mindset has been my anchor through 
+                                    numerous challenges in public service.
+                                </div>
+                                
+                                <p>
+                                    In civil supplies work, challenges come daily - from distribution logistics to ensuring 
+                                    fair access. Each solved problem strengthens my conviction that no challenge is too 
+                                    great when faced with determination and a clear purpose.
+                                </p>
+                            </div>
+                            
+                            <div class="wisdom-highlight">"Every setback is a setup for a comeback"</div>
+                        </div>
+                        
+                        <div class="wisdom-image-container">
+                            <img src="https://images.pexels.com/photos/4348401/pexels-photo-4348401.jpeg?auto=compress&cs=tinysrgb&w=800"
+                                 alt="Overcoming challenges in public service"
+                                 class="wisdom-image"
+                                 loading="lazy">
                         </div>
                     </div>
                     
-                    <!-- Slide 2: Work is God -->
-                    <div class="wisdom-slide" data-slide="2" role="tabpanel" aria-roledescription="slide" aria-label="2 of 3">
-                        <div class="wisdom-icon">
-                            <i class="fas fa-hands-praying" aria-hidden="true"></i>
-                        </div>
-                        <h3>Work is God</h3>
-                        
-                        <div class="wisdom-content">
-                            <div class="wisdom-quote">
-                                "Instead of plucking flowers to adorn transient spaces, let us cherish them in their 
-                                sanctified place of growth."
+                    <!-- Slide 2: Work as Devotion -->
+                    <div class="wisdom-slide" data-slide="2" role="tabpanel" aria-roledescription="slide" aria-label="2 of 6">
+                        <div class="wisdom-content-container">
+                            <div class="wisdom-header">
+                                <div class="wisdom-icon">
+                                    <i class="fas fa-hands-praying" aria-hidden="true"></i>
+                                </div>
+                                <h3>Work as Devotion</h3>
                             </div>
                             
-                            <p>
-                                For proper reverence lies not in their brief adornment of our assets but in the nurturing 
-                                care that allows them to flourish in the quiet dignity of nature's embrace.
-                            </p>
+                            <div class="wisdom-content">
+                                <div class="wisdom-quote">
+                                    "Instead of plucking flowers to adorn transient spaces, let us cherish them in their 
+                                    sanctified place of growth."
+                                </div>
+                                
+                                <p>
+                                    True devotion, in my view, is not confined to rituals or material entreaties but is 
+                                    expressed through our actions. <strong>"Work is God,"</strong> for in every task we undertake, 
+                                    we invoke the divine energy.
+                                </p>
+                                
+                                <p>
+                                    The labor we invest in life's duties is an offering to the cosmos, an alignment with 
+                                    the greater purpose of creation. Whether it's ensuring food reaches the needy or 
+                                    maintaining transparency in governance, every act of service is a form of worship.
+                                </p>
+                                
+                                <p>
+                                    Therefore, it is through conscientious work, and not through ceremonial wishes alone, 
+                                    that we truly honor the divine presence in all its manifestations.
+                                </p>
+                            </div>
                             
-                            <div class="wisdom-highlight">"Work is God"</div>
-                            
-                            
-                            
-                            <p>
-                                Therefore, it is through conscientious work, and not through ceremonial wishes, that we truly 
-                                honor the divine presence in all its manifestations.
-                            </p>
+                            <div class="wisdom-highlight">"Service to humanity is service to divinity"</div>
+                        </div>
+                        
+                        <div class="wisdom-image-container">
+                            <img src="https://images.pexels.com/photos/3935702/pexels-photo-3935702.jpeg?auto=compress&cs=tinysrgb&w=800"
+                                 alt="Work as devotion and service"
+                                 class="wisdom-image"
+                                 loading="lazy">
                         </div>
                     </div>
-                     <!-- Slide 3: Work is God -->
-                    <div class="wisdom-slide" data-slide="3" role="tabpanel" aria-roledescription="slide" aria-label="3 of 3">
-                        <div class="wisdom-icon">
-                            <i class="fas fa-hands-praying" aria-hidden="true"></i>
-                        </div>
-                        <h3>Work is God</h3>
-                        
-                        <div class="wisdom-content">
-                            <div class="wisdom-quote">
-                                "Instead of plucking flowers to adorn transient spaces, let us cherish them in their 
-                                sanctified place of growth."
+                    
+                    <!-- Slide 3: Integrity in Action -->
+                    <div class="wisdom-slide" data-slide="3" role="tabpanel" aria-roledescription="slide" aria-label="3 of 6">
+                        <div class="wisdom-content-container">
+                            <div class="wisdom-header">
+                                <div class="wisdom-icon">
+                                    <i class="fas fa-balance-scale" aria-hidden="true"></i>
+                                </div>
+                                <h3>Integrity in Action</h3>
                             </div>
                             
-                            <p>
-                                True devotion, in my view, is not confined to rituals or material entreaties but is rather 
-                                expressed through our actions. <strong>"Work is God,"</strong> for in every task we undertake, 
-                                we invoke the divine energy. The labor we invest in life's duties is an offering to the cosmos, 
-                                an alignment with the greater purpose of creation.
-                            </p>
+                            <div class="wisdom-content">
+                                <p>
+                                    Integrity is not just a word but a way of life. In public service, it means being 
+                                    transparent in decisions, fair in allocations, and honest in every interaction. 
+                                    It's about doing the right thing even when no one is watching.
+                                </p>
+                                
+                                <div class="wisdom-quote">
+                                    "Integrity is doing the right thing, even when it's hard, especially when it's hard."
+                                </div>
+                                
+                                <p>
+                                    My work involves managing essential commodities that affect millions of lives. 
+                                    Every decision must be guided by ethical principles, ensuring that resources reach 
+                                    those who need them most, without bias or corruption.
+                                </p>
+                                
+                                <p>
+                                    Integrity builds trust - trust between government and citizens, trust in systems, 
+                                    and trust in leadership. Without it, no public service can be truly effective.
+                                </p>
+                            </div>
                             
-                            <p>
-                                Therefore, it is through conscientious work, and not through ceremonial wishes, that we truly 
-                                honor the divine presence in all its manifestations.
-                            </p>
+                            <div class="wisdom-highlight">"Character is doing what's right when nobody's looking"</div>
+                        </div>
+                        
+                        <div class="wisdom-image-container">
+                            <img src="https://images.pexels.com/photos/5668859/pexels-photo-5668859.jpeg?auto=compress&cs=tinysrgb&w=800"
+                                 alt="Integrity and transparency in governance"
+                                 class="wisdom-image"
+                                 loading="lazy">
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 4: Nature as Teacher -->
+                    <div class="wisdom-slide" data-slide="4" role="tabpanel" aria-roledescription="slide" aria-label="4 of 6">
+                        <div class="wisdom-content-container">
+                            <div class="wisdom-header">
+                                <div class="wisdom-icon">
+                                    <i class="fas fa-leaf" aria-hidden="true"></i>
+                                </div>
+                                <h3>Nature as Teacher</h3>
+                            </div>
+                            
+                            <div class="wisdom-content">
+                                <p>
+                                    Nature has been my greatest teacher. It teaches patience through seasons, resilience 
+                                    through storms, and balance through ecosystems. In nature, I find both peace and profound 
+                                    lessons for life and work.
+                                </p>
+                                
+                                <div class="wisdom-quote">
+                                    "Look deep into nature, and then you will understand everything better." - Albert Einstein
+                                </div>
+                                
+                                <p>
+                                    The five elements - Earth, Water, Fire, Air, and Space - teach us about interdependence. 
+                                    Just as they work in harmony, so must different government departments collaborate for 
+                                    public welfare.
+                                </p>
+                                
+                                <p>
+                                    Nature reminds us that growth takes time, that strength comes from roots, and that 
+                                    the most beautiful things often emerge from struggle. These lessons guide my approach 
+                                    to both personal growth and public service.
+                                </p>
+                            </div>
+                            
+                            <div class="wisdom-highlight">"In every walk with nature, one receives far more than he seeks"</div>
+                        </div>
+                        
+                        <div class="wisdom-image-container">
+                            <img src="https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&w=800"
+                                 alt="Nature as teacher and guide"
+                                 class="wisdom-image"
+                                 loading="lazy">
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 5: Leadership Principles -->
+                    <div class="wisdom-slide" data-slide="5" role="tabpanel" aria-roledescription="slide" aria-label="5 of 6">
+                        <div class="wisdom-content-container">
+                            <div class="wisdom-header">
+                                <div class="wisdom-icon">
+                                    <i class="fas fa-users" aria-hidden="true"></i>
+                                </div>
+                                <h3>Leadership Principles</h3>
+                            </div>
+                            
+                            <div class="wisdom-content">
+                                <p>
+                                    True leadership is not about authority but about service. It's about empowering others, 
+                                    listening more than speaking, and leading by example. In public service, leadership 
+                                    means putting people first.
+                                </p>
+                                
+                                <div class="wisdom-quote">
+                                    "A leader is one who knows the way, goes the way, and shows the way."
+                                </div>
+                                
+                                <p>
+                                    My leadership philosophy is built on three pillars: <strong>Empathy</strong> to understand 
+                                    people's needs, <strong>Vision</strong> to see possibilities, and <strong>Courage</strong> 
+                                    to make difficult decisions for the greater good.
+                                </p>
+                                
+                                <p>
+                                    Leading a team in civil supplies requires balancing compassion with responsibility, 
+                                    innovation with tradition, and individual needs with collective welfare. It's about 
+                                    creating an environment where everyone can contribute their best.
+                                </p>
+                            </div>
+                            
+                            <div class="wisdom-highlight">"The function of leadership is to produce more leaders, not more followers"</div>
+                        </div>
+                        
+                        <div class="wisdom-image-container">
+                            <img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=800"
+                                 alt="Leadership and team collaboration"
+                                 class="wisdom-image"
+                                 loading="lazy">
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 6: Continuous Learning -->
+                    <div class="wisdom-slide" data-slide="6" role="tabpanel" aria-roledescription="slide" aria-label="6 of 6">
+                        <div class="wisdom-content-container">
+                            <div class="wisdom-header">
+                                <div class="wisdom-icon">
+                                    <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                                </div>
+                                <h3>Continuous Learning</h3>
+                            </div>
+                            
+                            <div class="wisdom-content">
+                                <p>
+                                    Learning never stops. Whether from books, experiences, or people, every day brings new 
+                                    lessons. In a rapidly changing world, continuous learning is essential for effective 
+                                    public service.
+                                </p>
+                                
+                                <div class="wisdom-quote">
+                                    "Your attitude, not your aptitude, will determine your altitude."
+                                </div>
+                                
+                                <p>
+                                    I believe in learning from everyone - from senior colleagues, from citizens we serve, 
+                                    from successes and failures. Every interaction is an opportunity to learn something new 
+                                    about human nature, governance, or problem-solving.
+                                </p>
+                                
+                                <p>
+                                    Reading biographies teaches me about resilience, studying systems helps me improve 
+                                    processes, and engaging with communities shows me ground realities. This commitment 
+                                    to learning ensures that my service remains relevant and effective.
+                                </p>
+                            </div>
+                            
+                            <div class="wisdom-highlight">"The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice"</div>
+                        </div>
+                        
+                        <div class="wisdom-image-container">
+                            <img src="https://images.pexels.com/photos/159866/books-book-pages-read-literature-159866.jpeg?auto=compress&cs=tinysrgb&w=800"
+                                 alt="Continuous learning and growth"
+                                 class="wisdom-image"
+                                 loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -1752,13 +2233,37 @@
                                 aria-selected="true" 
                                 aria-controls="wisdomSlider" 
                                 data-slide="0"
-                                aria-label="Words of Wisdom slide"></button>
+                                aria-label="Slide 1: Overcoming Challenges"></button>
                         <button class="slider-dot" 
                                 role="tab" 
                                 aria-selected="false" 
                                 aria-controls="wisdomSlider" 
                                 data-slide="1"
-                                aria-label="Work is God slide"></button>
+                                aria-label="Slide 2: Work as Devotion"></button>
+                        <button class="slider-dot" 
+                                role="tab" 
+                                aria-selected="false" 
+                                aria-controls="wisdomSlider" 
+                                data-slide="2"
+                                aria-label="Slide 3: Integrity in Action"></button>
+                        <button class="slider-dot" 
+                                role="tab" 
+                                aria-selected="false" 
+                                aria-controls="wisdomSlider" 
+                                data-slide="3"
+                                aria-label="Slide 4: Nature as Teacher"></button>
+                        <button class="slider-dot" 
+                                role="tab" 
+                                aria-selected="false" 
+                                aria-controls="wisdomSlider" 
+                                data-slide="4"
+                                aria-label="Slide 5: Leadership Principles"></button>
+                        <button class="slider-dot" 
+                                role="tab" 
+                                aria-selected="false" 
+                                aria-controls="wisdomSlider" 
+                                data-slide="5"
+                                aria-label="Slide 6: Continuous Learning"></button>
                     </div>
                     
                     <button class="slider-btn next-btn" aria-label="Next slide">
@@ -1769,39 +2274,99 @@
         </div>
     </section>
 
-    <!-- CAROUSEL SECTION -->
+    <!-- ENHANCED CAROUSEL SECTION (8 Slides from Pixabay) -->
     <section class="carousel-section animate-on-scroll">
         <div class="container">
             <h2 class="section-title">Moments of Service</h2>
-            <p class="section-subtitle">Capturing the journey of public service and community engagement</p>
+            <p class="section-subtitle">Capturing the journey of public service and community engagement - 8 inspiring moments</p>
             
             <div class="carousel-container">
                 <div class="carousel-slides" id="carouselSlides" aria-live="polite">
-                    <div class="carousel-slide active" role="tabpanel" aria-roledescription="slide" aria-label="1 of 3">
-                        <img src="https://res.cloudinary.com/saratoffice/image/upload/v1744625310/Sarat_Hill_pkwv7d.webp?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" 
-                             alt="Sarat Rout maintaining integrity in public service coverage" 
+                    <!-- Slide 1 -->
+                    <div class="carousel-slide active" role="tabpanel" aria-roledescription="slide" aria-label="1 of 8">
+                        <img src="https://images.pexels.com/photos/3184328/pexels-photo-3184328.jpeg?auto=compress&cs=tinysrgb&w=1600" 
+                             alt="Community meeting and public consultation" 
                              loading="lazy">
                         <div class="slide-content">
-                            <h3 class="slide-title">Integrity in Coverage</h3>
-                            <p class="slide-description">Maintaining transparency and accountability in public service while ensuring essential commodities reach every citizen.</p>
+                            <h3 class="slide-title">Community Consultation</h3>
+                            <p class="slide-description">Engaging directly with community members to understand their needs and concerns about essential commodities distribution and public welfare schemes.</p>
                         </div>
                     </div>
-                    <div class="carousel-slide" role="tabpanel" aria-roledescription="slide" aria-label="2 of 3">
-                        <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" 
-                             alt="Community engagement in public service" 
+                    
+                    <!-- Slide 2 -->
+                    <div class="carousel-slide" role="tabpanel" aria-roledescription="slide" aria-label="2 of 8">
+                        <img src="https://images.pexels.com/photos/6646945/pexels-photo-6646945.jpeg?auto=compress&cs=tinysrgb&w=1600" 
+                             alt="Food distribution to those in need" 
                              loading="lazy">
                         <div class="slide-content">
-                            <h3 class="slide-title">Community Engagement</h3>
-                            <p class="slide-description">Building strong connections with communities to understand their needs and provide effective solutions.</p>
+                            <h3 class="slide-title">Essential Commodities Distribution</h3>
+                            <p class="slide-description">Ensuring fair and transparent distribution of food grains and essential commodities to families through the public distribution system.</p>
                         </div>
                     </div>
-                    <div class="carousel-slide" role="tabpanel" aria-roledescription="slide" aria-label="3 of 3">
-                        <img src="https://res.cloudinary.com/saratoffice/image/upload/v1769527176/IMG_2077_bevty3.jpg?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" 
-                             alt="Leadership and guidance in public welfare" 
+                    
+                    <!-- Slide 3 -->
+                    <div class="carousel-slide" role="tabpanel" aria-roledescription="slide" aria-label="3 of 8">
+                        <img src="https://images.pexels.com/photos/7688468/pexels-photo-7688468.jpeg?auto=compress&cs=tinysrgb&w=1600" 
+                             alt="Team coordination and planning" 
                              loading="lazy">
                         <div class="slide-content">
-                            <h3 class="slide-title">Leadership & Guidance</h3>
-                            <p class="slide-description">Leading teams with compassion and wisdom to achieve common goals for public welfare.</p>
+                            <h3 class="slide-title">Team Coordination</h3>
+                            <p class="slide-description">Working closely with district administration and field staff to plan and execute efficient supply chain management for public welfare.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 4 -->
+                    <div class="carousel-slide" role="tabpanel" aria-roledescription="slide" aria-label="4 of 8">
+                        <img src="https://images.pexels.com/photos/5668859/pexels-photo-5668859.jpeg?auto=compress&cs=tinysrgb&w=1600" 
+                             alt="Transparent governance and documentation" 
+                             loading="lazy">
+                        <div class="slide-content">
+                            <h3 class="slide-title">Transparent Governance</h3>
+                            <p class="slide-description">Maintaining meticulous records and ensuring transparency in all government schemes and public distribution systems.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 5 -->
+                    <div class="carousel-slide" role="tabpanel" aria-roledescription="slide" aria-label="5 of 8">
+                        <img src="https://images.pexels.com/photos/3935702/pexels-photo-3935702.jpeg?auto=compress&cs=tinysrgb&w=1600" 
+                             alt="Rural outreach and field work" 
+                             loading="lazy">
+                        <div class="slide-content">
+                            <h3 class="slide-title">Rural Outreach</h3>
+                            <p class="slide-description">Extending essential services to remote villages and ensuring that government schemes reach the most marginalized communities.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 6 -->
+                    <div class="carousel-slide" role="tabpanel" aria-roledescription="slide" aria-label="6 of 8">
+                        <img src="https://images.pexels.com/photos/4348401/pexels-photo-4348401.jpeg?auto=compress&cs=tinysrgb&w=1600" 
+                             alt="Problem solving and conflict resolution" 
+                             loading="lazy">
+                        <div class="slide-content">
+                            <h3 class="slide-title">Problem Resolution</h3>
+                            <p class="slide-description">Addressing public grievances and resolving issues related to ration cards, food distribution, and other civil supplies matters.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 7 -->
+                    <div class="carousel-slide" role="tabpanel" aria-roledescription="slide" aria-label="7 of 8">
+                        <img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1600" 
+                             alt="Leadership and team building" 
+                             loading="lazy">
+                        <div class="slide-content">
+                            <h3 class="slide-title">Leadership Development</h3>
+                            <p class="slide-description">Mentoring junior staff and building capable teams to ensure sustainable and effective public service delivery.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 8 -->
+                    <div class="carousel-slide" role="tabpanel" aria-roledescription="slide" aria-label="8 of 8">
+                        <img src="https://images.pexels.com/photos/6476801/pexels-photo-6476801.jpeg?auto=compress&cs=tinysrgb&w=1600" 
+                             alt="Digital governance and technology adoption" 
+                             loading="lazy">
+                        <div class="slide-content">
+                            <h3 class="slide-title">Digital Governance</h3>
+                            <p class="slide-description">Implementing technology solutions for efficient monitoring, transparent tracking, and improved delivery of essential services.</p>
                         </div>
                     </div>
                 </div>
@@ -1821,24 +2386,55 @@
                             aria-selected="true" 
                             aria-controls="carouselSlides" 
                             data-slide="0"
-                            aria-label="Slide 1"></button>
+                            aria-label="Slide 1: Community Consultation"></button>
                     <button class="carousel-indicator" 
                             role="tab" 
                             aria-selected="false" 
                             aria-controls="carouselSlides" 
                             data-slide="1"
-                            aria-label="Slide 2"></button>
+                            aria-label="Slide 2: Distribution"></button>
                     <button class="carousel-indicator" 
                             role="tab" 
                             aria-selected="false" 
                             aria-controls="carouselSlides" 
                             data-slide="2"
-                            aria-label="Slide 3"></button>
+                            aria-label="Slide 3: Team Coordination"></button>
+                    <button class="carousel-indicator" 
+                            role="tab" 
+                            aria-selected="false" 
+                            aria-controls="carouselSlides" 
+                            data-slide="3"
+                            aria-label="Slide 4: Transparent Governance"></button>
+                    <button class="carousel-indicator" 
+                            role="tab" 
+                            aria-selected="false" 
+                            aria-controls="carouselSlides" 
+                            data-slide="4"
+                            aria-label="Slide 5: Rural Outreach"></button>
+                    <button class="carousel-indicator" 
+                            role="tab" 
+                            aria-selected="false" 
+                            aria-controls="carouselSlides" 
+                            data-slide="5"
+                            aria-label="Slide 6: Problem Resolution"></button>
+                    <button class="carousel-indicator" 
+                            role="tab" 
+                            aria-selected="false" 
+                            aria-controls="carouselSlides" 
+                            data-slide="6"
+                            aria-label="Slide 7: Leadership Development"></button>
+                    <button class="carousel-indicator" 
+                            role="tab" 
+                            aria-selected="false" 
+                            aria-controls="carouselSlides" 
+                            data-slide="7"
+                            aria-label="Slide 8: Digital Governance"></button>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Other Sections (Keeping existing content) -->
     <!-- PHILOSOPHY SECTION -->
     <section class="philosophy-section animate-on-scroll">
         <div class="container">
@@ -2157,15 +2753,16 @@
         // Set current year in footer
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-        // Wisdom Slider Functionality
+        // Enhanced Wisdom Slider with 6 Slides
         class WisdomSlider {
             constructor() {
                 this.slider = document.getElementById('wisdomSlider');
                 this.slides = document.querySelectorAll('.wisdom-slide');
-                this.dots = document.querySelectorAll('.slider-dot');
+                this.dots = document.querySelectorAll('.wisdom-slider-section .slider-dot');
                 this.prevBtn = document.querySelector('.wisdom-slider-section .prev-btn');
                 this.nextBtn = document.querySelector('.wisdom-slider-section .next-btn');
                 this.currentSlide = 0;
+                this.totalSlides = this.slides.length;
                 this.autoSlideInterval = null;
                 this.isAnimating = false;
                 this.slideDuration = 8000;
@@ -2177,21 +2774,25 @@
                 this.setupEventListeners();
                 this.startAutoSlide();
                 this.updateAriaAttributes();
+                this.setupDotNavigation();
             }
 
             setupEventListeners() {
                 this.prevBtn.addEventListener('click', () => this.prevSlide());
                 this.nextBtn.addEventListener('click', () => this.nextSlide());
 
-                this.dots.forEach((dot, index) => {
-                    dot.addEventListener('click', () => this.goToSlide(index));
-                    dot.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            this.goToSlide(index);
-                        }
-                    });
-                });
+                // Touch/swipe support
+                let touchStartX = 0;
+                let touchEndX = 0;
+
+                this.slider.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                this.slider.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    this.handleSwipe(touchStartX, touchEndX);
+                }, { passive: true });
 
                 // Pause on hover
                 this.slider.addEventListener('mouseenter', () => this.pauseAutoSlide());
@@ -2205,26 +2806,29 @@
                         this.slider.getBoundingClientRect().bottom > 0) {
                         if (e.key === 'ArrowLeft') this.prevSlide();
                         if (e.key === 'ArrowRight') this.nextSlide();
+                        if (e.key >= '1' && e.key <= '6') {
+                            e.preventDefault();
+                            this.goToSlide(parseInt(e.key) - 1);
+                        }
                     }
                 });
-
-                // Touch/swipe support
-                let touchStartX = 0;
-                let touchEndX = 0;
-
-                this.slider.addEventListener('touchstart', (e) => {
-                    touchStartX = e.changedTouches[0].screenX;
-                }, { passive: true });
-
-                this.slider.addEventListener('touchend', (e) => {
-                    touchEndX = e.changedTouches[0].screenX;
-                    this.handleSwipe();
-                }, { passive: true });
             }
 
-            handleSwipe() {
+            setupDotNavigation() {
+                this.dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => this.goToSlide(index));
+                    dot.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.goToSlide(index);
+                        }
+                    });
+                });
+            }
+
+            handleSwipe(startX, endX) {
                 const swipeThreshold = 50;
-                const diff = touchStartX - touchEndX;
+                const diff = startX - endX;
 
                 if (Math.abs(diff) > swipeThreshold) {
                     if (diff > 0) {
@@ -2249,15 +2853,16 @@
                     dot.setAttribute('aria-selected', 'false');
                 });
 
+                // Calculate previous and next indices
+                const prevIndex = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+                const nextIndex = (this.currentSlide + 1) % this.totalSlides;
+
                 // Set active slide and dot
                 this.slides[this.currentSlide].classList.add('active');
                 this.dots[this.currentSlide].classList.add('active');
                 this.dots[this.currentSlide].setAttribute('aria-selected', 'true');
 
-                // Set previous and next slide states for animation
-                const prevIndex = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
-                const nextIndex = (this.currentSlide + 1) % this.slides.length;
-                
+                // Set previous and next slide states
                 this.slides[prevIndex].classList.add('prev');
                 this.slides[nextIndex].classList.add('next');
 
@@ -2268,19 +2873,19 @@
             }
 
             nextSlide() {
-                this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+                this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
                 this.updateSlider();
                 this.resetAutoSlide();
             }
 
             prevSlide() {
-                this.currentSlide = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
+                this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
                 this.updateSlider();
                 this.resetAutoSlide();
             }
 
             goToSlide(index) {
-                if (index >= 0 && index < this.slides.length) {
+                if (index >= 0 && index < this.totalSlides) {
                     this.currentSlide = index;
                     this.updateSlider();
                     this.resetAutoSlide();
@@ -2288,7 +2893,7 @@
             }
 
             startAutoSlide() {
-                if (this.autoSlideInterval) return;
+                if (this.autoSlideInterval || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
                 this.autoSlideInterval = setInterval(() => this.nextSlide(), this.slideDuration);
             }
 
@@ -2306,12 +2911,12 @@
 
             updateAriaAttributes() {
                 this.slides.forEach((slide, index) => {
-                    slide.setAttribute('aria-label', `${index + 1} of ${this.slides.length}`);
+                    slide.setAttribute('aria-label', `${index + 1} of ${this.totalSlides}`);
                 });
             }
         }
 
-        // Carousel Functionality
+        // Enhanced Carousel with 8 Slides
         class Carousel {
             constructor() {
                 this.carouselSlides = document.getElementById('carouselSlides');
@@ -2320,9 +2925,10 @@
                 this.prevBtn = document.querySelector('.carousel-section .prev-btn');
                 this.nextBtn = document.querySelector('.carousel-section .next-btn');
                 this.currentSlide = 0;
+                this.totalSlides = this.slides.length;
                 this.autoSlideInterval = null;
                 this.isAnimating = false;
-                this.slideDuration = 5000;
+                this.slideDuration = 6000;
                 
                 this.init();
             }
@@ -2331,21 +2937,12 @@
                 this.setupEventListeners();
                 this.startAutoSlide();
                 this.updateAriaAttributes();
+                this.setupIndicatorNavigation();
             }
 
             setupEventListeners() {
                 this.prevBtn.addEventListener('click', () => this.prevSlide());
                 this.nextBtn.addEventListener('click', () => this.nextSlide());
-
-                this.indicators.forEach((indicator, index) => {
-                    indicator.addEventListener('click', () => this.goToSlide(index));
-                    indicator.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            this.goToSlide(index);
-                        }
-                    });
-                });
 
                 // Pause on hover
                 this.carouselSlides.addEventListener('mouseenter', () => this.pauseAutoSlide());
@@ -2357,6 +2954,18 @@
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'ArrowLeft') this.prevSlide();
                     if (e.key === 'ArrowRight') this.nextSlide();
+                });
+            }
+
+            setupIndicatorNavigation() {
+                this.indicators.forEach((indicator, index) => {
+                    indicator.addEventListener('click', () => this.goToSlide(index));
+                    indicator.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.goToSlide(index);
+                        }
+                    });
                 });
             }
 
@@ -2386,19 +2995,19 @@
             }
 
             nextSlide() {
-                this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+                this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
                 this.updateCarousel();
                 this.resetAutoSlide();
             }
 
             prevSlide() {
-                this.currentSlide = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
+                this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
                 this.updateCarousel();
                 this.resetAutoSlide();
             }
 
             goToSlide(index) {
-                if (index >= 0 && index < this.slides.length) {
+                if (index >= 0 && index < this.totalSlides) {
                     this.currentSlide = index;
                     this.updateCarousel();
                     this.resetAutoSlide();
@@ -2406,7 +3015,7 @@
             }
 
             startAutoSlide() {
-                if (this.autoSlideInterval) return;
+                if (this.autoSlideInterval || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
                 this.autoSlideInterval = setInterval(() => this.nextSlide(), this.slideDuration);
             }
 
@@ -2424,7 +3033,7 @@
 
             updateAriaAttributes() {
                 this.slides.forEach((slide, index) => {
-                    slide.setAttribute('aria-label', `${index + 1} of ${this.slides.length}`);
+                    slide.setAttribute('aria-label', `${index + 1} of ${this.totalSlides}`);
                 });
             }
         }
@@ -2490,7 +3099,15 @@
         class TypingEffect {
             constructor() {
                 this.typingFooterText = document.getElementById('typing-footer-text');
-                this.footerText = "Your attitude, not your aptitude, will determine your altitude.";
+                this.quotes = [
+                    "Your attitude, not your aptitude, will determine your altitude.",
+                    "Service to humanity is the highest form of worship.",
+                    "Integrity is doing the right thing, even when no one is watching.",
+                    "Every challenge is an opportunity in disguise.",
+                    "Nature is the greatest teacher; we just need to listen.",
+                    "Leadership is not about being in charge, but about taking care of those in your charge."
+                ];
+                this.currentQuoteIndex = 0;
                 this.charIndex = 0;
                 this.isDeleting = false;
                 this.typingSpeed = 50;
@@ -2503,23 +3120,24 @@
             }
 
             type() {
-                const currentText = this.footerText.substring(0, this.charIndex);
+                const currentText = this.quotes[this.currentQuoteIndex].substring(0, this.charIndex);
                 this.typingFooterText.innerHTML = `<span class="typed-footer-text">${currentText}</span>`;
                 
-                if (!this.isDeleting && this.charIndex < this.footerText.length) {
+                if (!this.isDeleting && this.charIndex < this.quotes[this.currentQuoteIndex].length) {
                     this.charIndex++;
                     setTimeout(() => this.type(), this.typingSpeed);
                 } else if (this.isDeleting && this.charIndex > 0) {
                     this.charIndex--;
                     setTimeout(() => this.type(), this.deletingSpeed);
-                } else if (!this.isDeleting && this.charIndex === this.footerText.length) {
+                } else if (!this.isDeleting && this.charIndex === this.quotes[this.currentQuoteIndex].length) {
                     setTimeout(() => {
                         this.isDeleting = true;
                         this.type();
                     }, this.pauseDuration);
                 } else if (this.isDeleting && this.charIndex === 0) {
                     this.isDeleting = false;
-                    setTimeout(() => this.type(), 1000);
+                    this.currentQuoteIndex = (this.currentQuoteIndex + 1) % this.quotes.length;
+                    setTimeout(() => this.type(), 500);
                 }
             }
         }
@@ -2542,6 +3160,31 @@
             }
         }
 
+        // Profile Image Hover Enhancement
+        class ProfileImageEnhancer {
+            constructor() {
+                this.profileWrapper = document.querySelector('.profile-image-wrapper');
+                if (this.profileWrapper) {
+                    this.setupEventListeners();
+                }
+            }
+
+            setupEventListeners() {
+                this.profileWrapper.addEventListener('mouseenter', () => this.onHover());
+                this.profileWrapper.addEventListener('mouseleave', () => this.onLeave());
+                this.profileWrapper.addEventListener('focus', () => this.onHover());
+                this.profileWrapper.addEventListener('blur', () => this.onLeave());
+            }
+
+            onHover() {
+                this.profileWrapper.style.transform = 'rotateY(10deg) rotateX(5deg) scale(1.05)';
+            }
+
+            onLeave() {
+                this.profileWrapper.style.transform = '';
+            }
+        }
+
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             // Check for reduced motion preference
@@ -2552,19 +3195,27 @@
             new Carousel();
             new ScrollAnimator().observeElements();
             new ElementsAnimator();
+            new ProfileImageEnhancer();
             
-            // Only run typing effect if not preferring reduced motion
+            // Only run animations if not preferring reduced motion
             if (!prefersReducedMotion) {
                 new TypingEffect();
                 new ParallaxEffect();
             }
 
             // Lazy load images
-            if ('loading' in HTMLImageElement.prototype) {
-                const images = document.querySelectorAll('img[loading="lazy"]');
-                images.forEach(img => {
-                    img.src = img.dataset.src;
+            const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.src = img.src;
+                            imageObserver.unobserve(img);
+                        }
+                    });
                 });
+                lazyImages.forEach(img => imageObserver.observe(img));
             }
 
             // Add loading state management
@@ -2573,16 +3224,15 @@
 
         // Handle page visibility changes
         document.addEventListener('visibilitychange', () => {
+            const wisdomSlider = document.querySelector('.wisdom-slider');
+            const carousel = document.querySelector('.carousel-container');
+            
             if (document.hidden) {
                 // Pause animations when page is not visible
-                const wisdomSlider = document.querySelector('.wisdom-slider');
-                const carousel = document.querySelector('.carousel-container');
                 if (wisdomSlider) wisdomSlider.classList.add('paused');
                 if (carousel) carousel.classList.add('paused');
             } else {
                 // Resume animations when page becomes visible
-                const wisdomSlider = document.querySelector('.wisdom-slider');
-                const carousel = document.querySelector('.carousel-container');
                 if (wisdomSlider) wisdomSlider.classList.remove('paused');
                 if (carousel) carousel.classList.remove('paused');
             }
