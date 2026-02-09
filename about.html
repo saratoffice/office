@@ -110,6 +110,87 @@
             margin-right: auto;
         }
 
+        /* Navigation Styles */
+        #main-nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(18, 24, 38, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(124, 255, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background: rgba(124, 255, 0, 0.1);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
         /* Hero Section */
         .hero {
             min-height: 100vh;
@@ -117,6 +198,7 @@
             align-items: center;
             position: relative;
             overflow: hidden;
+            padding-top: 80px; /* Space for fixed navigation */
         }
 
         .hero-background {
@@ -1889,11 +1971,32 @@
     </style>
 </head>
 <body>
-  <div id="site-header"></div>
-
     <!-- Skip to Content Link (Accessibility) -->
     <a href="#main-content" class="skip-to-content">Skip to main content</a>
     
+    <!-- NAVIGATION -->
+    <nav id="main-nav">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">
+                <i class="fas fa-user-circle"></i>
+                <span>Sarat Rout</span>
+            </a>
+            
+            <button class="menu-toggle" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <ul class="nav-menu">
+                <li><a href="#hero" class="nav-link">Home</a></li>
+                <li><a href="#main-content" class="nav-link">Profile</a></li>
+                <li><a href="#wisdomSlider" class="nav-link">Wisdom</a></li>
+                <li><a href="#carouselSlides" class="nav-link">Gallery</a></li>
+                <li><a href="#philosophy" class="nav-link">Philosophy</a></li>
+                <li><a href="#connect" class="nav-link">Connect</a></li>
+            </ul>
+        </div>
+    </nav>
+
     <!-- HERO SECTION -->
     <section class="hero" id="hero">
         <div class="hero-background" role="presentation"></div>
@@ -2277,7 +2380,7 @@
     </section>
 
     <!-- ENHANCED CAROUSEL SECTION (8 Slides from Pixabay) -->
-    <section class="carousel-section animate-on-scroll">
+    <section class="carousel-section animate-on-scroll" id="philosophy">
         <div class="container">
             <h2 class="section-title">Moments of Service</h2>
             <p class="section-subtitle">Capturing the journey of public service and community engagement - 8 inspiring moments</p>
@@ -2698,7 +2801,7 @@
     </section>
 
     <!-- CONNECT SECTION -->
-    <section class="connect-section animate-on-scroll">
+    <section class="connect-section animate-on-scroll" id="connect">
         <div class="container">
             <div class="connect-content">
                 <h2 class="connect-title">Let's Connect</h2>
@@ -3187,6 +3290,46 @@
             }
         }
 
+        // Mobile Navigation Toggle
+        class MobileNavigation {
+            constructor() {
+                this.menuToggle = document.querySelector('.menu-toggle');
+                this.navMenu = document.querySelector('.nav-menu');
+                
+                if (this.menuToggle && this.navMenu) {
+                    this.setupEventListeners();
+                }
+            }
+
+            setupEventListeners() {
+                this.menuToggle.addEventListener('click', () => this.toggleMenu());
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('#main-nav') && this.navMenu.classList.contains('active')) {
+                        this.closeMenu();
+                    }
+                });
+                
+                // Close menu when clicking a link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => this.closeMenu());
+                });
+            }
+
+            toggleMenu() {
+                this.navMenu.classList.toggle('active');
+                this.menuToggle.innerHTML = this.navMenu.classList.contains('active') ? 
+                    '<i class="fas fa-times"></i>' : 
+                    '<i class="fas fa-bars"></i>';
+            }
+
+            closeMenu() {
+                this.navMenu.classList.remove('active');
+                this.menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        }
+
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             // Check for reduced motion preference
@@ -3198,6 +3341,7 @@
             new ScrollAnimator().observeElements();
             new ElementsAnimator();
             new ProfileImageEnhancer();
+            new MobileNavigation();
             
             // Only run animations if not preferring reduced motion
             if (!prefersReducedMotion) {
@@ -3239,67 +3383,6 @@
                 if (carousel) carousel.classList.remove('paused');
             }
         });
-      div id="site-footer"></div>
-
-    <script>
-        // Load Header and Footer
-        Promise.all([
-            fetch('header.html').then(res => res.text()),
-            fetch('footer.html').then(res => res.text()),
-            fetch('nav.html').then(res => res.text())
-        ])
-        .then(([headerHtml, footerHtml, navHtml]) => {
-            // Load header
-            document.getElementById('site-header').innerHTML = headerHtml;
-            
-            // Load navigation
-            const header = document.getElementById('site-header');
-            const navPlaceholder = header.querySelector('#main-nav');
-            if (navPlaceholder) {
-                navPlaceholder.innerHTML = navHtml;
-            } else {
-                const navContainer = document.createElement('div');
-                navContainer.id = 'main-nav';
-                navContainer.innerHTML = navHtml;
-                header.appendChild(navContainer);
-            }
-            
-            // Load footer
-            document.getElementById('site-footer').innerHTML = footerHtml;
-            
-            // Initialize mobile menu
-            setTimeout(() => {
-                document.addEventListener("click", function (e) {
-                    if (e.target.classList.contains("menu-toggle")) {
-                        const menu = document.querySelector(".menu");
-                        if (menu) {
-                            menu.classList.toggle("open");
-                            e.stopPropagation();
-                        }
-                    }
-
-                    const dropdownLink = e.target.closest(".dropdown > a");
-                    if (dropdownLink && window.innerWidth <= 900) {
-                        e.preventDefault();
-                        dropdownLink.parentElement.classList.toggle("open");
-                    }
-
-                    if (!e.target.closest('.menu') && !e.target.closest('.menu-toggle')) {
-                        const openMenu = document.querySelector('.menu.open');
-                        if (openMenu) {
-                            openMenu.classList.remove('open');
-                        }
-                        
-                        const openDropdowns = document.querySelectorAll('.dropdown.open');
-                        openDropdowns.forEach(dropdown => {
-                            dropdown.classList.remove('open');
-                        });
-                    }
-                });
-            }, 100);
-        })
-        .catch(err => console.error('Error loading components:', err));
-
     </script>
 </body>
 </html>
