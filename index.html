@@ -170,33 +170,43 @@
       transform: translateY(-3px);
     }
 /* =================================
-   FULL-WIDTH SLIDER - NO GAPS
+   FULL-WIDTH SLIDER STYLES - NO GAPS
 ================================= */
-.home-page .hero-slider {
-  width: 100vw;
+.home-page .hero-slider-wrapper {
+  width: 100%;
+  overflow: hidden;
   position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  margin-top: 0;
-  padding-top: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.home-page .hero-slider {
+  width: 100%;
   height: 85vh;
   min-height: 600px;
+  position: relative;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 .home-page .slider-container {
-  width: 300%;
+  width: 100%;
   height: 100%;
+  position: relative;
   display: flex;
-  transition: transform 0.5s ease;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 0;
+  padding: 0;
 }
 
 .home-page .slider-slide {
-  width: 100vw;
+  min-width: 100%;
   height: 100%;
   position: relative;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .home-page .slider-image {
@@ -204,59 +214,65 @@
   height: 100%;
   object-fit: cover;
   pointer-events: none;
+  user-select: none;
+  margin: 0;
+  padding: 0;
 }
 
-/* CTA Buttons positioned at bottom-right */
-.home-page .slider-cta {
+/* Remove all container constraints */
+.home-page .hero-slider-wrapper .container {
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+
+/* Slider controls */
+.home-page .slider-controls {
   position: absolute;
   bottom: 40px;
-  right: 40px;
-  z-index: 2;
-}
-
-/* Navigation Arrows */
-.home-page .slider-nav {
-  position: absolute;
-  top: 50%;
-  width: 100%;
+  left: 0;
+  right: 0;
   display: flex;
-  justify-content: space-between;
-  padding: 0 20px;
-  transform: translateY(-50%);
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  z-index: 3;
 }
 
-.home-page .slider-nav button {
-  background: rgba(0,0,0,0.3);
-  color: white;
-  border: none;
+.home-page .slider-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  color: var(--white);
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-size: 24px;
+  font-size: 1.2rem;
   transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
 }
 
-.home-page .slider-nav button:hover {
-  background: rgba(0,0,0,0.6);
+.home-page .slider-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: var(--white);
   transform: scale(1.1);
 }
 
-/* Dots positioned at bottom-left */
 .home-page .slider-dots {
-  position: absolute;
-  bottom: 40px;
-  left: 40px;
   display: flex;
-  gap: 10px;
-  z-index: 2;
+  gap: 12px;
 }
 
 .home-page .slider-dot {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.5);
+  background: rgba(255, 255, 255, 0.4);
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -264,6 +280,111 @@
 .home-page .slider-dot.active {
   background: var(--primary-green);
   transform: scale(1.2);
+}
+
+/* Navigation arrows */
+.home-page .slider-nav {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  right: 20px;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.home-page .slider-nav button {
+  pointer-events: all;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  color: var(--white);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.home-page .slider-nav button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: var(--white);
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .home-page .hero-slider {
+    height: 70vh;
+    min-height: 500px;
+  }
+  
+  .home-page .slide-content h2 {
+    font-size: 2.8rem;
+  }
+  
+  .home-page .slider-nav button {
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-page .hero-slider {
+    height: 60vh;
+    min-height: 400px;
+  }
+  
+  .home-page .slide-content h2 {
+    font-size: 2.2rem;
+  }
+  
+  .home-page .slide-content p {
+    font-size: 1.1rem;
+  }
+  
+  .home-page .slider-controls {
+    bottom: 20px;
+  }
+  
+  .home-page .slider-nav {
+    left: 10px;
+    right: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-page .hero-slider {
+    height: 50vh;
+    min-height: 350px;
+  }
+  
+  .home-page .slide-content h2 {
+    font-size: 1.8rem;
+  }
+  
+  .home-page .slide-content p {
+    font-size: 1rem;
+  }
+  
+  .home-page .slider-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  
+  .home-page .slider-nav button {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
 }
     /* =================================
        HERO SECTION
@@ -1258,47 +1379,66 @@
 <div id="site-header"></div>
 
 <main>
-<!-- Replace your hero section with this -->
-<div class="hero-slider">
-  <div class="slider-container" id="sliderContainer">
-    <!-- Slide 1 -->
-    <div class="slider-slide">
-      <img src="YOUR_SLIDE1_IMAGE_URL" class="slider-image">
-      <div class="slider-cta">
-        <a href="#tools" class="btn btn-primary">Explore Tools</a>
+ <!-- Replace your entire hero section with this -->
+<div class="hero-slider-wrapper">
+  <div class="hero-slider">
+    <div class="slider-container" id="sliderContainer">
+      <!-- Slide 1 -->
+      <div class="slider-slide">
+        <div class="slider-overlay"></div>
+        <img src="assets/images/Sliders/Slider1_taot6m.jpg?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+             alt="Technology Innovation" 
+             class="slider-image">
+        <div class="slide-content">
+          
+          <a href="#tools" class="btn btn-primary">Explore Tools</a>
+        </div>
+      </div>
+      
+      <!-- Slide 2 -->
+      <div class="slider-slide">
+        <div class="slider-overlay"></div>
+        <img src="assets/images/Sliders/Slider2_fsvr7r.jpg?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+             alt="Data Analytics" 
+             class="slider-image">
+        <div class="slide-content">
+          
+          <a href="#resources" class="btn btn-primary">View Resources</a>
+        </div>
+      </div>
+      
+      <!-- Slide 3 -->
+      <div class="slider-slide">
+        <div class="slider-overlay"></div>
+        <img src="assets/images/Sliders/Slider3_f9vntq.jpg?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+             alt="Collaboration" 
+             class="slider-image">
+        <div class="slide-content">
+          
+          <a href="#contact" class="btn btn-primary">Get Started</a>
+        </div>
       </div>
     </div>
     
-    <!-- Slide 2 -->
-    <div class="slider-slide">
-      <img src="YOUR_SLIDE2_IMAGE_URL" class="slider-image">
-      <div class="slider-cta">
-        <a href="#resources" class="btn btn-primary">View Resources</a>
-      </div>
+    <!-- Navigation Arrows -->
+    <div class="slider-nav">
+      <button onclick="prevSlide()">‹</button>
+      <button onclick="nextSlide()">›</button>
     </div>
     
-    <!-- Slide 3 -->
-    <div class="slider-slide">
-      <img src="YOUR_SLIDE3_IMAGE_URL" class="slider-image">
-      <div class="slider-cta">
-        <a href="#contact" class="btn btn-primary">Get Started</a>
+    <!-- Bottom Controls -->
+    <div class="slider-controls">
+      <button class="slider-btn" onclick="prevSlide()">‹</button>
+      <div class="slider-dots">
+        <span class="slider-dot active" onclick="goToSlide(0)"></span>
+        <span class="slider-dot" onclick="goToSlide(1)"></span>
+        <span class="slider-dot" onclick="goToSlide(2)"></span>
       </div>
+      <button class="slider-btn" onclick="nextSlide()">›</button>
     </div>
-  </div>
-  
-  <!-- Navigation Arrows -->
-  <div class="slider-nav">
-    <button onclick="prevSlide()">‹</button>
-    <button onclick="nextSlide()">›</button>
-  </div>
-  
-  <!-- Dots at bottom-left -->
-  <div class="slider-dots">
-    <span class="slider-dot active" onclick="goToSlide(0)"></span>
-    <span class="slider-dot" onclick="goToSlide(1)"></span>
-    <span class="slider-dot" onclick="goToSlide(2)"></span>
   </div>
 </div>
+
   <!-- HERO SECTION -->
   <section class="hero container">
     <div class="hero-text">
