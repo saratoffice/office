@@ -170,20 +170,24 @@
       transform: translateY(-3px);
     }
 /* =================================
-   FULL-WIDTH SLIDER STYLES
-   Add these after your existing CSS
+   FULL-WIDTH SLIDER STYLES - NO GAPS
 ================================= */
-.home-page .hero-slider {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+.home-page .hero-slider-wrapper {
+  width: 100%;
   overflow: hidden;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.home-page .hero-slider {
+  width: 100%;
   height: 85vh;
   min-height: 600px;
-  background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 .home-page .slider-container {
@@ -192,6 +196,8 @@
   position: relative;
   display: flex;
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 0;
+  padding: 0;
 }
 
 .home-page .slider-slide {
@@ -199,6 +205,8 @@
   height: 100%;
   position: relative;
   flex-shrink: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .home-page .slider-image {
@@ -207,14 +215,19 @@
   object-fit: cover;
   pointer-events: none;
   user-select: none;
+  margin: 0;
+  padding: 0;
 }
 
-/* Prevent any hover effects on images */
-.home-page .slider-slide:hover .slider-image {
-  transform: none !important;
+/* Remove all container constraints */
+.home-page .hero-slider-wrapper .container {
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
 }
 
-/* Slide content overlay */
+/* Slide content */
 .home-page .slide-content {
   position: absolute;
   top: 50%;
@@ -224,8 +237,8 @@
   color: var(--white);
   z-index: 2;
   max-width: 800px;
-  padding: 0 20px;
-  width: 100%;
+  width: 90%;
+  padding: 0;
 }
 
 .home-page .slide-content h2 {
@@ -246,14 +259,13 @@
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
 }
 
-/* Overlay for better text visibility */
 .home-page .slider-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5));
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6));
   z-index: 1;
 }
 
@@ -311,8 +323,8 @@
   transform: scale(1.2);
 }
 
-/* Slider indicators */
-.home-page .slider-indicators {
+/* Navigation arrows */
+.home-page .slider-nav {
   position: absolute;
   top: 50%;
   left: 20px;
@@ -321,10 +333,11 @@
   display: flex;
   justify-content: space-between;
   z-index: 3;
+  pointer-events: none;
 }
 
-.home-page .slider-prev,
-.home-page .slider-next {
+.home-page .slider-nav button {
+  pointer-events: all;
   background: rgba(255, 255, 255, 0.2);
   border: 2px solid rgba(255, 255, 255, 0.4);
   color: var(--white);
@@ -340,14 +353,13 @@
   backdrop-filter: blur(5px);
 }
 
-.home-page .slider-prev:hover,
-.home-page .slider-next:hover {
+.home-page .slider-nav button:hover {
   background: rgba(255, 255, 255, 0.3);
   border-color: var(--white);
   transform: scale(1.1);
 }
 
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width: 992px) {
   .home-page .hero-slider {
     height: 70vh;
@@ -358,8 +370,7 @@
     font-size: 2.8rem;
   }
   
-  .home-page .slider-prev,
-  .home-page .slider-next {
+  .home-page .slider-nav button {
     width: 50px;
     height: 50px;
     font-size: 1.3rem;
@@ -384,7 +395,7 @@
     bottom: 20px;
   }
   
-  .home-page .slider-indicators {
+  .home-page .slider-nav {
     left: 10px;
     right: 10px;
   }
@@ -410,28 +421,11 @@
     font-size: 1rem;
   }
   
-  .home-page .slider-prev,
-  .home-page .slider-next {
+  .home-page .slider-nav button {
     width: 40px;
     height: 40px;
     font-size: 1.1rem;
   }
-}
-
-/* Animation for slide content */
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translate(-50%, 30px);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-}
-
-.home-page .slide-content {
-  animation: slideInUp 0.8s ease-out forwards;
 }
     /* =================================
        HERO SECTION
@@ -1426,67 +1420,70 @@
 <div id="site-header"></div>
 
 <main>
-  <!-- Replace your existing hero section with this slider -->
-<section class="hero-slider">
-  <div class="slider-container" id="sliderContainer">
-    <!-- Slide 1 -->
-    <div class="slider-slide">
-      <div class="slider-overlay"></div>
-      <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
-           alt="Technology Innovation" 
-           class="slider-image">
-      <div class="slide-content">
-        <h2>Innovate with Confidence</h2>
-        <p>Discover cutting-edge tools and resources to transform your ideas into reality</p>
-        <a href="#tools" class="btn btn-primary">Explore Tools</a>
+ <!-- Replace your entire hero section with this -->
+<div class="hero-slider-wrapper">
+  <div class="hero-slider">
+    <div class="slider-container" id="sliderContainer">
+      <!-- Slide 1 -->
+      <div class="slider-slide">
+        <div class="slider-overlay"></div>
+        <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+             alt="Technology Innovation" 
+             class="slider-image">
+        <div class="slide-content">
+          <h2>Innovate with Confidence</h2>
+          <p>Discover cutting-edge tools and resources to transform your ideas into reality</p>
+          <a href="#tools" class="btn btn-primary">Explore Tools</a>
+        </div>
+      </div>
+      
+      <!-- Slide 2 -->
+      <div class="slider-slide">
+        <div class="slider-overlay"></div>
+        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+             alt="Data Analytics" 
+             class="slider-image">
+        <div class="slide-content">
+          <h2>Data-Driven Decisions</h2>
+          <p>Leverage powerful analytics and insights to make informed choices</p>
+          <a href="#resources" class="btn btn-primary">View Resources</a>
+        </div>
+      </div>
+      
+      <!-- Slide 3 -->
+      <div class="slider-slide">
+        <div class="slider-overlay"></div>
+        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+             alt="Collaboration" 
+             class="slider-image">
+        <div class="slide-content">
+          <h2>Collaborate & Create</h2>
+          <p>Join a community of innovators and build amazing projects together</p>
+          <a href="#contact" class="btn btn-primary">Get Started</a>
+        </div>
       </div>
     </div>
     
-    <!-- Slide 2 -->
-    <div class="slider-slide">
-      <div class="slider-overlay"></div>
-      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
-           alt="Data Analytics" 
-           class="slider-image">
-      <div class="slide-content">
-        <h2>Data-Driven Decisions</h2>
-        <p>Leverage powerful analytics and insights to make informed choices for your projects</p>
-        <a href="#resources" class="btn btn-primary">View Resources</a>
-      </div>
+    <!-- Navigation Arrows -->
+    <div class="slider-nav">
+      <button onclick="prevSlide()">‹</button>
+      <button onclick="nextSlide()">›</button>
     </div>
     
-    <!-- Slide 3 -->
-    <div class="slider-slide">
-      <div class="slider-overlay"></div>
-      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
-           alt="Collaboration" 
-           class="slider-image">
-      <div class="slide-content">
-        <h2>Collaborate & Create</h2>
-        <p>Join a community of innovators and build amazing projects together</p>
-        <a href="#contact" class="btn btn-primary">Get Started</a>
+    <!-- Bottom Controls -->
+    <div class="slider-controls">
+      <button class="slider-btn" onclick="prevSlide()">‹</button>
+      <div class="slider-dots">
+        <span class="slider-dot active" onclick="goToSlide(0)"></span>
+        <span class="slider-dot" onclick="goToSlide(1)"></span>
+        <span class="slider-dot" onclick="goToSlide(2)"></span>
       </div>
+      <button class="slider-btn" onclick="nextSlide()">›</button>
     </div>
   </div>
-  
-  <!-- Navigation Arrows -->
-  <div class="slider-indicators">
-    <button class="slider-prev" onclick="prevSlide()">‹</button>
-    <button class="slider-next" onclick="nextSlide()">›</button>
-  </div>
-  
-  <!-- Bottom Controls -->
-  <div class="slider-controls">
-    <button class="slider-btn" onclick="prevSlide()">‹</button>
-    <div class="slider-dots">
-      <span class="slider-dot active" onclick="goToSlide(0)"></span>
-      <span class="slider-dot" onclick="goToSlide(1)"></span>
-      <span class="slider-dot" onclick="goToSlide(2)"></span>
-    </div>
-    <button class="slider-btn" onclick="nextSlide()">›</button>
-  </div>
-</section>
+</div>
 
+<!-- Your existing content continues from here... -->
 <!-- Your existing content continues here... -->
   <!-- HERO SECTION -->
   <section class="hero container">
@@ -1891,14 +1888,19 @@
   const dots = document.querySelectorAll('.slider-dot');
   const totalSlides = slides.length;
   let slideInterval;
+  let isHovering = false;
 
   function updateSlider() {
     const sliderContainer = document.getElementById('sliderContainer');
-    sliderContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+    if (sliderContainer) {
+      sliderContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
     
     // Update dots
     dots.forEach((dot, index) => {
-      dot.classList.toggle('active', index === currentSlide);
+      if (dot) {
+        dot.classList.toggle('active', index === currentSlide);
+      }
     });
   }
 
@@ -1915,17 +1917,25 @@
   }
 
   function goToSlide(index) {
-    currentSlide = index;
-    updateSlider();
-    resetInterval();
+    if (index >= 0 && index < totalSlides) {
+      currentSlide = index;
+      updateSlider();
+      resetInterval();
+    }
   }
 
   function startInterval() {
-    slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+    if (!isHovering) {
+      slideInterval = setInterval(nextSlide, 5000);
+    }
+  }
+
+  function stopInterval() {
+    clearInterval(slideInterval);
   }
 
   function resetInterval() {
-    clearInterval(slideInterval);
+    stopInterval();
     startInterval();
   }
 
@@ -1936,13 +1946,17 @@
     
     // Pause on hover
     const slider = document.querySelector('.hero-slider');
-    slider.addEventListener('mouseenter', () => {
-      clearInterval(slideInterval);
-    });
-    
-    slider.addEventListener('mouseleave', () => {
-      startInterval();
-    });
+    if (slider) {
+      slider.addEventListener('mouseenter', () => {
+        isHovering = true;
+        stopInterval();
+      });
+      
+      slider.addEventListener('mouseleave', () => {
+        isHovering = false;
+        startInterval();
+      });
+    }
   });
   // Load Header and Footer
   Promise.all([
