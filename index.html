@@ -171,51 +171,32 @@
       transform: translateY(-3px);
     }
 /* =================================
-   FULL-WIDTH SLIDER - MOBILE OPTIMIZED
+   FULL WIDTH FULL SCREEN SLIDER
 ================================= */
 
-/* RESET FOR MOBILE */
-.hero-slider-wrapper,
-.hero-slider,
-.slider-container,
-.slider-slide {
-    -webkit-overflow-scrolling: touch;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -webkit-transform: translate3d(0,0,0);
-    transform: translate3d(0,0,0);
-}
-
-/* MAIN WRAPPER */
 .hero-slider-wrapper {
     width: 100%;
     overflow: hidden;
     position: relative;
-    margin: 0;
-    padding: 0;
     max-width: 100vw;
 }
 
-/* SLIDER CONTAINER */
+/* FULL SCREEN HEIGHT FIX (ALL DEVICES) */
 .hero-slider {
     width: 100%;
-    height: 85vh;
-    min-height: 500px;
+    height: 100vh;
+    height: 100dvh;   /* Fix for mobile dynamic viewport */
+    height: 100svh;   /* Small viewport fix */
     position: relative;
     overflow: hidden;
-    margin: 0;
-    padding: 0;
 }
 
 /* SLIDES CONTAINER */
 .slider-container {
     width: 100%;
     height: 100%;
-    position: relative;
     display: flex;
     transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    margin: 0;
-    padding: 0;
     will-change: transform;
 }
 
@@ -223,325 +204,22 @@
 .slider-slide {
     min-width: 100%;
     height: 100%;
-    position: relative;
     flex-shrink: 0;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative;
 }
 
-/* IMAGE STYLES - MOBILE OPTIMIZED */
+/* IMAGE FULL COVER */
 .slider-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
-    pointer-events: none;
-    user-select: none;
-    -webkit-user-drag: none;
     display: block;
 }
 
-/* NAVIGATION BUTTONS */
-.slider-controls-left {
-    position: absolute;
-    bottom: 40px;
-    left: 40px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 15px;
-    z-index: 3;
-}
+/* Remove old vh rules from media queries */
+/* Delete all height changes like 60vh / 70vh / 85vh */
 
-.slider-btn {
-    background: rgba(255, 255, 255, 0.15);
-    border: 2px solid rgba(255, 255, 255, 0.25);
-    color: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1.8rem;
-    font-weight: 300;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    -webkit-tap-highlight-color: transparent;
-}
-
-.slider-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.4);
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-}
-
-/* DOWN BUTTONS */
-.slide-down-btn {
-    position: absolute;
-    bottom: 40px;
-    right: 40px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    padding: 18px 32px;
-    border-radius: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(15px);
-    z-index: 2;
-    font-size: 1.15rem;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    min-width: 160px;
-    -webkit-tap-highlight-color: transparent;
-    text-decoration: none;
-}
-
-.slide-down-btn:hover {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-    border-color: rgba(255, 255, 255, 0.35);
-    transform: translateY(-4px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-    gap: 18px;
-    padding-right: 28px;
-}
-
-.btn-text {
-    position: relative;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.btn-arrow {
-    transition: all 0.3s ease;
-    width: 22px;
-    height: 22px;
-    stroke: currentColor;
-    stroke-width: 2.5;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-    flex-shrink: 0;
-}
-
-/* PULSE ANIMATION */
-@keyframes elegant-pulse {
-    0% { transform: translateY(0); opacity: 0.9; }
-    50% { transform: translateY(6px); opacity: 1; }
-    100% { transform: translateY(0); opacity: 0.9; }
-}
-
-.btn-arrow {
-    animation: elegant-pulse 2s infinite ease-in-out;
-}
-
-.slide-down-btn:hover .btn-arrow {
-    animation: none;
-    transform: translateY(4px);
-}
-
-/* BUTTON COLORS */
-.slider-slide:nth-child(1) .slide-down-btn {
-    background: linear-gradient(135deg, rgba(76, 175, 80, 0.85), rgba(56, 142, 60, 0.7));
-    border-color: rgba(76, 175, 80, 0.4);
-}
-
-.slider-slide:nth-child(2) .slide-down-btn {
-    background: linear-gradient(135deg, rgba(33, 150, 243, 0.85), rgba(30, 136, 229, 0.7));
-    border-color: rgba(33, 150, 243, 0.4);
-}
-
-.slider-slide:nth-child(3) .slide-down-btn {
-    background: linear-gradient(135deg, rgba(156, 39, 176, 0.85), rgba(123, 31, 162, 0.7));
-    border-color: rgba(156, 39, 176, 0.4);
-}
-
-/* =================================
-   MOBILE RESPONSIVE STYLES
-================================= */
-
-/* TABLET (768px and below) */
-@media (max-width: 768px) {
-    .hero-slider {
-        height: 70vh;
-        min-height: 400px;
-    }
-    
-    .slider-controls-left {
-        bottom: 30px;
-        left: 20px;
-        gap: 10px;
-    }
-    
-    .slider-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 1.5rem;
-    }
-    
-    .slide-down-btn {
-        bottom: 30px;
-        right: 20px;
-        padding: 14px 20px;
-        font-size: 1rem;
-        min-width: 140px;
-        gap: 10px;
-    }
-    
-    .btn-arrow {
-        width: 18px;
-        height: 18px;
-    }
-}
-
-/* MOBILE (576px and below) */
-@media (max-width: 576px) {
-    .hero-slider {
-        height: 60vh;
-        min-height: 350px;
-    }
-    
-    .slider-controls-left {
-        flex-direction: column;
-        left: 15px;
-        bottom: 20px;
-        gap: 8px;
-    }
-    
-    .slider-btn {
-        width: 45px;
-        height: 45px;
-        font-size: 1.3rem;
-    }
-    
-    .slide-down-btn {
-        bottom: 20px;
-        right: 15px;
-        padding: 12px 16px;
-        font-size: 0.9rem;
-        min-width: auto;
-        max-width: 180px;
-        gap: 8px;
-    }
-    
-    .btn-text {
-        white-space: normal;
-        font-size: 0.9rem;
-        line-height: 1.2;
-    }
-    
-    .btn-arrow {
-        width: 16px;
-        height: 16px;
-    }
-}
-
-/* VERY SMALL MOBILE (400px and below) */
-@media (max-width: 400px) {
-    .hero-slider {
-        height: 55vh;
-        min-height: 300px;
-    }
-    
-    .slide-down-btn {
-        padding: 10px 14px;
-        font-size: 0.85rem;
-        gap: 6px;
-    }
-    
-    .btn-text {
-        font-size: 0.85rem;
-    }
-    
-    .btn-arrow {
-        width: 14px;
-        height: 14px;
-    }
-    
-    .slider-controls-left {
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 15px;
-        flex-direction: row;
-        gap: 15px;
-    }
-    
-    /* Hide arrow on very small screens */
-    .slide-down-btn .btn-arrow {
-        display: none;
-    }
-    
-    .slide-down-btn {
-        padding: 10px 20px;
-    }
-}
-
-/* LANDSCAPE MODE */
-@media (max-height: 500px) and (orientation: landscape) {
-    .hero-slider {
-        height: 90vh;
-        min-height: 300px;
-    }
-    
-    .slider-controls-left {
-        bottom: 20px;
-        left: 20px;
-    }
-    
-    .slide-down-btn {
-        bottom: 20px;
-        right: 20px;
-        padding: 10px 16px;
-        font-size: 0.9rem;
-    }
-    
-    .slider-btn {
-        width: 45px;
-        height: 45px;
-    }
-}
-
-/* TOUCH DEVICES */
-@media (hover: none) and (pointer: coarse) {
-    .slider-btn,
-    .slide-down-btn {
-        min-height: 44px;
-    }
-    
-    .slide-down-btn {
-        padding: 14px 20px;
-    }
-    
-    /* Disable hover effects on touch */
-    .slider-btn:hover,
-    .slide-down-btn:hover {
-        transform: none;
-    }
-    
-    /* Active state for touch feedback */
-    .slider-btn:active,
-    .slide-down-btn:active {
-        transform: scale(0.95);
-        opacity: 0.8;
-    }
-}
-
-/* IOS SAFARI FIX */
-@supports (-webkit-touch-callout: none) {
-    .hero-slider {
-        height: -webkit-fill-available;
-    }
-}
     /* =================================
        HERO SECTION
     ================================= */
@@ -1535,60 +1213,93 @@
 <div id="site-header"></div>
 
 <main>
-<!-- Slider Section -->
+<!-- ===============================
+     HERO SLIDER SECTION
+================================ -->
 <div class="hero-slider-wrapper">
+    
     <div class="hero-slider">
+        
         <div class="slider-container" id="sliderContainer">
+            
             <!-- Slide 1 -->
             <div class="slider-slide">
-                <img src="assets/images/Sliders/Slider1_taot6m.jpg" 
-                     alt="Technology Innovation" 
-                     class="slider-image">
+                <img 
+                    src="assets/images/Sliders/Slider1_taot6m.jpg"
+                    alt="Technology Innovation"
+                    class="slider-image"
+                    loading="lazy"
+                >
+                
                 <a href="#tools" class="slide-down-btn rounded-btn">
                     <span class="btn-text">Utility Tools</span>
-                    <svg class="btn-arrow" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="btn-arrow" xmlns="http://www.w3.org/2000/svg"
+                         width="20" height="20" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
                         <path d="M12 5v14"></path>
                         <path d="m19 12-7 7-7-7"></path>
                     </svg>
                 </a>
             </div>
-            
+
             <!-- Slide 2 -->
             <div class="slider-slide">
-                <img src="assets/images/Sliders/Slider2_fsvr7r.jpg" 
-                     alt="Data Analytics" 
-                     class="slider-image">
+                <img 
+                    src="assets/images/Sliders/Slider2_fsvr7r.jpg"
+                    alt="Data Analytics"
+                    class="slider-image"
+                    loading="lazy"
+                >
+                
                 <a href="#resources" class="slide-down-btn rounded-btn">
                     <span class="btn-text">Resources</span>
-                    <svg class="btn-arrow" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="btn-arrow" xmlns="http://www.w3.org/2000/svg"
+                         width="20" height="20" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
                         <path d="M12 5v14"></path>
                         <path d="m19 12-7 7-7-7"></path>
                     </svg>
                 </a>
             </div>
-            
+
             <!-- Slide 3 -->
             <div class="slider-slide">
-                <img src="assets/images/Sliders/Slider3_f9vntq.jpg" 
-                     alt="Collaboration" 
-                     class="slider-image">
+                <img 
+                    src="assets/images/Sliders/Slider3_f9vntq.jpg"
+                    alt="Collaboration"
+                    class="slider-image"
+                    loading="lazy"
+                >
+                
                 <a href="#contact" class="slide-down-btn rounded-btn">
                     <span class="btn-text">Legal Docs</span>
-                    <svg class="btn-arrow" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="btn-arrow" xmlns="http://www.w3.org/2000/svg"
+                         width="20" height="20" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
                         <path d="M12 5v14"></path>
                         <path d="m19 12-7 7-7-7"></path>
                     </svg>
                 </a>
             </div>
+
         </div>
-        
-        <!-- Navigation buttons on left bottom -->
+
+        <!-- Navigation Buttons -->
         <div class="slider-controls-left">
             <button class="slider-btn rounded-btn" id="prevBtn">‹</button>
             <button class="slider-btn rounded-btn" id="nextBtn">›</button>
         </div>
+
     </div>
+
 </div>
+
   <!-- HERO SECTION -->
   <section class="hero container">
     <div class="hero-text">
@@ -1986,109 +1697,31 @@
 <div id="site-footer"></div>
 
 <script>
-  // =================================
-// SLIDER FUNCTIONALITY - MOBILE OPTIMIZED
-// =================================
+  document.addEventListener("DOMContentLoaded", function () {
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Slider variables
     let currentSlide = 0;
     let isAnimating = false;
-    let startX = 0;
-    let currentX = 0;
-    const totalSlides = 3;
-    const sliderContainer = document.getElementById('sliderContainer');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    let slideInterval;
+    const sliderContainer = document.getElementById("sliderContainer");
+    const slides = document.querySelectorAll(".slider-slide");
+    const totalSlides = slides.length;
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
 
-    // Initialize slider
-    function initSlider() {
+    let autoSlideInterval = null;
+
+    function updateSlider() {
         if (!sliderContainer) return;
-        
-        updateSlider();
-        setupEventListeners();
-        
-        // Start auto-slide only on desktop
-        if (!isMobile()) {
-            startAutoSlide();
-        }
-        
-        // Add touch events for mobile swipe
-        setupTouchEvents();
+        sliderContainer.style.transform =
+            `translate3d(-${currentSlide * 100}%, 0, 0)`;
     }
 
-    // Setup event listeners
-    function setupEventListeners() {
-        if (prevBtn) prevBtn.addEventListener('click', prevSlide);
-        if (nextBtn) nextBtn.addEventListener('click', nextSlide);
-        
-        // Pause auto-slide on hover (desktop)
-        const slider = document.querySelector('.hero-slider');
-        if (slider && !isMobile()) {
-            slider.addEventListener('mouseenter', pauseAutoSlide);
-            slider.addEventListener('mouseleave', startAutoSlide);
-        }
-    }
-
-    // Setup touch events for mobile
-    function setupTouchEvents() {
-        if (!sliderContainer) return;
-        
-        sliderContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
-        sliderContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
-        sliderContainer.addEventListener('touchend', handleTouchEnd);
-    }
-
-    // Touch event handlers
-    function handleTouchStart(e) {
-        if (isAnimating) return;
-        startX = e.touches[0].clientX;
-        currentX = startX;
-        pauseAutoSlide();
-    }
-
-    function handleTouchMove(e) {
-        if (isAnimating) return;
-        currentX = e.touches[0].clientX;
-    }
-
-    function handleTouchEnd() {
-        if (isAnimating) return;
-        
-        const diffX = startX - currentX;
-        const threshold = 50; // Minimum swipe distance
-        
-        if (Math.abs(diffX) > threshold) {
-            if (diffX > 0) {
-                // Swipe left - next slide
-                nextSlide();
-            } else {
-                // Swipe right - previous slide
-                prevSlide();
-            }
-        }
-        
-        // Restart auto-slide after swipe
-        if (!isMobile()) {
-            setTimeout(startAutoSlide, 3000);
-        }
-    }
-
-    // Mobile detection
-    function isMobile() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    }
-
-    // Slider navigation functions
     function nextSlide() {
         if (isAnimating) return;
         isAnimating = true;
-        
+
         currentSlide = (currentSlide + 1) % totalSlides;
         updateSlider();
-        
-        // Reset animation flag after transition
+
         setTimeout(() => {
             isAnimating = false;
         }, 800);
@@ -2097,121 +1730,64 @@ document.addEventListener('DOMContentLoaded', function() {
     function prevSlide() {
         if (isAnimating) return;
         isAnimating = true;
-        
-        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+
+        currentSlide =
+            (currentSlide - 1 + totalSlides) % totalSlides;
         updateSlider();
-        
-        // Reset animation flag after transition
+
         setTimeout(() => {
             isAnimating = false;
         }, 800);
     }
 
-    // Update slider position
-    function updateSlider() {
-        if (!sliderContainer) return;
-        
-        // Use translate3d for hardware acceleration
-        sliderContainer.style.transform = `translate3d(-${currentSlide * 100}%, 0, 0)`;
-        sliderContainer.style.webkitTransform = `translate3d(-${currentSlide * 100}%, 0, 0)`;
-    }
+    if (nextBtn) nextBtn.addEventListener("click", nextSlide);
+    if (prevBtn) prevBtn.addEventListener("click", prevSlide);
 
-    // Auto-slide functionality
+    /* AUTO SLIDE (DESKTOP ONLY) */
     function startAutoSlide() {
-        if (isMobile()) return; // Don't auto-slide on mobile
-        
-        if (!slideInterval) {
-            slideInterval = setInterval(nextSlide, 5000);
+        if (window.innerWidth > 768 && !autoSlideInterval) {
+            autoSlideInterval = setInterval(nextSlide, 5000);
         }
     }
 
-    function pauseAutoSlide() {
-        if (slideInterval) {
-            clearInterval(slideInterval);
-            slideInterval = null;
+    function stopAutoSlide() {
+        if (autoSlideInterval) {
+            clearInterval(autoSlideInterval);
+            autoSlideInterval = null;
         }
     }
 
-    function resetAutoSlide() {
-        pauseAutoSlide();
-        if (!isMobile()) {
-            startAutoSlide();
+    startAutoSlide();
+
+    /* TOUCH SUPPORT */
+    let startX = 0;
+
+    sliderContainer.addEventListener("touchstart", (e) => {
+        startX = e.touches[0].clientX;
+        stopAutoSlide();
+    });
+
+    sliderContainer.addEventListener("touchend", (e) => {
+        let endX = e.changedTouches[0].clientX;
+        let diff = startX - endX;
+
+        if (Math.abs(diff) > 50) {
+            diff > 0 ? nextSlide() : prevSlide();
         }
-    }
 
-    // Initialize slider
-    initSlider();
+        startAutoSlide();
+    });
 
-    // Expose functions globally for onclick attributes (if needed)
-    window.nextSlide = nextSlide;
-    window.prevSlide = prevSlide;
-    window.pauseAutoSlide = pauseAutoSlide;
-    window.startAutoSlide = startAutoSlide;
-
-    // Handle window resize
-    window.addEventListener('resize', function() {
-        // Update slider position on resize
+    window.addEventListener("resize", () => {
         updateSlider();
+        stopAutoSlide();
+        startAutoSlide();
     });
 
-    // Prevent context menu on slider images
-    document.querySelectorAll('.slider-image').forEach(img => {
-        img.addEventListener('contextmenu', e => e.preventDefault());
-    });
 });
 
-// =================================
-// SMOOTH SCROLLING FOR SECTION LINKS
-// =================================
 
-// Enable smooth scrolling for anchor links
-document.addEventListener('DOMContentLoaded', function() {
-    // Add smooth scrolling to the entire page
-    if ('scrollBehavior' in document.documentElement.style) {
-        // Use native smooth scrolling if supported
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if (href === '#' || href === '#!') return;
-                
-                const target = document.querySelector(href);
-                if (target) {
-                    e.preventDefault();
-                    
-                    // Calculate offset for fixed headers
-                    const headerHeight = document.querySelector('header')?.offsetHeight || 0;
-                    const offset = headerHeight + 20;
-                    
-                    window.scrollTo({
-                        top: target.offsetTop - offset,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    } else {
-        // Fallback for older browsers
-        document.documentElement.style.scrollBehavior = 'smooth';
-    }
-});
-
-// Optional: Add scroll offset for sections
-function addScrollOffset() {
-    const sections = document.querySelectorAll('section[id]');
-    sections.forEach(section => {
-        section.style.scrollMarginTop = '100px';
-    });
-}
-
-// Call this after page loads
-setTimeout(addScrollOffset, 100);
-  // Load Header and Footer
-  Promise.all([
-    fetch('header.html').then(res => res.text()),
-    fetch('footer.html').then(res => res.text()),
-    fetch('nav.html').then(res => res.text())
-  ])
-  .then(([headerHtml, footerHtml, navHtml]) => {
+  
     // Load header
     document.getElementById('site-header').innerHTML = headerHtml;
     
