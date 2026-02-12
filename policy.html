@@ -2,289 +2,281 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sarat Office · Isolated Tabs (Header/Footer safe)</title>
+  <title>Sarat Office · Govt. Calendars Tab</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Papaparse for CSV parsing -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-<!-- Common CSS -->
-    <link rel="stylesheet" href="style.css">
-      <style>
+<link rel="stylesheet" href="style.css">
+  <style>
+    /* ----- GLOBAL RESET ----- */
+    body {
+      margin: 0;
+      background: #f5f9ff;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+    }
+
     /* ----- NAMESPACED WRAPPER – all custom CSS is scoped inside .sarat-docs ----- */
-.sarat-docs {
-  display: block;
-  width: 100%;
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 20px 60px;
-  box-sizing: border-box;
-}
+    .sarat-docs {
+      display: block;
+      width: 100%;
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 20px 80px;
+      box-sizing: border-box;
+    }
 
-/* ---- HORIZONTAL TABS – RECTANGULAR 3D STYLE (EXACTLY AS IMAGE) ---- */
-.sarat-docs .tab-strip {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 16px;
-  background: transparent;
-  padding: 20px 0;
-  margin: 20px 0 40px 0;
-  border-bottom: none;
-}
+    /* ---- HORIZONTAL TABS – RECTANGULAR 3D STYLE (EXACTLY AS IMAGE) ---- */
+    .sarat-docs .tab-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 20px;
+      background: transparent;
+      padding: 25px 0;
+      margin: 20px 0 40px 0;
+      border-bottom: none;
+    }
 
-/* tab item — rectangular with 3D depth */
-.sarat-docs .tab-item {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 32px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  color: #1e3a5f;
-  background: #ffffff;
-  border: none;
-  border-radius: 0;
-  box-shadow: 
-    0 6px 0 #b0b0b0,
-    0 8px 12px rgba(0,0,0,0.15),
-    inset 0 -2px 0 rgba(0,0,0,0.05);
-  transition: all 0.15s ease;
-  cursor: pointer;
-  text-decoration: none;
-  text-transform: uppercase;
-  border: 1px solid #d0d0d0;
-  border-bottom: none;
-  min-width: 140px;
-}
+    .sarat-docs .tab-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 36px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: #1e3a5f;
+      background: #ffffff;
+      border: none;
+      border-radius: 0;
+      box-shadow: 
+        0 8px 0 #a0a0a0,
+        0 10px 15px rgba(0,0,0,0.2),
+        inset 0 -2px 0 rgba(0,0,0,0.05);
+      transition: all 0.15s ease;
+      cursor: pointer;
+      text-decoration: none;
+      text-transform: uppercase;
+      border: 1px solid #c0c0c0;
+      border-bottom: none;
+      min-width: 160px;
+    }
 
-/* hover effect — lift and stronger shadow */
-.sarat-docs .tab-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 
-    0 8px 0 #8a8a8a,
-    0 12px 20px rgba(0,0,0,0.2),
-    inset 0 -2px 0 rgba(0,0,0,0.05);
-  background: #f8fbff;
-  color: #0a2a44;
-}
+    .sarat-docs .tab-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 10px 0 #7a7a7a,
+        0 15px 25px rgba(0,0,0,0.25),
+        inset 0 -2px 0 rgba(0,0,0,0.05);
+      background: #f0f7ff;
+      color: #003366;
+    }
 
-/* ACTIVE tab — rich blue, white text, deeper 3D */
-.sarat-docs .tab-item.active {
-  background: #005a9c;
-  color: white !important;
-  box-shadow: 
-    0 6px 0 #003f6b,
-    0 10px 16px rgba(0,90,156,0.3),
-    inset 0 -2px 0 rgba(0,0,0,0.1);
-  border-color: #004a80;
-  border-bottom: none;
-  transform: translateY(0);
-}
+    .sarat-docs .tab-item.active {
+      background: #0066b3;
+      color: white !important;
+      box-shadow: 
+        0 8px 0 #00407a,
+        0 12px 20px rgba(0,102,179,0.35),
+        inset 0 -2px 0 rgba(0,0,0,0.15);
+      border-color: #005095;
+      border-bottom: none;
+      transform: translateY(0);
+    }
 
-.sarat-docs .tab-item.active:hover {
-  background: #004a80;
-  box-shadow: 
-    0 8px 0 #003050,
-    0 14px 22px rgba(0,70,130,0.35);
-  transform: translateY(-2px);
-  color: white;
-}
+    .sarat-docs .tab-item.active:hover {
+      background: #005095;
+      box-shadow: 
+        0 10px 0 #00355c,
+        0 18px 28px rgba(0,80,150,0.4);
+      transform: translateY(-3px);
+      color: white;
+    }
 
-/* remove dividers/dots completely */
-.sarat-docs .tab-divider {
-  display: none;
-}
+    .sarat-docs .tab-divider {
+      display: none !important;
+    }
 
-/* ----- 3D TABLE – WIDER, FULL WIDTH, CENTERED CONTENT ----- */
-.sarat-docs .csv-tab-container {
-  overflow-x: auto;
-  padding: 20px 0 40px 0;
-  background: transparent;
-  margin-top: 10px;
-}
+    /* ----- CSV TABLE STYLES (for other tabs) ----- */
+    .sarat-docs .csv-tab-container {
+      overflow-x: auto;
+      padding: 20px 0 40px 0;
+      background: transparent;
+      margin-top: 10px;
+    }
 
-.sarat-docs .csv-table {
-  width: 80%;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-family: 'Segoe UI', sans-serif;
-  font-size: 16px;
-  min-width: 600px;
-  border-radius: 8px;
-  overflow: hidden;
-  background: #ffffff;
-  box-shadow:
-    0 0 0 4px #e8f0fe,
-    0 8px 20px rgba(0, 80, 150, 0.2),
-    inset 0 0 6px rgba(0, 120, 210, 0.1);
-  margin: 0 auto;
-}
+    .sarat-docs .csv-table {
+      width: 80%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 16px;
+      min-width: 600px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow:
+        0 0 0 4px #e8f0fe,
+        0 8px 20px rgba(0, 80, 150, 0.2),
+        inset 0 0 6px rgba(0, 120, 210, 0.1);
+      margin: 0 auto;
+    }
 
-.sarat-docs .csv-table thead {
-  background: linear-gradient(135deg, #0a1e3c, #13294b);
-}
+    .sarat-docs .csv-table thead {
+      background: linear-gradient(135deg, #0a1e3c, #13294b);
+    }
 
-.sarat-docs .csv-table thead th {
-  color: #fff !important;
-  font-weight: 700;
-  text-align: center;
-  padding: 20px 18px;
-  letter-spacing: 0.8px;
-  font-size: 16px;
-  text-transform: uppercase;
-}
+    .sarat-docs .csv-table thead th {
+      color: #fff !important;
+      font-weight: 700;
+      text-align: center;
+      padding: 20px 18px;
+      letter-spacing: 0.8px;
+      font-size: 16px;
+      text-transform: uppercase;
+    }
 
-.sarat-docs .csv-table td {
-  padding: 18px 20px;
-  border-bottom: 1px solid #d4e3f0;
-  vertical-align: middle;
-  background-color: white;
-  font-size: 15px;
-}
+    .sarat-docs .csv-table td {
+      padding: 18px 20px;
+      border-bottom: 1px solid #d4e3f0;
+      vertical-align: middle;
+      background-color: white;
+      font-size: 15px;
+    }
 
-.sarat-docs .csv-table td:nth-child(1) {
-  text-align: center;
-  font-weight: 600;
-  color: #0a2e4a;
-  width: 80px;
-}
+    .sarat-docs .csv-table td:nth-child(1) {
+      text-align: center;
+      font-weight: 600;
+      color: #0a2e4a;
+      width: 80px;
+    }
 
-.sarat-docs .csv-table td:nth-child(2) {
-  text-align: left;
-  font-weight: 500;
-  color: #1e3a5f;
-}
+    .sarat-docs .csv-table td:nth-child(2) {
+      text-align: left;
+      font-weight: 500;
+      color: #1e3a5f;
+    }
 
-.sarat-docs .csv-table td:nth-child(3),
-.sarat-docs .csv-table td:nth-child(4) {
-  text-align: center;
-  width: 140px;
-}
+    .sarat-docs .csv-table td:nth-child(3),
+    .sarat-docs .csv-table td:nth-child(4) {
+      text-align: center;
+      width: 140px;
+    }
 
-.sarat-docs .csv-table tbody tr:hover {
-  background-color: #f0f9ff;
-  transition: background-color 0.15s;
-  box-shadow: inset 0 0 0 2px rgba(0,110,220,0.1);
-}
+    .sarat-docs .csv-table tbody tr:hover {
+      background-color: #f0f9ff;
+      transition: background-color 0.15s;
+    }
 
-.sarat-docs .csv-table tbody tr:hover td {
-  background-color: #f0f9ff;
-}
+    .sarat-docs .download-btn,
+    .sarat-docs .share-btn {
+      min-width: 120px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+      box-shadow:
+        inset 0 -3px 0 rgba(0,0,0,0.15),
+        0 5px 12px rgba(0,0,0,0.12);
+      transform: translateY(0);
+      transition: all 0.2s ease;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
 
-/* --- 3D BUTTONS – refined, consistent --- */
-.sarat-docs .download-btn,
-.sarat-docs .share-btn {
-  min-width: 120px;
-  padding: 12px 20px;
-  font-size: 14px;
-  font-weight: 700;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  color: white;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-  box-shadow:
-    inset 0 -3px 0 rgba(0,0,0,0.15),
-    0 5px 12px rgba(0,0,0,0.12);
-  transform: translateY(0);
-  transition: all 0.2s ease;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-}
+    .sarat-docs .download-btn {
+      background: linear-gradient(to bottom, #2e7d32, #1b5e20);
+    }
 
-.sarat-docs .download-btn {
-  background: linear-gradient(to bottom, #2e7d32, #1b5e20);
-}
+    .sarat-docs .download-btn:hover {
+      background: linear-gradient(to bottom, #1b5e20, #0e4212);
+      transform: translateY(-2px);
+      box-shadow:
+        inset 0 -3px 0 rgba(0,0,0,0.2),
+        0 8px 18px rgba(46,125,50,0.4);
+    }
 
-.sarat-docs .download-btn:hover {
-  background: linear-gradient(to bottom, #1b5e20, #0e4212);
-  transform: translateY(-2px);
-  box-shadow:
-    inset 0 -3px 0 rgba(0,0,0,0.2),
-    0 8px 18px rgba(46,125,50,0.4);
-}
+    .sarat-docs .share-btn {
+      background: linear-gradient(to bottom, #1976d2, #0d47a1);
+    }
 
-.sarat-docs .share-btn {
-  background: linear-gradient(to bottom, #1976d2, #0d47a1);
-}
+    .sarat-docs .share-btn:hover {
+      background: linear-gradient(to bottom, #0d47a1, #062a5c);
+      transform: translateY(-2px);
+      box-shadow:
+        inset 0 -3px 0 rgba(0,0,0,0.2),
+        0 8px 18px rgba(25,118,210,0.4);
+    }
 
-.sarat-docs .share-btn:hover {
-  background: linear-gradient(to bottom, #0d47a1, #062a5c);
-  transform: translateY(-2px);
-  box-shadow:
-    inset 0 -3px 0 rgba(0,0,0,0.2),
-    0 8px 18px rgba(25,118,210,0.4);
-}
+    /* fallback header/footer */
+    .fallback-header {
+      background: #0c1f33;
+      color: white;
+      padding: 18px 30px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .fallback-footer {
+      background: #0a1929;
+      color: #bbd6ff;
+      padding: 20px 30px;
+      text-align: center;
+    }
 
-/* remove any lingering dot dividers */
-.sarat-docs .tab-divider {
-  display: none !important;
-}
+    @media (max-width: 1200px) {
+      .sarat-docs {
+        padding: 20px 50px;
+      }
+      .sarat-docs .tab-item {
+        padding: 14px 28px;
+        min-width: 140px;
+        font-size: 1.1rem;
+      }
+    }
 
-/* responsive adjustments */
-@media (max-width: 1100px) {
-  .sarat-docs {
-    padding: 20px 30px;
-  }
-  
-  .sarat-docs .tab-item {
-    padding: 12px 24px;
-    min-width: 120px;
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 800px) {
-  .sarat-docs {
-    padding: 15px 20px;
-  }
-  
-  .sarat-docs .tab-strip {
-    gap: 12px;
-  }
-  
-  .sarat-docs .tab-item {
-    padding: 10px 18px;
-    min-width: 100px;
-    font-size: 0.9rem;
-  }
-  
-  .sarat-docs .csv-table {
-    min-width: 700px;
-  }
-}
+    @media (max-width: 900px) {
+      .sarat-docs {
+        padding: 15px 20px;
+      }
+      .sarat-docs .tab-strip {
+        gap: 15px;
+      }
+      .sarat-docs .tab-item {
+        padding: 12px 20px;
+        min-width: 120px;
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
 
-<!-- ===== YOUR HEADER – completely untouched ===== -->
+<!-- HEADER -->
 <div id="site-header"></div>
 
-<!-- ===== MAIN DOCS COMPONENT – everything inside .sarat-docs ===== -->
+<!-- MAIN DOCS COMPONENT -->
 <div class="sarat-docs">
 
-  <!-- Horizontal tab strip – categories exactly as per image + your list -->
+  <!-- Horizontal tab strip – RECTANGULAR, 3D, NO DOTS, PROPER GAP -->
   <div class="tab-strip" id="horizontalTabStrip">
     <button class="tab-item active" data-category="Act">ACTS</button>
-    <span class="tab-divider">•</span>
     <button class="tab-item" data-category="Rules">RULES</button>
-    <span class="tab-divider">•</span>
     <button class="tab-item" data-category="Order">ORDERS</button>
-    <span class="tab-divider">•</span>
     <button class="tab-item" data-category="MSP">PADDY MSP</button>
-    <span class="tab-divider">•</span>
     <button class="tab-item" data-category="Procurement">PROC GUIDELINES</button>
-    <span class="tab-divider">•</span>
     <button class="tab-item" data-category="Food">FOOD POLICY</button>
-    <span class="tab-divider">•</span>
     <button class="tab-item" data-category="Misc">MISCELLANEOUS</button>
-    <span class="tab-divider">•</span>
     <button class="tab-item" data-category="Govt Calendars">GOVT. CALENDARS</button>
   </div>
 
-  <!-- Dynamic table area – each container ID matches the updated category names -->
+  <!-- Dynamic table area -->
   <div id="dynamicTableArea">
+    <!-- CSV-based tabs -->
     <div class="csv-tab-container" id="tab-Act" style="display: block;">
       <div class="csv-table-placeholder">Loading Acts...</div>
     </div>
@@ -306,61 +298,59 @@
     <div class="csv-tab-container" id="tab-Misc" style="display: none;">
       <div class="csv-table-placeholder">Loading Miscellaneous...</div>
     </div>
+    
+    <!-- GOVT. CALENDARS TAB - Will be loaded from GitHub -->
     <div class="csv-tab-container" id="tab-Govt Calendars" style="display: none;">
       <div class="csv-table-placeholder">Loading Govt. Calendars...</div>
     </div>
   </div>
 
-</div> <!-- end .sarat-docs -->
+</div>
 
-<!-- ===== YOUR FOOTER – completely untouched ===== -->
+<!-- FOOTER -->
 <div id="site-footer"></div>
 
 <script>
   (function() {
     "use strict";
 
-    // ------- CSV FETCH -------
+    // ------- CONFIGURATION --------
     const CSV_URL = "https://docs.google.com/spreadsheets/d/1mLh8E5JEHP-HCrBgs42pVpiY4ZpP7LG-O__3Av2-MgY/export?format=csv&gid=884226509";
+    const GOVT_CALENDARS_URL = "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/calendars.html"; // ← CHANGE THIS
+    
     let parsedRows = [];
 
-    // ---------- FETCH AND POPULATE ALL TABLES (UPDATED CATEGORY NAMES) ----------
+    // ---------- LOAD CSV DATA ----------
     function loadAllCSVTables() {
       fetch(CSV_URL)
         .then(response => response.text())
         .then(csvText => {
           const parsed = Papa.parse(csvText, { header: false });
-          const rows = parsed.data.slice(1); // skip header row
+          const rows = parsed.data.slice(1);
           parsedRows = rows.filter(row => row && row.length > 1);
 
-          /* --- REPLACED CATEGORIES --- */
           populateTableForCategory('Act');
           populateTableForCategory('Rules');
           populateTableForCategory('Order');
-          populateTableForCategory('MSP');           // was 'Paddy MSP'
-          populateTableForCategory('Procurement');   // was 'Proc Guidelines'
-          populateTableForCategory('Food');          // was 'Food Policy'
-          populateTableForCategory('Misc');          // was 'Miscellaneous'
-          populateTableForCategory('Govt Calendars');
+          populateTableForCategory('MSP');
+          populateTableForCategory('Procurement');
+          populateTableForCategory('Food');
+          populateTableForCategory('Misc');
         })
         .catch(err => {
           console.error("CSV Load Error:", err);
-          document.querySelectorAll('.sarat-docs .csv-table-placeholder').forEach(el => {
-            el.innerHTML = `<span style="color: red;">⚠️ Failed to load data.</span>`;
-          });
         });
     }
 
-    // build table HTML for a given category
+    // ---------- BUILD CSV TABLE HTML ----------
     function buildTableHTML(category) {
       const filtered = parsedRows.filter(row => row[1] && row[1].trim() === category);
       if (filtered.length === 0) {
-        return `<table class="csv-table"><thead><tr><th>S. No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center; padding:40px;">📁 No documents for ${category}</td></tr></tbody></table>`;
+        return `<table class="csv-table"><thead><tr><th>S.No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center; padding:40px;">📁 No documents for ${category}</td></tr></tbody></table>`;
       }
 
       const rowsHtml = filtered.map((row, idx) => {
-        let subject = (row[2] || "").replace(/_/g, " ").replace(/\.pdf$/i, "").trim();
-        if (subject === "") subject = "Untitled";
+        let subject = (row[2] || "").replace(/_/g, " ").replace(/\.pdf$/i, "").trim() || "Untitled";
         const link = row[5] ? row[5].trim() : "#";
         const safeLink = (link.startsWith("http") || link.startsWith("/")) ? link : "#";
         const encodedSubject = encodeURIComponent("📄 " + subject + "\n🔗 " + safeLink);
@@ -373,17 +363,14 @@
       }).join("");
 
       return `<table class="csv-table">
-        <thead><tr><th>S. No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead>
+        <thead><tr><th>S.No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead>
         <tbody>${rowsHtml}</tbody>
       </table>`;
     }
 
     function populateTableForCategory(category) {
       const tabDiv = document.getElementById(`tab-${category}`);
-      if (!tabDiv) {
-        console.warn(`Container for category "${category}" not found.`);
-        return;
-      }
+      if (!tabDiv) return;
       const placeholder = tabDiv.querySelector('.csv-table-placeholder');
       if (!placeholder) return;
       if (parsedRows.length === 0) {
@@ -393,7 +380,47 @@
       placeholder.innerHTML = buildTableHTML(category);
     }
 
-    // ---------- TAB CLICK HANDLER (updated container IDs) ----------
+    // ---------- LOAD GOVT. CALENDARS FROM GITHUB ----------
+    function loadGovtCalendars() {
+      const calendarContainer = document.getElementById('tab-Govt Calendars');
+      if (!calendarContainer) return;
+      
+      const placeholder = calendarContainer.querySelector('.csv-table-placeholder');
+      if (!placeholder) return;
+      
+      placeholder.innerHTML = '<div style="text-align: center; padding: 40px;">📅 Loading Government Calendars...</div>';
+      
+      fetch(GOVT_CALENDARS_URL)
+        .then(response => {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.text();
+        })
+        .then(html => {
+          // Extract the content inside the govt-calendars-section div
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const calendarSection = doc.querySelector('.govt-calendars-section');
+          
+          if (calendarSection) {
+            placeholder.innerHTML = calendarSection.outerHTML;
+          } else {
+            // Fallback: insert the entire HTML
+            placeholder.innerHTML = html;
+          }
+        })
+        .catch(error => {
+          console.error('Error loading Govt. Calendars:', error);
+          placeholder.innerHTML = `
+            <div style="text-align: center; padding: 50px; background: white; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+              <h2 style="color: #0083ed; font-size: 28pt; margin-bottom: 20px;">GOVT. CALENDARS</h2>
+              <p style="color: #666; font-size: 18px;">⚠️ Unable to load calendars. Please try again later.</p>
+              <p style="color: #999; margin-top: 20px;">Error: ${error.message}</p>
+            </div>
+          `;
+        });
+    }
+
+    // ---------- TAB CLICK HANDLER ----------
     function initTabs() {
       const tabStrip = document.querySelector('.sarat-docs .tab-strip');
       if (!tabStrip) return;
@@ -411,28 +438,33 @@
       };
 
       function activateTab(category) {
-        // update active class on buttons
+        // Update active class
         tabButtons.forEach(btn => {
           const btnCat = btn.getAttribute('data-category');
           btn.classList.toggle('active', btnCat === category);
         });
 
-        // show/hide containers
+        // Show/hide containers
         Object.keys(containers).forEach(key => {
           if (containers[key]) {
             containers[key].style.display = key === category ? 'block' : 'none';
           }
         });
 
-        // ensure table is built if needed
+        // Load data if needed
         if (parsedRows.length > 0) {
           const target = containers[category];
-          if (target) {
+          if (target && category !== 'Govt Calendars') {
             const placeholder = target.querySelector('.csv-table-placeholder');
             if (placeholder && placeholder.innerHTML.includes('Loading')) {
               placeholder.innerHTML = buildTableHTML(category);
             }
           }
+        }
+        
+        // Special handling for Govt. Calendars
+        if (category === 'Govt Calendars') {
+          loadGovtCalendars();
         }
       }
 
@@ -444,11 +476,11 @@
         });
       });
 
-      // initial active = Act
+      // Initial active tab
       activateTab('Act');
     }
 
-    // ----- HEADER / FOOTER LOADER (unchanged, safe) -----
+    // ----- HEADER / FOOTER LOADER -----
     function loadHeaderFooter() {
       const headerEl = document.getElementById('site-header');
       const footerEl = document.getElementById('site-footer');
@@ -479,12 +511,12 @@
         .catch(() => {});
     }
 
-    // ----- START -----
+    // ----- INITIALIZE -----
     loadHeaderFooter();
     loadAllCSVTables();
     initTabs();
 
-    // Mobile dropdown logic (global, unaffected)
+    // Mobile dropdown logic
     document.addEventListener("click", function (e) {
       if (e.target.classList.contains("menu-toggle")) {
         const menu = document.querySelector(".menu");
