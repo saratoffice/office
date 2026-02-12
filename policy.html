@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sarat Office</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style>
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .csv-tab-container {
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        table {
+            background: white;
+        }
+        table tr:hover {
+            background-color: #f5f5f5;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            table {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="site-header"></div>
+
+
+<!-- CONTENT -->
+div class="container">
+        <!-- ACTS Section -->
+        <table style="width: 100%; border-collapse: collapse; border-style: none;">
+            <tbody>
+                <tr>
+                    <td style="width: 1242.4px;">
+                        <h2 style="text-align: center; font-size: 32pt; color: #0083ed;">ACTS</h2>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="csv-tab-container" data-category="Act">
+            <div class="csv-table-placeholder">Loading Acts...</div>
+        </div>
+
+        <!-- RULES Section -->
+        <table style="width: 100%; border-collapse: collapse; border-style: none;">
+            <tbody>
+                <tr>
+                    <td style="width: 1242.4px;">
+                        <h2 style="text-align: center; font-size: 32pt; color: #0083ed;">RULES</h2>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="csv-tab-container" data-category="Rules">
+            <div class="csv-table-placeholder">Loading Rules...</div>
+        </div>
+
+        <!-- ORDERS Section -->
+        <table style="width: 100%; border-collapse: collapse; border-style: none;">
+            <tbody>
+                <tr>
+                    <td style="width: 1242.4px;">
+                        <h2 style="text-align: center; font-size: 32pt; color: #0083ed;">ORDERS</h2>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="csv-tab-container" data-category="Order">
+            <div class="csv-table-placeholder">Loading Orders...</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script>
+    // REPLACE THESE URLs WITH YOUR PUBLISHED GOOGLE SHEET CSV URLs
+    const CSV_CONFIG = {
+        Act: 'https://docs.google.com/spreadsheets/d/e/YOUR_SHEET_ID/pub?gid=0&single=true&output=csv',
+        Rules: 'https://docs.google.com/spreadsheets/d/e/YOUR_SHEET_ID/pub?gid=123456789&single=true&output=csv',
+        Order: 'https://docs.google.com/spreadsheets/d/e/YOUR_SHEET_ID/pub?gid=987654321&single=true&output=csv'
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const containers = document.querySelectorAll('.csv-tab-container');
+        
+        containers.forEach(container => {
+            const category = container.dataset.category;
+            const csvUrl = CSV_CONFIG[category];
+            const placeholder = container.querySelector('.csv-table-placeholder');
+            
+            if (csvUrl && placeholder) {
+                fetchCSVAndDisplay(csvUrl, container, category);
+            }
+        });
+    });
+
+    function fetchCSVAndDisplay(url, container, category) {
+        Papa.parse(url, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                displayTable(results.data, container, category);
+            },
+            error: function(error) {
+                console.error('Error parsing CSV:', error);
+                container.innerHTML = '<p style="color: red;">Error loading data. Please check the CSV URL.</p>';
+            }
+        });
+    }
+
+    function displayTable(data, container, category) {
+        // Clear container
+        container.innerHTML = '';
+        
+        if (!data || data.length === 0) {
+            container.innerHTML = '<p>No data available for ' + category + '</p>';
+            return;
+        }
+
+        // Filter out empty rows
+        data = data.filter(row => Object.values(row).some(val => val && val.trim() !== ''));
+
+        if (data.length === 0) {
+            container.innerHTML = '<p>No valid data found for ' + category + '</p>';
+            return;
+        }
+
+        // Create table
+        const table = document.createElement('table');
+        table.style.width = '100%';
+        table.style.borderCollapse = 'collapse';
+        table.style.border = '1px solid #ddd';
+        
+        // Get headers
+        const headers = Object.keys(data[0]).filter(key => 
+            key && key.trim() !== '' && !key.includes('__')
+        );
+
+        // Create header
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        headers.forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header;
+            th.style.border = '1px solid #ddd';
+            th.style.padding = '12px';
+            th.style.backgroundColor = '#0083ed';
+            th.style.color = 'white';
+            th.style.textAlign = 'left';
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Create body
+        const tbody = document.createElement('tbody');
+        data.forEach(row => {
+            const tr = document.createElement('tr');
+            headers.forEach(header => {
+                const td = document.createElement('td');
+                td.textContent = row[header] || '';
+                td.style.border = '1px solid #ddd';
+                td.style.padding = '8px';
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+        container.appendChild(table);
+    }
+    </script>  <!-- FOOTER -->
+<div id="site-footer"></div>
+
+
+<script>
+/* Load Header */
+fetch('header.html')
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById('site-header').innerHTML = html;
+
+    /* Load Navigation */
+    fetch('nav.html')
+      .then(res => res.text())
+      .then(nav => {
+        document.getElementById('main-nav').innerHTML = nav;
+      });
+  });
+
+/* Load Footer */
+fetch('footer.html')
+  .then(res => res.text())
+  .then(footer => {
+    document.getElementById('site-footer').innerHTML = footer;
+  });
+</script>
+<script>
+/* ===== MOBILE MENU LOGIC ===== */
+document.addEventListener("click", function (e) {
+
+  /* Toggle main menu */
+  if (e.target.classList.contains("menu-toggle")) {
+    const menu = document.querySelector(".menu");
+    if (menu) {
+      menu.classList.toggle("open");
+    }
+  }
+
+  /* Toggle dropdowns on mobile */
+  const dropdownLink = e.target.closest(".dropdown > a");
+  if (dropdownLink && window.innerWidth <= 900) {
+    e.preventDefault();
+    dropdownLink.parentElement.classList.toggle("open");
+  }
+
+});
+</script>
+</body>
+</html>
