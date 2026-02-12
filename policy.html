@@ -6,37 +6,110 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <style>
-        body {
-            font-family: 'Helvetica', Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .csv-tab-container {
-            margin-bottom: 30px;
-            overflow-x: auto;
-        }
-        table {
-            background: white;
-        }
-        table tr:hover {
-            background-color: #f5f5f5;
-        }
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            table {
-                font-size: 14px;
-            }
-        }
+       .csv-tab-container {
+  overflow-x: auto;
+  padding: 20px 0;
+  background: #f0f4ff;
+}
+
+/* Table with 3D border + glassy glaze */
+.csv-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 15px;
+  min-width: 700px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow:
+    0 0 0 4px #e0f0ff, /* outer border glow */
+    0 4px 4px rgba(0, 102, 204, 0.2), /* subtle blue 3D shadow */
+    inset 0 0 2px rgba(0, 174, 255, 0.05); /* soft inner glaze */
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+/* Header styling */
+.csv-table thead {
+  background: linear-gradient(90deg, #101535, #1c295f);
+}
+
+.csv-table thead th {
+  color: #fff !important;
+  font-weight: 600;
+  text-align: center;
+  padding: 16px 15px;
+  letter-spacing: 0.6px;
+  font-size: 15px;
+}
+
+/* Table cell styles */
+.csv-table td {
+  padding: 16px 15px;
+  border-bottom: 1px solid #e1ecf9;
+  vertical-align: middle;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Center download/share columns */
+.csv-table td:nth-child(3),
+.csv-table td:nth-child(4) {
+  text-align: center;
+}
+
+/* Prominent hover effect */
+.csv-table tbody tr:hover {
+  background-color: #ff4500;
+  transition: background-color 0.3s ease-in-out;
+  box-shadow: inset 0 0 10px rgba(0, 123, 255, 0.15);
+}
+
+/* 3D Buttons — extra pop & bounce */
+.download-btn,
+.share-btn {
+  min-width: 110px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-shadow:
+    inset 0 -2px 0 rgba(0,0,0,0.2),
+    0 4px 10px rgba(0,0,0,0.15),
+    0 6px 20px rgba(0, 102, 204, 0.1);
+  transform: translateY(0);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Download button (green gradient) */
+.download-btn {
+  background: linear-gradient(145deg, #4caf50, #2e7d32);
+}
+
+.download-btn:hover {
+  background: linear-gradient(145deg, #2e7d32, #1b5e20);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 -2px 0 rgba(0,0,0,0.25),
+    0 8px 20px rgba(67, 160, 71, 0.4);
+}
+
+/* Share button (blue gradient) */
+.share-btn {
+  background: linear-gradient(145deg, #007bff, #0056b3);
+}
+
+.share-btn:hover {
+  background: linear-gradient(145deg, #0056b3, #003f88);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 -2px 0 rgba(0,0,0,0.25),
+    0 8px 20px rgba(0, 123, 255, 0.4);
+}
     </style>
 </head>
 
@@ -92,103 +165,49 @@ div class="container">
 
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <script>
-    // REPLACE THESE URLs WITH YOUR PUBLISHED GOOGLE SHEET CSV URLs
-    const CSV_CONFIG = {
-        Act: 'https://docs.google.com/spreadsheets/d/e/1mLh8E5JEHP-HCrBgs42pVpiY4ZpP7LG-O__3Av2-MgY/pub?gid=0&single=true&output=csv',
-        Rules: 'https://docs.google.com/spreadsheets/d/e/1mLh8E5JEHP-HCrBgs42pVpiY4ZpP7LG-O__3Av2-MgY/pub?gid=123456789&single=true&output=csv',
-        Order: 'https://docs.google.com/spreadsheets/d/e/1mLh8E5JEHP-HCrBgs42pVpiY4ZpP7LG-O__3Av2-MgY/pub?gid=987654321&single=true&output=csv'
-    };
+    document.addEventListener("DOMContentLoaded", function () {
+    const csvUrl = "https://docs.google.com/spreadsheets/d/1mLh8E5JEHP-HCrBgs42pVpiY4ZpP7LG-O__3Av2-MgY/export?format=csv&gid=884226509";
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const containers = document.querySelectorAll('.csv-tab-container');
-        
-        containers.forEach(container => {
-            const category = container.dataset.category;
-            const csvUrl = CSV_CONFIG[category];
-            const placeholder = container.querySelector('.csv-table-placeholder');
-            
-            if (csvUrl && placeholder) {
-                fetchCSVAndDisplay(csvUrl, container, category);
-            }
+    fetch(csvUrl)
+      .then(response => response.text())
+      .then(csvText => {
+        const parsed = Papa.parse(csvText, { header: false });
+        const rows = parsed.data.slice(1); // skip header
+
+        document.querySelectorAll(".csv-tab-container").forEach(container => {
+          const category = container.getAttribute("data-category");
+          const tableBody = rows.filter(row => row[1] === category);
+          const tableHTML = `
+            <table class="csv-table">
+              <thead>
+                <tr>
+                  <th>S.No.</th>
+                  <th>Subject</th>
+                  <th>Download</th>
+                  <th>Share</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${tableBody.map((row, i) => {
+                  const subject = (row[2] || "").replace(/_/g, " ").replace(/\.pdf/i, "");
+                  const link = row[5];
+                  return `
+                    <tr>
+                      <td>${i + 1}</td>
+                      <td>${subject}</td>
+                      <td><a href="${link}" target="_blank"><button class="download-btn">Download</button></a></td>
+                      <td><a href="https://wa.me/?text=${encodeURIComponent("📄 " + subject + "\n🔗 " + link)}" target="_blank"><button class="share-btn">Share</button></a></td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          `;
+          container.querySelector(".csv-table-placeholder").innerHTML = tableHTML;
         });
-    });
-
-    function fetchCSVAndDisplay(url, container, category) {
-        Papa.parse(url, {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            complete: function(results) {
-                displayTable(results.data, container, category);
-            },
-            error: function(error) {
-                console.error('Error parsing CSV:', error);
-                container.innerHTML = '<p style="color: red;">Error loading data. Please check the CSV URL.</p>';
-            }
-        });
-    }
-
-    function displayTable(data, container, category) {
-        // Clear container
-        container.innerHTML = '';
-        
-        if (!data || data.length === 0) {
-            container.innerHTML = '<p>No data available for ' + category + '</p>';
-            return;
-        }
-
-        // Filter out empty rows
-        data = data.filter(row => Object.values(row).some(val => val && val.trim() !== ''));
-
-        if (data.length === 0) {
-            container.innerHTML = '<p>No valid data found for ' + category + '</p>';
-            return;
-        }
-
-        // Create table
-        const table = document.createElement('table');
-        table.style.width = '100%';
-        table.style.borderCollapse = 'collapse';
-        table.style.border = '1px solid #ddd';
-        
-        // Get headers
-        const headers = Object.keys(data[0]).filter(key => 
-            key && key.trim() !== '' && !key.includes('__')
-        );
-
-        // Create header
-        const thead = document.createElement('thead');
-        const headerRow = document.createElement('tr');
-        headers.forEach(header => {
-            const th = document.createElement('th');
-            th.textContent = header;
-            th.style.border = '1px solid #ddd';
-            th.style.padding = '12px';
-            th.style.backgroundColor = '#0083ed';
-            th.style.color = 'white';
-            th.style.textAlign = 'left';
-            headerRow.appendChild(th);
-        });
-        thead.appendChild(headerRow);
-        table.appendChild(thead);
-
-        // Create body
-        const tbody = document.createElement('tbody');
-        data.forEach(row => {
-            const tr = document.createElement('tr');
-            headers.forEach(header => {
-                const td = document.createElement('td');
-                td.textContent = row[header] || '';
-                td.style.border = '1px solid #ddd';
-                td.style.padding = '8px';
-                tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
-        });
-        table.appendChild(tbody);
-
-        container.appendChild(table);
-    }
+      })
+      .catch(err => console.error("CSV Load Error:", err));
+  });
     </script>  <!-- FOOTER -->
 <div id="site-footer"></div>
 
@@ -214,8 +233,7 @@ fetch('footer.html')
   .then(footer => {
     document.getElementById('site-footer').innerHTML = footer;
   });
-</script>
-<script>
+
 /* ===== MOBILE MENU LOGIC ===== */
 document.addEventListener("click", function (e) {
 
