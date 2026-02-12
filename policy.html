@@ -2,40 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sarat Office · ACTS Horizontal Tabs</title>
+  <title>Sarat Office · Isolated Tabs (Header/Footer safe)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Common CSS -->
-    <link rel="stylesheet" href="style.css">
-      <!-- Papaparse for CSV parsing -->
+
+  <!-- Papaparse for CSV parsing -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
   <style>
-    /* ---------- RESET / GLOBAL ---------- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    /* ----- GLOBAL RESET (non‑invasive) ----- */
     body {
+      margin: 0;
       background: #f5f9ff;
-      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-      line-height: 1.5;
+      font-family: 'Segoe UI', Roboto, sans-serif;
     }
 
-    .container {
+    /* ----- NAMESPACED WRAPPER – all custom CSS is scoped inside .sarat-docs ----- */
+    .sarat-docs {
+      display: block;
+      width: 100%;
       max-width: 1400px;
       margin: 0 auto;
       padding: 20px 30px;
+      box-sizing: border-box;
     }
 
-    /* ----- HORIZONTAL TAB STRIP – exactly like image + 3D active/inactive hover ----- */
-    .tab-strip {
+    /* ---- HORIZONTAL TABS – 3D pill style (completely isolated) ---- */
+    .sarat-docs .tab-strip {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 8px;
-      background: #eef5fc;           /* soft cloud base */
+      background: #eef5fc;
       padding: 18px 24px;
       border-radius: 60px;
       margin: 30px 0 20px 0;
@@ -46,8 +43,7 @@
       backdrop-filter: blur(2px);
     }
 
-    /* tab pill — 3D default (inactive) */
-    .tab-item {
+    .sarat-docs .tab-item {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -69,8 +65,7 @@
       border: 1px solid rgba(255,255,255,0.7);
     }
 
-    /* hover – slight lift, deep glow */
-    .tab-item:hover {
+    .sarat-docs .tab-item:hover {
       background: linear-gradient(145deg, #ffffff, #e6f0ff);
       transform: translateY(-2px);
       box-shadow: 
@@ -80,8 +75,7 @@
       color: #003e7e;
     }
 
-    /* ACTIVE tab – pressed, prominent blue gradient, white text, extra depth */
-    .tab-item.active {
+    .sarat-docs .tab-item.active {
       background: linear-gradient(145deg, #004b8f, #002856);
       color: white !important;
       box-shadow: 
@@ -94,8 +88,7 @@
       transform: scale(1.02);
     }
 
-    /* active hover – stays deep */
-    .tab-item.active:hover {
+    .sarat-docs .tab-item.active:hover {
       background: linear-gradient(145deg, #003f7a, #001e3c);
       box-shadow: 
         inset 0 -3px 0 #00000030,
@@ -103,17 +96,7 @@
       transform: translateY(-1px);
     }
 
-    /* mimic the 'ACTS · RULES · ORDERS ...' from image, plus extra categories */
-    .tab-strip .spacer {
-      width: 4px;
-      height: 30px;
-      background: rgba(0,70,130,0.1);
-      border-radius: 4px;
-      margin: 0 6px;
-    }
-
-    /* optional subtle dividers – like image feel */
-    .tab-divider {
+    .sarat-docs .tab-divider {
       color: #6a8fb1;
       font-weight: 300;
       font-size: 24px;
@@ -122,15 +105,15 @@
       user-select: none;
     }
 
-    /* ----- 3D table with glaze (your EXISTING preserved + enhanced) ----- */
-    .csv-tab-container {
+    /* ----- 3D table with glaze (namespaced) ----- */
+    .sarat-docs .csv-tab-container {
       overflow-x: auto;
       padding: 12px 0 30px 0;
       background: transparent;
       margin-top: 6px;
     }
 
-    .csv-table {
+    .sarat-docs .csv-table {
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
@@ -147,11 +130,11 @@
       transition: box-shadow 0.2s;
     }
 
-    .csv-table thead {
+    .sarat-docs .csv-table thead {
       background: linear-gradient(90deg, #101535, #1c295f);
     }
 
-    .csv-table thead th {
+    .sarat-docs .csv-table thead th {
       color: #fff !important;
       font-weight: 600;
       text-align: center;
@@ -160,27 +143,26 @@
       font-size: 16px;
     }
 
-    .csv-table td {
+    .sarat-docs .csv-table td {
       padding: 16px 15px;
       border-bottom: 1px solid #d9e9ff;
       vertical-align: middle;
       background-color: rgba(255, 255, 255, 0.9);
     }
 
-    .csv-table td:nth-child(3),
-    .csv-table td:nth-child(4) {
+    .sarat-docs .csv-table td:nth-child(3),
+    .sarat-docs .csv-table td:nth-child(4) {
       text-align: center;
     }
 
-    .csv-table tbody tr:hover {
+    .sarat-docs .csv-table tbody tr:hover {
       background-color: #fffbee;
       transition: background-color 0.2s;
       box-shadow: inset 0 0 12px rgba(0,123,255,0.1);
     }
 
-    /* --- 3D buttons – extra bounce, preserved with love --- */
-    .download-btn,
-    .share-btn {
+    .sarat-docs .download-btn,
+    .sarat-docs .share-btn {
       min-width: 110px;
       padding: 10px 18px;
       font-size: 14px;
@@ -198,11 +180,11 @@
       transition: all 0.3s ease-in-out;
     }
 
-    .download-btn {
+    .sarat-docs .download-btn {
       background: linear-gradient(145deg, #4caf50, #2e7d32);
     }
 
-    .download-btn:hover {
+    .sarat-docs .download-btn:hover {
       background: linear-gradient(145deg, #2e7d32, #1b5e20);
       transform: translateY(-2px);
       box-shadow:
@@ -210,11 +192,11 @@
         0 8px 20px rgba(67, 160, 71, 0.4);
     }
 
-    .share-btn {
+    .sarat-docs .share-btn {
       background: linear-gradient(145deg, #007bff, #0056b3);
     }
 
-    .share-btn:hover {
+    .sarat-docs .share-btn:hover {
       background: linear-gradient(145deg, #0056b3, #003f88);
       transform: translateY(-2px);
       box-shadow:
@@ -222,73 +204,58 @@
         0 8px 20px rgba(0, 123, 255, 0.4);
     }
 
-    /* section title – keep your 32pt look */
-    .section-title {
-      text-align: center;
-      font-size: 32pt;
-      color: #0083ed;
-      font-weight: 700;
-      letter-spacing: 1px;
-      margin: 10px 0 5px 0;
-      text-shadow: 0 2px 6px rgba(0,131,237,0.2);
-    }
-
-    /* header & footer simulation (unchanged) */
-    #site-header, #site-footer {
-      background: #0a1a2b;
-      color: white;
-      padding: 16px 32px;
-    }
-
-    /* mobile friendly tab wrap */
     @media (max-width: 800px) {
-      .tab-item {
+      .sarat-docs .tab-item {
         padding: 10px 18px;
         font-size: 0.9rem;
       }
-      .section-title { font-size: 28pt; }
     }
 
-    /* dummy nav/footer styling – matches your includes */
-    .dummy-nav, .dummy-footer {
-      background: #0f1f30;
-      color: #cfe2ff;
+    /* fallback header/footer (only if fetch fails) */
+    .fallback-header {
+      background: #0c1f33;
+      color: white;
       padding: 18px 30px;
-      font-size: 1.1rem;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .fallback-footer {
+      background: #0a1929;
+      color: #bbd6ff;
+      padding: 20px 30px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
 
-<!-- HEADER placeholder (as in original) -->
+<!-- ===== YOUR HEADER – completely untouched ===== -->
 <div id="site-header"></div>
 
-<!-- MAIN CONTENT with HORIZONTAL TABS (exactly like image + active/inactive 3D) -->
-<div class="container">
+<!-- ===== MAIN DOCS COMPONENT – everything inside .sarat-docs ===== -->
+<div class="sarat-docs">
 
-  <!-- ===== HORIZONTAL TAB STRIP – ACTS, RULES, ORDERS, PADDY MSP, PROC GUIDELINES, FOOD POLICY, MISCELLANEOUS, GOVT. CALENDARS ===== -->
+  <!-- Horizontal tab strip – categories exactly as per image + your list -->
   <div class="tab-strip" id="horizontalTabStrip">
-    <!-- ACTS tab – active by default -->
     <button class="tab-item active" data-category="Act">ACTS</button>
     <span class="tab-divider">•</span>
     <button class="tab-item" data-category="Rules">RULES</button>
     <span class="tab-divider">•</span>
     <button class="tab-item" data-category="Order">ORDERS</button>
     <span class="tab-divider">•</span>
-    <button class="tab-item" data-category="Paddy MSP">PADDY MSP</button>
+    <button class="tab-item" data-category="MSP">PADDY MSP</button>
     <span class="tab-divider">•</span>
-    <button class="tab-item" data-category="Proc Guidelines">PROC GUIDELINES</button>
+    <button class="tab-item" data-category="Procurement">PROC GUIDELINES</button>
     <span class="tab-divider">•</span>
-    <button class="tab-item" data-category="Food Policy">FOOD POLICY</button>
+    <button class="tab-item" data-category="Food">FOOD POLICY</button>
     <span class="tab-divider">•</span>
-    <button class="tab-item" data-category="Miscellaneous">MISCELLANEOUS</button>
+    <button class="tab-item" data-category="Misc">MISCELLANEOUS</button>
     <span class="tab-divider">•</span>
     <button class="tab-item" data-category="Govt Calendars">GOVT. CALENDARS</button>
   </div>
 
-  <!-- ===== DYNAMIC TABLE AREA (ACTS visible by default) ===== -->
+  <!-- Dynamic table area – each container ID matches the updated category names -->
   <div id="dynamicTableArea">
-    <!-- Acts container – will be populated, others are hidden until tab click -->
     <div class="csv-tab-container" id="tab-Act" style="display: block;">
       <div class="csv-table-placeholder">Loading Acts...</div>
     </div>
@@ -298,16 +265,16 @@
     <div class="csv-tab-container" id="tab-Order" style="display: none;">
       <div class="csv-table-placeholder">Loading Orders...</div>
     </div>
-    <div class="csv-tab-container" id="tab-Paddy MSP" style="display: none;">
+    <div class="csv-tab-container" id="tab-MSP" style="display: none;">
       <div class="csv-table-placeholder">Loading Paddy MSP...</div>
     </div>
-    <div class="csv-tab-container" id="tab-Proc Guidelines" style="display: none;">
+    <div class="csv-tab-container" id="tab-Procurement" style="display: none;">
       <div class="csv-table-placeholder">Loading Proc Guidelines...</div>
     </div>
-    <div class="csv-tab-container" id="tab-Food Policy" style="display: none;">
+    <div class="csv-tab-container" id="tab-Food" style="display: none;">
       <div class="csv-table-placeholder">Loading Food Policy...</div>
     </div>
-    <div class="csv-tab-container" id="tab-Miscellaneous" style="display: none;">
+    <div class="csv-tab-container" id="tab-Misc" style="display: none;">
       <div class="csv-table-placeholder">Loading Miscellaneous...</div>
     </div>
     <div class="csv-tab-container" id="tab-Govt Calendars" style="display: none;">
@@ -315,64 +282,57 @@
     </div>
   </div>
 
-  <!-- subtle extra space – footer will appear -->
-</div>
+</div> <!-- end .sarat-docs -->
 
-<!-- FOOTER placeholder -->
+<!-- ===== YOUR FOOTER – completely untouched ===== -->
 <div id="site-footer"></div>
 
 <script>
   (function() {
     "use strict";
 
-    // ------- CSV FETCH & GLOBAL DATA STORAGE -------
+    // ------- CSV FETCH -------
     const CSV_URL = "https://docs.google.com/spreadsheets/d/1mLh8E5JEHP-HCrBgs42pVpiY4ZpP7LG-O__3Av2-MgY/export?format=csv&gid=884226509";
-    let parsedRows = []; // store all rows after fetch
+    let parsedRows = [];
 
-    // category mapping: from data-category attribute (tab button) to CSV column 1 (category)
-    // we also want to display exactly the category name as per button.
-    // we keep both the same.
-
-    // ---------- FETCH AND POPULATE ALL TABLES ----------
+    // ---------- FETCH AND POPULATE ALL TABLES (UPDATED CATEGORY NAMES) ----------
     function loadAllCSVTables() {
       fetch(CSV_URL)
         .then(response => response.text())
         .then(csvText => {
           const parsed = Papa.parse(csvText, { header: false });
           const rows = parsed.data.slice(1); // skip header row
-          parsedRows = rows.filter(row => row && row.length > 1); // keep valid
+          parsedRows = rows.filter(row => row && row.length > 1);
 
-          // Populate each tab container
+          /* --- REPLACED CATEGORIES --- */
           populateTableForCategory('Act');
           populateTableForCategory('Rules');
           populateTableForCategory('Order');
-          populateTableForCategory('MSP');
-          populateTableForCategory('Procurement');
-          populateTableForCategory('Food');
-          populateTableForCategory('Misc');
+          populateTableForCategory('MSP');           // was 'Paddy MSP'
+          populateTableForCategory('Procurement');   // was 'Proc Guidelines'
+          populateTableForCategory('Food');          // was 'Food Policy'
+          populateTableForCategory('Misc');          // was 'Miscellaneous'
           populateTableForCategory('Govt Calendars');
         })
         .catch(err => {
           console.error("CSV Load Error:", err);
-          document.querySelectorAll('.csv-table-placeholder').forEach(el => {
-            el.innerHTML = `<span style="color: red;">⚠️ Failed to load data. Check console.</span>`;
+          document.querySelectorAll('.sarat-docs .csv-table-placeholder').forEach(el => {
+            el.innerHTML = `<span style="color: red;">⚠️ Failed to load data.</span>`;
           });
         });
     }
 
-    // helper: build table HTML for given category
+    // build table HTML for a given category
     function buildTableHTML(category) {
       const filtered = parsedRows.filter(row => row[1] && row[1].trim() === category);
-      // If no rows, show empty state
       if (filtered.length === 0) {
-        return `<table class="csv-table"><thead><tr><th>S.No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center; padding:40px;">📁 No documents available for ${category}</td></tr></tbody></table>`;
+        return `<table class="csv-table"><thead><tr><th>S.No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center; padding:40px;">📁 No documents for ${category}</td></tr></tbody></table>`;
       }
 
       const rowsHtml = filtered.map((row, idx) => {
         let subject = (row[2] || "").replace(/_/g, " ").replace(/\.pdf$/i, "").trim();
-        if (subject === "") subject = "Untitled Document";
+        if (subject === "") subject = "Untitled";
         const link = row[5] ? row[5].trim() : "#";
-        // ensure link is absolute or relative; if not, provide fallback
         const safeLink = (link.startsWith("http") || link.startsWith("/")) ? link : "#";
         const encodedSubject = encodeURIComponent("📄 " + subject + "\n🔗 " + safeLink);
         return `<tr>
@@ -391,64 +351,62 @@
 
     function populateTableForCategory(category) {
       const tabDiv = document.getElementById(`tab-${category}`);
-      if (!tabDiv) return;
+      if (!tabDiv) {
+        console.warn(`Container for category "${category}" not found.`);
+        return;
+      }
       const placeholder = tabDiv.querySelector('.csv-table-placeholder');
       if (!placeholder) return;
       if (parsedRows.length === 0) {
         placeholder.innerHTML = '⏳ Loading...';
         return;
       }
-      const tableHTML = buildTableHTML(category);
-      placeholder.innerHTML = tableHTML;
+      placeholder.innerHTML = buildTableHTML(category);
     }
 
-    // ---------- TAB CLICK HANDLER (horizontal 3D active/inactive effect) ----------
+    // ---------- TAB CLICK HANDLER (updated container IDs) ----------
     function initTabs() {
-      const tabStrip = document.getElementById('horizontalTabStrip');
+      const tabStrip = document.querySelector('.sarat-docs .tab-strip');
+      if (!tabStrip) return;
       const tabButtons = tabStrip.querySelectorAll('.tab-item');
+      
       const containers = {
         Act: document.getElementById('tab-Act'),
         Rules: document.getElementById('tab-Rules'),
         Order: document.getElementById('tab-Order'),
-        'Paddy MSP': document.getElementById('tab-Paddy MSP'),
-        'Proc Guidelines': document.getElementById('tab-Proc Guidelines'),
-        'Food Policy': document.getElementById('tab-Food Policy'),
-        Miscellaneous: document.getElementById('tab-Miscellaneous'),
+        MSP: document.getElementById('tab-MSP'),
+        Procurement: document.getElementById('tab-Procurement'),
+        Food: document.getElementById('tab-Food'),
+        Misc: document.getElementById('tab-Misc'),
         'Govt Calendars': document.getElementById('tab-Govt Calendars')
       };
 
       function activateTab(category) {
-        // 1. update button active class
+        // update active class on buttons
         tabButtons.forEach(btn => {
           const btnCat = btn.getAttribute('data-category');
-          if (btnCat === category) {
-            btn.classList.add('active');
-          } else {
-            btn.classList.remove('active');
-          }
+          btn.classList.toggle('active', btnCat === category);
         });
 
-        // 2. hide all containers, show selected
+        // show/hide containers
         Object.keys(containers).forEach(key => {
           if (containers[key]) {
             containers[key].style.display = key === category ? 'block' : 'none';
           }
         });
 
-        // 3. if table content not yet built or empty (fallback), but we already pre-populated all. However, ensure populate if missing
+        // ensure table is built if needed
         if (parsedRows.length > 0) {
-          const targetContainer = containers[category];
-          if (targetContainer) {
-            const placeholder = targetContainer.querySelector('.csv-table-placeholder');
-            // if placeholder still has loading text, rebuild
-            if (placeholder && placeholder.innerText.includes('Loading')) {
+          const target = containers[category];
+          if (target) {
+            const placeholder = target.querySelector('.csv-table-placeholder');
+            if (placeholder && placeholder.innerHTML.includes('Loading')) {
               placeholder.innerHTML = buildTableHTML(category);
             }
           }
         }
       }
 
-      // attach click listeners
       tabButtons.forEach(btn => {
         btn.addEventListener('click', function(e) {
           e.preventDefault();
@@ -457,50 +415,48 @@
         });
       });
 
-      // initial active: ACTS (already set in HTML, but ensure container visible)
+      // initial active = Act
       activateTab('Act');
     }
 
-    // ----- LOAD HEADER, FOOTER, then init CSV and tabs (keep original fetch pattern)-----
+    // ----- HEADER / FOOTER LOADER (unchanged, safe) -----
     function loadHeaderFooter() {
-      // Simulate loading header.html and footer.html – using dummy content to avoid 404.
-      // but we keep exactly same as original: fetch header.html, footer.html, nav.html
-      // If files missing, we provide fallback to prevent empty areas.
       const headerEl = document.getElementById('site-header');
       const footerEl = document.getElementById('site-footer');
 
-      // Provide dummy gradient bar matching original style (since actual files may not exist)
-      // But we preserve the fetch attempts. In case of error, we set visible placeholder.
       Promise.all([
         fetch('header.html').catch(() => ({ ok: false })),
         fetch('footer.html').catch(() => ({ ok: false }))
       ]).then(responses => {
-        // HEADER
         if (responses[0] && responses[0].ok) {
-          responses[0].text().then(html => headerEl.innerHTML = html);
+          responses[0].text().then(html => { headerEl.innerHTML = html; });
         } else {
-          headerEl.innerHTML = `<div style="background: #0c1f33; color: white; padding: 18px 30px; font-size: 24px; font-weight: bold;">📘 SARAT OFFICE</div>`;
+          headerEl.innerHTML = '<div class="fallback-header">📘 SARAT OFFICE</div>';
         }
-        // FOOTER
+
         if (responses[1] && responses[1].ok) {
-          responses[1].text().then(html => footerEl.innerHTML = html);
+          responses[1].text().then(html => { footerEl.innerHTML = html; });
         } else {
-          footerEl.innerHTML = `<div style="background: #0a1929; color: #bbd6ff; padding: 20px 30px; text-align: center;">© Sarat Government Office — eDocuments</div>`;
+          footerEl.innerHTML = '<div class="fallback-footer">© Sarat Government Office — eDocuments</div>';
         }
       });
 
-      // also nav.html? original script loads nav inside header, we skip for brevity but keep mobile logic.
-      // we call the original mobile menu listener (copy from original)
+      fetch('nav.html')
+        .then(res => res.ok ? res.text() : '')
+        .then(navHtml => {
+          const navTarget = document.getElementById('main-nav');
+          if (navTarget && navHtml) navTarget.innerHTML = navHtml;
+        })
+        .catch(() => {});
     }
 
     // ----- START -----
     loadHeaderFooter();
-    loadAllCSVTables();   // async fetch + populate all tabs
-    initTabs();           // set up click behavior, active = Acts
+    loadAllCSVTables();
+    initTabs();
 
-    // preserve the original mobile dropdown logic (from original)
+    // Mobile dropdown logic (global, unaffected)
     document.addEventListener("click", function (e) {
-      /* Toggle main menu – if .menu-toggle exists in header after load */
       if (e.target.classList.contains("menu-toggle")) {
         const menu = document.querySelector(".menu");
         if (menu) menu.classList.toggle("open");
@@ -513,28 +469,6 @@
     });
 
   })();
-</script>
-
-<!-- ensure that after CSV load, any visible tab gets fresh table (Act is visible) -->
-<script>
-  // additional safety: after window load, if parsedRows populated, refresh current active tab
-  window.addEventListener('load', function() {
-    setTimeout(() => {
-      if (window.parsedRows && window.parsedRows.length > 0) {
-        const activeTab = document.querySelector('.tab-item.active');
-        if (activeTab) {
-          const cat = activeTab.getAttribute('data-category');
-          const container = document.getElementById(`tab-${cat}`);
-          if (container) {
-            const placeholder = container.querySelector('.csv-table-placeholder');
-            if (placeholder && !placeholder.innerHTML.includes('csv-table')) {
-              placeholder.innerHTML = buildTableHTML(cat);
-            }
-          }
-        }
-      }
-    }, 100);
-  });
 </script>
 
 </body>
