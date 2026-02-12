@@ -9,6 +9,8 @@
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <!-- Common CSS -->
     <link rel="stylesheet" href="style.css">
+  !-- IMPORTANT: Add the script with defer -->
+    <script src="assets/Scripts/site-components.js" defer></script>
   <style>
     /* ================================
    GUARD FILE – HERO SECTION
@@ -664,57 +666,6 @@
       // Initial active tab
       activateTab('Act');
     }
-
-    // ----- HEADER / FOOTER LOADER -----
-    function loadHeaderFooter() {
-      const headerEl = document.getElementById('site-header');
-      const footerEl = document.getElementById('site-footer');
-
-      Promise.all([
-        fetch('header.html').catch(() => ({ ok: false })),
-        fetch('footer.html').catch(() => ({ ok: false }))
-      ]).then(responses => {
-        if (responses[0] && responses[0].ok) {
-          responses[0].text().then(html => { headerEl.innerHTML = html; });
-        } else {
-          headerEl.innerHTML = '<div class="fallback-header">📘 SARAT OFFICE</div>';
-        }
-
-        if (responses[1] && responses[1].ok) {
-          responses[1].text().then(html => { footerEl.innerHTML = html; });
-        } else {
-          footerEl.innerHTML = '<div class="fallback-footer">© Sarat Government Office — eDocuments</div>';
-        }
-      });
-
-      fetch('nav.html')
-        .then(res => res.ok ? res.text() : '')
-        .then(navHtml => {
-          const navTarget = document.getElementById('main-nav');
-          if (navTarget && navHtml) navTarget.innerHTML = navHtml;
-        })
-        .catch(() => {});
-    }
-
-    // ----- INITIALIZE -----
-    loadHeaderFooter();
-    loadAllCSVTables();
-    initTabs();
-
-    // Mobile dropdown logic
-    document.addEventListener("click", function (e) {
-      if (e.target.classList.contains("menu-toggle")) {
-        const menu = document.querySelector(".menu");
-        if (menu) menu.classList.toggle("open");
-      }
-      const dropdownLink = e.target.closest(".dropdown > a");
-      if (dropdownLink && window.innerWidth <= 900) {
-        e.preventDefault();
-        dropdownLink.parentElement.classList.toggle("open");
-      }
-    });
-
-  })();
 </script>
 
 </body>
