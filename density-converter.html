@@ -2,225 +2,286 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
- <title>Fuel Density & VCF Calculator</title>
+  <title>Fuel Density & VCF Calculator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Common CSS (menu, footer, global styles) -->
   <link rel="stylesheet" href="style.css">
-  
-<style>
-body{
-  font-family:Arial, sans-serif;
-  background:#f4f6f8;
-  margin:0; padding:20px;
-}
-.container{
-  display:flex;
-  gap:20px;
-  max-width:1100px;
-  margin:auto;
-  flex-wrap:wrap;
-}
-.box{
-  flex:1;
-  min-width:300px;
-  background:#fff;
-  padding:20px;
-  border-radius:8px;
-  box-shadow:0 2px 10px rgba(0,0,0,.1);
-}
-h2{text-align:center;margin-top:0;}
-label{font-weight:bold;display:block;margin-top:12px;}
-input,select{
-  width:100%;
-  padding:8px;
-  margin-top:5px;
-}
-button{
-  width:100%;
-  padding:10px;
-  margin-top:15px;
-  background:#1976d2;
-  color:#fff;
-  border:none;
-  border-radius:5px;
-  font-size:15px;
-  cursor:pointer;
-}
-.result{
-  margin-top:15px;
-  background:#eef6ff;
-  padding:12px;
-  border-radius:5px;
-}
-.note{
-  font-size:12px;
-  color:#555;
-  margin-top:15px;
-  text-align:center;
-}
-</style>
+  <!-- ✅ IMPORTANT: site components for header/footer etc. -->
+  <script src="assets/Scripts/site-components.js" defer></script>
+  <!-- 🛡️ Namespaced calculator styles – only affect .fdvcf-* -->
+  <style>
+    /* ------------------------------------------------------------
+       FUEL DENSITY & VCF CALCULATOR – ISOLATED STYLES
+       Uses unique prefix "fdvcf" to avoid conflicts with site menu/footer.
+       Does not rely on generic class names like .container, .box, .result.
+    ------------------------------------------------------------ */
+    .fdvcf-body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+    /* main wrapper – distinct name */
+    .fdvcf-grid {
+      display: flex;
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+    /* card / panel */
+    .fdvcf-card {
+      flex: 1;
+      min-width: 300px;
+      background: #ffffff;
+      padding: 20px 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      transition: 0.2s;
+    }
+    .fdvcf-card h2 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #0a3144;
+      border-bottom: 2px solid #e3ecf1;
+      padding-bottom: 10px;
+    }
+    .fdvcf-label {
+      font-weight: 600;
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 4px;
+      color: #1e3b4c;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .fdvcf-input,
+    .fdvcf-select {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 4px;
+      border: 1px solid #b6cbd4;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background-color: #fafcfc;
+      transition: 0.15s;
+      box-sizing: border-box;
+    }
+    .fdvcf-input:focus,
+    .fdvcf-select:focus {
+      border-color: #1976d2;
+      outline: none;
+      background-color: #fff;
+      box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.08);
+    }
+    .fdvcf-btn {
+      width: 100%;
+      padding: 12px 16px;
+      margin-top: 24px;
+      background: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 30px;   /* distinct from typical menu buttons */
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 6px 14px rgba(25, 118, 210, 0.2);
+    }
+    .fdvcf-btn:hover {
+      background: #0f5fa7;
+      transform: scale(0.98);
+    }
+    .fdvcf-result-panel {
+      margin-top: 20px;
+      background: #e5f1fb;
+      padding: 16px 18px;
+      border-radius: 10px;
+      border-left: 5px solid #1976d2;
+      font-size: 0.98rem;
+      line-height: 1.6;
+      color: #003057;
+      word-break: break-word;
+    }
+    .fdvcf-disclaimer {
+      font-size: 0.78rem;
+      color: #4e6872;
+      margin-top: 30px;
+      text-align: center;
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 10px 15px;
+      background: #eaf0f3;
+      border-radius: 40px;
+    }
+    /* optional volume light note */
+    .fdvcf-optional-note {
+      font-size: 0.75rem;
+      color: #5f7d8a;
+      margin-top: 4px;
+      font-style: italic;
+    }
+    /* guarantee no external leak */
+    .fdvcf-grid * {
+      box-sizing: border-box;
+    }
+  </style>
 </head>
-
 <body>
 
-<div id="site-header"></div>
+  <!-- SITE HEADER (from site-components.js) -->
+  <div id="site-header"></div>
 
+  <!-- ====== CALCULATOR – PREFIXED CLASSES ====== -->
+  <!-- All classes start with 'fdvcf-' to isolate from site menu/footer CSS -->
+  <div class="fdvcf-body">
+    
+    <div class="fdvcf-grid">
+      
+      <!-- FORWARD CARD: 15°C → Observed -->
+      <div class="fdvcf-card">
+        <h2>⛽ 15°C → Observed Temp</h2>
 
-<!-- CONTENT -->
-<div class="container">
+        <span class="fdvcf-label">Fuel Type</span>
+        <select id="fuel1" class="fdvcf-select">
+          <option value="0.00083">Diesel (HSD) — 820–860 kg/m³</option>
+          <option value="0.00095">Petrol (MS) — 710–780 kg/m³</option>
+          <option value="0.00099">Kerosene — 780–820 kg/m³</option>
+        </select>
 
-<!-- ===== FORWARD CALCULATOR ===== -->
-<div class="box">
-<h2>15 °C → Observed Temperature</h2>
+        <span class="fdvcf-label">Density @ 15 °C (kg/m³)</span>
+        <input type="number" id="rho15" step="0.01" placeholder="e.g. 850.00" class="fdvcf-input">
 
-<label>Fuel Type</label>
-<select id="fuel1">
-  <option value="0.00083">Diesel (HSD) — 820–860 kg/m³</option>
-  <option value="0.00095">Petrol (MS) — 710–780 kg/m³</option>
-  <option value="0.00099">Kerosene — 780–820 kg/m³</option>
-</select>
+        <span class="fdvcf-label">Observed Temperature (°C)</span>
+        <input type="number" id="temp1" step="0.1" placeholder="e.g. 30.0" class="fdvcf-input">
 
-<label>Density @ 15 °C (kg/m³)</label>
-<input type="number" id="rho15" step="0.01" placeholder="e.g. 850">
+        <span class="fdvcf-label">Observed Volume (litres) – Optional</span>
+        <input type="number" id="vol1" step="0.01" placeholder="e.g. 1000.00" class="fdvcf-input">
+        <div class="fdvcf-optional-note">Leave blank to skip volume correction</div>
 
-<label>Observed Temperature (°C)</label>
-<input type="number" id="temp1" step="0.1" placeholder="e.g. 30">
+        <button onclick="fdvcfForwardCalc()" class="fdvcf-btn">📊 Calculate →</button>
+        <!-- result container hidden by default, uses prefixed class -->
+        <div id="out1" class="fdvcf-result-panel" style="display: none;"></div>
+      </div>
 
-<label>Observed Volume (Litres) – Optional</label>
-<input type="number" id="vol1" step="0.01">
+      <!-- REVERSE CARD: Observed → 15°C -->
+      <div class="fdvcf-card">
+        <h2>🌡️ Observed Temp → 15°C</h2>
 
-<button onclick="forwardCalc()">Calculate</button>
-<div class="result" id="out1" style="display:none;"></div>
-</div>
+        <span class="fdvcf-label">Fuel Type</span>
+        <select id="fuel2" class="fdvcf-select">
+          <option value="0.00083">Diesel (HSD) — 820–860 kg/m³</option>
+          <option value="0.00095">Petrol (MS) — 710–780 kg/m³</option>
+          <option value="0.00099">Kerosene — 780–820 kg/m³</option>
+        </select>
 
-<!-- ===== REVERSE CALCULATOR ===== -->
-<div class="box">
-<h2>Observed Temperature → 15 °C</h2>
+        <span class="fdvcf-label">Observed Density (kg/m³)</span>
+        <input type="number" id="rhoT" step="0.01" placeholder="e.g. 839.20" class="fdvcf-input">
 
-<label>Fuel Type</label>
-<select id="fuel2">
-  <option value="0.00083">Diesel (HSD) — 820–860 kg/m³</option>
-  <option value="0.00095">Petrol (MS) — 710–780 kg/m³</option>
-  <option value="0.00099">Kerosene — 780–820 kg/m³</option>
-</select>
+        <span class="fdvcf-label">Observed Temperature (°C)</span>
+        <input type="number" id="temp2" step="0.1" placeholder="e.g. 30.0" class="fdvcf-input">
 
-<label>Observed Density (kg/m³)</label>
-<input type="number" id="rhoT" step="0.01" placeholder="e.g. 839">
+        <span class="fdvcf-label">Observed Volume (litres) – Optional</span>
+        <input type="number" id="vol2" step="0.01" placeholder="e.g. 1000.00" class="fdvcf-input">
+        <div class="fdvcf-optional-note">Leave blank to skip volume correction</div>
 
-<label>Observed Temperature (°C)</label>
-<input type="number" id="temp2" step="0.1" placeholder="e.g. 30">
+        <button onclick="fdvcfReverseCalc()" class="fdvcf-btn">🔄 Calculate →</button>
+        <div id="out2" class="fdvcf-result-panel" style="display: none;"></div>
+      </div>
 
-<label>Observed Volume (Litres) – Optional</label>
-<input type="number" id="vol2" step="0.01">
+    </div> <!-- end fdvcf-grid -->
 
-<button onclick="reverseCalc()">Calculate</button>
-<div class="result" id="out2" style="display:none;"></div>
-</div>
+    <div class="fdvcf-disclaimer">
+      ⚖️ Formula based on API MPMS Chapter 11.1 (simplified). For custody transfer and official billing, refer to ASTM / API tables.
+    </div>
 
-</div>
+  </div> <!-- end fdvcf-body -->
 
-<div class="note">
-Formula-based calculator derived from API MPMS Chapter 11.1.
-For custody transfer and billing, official API/ASTM tables must be used.
-</div>
+  <!-- SITE FOOTER (from site-components.js) -->
+  <div id="site-footer"></div>
 
-<script>
-function forwardCalc(){
-  const rho15=parseFloat(document.getElementById("rho15").value);
-  const T=parseFloat(document.getElementById("temp1").value);
-  const alpha=parseFloat(document.getElementById("fuel1").value);
-  const V=document.getElementById("vol1").value;
+  <!-- Go to Top script (already in your structure) -->
+  <script src="/assets/Scripts/gototop.js"></script>
 
-  if(isNaN(rho15)||isNaN(T)){
-    alert("Enter Density @15°C and Temperature");
-    return;
-  }
+  <!-- ========= PREFIXED CALCULATOR LOGIC ========= -->
+  <!-- All function names and DOM references remain but are isolated;
+       no conflict with menu/footer scripts. -->
+  <script>
+    // ---------- FORWARD: density @15 to @T ----------
+    function fdvcfForwardCalc() {
+      const rho15 = parseFloat(document.getElementById("rho15").value);
+      const T = parseFloat(document.getElementById("temp1").value);
+      const alpha = parseFloat(document.getElementById("fuel1").value);
+      const volInput = document.getElementById("vol1").value;
 
-  const rhoT=rho15/(1+alpha*(T-15));
-  const VCF=rhoT/rho15;
+      if (isNaN(rho15) || isNaN(T)) {
+        alert("⚠️ Please enter both Density @15°C and Observed Temperature.");
+        return;
+      }
 
-  let html=`<b>Density @ ${T} °C:</b> ${rhoT.toFixed(2)} kg/m³<br>
-            <b>VCF:</b> ${VCF.toFixed(5)}`;
+      const rhoT = rho15 / (1 + alpha * (T - 15));
+      const VCF = rhoT / rho15;   // VCF = density ratio
 
-  if(V!==""){
-    html+=`<br><b>Volume @ 15 °C:</b> ${(parseFloat(V)*VCF).toFixed(2)} litres`;
-  }
+      let output = `<strong>📌 Density @ ${T} °C:</strong> ${rhoT.toFixed(3)} kg/m³<br>
+                     <strong>📌 VCF (volume correction):</strong> ${VCF.toFixed(5)}`;
 
-  out1.style.display="block";
-  out1.innerHTML=html;
-}
+      if (volInput !== "") {
+        const volObs = parseFloat(volInput);
+        if (!isNaN(volObs)) {
+          const vol15 = volObs * VCF;
+          output += `<br><strong>📌 Volume @ 15 °C:</strong> ${vol15.toFixed(3)} litres (from ${volObs.toFixed(2)} L @ ${T}°C)`;
+        }
+      }
 
-function reverseCalc(){
-  const rhoT=parseFloat(document.getElementById("rhoT").value);
-  const T=parseFloat(document.getElementById("temp2").value);
-  const alpha=parseFloat(document.getElementById("fuel2").value);
-  const V=document.getElementById("vol2").value;
-
-  if(isNaN(rhoT)||isNaN(T)){
-    alert("Enter Observed Density and Temperature");
-    return;
-  }
-
-  const rho15=rhoT*(1+alpha*(T-15));
-  const VCF=rhoT/rho15;
-
-  let html=`<b>Density @ 15 °C:</b> ${rho15.toFixed(2)} kg/m³<br>
-            <b>VCF:</b> ${VCF.toFixed(5)}`;
-
-  if(V!==""){
-    html+=`<br><b>Volume @ 15 °C:</b> ${(parseFloat(V)*VCF).toFixed(2)} litres`;
-  }
-
-  out2.style.display="block";
-  out2.innerHTML=html;
-}
-</script>
-
-
-  <!-- FOOTER -->
-<div id="site-footer"></div>
-
-
-<script>
-/* Load Header */
-fetch('header.html')
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('site-header').innerHTML = html;
-
-    /* Load Navigation */
-    fetch('nav.html')
-      .then(res => res.text())
-      .then(nav => {
-        document.getElementById('main-nav').innerHTML = nav;
-      });
-  });
-
-/* Load Footer */
-fetch('footer.html')
-  .then(res => res.text())
-  .then(footer => {
-    document.getElementById('site-footer').innerHTML = footer;
-  });
-</script>
-<script>
-/* ===== MOBILE MENU LOGIC ===== */
-document.addEventListener("click", function (e) {
-
-  /* Toggle main menu */
-  if (e.target.classList.contains("menu-toggle")) {
-    const menu = document.querySelector(".menu");
-    if (menu) {
-      menu.classList.toggle("open");
+      const outDiv = document.getElementById("out1");
+      outDiv.style.display = "block";
+      outDiv.innerHTML = output;
     }
-  }
 
-  /* Toggle dropdowns on mobile */
-  const dropdownLink = e.target.closest(".dropdown > a");
-  if (dropdownLink && window.innerWidth <= 900) {
-    e.preventDefault();
-    dropdownLink.parentElement.classList.toggle("open");
-  }
+    // ---------- REVERSE: observed density → density @15°C ----------
+    function fdvcfReverseCalc() {
+      const rhoT = parseFloat(document.getElementById("rhoT").value);
+      const T = parseFloat(document.getElementById("temp2").value);
+      const alpha = parseFloat(document.getElementById("fuel2").value);
+      const volInput = document.getElementById("vol2").value;
 
-});
-</script></body>
+      if (isNaN(rhoT) || isNaN(T)) {
+        alert("⚠️ Please enter both Observed Density and Temperature.");
+        return;
+      }
+
+      const rho15 = rhoT * (1 + alpha * (T - 15));
+      const VCF = rhoT / rho15;   // VCF < 1 if T > 15
+
+      let output = `<strong>📌 Density @ 15 °C:</strong> ${rho15.toFixed(3)} kg/m³<br>
+                     <strong>📌 VCF (volume correction):</strong> ${VCF.toFixed(5)}`;
+
+      if (volInput !== "") {
+        const volObs = parseFloat(volInput);
+        if (!isNaN(volObs)) {
+          const vol15 = volObs * VCF;
+          output += `<br><strong>📌 Volume @ 15 °C:</strong> ${vol15.toFixed(3)} litres (from ${volObs.toFixed(2)} L @ ${T}°C)`;
+        }
+      }
+
+      const outDiv = document.getElementById("out2");
+      outDiv.style.display = "block";
+      outDiv.innerHTML = output;
+    }
+
+    // (Optional) expose functions globally – but with unique names.
+    window.fdvcfForwardCalc = fdvcfForwardCalc;
+    window.fdvcfReverseCalc = fdvcfReverseCalc;
+  </script>
+
+  <!-- minor safety: avoid any conflict with existing .container, .box etc.
+       This page uses zero generic classes from style.css for calculator layout. 
+       Menu & footer remain untouched. -->
+</body>
 </html>
