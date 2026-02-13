@@ -509,13 +509,26 @@
 
     // ---------- LOAD CSV DATA ----------
     function loadAllCSVTables() {
+      // Show loading state
+      updateAllPlaceholders('⏳ Loading documents...');
+      
       fetch(CSV_URL)
-        .then(response => response.text())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.text();
+        })
         .then(csvText => {
           const parsed = Papa.parse(csvText, { header: false });
           const rows = parsed.data.slice(1);
           parsedRows = rows.filter(row => row && row.length > 1);
-
+          
+          if (parsedRows.length === 0) {
+            throw new Error('No data found in CSV');
+          }
+          
+          // Populate all tabs
           populateTableForCategory('Act');
           populateTableForCategory('Rules');
           populateTableForCategory('Order');
@@ -526,7 +539,42 @@
         })
         .catch(err => {
           console.error("CSV Load Error:", err);
+          showErrorMessage(err.message);
         });
+    }
+    
+    // Helper function to update all placeholders
+    function updateAllPlaceholders(message) {
+      const categories = ['Act', 'Rules', 'Order', 'MSP', 'Procurement', 'Food', 'Misc'];
+      categories.forEach(cat => {
+        const tabDiv = document.getElementById(`tab-${cat}`);
+        if (tabDiv) {
+          const placeholder = tabDiv.querySelector('.csv-table-placeholder');
+          if (placeholder) {
+            placeholder.innerHTML = message;
+          }
+        }
+      });
+    }
+    
+    // Helper function to show error message
+    function showErrorMessage(errorText) {
+      const categories = ['Act', 'Rules', 'Order', 'MSP', 'Procurement', 'Food', 'Misc'];
+      categories.forEach(cat => {
+        const tabDiv = document.getElementById(`tab-${cat}`);
+        if (tabDiv) {
+          const placeholder = tabDiv.querySelector('.csv-table-placeholder');
+          if (placeholder) {
+            placeholder.innerHTML = `
+              <div style="text-align: center; padding: 40px; background: #fff3f3; border-radius: 8px;">
+                <h3 style="color: #d32f2f; margin-bottom: 15px;">⚠️ Error Loading Documents</h3>
+                <p style="color: #666;">${errorText}</p>
+                <p style="color: #999; margin-top: 20px; font-size: 14px;">Please try refreshing the page or contact support.</p>
+              </div>
+            `;
+          }
+        }
+      });
     }
 
     // ---------- BUILD CSV TABLE HTML ----------
@@ -544,8 +592,8 @@
         return `<tr>
           <td>${idx + 1}</td>
           <td>${subject}</td>
-          <td><a href="${safeLink}" target="_blank"><button class="download-btn">Download</button></a></td>
-          <td><a href="https://wa.me/?text=${encodedSubject}" target="_blank"><button class="share-btn">Share</button></a></td>
+          <td><a href="${safeLink}" target="_blank" rel="noopener noreferrer"><button class="download-btn">Download</button></a></td>
+          <td><a href="https://wa.me/?text=${encodedSubject}" target="_blank" rel="noopener noreferrer"><button class="share-btn">Share</button></a></td>
         </tr>`;
       }).join("");
 
@@ -639,9 +687,9 @@
         });
 
         // Load data if needed
-        if (parsedRows.length > 0) {
+        if (category !== 'Govt Calendars' && parsedRows.length > 0) {
           const target = containers[category];
-          if (target && category !== 'Govt Calendars') {
+          if (target) {
             const placeholder = target.querySelector('.csv-table-placeholder');
             if (placeholder && placeholder.innerHTML.includes('Loading')) {
               placeholder.innerHTML = buildTableHTML(category);
@@ -666,6 +714,20 @@
       // Initial active tab
       activateTab('Act');
     }
+
+    // ---------- INITIALIZE EVERYTHING ----------
+    document.addEventListener('DOMContentLoaded', function() {
+      initTabs();
+      loadAllCSVTables(); // This was missing!
+      
+      // Pre-load Govt. Calendars if that tab is active by default
+      const activeTab = document.querySelector('.tab-item.active');
+      if (activeTab && activeTab.getAttribute('data-category') === 'Govt Calendars') {
+        loadGovtCalendars();
+      }
+    });
+
+  })();
 </script>
 <script src="/assets/Scripts/gototop.js"></script>
 </body>
