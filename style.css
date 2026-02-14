@@ -66,10 +66,9 @@ body {
   bottom: 0;
   width: 100%;
   height: 4px;
-background: linear-gradient(90deg, #0d47a1, #00e676);
-
-
+  background: linear-gradient(90deg, #0d47a1, #00e676);
 }
+
 @media (max-width: 768px) {
   .site-header::after {
     height: 3px;
@@ -82,34 +81,32 @@ background: linear-gradient(90deg, #0d47a1, #00e676);
   }
 }
 
-
 /* =================================
-  LOGO
+   LOGO
    ================================= */
 .logo {
   display: flex;
   align-items: center;
   gap: 10px;
-  height: 100%; /* Make logo container full height of header */
+  height: 100%;
 }
 
 .logo img {
   width: auto;
-  height: 100%; /* Takes full height of .logo container */
-  max-height: 70px; /* 80px (desired max) - 24px (12px padding top+bottom) = 56px */
+  height: 100%;
+  max-height: 70px;
   object-fit: contain;
 }
 
-/* For responsive behavior on different screens */
 @media (max-width: 768px) {
   .logo img {
-    max-height: 36px; /* 60px (mobile header) - 24px padding = 36px */
+    max-height: 36px;
   }
 }
 
 @media (min-width: 769px) {
   .logo img {
-    max-height: 56px; /* 80px (desktop header) - 24px padding = 56px */
+    max-height: 56px;
   }
 }
 
@@ -122,53 +119,219 @@ background: linear-gradient(90deg, #0d47a1, #00e676);
   font-size: 14px;
   font-style: italic;
 }
+
 /* =================================
-   NAVIGATION (DESKTOP)
+   MENU TOGGLE BUTTON (HAMBURGER)
    ================================= */
-.menu {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.menu > li {
-  position: relative;
-}
-
-.menu a {
-  text-decoration: none;
-  font-weight: 600;
-  padding: 8px 12px;
-  color: var(--dark);
-  border-radius: 6px;
-}
-
-.menu a:hover,
-.menu a.active {
-  background: var(--primary);
-  color: #fff;
-}
-
-/* Dropdown */
-.dropdown-menu {
+.menu-toggle {
   display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  margin-top: 6px;
-  background: #ffffff;
-  min-width: 220px;
-  border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-  z-index: 9999;
-  list-style: none;
-  padding-left: 0;
-  margin-left: 0;
+  font-size: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--dark);
+  padding: 5px 10px;
+  z-index: 1001;
 }
 
-.dropdown:hover > .dropdown-menu {
-  display: block;
+/* =================================
+   DESKTOP STYLES (901px and above)
+   ================================= */
+@media (min-width: 901px) {
+  .menu {
+    display: flex !important;
+    list-style: none;
+    gap: 20px;
+    align-items: center;
+    position: static;
+    box-shadow: none;
+    background: transparent;
+    padding: 0;
+  }
+  
+  .menu-toggle {
+    display: none !important;
+  }
+  
+  .menu > li {
+    position: relative;
+  }
+  
+  .menu a {
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 12px;
+    color: var(--dark);
+    border-radius: 6px;
+    display: block;
+  }
+  
+  .menu a:hover,
+  .menu a.active {
+    background: var(--primary);
+    color: #fff;
+  }
+  
+  /* Dropdown styling for desktop */
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 6px;
+    background: #ffffff;
+    min-width: 220px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    z-index: 9999;
+    list-style: none;
+    padding: 5px 0;
+  }
+  
+  .dropdown:hover > .dropdown-menu {
+    display: block;
+  }
+  
+  .dropdown-menu li {
+    width: 100%;
+  }
+  
+  .dropdown-menu a {
+    padding: 10px 15px;
+    border-radius: 0;
+  }
+  
+  .dropdown-menu a:hover {
+    background: var(--primary);
+    color: #fff;
+  }
+}
+
+/* =================================
+   MOBILE STYLES (900px and below)
+   ================================= */
+@media (max-width: 900px) {
+  /* Show menu toggle button */
+  .menu-toggle {
+    display: block !important;
+  }
+  
+  /* Header adjustments for mobile */
+  .site-header {
+    position: relative;
+    flex-wrap: wrap;
+  }
+  
+  /* Main navigation container */
+  #main-nav {
+    width: 100%;
+    order: 3;
+  }
+  
+  /* Mobile menu styling */
+  .menu {
+    display: none !important;
+    flex-direction: column;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 0 0 10px 10px;
+    width: 100%;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    margin: 0;
+    list-style: none;
+  }
+  
+  /* Show menu when open class is added */
+  .menu.open {
+    display: flex !important;
+  }
+  
+  /* Menu items styling */
+  .menu > li {
+    width: 100%;
+    margin: 2px 0;
+  }
+  
+  .menu a {
+    text-decoration: none;
+    font-weight: 600;
+    padding: 12px 15px;
+    color: var(--dark);
+    border-radius: 6px;
+    display: block;
+    width: 100%;
+  }
+  
+  .menu a:hover,
+  .menu a.active {
+    background: var(--primary);
+    color: #fff;
+  }
+  
+  /* Dropdown styling for mobile */
+  .dropdown {
+    position: relative;
+    width: 100%;
+  }
+  
+  .dropdown > a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .dropdown > a::after {
+    content: '▾';
+    margin-left: 5px;
+    transition: transform 0.3s ease;
+    font-size: 18px;
+  }
+  
+  .dropdown.open > a::after {
+    transform: rotate(180deg);
+  }
+  
+  /* Dropdown menu - hidden by default on mobile */
+  .dropdown-menu {
+    display: none !important;
+    position: static !important;
+    box-shadow: none !important;
+    background: #f5f5f5;
+    margin: 5px 0 5px 15px;
+    border-radius: 6px;
+    width: calc(100% - 15px);
+    list-style: none;
+    padding: 5px 0;
+  }
+  
+  /* Show dropdown when open class is added */
+  .dropdown.open > .dropdown-menu {
+    display: block !important;
+  }
+  
+  .dropdown-menu li {
+    width: 100%;
+  }
+  
+  .dropdown-menu a {
+    padding: 10px 15px;
+    font-size: 0.95em;
+  }
+  
+  .dropdown-menu a:hover {
+    background: var(--primary);
+    color: #fff;
+  }
+  
+  /* Ensure dropdown hover doesn't interfere on mobile */
+  .dropdown:hover > .dropdown-menu {
+    display: none !important;
+  }
 }
 
 /* =================================
@@ -334,6 +497,8 @@ form button {
   background: #1f2937;
   color: #ffffff;
   width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .footer-top {
@@ -395,13 +560,29 @@ form button {
   justify-content: space-between;
   align-items: center;
   padding: 18px 20px;
-}
-.footer-social {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
+/* Ensure children do not push width */
+.footer-bottom * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Social icons container */
+.footer-social {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Individual social icons */
 .footer-social a {
   width: 44px;
   height: 44px;
@@ -414,116 +595,16 @@ form button {
   font-size: 18px;
   text-decoration: none;
   line-height: 1;
-  transition: 
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    background 0.3s ease;
+  flex: 0 0 auto;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.8), 0 0 20px rgba(139, 92, 246, 0.6), 0 0 30px rgba(139, 92, 246, 0.4);
 }
 
 /* Hover effect */
 .footer-social a:hover {
-  transform: translateY(-4px) scale(1.05);
-  background: radial-gradient(circle at top left, #c4b5fd, #6d28d9);
-  box-shadow: 0 10px 25px rgba(109, 40, 217, 0.45);
-}
-
-  /* 🔥 GLOW */
-  box-shadow:
-    0 0 10px rgba(139, 92, 246, 0.8),
-    0 0 20px rgba(139, 92, 246, 0.6),
-    0 0 30px rgba(139, 92, 246, 0.4);
-
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
-.footer-social a:hover {
   transform: translateY(-4px) scale(1.08);
-
-  box-shadow:
-    0 0 14px rgba(168, 85, 247, 1),
-    0 0 28px rgba(168, 85, 247, 0.9),
-    0 0 40px rgba(168, 85, 247, 0.7);
-}
-
-/* =================================
-   MOBILE MENU + RESPONSIVE
-   ================================= */
-.menu-toggle {
-  display: none;
-  font-size: 26px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--dark);
-}
-
-@media (max-width: 900px) {
-
-  .menu-toggle {
-    display: block;
-    margin-left: auto;
-  }
-
-  .menu {
-    flex-direction: column;
-    display: none;
-    background: #ffffff;
-    padding: 15px;
-    margin-top: 10px;
-    border-radius: 10px;
-    width: 100%;
-  }
-
-  .menu.open {
-    display: flex;
-  }
-
-  .dropdown-menu {
-    position: static;
-    box-shadow: none;
-  }
-
-  .footer-top,
-  .footer-media,
-  .footer-links-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .footer-bottom {
-    flex-direction: column;
-    text-align: center;
-    gap: 10px;
-  }
-}
-/* =================================
-   FOOTER SOCIAL – MOBILE FIX
-   ================================= */
-
-/* Prevent footer from causing horizontal scroll */
-.mega-footer,
-.footer-bottom {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-/* Social icons container */
-.footer-social {
-  display: flex;
-  flex-wrap: nowrap;              /* Force single line */
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  max-width: 100%;
-  overflow-x: hidden;             /* No horizontal scroll */
-}
-
-/* Individual social icons */
-.footer-social a {
-  flex: 0 0 auto;                 /* Prevent stretching */
-  width: 40px;
-  height: 40px;
+  background: radial-gradient(circle at top left, #c4b5fd, #6d28d9);
+  box-shadow: 0 0 14px rgba(168, 85, 247, 1), 0 0 28px rgba(168, 85, 247, 0.9), 0 0 40px rgba(168, 85, 247, 0.7);
 }
 
 /* Tablet adjustments */
@@ -531,7 +612,7 @@ form button {
   .footer-social {
     gap: 10px;
   }
-
+  
   .footer-social a {
     width: 38px;
     height: 38px;
@@ -544,52 +625,147 @@ form button {
   .footer-social {
     gap: 8px;
   }
-
+  
   .footer-social a {
     width: 36px;
     height: 36px;
     font-size: 15px;
-
-    /* Reduce glow slightly to avoid overflow */
-    box-shadow:
-      0 0 6px rgba(139, 92, 246, 0.6),
-      0 0 12px rgba(139, 92, 246, 0.4);
+    box-shadow: 0 0 6px rgba(139, 92, 246, 0.6), 0 0 12px rgba(139, 92, 246, 0.4);
   }
 }
+
 /* =================================
-   FOOTER-BOTTOM OVERFLOW FIX
+   MOBILE FOOTER FIXES - UPDATED
    ================================= */
-
-/* Stop footer from exceeding viewport */
-.footer-bottom {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-/* Ensure children do not push width */
-.footer-bottom * {
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-/* Social bar safety */
-.footer-social {
-  flex-wrap: nowrap;
-  overflow-x: hidden;
-  justify-content: center;
-}
-
-/* Reduce glow overflow on small screens */
-@media (max-width: 480px) {
-  .footer-social a {
-    box-shadow:
-      0 0 6px rgba(139, 92, 246, 0.6),
-      0 0 12px rgba(139, 92, 246, 0.4);
+@media (max-width: 900px) {
+  /* Footer responsive adjustments */
+  .footer-top {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 30px 15px;
+  }
+  
+  .footer-media {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  
+  /* Make social media iframes stack vertically */
+  .footer-media {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .footer-col {
+    width: 100%;
+    padding: 10px 0;
+  }
+  
+  /* Fix iframe height - maintain aspect ratio */
+  .youtube-box,
+  .facebook-box {
+    width: 100%;
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio (9/16 = 0.5625) */
+    height: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .youtube-box iframe,
+  .facebook-box iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    min-height: auto; /* Remove the min-height */
+    border-radius: 8px;
+  }
+  
+  /* Alternative: If you prefer fixed height instead of aspect ratio */
+  /*
+  .youtube-box iframe,
+  .facebook-box iframe {
+    height: 200px;
+    min-height: auto;
+  }
+  */
+  
+  .footer-links-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  /* Make footer links more touch-friendly */
+  .footer-links-grid ul {
+    padding-left: 0;
+    list-style: none;
+    text-align: center;
+  }
+  
+  .footer-links-grid li {
+    margin-bottom: 8px;
+  }
+  
+  .footer-links-grid a {
+    display: inline-block;
+    padding: 5px 0;
   }
 }
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .footer-top {
+    padding: 20px 10px;
+  }
+  
+  .footer-col h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  /* Even smaller iframe for very small screens */
+  .youtube-box,
+  .facebook-box {
+    padding-bottom: 56.25%; /* Keep 16:9 aspect ratio */
+  }
+  
+  /* Alternative fixed height for very small screens */
+  /*
+  .youtube-box iframe,
+  .facebook-box iframe {
+    height: 180px;
+  }
+  */
+  
+  .footer-links-grid {
+    gap: 15px;
+  }
+  
+  .footer-links-grid a {
+    font-size: 14px;
+  }
+  
+  .footer-bottom {
+    padding: 12px 10px;
+    font-size: 13px;
+  }
+}
+
+/* =================================
+   GO TO TOP BUTTON
+   ================================= */
 #goTopBtn {
-  display: none; /* Hidden by default */
+  display: none;
   position: fixed;
   bottom: 20px;
   right: 30px;
@@ -606,4 +782,23 @@ form button {
 
 #goTopBtn:hover {
   background-color: #333;
+}
+
+/* Mobile adjustment for go to top button */
+@media (max-width: 768px) {
+  #goTopBtn {
+    bottom: 15px;
+    right: 15px;
+    padding: 12px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  #goTopBtn {
+    bottom: 10px;
+    right: 10px;
+    padding: 10px;
+    font-size: 14px;
+  }
 }
