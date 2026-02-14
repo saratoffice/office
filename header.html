@@ -1,10 +1,189 @@
-<!-- TOP BAR -->
-<div class="top-bar">
-  <div>📞 +91 00000 00000</div>
-  <div>✉ admin@saratoffice.in</div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarat Office - Mobile Menu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <!-- HEADER -->
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            font-size: 14px;
+        }
+
+        /* Header */
+        .site-header {
+            background: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        /* Mobile Menu Button */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: 2px solid #333;
+            font-size: 24px;
+            padding: 5px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            color: #333;
+        }
+
+        .menu-toggle:hover {
+            background: #f0f0f0;
+        }
+
+        /* Navigation Menu */
+        #main-nav {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .menu {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        .menu > li {
+            position: relative;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 10px;
+            display: block;
+        }
+
+        .menu a:hover {
+            color: #007bff;
+        }
+
+        /* Dropdown */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            list-style: none;
+            min-width: 200px;
+            z-index: 1000;
+            border-radius: 5px;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu li a {
+            padding: 10px 15px;
+            white-space: nowrap;
+        }
+
+        .dropdown-menu li a:hover {
+            background: #f8f9fa;
+        }
+
+        /* Mobile Styles */
+        @media screen and (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            #main-nav {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                display: none;
+                z-index: 1000;
+            }
+
+            #main-nav.active {
+                display: block;
+            }
+
+            .menu {
+                flex-direction: column;
+                padding: 10px;
+                gap: 0;
+            }
+
+            .menu > li {
+                border-bottom: 1px solid #eee;
+            }
+
+            .menu > li:last-child {
+                border-bottom: none;
+            }
+
+            .dropdown-menu {
+                position: static;
+                display: none;
+                box-shadow: none;
+                background: #f8f9fa;
+                margin-left: 20px;
+            }
+
+            .dropdown.active .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown > a::after {
+                content: ' ▾';
+                float: right;
+            }
+
+            .dropdown.active > a::after {
+                content: ' ▴';
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div>📞 +91 00000 00000</div>
+        <div>✉ admin@saratoffice.in</div>
+    </div>
+
+    <!-- HEADER -->
     <header class="site-header">
         <div class="logo">
             <img src="https://res.cloudinary.com/saratoffice/image/upload/v1745503775/Final_Logo_ztbhgp.svg" alt="Sarat Office Logo">
@@ -49,3 +228,64 @@
             </ul>
         </nav>
     </header>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const mainNav = document.getElementById('main-nav');
+            const dropdowns = document.querySelectorAll('.dropdown');
+
+            // Toggle mobile menu
+            menuToggle.addEventListener('click', function() {
+                mainNav.classList.toggle('active');
+                // Change button text based on menu state
+                this.textContent = mainNav.classList.contains('active') ? '✕' : '☰';
+            });
+
+            // Handle dropdown clicks on mobile
+            if (window.innerWidth <= 768) {
+                dropdowns.forEach(dropdown => {
+                    const link = dropdown.querySelector('a');
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        dropdown.classList.toggle('active');
+                    });
+                });
+            }
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.site-header')) {
+                    mainNav.classList.remove('active');
+                    menuToggle.textContent = '☰';
+                    
+                    // Close all dropdowns on mobile
+                    if (window.innerWidth <= 768) {
+                        dropdowns.forEach(dropdown => {
+                            dropdown.classList.remove('active');
+                        });
+                    }
+                }
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    mainNav.classList.remove('active');
+                    menuToggle.textContent = '☰';
+                    
+                    // Reset dropdowns
+                    dropdowns.forEach(dropdown => {
+                        dropdown.classList.remove('active');
+                    });
+                }
+            });
+
+            // Prevent menu from closing when clicking inside
+            mainNav.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        });
+    </script>
+</body>
+</html>
