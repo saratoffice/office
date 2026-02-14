@@ -8,9 +8,9 @@ const SiteComponents = (function() {
     headerUrl: 'header.html',        // Path to your header file
     navUrl: 'nav.html',             // Path to your navigation file
     footerUrl: 'footer.html',       // Path to your footer file
-    mobileBreakpoint: 900,          // Mobile menu breakpoint in pixels
-    cache: true,                   // Enable/disable caching
-    cacheBuster: false             // Set to true in development, false in production
+    mobileBreakpoint: 768,          // Mobile menu breakpoint in pixels (changed to 768 for better mobile UX)
+    cache: true,                    // Enable/disable caching
+    cacheBuster: false              // Set to true in development, false in production
   };
 
   // ===== CACHE STORAGE =====
@@ -27,6 +27,12 @@ const SiteComponents = (function() {
         const element = document.getElementById(elementId);
         if (element) {
           element.innerHTML = templateCache.get(url);
+          
+          // Re-initialize components after content is loaded
+          setTimeout(() => {
+            initMobileMenu();
+            initDropdowns();
+          }, 100);
           return;
         }
       }
@@ -53,6 +59,12 @@ const SiteComponents = (function() {
       const element = document.getElementById(elementId);
       if (element) {
         element.innerHTML = html;
+        
+        // Re-initialize components after content is loaded
+        setTimeout(() => {
+          initMobileMenu();
+          initDropdowns();
+        }, 100);
       } else {
         console.warn(`Element with id "${elementId}" not found`);
       }
@@ -71,28 +83,144 @@ const SiteComponents = (function() {
     }
   }
 
+  // ===== DROPDOWN INITIALIZATION =====
+  // Initialize dropdown functionality for desktop
+  function initDropdowns() {
+    const dropdowns = document.querySelectorAll('.dropdown');
+    
+    // Remove any existing event listeners (to prevent duplicates)
+    dropdowns.forEach(dropdown => {
+      const link = dropdown.querySelector('a');
+      if (link) {
+        // For desktop, we want hover behavior
+        if (window.innerWidth > config.mobileBreakpoint) {
+          dropdown.removeEventListener('mouseenter', handleMouseEnter);
+          dropdown.removeEventListener('mouseleave', handleMouseLeave);
+          
+          dropdown.addEventListener('mouseenter', handleMouseEnter);
+          dropdown.addEventListener('mouseleave', handleMouseLeave);
+        }
+      }
+    });
+  }
+
+  // Mouse enter handler for desktop dropdowns
+  function handleMouseEnter(e) {
+    const dropdown = e.currentTarget;
+    const menu = dropdown.querySelector('.dropdown-menu');
+    if (menu) {
+      menu.style.display = 'block';
+    }
+  }
+
+  // Mouse leave handler for desktop dropdowns
+  function handleMouseLeave(e) {
+    const dropdown = e.currentTarget;
+    const menu = dropdown.querySelector('.dropdown-menu');
+    if (menu) {
+      menu.style.display = '';
+    }
+  }
+
   // ===== MOBILE MENU INITIALIZATION =====
   // Sets up click handlers for mobile menu
   function initMobileMenu() {
     console.log('Initializing mobile menu');
     
-    document.addEventListener("click", function(e) {
-      // Toggle main menu when menu-toggle button is clicked
-      if (e.target.classList.contains("menu-toggle")) {
-        e.preventDefault();
-        const menu = document.querySelector(".menu");
-        if (menu) {
-          menu.classList.toggle("open");
-          console.log('Menu toggled:', menu.classList.contains('open') ? 'open' : 'closed');
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mainNav = document.getElementById('main-nav');
+    const dropdowns = document.querySelectorAll('.dropdown');
+
+    // Remove existing listeners if any
+    if (menuToggle) {
+      menuToggle.replaceWith(menuToggle.cloneNode(true));
+      const newMenuToggle = document.querySelector('.menu-toggle');
+      
+      if (newMenuToggle) {
+        newMenuToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const mainNav = document.getElementById('main-nav');
+          if (mainNav) {
+            mainNav.classList.toggle('active');
+            this.textContent = mainNav.classList.contains('active') ? '✕' : '☰';
+            
+            // Close all dropdowns when closing menu
+            if (!mainNav.classList.contains('active')) {
+              dropdowns.forEach(dropdown => {
+                dropdown.classList.remove('active');
+              });
+            }
+          }
+        });
+      }
+    }
+
+    // Handle dropdown clicks on mobile
+    if (window.innerWidth <= config.mobileBreakpoint) {
+      dropdowns.forEach(dropdown => {
+        const link = dropdown.querySelector('a');
+        if (link) {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Close other dropdowns
+            dropdowns.forEach(d => {
+              if (d !== dropdown) {
+                d.classList.remove('active');
+              }
+            });
+            
+            dropdown.classList.toggle('active');
+          });
+        }
+      });
+    }
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const mainNav = document.getElementById('main-nav');
+      const menuToggle = document.querySelector('.menu-toggle');
+      
+      if (mainNav && menuToggle) {
+        if (!event.target.closest('#main-nav') && !event.target.closest('.menu-toggle')) {
+          mainNav.classList.remove('active');
+          menuToggle.textContent = '☰';
+          
+          // Close all dropdowns on mobile
+          if (window.innerWidth <= config.mobileBreakpoint) {
+            dropdowns.forEach(dropdown => {
+              dropdown.classList.remove('active');
+            });
+          }
         }
       }
+    });
 
-      // Handle dropdown menus on mobile devices
-      const dropdownLink = e.target.closest(".dropdown > a");
-      if (dropdownLink && window.innerWidth <= config.mobileBreakpoint) {
-        e.preventDefault();
-        dropdownLink.parentElement.classList.toggle("open");
-        console.log('Dropdown toggled');
+    // Prevent menu from closing when clicking inside
+    if (mainNav) {
+      mainNav.addEventListener('click', function(event) {
+        event.stopPropagation();
+      });
+    }
+
+    // Handle window resize
+    window.addEventListener('resize', function() {
+      const mainNav = document.getElementById('main-nav');
+      const menuToggle = document.querySelector('.menu-toggle');
+      
+      if (window.innerWidth > config.mobileBreakpoint) {
+        if (mainNav) mainNav.classList.remove('active');
+        if (menuToggle) menuToggle.textContent = '☰';
+        
+        // Reset dropdowns and restore hover behavior
+        dropdowns.forEach(dropdown => {
+          dropdown.classList.remove('active');
+          
+          // Re-initialize desktop hover
+          initDropdowns();
+        });
       }
     });
   }
@@ -105,17 +233,29 @@ const SiteComponents = (function() {
       console.log('🚀 Initializing SiteComponents...');
       
       try {
-        // Load header and footer in parallel (faster!)
-        await Promise.all([
-          loadTemplate(config.headerUrl, 'site-header'),
-          loadTemplate(config.footerUrl, 'site-footer')
-        ]);
+        // Check if we have the necessary container elements
+        const hasHeader = document.getElementById('site-header');
+        const hasFooter = document.getElementById('site-footer');
         
-        // Load navigation after header (if needed)
-        await loadTemplate(config.navUrl, 'main-nav');
+        // Load components if their containers exist
+        const loadPromises = [];
         
-        // Initialize mobile menu after all components are loaded
-        initMobileMenu();
+        if (hasHeader) {
+          loadPromises.push(loadTemplate(config.headerUrl, 'site-header'));
+        }
+        
+        if (hasFooter) {
+          loadPromises.push(loadTemplate(config.footerUrl, 'site-footer'));
+        }
+        
+        // Wait for header and footer to load
+        await Promise.all(loadPromises);
+        
+        // Load navigation after header (if container exists)
+        const hasNav = document.getElementById('main-nav');
+        if (hasNav) {
+          await loadTemplate(config.navUrl, 'main-nav');
+        }
         
         console.log('✅ SiteComponents initialized successfully');
       } catch (error) {
@@ -155,6 +295,9 @@ const SiteComponents = (function() {
     updateConfig: function(newConfig) {
       Object.assign(config, newConfig);
       console.log('⚙️ Configuration updated:', config);
+      
+      // Re-initialize with new config
+      this.init();
     }
   };
 })();
