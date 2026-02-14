@@ -11,7 +11,7 @@
   <!-- ✅ IMPORTANT: site components for header/footer etc. -->
   <script src="assets/Scripts/site-components.js" defer></script>
   <style>
-    /* =================================
+    /* ================================
        GLOBAL VARIABLES & RESET
        Scoped to this page only
     ================================= */
@@ -67,6 +67,11 @@
       max-width: 100%;
       box-sizing: border-box;
     }
+   .home-page section.slider-section {
+      padding: 0 !important;
+          margin: 0 !important;
+        }       
+
 
     .home-page .section-header {
       text-align: center;
@@ -173,377 +178,235 @@
       color: var(--white);
       transform: translateY(-3px);
     }
-/* =================================
-   FULL-WIDTH SLIDER - MOBILE OPTIMIZED
-================================= */
-
-/* RESET FOR MOBILE */
-.hero-slider-wrapper,
-.hero-slider,
-.slider-container,
-.slider-slide {
-    -webkit-overflow-scrolling: touch;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -webkit-transform: translate3d(0,0,0);
-    transform: translate3d(0,0,0);
+    @media (max-width: 680px) {
+  .home-page section.slider-section {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
 }
 
-/* MAIN WRAPPER */
-.hero-slider-wrapper {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-    margin: 0;
-    padding: 0;
-    max-width: 100vw;
+/* ----- SLIDER SECTION (full viewport width) ----- */
+    
+.slider-section {
+  width: 100%;
+  background: #0e1e32;
 }
 
-/* SLIDER CONTAINER */
-.hero-slider {
-    width: 100%;
-    height: 70vh;
-    min-height: 500px;
-    position: relative;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-}
-
-/* SLIDES CONTAINER */
 .slider-container {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    display: flex;
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    margin: 0;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.slider-track {
+  display: flex;
+  transition: transform 0.65s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.slide {
+  flex: 0 0 100%;               /* each slide takes full container width */
+  height: 85vh;                 /* default height (desktop) */
+  min-height: 520px;
+  background-size: cover;       /* cover by default (crops on mobile) */
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-end;        /* push button to bottom */
+  justify-content: flex-end;    /* push button to right */
+  padding: 0;                   /* REMOVED PADDING - was 2rem 2.5rem */
+  position: relative;
+}
+
+/* subtle overlay for better button visibility */
+.slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 70%);
+  pointer-events: none;         /* lets button stay clickable */
+}
+
+/* slide unique backgrounds */
+.slide-1 {
+  background-image: url('assets/images/Sliders/Slider_Sarat.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); /* tools */
+}
+.slide-2 {
+  background-image: url('assets/images/Sliders/Slider_SaratSom.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');  /* contact */
+}
+.slide-3 {
+  background-image: url('assets/images/Sliders/Slider_Som.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); /* legal */
+}
+
+/* ----- bottom right button (down arrow + text) ----- */
+.slide-btn {
+  position: relative;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(245, 245, 255, 0.92);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 60px;
+  padding: 0.9rem 2.2rem 0.9rem 2.4rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #10131e;
+  box-shadow: 0 15px 30px -10px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: transform 0.18s, background 0.2s, box-shadow 0.2s;
+  border: none;
+  outline: 2px solid transparent;
+  letter-spacing: 0.5px;
+  margin: 0 2.5rem 2rem 0;      /* ADDED margin to position button from edges */
+}
+
+.slide-btn i {               /* downward arrow icon */
+  font-style: normal;
+  font-size: 2rem;
+  line-height: 1;
+  transform: translateY(2px);
+  transition: transform 0.2s;
+}
+
+.slide-btn:hover {
+  background: #ffffff;
+  transform: scale(1.04);
+  box-shadow: 0 22px 35px -12px #030b14;
+}
+
+.slide-btn:hover i {
+  transform: translateY(5px);
+}
+
+/* ----- navigation arrows (bottom left corner) ----- */
+.nav-arrows {
+  position: absolute;
+  bottom: 2rem;
+  left: 2.5rem;
+  z-index: 25;
+  display: flex;
+  gap: 1.2rem;
+}
+
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  background: rgba(20, 30, 45, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 40px;
+  color: white;
+  font-size: 2.4rem;
+  font-weight: 300;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, border-color 0.2s;
+  user-select: none;
+  box-shadow: 0 10px 18px -8px black;
+  line-height: 1;
+}
+
+.arrow:hover {
+  background: #1f334b;
+  border-color: rgba(255,255,255,0.7);
+  transform: scale(1.07);
+}
+
+.arrow:active {
+  transform: scale(0.98);
+}
+
+/* pause on hover */
+.slider-container.pause-autoplay .slider-track {
+  transition-duration: 0.4s;
+}
+
+/* ========== MOBILE FIX: REDUCE HEIGHT + SHOW FULL IMAGE ========== */
+@media (max-width: 680px) {
+  .slide {
+    height: auto;                    /* Let height be determined by content */
+    min-height: 300px;               /* Set a reasonable minimum */
+    background-size: cover !important; /* Cover fills the space without gaps */
+    background-color: #111d2f;
+    background-position: center center;
     padding: 0;
-    will-change: transform;
+  }
+  
+  /* Remove the separate rule that enforces contain */
+  /* .slide-1, .slide-2, .slide-3 {
+    background-size: contain !important;
+  } */
 }
 
-/* INDIVIDUAL SLIDE */
-.slider-slide {
-    min-width: 100%;
-    height: 100%;
-    position: relative;
-    flex-shrink: 0;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  /* adjust overlay to be lighter (still visible over dark gaps) */
+  .slide::after {
+    background: linear-gradient(90deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.2) 80%);
+  }
+
+  /* button size & position for mobile */
+  .slide-btn {
+    padding: 0.6rem 1.4rem 0.6rem 1.6rem;
+    font-size: 1.25rem;
+    gap: 0.4rem;
+    margin: 0 1.2rem 1.2rem 0;      /* ADJUSTED margin for mobile */
+  }
+  .slide-btn i {
+    font-size: 1.7rem;
+  }
+
+  /* bottom arrows a bit smaller */
+  .nav-arrows {
+    bottom: 1.2rem;
+    left: 1.2rem;
+    gap: 0.7rem;
+  }
+  .arrow {
+    width: 44px;
+    height: 44px;
+    font-size: 2rem;
+  }
 }
 
-/* IMAGE STYLES - MOBILE OPTIMIZED */
-.slider-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    pointer-events: none;
-    user-select: none;
-    -webkit-user-drag: none;
-    display: block;
-}
-
-/* NAVIGATION BUTTONS */
-.slider-controls-left {
-    position: absolute;
-    bottom: 40px;
-    left: 40px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 15px;
-    z-index: 3;
-}
-
-.slider-btn {
-    background: rgba(255, 255, 255, 0.15);
-    border: 2px solid rgba(255, 255, 255, 0.25);
-    color: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+/* extra small devices: even shorter height, keep contain */
+@media (max-width: 480px) {
+  .slide {
+    height: 38vh !important;
+    min-height: 260px;
+  }
+  .slide-btn {
+    font-size: 1.1rem;
+    padding: 0.5rem 1.2rem 0.5rem 1.4rem;
+    margin: 0 0.9rem 0.9rem 0;      /* ADJUSTED margin for smaller screens */
+  }
+  .slide-btn i {
+    font-size: 1.5rem;
+  }
+  .nav-arrows {
+    bottom: 0.9rem;
+    left: 0.9rem;
+  }
+  .arrow {
+    width: 40px;
+    height: 40px;
     font-size: 1.8rem;
-    font-weight: 300;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    -webkit-tap-highlight-color: transparent;
+  }
 }
 
-.slider-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.4);
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+/* make sure background-size contain is enforced on all mobile */
+@media (max-width: 680px) {
+  .slide-1, .slide-2, .slide-3 {
+    background-size: contain !important;
+  }
 }
 
-/* DOWN BUTTONS */
-.slide-down-btn {
-    position: absolute;
-    bottom: 40px;
-    right: 40px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    padding: 18px 32px;
-    border-radius: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(15px);
-    z-index: 2;
-    font-size: 1.15rem;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    min-width: 160px;
-    -webkit-tap-highlight-color: transparent;
-    text-decoration: none;
-}
-
-.slide-down-btn:hover {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-    border-color: rgba(255, 255, 255, 0.35);
-    transform: translateY(-4px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-    gap: 18px;
-    padding-right: 28px;
-}
-
-.btn-text {
-    position: relative;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.btn-arrow {
-    transition: all 0.3s ease;
-    width: 22px;
-    height: 22px;
-    stroke: currentColor;
-    stroke-width: 2.5;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-    flex-shrink: 0;
-}
-
-/* PULSE ANIMATION */
-@keyframes elegant-pulse {
-    0% { transform: translateY(0); opacity: 0.9; }
-    50% { transform: translateY(6px); opacity: 1; }
-    100% { transform: translateY(0); opacity: 0.9; }
-}
-
-.btn-arrow {
-    animation: elegant-pulse 2s infinite ease-in-out;
-}
-
-.slide-down-btn:hover .btn-arrow {
-    animation: none;
-    transform: translateY(4px);
-}
-
-/* BUTTON COLORS */
-.slider-slide:nth-child(1) .slide-down-btn {
-    background: linear-gradient(135deg, rgba(76, 175, 80, 0.85), rgba(56, 142, 60, 0.7));
-    border-color: rgba(76, 175, 80, 0.4);
-}
-
-.slider-slide:nth-child(2) .slide-down-btn {
-    background: linear-gradient(135deg, rgba(33, 150, 243, 0.85), rgba(30, 136, 229, 0.7));
-    border-color: rgba(33, 150, 243, 0.4);
-}
-
-.slider-slide:nth-child(3) .slide-down-btn {
-    background: linear-gradient(135deg, rgba(156, 39, 176, 0.85), rgba(123, 31, 162, 0.7));
-    border-color: rgba(156, 39, 176, 0.4);
-}
-
-/* =================================
-   MOBILE RESPONSIVE STYLES
-================================= */
-
-/* TABLET (768px and below) */
-@media (max-width: 768px) {
-    .hero-slider {
-        height: 70vh;
-        min-height: 400px;
-    }
-    
-    .slider-controls-left {
-        bottom: 30px;
-        left: 20px;
-        gap: 10px;
-    }
-    
-    .slider-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 1.5rem;
-    }
-    
-    .slide-down-btn {
-        bottom: 30px;
-        right: 20px;
-        padding: 14px 20px;
-        font-size: 1rem;
-        min-width: 140px;
-        gap: 10px;
-    }
-    
-    .btn-arrow {
-        width: 18px;
-        height: 18px;
-    }
-}
-
-/* MOBILE (576px and below) */
-@media (max-width: 576px) {
-    .hero-slider {
-        height: 60vh;
-        min-height: 350px;
-    }
-    
-    .slider-controls-left {
-        flex-direction: column;
-        left: 15px;
-        bottom: 20px;
-        gap: 8px;
-    }
-    
-    .slider-btn {
-        width: 45px;
-        height: 45px;
-        font-size: 1.3rem;
-    }
-    
-    .slide-down-btn {
-        bottom: 20px;
-        right: 15px;
-        padding: 12px 16px;
-        font-size: 0.9rem;
-        min-width: auto;
-        max-width: 180px;
-        gap: 8px;
-    }
-    
-    .btn-text {
-        white-space: normal;
-        font-size: 0.9rem;
-        line-height: 1.2;
-    }
-    
-    .btn-arrow {
-        width: 16px;
-        height: 16px;
-    }
-}
-
-/* VERY SMALL MOBILE (400px and below) */
-@media (max-width: 400px) {
-    .hero-slider {
-        height: 55vh;
-        min-height: 300px;
-    }
-    
-    .slide-down-btn {
-        padding: 10px 14px;
-        font-size: 0.85rem;
-        gap: 6px;
-    }
-    
-    .btn-text {
-        font-size: 0.85rem;
-    }
-    
-    .btn-arrow {
-        width: 14px;
-        height: 14px;
-    }
-    
-    .slider-controls-left {
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 15px;
-        flex-direction: row;
-        gap: 15px;
-    }
-    
-    /* Hide arrow on very small screens */
-    .slide-down-btn .btn-arrow {
-        display: none;
-    }
-    
-    .slide-down-btn {
-        padding: 10px 20px;
-    }
-}
-
-/* LANDSCAPE MODE */
-@media (max-height: 500px) and (orientation: landscape) {
-    .hero-slider {
-        height: 90vh;
-        min-height: 300px;
-    }
-    
-    .slider-controls-left {
-        bottom: 20px;
-        left: 20px;
-    }
-    
-    .slide-down-btn {
-        bottom: 20px;
-        right: 20px;
-        padding: 10px 16px;
-        font-size: 0.9rem;
-    }
-    
-    .slider-btn {
-        width: 45px;
-        height: 45px;
-    }
-}
-
-/* TOUCH DEVICES */
-@media (hover: none) and (pointer: coarse) {
-    .slider-btn,
-    .slide-down-btn {
-        min-height: 44px;
-    }
-    
-    .slide-down-btn {
-        padding: 14px 20px;
-    }
-    
-    /* Disable hover effects on touch */
-    .slider-btn:hover,
-    .slide-down-btn:hover {
-        transform: none;
-    }
-    
-    /* Active state for touch feedback */
-    .slider-btn:active,
-    .slide-down-btn:active {
-        transform: scale(0.95);
-        opacity: 0.8;
-    }
-}
-
-/* IOS SAFARI FIX */
-@supports (-webkit-touch-callout: none) {
-    .hero-slider {
-        height: -webkit-fill-available;
-    }
+/* smoothness */
+.slider-track, .slide-btn, .arrow {
+  -webkit-tap-highlight-color: transparent;
 }
     /* =================================
        HERO SECTION
@@ -1538,60 +1401,38 @@
 <div id="site-header"></div>
 
 <main>
-<!-- Slider Section -->
-<div class="hero-slider-wrapper">
-    <div class="hero-slider">
-        <div class="slider-container" id="sliderContainer">
-            <!-- Slide 1 -->
-            <div class="slider-slide">
-                <img src="assets/images/Sliders/Slider_Sarat.jpg" 
-                     alt="Technology Innovation" 
-                     class="slider-image">
-                <a href="#tools" class="slide-down-btn rounded-btn">
-                    <span class="btn-text">Utility Tools</span>
-                    <svg class="btn-arrow" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 5v14"></path>
-                        <path d="m19 12-7 7-7-7"></path>
-                    </svg>
-                </a>
-            </div>
-            
-            <!-- Slide 2 -->
-            <div class="slider-slide">
-                <img src="assets/images/Sliders/Slider_SaratSom.jpg" 
-                     alt="Data Analytics" 
-                     class="slider-image">
-                <a href="#resources" class="slide-down-btn rounded-btn">
-                    <span class="btn-text">Resources</span>
-                    <svg class="btn-arrow" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 5v14"></path>
-                        <path d="m19 12-7 7-7-7"></path>
-                    </svg>
-                </a>
-            </div>
-            
-            <!-- Slide 3 -->
-            <div class="slider-slide">
-                <img src="assets/images/Sliders/Slider_Som.jpg" 
-                     alt="Collaboration" 
-                     class="slider-image">
-                <a href="#legaldocs" class="slide-down-btn rounded-btn">
-                    <span class="btn-text">Legal Docs</span>
-                    <svg class="btn-arrow" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 5v14"></path>
-                        <path d="m19 12-7 7-7-7"></path>
-                    </svg>
-                </a>
-            </div>
+<!-- FULL WIDTH SLIDER (mobile: reduced height & contain to show full image) -->
+  <section class="slider-section">
+    <div class="slider-container" id="sliderContainer">
+      <div class="slider-track" id="sliderTrack">
+        <!-- slide 1: Tools (button text "Utility Tools" as requested) -->
+        <div class="slide slide-1">
+          <button class="slide-btn" data-target="tools">
+            Utility Tools <i>↓</i>
+          </button>
         </div>
-        
-        <!-- Navigation buttons on left bottom -->
-        <div class="slider-controls-left">
-            <button class="slider-btn rounded-btn" id="prevBtn">‹</button>
-            <button class="slider-btn rounded-btn" id="nextBtn">›</button>
+        <!-- slide 2: Resources -->
+        <div class="slide slide-2">
+          <button class="slide-btn" data-target="resources">
+            Resources <i>↓</i>
+          </button>
         </div>
+        <!-- slide 3: Legal Docs -->
+        <div class="slide slide-3">
+          <button class="slide-btn" data-target="legaldocs">
+            Legal Docs <i>↓</i>
+          </button>
+        </div>
+      </div>
+
+      <!-- navigation arrows bottom left -->
+      <div class="nav-arrows">
+        <div class="arrow" id="arrowLeft">←</div>
+        <div class="arrow" id="arrowRight">→</div>
+      </div>
     </div>
-</div>
+  </section>
+
   <!-- HERO SECTION -->
   <section class="hero container">
     <div class="hero-text">
@@ -1994,175 +1835,117 @@
 // SLIDER FUNCTIONALITY - MOBILE OPTIMIZED
 // =================================
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Slider variables
-    let currentSlide = 0;
-    let isAnimating = false;
-    let startX = 0;
-    let currentX = 0;
-    const totalSlides = 3;
-    const sliderContainer = document.getElementById('sliderContainer');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    let slideInterval;
+(function() {
+  const track = document.getElementById('sliderTrack');
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const leftArrow = document.getElementById('arrowLeft');
+  const rightArrow = document.getElementById('arrowRight');
+  const container = document.getElementById('sliderContainer');
 
-    // Initialize slider
-    function initSlider() {
-        if (!sliderContainer) return;
-        
-        updateSlider();
-        setupEventListeners();
-        
-        // Start auto-slide only on desktop
-        if (!isMobile()) {
-            startAutoSlide();
+  let currentIndex = 0;
+  let autoPlayInterval;
+  const totalSlides = slides.length; // 3
+
+  // ----- helper to move to a specific slide (loop) -----
+  function goToSlide(index) {
+    if (index < 0) index = totalSlides - 1;
+    if (index >= totalSlides) index = 0;
+    currentIndex = index;
+    const shiftPercent = -currentIndex * 100;
+    track.style.transform = `translateX(${shiftPercent}%)`;
+  }
+
+  function nextSlide() {
+    goToSlide(currentIndex + 1);
+  }
+
+  function prevSlide() {
+    goToSlide(currentIndex - 1);
+  }
+
+  // ----- autoplay -----
+  function startAutoPlay() {
+    if (autoPlayInterval) clearInterval(autoPlayInterval);
+    autoPlayInterval = setInterval(() => {
+      nextSlide();
+    }, 4000);
+  }
+
+  function stopAutoPlay() {
+    if (autoPlayInterval) {
+      clearInterval(autoPlayInterval);
+      autoPlayInterval = null;
+    }
+  }
+
+  function restartAutoPlay() {
+    if (!autoPlayInterval) {
+      startAutoPlay();
+    }
+  }
+
+  // hover pause
+  container.addEventListener('mouseenter', () => {
+    container.classList.add('pause-autoplay');
+    stopAutoPlay();
+  });
+
+  container.addEventListener('mouseleave', () => {
+    container.classList.remove('pause-autoplay');
+    restartAutoPlay();
+  });
+
+  // arrow click events
+  leftArrow.addEventListener('click', (e) => {
+    e.stopPropagation();
+    prevSlide();
+    stopAutoPlay();
+    restartAutoPlay();
+  });
+
+  rightArrow.addEventListener('click', (e) => {
+    e.stopPropagation();
+    nextSlide();
+    stopAutoPlay();
+    restartAutoPlay();
+  });
+
+  // BUTTON CLICK: navigate to corresponding section (smooth)
+  document.querySelectorAll('.slide-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const targetId = this.getAttribute('data-target');
+      if (targetId) {
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: 'smooth' });
         }
-        
-        // Add touch events for mobile swipe
-        setupTouchEvents();
-    }
-
-    // Setup event listeners
-    function setupEventListeners() {
-        if (prevBtn) prevBtn.addEventListener('click', prevSlide);
-        if (nextBtn) nextBtn.addEventListener('click', nextSlide);
-        
-        // Pause auto-slide on hover (desktop)
-        const slider = document.querySelector('.hero-slider');
-        if (slider && !isMobile()) {
-            slider.addEventListener('mouseenter', pauseAutoSlide);
-            slider.addEventListener('mouseleave', startAutoSlide);
-        }
-    }
-
-    // Setup touch events for mobile
-    function setupTouchEvents() {
-        if (!sliderContainer) return;
-        
-        sliderContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
-        sliderContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
-        sliderContainer.addEventListener('touchend', handleTouchEnd);
-    }
-
-    // Touch event handlers
-    function handleTouchStart(e) {
-        if (isAnimating) return;
-        startX = e.touches[0].clientX;
-        currentX = startX;
-        pauseAutoSlide();
-    }
-
-    function handleTouchMove(e) {
-        if (isAnimating) return;
-        currentX = e.touches[0].clientX;
-    }
-
-    function handleTouchEnd() {
-        if (isAnimating) return;
-        
-        const diffX = startX - currentX;
-        const threshold = 50; // Minimum swipe distance
-        
-        if (Math.abs(diffX) > threshold) {
-            if (diffX > 0) {
-                // Swipe left - next slide
-                nextSlide();
-            } else {
-                // Swipe right - previous slide
-                prevSlide();
-            }
-        }
-        
-        // Restart auto-slide after swipe
-        if (!isMobile()) {
-            setTimeout(startAutoSlide, 3000);
-        }
-    }
-
-    // Mobile detection
-    function isMobile() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    }
-
-    // Slider navigation functions
-    function nextSlide() {
-        if (isAnimating) return;
-        isAnimating = true;
-        
-        currentSlide = (currentSlide + 1) % totalSlides;
-        updateSlider();
-        
-        // Reset animation flag after transition
-        setTimeout(() => {
-            isAnimating = false;
-        }, 800);
-    }
-
-    function prevSlide() {
-        if (isAnimating) return;
-        isAnimating = true;
-        
-        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-        updateSlider();
-        
-        // Reset animation flag after transition
-        setTimeout(() => {
-            isAnimating = false;
-        }, 800);
-    }
-
-    // Update slider position
-    function updateSlider() {
-        if (!sliderContainer) return;
-        
-        // Use translate3d for hardware acceleration
-        sliderContainer.style.transform = `translate3d(-${currentSlide * 100}%, 0, 0)`;
-        sliderContainer.style.webkitTransform = `translate3d(-${currentSlide * 100}%, 0, 0)`;
-    }
-
-    // Auto-slide functionality
-    function startAutoSlide() {
-        if (isMobile()) return; // Don't auto-slide on mobile
-        
-        if (!slideInterval) {
-            slideInterval = setInterval(nextSlide, 5000);
-        }
-    }
-
-    function pauseAutoSlide() {
-        if (slideInterval) {
-            clearInterval(slideInterval);
-            slideInterval = null;
-        }
-    }
-
-    function resetAutoSlide() {
-        pauseAutoSlide();
-        if (!isMobile()) {
-            startAutoSlide();
-        }
-    }
-
-    // Initialize slider
-    initSlider();
-
-    // Expose functions globally for onclick attributes (if needed)
-    window.nextSlide = nextSlide;
-    window.prevSlide = prevSlide;
-    window.pauseAutoSlide = pauseAutoSlide;
-    window.startAutoSlide = startAutoSlide;
-
-    // Handle window resize
-    window.addEventListener('resize', function() {
-        // Update slider position on resize
-        updateSlider();
+      }
     });
+  });
 
-    // Prevent context menu on slider images
-    document.querySelectorAll('.slider-image').forEach(img => {
-        img.addEventListener('contextmenu', e => e.preventDefault());
-    });
-});
+  // initial slide
+  goToSlide(0);
+  startAutoPlay();
+
+  // optional: visibilitychange
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopAutoPlay();
+    } else {
+      if (!container.matches(':hover')) {
+        restartAutoPlay();
+      }
+    }
+  });
+
+  // on load, if container hovered stop autoplay
+  window.addEventListener('load', () => {
+    if (container.matches(':hover')) {
+      stopAutoPlay();
+    }
+  });
+})();
 
 // =================================
 // SMOOTH SCROLLING FOR SECTION LINKS
@@ -2170,172 +1953,178 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Enable smooth scrolling for anchor links
 document.addEventListener('DOMContentLoaded', function() {
-    // Add smooth scrolling to the entire page
-    if ('scrollBehavior' in document.documentElement.style) {
-        // Use native smooth scrolling if supported
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if (href === '#' || href === '#!') return;
-                
-                const target = document.querySelector(href);
-                if (target) {
-                    e.preventDefault();
-                    
-                    // Calculate offset for fixed headers
-                    const headerHeight = document.querySelector('header')?.offsetHeight || 0;
-                    const offset = headerHeight + 20;
-                    
-                    window.scrollTo({
-                        top: target.offsetTop - offset,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    } else {
-        // Fallback for older browsers
-        document.documentElement.style.scrollBehavior = 'smooth';
-    }
-});
-
-// Optional: Add scroll offset for sections
-function addScrollOffset() {
-    const sections = document.querySelectorAll('section[id]');
-    sections.forEach(section => {
-        section.style.scrollMarginTop = '100px';
-    });
-}
-
-// Call this after page loads
-setTimeout(addScrollOffset, 100);
-
-  // Load Header and Footer
-  Promise.all([
-    fetch('header.html').then(res => res.text()),
-    fetch('footer.html').then(res => res.text()),
-    fetch('nav.html').then(res => res.text())
-  ])
-  .then(([headerHtml, footerHtml, navHtml]) => {
-    // Load header
-    document.getElementById('site-header').innerHTML = headerHtml;
-    
-    // Load navigation
-    const header = document.getElementById('site-header');
-    const navPlaceholder = header.querySelector('#main-nav');
-    if (navPlaceholder) {
-      navPlaceholder.innerHTML = navHtml;
-    } else {
-      // If #main-nav doesn't exist in header, append it
-      const navContainer = document.createElement('div');
-      navContainer.id = 'main-nav';
-      navContainer.innerHTML = navHtml;
-      header.appendChild(navContainer);
-    }
-    
-    // Load footer
-    document.getElementById('site-footer').innerHTML = footerHtml;
-    
-    // Initialize after content is loaded
-    setTimeout(initializePage, 100);
-  })
-  .catch(err => console.error('Error loading components:', err));
-
-  // Initialize page functionality
-  function initializePage() {
-    // Tab functionality for documents section
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    
-    tabButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        // Remove active class from all buttons
-        tabButtons.forEach(btn => btn.classList.remove('active'));
-        // Add active class to clicked button
-        button.classList.add('active');
-        
-        // Filter cards based on tab
-        const filter = button.getAttribute('data-tab');
-        const documentCards = document.querySelectorAll('.document-card');
-        
-        documentCards.forEach(card => {
-          if (filter === 'petroleum') {
-            if (card.querySelector('h3').textContent.includes('Petroleum')) {
-              card.style.display = 'block';
-            } else {
-              card.style.display = 'none';
-            }
-          } else if (filter === 'commodity') {
-            if (card.querySelector('h3').textContent.includes('Essential Commodity')) {
-              card.style.display = 'block';
-            } else {
-              card.style.display = 'none';
-            }
-          } else {
-            card.style.display = 'block';
-          }
-        });
-      });
-    });
-    
-    // Mobile menu logic
-    document.addEventListener("click", function (e) {
-      /* Toggle main menu */
-      if (e.target.classList.contains("menu-toggle")) {
-        const menu = document.querySelector(".menu");
-        if (menu) {
-          menu.classList.toggle("open");
-          e.stopPropagation();
-        }
-      }
-
-      /* Toggle dropdowns on mobile */
-      const dropdownLink = e.target.closest(".dropdown > a");
-      if (dropdownLink && window.innerWidth <= 900) {
-        e.preventDefault();
-        dropdownLink.parentElement.classList.toggle("open");
-      }
-
-      /* Close menu when clicking outside */
-      if (!e.target.closest('.menu') && !e.target.closest('.menu-toggle')) {
-        const openMenu = document.querySelector('.menu.open');
-        if (openMenu) {
-          openMenu.classList.remove('open');
-        }
-        
-        const openDropdowns = document.querySelectorAll('.dropdown.open');
-        openDropdowns.forEach(dropdown => {
-          dropdown.classList.remove('open');
-        });
-      }
-    });
-
-    // Smooth scroll for anchor links
+  // Add smooth scrolling to the entire page
+  if ('scrollBehavior' in document.documentElement.style) {
+    // Use native smooth scrolling if supported
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href === '#' || href === '#!') return;
         
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          
+          // Calculate offset for fixed headers
+          const headerHeight = document.querySelector('header')?.offsetHeight || 0;
+          const offset = headerHeight + 20;
+          
           window.scrollTo({
-            top: targetElement.offsetTop - 80,
+            top: target.offsetTop - offset,
             behavior: 'smooth'
           });
         }
       });
     });
+  } else {
+    // Fallback for older browsers
+    document.documentElement.style.scrollBehavior = 'smooth';
+  }
+});
 
-    // Add keyboard navigation for accessibility
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        const openMenu = document.querySelector('.menu.open');
-        if (openMenu) {
-          openMenu.classList.remove('open');
+// Optional: Add scroll offset for sections
+function addScrollOffset() {
+  const sections = document.querySelectorAll('section[id]');
+  sections.forEach(section => {
+    section.style.scrollMarginTop = '100px';
+  });
+}
+
+// Call this after page loads
+setTimeout(addScrollOffset, 100);
+
+// =================================
+// LOAD HEADER AND FOOTER COMPONENTS
+// =================================
+
+Promise.all([
+  fetch('header.html').then(res => res.text()),
+  fetch('footer.html').then(res => res.text()),
+  fetch('nav.html').then(res => res.text())
+])
+.then(([headerHtml, footerHtml, navHtml]) => {
+  // Load header
+  document.getElementById('site-header').innerHTML = headerHtml;
+  
+  // Load navigation
+  const header = document.getElementById('site-header');
+  const navPlaceholder = header.querySelector('#main-nav');
+  if (navPlaceholder) {
+    navPlaceholder.innerHTML = navHtml;
+  } else {
+    // If #main-nav doesn't exist in header, append it
+    const navContainer = document.createElement('div');
+    navContainer.id = 'main-nav';
+    navContainer.innerHTML = navHtml;
+    header.appendChild(navContainer);
+  }
+  
+  // Load footer
+  document.getElementById('site-footer').innerHTML = footerHtml;
+  
+  // Initialize after content is loaded
+  setTimeout(initializePage, 100);
+})
+.catch(err => console.error('Error loading components:', err));
+
+// =================================
+// INITIALIZE PAGE FUNCTIONALITY
+// =================================
+
+function initializePage() {
+  // Tab functionality for documents section
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Remove active class from all buttons
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+      // Add active class to clicked button
+      button.classList.add('active');
+      
+      // Filter cards based on tab
+      const filter = button.getAttribute('data-tab');
+      const documentCards = document.querySelectorAll('.document-card');
+      
+      documentCards.forEach(card => {
+        if (filter === 'petroleum') {
+          if (card.querySelector('h3').textContent.includes('Petroleum')) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        } else if (filter === 'commodity') {
+          if (card.querySelector('h3').textContent.includes('Essential Commodity')) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        } else {
+          card.style.display = 'block';
         }
+      });
+    });
+  });
+  
+  // Mobile menu logic
+  document.addEventListener("click", function (e) {
+    /* Toggle main menu */
+    if (e.target.classList.contains("menu-toggle")) {
+      const menu = document.querySelector(".menu");
+      if (menu) {
+        menu.classList.toggle("open");
+        e.stopPropagation();
+      }
+    }
+
+    /* Toggle dropdowns on mobile */
+    const dropdownLink = e.target.closest(".dropdown > a");
+    if (dropdownLink && window.innerWidth <= 900) {
+      e.preventDefault();
+      dropdownLink.parentElement.classList.toggle("open");
+    }
+
+    /* Close menu when clicking outside */
+    if (!e.target.closest('.menu') && !e.target.closest('.menu-toggle')) {
+      const openMenu = document.querySelector('.menu.open');
+      if (openMenu) {
+        openMenu.classList.remove('open');
+      }
+      
+      const openDropdowns = document.querySelectorAll('.dropdown.open');
+      openDropdowns.forEach(dropdown => {
+        dropdown.classList.remove('open');
+      });
+    }
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+      
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        window.scrollTo({
+          top: targetElement.offsetTop - 80,
+          behavior: 'smooth'
+        });
       }
     });
-  }
+  });
+
+  // Add keyboard navigation for accessibility
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const openMenu = document.querySelector('.menu.open');
+      if (openMenu) {
+        openMenu.classList.remove('open');
+      }
+    }
+  });
+}
 </script>
 </body>
 </html>
