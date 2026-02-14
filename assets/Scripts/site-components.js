@@ -1,15 +1,15 @@
-// js/site-components.js - Enhanced Version with Error Handling & Caching
+// js/site-components.js - Enhanced Version with Fixed Mobile Menu
 const SiteComponents = (function() {
   'use strict';
   
   // ===== CONFIGURATION =====
   const config = {
-    headerUrl: 'header.html',        // Path to your header file
-    navUrl: 'nav.html',             // Path to your navigation file
-    footerUrl: 'footer.html',       // Path to your footer file
-    mobileBreakpoint: 900,          // Mobile menu breakpoint in pixels
-    cache: true,                    // Enable/disable caching
-    cacheBuster: false              // Set to true in development, false in production
+    headerUrl: 'header.html',
+    navUrl: 'nav.html',
+    footerUrl: 'footer.html',
+    mobileBreakpoint: 900,
+    cache: true,
+    cacheBuster: false
   };
 
   // ===== CACHE STORAGE =====
@@ -18,21 +18,18 @@ const SiteComponents = (function() {
   // ===== LOAD TEMPLATE FUNCTION =====
   async function loadTemplate(url, elementId) {
     try {
-      // Check cache first
       if (config.cache && templateCache.has(url)) {
         console.log(`Loading ${url} from cache`);
         const element = document.getElementById(elementId);
         if (element) {
           element.innerHTML = templateCache.get(url);
-          // If we just loaded the navigation, initialize the mobile menu
           if (elementId === 'main-nav') {
-            setTimeout(initializeMobileMenu, 100); // Small delay to ensure DOM is updated
+            setTimeout(initializeMobileMenu, 150);
           }
           return;
         }
       }
 
-      // Add cache buster for development
       const fetchUrl = config.cacheBuster ? url + '?v=' + Date.now() : url;
       console.log(`Fetching ${fetchUrl}`);
       
@@ -44,18 +41,15 @@ const SiteComponents = (function() {
       
       const html = await response.text();
       
-      // Store in cache
       if (config.cache) {
         templateCache.set(url, html);
       }
       
-      // Insert into the DOM
       const element = document.getElementById(elementId);
       if (element) {
         element.innerHTML = html;
-        // If we just loaded the navigation, initialize the mobile menu
         if (elementId === 'main-nav') {
-          setTimeout(initializeMobileMenu, 100); // Small delay to ensure DOM is updated
+          setTimeout(initializeMobileMenu, 150);
         }
       } else {
         console.warn(`Element with id "${elementId}" not found`);
@@ -77,10 +71,7 @@ const SiteComponents = (function() {
   function initializeMobileMenu() {
     console.log('Initializing mobile menu...');
     
-    // Get the menu toggle button from header
     const menuToggle = document.querySelector('.site-header .menu-toggle');
-    
-    // Get the menu that was loaded into main-nav
     const menu = document.querySelector('.menu');
     
     if (!menuToggle) {
@@ -93,76 +84,99 @@ const SiteComponents = (function() {
       return;
     }
     
-    // Remove any existing event listeners by cloning and replacing
+    // Remove all existing event listeners by cloning
     const newMenuToggle = menuToggle.cloneNode(true);
     menuToggle.parentNode.replaceChild(newMenuToggle, menuToggle);
     
-    // Add click event to toggle main menu
+    // Main menu toggle click handler
     newMenuToggle.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
       
-      // Toggle the menu
       menu.classList.toggle('open');
       
-      // Change button text/icon based on state (optional)
+      // Update button icon
       if (menu.classList.contains('open')) {
-        newMenuToggle.textContent = '✕'; // Close icon
+        newMenuToggle.textContent = '✕';
         newMenuToggle.setAttribute('aria-label', 'Close navigation');
       } else {
-        newMenuToggle.textContent = '☰'; // Hamburger icon
+        newMenuToggle.textContent = '☰';
         newMenuToggle.setAttribute('aria-label', 'Open navigation');
-      }
-      
-      console.log('Menu toggled:', menu.classList.contains('open') ? 'open' : 'closed');
-    });
-    
-    // Handle dropdown clicks on mobile
-    const dropdownLinks = document.querySelectorAll('.dropdown > a');
-    dropdownLinks.forEach(link => {
-      // Remove existing listeners
-      const newLink = link.cloneNode(true);
-      link.parentNode.replaceChild(newLink, link);
-      
-      // Add click handler for mobile
-      newLink.addEventListener('click', function(e) {
-        if (window.innerWidth <= config.mobileBreakpoint) {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          const dropdown = this.parentElement;
-          
-          // Toggle current dropdown
-          dropdown.classList.toggle('open');
-          console.log('Dropdown toggled:', dropdown.classList.contains('open') ? 'open' : 'closed');
-        }
-      });
-    });
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', function(e) {
-      if (window.innerWidth <= config.mobileBreakpoint) {
-        const menu = document.querySelector('.menu');
-        const menuToggle = document.querySelector('.site-header .menu-toggle');
         
-        if (menu && menu.classList.contains('open')) {
-          // If click is outside menu and not on toggle button
-          if (!menu.contains(e.target) && !menuToggle?.contains(e.target)) {
-            menu.classList.remove('open');
+        // Close all dropdowns when closing main menu
+        document.querySelectorAll('.dropdown.open').forEach(dropdown => {
+          dropdown.classList.remove('open');
+        });
+      }
+    });
+    
+    // Handle dropdown toggles - FIXED VERSION
+    function setupDropdowns() {
+      const dropdowns = document.querySelectorAll('.dropdown');
+      
+      dropdowns.forEach(dropdown => {
+        const link = dropdown.querySelector('a');
+        if (!link) return;
+        
+        // Remove any existing listeners
+        const newLink = link.cloneNode(true);
+        link.parentNode.replaceChild(newLink, link);
+        
+        // Add click handler for mobile
+        newLink.addEventListener('click', function(e) {
+          // Only handle on mobile
+          if (window.innerWidth <= config.mobileBreakpoint) {
+            e.preventDefault();
+            e.stopPropagation();
             
-            // Change toggle button back to hamburger
-            if (menuToggle) {
-              menuToggle.textContent = '☰';
-              menuToggle.setAttribute('aria-label', 'Open navigation');
-            }
+            const currentDropdown = this.closest('.dropdown');
             
-            // Close all dropdowns
-            document.querySelectorAll('.dropdown.open').forEach(dropdown => {
-              dropdown.classList.remove('open');
-            });
+            // Check if this dropdown is already open
+            const isOpen = currentDropdown.classList.contains('open');
             
-            console.log('Menu closed by outside click');
+            // OPTION 1: Close other dropdowns (uncomment if you want this behavior)
+            // if (!isOpen) {
+            //   dropdowns.forEach(d => {
+            //     if (d !== currentDropdown) {
+            //       d.classList.remove('open');
+            //     }
+            //   });
+            // }
+            
+            // OPTION 2: Just toggle current dropdown (simpler, fewer glitches)
+            currentDropdown.classList.toggle('open');
+            
+            console.log('Dropdown toggled:', currentDropdown.classList.contains('open') ? 'open' : 'closed');
           }
+        });
+      });
+    }
+    
+    // Run dropdown setup
+    setupDropdowns();
+    
+    // Close menu when clicking outside - IMPROVED VERSION
+    document.addEventListener('click', function(e) {
+      // Only on mobile
+      if (window.innerWidth > config.mobileBreakpoint) return;
+      
+      const menu = document.querySelector('.menu');
+      const menuToggle = document.querySelector('.site-header .menu-toggle');
+      
+      // If menu is open and click is outside menu AND outside toggle
+      if (menu && menu.classList.contains('open')) {
+        if (!menu.contains(e.target) && !menuToggle?.contains(e.target)) {
+          menu.classList.remove('open');
+          
+          // Reset toggle button
+          if (menuToggle) {
+            menuToggle.textContent = '☰';
+            menuToggle.setAttribute('aria-label', 'Open navigation');
+          }
+          
+          // DON'T close dropdowns automatically when clicking outside
+          // Let the user decide when to close dropdowns
+          // This prevents the glitch where dropdowns close unexpectedly
         }
       }
     });
@@ -178,16 +192,13 @@ const SiteComponents = (function() {
           menu.classList.remove('open');
         }
         
-        // Reset toggle button
         if (menuToggle) {
           menuToggle.textContent = '☰';
           menuToggle.setAttribute('aria-label', 'Open navigation');
         }
         
-        // Close all dropdowns
-        document.querySelectorAll('.dropdown.open').forEach(dropdown => {
-          dropdown.classList.remove('open');
-        });
+        // Don't force close dropdowns on resize to desktop
+        // This preserves desktop hover functionality
       }
     });
     
@@ -196,18 +207,12 @@ const SiteComponents = (function() {
 
   // ===== PUBLIC API =====
   return {
-    // Initialize everything
     init: async function() {
       console.log('🚀 Initializing SiteComponents...');
       
       try {
-        // Load header first (it contains the menu toggle button)
         await loadTemplate(config.headerUrl, 'site-header');
-        
-        // Load footer
         await loadTemplate(config.footerUrl, 'site-footer');
-        
-        // Load navigation (this will trigger mobile menu initialization)
         await loadTemplate(config.navUrl, 'main-nav');
         
         console.log('✅ SiteComponents initialized successfully');
@@ -216,7 +221,6 @@ const SiteComponents = (function() {
       }
     },
 
-    // Manually reload a specific component
     reloadComponent: function(componentName) {
       const urls = {
         'header': config.headerUrl,
@@ -236,13 +240,11 @@ const SiteComponents = (function() {
       }
     },
 
-    // Clear entire cache
     clearCache: function() {
       templateCache.clear();
       console.log('🧹 Cache cleared');
     },
 
-    // Update configuration
     updateConfig: function(newConfig) {
       Object.assign(config, newConfig);
       console.log('⚙️ Configuration updated:', config);
