@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>full·width slider · bottom arrows · section nav</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>full·width slider · mobile shrink · full image visible</title>
   <style>
     /* reset & base */
     * {
@@ -37,9 +37,9 @@
 
     .slide {
       flex: 0 0 100%;               /* each slide takes full container width */
-      height: 85vh;                 /* comfortable vertical size — adjust if needed */
+      height: 85vh;                 /* default height (desktop) */
       min-height: 520px;
-      background-size: cover;
+      background-size: cover;       /* cover by default (crops on mobile) */
       background-position: center;
       background-repeat: no-repeat;
       display: flex;
@@ -58,15 +58,15 @@
       pointer-events: none;         /* lets button stay clickable */
     }
 
-    /* slide unique backgrounds (professional, full width) */
+    /* slide unique backgrounds */
     .slide-1 {
-      background-image: url('https://images.pexels.com/photos/380769/pexels-photo-380769.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); /* tools / hardware */
+      background-image: url('https://images.pexels.com/photos/380769/pexels-photo-380769.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); /* tools */
     }
     .slide-2 {
-      background-image: url('https://images.pexels.com/photos/48604/pexels-photo-48604.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');  /* contact / business card / phone */
+      background-image: url('https://images.pexels.com/photos/48604/pexels-photo-48604.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');  /* contact */
     }
     .slide-3 {
-      background-image: url('https://images.pexels.com/photos/5668482/pexels-photo-5668482.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); /* legal / gavel / books */
+      background-image: url('https://images.pexels.com/photos/5668482/pexels-photo-5668482.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); /* legal */
     }
 
     /* ----- bottom right button (down arrow + text) ----- */
@@ -93,7 +93,7 @@
       letter-spacing: 0.5px;
     }
 
-    .slide-btn i {               /* downward arrow icon (simple unicode) */
+    .slide-btn i {               /* downward arrow icon */
       font-style: normal;
       font-size: 2rem;
       line-height: 1;
@@ -108,10 +108,10 @@
     }
 
     .slide-btn:hover i {
-      transform: translateY(5px);   /* subtle down motion */
+      transform: translateY(5px);
     }
 
-    /* ----- navigation arrows (bottom left corner, no dots) ----- */
+    /* ----- navigation arrows (bottom left corner) ----- */
     .nav-arrows {
       position: absolute;
       bottom: 2rem;
@@ -152,12 +152,12 @@
       transform: scale(0.98);
     }
 
-    /* pause on hover (whole container) */
+    /* pause on hover */
     .slider-container.pause-autoplay .slider-track {
-      transition-duration: 0.4s;   /* keep smooth but autoplay stopped */
+      transition-duration: 0.4s;
     }
 
-    /* ----- destination sections (to navigate) ----- */
+    /* ----- destination sections ----- */
     .content-block {
       min-height: 70vh;
       display: flex;
@@ -168,7 +168,7 @@
       color: #0b1e32;
       padding: 3rem 2rem;
       border-top: 4px solid #2d4b75;
-      scroll-margin-top: 20px;      /* offset for fixed headers if any */
+      scroll-margin-top: 20px;
     }
 
     .content-block:nth-child(even) {
@@ -194,58 +194,102 @@
       box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     }
 
-    /* tiny responsive touches */
+    /* ========== MOBILE FIX: REDUCE HEIGHT + SHOW FULL IMAGE ========== */
     @media (max-width: 680px) {
       .slide {
-        padding: 1.5rem;
+        height: 45vh !important;        /* significantly reduced height on mobile */
+        min-height: 320px;              /* ensure not too tiny */
+        background-size: contain !important; /* force entire image visible (no crop) */
+        background-color: #111d2f;      /* fill leftover areas with dark tone */
+        background-position: center center;
+        padding: 1.2rem 1.2rem;
       }
+
+      /* adjust overlay to be lighter (still visible over dark gaps) */
+      .slide::after {
+        background: linear-gradient(90deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.2) 80%);
+      }
+
+      /* button size & position for mobile */
       .slide-btn {
-        padding: 0.7rem 1.5rem 0.7rem 1.8rem;
-        font-size: 1.3rem;
+        padding: 0.6rem 1.4rem 0.6rem 1.6rem;
+        font-size: 1.25rem;
+        gap: 0.4rem;
+        margin-bottom: 0.5rem;
+        margin-right: 0.25rem;
       }
       .slide-btn i {
-        font-size: 1.8rem;
+        font-size: 1.7rem;
       }
+
+      /* bottom arrows a bit smaller */
       .nav-arrows {
-        bottom: 1.5rem;
-        left: 1.5rem;
-        gap: 0.8rem;
+        bottom: 1.2rem;
+        left: 1.2rem;
+        gap: 0.7rem;
       }
       .arrow {
-        width: 46px;
-        height: 46px;
+        width: 44px;
+        height: 44px;
         font-size: 2rem;
       }
+
       .content-block h2 {
-        font-size: 3rem;
+        font-size: 2.8rem;
+        letter-spacing: 3px;
       }
       .content-block p {
         font-size: 1.4rem;
+        padding: 1rem 2rem;
       }
     }
 
+    /* extra small devices: even shorter height, keep contain */
     @media (max-width: 480px) {
+      .slide {
+        height: 38vh !important;
+        min-height: 260px;
+      }
       .slide-btn {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         padding: 0.5rem 1.2rem 0.5rem 1.4rem;
       }
+      .slide-btn i {
+        font-size: 1.5rem;
+      }
+      .nav-arrows {
+        bottom: 0.9rem;
+        left: 0.9rem;
+      }
+      .arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1.8rem;
+      }
     }
 
-    /* extra smooth */
+    /* make sure background-size contain is enforced on all mobile */
+    @media (max-width: 680px) {
+      .slide-1, .slide-2, .slide-3 {
+        background-size: contain !important;
+      }
+    }
+
+    /* smoothness */
     .slider-track, .slide-btn, .arrow {
       -webkit-tap-highlight-color: transparent;
     }
   </style>
 </head>
 <body>
-  <!-- FULL WIDTH SLIDER (no text, only three slides with image + button) -->
+  <!-- FULL WIDTH SLIDER (mobile: reduced height & contain to show full image) -->
   <section class="slider-section">
     <div class="slider-container" id="sliderContainer">
       <div class="slider-track" id="sliderTrack">
-        <!-- slide 1: Tools -->
+        <!-- slide 1: Tools (button text "Toos" as requested) -->
         <div class="slide slide-1">
           <button class="slide-btn" data-target="tools-section">
-            Toos <i>↓</i>      <!-- intentional typo "Toos" matches request -->
+            Toos <i>↓</i>
           </button>
         </div>
         <!-- slide 2: Contact -->
@@ -262,7 +306,7 @@
         </div>
       </div>
 
-      <!-- navigation arrows (bottom left corner, no dots) -->
+      <!-- navigation arrows bottom left -->
       <div class="nav-arrows">
         <div class="arrow" id="arrowLeft">←</div>
         <div class="arrow" id="arrowRight">→</div>
@@ -270,7 +314,7 @@
     </div>
   </section>
 
-  <!-- DESTINATION SECTIONS (navigated by slide buttons) -->
+  <!-- DESTINATION SECTIONS (targets for slide buttons) -->
   <section id="tools-section" class="content-block">
     <h2>🔧 TOOLS</h2>
     <p>quality equipment · workshop · innovation</p>
@@ -294,16 +338,12 @@
       const rightArrow = document.getElementById('arrowRight');
       const container = document.getElementById('sliderContainer');
 
-      let currentIndex = 0;               // 0-based
+      let currentIndex = 0;
       let autoPlayInterval;
-      const totalSlides = slides.length;   // 3
+      const totalSlides = slides.length; // 3
 
-      // transition duration (matches CSS cubic-bezier)
-      const transitionTime = 650; // ms
-
-      // ----- helper to move to a specific slide (with loop) -----
+      // ----- helper to move to a specific slide (loop) -----
       function goToSlide(index) {
-        // wrap around
         if (index < 0) index = totalSlides - 1;
         if (index >= totalSlides) index = 0;
         currentIndex = index;
@@ -311,12 +351,10 @@
         track.style.transform = `translateX(${shiftPercent}%)`;
       }
 
-      // next slide (right arrow)
       function nextSlide() {
         goToSlide(currentIndex + 1);
       }
 
-      // prev slide (left arrow)
       function prevSlide() {
         goToSlide(currentIndex - 1);
       }
@@ -326,10 +364,9 @@
         if (autoPlayInterval) clearInterval(autoPlayInterval);
         autoPlayInterval = setInterval(() => {
           nextSlide();
-        }, 4000); // 4s between slides
+        }, 4000);
       }
 
-      // stop autoplay (called on mouseenter)
       function stopAutoPlay() {
         if (autoPlayInterval) {
           clearInterval(autoPlayInterval);
@@ -337,16 +374,15 @@
         }
       }
 
-      // restart autoplay (on mouseleave) only if not paused permanently
       function restartAutoPlay() {
         if (!autoPlayInterval) {
           startAutoPlay();
         }
       }
 
-      // ----- event listeners for hover pause -----
+      // hover pause
       container.addEventListener('mouseenter', () => {
-        container.classList.add('pause-autoplay');   // optional styling hook
+        container.classList.add('pause-autoplay');
         stopAutoPlay();
       });
 
@@ -355,13 +391,12 @@
         restartAutoPlay();
       });
 
-      // ----- arrow click events -----
+      // arrow click events
       leftArrow.addEventListener('click', (e) => {
         e.stopPropagation();
         prevSlide();
-        // small usability: reset autoplay timer after manual click
         stopAutoPlay();
-        restartAutoPlay(); // will clear & start again
+        restartAutoPlay();
       });
 
       rightArrow.addEventListener('click', (e) => {
@@ -371,11 +406,10 @@
         restartAutoPlay();
       });
 
-      // ----- BUTTON CLICK: navigate to corresponding section -----
-      // each button has data-target attribute matching section id
+      // BUTTON CLICK: navigate to corresponding section (smooth)
       document.querySelectorAll('.slide-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
-          e.stopPropagation();       // avoid weirdness
+          e.stopPropagation();
           const targetId = this.getAttribute('data-target');
           if (targetId) {
             const targetSection = document.getElementById(targetId);
@@ -386,27 +420,23 @@
         });
       });
 
-      // ----- initial slide position (first slide) -----
+      // initial slide
       goToSlide(0);
-
-      // start autoplay
       startAutoPlay();
 
-      // optional: pause if window is hidden (not necessary but polite)
+      // optional: visibilitychange
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
           stopAutoPlay();
         } else {
-          // only restart if mouse is not over container
           if (!container.matches(':hover')) {
             restartAutoPlay();
           }
         }
       });
 
-      // ensure autoplay respects hover after tab switch etc.
+      // on load, if container hovered stop autoplay
       window.addEventListener('load', () => {
-        // small safety: if container is hovered on load, autoplay should not run
         if (container.matches(':hover')) {
           stopAutoPlay();
         }
@@ -414,7 +444,6 @@
     })();
   </script>
 
-  <!-- subtle note: left & right arrows at bottom left, no dots, full width, down arrow icon + text per slide, click navigates -->
-  <!-- "Toos" spelling kept as requested -->
+  <!-- Mobile behaviour: height reduced + background-size: contain guarantees full image visibility (no cropping) -->
 </body>
 </html>
