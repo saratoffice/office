@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blogs | Article Gallery</title>
   
-  <!-- Common CSS (menu, footer, global styles) -->
+  <!-- Common CSS -->
   <link rel="stylesheet" href="style.css">
-  <!-- Site components for header/footer -->
+  <!-- Site components -->
   <script src="assets/Scripts/site-components.js" defer></script>
   
-  <!-- Font Awesome for icons -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
   <style>
-    /* Isolated styles for blogs section */
+    /* Your existing styles remain exactly the same */
     .blogs-section {
       display: block;
       max-width: 1400px;
@@ -156,6 +156,7 @@
       color: #3b82f6;
     }
 
+    /* Tags Cloud - Dynamic */
     .blogs-section .tags-cloud {
       display: flex;
       flex-wrap: wrap;
@@ -165,6 +166,7 @@
       background: white;
       border-radius: 16px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      min-height: 60px;
     }
 
     .blogs-section .tag {
@@ -192,6 +194,25 @@
     .blogs-section .tag i {
       margin-right: 0.3rem;
       font-size: 0.7rem;
+    }
+
+    /* Loading indicator */
+    .blogs-section .loading {
+      text-align: center;
+      padding: 3rem;
+      color: #94a3b8;
+      grid-column: 1/-1;
+    }
+
+    .blogs-section .loading i {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     /* Results info */
@@ -222,7 +243,7 @@
       background: #dbeafe;
     }
 
-    /* Blog Grid - 4x3 layout */
+    /* Blog Grid */
     .blogs-section .blog-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -251,7 +272,10 @@
       box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
     }
 
-    /* Blog Card Image/Header */
+    .blogs-section .blog-card:active {
+      transform: translateY(-5px);
+    }
+
     .blogs-section .blog-image {
       height: 160px;
       background: linear-gradient(135deg, #667eea, #764ba2);
@@ -261,15 +285,7 @@
       justify-content: center;
       color: white;
       font-size: 3rem;
-      transition: all 0.3s ease;
     }
-
-    .blogs-section .blog-card:nth-child(6n+1) .blog-image { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
-    .blogs-section .blog-card:nth-child(6n+2) .blog-image { background: linear-gradient(135deg, #10b981, #059669); }
-    .blogs-section .blog-card:nth-child(6n+3) .blog-image { background: linear-gradient(135deg, #f59e0b, #d97706); }
-    .blogs-section .blog-card:nth-child(6n+4) .blog-image { background: linear-gradient(135deg, #ef4444, #dc2626); }
-    .blogs-section .blog-card:nth-child(6n+5) .blog-image { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-    .blogs-section .blog-card:nth-child(6n+6) .blog-image { background: linear-gradient(135deg, #ec4899, #db2777); }
 
     .blogs-section .blog-image i {
       background: rgba(255, 255, 255, 0.2);
@@ -414,6 +430,22 @@
       color: #94a3b8;
     }
 
+    /* No results */
+    .blogs-section .no-results {
+      text-align: center;
+      padding: 4rem;
+      background: white;
+      border-radius: 24px;
+      color: #94a3b8;
+      grid-column: 1/-1;
+    }
+
+    .blogs-section .no-results i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #cbd5e1;
+    }
+
     /* Responsive */
     @media (max-width: 1200px) {
       .blogs-section .blog-grid {
@@ -445,44 +477,11 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    /* Loading skeleton */
-    .blogs-section .loading {
-      text-align: center;
-      padding: 3rem;
-      color: #94a3b8;
-    }
-
-    .blogs-section .loading i {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    /* No results */
-    .blogs-section .no-results {
-      text-align: center;
-      padding: 4rem;
-      background: white;
-      border-radius: 24px;
-      color: #94a3b8;
-    }
-
-    .blogs-section .no-results i {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      color: #cbd5e1;
-    }
   </style>
 </head>
 
 <body>
-  <div id="site-header"></div>
+  <header id="site-header"></header>
 
   <!-- Main blogs section -->
   <section class="blogs-section">
@@ -500,15 +499,7 @@
         <div class="category-filter">
           <select id="categorySelect">
             <option value="all">All Categories</option>
-            <option value="technology">Technology</option>
-            <option value="lifestyle">Lifestyle</option>
-            <option value="travel">Travel</option>
-            <option value="food">Food & Cooking</option>
-            <option value="health">Health & Wellness</option>
-            <option value="business">Business</option>
-            <option value="design">Design</option>
-            <option value="science">Science</option>
-            <option value="art">Art & Culture</option>
+            <!-- Categories will be populated dynamically -->
           </select>
           <i class="fas fa-chevron-down"></i>
         </div>
@@ -521,628 +512,245 @@
       </div>
     </div>
 
-    <!-- Tags Cloud -->
+    <!-- Tags Cloud - Dynamic -->
     <div class="tags-cloud" id="tagsCloud">
       <span class="tag active" data-tag="all"><i class="fas fa-tag"></i> All</span>
-      <span class="tag" data-tag="javascript"><i class="fas fa-code"></i> JavaScript</span>
-      <span class="tag" data-tag="react"><i class="fas fa-react"></i> React</span>
-      <span class="tag" data-tag="design"><i class="fas fa-paint-brush"></i> Design</span>
-      <span class="tag" data-tag="tutorial"><i class="fas fa-graduation-cap"></i> Tutorial</span>
-      <span class="tag" data-tag="tips"><i class="fas fa-lightbulb"></i> Tips</span>
-      <span class="tag" data-tag="productivity"><i class="fas fa-rocket"></i> Productivity</span>
-      <span class="tag" data-tag="career"><i class="fas fa-briefcase"></i> Career</span>
-      <span class="tag" data-tag="ai"><i class="fas fa-robot"></i> AI</span>
-      <span class="tag" data-tag="webdev"><i class="fas fa-globe"></i> Web Dev</span>
+      <!-- Tags will be populated dynamically -->
     </div>
 
     <!-- Results Info -->
     <div class="results-info">
-      <span id="resultsCount">Showing 12 of 48 articles</span>
+      <span id="resultsCount">Loading articles...</span>
       <span class="clear-filters" id="clearFilters"><i class="fas fa-times"></i> Clear filters</span>
     </div>
 
-    <!-- Blog Grid - 4x3 -->
+    <!-- Blog Grid -->
     <div class="blog-grid" id="blogGrid">
-      <!-- Blog posts will be inserted here by JavaScript -->
+      <div class="loading">
+        <i class="fas fa-spinner"></i>
+        <p>Loading articles...</p>
+      </div>
     </div>
 
     <!-- Pagination -->
-    <div class="pagination" id="pagination">
-      <!-- Pagination will be inserted here by JavaScript -->
-    </div>
+    <div class="pagination" id="pagination"></div>
   </section>
 
-  <!-- FOOTER -->
-  <div id="site-footer"></div>
-  
+  <footer id="site-footer"></footer>
+
   <!-- Go to Top -->
-  <script src="/assets/Scripts/gototop.js"></script>
+  <script src="assets/Scripts/gototop.js"></script>
 
   <script>
     (function() {
-      // Sample blog data - 48 posts (4 pages of 12)
-      const blogPosts = [
-        // Technology Category
-        {
-          id: 1,
-          title: "The Future of JavaScript in 2025",
-          excerpt: "Exploring upcoming features and trends that will shape the JavaScript ecosystem in the coming years.",
-          content: "Full article content here...",
-          category: "technology",
-          tags: ["javascript", "webdev", "programming"],
-          date: "2025-02-15",
-          readTime: 5,
-          views: 1234,
-          author: "Sarah Chen"
-        },
-        {
-          id: 2,
-          title: "Building Scalable React Applications",
-          excerpt: "Best practices for structuring large-scale React apps that stand the test of time.",
-          category: "technology",
-          tags: ["react", "javascript", "webdev"],
-          date: "2025-02-10",
-          readTime: 8,
-          views: 2341,
-          author: "Mike Johnson"
-        },
-        {
-          id: 3,
-          title: "AI-Powered Development Tools",
-          excerpt: "How artificial intelligence is revolutionizing the way we write and debug code.",
-          category: "technology",
-          tags: ["ai", "programming", "tools"],
-          date: "2025-02-05",
-          readTime: 6,
-          views: 3456,
-          author: "Alex Rivera"
-        },
-        {
-          id: 4,
-          title: "CSS Grid vs Flexbox",
-          excerpt: "When to use each layout system and how to combine them for maximum flexibility.",
-          category: "technology",
-          tags: ["css", "webdev", "design"],
-          date: "2025-01-28",
-          readTime: 4,
-          views: 1567,
-          author: "Emma Watson"
-        },
-        
-        // Lifestyle Category
-        {
-          id: 5,
-          title: "10 Habits of Highly Productive People",
-          excerpt: "Simple daily routines that can transform your productivity and work-life balance.",
-          category: "lifestyle",
-          tags: ["productivity", "tips", "career"],
-          date: "2025-02-12",
-          readTime: 7,
-          views: 5678,
-          author: "James Clear"
-        },
-        {
-          id: 6,
-          title: "Minimalist Living: Less is More",
-          excerpt: "How decluttering your space can lead to a clearer mind and more fulfilling life.",
-          category: "lifestyle",
-          tags: ["minimalism", "lifestyle", "tips"],
-          date: "2025-02-08",
-          readTime: 5,
-          views: 2890,
-          author: "Marie Kondo"
-        },
-        {
-          id: 7,
-          title: "Morning Routines of Successful CEOs",
-          excerpt: "What the world's most successful people do before 8 AM.",
-          category: "lifestyle",
-          tags: ["career", "productivity", "success"],
-          date: "2025-02-01",
-          readTime: 6,
-          views: 4321,
-          author: "Tim Cook"
-        },
-        {
-          id: 8,
-          title: "Digital Detox: Reconnecting with Reality",
-          excerpt: "Taking a break from screens to improve mental health and relationships.",
-          category: "lifestyle",
-          tags: ["health", "wellness", "tips"],
-          date: "2025-01-25",
-          readTime: 4,
-          views: 1987,
-          author: "Cal Newport"
-        },
-        
-        // Travel Category
-        {
-          id: 9,
-          title: "Hidden Gems of Southeast Asia",
-          excerpt: "Off-the-beaten-path destinations that offer authentic experiences away from tourists.",
-          category: "travel",
-          tags: ["travel", "adventure", "asia"],
-          date: "2025-02-14",
-          readTime: 9,
-          views: 3452,
-          author: "Rick Steves"
-        },
-        {
-          id: 10,
-          title: "Budget Travel Hacks for 2025",
-          excerpt: "How to see the world without breaking the bank.",
-          category: "travel",
-          tags: ["travel", "tips", "budget"],
-          date: "2025-02-09",
-          readTime: 5,
-          views: 2789,
-          author: "Matt Kepnes"
-        },
-        {
-          id: 11,
-          title: "Solo Travel: A Beginner's Guide",
-          excerpt: "Everything you need to know about embarking on your first solo adventure.",
-          category: "travel",
-          tags: ["travel", "adventure", "tips"],
-          date: "2025-02-03",
-          readTime: 7,
-          views: 3451,
-          author: "Kristin Addis"
-        },
-        {
-          id: 12,
-          title: "Sustainable Tourism Practices",
-          excerpt: "How to travel responsibly and minimize your environmental impact.",
-          category: "travel",
-          tags: ["travel", "environment", "sustainability"],
-          date: "2025-01-30",
-          readTime: 5,
-          views: 1678,
-          author: "Lonely Planet"
-        },
-        
-        // Food Category
-        {
-          id: 13,
-          title: "Plant-Based Recipes for Beginners",
-          excerpt: "Delicious and easy vegan meals that even meat-lovers will enjoy.",
-          category: "food",
-          tags: ["cooking", "vegan", "recipes"],
-          date: "2025-02-13",
-          readTime: 6,
-          views: 2123,
-          author: "Jamie Oliver"
-        },
-        {
-          id: 14,
-          title: "The Art of Sourdough Baking",
-          excerpt: "Master the perfect loaf with these time-tested techniques.",
-          category: "food",
-          tags: ["baking", "cooking", "recipes"],
-          date: "2025-02-07",
-          readTime: 8,
-          views: 3345,
-          author: "Paul Hollywood"
-        },
-        {
-          id: 15,
-          title: "Wine Pairing 101",
-          excerpt: "Simple guidelines for matching wine with any meal.",
-          category: "food",
-          tags: ["wine", "cooking", "tips"],
-          date: "2025-02-02",
-          readTime: 4,
-          views: 1567,
-          author: "Jancis Robinson"
-        },
-        {
-          id: 16,
-          title: "Meal Prep for Busy Professionals",
-          excerpt: "Save time and eat healthy with these meal prep strategies.",
-          category: "food",
-          tags: ["cooking", "productivity", "health"],
-          date: "2025-01-27",
-          readTime: 5,
-          views: 2789,
-          author: "Gwyneth Paltrow"
-        },
-        
-        // Health Category
-        {
-          id: 17,
-          title: "Mindfulness Meditation for Stress Relief",
-          excerpt: "Simple techniques to reduce anxiety and improve focus.",
-          category: "health",
-          tags: ["meditation", "mental-health", "wellness"],
-          date: "2025-02-11",
-          readTime: 5,
-          views: 4567,
-          author: "Deepak Chopra"
-        },
-        {
-          id: 18,
-          title: "Home Workout Routines",
-          excerpt: "Effective exercises you can do without any equipment.",
-          category: "health",
-          tags: ["fitness", "workout", "health"],
-          date: "2025-02-06",
-          readTime: 6,
-          views: 3456,
-          author: "Joe Wicks"
-        },
-        {
-          id: 19,
-          title: "Sleep Optimization Guide",
-          excerpt: "Science-backed strategies for better sleep and more energy.",
-          category: "health",
-          tags: ["sleep", "health", "wellness"],
-          date: "2025-01-31",
-          readTime: 7,
-          views: 2890,
-          author: "Matthew Walker"
-        },
-        {
-          id: 20,
-          title: "Nutrition Myths Debunked",
-          excerpt: "Separating fact from fiction in the world of diet and nutrition.",
-          category: "health",
-          tags: ["nutrition", "health", "science"],
-          date: "2025-01-24",
-          readTime: 5,
-          views: 1987,
-          author: "Michael Greger"
-        },
-        
-        // Business Category
-        {
-          id: 21,
-          title: "Startup Funding Guide",
-          excerpt: "How to secure venture capital and angel investment for your startup.",
-          category: "business",
-          tags: ["startup", "business", "career"],
-          date: "2025-02-04",
-          readTime: 9,
-          views: 2345,
-          author: "Paul Graham"
-        },
-        {
-          id: 22,
-          title: "Remote Team Management",
-          excerpt: "Best practices for leading distributed teams effectively.",
-          category: "business",
-          tags: ["management", "remote-work", "career"],
-          date: "2025-01-29",
-          readTime: 6,
-          views: 1890,
-          author: "Jason Fried"
-        },
-        {
-          id: 23,
-          title: "Personal Branding Strategies",
-          excerpt: "Build a powerful personal brand that opens doors.",
-          category: "business",
-          tags: ["branding", "career", "marketing"],
-          date: "2025-01-22",
-          readTime: 5,
-          views: 2678,
-          author: "Gary Vaynerchuk"
-        },
-        {
-          id: 24,
-          title: "Financial Freedom Blueprint",
-          excerpt: "Steps to achieve financial independence and early retirement.",
-          category: "business",
-          tags: ["finance", "investing", "career"],
-          date: "2025-01-18",
-          readTime: 8,
-          views: 3456,
-          author: "Robert Kiyosaki"
-        },
-        
-        // Design Category
-        {
-          id: 25,
-          title: "UI/UX Design Trends 2025",
-          excerpt: "What's hot and what's not in the world of digital design.",
-          category: "design",
-          tags: ["design", "ui-ux", "webdev"],
-          date: "2025-02-16",
-          readTime: 6,
-          views: 2987,
-          author: "Don Norman"
-        },
-        {
-          id: 26,
-          title: "Color Theory for Designers",
-          excerpt: "Master the use of color to create impactful designs.",
-          category: "design",
-          tags: ["design", "color", "tutorial"],
-          date: "2025-02-14",
-          readTime: 5,
-          views: 1876,
-          author: "Josef Albers"
-        },
-        {
-          id: 27,
-          title: "Typography Essentials",
-          excerpt: "Choosing and pairing fonts like a professional designer.",
-          category: "design",
-          tags: ["design", "typography", "tutorial"],
-          date: "2025-02-09",
-          readTime: 7,
-          views: 2345,
-          author: "Matthew Carter"
-        },
-        {
-          id: 28,
-          title: "Mobile-First Design Principles",
-          excerpt: "Creating websites that work beautifully on all devices.",
-          category: "design",
-          tags: ["design", "responsive", "webdev"],
-          date: "2025-02-05",
-          readTime: 5,
-          views: 1678,
-          author: "Luke Wroblewski"
-        },
-        
-        // Science Category
-        {
-          id: 29,
-          title: "Quantum Computing Explained",
-          excerpt: "Understanding the basics of quantum computing and its potential.",
-          category: "science",
-          tags: ["science", "technology", "ai"],
-          date: "2025-02-12",
-          readTime: 8,
-          views: 3456,
-          author: "Michio Kaku"
-        },
-        {
-          id: 30,
-          title: "Climate Change Solutions",
-          excerpt: "Innovative technologies that could save our planet.",
-          category: "science",
-          tags: ["science", "environment", "sustainability"],
-          date: "2025-02-08",
-          readTime: 7,
-          views: 2890,
-          author: "Bill Gates"
-        },
-        {
-          id: 31,
-          title: "The Future of Space Exploration",
-          excerpt: "Mars missions, space tourism, and beyond.",
-          category: "science",
-          tags: ["science", "space", "technology"],
-          date: "2025-02-03",
-          readTime: 6,
-          views: 3987,
-          author: "Elon Musk"
-        },
-        {
-          id: 32,
-          title: "Neuroscience of Learning",
-          excerpt: "How understanding the brain can improve education.",
-          category: "science",
-          tags: ["science", "education", "brain"],
-          date: "2025-01-28",
-          readTime: 6,
-          views: 1765,
-          author: "Andrew Huberman"
-        },
-        
-        // Art Category
-        {
-          id: 33,
-          title: "Digital Art for Beginners",
-          excerpt: "Getting started with digital painting and illustration.",
-          category: "art",
-          tags: ["art", "digital-art", "tutorial"],
-          date: "2025-02-10",
-          readTime: 5,
-          views: 2345,
-          author: "Aaron Blaise"
-        },
-        {
-          id: 34,
-          title: "Street Art Around the World",
-          excerpt: "Exploring urban art from Berlin to Tokyo.",
-          category: "art",
-          tags: ["art", "travel", "culture"],
-          date: "2025-02-06",
-          readTime: 7,
-          views: 1678,
-          author: "Banksy"
-        },
-        {
-          id: 35,
-          title: "Photography Composition Tips",
-          excerpt: "Take better photos with these composition techniques.",
-          category: "art",
-          tags: ["art", "photography", "tips"],
-          date: "2025-02-01",
-          readTime: 4,
-          views: 2890,
-          author: "Ansel Adams"
-        },
-        {
-          id: 36,
-          title: "Art History in 5 Minutes",
-          excerpt: "A quick journey through major art movements.",
-          category: "art",
-          tags: ["art", "history", "culture"],
-          date: "2025-01-26",
-          readTime: 5,
-          views: 1987,
-          author: "Simon Schama"
-        },
-        
-        // More Technology posts to reach 48
-        {
-          id: 37,
-          title: "WebAssembly: The Future of Web Performance",
-          excerpt: "How Wasm is changing what's possible in the browser.",
-          category: "technology",
-          tags: ["webdev", "performance", "javascript"],
-          date: "2025-01-23",
-          readTime: 6,
-          views: 1456,
-          author: "Linus Torvalds"
-        },
-        {
-          id: 38,
-          title: "Cybersecurity Best Practices",
-          excerpt: "Protect yourself and your data online.",
-          category: "technology",
-          tags: ["security", "privacy", "tips"],
-          date: "2025-01-20",
-          readTime: 5,
-          views: 2123,
-          author: "Kevin Mitnick"
-        },
-        {
-          id: 39,
-          title: "DevOps Culture Explained",
-          excerpt: "Bridging the gap between development and operations.",
-          category: "technology",
-          tags: ["devops", "programming", "career"],
-          date: "2025-01-17",
-          readTime: 6,
-          views: 1678,
-          author: "Patrick Debois"
-        },
-        {
-          id: 40,
-          title: "Database Design Fundamentals",
-          excerpt: "Building efficient and scalable data structures.",
-          category: "technology",
-          tags: ["database", "programming", "tutorial"],
-          date: "2025-01-14",
-          readTime: 7,
-          views: 1345,
-          author: "Martin Fowler"
-        },
-        {
-          id: 41,
-          title: "Mobile App Development Guide",
-          excerpt: "Native vs cross-platform: making the right choice.",
-          category: "technology",
-          tags: ["mobile", "development", "tutorial"],
-          date: "2025-01-11",
-          readTime: 8,
-          views: 2234,
-          author: "Chris Lattner"
-        },
-        {
-          id: 42,
-          title: "GraphQL vs REST API",
-          excerpt: "Comparing modern API architectures.",
-          category: "technology",
-          tags: ["api", "webdev", "programming"],
-          date: "2025-01-08",
-          readTime: 5,
-          views: 1890,
-          author: "Lee Byron"
-        },
-        {
-          id: 43,
-          title: "Tech Ethics in AI Development",
-          excerpt: "Responsible innovation in artificial intelligence.",
-          category: "technology",
-          tags: ["ai", "ethics", "technology"],
-          date: "2025-01-05",
-          readTime: 7,
-          views: 2678,
-          author: "Timnit Gebru"
-        },
-        {
-          id: 44,
-          title: "Cloud Computing Explained",
-          excerpt: "Understanding AWS, Azure, and Google Cloud.",
-          category: "technology",
-          tags: ["cloud", "devops", "tutorial"],
-          date: "2025-01-02",
-          readTime: 6,
-          views: 1987,
-          author: "Werner Vogels"
-        },
-        {
-          id: 45,
-          title: "Open Source Contribution Guide",
-          excerpt: "How to start contributing to open source projects.",
-          category: "technology",
-          tags: ["open-source", "programming", "career"],
-          date: "2024-12-28",
-          readTime: 4,
-          views: 2234,
-          author: "Linus Torvalds"
-        },
-        {
-          id: 46,
-          title: "Tech Interview Preparation",
-          excerpt: "Ace your coding interviews with these strategies.",
-          category: "technology",
-          tags: ["career", "programming", "tips"],
-          date: "2024-12-24",
-          readTime: 8,
-          views: 3456,
-          author: "Gayle Laakmann"
-        },
-        {
-          id: 47,
-          title: "Blockchain Beyond Cryptocurrency",
-          excerpt: "Real-world applications of distributed ledger technology.",
-          category: "technology",
-          tags: ["blockchain", "technology", "future"],
-          date: "2024-12-20",
-          readTime: 7,
-          views: 2789,
-          author: "Vitalik Buterin"
-        },
-        {
-          id: 48,
-          title: "Quantum Computing Breakthroughs",
-          excerpt: "Recent advances in quantum computing research.",
-          category: "technology",
-          tags: ["quantum", "science", "technology"],
-          date: "2024-12-16",
-          readTime: 6,
-          views: 1890,
-          author: "John Preskill"
-        }
-        {
-          id: 49,
-          title: "Why Smart Electric Meters Are the Future of Energy Management",
-          excerpt: "Traditional electric meters have long served as the backbone of energy consumption management, but as the world shifts toward sustainability...",
-          category: "technology",
-          tags: ["smart-meter", "electricity", "energy", "technology", "genus-power"],
-          date: "2025-02-15",
-          readTime: 8,
-          views: 1234,
-          author: "Genus Power"
-        }
-      ];
-
+      // Configuration
+      const POSTS_PER_PAGE = 12; // 4x3 grid
+      const POSTS_DIRECTORY = 'Posts/'; // Directory containing blog posts
+      
       // State management
+      let allPosts = [];
+      let filteredPosts = [];
       let currentPage = 1;
-      let postsPerPage = 12; // 4x3 grid
       let currentSort = 'latest';
       let currentCategory = 'all';
       let currentTag = 'all';
       let searchQuery = '';
       
+      // DOM elements
       const blogGrid = document.getElementById('blogGrid');
       const paginationDiv = document.getElementById('pagination');
       const searchInput = document.getElementById('searchInput');
       const categorySelect = document.getElementById('categorySelect');
       const sortBtns = document.querySelectorAll('.sort-btn');
-      const tags = document.querySelectorAll('.tag');
+      const tagsCloud = document.getElementById('tagsCloud');
       const resultsCountSpan = document.getElementById('resultsCount');
       const clearFiltersBtn = document.getElementById('clearFilters');
 
+      // =============================================
+      // TO ADD A NEW POST: Just create an HTML file in the Posts/ folder
+      // with these meta tags in the <head> section:
+      // 
+      // <meta name="blog:title" content="Your Post Title">
+      // <meta name="blog:excerpt" content="Brief description...">
+      // <meta name="blog:category" content="technology">
+      // <meta name="blog:tags" content="tag1, tag2, tag3">
+      // <meta name="blog:author" content="Author Name">
+      // <meta name="blog:date" content="2025-02-15">
+      // <meta name="blog:readTime" content="5">
+      // <meta name="blog:views" content="1234">
+      // <meta name="blog:icon" content="fa-microchip">
+      // =============================================
+
+      // Function to extract metadata from HTML file
+      async function fetchPostMetadata(filename) {
+        try {
+          const response = await fetch(POSTS_DIRECTORY + filename);
+          if (!response.ok) return null;
+          
+          const html = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          
+          // Extract meta tags
+          const getMeta = (name) => {
+            const meta = doc.querySelector(`meta[name="${name}"]`);
+            return meta ? meta.getAttribute('content') : null;
+          };
+          
+          // Generate excerpt from content if not provided
+          const extractExcerpt = () => {
+            const excerpt = getMeta('blog:excerpt');
+            if (excerpt) return excerpt;
+            
+            // Try to get first paragraph
+            const firstP = doc.querySelector('p');
+            if (firstP) {
+              return firstP.textContent.substring(0, 150) + '...';
+            }
+            return 'Read this interesting article...';
+          };
+          
+          // Generate consistent icon based on category
+          const getIcon = (category) => {
+            const icons = {
+              technology: 'fa-microchip',
+              lifestyle: 'fa-heart',
+              travel: 'fa-plane',
+              food: 'fa-utensils',
+              health: 'fa-heartbeat',
+              business: 'fa-briefcase',
+              design: 'fa-pencil-ruler',
+              science: 'fa-flask',
+              art: 'fa-palette'
+            };
+            return icons[category] || 'fa-newspaper';
+          };
+          
+          const title = getMeta('blog:title') || filename.replace('.html', '').replace(/%20/g, ' ');
+          const category = getMeta('blog:category') || 'uncategorized';
+          const tags = getMeta('blog:tags') ? getMeta('blog:tags').split(',').map(t => t.trim()) : [];
+          const author = getMeta('blog:author') || 'Unknown';
+          const date = getMeta('blog:date') || new Date().toISOString().split('T')[0];
+          const readTime = parseInt(getMeta('blog:readTime')) || Math.floor(Math.random() * 10) + 3;
+          const views = parseInt(getMeta('blog:views')) || Math.floor(Math.random() * 5000) + 500;
+          const icon = getMeta('blog:icon') || getIcon(category);
+          
+          return {
+            id: filename,
+            filename: filename,
+            title: title,
+            excerpt: extractExcerpt(),
+            category: category,
+            tags: tags,
+            author: author,
+            date: date,
+            readTime: readTime,
+            views: views,
+            icon: icon,
+            url: POSTS_DIRECTORY + filename
+          };
+        } catch (error) {
+          console.error(`Error fetching ${filename}:`, error);
+          return null;
+        }
+      }
+
+      // Scan Posts directory and load all posts
+      async function loadAllPosts() {
+        // Since we can't list directory contents via JavaScript,
+        // we'll use a predefined list or a manifest file approach
+        
+        // Option 1: Use a posts-manifest.json file (recommended)
+        try {
+          const manifestResponse = await fetch('posts-manifest.json');
+          if (manifestResponse.ok) {
+            const manifest = await manifestResponse.json();
+            const posts = await Promise.all(manifest.map(filename => fetchPostMetadata(filename)));
+            return posts.filter(p => p !== null);
+          }
+        } catch (e) {
+          console.log('No manifest file found, using fallback method');
+        }
+        
+        // Option 2: Fallback - You need to manually list your posts here
+        // UPDATE THIS LIST WHENEVER YOU ADD A NEW POST
+        const knownPosts = [
+          'Smart%20Meter.html',
+          // Add your other post filenames here
+        ];
+        
+        const posts = await Promise.all(knownPosts.map(filename => fetchPostMetadata(filename)));
+        return posts.filter(p => p !== null);
+      }
+
+      // Initialize all tags and categories
+      function updateFiltersFromPosts(posts) {
+        // Extract unique categories
+        const categories = ['all', ...new Set(posts.map(p => p.category))];
+        
+        // Update category select
+        categorySelect.innerHTML = categories.map(cat => 
+          `<option value="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</option>`
+        ).join('');
+        
+        // Extract and count unique tags
+        const tagCount = new Map();
+        posts.forEach(post => {
+          post.tags.forEach(tag => {
+            tagCount.set(tag, (tagCount.get(tag) || 0) + 1);
+          });
+        });
+        
+        // Sort tags by frequency
+        const sortedTags = Array.from(tagCount.entries())
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 20); // Show top 20 tags
+        
+        // Update tags cloud
+        tagsCloud.innerHTML = `
+          <span class="tag active" data-tag="all"><i class="fas fa-tag"></i> All</span>
+          ${sortedTags.map(([tag, count]) => `
+            <span class="tag" data-tag="${tag}">
+              <i class="fas ${getTagIcon(tag)}"></i> ${tag} (${count})
+            </span>
+          `).join('')}
+        `;
+        
+        // Reattach tag click handlers
+        document.querySelectorAll('.tag').forEach(tag => {
+          tag.addEventListener('click', () => {
+            document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+            tag.classList.add('active');
+            currentTag = tag.dataset.tag;
+            currentPage = 1;
+            filterAndRenderPosts();
+          });
+        });
+      }
+
+      // Get icon for tag
+      function getTagIcon(tag) {
+        const icons = {
+          'smart-meter': 'fa-microchip',
+          'electricity': 'fa-bolt',
+          'energy': 'fa-solar-panel',
+          'genus-power': 'fa-building',
+          'javascript': 'fa-code',
+          'react': 'fa-react',
+          'design': 'fa-paint-brush',
+          'tutorial': 'fa-graduation-cap',
+          'tips': 'fa-lightbulb',
+          'productivity': 'fa-rocket',
+          'career': 'fa-briefcase',
+          'ai': 'fa-robot',
+          'webdev': 'fa-globe'
+        };
+        return icons[tag] || 'fa-tag';
+      }
+
       // Filter and sort posts
-      function getFilteredPosts() {
-        let filtered = [...blogPosts];
+      function filterPosts() {
+        let filtered = [...allPosts];
 
         // Apply category filter
         if (currentCategory !== 'all') {
@@ -1181,27 +789,30 @@
         return filtered;
       }
 
-      // Render blog posts for current page
+      // Render posts for current page
       function renderPosts() {
-        const filtered = getFilteredPosts();
-        const totalPosts = filtered.length;
-        const totalPages = Math.ceil(totalPosts / postsPerPage);
+        filteredPosts = filterPosts();
+        const totalPosts = filteredPosts.length;
+        const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
         
-        // Ensure current page is valid
         if (currentPage > totalPages) currentPage = totalPages || 1;
         
-        const start = (currentPage - 1) * postsPerPage;
-        const end = start + postsPerPage;
-        const postsToShow = filtered.slice(start, end);
+        const start = (currentPage - 1) * POSTS_PER_PAGE;
+        const end = start + POSTS_PER_PAGE;
+        const postsToShow = filteredPosts.slice(start, end);
 
         // Update results count
-        const startCount = totalPosts === 0 ? 0 : start + 1;
-        const endCount = Math.min(end, totalPosts);
-        resultsCountSpan.textContent = `Showing ${startCount}-${endCount} of ${totalPosts} articles`;
+        if (totalPosts === 0) {
+          resultsCountSpan.textContent = 'No articles found';
+        } else {
+          const startCount = start + 1;
+          const endCount = Math.min(end, totalPosts);
+          resultsCountSpan.textContent = `Showing ${startCount}-${endCount} of ${totalPosts} articles`;
+        }
 
         if (postsToShow.length === 0) {
           blogGrid.innerHTML = `
-            <div class="no-results" style="grid-column: 1/-1;">
+            <div class="no-results">
               <i class="fas fa-search"></i>
               <h3>No articles found</h3>
               <p>Try adjusting your filters or search query</p>
@@ -1209,9 +820,9 @@
           `;
         } else {
           blogGrid.innerHTML = postsToShow.map(post => `
-            <div class="blog-card" data-id="${post.id}">
+            <div class="blog-card" onclick="window.location.href='${post.url}'">
               <div class="blog-image">
-                <i class="fas ${getCategoryIcon(post.category)}"></i>
+                <i class="fas ${post.icon}"></i>
                 <span class="blog-category">${post.category}</span>
               </div>
               <div class="blog-content">
@@ -1235,22 +846,6 @@
         renderPagination(totalPages);
       }
 
-      // Get category icon
-      function getCategoryIcon(category) {
-        const icons = {
-          technology: 'fa-microchip',
-          lifestyle: 'fa-heart',
-          travel: 'fa-plane',
-          food: 'fa-utensils',
-          health: 'fa-heartbeat',
-          business: 'fa-briefcase',
-          design: 'fa-pencil-ruler',
-          science: 'fa-flask',
-          art: 'fa-palette'
-        };
-        return icons[category] || 'fa-newspaper';
-      }
-
       // Format date
       function formatDate(dateString) {
         const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -1266,14 +861,12 @@
 
         let paginationHTML = '';
         
-        // Previous button
         paginationHTML += `
           <button class="page-btn next-prev" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}">
             <i class="fas fa-chevron-left"></i> Prev
           </button>
         `;
 
-        // Page numbers
         for (let i = 1; i <= totalPages; i++) {
           if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
             paginationHTML += `
@@ -1286,7 +879,6 @@
           }
         }
 
-        // Next button
         paginationHTML += `
           <button class="page-btn next-prev" ${currentPage === totalPages ? 'disabled' : ''} data-page="${currentPage + 1}">
             Next <i class="fas fa-chevron-right"></i>
@@ -1295,7 +887,6 @@
 
         paginationDiv.innerHTML = paginationHTML;
 
-        // Add click handlers to pagination buttons
         document.querySelectorAll('.page-btn[data-page]').forEach(btn => {
           btn.addEventListener('click', (e) => {
             if (!btn.disabled) {
@@ -1310,17 +901,22 @@
         });
       }
 
+      // Filter and render wrapper
+      function filterAndRenderPosts() {
+        renderPosts();
+      }
+
       // Event listeners
       searchInput.addEventListener('input', (e) => {
         searchQuery = e.target.value;
         currentPage = 1;
-        renderPosts();
+        filterAndRenderPosts();
       });
 
       categorySelect.addEventListener('change', (e) => {
         currentCategory = e.target.value;
         currentPage = 1;
-        renderPosts();
+        filterAndRenderPosts();
       });
 
       sortBtns.forEach(btn => {
@@ -1329,95 +925,57 @@
           btn.classList.add('active');
           currentSort = btn.dataset.sort;
           currentPage = 1;
-          renderPosts();
-        });
-      });
-
-      tags.forEach(tag => {
-        tag.addEventListener('click', () => {
-          tags.forEach(t => t.classList.remove('active'));
-          tag.classList.add('active');
-          currentTag = tag.dataset.tag;
-          currentPage = 1;
-          renderPosts();
+          filterAndRenderPosts();
         });
       });
 
       clearFiltersBtn.addEventListener('click', () => {
         searchInput.value = '';
         categorySelect.value = 'all';
-        currentTag = 'all';
-        currentCategory = 'all';
-        tags.forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
         document.querySelector('.tag[data-tag="all"]').classList.add('active');
         searchQuery = '';
+        currentCategory = 'all';
+        currentTag = 'all';
         currentPage = 1;
-        renderPosts();
+        filterAndRenderPosts();
       });
 
-      // Blog card click handler
-      blogGrid.addEventListener('click', (e) => {
-        const card = e.target.closest('.blog-card');
-        if (card) {
-          const postId = card.dataset.id;
-          const post = blogPosts.find(p => p.id === parseInt(postId));
-          if (post) {
-            // Open blog post in new tab (you can replace with actual blog URL)
-            window.open(`/blog/${post.slug || postId}`, '_blank');
-            
-            // Show toast notification
-            showToast(`Opening: ${post.title}`);
+      // Initialize
+      async function init() {
+        try {
+          blogGrid.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>Loading articles...</p></div>';
+          
+          allPosts = await loadAllPosts();
+          
+          if (allPosts.length === 0) {
+            blogGrid.innerHTML = `
+              <div class="no-results">
+                <i class="fas fa-file-alt"></i>
+                <h3>No posts found</h3>
+                <p>Add HTML files to the Posts/ folder with proper meta tags</p>
+              </div>
+            `;
+            resultsCountSpan.textContent = '0 articles';
+            return;
           }
+          
+          updateFiltersFromPosts(allPosts);
+          filterAndRenderPosts();
+          
+        } catch (error) {
+          console.error('Initialization error:', error);
+          blogGrid.innerHTML = `
+            <div class="no-results">
+              <i class="fas fa-exclamation-triangle"></i>
+              <h3>Error loading posts</h3>
+              <p>Please refresh the page or try again later</p>
+            </div>
+          `;
         }
-      });
-
-      // Toast notification function
-      function showToast(message) {
-        const toast = document.createElement('div');
-        toast.className = 'toast-notification';
-        toast.innerHTML = `
-          <i class="fas fa-book-open"></i>
-          <span>${message}</span>
-        `;
-        
-        // Add styles for toast
-        const style = document.createElement('style');
-        style.textContent = `
-          .toast-notification {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-size: 0.95rem;
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-          }
-          .toast-notification.show {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        `;
-        document.head.appendChild(style);
-        
-        document.body.appendChild(toast);
-        setTimeout(() => toast.classList.add('show'), 10);
-        setTimeout(() => {
-          toast.classList.remove('show');
-          setTimeout(() => toast.remove(), 300);
-        }, 2000);
       }
 
-      // Initial render
-      renderPosts();
+      init();
     })();
   </script>
 </body>
