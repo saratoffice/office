@@ -1,5 +1,5 @@
 /**
- * Site Components - Handles loading of header and footer
+ * Post Components - Handles loading of header and footer
  * Updated with correct paths for your GitHub structure
  */
 
