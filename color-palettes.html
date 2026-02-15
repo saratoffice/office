@@ -5,427 +5,426 @@
   <title>Color palette | click to copy</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  
- <!-- Common CSS (menu, footer, global styles) -->
+  <!-- Common CSS (menu, footer, global styles) -->
   <link rel="stylesheet" href="style.css">
   <!-- ✅ IMPORTANT: site components for header/footer etc. -->
   <script src="assets/Scripts/site-components.js" defer></script>
-<style>
-        /* Isolated styles that won't affect header/footer */
-        .color-palette-section {
-            display: block;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-        }
+  
+  <style>
+    /* Isolated styles that won't affect header/footer */
+    .color-palette-section {
+      display: block;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
 
-        .color-palette-section .color-palette {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1.5rem;
-            margin: 1.5rem 0;
-        }
+    .color-palette-section .color-palette {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
 
-        .color-palette-section .color-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 140px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
+    .color-palette-section .color-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 140px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
 
-        .color-palette-section .color-box:hover {
-            transform: translateY(-5px);
-        }
+    .color-palette-section .color-box:hover {
+      transform: translateY(-5px);
+    }
 
-        .color-palette-section .color {
-            width: 100%;
-            height: 120px;
-            border-radius: 12px 12px 8px 8px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            padding-bottom: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease;
-            position: relative;
-            border: 2px solid white;
-        }
+    .color-palette-section .color {
+      width: 100%;
+      height: 120px;
+      border-radius: 12px 12px 8px 8px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      position: relative;
+      border: 2px solid white;
+    }
 
-        /* Color code visible only on hover */
-        .color-palette-section .color-code {
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            font-family: monospace;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.2s ease;
-            pointer-events: none;
-        }
+    /* Color code visible only on hover */
+    .color-palette-section .color-code {
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      font-family: monospace;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.2s ease;
+      pointer-events: none;
+    }
 
-        .color-palette-section .color-box:hover .color-code {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .color-palette-section .color-box:hover .color-code {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-        .color-palette-section .color-name {
-            margin-top: 10px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: #333;
-            text-align: center;
-        }
+    .color-palette-section .color-name {
+      margin-top: 10px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #333;
+      text-align: center;
+    }
 
-        /* Toast notification */
-        .color-palette-section #copy-toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) scale(0.9);
-            background: #1e293b;
-            color: white;
-            padding: 12px 28px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 500;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            transition: all 0.3s ease;
-            pointer-events: none;
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+    /* Toast notification */
+    .color-palette-section #copy-toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      background: #1e293b;
+      color: white;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 500;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-        .color-palette-section #copy-toast.show {
-            opacity: 1;
-            transform: translateX(-50%) scale(1);
-        }
+    .color-palette-section #copy-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
 
-        .color-palette-section #copy-toast span {
-            background: #10b981;
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
+    .color-palette-section #copy-toast span {
+      background: #10b981;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
 
-        .color-palette-section .copy-instruction {
-            text-align: center;
-            color: #666;
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-            font-style: italic;
-        }
-    </style>
-
+    .color-palette-section .copy-instruction {
+      text-align: center;
+      color: #666;
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+  </style>
 </head>
 
 <body>
+  <div id="site-header"></div>
 
-<div id="site-header"></div>
-
-
-<!-- CONTENT -->
- <div class="copy-instruction">🎨 Hover to see color code • Click to copy</div>
+  <!-- CONTENT - Fixed: Added missing section wrapper -->
+  <section class="color-palette-section">
+    <div class="copy-instruction">🎨 Hover to see color code • Click to copy</div>
 
     <div class="color-palette">
-        <div class="color-box" data-color="#FF0000" data-color-name="Red">
-            <div class="color" style="background-color: #FF0000;">
-                <span class="color-code">#FF0000</span>
-            </div>
-            <span class="color-name">Red</span>
+      <div class="color-box" data-color="#FF0000" data-color-name="Red">
+        <div class="color" style="background-color: #FF0000;">
+          <span class="color-code">#FF0000</span>
         </div>
-        <div class="color-box" data-color="#0000FF" data-color-name="Blue">
-            <div class="color" style="background-color: #0000FF;">
-                <span class="color-code">#0000FF</span>
-            </div>
-            <span class="color-name">Blue</span>
+        <span class="color-name">Red</span>
+      </div>
+      <div class="color-box" data-color="#0000FF" data-color-name="Blue">
+        <div class="color" style="background-color: #0000FF;">
+          <span class="color-code">#0000FF</span>
         </div>
-        <div class="color-box" data-color="#FFFF00" data-color-name="Yellow">
-            <div class="color" style="background-color: #FFFF00;">
-                <span class="color-code">#FFFF00</span>
-            </div>
-            <span class="color-name">Yellow</span>
+        <span class="color-name">Blue</span>
+      </div>
+      <div class="color-box" data-color="#FFFF00" data-color-name="Yellow">
+        <div class="color" style="background-color: #FFFF00;">
+          <span class="color-code">#FFFF00</span>
         </div>
-        <div class="color-box" data-color="#008000" data-color-name="Green">
-            <div class="color" style="background-color: #008000;">
-                <span class="color-code">#008000</span>
-            </div>
-            <span class="color-name">Green</span>
+        <span class="color-name">Yellow</span>
+      </div>
+      <div class="color-box" data-color="#008000" data-color-name="Green">
+        <div class="color" style="background-color: #008000;">
+          <span class="color-code">#008000</span>
         </div>
-        <div class="color-box" data-color="#FFA500" data-color-name="Orange">
-            <div class="color" style="background-color: #FFA500;">
-                <span class="color-code">#FFA500</span>
-            </div>
-            <span class="color-name">Orange</span>
+        <span class="color-name">Green</span>
+      </div>
+      <div class="color-box" data-color="#FFA500" data-color-name="Orange">
+        <div class="color" style="background-color: #FFA500;">
+          <span class="color-code">#FFA500</span>
         </div>
-        <div class="color-box" data-color="#800080" data-color-name="Purple">
-            <div class="color" style="background-color: #800080;">
-                <span class="color-code">#800080</span>
-            </div>
-            <span class="color-name">Purple</span>
+        <span class="color-name">Orange</span>
+      </div>
+      <div class="color-box" data-color="#800080" data-color-name="Purple">
+        <div class="color" style="background-color: #800080;">
+          <span class="color-code">#800080</span>
         </div>
+        <span class="color-name">Purple</span>
+      </div>
     </div>
 
     <div class="color-palette">
-        <div class="color-box" data-color="#8a2be2" data-color-name="Blue-Violet">
-            <div class="color" style="background-color: #8a2be2;">
-                <span class="color-code">#8a2be2</span>
-            </div>
-            <span class="color-name">Blue-Violet</span>
+      <div class="color-box" data-color="#8a2be2" data-color-name="Blue-Violet">
+        <div class="color" style="background-color: #8a2be2;">
+          <span class="color-code">#8a2be2</span>
         </div>
-        <div class="color-box" data-color="#ff4500" data-color-name="Red-Orange">
-            <div class="color" style="background-color: #ff4500;">
-                <span class="color-code">#ff4500</span>
-            </div>
-            <span class="color-name">Red-Orange</span>
+        <span class="color-name">Blue-Violet</span>
+      </div>
+      <div class="color-box" data-color="#ff4500" data-color-name="Red-Orange">
+        <div class="color" style="background-color: #ff4500;">
+          <span class="color-code">#ff4500</span>
         </div>
-        <div class="color-box" data-color="#ffb74d" data-color-name="Yellow-Orange">
-            <div class="color" style="background-color: #ffb74d;">
-                <span class="color-code">#ffb74d</span>
-            </div>
-            <span class="color-name">Yellow-Orange</span>
+        <span class="color-name">Red-Orange</span>
+      </div>
+      <div class="color-box" data-color="#ffb74d" data-color-name="Yellow-Orange">
+        <div class="color" style="background-color: #ffb74d;">
+          <span class="color-code">#ffb74d</span>
         </div>
-        <div class="color-box" data-color="#9acd32" data-color-name="Yellow-Green">
-            <div class="color" style="background-color: #9acd32;">
-                <span class="color-code">#9acd32</span>
-            </div>
-            <span class="color-name">Yellow-Green</span>
+        <span class="color-name">Yellow-Orange</span>
+      </div>
+      <div class="color-box" data-color="#9acd32" data-color-name="Yellow-Green">
+        <div class="color" style="background-color: #9acd32;">
+          <span class="color-code">#9acd32</span>
         </div>
-        <div class="color-box" data-color="#20b2aa" data-color-name="Blue-Green">
-            <div class="color" style="background-color: #20b2aa;">
-                <span class="color-code">#20b2aa</span>
-            </div>
-            <span class="color-name">Blue-Green</span>
+        <span class="color-name">Yellow-Green</span>
+      </div>
+      <div class="color-box" data-color="#20b2aa" data-color-name="Blue-Green">
+        <div class="color" style="background-color: #20b2aa;">
+          <span class="color-code">#20b2aa</span>
         </div>
-        <div class="color-box" data-color="#c71585" data-color-name="Red-Violet">
-            <div class="color" style="background-color: #c71585;">
-                <span class="color-code">#c71585</span>
-            </div>
-            <span class="color-name">Red-Violet</span>
+        <span class="color-name">Blue-Green</span>
+      </div>
+      <div class="color-box" data-color="#c71585" data-color-name="Red-Violet">
+        <div class="color" style="background-color: #c71585;">
+          <span class="color-code">#c71585</span>
         </div>
+        <span class="color-name">Red-Violet</span>
+      </div>
     </div>
 
     <div class="color-palette">
-        <div class="color-box" data-color="#253D5B" data-color-name="Dark Blue">
-            <div class="color" style="background-color: #253D5B;">
-                <span class="color-code">#253D5B</span>
-            </div>
-            <span class="color-name">Dark Blue</span>
+      <div class="color-box" data-color="#253D5B" data-color-name="Dark Blue">
+        <div class="color" style="background-color: #253D5B;">
+          <span class="color-code">#253D5B</span>
         </div>
-        <div class="color-box" data-color="#101535" data-color-name="Dark Gray">
-            <div class="color" style="background-color: #101535;">
-                <span class="color-code">#101535</span>
-            </div>
-            <span class="color-name">Dark Gray</span>
+        <span class="color-name">Dark Blue</span>
+      </div>
+      <div class="color-box" data-color="#101535" data-color-name="Dark Gray">
+        <div class="color" style="background-color: #101535;">
+          <span class="color-code">#101535</span>
         </div>
-        <div class="color-box" data-color="#8300E9" data-color-name="Dark Violet">
-            <div class="color" style="background-color: #8300E9;">
-                <span class="color-code">#8300E9</span>
-            </div>
-            <span class="color-name">Dark Violet</span>
+        <span class="color-name">Dark Gray</span>
+      </div>
+      <div class="color-box" data-color="#8300E9" data-color-name="Dark Violet">
+        <div class="color" style="background-color: #8300E9;">
+          <span class="color-code">#8300E9</span>
         </div>
-        <div class="color-box" data-color="#00b4d8" data-color-name="Cyan">
-            <div class="color" style="background-color: #00b4d8;">
-                <span class="color-code">#00b4d8</span>
-            </div>
-            <span class="color-name">Cyan</span>
+        <span class="color-name">Dark Violet</span>
+      </div>
+      <div class="color-box" data-color="#00b4d8" data-color-name="Cyan">
+        <div class="color" style="background-color: #00b4d8;">
+          <span class="color-code">#00b4d8</span>
         </div>
-        <div class="color-box" data-color="#94a3b8" data-color-name="Gray Blue">
-            <div class="color" style="background-color: #94a3b8;">
-                <span class="color-code">#94a3b8</span>
-            </div>
-            <span class="color-name">Gray Blue</span>
+        <span class="color-name">Cyan</span>
+      </div>
+      <div class="color-box" data-color="#94a3b8" data-color-name="Gray Blue">
+        <div class="color" style="background-color: #94a3b8;">
+          <span class="color-code">#94a3b8</span>
         </div>
-        <div class="color-box" data-color="#C0A301" data-color-name="Supphine Yellow">
-            <div class="color" style="background-color: #C0A301;">
-                <span class="color-code">#C0A301</span>
-            </div>
-            <span class="color-name">Supphine Yellow</span>
+        <span class="color-name">Gray Blue</span>
+      </div>
+      <div class="color-box" data-color="#C0A301" data-color-name="Supphine Yellow">
+        <div class="color" style="background-color: #C0A301;">
+          <span class="color-code">#C0A301</span>
         </div>
+        <span class="color-name">Supphine Yellow</span>
+      </div>
     </div>
 
     <div class="color-palette">
-        <div class="color-box" data-color="#0077b6" data-color-name="Biloxy Blue">
-            <div class="color" style="background-color: #0077b6;">
-                <span class="color-code">#0077b6</span>
-            </div>
-            <span class="color-name">Biloxy Blue</span>
+      <div class="color-box" data-color="#0077b6" data-color-name="Biloxy Blue">
+        <div class="color" style="background-color: #0077b6;">
+          <span class="color-code">#0077b6</span>
         </div>
-        <div class="color-box" data-color="#03fcf0" data-color-name="Turquoise Blue">
-            <div class="color" style="background-color: #03fcf0;">
-                <span class="color-code">#03fcf0</span>
-            </div>
-            <span class="color-name">Turquoise Blue</span>
+        <span class="color-name">Biloxy Blue</span>
+      </div>
+      <div class="color-box" data-color="#03fcf0" data-color-name="Turquoise Blue">
+        <div class="color" style="background-color: #03fcf0;">
+          <span class="color-code">#03fcf0</span>
         </div>
-        <div class="color-box" data-color="#2a9d8f" data-color-name="Azure Tide">
-            <div class="color" style="background-color: #2a9d8f;">
-                <span class="color-code">#2a9d8f</span>
-            </div>
-            <span class="color-name">Azure Tide</span>
+        <span class="color-name">Turquoise Blue</span>
+      </div>
+      <div class="color-box" data-color="#2a9d8f" data-color-name="Azure Tide">
+        <div class="color" style="background-color: #2a9d8f;">
+          <span class="color-code">#2a9d8f</span>
         </div>
-        <div class="color-box" data-color="#80ed99" data-color-name="Light Green">
-            <div class="color" style="background-color: #80ed99;">
-                <span class="color-code">#80ed99</span>
-            </div>
-            <span class="color-name">Light Green</span>
+        <span class="color-name">Azure Tide</span>
+      </div>
+      <div class="color-box" data-color="#80ed99" data-color-name="Light Green">
+        <div class="color" style="background-color: #80ed99;">
+          <span class="color-code">#80ed99</span>
         </div>
-        <div class="color-box" data-color="#9ef01a" data-color-name="Lime Green">
-            <div class="color" style="background-color: #9ef01a;">
-                <span class="color-code">#9ef01a</span>
-            </div>
-            <span class="color-name">Lime Green</span>
+        <span class="color-name">Light Green</span>
+      </div>
+      <div class="color-box" data-color="#9ef01a" data-color-name="Lime Green">
+        <div class="color" style="background-color: #9ef01a;">
+          <span class="color-code">#9ef01a</span>
         </div>
-        <div class="color-box" data-color="#b5e48c" data-color-name="Mint Green">
-            <div class="color" style="background-color: #b5e48c;">
-                <span class="color-code">#b5e48c</span>
-            </div>
-            <span class="color-name">Mint Green</span>
+        <span class="color-name">Lime Green</span>
+      </div>
+      <div class="color-box" data-color="#b5e48c" data-color-name="Mint Green">
+        <div class="color" style="background-color: #b5e48c;">
+          <span class="color-code">#b5e48c</span>
         </div>
+        <span class="color-name">Mint Green</span>
+      </div>
     </div>
 
     <div class="color-palette">
-        <div class="color-box" data-color="#abc4ff" data-color-name="Light Blue">
-            <div class="color" style="background-color: #abc4ff;">
-                <span class="color-code">#abc4ff</span>
-            </div>
-            <span class="color-name">Light Blue</span>
+      <div class="color-box" data-color="#abc4ff" data-color-name="Light Blue">
+        <div class="color" style="background-color: #abc4ff;">
+          <span class="color-code">#abc4ff</span>
         </div>
-        <div class="color-box" data-color="#9381ff" data-color-name="Lavender">
-            <div class="color" style="background-color: #9381ff;">
-                <span class="color-code">#9381ff</span>
-            </div>
-            <span class="color-name">Lavender</span>
+        <span class="color-name">Light Blue</span>
+      </div>
+      <div class="color-box" data-color="#9381ff" data-color-name="Lavender">
+        <div class="color" style="background-color: #9381ff;">
+          <span class="color-code">#9381ff</span>
         </div>
-        <div class="color-box" data-color="#2ec4b6" data-color-name="Teal">
-            <div class="color" style="background-color: #2ec4b6;">
-                <span class="color-code">#2ec4b6</span>
-            </div>
-            <span class="color-name">Teal</span>
+        <span class="color-name">Lavender</span>
+      </div>
+      <div class="color-box" data-color="#2ec4b6" data-color-name="Teal">
+        <div class="color" style="background-color: #2ec4b6;">
+          <span class="color-code">#2ec4b6</span>
         </div>
-        <div class="color-box" data-color="#f95738" data-color-name="Coral">
-            <div class="color" style="background-color: #f95738;">
-                <span class="color-code">#f95738</span>
-            </div>
-            <span class="color-name">Coral</span>
+        <span class="color-name">Teal</span>
+      </div>
+      <div class="color-box" data-color="#f95738" data-color-name="Coral">
+        <div class="color" style="background-color: #f95738;">
+          <span class="color-code">#f95738</span>
         </div>
-        <div class="color-box" data-color="#c0b9dd" data-color-name="Light Purple">
-            <div class="color" style="background-color: #c0b9dd;">
-                <span class="color-code">#c0b9dd</span>
-            </div>
-            <span class="color-name">Light Purple</span>
+        <span class="color-name">Coral</span>
+      </div>
+      <div class="color-box" data-color="#c0b9dd" data-color-name="Light Purple">
+        <div class="color" style="background-color: #c0b9dd;">
+          <span class="color-code">#c0b9dd</span>
         </div>
-        <div class="color-box" data-color="#ff7900" data-color-name="Orange">
-            <div class="color" style="background-color: #ff7900;">
-                <span class="color-code">#ff7900</span>
-            </div>
-            <span class="color-name">Orange</span>
+        <span class="color-name">Light Purple</span>
+      </div>
+      <div class="color-box" data-color="#ff7900" data-color-name="Orange">
+        <div class="color" style="background-color: #ff7900;">
+          <span class="color-code">#ff7900</span>
         </div>
+        <span class="color-name">Orange</span>
+      </div>
     </div>
 
     <div id="copy-toast">
-        <span>✓</span> Copied <span id="copied-hex">#FF0000</span>
+      <span>✓</span> Copied <span id="copied-hex">#FF0000</span>
     </div>
+  </section> <!-- Fixed: closed the section properly -->
 
-    <script>
-        (function() {
-            const section = document.querySelector('.color-palette-section');
-            const colorBoxes = section.querySelectorAll('.color-box');
-            const toast = section.querySelector('#copy-toast');
-            const copiedHexSpan = section.querySelector('#copied-hex');
-
-            if (!toast || !copiedHexSpan) return;
-
-            let hideTimeout = null;
-
-            function showToastMessage(hex) {
-                copiedHexSpan.textContent = hex;
-                
-                if (hideTimeout) {
-                    clearTimeout(hideTimeout);
-                }
-
-                toast.classList.add('show');
-                
-                hideTimeout = setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 1500);
-            }
-
-            function copyToClipboard(text) {
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(text).then(() => {
-                        showToastMessage(text);
-                    }).catch(() => fallbackCopy(text));
-                } else {
-                    fallbackCopy(text);
-                }
-
-                function fallbackCopy(text) {
-                    const textArea = document.createElement('textarea');
-                    textArea.value = text;
-                    textArea.style.position = 'fixed';
-                    textArea.style.top = '-999px';
-                    textArea.style.left = '-999px';
-                    document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
-
-                    try {
-                        if (document.execCommand('copy')) {
-                            showToastMessage(text);
-                        } else {
-                            alert('Press Ctrl+C to copy: ' + text);
-                        }
-                    } catch (err) {
-                        alert('Could not copy: ' + text);
-                    }
-                    document.body.removeChild(textArea);
-                }
-            }
-
-            colorBoxes.forEach(box => {
-                box.addEventListener('click', function(e) {
-                    const hex = this.dataset.color;
-                    if (hex) {
-                        copyToClipboard(hex);
-                        
-                        // Quick flash animation
-                        const colorDiv = this.querySelector('.color');
-                        if (colorDiv) {
-                            colorDiv.style.transform = 'scale(0.98)';
-                            colorDiv.style.filter = 'brightness(1.1)';
-                            setTimeout(() => {
-                                colorDiv.style.transform = '';
-                                colorDiv.style.filter = '';
-                            }, 150);
-                        }
-                    }
-                });
-            });
-        })();
-    </script>
-</section>
   <!-- FOOTER -->
-<div id="site-footer"></div>
+  <div id="site-footer"></div>
+  
   <!-- Go to Top -->
   <script src="/assets/Scripts/gototop.js"></script>
 
+  <script>
+    (function() {
+      const section = document.querySelector('.color-palette-section');
+      const colorBoxes = section.querySelectorAll('.color-box');
+      const toast = section.querySelector('#copy-toast');
+      const copiedHexSpan = section.querySelector('#copied-hex');
+
+      if (!toast || !copiedHexSpan) return;
+
+      let hideTimeout = null;
+
+      function showToastMessage(hex) {
+        copiedHexSpan.textContent = hex;
+        
+        if (hideTimeout) {
+          clearTimeout(hideTimeout);
+        }
+
+        toast.classList.add('show');
+        
+        hideTimeout = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 1500);
+      }
+
+      function copyToClipboard(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            showToastMessage(text);
+          }).catch(() => fallbackCopy(text));
+        } else {
+          fallbackCopy(text);
+        }
+
+        function fallbackCopy(text) {
+          const textArea = document.createElement('textarea');
+          textArea.value = text;
+          textArea.style.position = 'fixed';
+          textArea.style.top = '-999px';
+          textArea.style.left = '-999px';
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+
+          try {
+            if (document.execCommand('copy')) {
+              showToastMessage(text);
+            } else {
+              alert('Press Ctrl+C to copy: ' + text);
+            }
+          } catch (err) {
+            alert('Could not copy: ' + text);
+          }
+          document.body.removeChild(textArea);
+        }
+      }
+
+      colorBoxes.forEach(box => {
+        box.addEventListener('click', function(e) {
+          const hex = this.dataset.color;
+          if (hex) {
+            copyToClipboard(hex);
+            
+            // Quick flash animation
+            const colorDiv = this.querySelector('.color');
+            if (colorDiv) {
+              colorDiv.style.transform = 'scale(0.98)';
+              colorDiv.style.filter = 'brightness(1.1)';
+              setTimeout(() => {
+                colorDiv.style.transform = '';
+                colorDiv.style.filter = '';
+              }, 150);
+            }
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
