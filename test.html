@@ -2,448 +2,789 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>full·width slider · mobile shrink · full image visible</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Electric Meters | Genus Power Blog</title>
+  
+  <!-- Common CSS -->
+    <link rel="stylesheet" href="style.css">
+  <!-- ✅ IMPORTANT: Add the script for common header footer menu etc with defer HERE -->
+    <script src="assets/Scripts/post-components.js" defer></script>
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
   <style>
-    /* reset & base */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
+    /* Isolated styles for blog post page */
+    .blog-post-section {
+      display: block;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      background: #0b1a2f;
-      scroll-behavior: smooth;   /* for smooth section navigation */
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     }
 
-    /* ----- SLIDER SECTION (full viewport width) ----- */
-    .slider-section {
-      width: 100%;
-      background: #0e1e32;
-    }
-
-    .slider-container {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-    }
-
-    .slider-track {
-      display: flex;
-      transition: transform 0.65s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-
-    .slide {
-      flex: 0 0 100%;               /* each slide takes full container width */
-      height: 85vh;                 /* default height (desktop) */
-      min-height: 520px;
-      background-size: cover;       /* cover by default (crops on mobile) */
-      background-position: center;
-      background-repeat: no-repeat;
-      display: flex;
-      align-items: flex-end;        /* push button to bottom */
-      justify-content: flex-end;    /* push button to right */
-      padding: 2rem 2.5rem;
-      position: relative;
-    }
-
-    /* subtle overlay for better button visibility */
-    .slide::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 70%);
-      pointer-events: none;         /* lets button stay clickable */
-    }
-
-    /* slide unique backgrounds */
-    .slide-1 {
-      background-image: url('https://images.pexels.com/photos/380769/pexels-photo-380769.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); /* tools */
-    }
-    .slide-2 {
-      background-image: url('https://images.pexels.com/photos/48604/pexels-photo-48604.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');  /* contact */
-    }
-    .slide-3 {
-      background-image: url('https://images.pexels.com/photos/5668482/pexels-photo-5668482.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); /* legal */
-    }
-
-    /* ----- bottom right button (down arrow + text) ----- */
-    .slide-btn {
-      position: relative;
-      z-index: 10;
+    /* Back to blogs link */
+    .blog-post-section .back-link {
       display: inline-flex;
       align-items: center;
-      gap: 0.75rem;
-      background: rgba(245, 245, 255, 0.92);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      border: 1px solid rgba(255,255,255,0.4);
-      border-radius: 60px;
-      padding: 0.9rem 2.2rem 0.9rem 2.4rem;
-      font-size: 1.5rem;
+      gap: 0.5rem;
+      color: #3b82f6;
+      text-decoration: none;
       font-weight: 500;
-      color: #10131e;
-      box-shadow: 0 15px 30px -10px rgba(0,0,0,0.3);
-      cursor: pointer;
-      transition: transform 0.18s, background 0.2s, box-shadow 0.2s;
-      border: none;
-      outline: 2px solid transparent;
-      letter-spacing: 0.5px;
+      margin-bottom: 2rem;
+      padding: 0.5rem 1rem;
+      background: white;
+      border-radius: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
     }
 
-    .slide-btn i {               /* downward arrow icon */
-      font-style: normal;
-      font-size: 2rem;
-      line-height: 1;
-      transform: translateY(2px);
-      transition: transform 0.2s;
+    .blog-post-section .back-link:hover {
+      transform: translateX(-5px);
+      background: #eff6ff;
     }
 
-    .slide-btn:hover {
-      background: #ffffff;
-      transform: scale(1.04);
-      box-shadow: 0 22px 35px -12px #030b14;
-    }
-
-    .slide-btn:hover i {
-      transform: translateY(5px);
-    }
-
-    /* ----- navigation arrows (bottom left corner) ----- */
-    .nav-arrows {
-      position: absolute;
-      bottom: 2rem;
-      left: 2.5rem;
-      z-index: 25;
-      display: flex;
-      gap: 1.2rem;
-    }
-
-    .arrow {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 54px;
-      height: 54px;
-      background: rgba(20, 30, 45, 0.75);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 40px;
-      color: white;
-      font-size: 2.4rem;
-      font-weight: 300;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s, border-color 0.2s;
-      user-select: none;
-      box-shadow: 0 10px 18px -8px black;
-      line-height: 1;
-    }
-
-    .arrow:hover {
-      background: #1f334b;
-      border-color: rgba(255,255,255,0.7);
-      transform: scale(1.07);
-    }
-
-    .arrow:active {
-      transform: scale(0.98);
-    }
-
-    /* pause on hover */
-    .slider-container.pause-autoplay .slider-track {
-      transition-duration: 0.4s;
-    }
-
-    /* ----- destination sections ----- */
-    .content-block {
-      min-height: 70vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: #f4f7fc;
-      color: #0b1e32;
-      padding: 3rem 2rem;
-      border-top: 4px solid #2d4b75;
-      scroll-margin-top: 20px;
-    }
-
-    .content-block:nth-child(even) {
-      background: #e8edf5;
-    }
-
-    .content-block h2 {
-      font-size: 4rem;
-      font-weight: 400;
-      margin-bottom: 1.5rem;
-      text-transform: uppercase;
-      letter-spacing: 6px;
-      color: #14273e;
-    }
-
-    .content-block p {
-      font-size: 1.8rem;
-      max-width: 800px;
+    /* Blog header */
+    .blog-post-section .post-header {
       text-align: center;
-      background: rgba(255,255,255,0.6);
-      padding: 1.5rem 3rem;
-      border-radius: 80px;
+      margin-bottom: 3rem;
+    }
+
+    .blog-post-section .post-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .blog-post-section .post-meta {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+
+    .blog-post-section .post-meta i {
+      color: #3b82f6;
+      margin-right: 0.3rem;
+    }
+
+    .blog-post-section .category-tag {
+      background: #e2e8f0;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      color: #475569;
+    }
+
+    /* Featured image */
+    .blog-post-section .featured-image {
+      margin: 2rem 0;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .blog-post-section .featured-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Image grid */
+    .blog-post-section .image-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 3rem 0;
+      background: white;
+      padding: 2rem;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .blog-post-section .image-grid-item {
+      text-align: center;
+    }
+
+    .blog-post-section .image-grid-item img {
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .blog-post-section .image-grid-item img:hover {
+      transform: scale(1.02);
+    }
+
+    .blog-post-section .image-caption {
+      margin-top: 1rem;
+      color: #64748b;
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+
+    /* Content styles */
+    .blog-post-section .post-content {
+      background: white;
+      padding: 3rem;
+      border-radius: 30px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+      margin: 2rem 0;
+    }
+
+    .blog-post-section .post-content h2 {
+      font-size: 1.8rem;
+      color: #1e293b;
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 3px solid;
+      border-image: linear-gradient(90deg, #3b82f6, #8b5cf6) 1;
+      border-bottom-style: solid;
+      border-bottom-width: 3px;
+      border-image-slice: 1;
+    }
+
+    .blog-post-section .post-content h3 {
+      font-size: 1.4rem;
+      color: #334155;
+      margin: 1.5rem 0 1rem;
+    }
+
+    .blog-post-section .post-content p {
+      line-height: 1.8;
+      color: #475569;
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+    }
+
+    .blog-post-section .post-content strong {
+      color: #3b82f6;
+      font-weight: 600;
+    }
+
+    /* Lists */
+    .blog-post-section .post-content ul,
+    .blog-post-section .post-content ol {
+      margin: 1.5rem 0;
+      padding-left: 2rem;
+    }
+
+    .blog-post-section .post-content li {
+      line-height: 1.8;
+      color: #475569;
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    .blog-post-section .post-content li::marker {
+      color: #3b82f6;
+    }
+
+    /* Benefits grid */
+    .blog-post-section .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .blog-post-section .benefit-card {
+      background: #f8fafc;
+      padding: 1.5rem;
+      border-radius: 16px;
+      border-left: 4px solid #3b82f6;
+      transition: all 0.3s ease;
+    }
+
+    .blog-post-section .benefit-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.1);
+    }
+
+    .blog-post-section .benefit-card i {
+      font-size: 1.5rem;
+      color: #3b82f6;
+      margin-bottom: 1rem;
+    }
+
+    .blog-post-section .benefit-card h4 {
+      font-size: 1.1rem;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+
+    .blog-post-section .benefit-card p {
+      font-size: 0.95rem;
+      margin-bottom: 0;
+      color: #64748b;
+    }
+
+    /* Info box */
+    .blog-post-section .info-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #eef2ff 100%);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 2rem 0;
+      border-left: 6px solid #3b82f6;
+    }
+
+    .blog-post-section .info-box h4 {
+      color: #1e293b;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .blog-post-section .info-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Tags section */
+    .blog-post-section .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 2rem 0 1rem;
+    }
+
+    .blog-post-section .post-tag {
+      background: #e2e8f0;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      color: #475569;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .blog-post-section .post-tag:hover {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .blog-post-section .post-tag i {
+      font-size: 0.7rem;
+    }
+
+    /* Share section */
+    .blog-post-section .share-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 3rem 0 2rem;
+      padding: 2rem;
+      background: white;
+      border-radius: 20px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     }
 
-    /* ========== MOBILE FIX: REDUCE HEIGHT + SHOW FULL IMAGE ========== */
-    @media (max-width: 680px) {
-      .slide {
-        height: 45vh !important;        /* significantly reduced height on mobile */
-        min-height: 320px;              /* ensure not too tiny */
-        background-size: contain !important; /* force entire image visible (no crop) */
-        background-color: #111d2f;      /* fill leftover areas with dark tone */
-        background-position: center center;
-        padding: 1.2rem 1.2rem;
-      }
-
-      /* adjust overlay to be lighter (still visible over dark gaps) */
-      .slide::after {
-        background: linear-gradient(90deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.2) 80%);
-      }
-
-      /* button size & position for mobile */
-      .slide-btn {
-        padding: 0.6rem 1.4rem 0.6rem 1.6rem;
-        font-size: 1.25rem;
-        gap: 0.4rem;
-        margin-bottom: 0.5rem;
-        margin-right: 0.25rem;
-      }
-      .slide-btn i {
-        font-size: 1.7rem;
-      }
-
-      /* bottom arrows a bit smaller */
-      .nav-arrows {
-        bottom: 1.2rem;
-        left: 1.2rem;
-        gap: 0.7rem;
-      }
-      .arrow {
-        width: 44px;
-        height: 44px;
-        font-size: 2rem;
-      }
-
-      .content-block h2 {
-        font-size: 2.8rem;
-        letter-spacing: 3px;
-      }
-      .content-block p {
-        font-size: 1.4rem;
-        padding: 1rem 2rem;
-      }
+    .blog-post-section .share-title {
+      color: #1e293b;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    /* extra small devices: even shorter height, keep contain */
-    @media (max-width: 480px) {
-      .slide {
-        height: 38vh !important;
-        min-height: 260px;
-      }
-      .slide-btn {
-        font-size: 1.1rem;
-        padding: 0.5rem 1.2rem 0.5rem 1.4rem;
-      }
-      .slide-btn i {
-        font-size: 1.5rem;
-      }
-      .nav-arrows {
-        bottom: 0.9rem;
-        left: 0.9rem;
-      }
-      .arrow {
-        width: 40px;
-        height: 40px;
+    .blog-post-section .share-buttons {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    .blog-post-section .share-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .blog-post-section .share-btn:hover {
+      transform: translateY(-5px);
+    }
+
+    .blog-post-section .share-btn.facebook { background: #1877f2; }
+    .blog-post-section .share-btn.twitter { background: #1da1f2; }
+    .blog-post-section .share-btn.linkedin { background: #0a66c2; }
+    .blog-post-section .share-btn.whatsapp { background: #25d366; }
+
+    /* Related posts */
+    .blog-post-section .related-posts {
+      margin: 4rem 0;
+    }
+
+    .blog-post-section .related-title {
+      font-size: 1.8rem;
+      color: #1e293b;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .blog-post-section .related-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .blog-post-section .related-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .blog-post-section .related-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 30px rgba(59, 130, 246, 0.15);
+    }
+
+    .blog-post-section .related-image {
+      height: 150px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+    }
+
+    .blog-post-section .related-content {
+      padding: 1.5rem;
+    }
+
+    .blog-post-section .related-content h4 {
+      font-size: 1rem;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+
+    .blog-post-section .related-content p {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 0;
+    }
+
+    /* Table styles */
+    .blog-post-section .meter-types {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .blog-post-section .meter-type-card {
+      background: #f8fafc;
+      padding: 2rem;
+      border-radius: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .blog-post-section .meter-type-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .blog-post-section .meter-type-card i {
+      font-size: 3rem;
+      color: #3b82f6;
+      margin-bottom: 1rem;
+    }
+
+    .blog-post-section .meter-type-card h4 {
+      font-size: 1.2rem;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+
+    .blog-post-section .meter-type-card p {
+      color: #64748b;
+      margin-bottom: 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .blog-post-section .post-title {
         font-size: 1.8rem;
       }
-    }
-
-    /* make sure background-size contain is enforced on all mobile */
-    @media (max-width: 680px) {
-      .slide-1, .slide-2, .slide-3 {
-        background-size: contain !important;
+      
+      .blog-post-section .image-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .blog-post-section .post-content {
+        padding: 1.5rem;
+      }
+      
+      .blog-post-section .related-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .blog-post-section .meter-types {
+        grid-template-columns: 1fr;
       }
     }
 
-    /* smoothness */
-    .slider-track, .slide-btn, .arrow {
-      -webkit-tap-highlight-color: transparent;
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .blog-post-section .post-content > * {
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* Stats card */
+    .blog-post-section .stats-card {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: white;
+      padding: 2rem;
+      border-radius: 20px;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .blog-post-section .stats-number {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #3b82f6;
+      margin-bottom: 0.5rem;
+    }
+
+    .blog-post-section .stats-label {
+      font-size: 1rem;
+      opacity: 0.9;
     }
   </style>
+
+  <!-- Blog post metadata for filtering -->
+  <meta name="blog:category" content="technology">
+  <meta name="blog:tags" content="smart-meter, electricity, energy, technology, genus-power">
+  <meta name="blog:author" content="Genus Power">
+  <meta name="blog:date" content="2025-02-15">
+  <meta name="blog:readTime" content="8">
 </head>
+
 <body>
-  <!-- FULL WIDTH SLIDER (mobile: reduced height & contain to show full image) -->
-  <section class="slider-section">
-    <div class="slider-container" id="sliderContainer">
-      <div class="slider-track" id="sliderTrack">
-        <!-- slide 1: Tools (button text "Toos" as requested) -->
-        <div class="slide slide-1">
-          <button class="slide-btn" data-target="tools-section">
-            Toos <i>↓</i>
-          </button>
+  <div id="site-header"></div>
+
+  <!-- Main blog post section -->
+  <section class="blog-post-section">
+    <!-- Back to blogs link -->
+    <a href="../blogs.html" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to all articles
+    </a>
+
+    <!-- Post header -->
+    <div class="post-header">
+      <h1 class="post-title">Why Smart Electric Meters Are the Future of Energy Management</h1>
+      
+      <div class="post-meta">
+        <span><i class="fas fa-user"></i> Genus Power</span>
+        <span><i class="fas fa-calendar"></i> February 15, 2025</span>
+        <span><i class="fas fa-clock"></i> 8 min read</span>
+        <span class="category-tag"><i class="fas fa-tag"></i> Technology</span>
+      </div>
+    </div>
+
+    <!-- Featured image grid from your HTML -->
+    <div class="image-grid">
+      <div class="image-grid-item">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhfki8k-_kVkXAVFn5D1n6P8jwPjSWBN_-wyIGtGIrLQP3hw0JsISWehDzTnVV3CswB00ipjiadCNYAEjXpGufrBpoywGtEQ5LCUGE1P41MhSIGiYE4qKRTrccdDmEclFlDsj8GDOw1FtaJTS8bfxQFgsLqmIlSHTxAtA-KGMED9ev-QhC0VYN90fpt3s8O/s1024/Smart%20Meter.jpg" 
+             alt="Smart Meter" 
+             loading="lazy">
+        <div class="image-caption">Modern Smart Meter Design</div>
+      </div>
+      
+      <div class="image-grid-item">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj7ZQsTGlI2jPuMLpKXVRdNFrLrzY4TvEDGTMmvcLOVzqTG-jnp5P0NFkHrfzOZrnUe4E-LGu1jvBHt8P2Vpv2ngdGWeoOOu1Iu8rczDSoBcTWqHz5MQItQBkxanEqWFVl4eLPOHaV6HxxZCEMxytsv0yvqcJHqGgcKGJ2NUp_oOZIjb_nOdPSEEBeIwblF/s1280/Smart%20meter%20genus.jpg" 
+             alt="Genus Smart Meter" 
+             loading="lazy">
+        <div class="image-caption">Genus Power Smart Meter</div>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="post-content">
+      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">Traditional electric meters have long served as the backbone of energy consumption management, but as the world shifts toward sustainability and greater efficiency, it's becoming clear that these conventional systems can no longer meet modern demands. Smart electric meters are stepping in to offer not just reliable energy monitoring, but a more efficient and sustainable way of managing electricity usage.</p>
+
+      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">In this blog post, we'll explore what smart electric meters are, how they work, their benefits, and why they are revolutionizing energy management.</p>
+
+      <h2>What Are Smart Electric Meters?</h2>
+
+      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">At their core, smart electric meters function similarly to traditional meters—they measure, monitor, and record electricity usage. However, the major difference lies in their ability to communicate directly with utility operators. Equipped with a digital communication module, smart meters automatically send usage data to the utility company at regular intervals, often every 15 minutes.</p>
+
+      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">This real-time data transmission eliminates the need for manual meter readings, making monitoring electricity consumption more efficient and transparent.</p>
+
+      <div class="info-box">
+        <h4><i class="fas fa-bolt" style="margin-right: 0.5rem;"></i> Industry Leader</h4>
+        <p>If you're looking for advanced, reliable metering solutions, <strong>Genus Power</strong> offers a range of smart electric meters and smart grid systems, catering to both residential and commercial needs in India.</p>
+      </div>
+
+      <h2>How Do Smart Electric Meters Work?</h2>
+
+      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">Smart meters provide much more than just basic energy consumption readings. They continuously record and transmit your electricity usage data to the utility provider, offering a real-time overview of your energy consumption.</p>
+
+      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">This allows users to track energy trends during peak and off-peak hours, offering insights into when they use the most electricity. With this information, consumers can adjust their usage patterns to reduce electricity costs. Additionally, some smart meters come with in-home displays, which enable users to monitor their energy usage and associated costs in real-time.</p>
+
+      <h2>Types of Smart Electric Meters</h2>
+
+      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">Smart electric meters are available in two main configurations:</p>
+
+      <div class="meter-types">
+        <div class="meter-type-card">
+          <i class="fas fa-industry"></i>
+          <h4>Three-Phase Smart Meters</h4>
+          <p>Designed for industrial and commercial applications where a higher power supply is required. Ideal for businesses and large-scale operations.</p>
         </div>
-        <!-- slide 2: Contact -->
-        <div class="slide slide-2">
-          <button class="slide-btn" data-target="contact-section">
-            Contact <i>↓</i>
-          </button>
-        </div>
-        <!-- slide 3: Legal -->
-        <div class="slide slide-3">
-          <button class="slide-btn" data-target="legal-section">
-            Legal <i>↓</i>
-          </button>
+
+        <div class="meter-type-card">
+          <i class="fas fa-home"></i>
+          <h4>Single-Phase Smart Meters</h4>
+          <p>Typically used in residential properties. Ensures accurate readings and easy monitoring of electricity usage.</p>
         </div>
       </div>
 
-      <!-- navigation arrows bottom left -->
-      <div class="nav-arrows">
-        <div class="arrow" id="arrowLeft">←</div>
-        <div class="arrow" id="arrowRight">→</div>
+      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">Other specialized meters, like distribution transformer-operated meters and CT-PT meters, are available for specific needs in different applications.</p>
+
+      <h2>Key Benefits of Smart Electric Meters</h2>
+
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <i class="fas fa-check-circle"></i>
+          <h4>Accuracy & Transparency</h4>
+          <p>Automated readings reduce human error, ensuring accurate billing and eliminating estimation or manipulation in energy charges.</p>
+        </div>
+
+        <div class="benefit-card">
+          <i class="fas fa-coins"></i>
+          <h4>Cost Reduction</h4>
+          <p>Consumers can monitor energy usage in real-time, adjusting habits to lower electricity costs.</p>
+        </div>
+
+        <div class="benefit-card">
+          <i class="fas fa-leaf"></i>
+          <h4>Energy Efficiency</h4>
+          <p>By providing detailed consumption data, smart meters optimize energy distribution, reduce wastage, and support grid sustainability.</p>
+        </div>
+
+        <div class="benefit-card">
+          <i class="fas fa-shield-alt"></i>
+          <h4>Enhanced Safety</h4>
+          <p>Real-time fault detection allows immediate corrective action, improving grid stability and reducing safety risks.</p>
+        </div>
+
+        <div class="benefit-card">
+          <i class="fas fa-mobile-alt"></i>
+          <h4>User-Friendly Experience</h4>
+          <p>Features like remote readings and in-home displays help consumers track usage and make informed energy decisions.</p>
+        </div>
+
+        <div class="benefit-card">
+          <i class="fas fa-chart-line"></i>
+          <h4>Real-Time Readings</h4>
+          <p>Consumers can track daily readings and bills, avoiding surprise charges at the end of the month.</p>
+        </div>
+
+        <div class="benefit-card">
+          <i class="fas fa-wallet"></i>
+          <h4>Flexible Recharge Options</h4>
+          <p>Users can recharge at their convenience, offering better control over energy usage and budget management.</p>
+        </div>
+
+        <div class="benefit-card">
+          <i class="fas fa-ban"></i>
+          <h4>No Reconnection Charges</h4>
+          <p>Disconnections don't incur reconnection fees, unlike traditional meters that often charge for reactivation.</p>
+        </div>
+
+        <div class="benefit-card">
+          <i class="fas fa-file-invoice"></i>
+          <h4>Reduced Billing Errors</h4>
+          <p>Real-time data transmission minimizes the risk of incorrect billing, ensuring accuracy based on actual consumption.</p>
+        </div>
+
+        <div class="benefit-card">
+          <i class="fas fa-globe"></i>
+          <h4>Online Monitoring</h4>
+          <p>Users can access their energy usage and bills online, making it easier to manage and monitor expenses.</p>
+        </div>
+
+        <div class="benefit-card">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h4>Quick Reporting of Issues</h4>
+          <p>Any malfunctions are immediately reported to utility providers, speeding up problem resolution.</p>
+        </div>
+
+        <div class="benefit-card">
+          <i class="fas fa-sync-alt"></i>
+          <h4>Continuous Bill Generation</h4>
+          <p>Smart meters ensure consistent billing, even during off-hours, preventing discrepancies from usage when the property is closed.</p>
+        </div>
       </div>
+
+      <h2>Disadvantages of Smart Meters</h2>
+
+      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">While smart meters offer many benefits, there are a few potential drawbacks to consider:</p>
+
+      <ul style="margin-top: 0cm;" type="disc">
+        <li class="MsoNormal" style="line-height: 150%; mso-list: l0 level1 lfo3; tab-stops: list 36.0pt; text-align: justify;"><strong>Network/Server Issues</strong>: In rare cases, network or server problems may prevent a recharge from being processed, leaving the household without power. It's advisable to recharge before the balance gets too low to avoid interruptions.</li>
+        <li class="MsoNormal" style="line-height: 150%; mso-list: l0 level1 lfo3; tab-stops: list 36.0pt; text-align: justify;"><strong>Average Billing During Malfunction</strong>: If the smart meter malfunctions, billing might be based on estimated consumption, which could result in overcharging or undercharging.</li>
+        <li class="MsoNormal" style="line-height: 150%; mso-list: l0 level1 lfo3; tab-stops: list 36.0pt; text-align: justify;"><strong>Pre-Payment Requirement</strong>: Smart meters often require payment to be made upfront, unlike traditional meters that allow post-billing. This might be inconvenient for some users.</li>
+        <li class="MsoNormal" style="line-height: 150%; mso-list: l0 level1 lfo3; tab-stops: list 36.0pt; text-align: justify;"><strong>No Physical Bill Copy</strong>: Smart meters generally do not provide a physical bill copy. Instead, all billing details are available online, which may not be suitable for individuals who prefer paper records.</li>
+      </ul>
+
+      <!-- Stats section -->
+      <div class="stats-card">
+        <div class="stats-number">27%</div>
+        <div class="stats-label">Market Share in India</div>
+        <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 2rem;">
+          <div>
+            <div class="stats-number" style="font-size: 1.5rem;">10M+</div>
+            <div>Annual Capacity</div>
+          </div>
+          <div>
+            <div class="stats-number" style="font-size: 1.5rem;">3</div>
+            <div>Manufacturing Plants</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Conclusion: The Future of Energy Management</h2>
+
+      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">Smart electric meters represent the future of energy management, offering automation, transparency, and efficiency. They enable real-time monitoring, accurate billing, and help consumers reduce their energy costs while contributing to grid stability and sustainability.</p>
+
+      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">As energy demands continue to grow, adopting smart metering technology will be crucial for optimizing energy consumption and promoting sustainability. Whether you need a single-phase or a three-phase meter, <strong>Genus Power</strong> provides cutting-edge solutions that cater to both residential and commercial energy needs.</p>
+
+      <h2>Connect with Genus Power</h2>
+
+      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">Genus Power is one of India's largest players in electricity metering solutions, holding a 27% market share. With manufacturing plants in Jaipur, Haridwar, and Guwahati, Genus Power boasts an annual installed capacity of over 10 million meters. To learn more about our advanced smart metering systems and how they can meet your energy requirements, <strong>contact us today</strong>!</p>
+
+      <!-- Tags section -->
+      <div class="post-tags">
+        <span class="post-tag"><i class="fas fa-tag"></i> smart-meter</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> electricity</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> energy</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> technology</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> genus-power</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> innovation</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> sustainability</span>
+      </div>
+    </div>
+
+    <!-- Share section -->
+    <div class="share-section">
+      <div class="share-title">
+        <i class="fas fa-share-alt"></i> Share this article
+      </div>
+      <div class="share-buttons">
+        <a href="#" class="share-btn facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="share-btn twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="share-btn linkedin"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+
+    <!-- Related posts (matching your blogs.html structure) -->
+    <div class="related-posts">
+      <h3 class="related-title">You might also like</h3>
+      <div class="related-grid">
+        <a href="#" class="related-card">
+          <div class="related-image"><i class="fas fa-microchip"></i></div>
+          <div class="related-content">
+            <h4>The Future of Smart Grid Technology</h4>
+            <p>How smart grids are revolutionizing energy distribution</p>
+          </div>
+        </a>
+
+        <a href="#" class="related-card">
+          <div class="related-image"><i class="fas fa-solar-panel"></i></div>
+          <div class="related-content">
+            <h4>Renewable Energy Integration</h4>
+            <p>Combining solar power with smart metering</p>
+          </div>
+        </a>
+
+        <a href="#" class="related-card">
+          <div class="related-image"><i class="fas fa-chart-bar"></i></div>
+          <div class="related-content">
+            <h4>Energy Saving Tips for Home</h4>
+            <p>Reduce your electricity bills with these simple tricks</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Navigation to blogs.html -->
+    <div style="text-align: center; margin: 3rem 0;">
+      <a href="../blogs.html" class="back-link" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
+        <i class="fas fa-arrow-left"></i> Back to all articles
+      </a>
     </div>
   </section>
 
-  <!-- DESTINATION SECTIONS (targets for slide buttons) -->
-  <section id="tools-section" class="content-block">
-    <h2>🔧 TOOLS</h2>
-    <p>quality equipment · workshop · innovation</p>
-  </section>
-
-  <section id="contact-section" class="content-block">
-    <h2>📞 CONTACT</h2>
-    <p>get in touch · support · collaboration</p>
-  </section>
-
-  <section id="legal-section" class="content-block">
-    <h2>⚖️ LEGAL</h2>
-    <p>terms · privacy · compliance</p>
-  </section>
+  <!-- FOOTER -->
+  <div id="site-footer"></div>
+  
+  <!-- Go to Top -->
+  <script src="/assets/Scripts/gototop.js"></script>
 
   <script>
-    (function() {
-      const track = document.getElementById('sliderTrack');
-      const slides = Array.from(document.querySelectorAll('.slide'));
-      const leftArrow = document.getElementById('arrowLeft');
-      const rightArrow = document.getElementById('arrowRight');
-      const container = document.getElementById('sliderContainer');
+    // Add metadata for blogs.html integration
+    document.addEventListener('DOMContentLoaded', function() {
+      // You can add any interactive features here
+      
+      // Share button functionality
+      const shareButtons = document.querySelectorAll('.share-btn');
+      const pageUrl = encodeURIComponent(window.location.href);
+      const pageTitle = encodeURIComponent(document.title);
 
-      let currentIndex = 0;
-      let autoPlayInterval;
-      const totalSlides = slides.length; // 3
-
-      // ----- helper to move to a specific slide (loop) -----
-      function goToSlide(index) {
-        if (index < 0) index = totalSlides - 1;
-        if (index >= totalSlides) index = 0;
-        currentIndex = index;
-        const shiftPercent = -currentIndex * 100;
-        track.style.transform = `translateX(${shiftPercent}%)`;
-      }
-
-      function nextSlide() {
-        goToSlide(currentIndex + 1);
-      }
-
-      function prevSlide() {
-        goToSlide(currentIndex - 1);
-      }
-
-      // ----- autoplay -----
-      function startAutoPlay() {
-        if (autoPlayInterval) clearInterval(autoPlayInterval);
-        autoPlayInterval = setInterval(() => {
-          nextSlide();
-        }, 4000);
-      }
-
-      function stopAutoPlay() {
-        if (autoPlayInterval) {
-          clearInterval(autoPlayInterval);
-          autoPlayInterval = null;
-        }
-      }
-
-      function restartAutoPlay() {
-        if (!autoPlayInterval) {
-          startAutoPlay();
-        }
-      }
-
-      // hover pause
-      container.addEventListener('mouseenter', () => {
-        container.classList.add('pause-autoplay');
-        stopAutoPlay();
-      });
-
-      container.addEventListener('mouseleave', () => {
-        container.classList.remove('pause-autoplay');
-        restartAutoPlay();
-      });
-
-      // arrow click events
-      leftArrow.addEventListener('click', (e) => {
-        e.stopPropagation();
-        prevSlide();
-        stopAutoPlay();
-        restartAutoPlay();
-      });
-
-      rightArrow.addEventListener('click', (e) => {
-        e.stopPropagation();
-        nextSlide();
-        stopAutoPlay();
-        restartAutoPlay();
-      });
-
-      // BUTTON CLICK: navigate to corresponding section (smooth)
-      document.querySelectorAll('.slide-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          const targetId = this.getAttribute('data-target');
-          if (targetId) {
-            const targetSection = document.getElementById(targetId);
-            if (targetSection) {
-              targetSection.scrollIntoView({ behavior: 'smooth' });
-            }
+      shareButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          let shareUrl = '';
+          
+          if (btn.classList.contains('facebook')) {
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
+          } else if (btn.classList.contains('twitter')) {
+            shareUrl = `https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`;
+          } else if (btn.classList.contains('linkedin')) {
+            shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`;
+          } else if (btn.classList.contains('whatsapp')) {
+            shareUrl = `https://wa.me/?text=${pageTitle}%20${pageUrl}`;
+          }
+          
+          if (shareUrl) {
+            window.open(shareUrl, '_blank', 'width=600,height=400');
           }
         });
       });
-
-      // initial slide
-      goToSlide(0);
-      startAutoPlay();
-
-      // optional: visibilitychange
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          stopAutoPlay();
-        } else {
-          if (!container.matches(':hover')) {
-            restartAutoPlay();
-          }
-        }
-      });
-
-      // on load, if container hovered stop autoplay
-      window.addEventListener('load', () => {
-        if (container.matches(':hover')) {
-          stopAutoPlay();
-        }
-      });
-    })();
+    });
   </script>
-
-  <!-- Mobile behaviour: height reduced + background-size: contain guarantees full image visibility (no cropping) -->
 </body>
 </html>
