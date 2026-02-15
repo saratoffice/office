@@ -132,6 +132,7 @@ body {
   color: var(--dark);
   padding: 5px 10px;
   z-index: 1001;
+  transition: transform 0.3s ease;
 }
 
 /* =================================
@@ -173,16 +174,15 @@ body {
   }
   
   /* Dropdown styling for desktop */
- /* Parent dropdown container */
-.dropdown {
+  .dropdown {
     position: relative;
-}
+  }
 
-/* Dropdown menu */
-.dropdown-menu {
+  /* Dropdown menu */
+  .dropdown-menu {
     display: none;
     position: absolute;
-    top: 100%;              /* Directly below parent */
+    top: 100%;
     left: 0;
     background: #ffffff;
     min-width: 220px;
@@ -191,49 +191,64 @@ body {
     z-index: 9999;
     list-style: none;
     padding: 5px 0;
-}
+  }
 
-/* Show dropdown on hover */
-.dropdown:hover > .dropdown-menu {
+  /* Show dropdown on hover */
+  .dropdown:hover > .dropdown-menu {
     display: block;
-}
+  }
 
-/* Dropdown list items */
-.dropdown-menu li {
+  /* Dropdown list items */
+  .dropdown-menu li {
     width: 100%;
-}
+  }
 
-/* Dropdown links */
-.dropdown-menu a {
+  /* Dropdown links */
+  .dropdown-menu a {
     display: block;
     padding: 10px 15px;
     text-decoration: none;
     color: #333;
     border-radius: 0;
     transition: background 0.3s ease, color 0.3s ease;
-}
+  }
 
-/* Hover effect */
-.dropdown-menu a:hover {
+  /* Hover effect */
+  .dropdown-menu a:hover {
     background: var(--primary);
     color: #fff;
+  }
 }
 
-
 /* =================================
-   MOBILE STYLES (900px and below)
+   MOBILE STYLES (900px and below) - UPDATED
    ================================= */
 @media (max-width: 900px) {
 
   /* Show hamburger */
   .menu-toggle {
     display: block;
+    font-size: 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--dark);
+    padding: 8px 12px;
+    z-index: 1001;
+    transition: transform 0.3s ease;
   }
 
   /* Header layout */
   .site-header {
     position: relative;
     flex-wrap: wrap;
+    min-height: 70px;
+    padding: 15px 20px;
+  }
+
+  /* Logo adjustment */
+  .logo img {
+    max-height: 45px;
   }
 
   /* Nav should take full width */
@@ -241,20 +256,23 @@ body {
     width: 100%;
   }
 
-  /* Mobile menu */
+  /* Mobile menu - initially hidden */
   .menu {
     display: none;
     flex-direction: column;
     width: 100%;
     background: #ffffff;
-    padding: 15px;
-    border-radius: 0 0 10px 10px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    padding: 20px;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     position: absolute;
     top: 100%;
     left: 0;
     z-index: 1000;
     list-style: none;
+    margin: 0;
+    max-height: 80vh;
+    overflow-y: auto;
   }
 
   /* When toggle is clicked */
@@ -265,17 +283,24 @@ body {
   /* Menu items */
   .menu > li {
     width: 100%;
-    margin: 4px 0;
+    margin: 2px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .menu > li:last-child {
+    border-bottom: none;
   }
 
   .menu a {
     display: block;
     width: 100%;
-    padding: 12px 15px;
+    padding: 14px 16px;
     text-decoration: none;
     font-weight: 600;
     color: var(--dark);
-    border-radius: 6px;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
   }
 
   .menu a:hover,
@@ -287,19 +312,23 @@ body {
   /* Dropdown container */
   .dropdown {
     width: 100%;
+    position: relative;
   }
 
   .dropdown > a {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-right: 16px;
   }
 
   /* Arrow icon */
   .dropdown > a::after {
-    content: "▾";
-    font-size: 16px;
+    content: "▼";
+    font-size: 14px;
+    margin-left: 8px;
     transition: transform 0.3s ease;
+    color: var(--primary);
   }
 
   .dropdown.open > a::after {
@@ -309,12 +338,12 @@ body {
   /* Dropdown menu */
   .dropdown-menu {
     display: none;
-    position: static;
-    background: #f5f5f5;
-    margin: 5px 0 5px 15px;
-    border-radius: 6px;
+    background: #f8f9fa;
+    margin: 5px 0 10px 15px;
+    border-radius: 10px;
     list-style: none;
-    padding: 5px 0;
+    padding: 8px 0;
+    border-left: 4px solid var(--primary);
   }
 
   .dropdown.open > .dropdown-menu {
@@ -326,15 +355,15 @@ body {
   }
 
   .dropdown-menu a {
-    padding: 10px 15px;
+    padding: 12px 20px;
     font-size: 0.95em;
+    color: #444;
   }
 
   .dropdown-menu a:hover {
     background: var(--primary);
     color: #ffffff;
   }
-
 }
 
 /* =================================
@@ -669,7 +698,7 @@ form button {
   .facebook-box {
     width: 100%;
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio (9/16 = 0.5625) */
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
     height: 0;
     overflow: hidden;
     border-radius: 8px;
@@ -683,18 +712,9 @@ form button {
     left: 0;
     width: 100%;
     height: 100%;
-    min-height: auto; /* Remove the min-height */
+    min-height: auto;
     border-radius: 8px;
   }
-  
-  /* Alternative: If you prefer fixed height instead of aspect ratio */
-  /*
-  .youtube-box iframe,
-  .facebook-box iframe {
-    height: 200px;
-    min-height: auto;
-  }
-  */
   
   .footer-links-grid {
     grid-template-columns: 1fr;
@@ -741,14 +761,6 @@ form button {
   .facebook-box {
     padding-bottom: 56.25%; /* Keep 16:9 aspect ratio */
   }
-  
-  /* Alternative fixed height for very small screens */
-  /*
-  .youtube-box iframe,
-  .facebook-box iframe {
-    height: 180px;
-  }
-  */
   
   .footer-links-grid {
     gap: 15px;
