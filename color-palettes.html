@@ -10,125 +10,130 @@
   <link rel="stylesheet" href="style.css">
   <!-- ✅ IMPORTANT: site components for header/footer etc. -->
   <script src="assets/Scripts/site-components.js" defer></script>
- <style>
-        /* minimal base for the palette rows – assumes global header/footer/menu exist elsewhere */
-        body {
-            background: #f5f7fa;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+<style>
+        /* Isolated styles that won't affect header/footer */
+        .color-palette-section {
+            display: block;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 2rem 1rem;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
         }
-        /* palette grid (exactly as provided, but with pointer and copy transition) */
-        .color-palette {
+
+        .color-palette-section .color-palette {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 1.2rem;
+            gap: 1.5rem;
             margin: 1.5rem 0;
-            max-width: 1100px;
         }
-        .color-box {
+
+        .color-palette-section .color-box {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 120px;
+            width: 140px;
             cursor: pointer;
-            transition: transform 0.1s ease;
-            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.2s ease;
         }
-        .color-box:active {
-            transform: scale(0.97);
+
+        .color-palette-section .color-box:hover {
+            transform: translateY(-5px);
         }
-        .color {
+
+        .color-palette-section .color {
             width: 100%;
-            height: 100px;
-            border-radius: 16px 16px 8px 8px;
+            height: 120px;
+            border-radius: 12px 12px 8px 8px;
             display: flex;
             align-items: flex-end;
             justify-content: center;
-            padding-bottom: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.2s, filter 0.2s;
+            padding-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
             border: 2px solid white;
-            box-sizing: border-box;
-        }
-        .color-box:hover .color {
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
-            filter: brightness(1.02);
-        }
-        .color-code {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(3px);
-            padding: 4px 8px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            color: #1e1e2f;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.6);
-        }
-        .color-name {
-            margin-top: 8px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #2d3e50;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
         }
 
-        /* temporary copy-feedback snackbar (appears near cursor / gently) */
-        #copy-toast {
+        /* Color code visible only on hover */
+        .color-palette-section .color-code {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            font-family: monospace;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+            pointer-events: none;
+        }
+
+        .color-palette-section .color-box:hover .color-code {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .color-palette-section .color-name {
+            margin-top: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+            text-align: center;
+        }
+
+        /* Toast notification */
+        .color-palette-section #copy-toast {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%) scale(0.9);
             background: #1e293b;
             color: white;
-            padding: 10px 24px;
-            border-radius: 40px;
-            font-size: 0.95rem;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-size: 1rem;
             font-weight: 500;
-            box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             opacity: 0;
-            transition: opacity 0.2s, transform 0.2s;
+            transition: all 0.3s ease;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 10000;
             display: flex;
             align-items: center;
             gap: 8px;
-            border: 1px solid #ffffff30;
-            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        #copy-toast.show {
+
+        .color-palette-section #copy-toast.show {
             opacity: 1;
             transform: translateX(-50%) scale(1);
         }
-        #copy-toast span {
-            background: #2ecc71;
+
+        .color-palette-section #copy-toast span {
+            background: #10b981;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             font-size: 14px;
         }
-        /* optional inline message for unsupported fallback */
-        .copy-instruction {
-            color: #4b5563;
-            font-size: 0.9rem;
-            margin: 10px 0 -10px 0;
-            background: #eef2f6;
-            padding: 5px 14px;
-            border-radius: 40px;
+
+        .color-palette-section .copy-instruction {
+            text-align: center;
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            font-style: italic;
         }
     </style>
+
 </head>
 
 <body>
@@ -137,10 +142,8 @@
 
 
 <!-- CONTENT -->
- <!-- small hint (non‑intrusive) -->
-    <div class="copy-instruction">✨ click any color → hex copied</div>
+ <div class="copy-instruction">🎨 Hover to see color code • Click to copy</div>
 
-    <!-- ==========  EXACT COLOR PALETTES (provided, untouched) ========== -->
     <div class="color-palette">
         <div class="color-box" data-color="#FF0000" data-color-name="Red">
             <div class="color" style="background-color: #FF0000;">
@@ -179,6 +182,7 @@
             <span class="color-name">Purple</span>
         </div>
     </div>
+
     <div class="color-palette">
         <div class="color-box" data-color="#8a2be2" data-color-name="Blue-Violet">
             <div class="color" style="background-color: #8a2be2;">
@@ -217,6 +221,7 @@
             <span class="color-name">Red-Violet</span>
         </div>
     </div>
+
     <div class="color-palette">
         <div class="color-box" data-color="#253D5B" data-color-name="Dark Blue">
             <div class="color" style="background-color: #253D5B;">
@@ -255,6 +260,7 @@
             <span class="color-name">Supphine Yellow</span>
         </div>
     </div>
+
     <div class="color-palette">
         <div class="color-box" data-color="#0077b6" data-color-name="Biloxy Blue">
             <div class="color" style="background-color: #0077b6;">
@@ -293,6 +299,7 @@
             <span class="color-name">Mint Green</span>
         </div>
     </div>
+
     <div class="color-palette">
         <div class="color-box" data-color="#abc4ff" data-color-name="Light Blue">
             <div class="color" style="background-color: #abc4ff;">
@@ -332,127 +339,89 @@
         </div>
     </div>
 
-    <!-- hidden toast for copy feedback -->
     <div id="copy-toast">
-        <span>✓</span> copied <span id="copied-hex">#FF0000</span>
+        <span>✓</span> Copied <span id="copied-hex">#FF0000</span>
     </div>
 
-    <!-- JavaScript: onclick copier (no dependencies) -->
     <script>
         (function() {
-            // get all color boxes (they already have data-color attribute)
-            const colorBoxes = document.querySelectorAll('.color-box');
-            const toast = document.getElementById('copy-toast');
-            const copiedHexSpan = document.getElementById('copied-hex');
+            const section = document.querySelector('.color-palette-section');
+            const colorBoxes = section.querySelectorAll('.color-box');
+            const toast = section.querySelector('#copy-toast');
+            const copiedHexSpan = section.querySelector('#copied-hex');
 
-            // if no toast somehow, exit gracefully
             if (!toast || !copiedHexSpan) return;
 
             let hideTimeout = null;
 
-            // function to hide toast with slight delay (reusable)
             function showToastMessage(hex) {
-                // update hex text inside toast
                 copiedHexSpan.textContent = hex;
-
-                // clear any pending hide timeout
+                
                 if (hideTimeout) {
                     clearTimeout(hideTimeout);
-                    hideTimeout = null;
                 }
 
-                // show toast (add show class)
                 toast.classList.add('show');
-
-                // set timer to hide after 1.5 seconds
+                
                 hideTimeout = setTimeout(() => {
                     toast.classList.remove('show');
-                    hideTimeout = null;
                 }, 1500);
             }
 
-            // copy function using modern clipboard API, with fallback
-            function copyToClipboard(text, fromElement) {
-                // try using clipboard API first (secure context)
+            function copyToClipboard(text) {
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(text).then(() => {
                         showToastMessage(text);
-                    }).catch(err => {
-                        console.warn('Clipboard write failed, using fallback', err);
-                        fallbackCopy(text);
-                    });
+                    }).catch(() => fallbackCopy(text));
                 } else {
-                    // fallback for non-https or old browsers
                     fallbackCopy(text);
                 }
 
-                // fallback method using textarea
                 function fallbackCopy(text) {
                     const textArea = document.createElement('textarea');
                     textArea.value = text;
-                    // make it invisible
                     textArea.style.position = 'fixed';
                     textArea.style.top = '-999px';
                     textArea.style.left = '-999px';
-                    textArea.style.width = '2em';
-                    textArea.style.height = '2em';
-                    textArea.style.padding = '0';
-                    textArea.style.border = 'none';
-                    textArea.style.outline = 'none';
-                    textArea.style.boxShadow = 'none';
-                    textArea.style.background = 'transparent';
                     document.body.appendChild(textArea);
                     textArea.focus();
                     textArea.select();
 
                     try {
-                        const successful = document.execCommand('copy');
-                        if (successful) {
+                        if (document.execCommand('copy')) {
                             showToastMessage(text);
                         } else {
                             alert('Press Ctrl+C to copy: ' + text);
                         }
                     } catch (err) {
-                        alert('Could not copy, manual: ' + text);
-                    } finally {
-                        document.body.removeChild(textArea);
+                        alert('Could not copy: ' + text);
                     }
+                    document.body.removeChild(textArea);
                 }
             }
 
-            // attach click handler to every color-box
             colorBoxes.forEach(box => {
                 box.addEventListener('click', function(e) {
-                    // get the hex from data-color (original source)
                     const hex = this.dataset.color;
-                    if (!hex) return;  // fallback: maybe extract from child .color-code?
-                    
-                    // copy to clipboard
-                    copyToClipboard(hex, this);
-
-                    // optional little animation on the color block
-                    const colorDiv = this.querySelector('.color');
-                    if (colorDiv) {
-                        colorDiv.style.transition = 'filter 0.15s, box-shadow 0.15s';
-                        colorDiv.style.filter = 'brightness(1.1) saturate(1.2)';
-                        colorDiv.style.boxShadow = '0 0 0 3px white, 0 8px 18px black';
-                        setTimeout(() => {
-                            colorDiv.style.filter = '';
-                            colorDiv.style.boxShadow = '';
-                        }, 200);
+                    if (hex) {
+                        copyToClipboard(hex);
+                        
+                        // Quick flash animation
+                        const colorDiv = this.querySelector('.color');
+                        if (colorDiv) {
+                            colorDiv.style.transform = 'scale(0.98)';
+                            colorDiv.style.filter = 'brightness(1.1)';
+                            setTimeout(() => {
+                                colorDiv.style.transform = '';
+                                colorDiv.style.filter = '';
+                            }, 150);
+                        }
                     }
                 });
-
-                // also show pointer cursor (already in css, but ensure)
-                box.style.cursor = 'pointer';
             });
-
-            // if a box contains .color-code we could also use that, but data-color is reliable.
-            // Just in case any .color-box missing data-color? (all provided have it)
-            // Add a tiny extra: if data-color is missing, read from child .color-code text.
-            // but here we trust the given HTML (it's complete).
         })();
     </script>
+</section>
   <!-- FOOTER -->
 <div id="site-footer"></div>
   <!-- Go to Top -->
