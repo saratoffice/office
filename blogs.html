@@ -2,29 +2,1412 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sarat Office</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blogs | Article Gallery</title>
   
-  
- <!-- Common CSS (menu, footer, global styles) -->
+  <!-- Common CSS (menu, footer, global styles) -->
   <link rel="stylesheet" href="style.css">
-  <!-- ✅ IMPORTANT: site components for header/footer etc. -->
+  <!-- Site components for header/footer -->
   <script src="assets/Scripts/site-components.js" defer></script>
   
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    /* Isolated styles for blogs section */
+    .blogs-section {
+      display: block;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      min-height: 100vh;
+    }
+
+    .blogs-section h1 {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .blogs-section .subtitle {
+      text-align: center;
+      color: #64748b;
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Search and Filter Bar */
+    .blogs-section .filter-bar {
+      background: white;
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .blogs-section .search-box {
+      flex: 2;
+      min-width: 250px;
+      position: relative;
+    }
+
+    .blogs-section .search-box i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+    }
+
+    .blogs-section .search-box input {
+      width: 100%;
+      padding: 0.8rem 1rem 0.8rem 2.5rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #f8fafc;
+    }
+
+    .blogs-section .search-box input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .blogs-section .filter-controls {
+      flex: 3;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .blogs-section .category-filter {
+      position: relative;
+      min-width: 180px;
+    }
+
+    .blogs-section .category-filter select {
+      width: 100%;
+      padding: 0.8rem 2rem 0.8rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      background: #f8fafc;
+      cursor: pointer;
+      appearance: none;
+    }
+
+    .blogs-section .category-filter i {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      pointer-events: none;
+    }
+
+    .blogs-section .sort-controls {
+      display: flex;
+      gap: 0.5rem;
+      background: #f1f5f9;
+      padding: 0.3rem;
+      border-radius: 12px;
+    }
+
+    .blogs-section .sort-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .blogs-section .sort-btn.active {
+      background: white;
+      color: #3b82f6;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .blogs-section .sort-btn:hover {
+      color: #3b82f6;
+    }
+
+    .blogs-section .tags-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    .blogs-section .tag {
+      padding: 0.4rem 1rem;
+      background: #f1f5f9;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .blogs-section .tag:hover {
+      background: #e2e8f0;
+      transform: translateY(-2px);
+    }
+
+    .blogs-section .tag.active {
+      background: #3b82f6;
+      color: white;
+      border-color: #2563eb;
+    }
+
+    .blogs-section .tag i {
+      margin-right: 0.3rem;
+      font-size: 0.7rem;
+    }
+
+    /* Results info */
+    .blogs-section .results-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+
+    .blogs-section .clear-filters {
+      color: #3b82f6;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.3rem 1rem;
+      background: #eff6ff;
+      border-radius: 30px;
+      transition: all 0.2s ease;
+    }
+
+    .blogs-section .clear-filters:hover {
+      background: #dbeafe;
+    }
+
+    /* Blog Grid - 4x3 layout */
+    .blogs-section .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.8rem;
+      margin: 2rem 0;
+    }
+
+    /* Blog Card */
+    .blogs-section .blog-card {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    .blogs-section .blog-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+    }
+
+    /* Blog Card Image/Header */
+    .blogs-section .blog-image {
+      height: 160px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 3rem;
+      transition: all 0.3s ease;
+    }
+
+    .blogs-section .blog-card:nth-child(6n+1) .blog-image { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
+    .blogs-section .blog-card:nth-child(6n+2) .blog-image { background: linear-gradient(135deg, #10b981, #059669); }
+    .blogs-section .blog-card:nth-child(6n+3) .blog-image { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .blogs-section .blog-card:nth-child(6n+4) .blog-image { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .blogs-section .blog-card:nth-child(6n+5) .blog-image { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+    .blogs-section .blog-card:nth-child(6n+6) .blog-image { background: linear-gradient(135deg, #ec4899, #db2777); }
+
+    .blogs-section .blog-image i {
+      background: rgba(255, 255, 255, 0.2);
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      backdrop-filter: blur(5px);
+      font-size: 2rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .blogs-section .blog-category {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(5px);
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #333;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .blogs-section .blog-content {
+      padding: 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .blogs-section .blog-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      color: #1e293b;
+      line-height: 1.4;
+    }
+
+    .blogs-section .blog-excerpt {
+      font-size: 0.9rem;
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      flex-grow: 1;
+    }
+
+    .blogs-section .blog-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 0.8rem;
+    }
+
+    .blogs-section .blog-meta i {
+      margin-right: 0.3rem;
+    }
+
+    .blogs-section .blog-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .blogs-section .blog-tag {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      background: #f1f5f9;
+      border-radius: 20px;
+      color: #475569;
+    }
+
+    .blogs-section .read-more {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #3b82f6;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .blogs-section .read-more i {
+      transition: transform 0.2s ease;
+    }
+
+    .blogs-section .blog-card:hover .read-more i {
+      transform: translateX(5px);
+    }
+
+    /* Pagination */
+    .blogs-section .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 3rem 0 2rem;
+    }
+
+    .blogs-section .page-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      background: white;
+      color: #475569;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .blogs-section .page-btn:hover:not(.active) {
+      background: #f8fafc;
+      border-color: #3b82f6;
+      color: #3b82f6;
+    }
+
+    .blogs-section .page-btn.active {
+      background: #3b82f6;
+      border-color: #3b82f6;
+      color: white;
+    }
+
+    .blogs-section .page-btn.next-prev {
+      width: auto;
+      padding: 0 1rem;
+    }
+
+    .blogs-section .page-dots {
+      color: #94a3b8;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .blogs-section .blog-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .blogs-section .blog-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .blogs-section .blog-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .blogs-section .filter-bar {
+        flex-direction: column;
+      }
+      
+      .blogs-section .filter-controls {
+        width: 100%;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Loading skeleton */
+    .blogs-section .loading {
+      text-align: center;
+      padding: 3rem;
+      color: #94a3b8;
+    }
+
+    .blogs-section .loading i {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* No results */
+    .blogs-section .no-results {
+      text-align: center;
+      padding: 4rem;
+      background: white;
+      border-radius: 24px;
+      color: #94a3b8;
+    }
+
+    .blogs-section .no-results i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #cbd5e1;
+    }
+  </style>
 </head>
 
 <body>
-  
+  <div id="site-header"></div>
 
-<div id="site-header"></div>
+  <!-- Main blogs section -->
+  <section class="blogs-section">
+    <h1>📚 Blog Gallery</h1>
+    <div class="subtitle">Discover inspiring articles, stories, and insights</div>
 
+    <!-- Search and Filter Bar -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search articles by title or content...">
+      </div>
+      
+      <div class="filter-controls">
+        <div class="category-filter">
+          <select id="categorySelect">
+            <option value="all">All Categories</option>
+            <option value="technology">Technology</option>
+            <option value="lifestyle">Lifestyle</option>
+            <option value="travel">Travel</option>
+            <option value="food">Food & Cooking</option>
+            <option value="health">Health & Wellness</option>
+            <option value="business">Business</option>
+            <option value="design">Design</option>
+            <option value="science">Science</option>
+            <option value="art">Art & Culture</option>
+          </select>
+          <i class="fas fa-chevron-down"></i>
+        </div>
 
-<!-- CONTENT -->
+        <div class="sort-controls">
+          <button class="sort-btn active" data-sort="latest"><i class="fas fa-clock"></i> Latest</button>
+          <button class="sort-btn" data-sort="oldest"><i class="fas fa-calendar"></i> Oldest</button>
+          <button class="sort-btn" data-sort="popular"><i class="fas fa-fire"></i> Popular</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tags Cloud -->
+    <div class="tags-cloud" id="tagsCloud">
+      <span class="tag active" data-tag="all"><i class="fas fa-tag"></i> All</span>
+      <span class="tag" data-tag="javascript"><i class="fas fa-code"></i> JavaScript</span>
+      <span class="tag" data-tag="react"><i class="fas fa-react"></i> React</span>
+      <span class="tag" data-tag="design"><i class="fas fa-paint-brush"></i> Design</span>
+      <span class="tag" data-tag="tutorial"><i class="fas fa-graduation-cap"></i> Tutorial</span>
+      <span class="tag" data-tag="tips"><i class="fas fa-lightbulb"></i> Tips</span>
+      <span class="tag" data-tag="productivity"><i class="fas fa-rocket"></i> Productivity</span>
+      <span class="tag" data-tag="career"><i class="fas fa-briefcase"></i> Career</span>
+      <span class="tag" data-tag="ai"><i class="fas fa-robot"></i> AI</span>
+      <span class="tag" data-tag="webdev"><i class="fas fa-globe"></i> Web Dev</span>
+    </div>
+
+    <!-- Results Info -->
+    <div class="results-info">
+      <span id="resultsCount">Showing 12 of 48 articles</span>
+      <span class="clear-filters" id="clearFilters"><i class="fas fa-times"></i> Clear filters</span>
+    </div>
+
+    <!-- Blog Grid - 4x3 -->
+    <div class="blog-grid" id="blogGrid">
+      <!-- Blog posts will be inserted here by JavaScript -->
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination">
+      <!-- Pagination will be inserted here by JavaScript -->
+    </div>
+  </section>
 
   <!-- FOOTER -->
-<div id="site-footer"></div>
+  <div id="site-footer"></div>
+  
   <!-- Go to Top -->
   <script src="/assets/Scripts/gototop.js"></script>
 
+  <script>
+    (function() {
+      // Sample blog data - 48 posts (4 pages of 12)
+      const blogPosts = [
+        // Technology Category
+        {
+          id: 1,
+          title: "The Future of JavaScript in 2025",
+          excerpt: "Exploring upcoming features and trends that will shape the JavaScript ecosystem in the coming years.",
+          content: "Full article content here...",
+          category: "technology",
+          tags: ["javascript", "webdev", "programming"],
+          date: "2025-02-15",
+          readTime: 5,
+          views: 1234,
+          author: "Sarah Chen"
+        },
+        {
+          id: 2,
+          title: "Building Scalable React Applications",
+          excerpt: "Best practices for structuring large-scale React apps that stand the test of time.",
+          category: "technology",
+          tags: ["react", "javascript", "webdev"],
+          date: "2025-02-10",
+          readTime: 8,
+          views: 2341,
+          author: "Mike Johnson"
+        },
+        {
+          id: 3,
+          title: "AI-Powered Development Tools",
+          excerpt: "How artificial intelligence is revolutionizing the way we write and debug code.",
+          category: "technology",
+          tags: ["ai", "programming", "tools"],
+          date: "2025-02-05",
+          readTime: 6,
+          views: 3456,
+          author: "Alex Rivera"
+        },
+        {
+          id: 4,
+          title: "CSS Grid vs Flexbox",
+          excerpt: "When to use each layout system and how to combine them for maximum flexibility.",
+          category: "technology",
+          tags: ["css", "webdev", "design"],
+          date: "2025-01-28",
+          readTime: 4,
+          views: 1567,
+          author: "Emma Watson"
+        },
+        
+        // Lifestyle Category
+        {
+          id: 5,
+          title: "10 Habits of Highly Productive People",
+          excerpt: "Simple daily routines that can transform your productivity and work-life balance.",
+          category: "lifestyle",
+          tags: ["productivity", "tips", "career"],
+          date: "2025-02-12",
+          readTime: 7,
+          views: 5678,
+          author: "James Clear"
+        },
+        {
+          id: 6,
+          title: "Minimalist Living: Less is More",
+          excerpt: "How decluttering your space can lead to a clearer mind and more fulfilling life.",
+          category: "lifestyle",
+          tags: ["minimalism", "lifestyle", "tips"],
+          date: "2025-02-08",
+          readTime: 5,
+          views: 2890,
+          author: "Marie Kondo"
+        },
+        {
+          id: 7,
+          title: "Morning Routines of Successful CEOs",
+          excerpt: "What the world's most successful people do before 8 AM.",
+          category: "lifestyle",
+          tags: ["career", "productivity", "success"],
+          date: "2025-02-01",
+          readTime: 6,
+          views: 4321,
+          author: "Tim Cook"
+        },
+        {
+          id: 8,
+          title: "Digital Detox: Reconnecting with Reality",
+          excerpt: "Taking a break from screens to improve mental health and relationships.",
+          category: "lifestyle",
+          tags: ["health", "wellness", "tips"],
+          date: "2025-01-25",
+          readTime: 4,
+          views: 1987,
+          author: "Cal Newport"
+        },
+        
+        // Travel Category
+        {
+          id: 9,
+          title: "Hidden Gems of Southeast Asia",
+          excerpt: "Off-the-beaten-path destinations that offer authentic experiences away from tourists.",
+          category: "travel",
+          tags: ["travel", "adventure", "asia"],
+          date: "2025-02-14",
+          readTime: 9,
+          views: 3452,
+          author: "Rick Steves"
+        },
+        {
+          id: 10,
+          title: "Budget Travel Hacks for 2025",
+          excerpt: "How to see the world without breaking the bank.",
+          category: "travel",
+          tags: ["travel", "tips", "budget"],
+          date: "2025-02-09",
+          readTime: 5,
+          views: 2789,
+          author: "Matt Kepnes"
+        },
+        {
+          id: 11,
+          title: "Solo Travel: A Beginner's Guide",
+          excerpt: "Everything you need to know about embarking on your first solo adventure.",
+          category: "travel",
+          tags: ["travel", "adventure", "tips"],
+          date: "2025-02-03",
+          readTime: 7,
+          views: 3451,
+          author: "Kristin Addis"
+        },
+        {
+          id: 12,
+          title: "Sustainable Tourism Practices",
+          excerpt: "How to travel responsibly and minimize your environmental impact.",
+          category: "travel",
+          tags: ["travel", "environment", "sustainability"],
+          date: "2025-01-30",
+          readTime: 5,
+          views: 1678,
+          author: "Lonely Planet"
+        },
+        
+        // Food Category
+        {
+          id: 13,
+          title: "Plant-Based Recipes for Beginners",
+          excerpt: "Delicious and easy vegan meals that even meat-lovers will enjoy.",
+          category: "food",
+          tags: ["cooking", "vegan", "recipes"],
+          date: "2025-02-13",
+          readTime: 6,
+          views: 2123,
+          author: "Jamie Oliver"
+        },
+        {
+          id: 14,
+          title: "The Art of Sourdough Baking",
+          excerpt: "Master the perfect loaf with these time-tested techniques.",
+          category: "food",
+          tags: ["baking", "cooking", "recipes"],
+          date: "2025-02-07",
+          readTime: 8,
+          views: 3345,
+          author: "Paul Hollywood"
+        },
+        {
+          id: 15,
+          title: "Wine Pairing 101",
+          excerpt: "Simple guidelines for matching wine with any meal.",
+          category: "food",
+          tags: ["wine", "cooking", "tips"],
+          date: "2025-02-02",
+          readTime: 4,
+          views: 1567,
+          author: "Jancis Robinson"
+        },
+        {
+          id: 16,
+          title: "Meal Prep for Busy Professionals",
+          excerpt: "Save time and eat healthy with these meal prep strategies.",
+          category: "food",
+          tags: ["cooking", "productivity", "health"],
+          date: "2025-01-27",
+          readTime: 5,
+          views: 2789,
+          author: "Gwyneth Paltrow"
+        },
+        
+        // Health Category
+        {
+          id: 17,
+          title: "Mindfulness Meditation for Stress Relief",
+          excerpt: "Simple techniques to reduce anxiety and improve focus.",
+          category: "health",
+          tags: ["meditation", "mental-health", "wellness"],
+          date: "2025-02-11",
+          readTime: 5,
+          views: 4567,
+          author: "Deepak Chopra"
+        },
+        {
+          id: 18,
+          title: "Home Workout Routines",
+          excerpt: "Effective exercises you can do without any equipment.",
+          category: "health",
+          tags: ["fitness", "workout", "health"],
+          date: "2025-02-06",
+          readTime: 6,
+          views: 3456,
+          author: "Joe Wicks"
+        },
+        {
+          id: 19,
+          title: "Sleep Optimization Guide",
+          excerpt: "Science-backed strategies for better sleep and more energy.",
+          category: "health",
+          tags: ["sleep", "health", "wellness"],
+          date: "2025-01-31",
+          readTime: 7,
+          views: 2890,
+          author: "Matthew Walker"
+        },
+        {
+          id: 20,
+          title: "Nutrition Myths Debunked",
+          excerpt: "Separating fact from fiction in the world of diet and nutrition.",
+          category: "health",
+          tags: ["nutrition", "health", "science"],
+          date: "2025-01-24",
+          readTime: 5,
+          views: 1987,
+          author: "Michael Greger"
+        },
+        
+        // Business Category
+        {
+          id: 21,
+          title: "Startup Funding Guide",
+          excerpt: "How to secure venture capital and angel investment for your startup.",
+          category: "business",
+          tags: ["startup", "business", "career"],
+          date: "2025-02-04",
+          readTime: 9,
+          views: 2345,
+          author: "Paul Graham"
+        },
+        {
+          id: 22,
+          title: "Remote Team Management",
+          excerpt: "Best practices for leading distributed teams effectively.",
+          category: "business",
+          tags: ["management", "remote-work", "career"],
+          date: "2025-01-29",
+          readTime: 6,
+          views: 1890,
+          author: "Jason Fried"
+        },
+        {
+          id: 23,
+          title: "Personal Branding Strategies",
+          excerpt: "Build a powerful personal brand that opens doors.",
+          category: "business",
+          tags: ["branding", "career", "marketing"],
+          date: "2025-01-22",
+          readTime: 5,
+          views: 2678,
+          author: "Gary Vaynerchuk"
+        },
+        {
+          id: 24,
+          title: "Financial Freedom Blueprint",
+          excerpt: "Steps to achieve financial independence and early retirement.",
+          category: "business",
+          tags: ["finance", "investing", "career"],
+          date: "2025-01-18",
+          readTime: 8,
+          views: 3456,
+          author: "Robert Kiyosaki"
+        },
+        
+        // Design Category
+        {
+          id: 25,
+          title: "UI/UX Design Trends 2025",
+          excerpt: "What's hot and what's not in the world of digital design.",
+          category: "design",
+          tags: ["design", "ui-ux", "webdev"],
+          date: "2025-02-16",
+          readTime: 6,
+          views: 2987,
+          author: "Don Norman"
+        },
+        {
+          id: 26,
+          title: "Color Theory for Designers",
+          excerpt: "Master the use of color to create impactful designs.",
+          category: "design",
+          tags: ["design", "color", "tutorial"],
+          date: "2025-02-14",
+          readTime: 5,
+          views: 1876,
+          author: "Josef Albers"
+        },
+        {
+          id: 27,
+          title: "Typography Essentials",
+          excerpt: "Choosing and pairing fonts like a professional designer.",
+          category: "design",
+          tags: ["design", "typography", "tutorial"],
+          date: "2025-02-09",
+          readTime: 7,
+          views: 2345,
+          author: "Matthew Carter"
+        },
+        {
+          id: 28,
+          title: "Mobile-First Design Principles",
+          excerpt: "Creating websites that work beautifully on all devices.",
+          category: "design",
+          tags: ["design", "responsive", "webdev"],
+          date: "2025-02-05",
+          readTime: 5,
+          views: 1678,
+          author: "Luke Wroblewski"
+        },
+        
+        // Science Category
+        {
+          id: 29,
+          title: "Quantum Computing Explained",
+          excerpt: "Understanding the basics of quantum computing and its potential.",
+          category: "science",
+          tags: ["science", "technology", "ai"],
+          date: "2025-02-12",
+          readTime: 8,
+          views: 3456,
+          author: "Michio Kaku"
+        },
+        {
+          id: 30,
+          title: "Climate Change Solutions",
+          excerpt: "Innovative technologies that could save our planet.",
+          category: "science",
+          tags: ["science", "environment", "sustainability"],
+          date: "2025-02-08",
+          readTime: 7,
+          views: 2890,
+          author: "Bill Gates"
+        },
+        {
+          id: 31,
+          title: "The Future of Space Exploration",
+          excerpt: "Mars missions, space tourism, and beyond.",
+          category: "science",
+          tags: ["science", "space", "technology"],
+          date: "2025-02-03",
+          readTime: 6,
+          views: 3987,
+          author: "Elon Musk"
+        },
+        {
+          id: 32,
+          title: "Neuroscience of Learning",
+          excerpt: "How understanding the brain can improve education.",
+          category: "science",
+          tags: ["science", "education", "brain"],
+          date: "2025-01-28",
+          readTime: 6,
+          views: 1765,
+          author: "Andrew Huberman"
+        },
+        
+        // Art Category
+        {
+          id: 33,
+          title: "Digital Art for Beginners",
+          excerpt: "Getting started with digital painting and illustration.",
+          category: "art",
+          tags: ["art", "digital-art", "tutorial"],
+          date: "2025-02-10",
+          readTime: 5,
+          views: 2345,
+          author: "Aaron Blaise"
+        },
+        {
+          id: 34,
+          title: "Street Art Around the World",
+          excerpt: "Exploring urban art from Berlin to Tokyo.",
+          category: "art",
+          tags: ["art", "travel", "culture"],
+          date: "2025-02-06",
+          readTime: 7,
+          views: 1678,
+          author: "Banksy"
+        },
+        {
+          id: 35,
+          title: "Photography Composition Tips",
+          excerpt: "Take better photos with these composition techniques.",
+          category: "art",
+          tags: ["art", "photography", "tips"],
+          date: "2025-02-01",
+          readTime: 4,
+          views: 2890,
+          author: "Ansel Adams"
+        },
+        {
+          id: 36,
+          title: "Art History in 5 Minutes",
+          excerpt: "A quick journey through major art movements.",
+          category: "art",
+          tags: ["art", "history", "culture"],
+          date: "2025-01-26",
+          readTime: 5,
+          views: 1987,
+          author: "Simon Schama"
+        },
+        
+        // More Technology posts to reach 48
+        {
+          id: 37,
+          title: "WebAssembly: The Future of Web Performance",
+          excerpt: "How Wasm is changing what's possible in the browser.",
+          category: "technology",
+          tags: ["webdev", "performance", "javascript"],
+          date: "2025-01-23",
+          readTime: 6,
+          views: 1456,
+          author: "Linus Torvalds"
+        },
+        {
+          id: 38,
+          title: "Cybersecurity Best Practices",
+          excerpt: "Protect yourself and your data online.",
+          category: "technology",
+          tags: ["security", "privacy", "tips"],
+          date: "2025-01-20",
+          readTime: 5,
+          views: 2123,
+          author: "Kevin Mitnick"
+        },
+        {
+          id: 39,
+          title: "DevOps Culture Explained",
+          excerpt: "Bridging the gap between development and operations.",
+          category: "technology",
+          tags: ["devops", "programming", "career"],
+          date: "2025-01-17",
+          readTime: 6,
+          views: 1678,
+          author: "Patrick Debois"
+        },
+        {
+          id: 40,
+          title: "Database Design Fundamentals",
+          excerpt: "Building efficient and scalable data structures.",
+          category: "technology",
+          tags: ["database", "programming", "tutorial"],
+          date: "2025-01-14",
+          readTime: 7,
+          views: 1345,
+          author: "Martin Fowler"
+        },
+        {
+          id: 41,
+          title: "Mobile App Development Guide",
+          excerpt: "Native vs cross-platform: making the right choice.",
+          category: "technology",
+          tags: ["mobile", "development", "tutorial"],
+          date: "2025-01-11",
+          readTime: 8,
+          views: 2234,
+          author: "Chris Lattner"
+        },
+        {
+          id: 42,
+          title: "GraphQL vs REST API",
+          excerpt: "Comparing modern API architectures.",
+          category: "technology",
+          tags: ["api", "webdev", "programming"],
+          date: "2025-01-08",
+          readTime: 5,
+          views: 1890,
+          author: "Lee Byron"
+        },
+        {
+          id: 43,
+          title: "Tech Ethics in AI Development",
+          excerpt: "Responsible innovation in artificial intelligence.",
+          category: "technology",
+          tags: ["ai", "ethics", "technology"],
+          date: "2025-01-05",
+          readTime: 7,
+          views: 2678,
+          author: "Timnit Gebru"
+        },
+        {
+          id: 44,
+          title: "Cloud Computing Explained",
+          excerpt: "Understanding AWS, Azure, and Google Cloud.",
+          category: "technology",
+          tags: ["cloud", "devops", "tutorial"],
+          date: "2025-01-02",
+          readTime: 6,
+          views: 1987,
+          author: "Werner Vogels"
+        },
+        {
+          id: 45,
+          title: "Open Source Contribution Guide",
+          excerpt: "How to start contributing to open source projects.",
+          category: "technology",
+          tags: ["open-source", "programming", "career"],
+          date: "2024-12-28",
+          readTime: 4,
+          views: 2234,
+          author: "Linus Torvalds"
+        },
+        {
+          id: 46,
+          title: "Tech Interview Preparation",
+          excerpt: "Ace your coding interviews with these strategies.",
+          category: "technology",
+          tags: ["career", "programming", "tips"],
+          date: "2024-12-24",
+          readTime: 8,
+          views: 3456,
+          author: "Gayle Laakmann"
+        },
+        {
+          id: 47,
+          title: "Blockchain Beyond Cryptocurrency",
+          excerpt: "Real-world applications of distributed ledger technology.",
+          category: "technology",
+          tags: ["blockchain", "technology", "future"],
+          date: "2024-12-20",
+          readTime: 7,
+          views: 2789,
+          author: "Vitalik Buterin"
+        },
+        {
+          id: 48,
+          title: "Quantum Computing Breakthroughs",
+          excerpt: "Recent advances in quantum computing research.",
+          category: "technology",
+          tags: ["quantum", "science", "technology"],
+          date: "2024-12-16",
+          readTime: 6,
+          views: 1890,
+          author: "John Preskill"
+        }
+      ];
+
+      // State management
+      let currentPage = 1;
+      let postsPerPage = 12; // 4x3 grid
+      let currentSort = 'latest';
+      let currentCategory = 'all';
+      let currentTag = 'all';
+      let searchQuery = '';
+      
+      const blogGrid = document.getElementById('blogGrid');
+      const paginationDiv = document.getElementById('pagination');
+      const searchInput = document.getElementById('searchInput');
+      const categorySelect = document.getElementById('categorySelect');
+      const sortBtns = document.querySelectorAll('.sort-btn');
+      const tags = document.querySelectorAll('.tag');
+      const resultsCountSpan = document.getElementById('resultsCount');
+      const clearFiltersBtn = document.getElementById('clearFilters');
+
+      // Filter and sort posts
+      function getFilteredPosts() {
+        let filtered = [...blogPosts];
+
+        // Apply category filter
+        if (currentCategory !== 'all') {
+          filtered = filtered.filter(post => post.category === currentCategory);
+        }
+
+        // Apply tag filter
+        if (currentTag !== 'all') {
+          filtered = filtered.filter(post => post.tags.includes(currentTag));
+        }
+
+        // Apply search filter
+        if (searchQuery) {
+          const query = searchQuery.toLowerCase();
+          filtered = filtered.filter(post => 
+            post.title.toLowerCase().includes(query) || 
+            post.excerpt.toLowerCase().includes(query) ||
+            post.author.toLowerCase().includes(query)
+          );
+        }
+
+        // Apply sorting
+        filtered.sort((a, b) => {
+          switch(currentSort) {
+            case 'latest':
+              return new Date(b.date) - new Date(a.date);
+            case 'oldest':
+              return new Date(a.date) - new Date(b.date);
+            case 'popular':
+              return b.views - a.views;
+            default:
+              return 0;
+          }
+        });
+
+        return filtered;
+      }
+
+      // Render blog posts for current page
+      function renderPosts() {
+        const filtered = getFilteredPosts();
+        const totalPosts = filtered.length;
+        const totalPages = Math.ceil(totalPosts / postsPerPage);
+        
+        // Ensure current page is valid
+        if (currentPage > totalPages) currentPage = totalPages || 1;
+        
+        const start = (currentPage - 1) * postsPerPage;
+        const end = start + postsPerPage;
+        const postsToShow = filtered.slice(start, end);
+
+        // Update results count
+        const startCount = totalPosts === 0 ? 0 : start + 1;
+        const endCount = Math.min(end, totalPosts);
+        resultsCountSpan.textContent = `Showing ${startCount}-${endCount} of ${totalPosts} articles`;
+
+        if (postsToShow.length === 0) {
+          blogGrid.innerHTML = `
+            <div class="no-results" style="grid-column: 1/-1;">
+              <i class="fas fa-search"></i>
+              <h3>No articles found</h3>
+              <p>Try adjusting your filters or search query</p>
+            </div>
+          `;
+        } else {
+          blogGrid.innerHTML = postsToShow.map(post => `
+            <div class="blog-card" data-id="${post.id}">
+              <div class="blog-image">
+                <i class="fas ${getCategoryIcon(post.category)}"></i>
+                <span class="blog-category">${post.category}</span>
+              </div>
+              <div class="blog-content">
+                <h3 class="blog-title">${post.title}</h3>
+                <p class="blog-excerpt">${post.excerpt}</p>
+                <div class="blog-meta">
+                  <span><i class="fas fa-user"></i> ${post.author}</span>
+                  <span><i class="fas fa-calendar"></i> ${formatDate(post.date)}</span>
+                </div>
+                <div class="blog-tags">
+                  ${post.tags.slice(0, 3).map(tag => `<span class="blog-tag">${tag}</span>`).join('')}
+                </div>
+                <div class="read-more">
+                  Read article <i class="fas fa-arrow-right"></i>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        renderPagination(totalPages);
+      }
+
+      // Get category icon
+      function getCategoryIcon(category) {
+        const icons = {
+          technology: 'fa-microchip',
+          lifestyle: 'fa-heart',
+          travel: 'fa-plane',
+          food: 'fa-utensils',
+          health: 'fa-heartbeat',
+          business: 'fa-briefcase',
+          design: 'fa-pencil-ruler',
+          science: 'fa-flask',
+          art: 'fa-palette'
+        };
+        return icons[category] || 'fa-newspaper';
+      }
+
+      // Format date
+      function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('en-US', options);
+      }
+
+      // Render pagination
+      function renderPagination(totalPages) {
+        if (totalPages <= 1) {
+          paginationDiv.innerHTML = '';
+          return;
+        }
+
+        let paginationHTML = '';
+        
+        // Previous button
+        paginationHTML += `
+          <button class="page-btn next-prev" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}">
+            <i class="fas fa-chevron-left"></i> Prev
+          </button>
+        `;
+
+        // Page numbers
+        for (let i = 1; i <= totalPages; i++) {
+          if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+            paginationHTML += `
+              <button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">
+                ${i}
+              </button>
+            `;
+          } else if (i === currentPage - 3 || i === currentPage + 3) {
+            paginationHTML += `<span class="page-dots">...</span>`;
+          }
+        }
+
+        // Next button
+        paginationHTML += `
+          <button class="page-btn next-prev" ${currentPage === totalPages ? 'disabled' : ''} data-page="${currentPage + 1}">
+            Next <i class="fas fa-chevron-right"></i>
+          </button>
+        `;
+
+        paginationDiv.innerHTML = paginationHTML;
+
+        // Add click handlers to pagination buttons
+        document.querySelectorAll('.page-btn[data-page]').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            if (!btn.disabled) {
+              const page = parseInt(btn.dataset.page);
+              if (!isNaN(page)) {
+                currentPage = page;
+                renderPosts();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }
+          });
+        });
+      }
+
+      // Event listeners
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        currentPage = 1;
+        renderPosts();
+      });
+
+      categorySelect.addEventListener('change', (e) => {
+        currentCategory = e.target.value;
+        currentPage = 1;
+        renderPosts();
+      });
+
+      sortBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          sortBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentSort = btn.dataset.sort;
+          currentPage = 1;
+          renderPosts();
+        });
+      });
+
+      tags.forEach(tag => {
+        tag.addEventListener('click', () => {
+          tags.forEach(t => t.classList.remove('active'));
+          tag.classList.add('active');
+          currentTag = tag.dataset.tag;
+          currentPage = 1;
+          renderPosts();
+        });
+      });
+
+      clearFiltersBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        categorySelect.value = 'all';
+        currentTag = 'all';
+        currentCategory = 'all';
+        tags.forEach(t => t.classList.remove('active'));
+        document.querySelector('.tag[data-tag="all"]').classList.add('active');
+        searchQuery = '';
+        currentPage = 1;
+        renderPosts();
+      });
+
+      // Blog card click handler
+      blogGrid.addEventListener('click', (e) => {
+        const card = e.target.closest('.blog-card');
+        if (card) {
+          const postId = card.dataset.id;
+          const post = blogPosts.find(p => p.id === parseInt(postId));
+          if (post) {
+            // Open blog post in new tab (you can replace with actual blog URL)
+            window.open(`/blog/${post.slug || postId}`, '_blank');
+            
+            // Show toast notification
+            showToast(`Opening: ${post.title}`);
+          }
+        }
+      });
+
+      // Toast notification function
+      function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification';
+        toast.innerHTML = `
+          <i class="fas fa-book-open"></i>
+          <span>${message}</span>
+        `;
+        
+        // Add styles for toast
+        const style = document.createElement('style');
+        style.textContent = `
+          .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        `;
+        document.head.appendChild(style);
+        
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => toast.remove(), 300);
+        }, 2000);
+      }
+
+      // Initial render
+      renderPosts();
+    })();
+  </script>
 </body>
 </html>
