@@ -1994,39 +1994,6 @@ function addScrollOffset() {
 // Call this after page loads
 setTimeout(addScrollOffset, 100);
 
-// =================================
-// LOAD HEADER AND FOOTER COMPONENTS
-// =================================
-
-Promise.all([
-  fetch('header.html').then(res => res.text()),
-  fetch('footer.html').then(res => res.text()),
-  fetch('nav.html').then(res => res.text())
-])
-.then(([headerHtml, footerHtml, navHtml]) => {
-  // Load header
-  document.getElementById('site-header').innerHTML = headerHtml;
-  
-  // Load navigation
-  const header = document.getElementById('site-header');
-  const navPlaceholder = header.querySelector('#main-nav');
-  if (navPlaceholder) {
-    navPlaceholder.innerHTML = navHtml;
-  } else {
-    // If #main-nav doesn't exist in header, append it
-    const navContainer = document.createElement('div');
-    navContainer.id = 'main-nav';
-    navContainer.innerHTML = navHtml;
-    header.appendChild(navContainer);
-  }
-  
-  // Load footer
-  document.getElementById('site-footer').innerHTML = footerHtml;
-  
-  // Initialize after content is loaded
-  setTimeout(initializePage, 100);
-})
-.catch(err => console.error('Error loading components:', err));
 
 // =================================
 // INITIALIZE PAGE FUNCTIONALITY
