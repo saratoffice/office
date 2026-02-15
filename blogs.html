@@ -542,441 +542,194 @@
   <script src="assets/Scripts/gototop.js"></script>
 
   <script>
-    (function() {
-      // Configuration
-      const POSTS_PER_PAGE = 12; // 4x3 grid
-      const POSTS_DIRECTORY = 'Posts/'; // Directory containing blog posts
+   // Configuration
+const POSTS_PER_PAGE = 12;
+const POSTS_DIRECTORY = 'Posts/';
+const GITHUB_TOKEN = 'YOUR_PERSONAL_ACCESS_TOKEN'; // Replace with your token
+const GITHUB_REPO = 'saratoffice/office'; // Your repo
+const GITHUB_BRANCH = 'main'; // Your branch
+
+// =============================================
+// AUTO-DISCOVERY METHOD 1: Using Manifest File (Recommended)
+// =============================================
+async function loadPostsFromManifest() {
+  try {
+    const response = await fetch('posts-manifest.json');
+    if (!response.ok) throw new Error('Manifest not found');
+    
+    const manifest = await response.json();
+    const posts = await Promise.all(manifest.map(filename => fetchPostMetadata(filename)));
+    return posts.filter(p => p !== null);
+  } catch (error) {
+    console.log('Manifest not found, trying GitHub API...', error);
+    return loadPostsFromGitHubAPI(); // Fallback to API method
+  }
+}
+
+// =============================================
+// AUTO-DISCOVERY METHOD 2: GitHub API (Advanced)
+// =============================================
+async function loadPostsFromGitHubAPI() {
+  try {
+    // Fetch list of files from Posts folder using GitHub API
+    const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${POSTS_DIRECTORY}?ref=${GITHUB_BRANCH}`;
+    
+    const response = await fetch(apiUrl, {
+      headers: {
+        'Authorization': `token ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+    
+    if (!response.ok) throw new Error('GitHub API failed');
+    
+    const files = await response.json();
+    
+    // Filter only HTML files
+    const htmlFiles = files.filter(file => 
+      file.name.endsWith('.html') && file.type === 'file'
+    );
+    
+    // Fetch metadata for each file
+    const posts = await Promise.all(htmlFiles.map(file => 
+      fetchPostMetadata(encodeURIComponent(file.name))
+    ));
+    
+    return posts.filter(p => p !== null);
+    
+  } catch (error) {
+    console.error('GitHub API failed:', error);
+    return loadPostsFromManualList(); // Final fallback
+  }
+}
+
+// =============================================
+// FALLBACK METHOD 3: Manual List (Always Works)
+// =============================================
+function loadPostsFromManualList() {
+  // UPDATE THIS LIST WHENEVER YOU ADD A NEW POST
+  const knownPosts = [
+    'Smart%20Meter.html',
+    // Add your other post filenames here
+  ];
+  
+  return Promise.all(knownPosts.map(filename => fetchPostMetadata(filename)))
+    .then(posts => posts.filter(p => p !== null));
+}
+
+// =============================================
+// Fetch Individual Post Metadata
+// =============================================
+async function fetchPostMetadata(filename) {
+  try {
+    const response = await fetch(POSTS_DIRECTORY + filename);
+    if (!response.ok) return null;
+    
+    const html = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    
+    // Extract meta tags
+    const getMeta = (name) => {
+      const meta = doc.querySelector(`meta[name="${name}"]`);
+      return meta ? meta.getAttribute('content') : null;
+    };
+    
+    // Generate excerpt from content if not provided
+    const extractExcerpt = () => {
+      const excerpt = getMeta('blog:excerpt');
+      if (excerpt) return excerpt;
       
-      // State management
-      let allPosts = [];
-      let filteredPosts = [];
-      let currentPage = 1;
-      let currentSort = 'latest';
-      let currentCategory = 'all';
-      let currentTag = 'all';
-      let searchQuery = '';
-      
-      // DOM elements
-      const blogGrid = document.getElementById('blogGrid');
-      const paginationDiv = document.getElementById('pagination');
-      const searchInput = document.getElementById('searchInput');
-      const categorySelect = document.getElementById('categorySelect');
-      const sortBtns = document.querySelectorAll('.sort-btn');
-      const tagsCloud = document.getElementById('tagsCloud');
-      const resultsCountSpan = document.getElementById('resultsCount');
-      const clearFiltersBtn = document.getElementById('clearFilters');
-
-      // =============================================
-      // TO ADD A NEW POST: Just create an HTML file in the Posts/ folder
-      // with these meta tags in the <head> section:
-      // 
-      // <meta name="blog:title" content="Your Post Title">
-      // <meta name="blog:excerpt" content="Brief description...">
-      // <meta name="blog:category" content="technology">
-      // <meta name="blog:tags" content="tag1, tag2, tag3">
-      // <meta name="blog:author" content="Author Name">
-      // <meta name="blog:date" content="2025-02-15">
-      // <meta name="blog:readTime" content="5">
-      // <meta name="blog:views" content="1234">
-      // <meta name="blog:icon" content="fa-microchip">
-      // =============================================
-
-      // Function to extract metadata from HTML file
-      async function fetchPostMetadata(filename) {
-        try {
-          const response = await fetch(POSTS_DIRECTORY + filename);
-          if (!response.ok) return null;
-          
-          const html = await response.text();
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-          
-          // Extract meta tags
-          const getMeta = (name) => {
-            const meta = doc.querySelector(`meta[name="${name}"]`);
-            return meta ? meta.getAttribute('content') : null;
-          };
-          
-          // Generate excerpt from content if not provided
-          const extractExcerpt = () => {
-            const excerpt = getMeta('blog:excerpt');
-            if (excerpt) return excerpt;
-            
-            // Try to get first paragraph
-            const firstP = doc.querySelector('p');
-            if (firstP) {
-              return firstP.textContent.substring(0, 150) + '...';
-            }
-            return 'Read this interesting article...';
-          };
-          
-          // Generate consistent icon based on category
-          const getIcon = (category) => {
-            const icons = {
-              technology: 'fa-microchip',
-              lifestyle: 'fa-heart',
-              travel: 'fa-plane',
-              food: 'fa-utensils',
-              health: 'fa-heartbeat',
-              business: 'fa-briefcase',
-              design: 'fa-pencil-ruler',
-              science: 'fa-flask',
-              art: 'fa-palette'
-            };
-            return icons[category] || 'fa-newspaper';
-          };
-          
-          const title = getMeta('blog:title') || filename.replace('.html', '').replace(/%20/g, ' ');
-          const category = getMeta('blog:category') || 'uncategorized';
-          const tags = getMeta('blog:tags') ? getMeta('blog:tags').split(',').map(t => t.trim()) : [];
-          const author = getMeta('blog:author') || 'Unknown';
-          const date = getMeta('blog:date') || new Date().toISOString().split('T')[0];
-          const readTime = parseInt(getMeta('blog:readTime')) || Math.floor(Math.random() * 10) + 3;
-          const views = parseInt(getMeta('blog:views')) || Math.floor(Math.random() * 5000) + 500;
-          const icon = getMeta('blog:icon') || getIcon(category);
-          
-          return {
-            id: filename,
-            filename: filename,
-            title: title,
-            excerpt: extractExcerpt(),
-            category: category,
-            tags: tags,
-            author: author,
-            date: date,
-            readTime: readTime,
-            views: views,
-            icon: icon,
-            url: POSTS_DIRECTORY + filename
-          };
-        } catch (error) {
-          console.error(`Error fetching ${filename}:`, error);
-          return null;
-        }
+      const firstP = doc.querySelector('p');
+      if (firstP) {
+        return firstP.textContent.substring(0, 150) + '...';
       }
+      return 'Read this interesting article...';
+    };
+    
+    // Get icon based on category
+    const getIcon = (category) => {
+      const icons = {
+        technology: 'fa-microchip',
+        lifestyle: 'fa-heart',
+        travel: 'fa-plane',
+        food: 'fa-utensils',
+        health: 'fa-heartbeat',
+        business: 'fa-briefcase',
+        design: 'fa-pencil-ruler',
+        science: 'fa-flask',
+        art: 'fa-palette',
+        uncategorized: 'fa-newspaper'
+      };
+      return icons[category] || 'fa-newspaper';
+    };
+    
+    const title = getMeta('blog:title') || filename.replace('.html', '').replace(/%20/g, ' ');
+    const category = getMeta('blog:category') || 'uncategorized';
+    const tags = getMeta('blog:tags') ? getMeta('blog:tags').split(',').map(t => t.trim()) : [];
+    const author = getMeta('blog:author') || 'Unknown';
+    const date = getMeta('blog:date') || new Date().toISOString().split('T')[0];
+    const readTime = parseInt(getMeta('blog:readTime')) || Math.floor(Math.random() * 10) + 3;
+    const views = parseInt(getMeta('blog:views')) || Math.floor(Math.random() * 5000) + 500;
+    const icon = getMeta('blog:icon') || getIcon(category);
+    
+    return {
+      id: filename,
+      filename: filename,
+      title: title,
+      excerpt: extractExcerpt(),
+      category: category,
+      tags: tags,
+      author: author,
+      date: date,
+      readTime: readTime,
+      views: views,
+      icon: icon,
+      url: POSTS_DIRECTORY + filename
+    };
+    
+  } catch (error) {
+    console.error(`Error fetching ${filename}:`, error);
+    return null;
+  }
+}
 
-      // Scan Posts directory and load all posts
-      async function loadAllPosts() {
-        // Since we can't list directory contents via JavaScript,
-        // we'll use a predefined list or a manifest file approach
-        
-        // Option 1: Use a posts-manifest.json file (recommended)
-        try {
-          const manifestResponse = await fetch('posts-manifest.json');
-          if (manifestResponse.ok) {
-            const manifest = await manifestResponse.json();
-            const posts = await Promise.all(manifest.map(filename => fetchPostMetadata(filename)));
-            return posts.filter(p => p !== null);
-          }
-        } catch (e) {
-          console.log('No manifest file found, using fallback method');
-        }
-        
-        // Option 2: Fallback - You need to manually list your posts here
-        // UPDATE THIS LIST WHENEVER YOU ADD A NEW POST
-        const knownPosts = [
-          'Smart%20Meter.html',
-          // Add your other post filenames here
-        ];
-        
-        const posts = await Promise.all(knownPosts.map(filename => fetchPostMetadata(filename)));
-        return posts.filter(p => p !== null);
-      }
-
-      // Initialize all tags and categories
-      function updateFiltersFromPosts(posts) {
-        // Extract unique categories
-        const categories = ['all', ...new Set(posts.map(p => p.category))];
-        
-        // Update category select
-        categorySelect.innerHTML = categories.map(cat => 
-          `<option value="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</option>`
-        ).join('');
-        
-        // Extract and count unique tags
-        const tagCount = new Map();
-        posts.forEach(post => {
-          post.tags.forEach(tag => {
-            tagCount.set(tag, (tagCount.get(tag) || 0) + 1);
-          });
-        });
-        
-        // Sort tags by frequency
-        const sortedTags = Array.from(tagCount.entries())
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, 20); // Show top 20 tags
-        
-        // Update tags cloud
-        tagsCloud.innerHTML = `
-          <span class="tag active" data-tag="all"><i class="fas fa-tag"></i> All</span>
-          ${sortedTags.map(([tag, count]) => `
-            <span class="tag" data-tag="${tag}">
-              <i class="fas ${getTagIcon(tag)}"></i> ${tag} (${count})
-            </span>
-          `).join('')}
-        `;
-        
-        // Reattach tag click handlers
-        document.querySelectorAll('.tag').forEach(tag => {
-          tag.addEventListener('click', () => {
-            document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
-            tag.classList.add('active');
-            currentTag = tag.dataset.tag;
-            currentPage = 1;
-            filterAndRenderPosts();
-          });
-        });
-      }
-
-      // Get icon for tag
-      function getTagIcon(tag) {
-        const icons = {
-          'smart-meter': 'fa-microchip',
-          'electricity': 'fa-bolt',
-          'energy': 'fa-solar-panel',
-          'genus-power': 'fa-building',
-          'javascript': 'fa-code',
-          'react': 'fa-react',
-          'design': 'fa-paint-brush',
-          'tutorial': 'fa-graduation-cap',
-          'tips': 'fa-lightbulb',
-          'productivity': 'fa-rocket',
-          'career': 'fa-briefcase',
-          'ai': 'fa-robot',
-          'webdev': 'fa-globe'
-        };
-        return icons[tag] || 'fa-tag';
-      }
-
-      // Filter and sort posts
-      function filterPosts() {
-        let filtered = [...allPosts];
-
-        // Apply category filter
-        if (currentCategory !== 'all') {
-          filtered = filtered.filter(post => post.category === currentCategory);
-        }
-
-        // Apply tag filter
-        if (currentTag !== 'all') {
-          filtered = filtered.filter(post => post.tags.includes(currentTag));
-        }
-
-        // Apply search filter
-        if (searchQuery) {
-          const query = searchQuery.toLowerCase();
-          filtered = filtered.filter(post => 
-            post.title.toLowerCase().includes(query) || 
-            post.excerpt.toLowerCase().includes(query) ||
-            post.author.toLowerCase().includes(query)
-          );
-        }
-
-        // Apply sorting
-        filtered.sort((a, b) => {
-          switch(currentSort) {
-            case 'latest':
-              return new Date(b.date) - new Date(a.date);
-            case 'oldest':
-              return new Date(a.date) - new Date(b.date);
-            case 'popular':
-              return b.views - a.views;
-            default:
-              return 0;
-          }
-        });
-
-        return filtered;
-      }
-
-      // Render posts for current page
-      function renderPosts() {
-        filteredPosts = filterPosts();
-        const totalPosts = filteredPosts.length;
-        const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
-        
-        if (currentPage > totalPages) currentPage = totalPages || 1;
-        
-        const start = (currentPage - 1) * POSTS_PER_PAGE;
-        const end = start + POSTS_PER_PAGE;
-        const postsToShow = filteredPosts.slice(start, end);
-
-        // Update results count
-        if (totalPosts === 0) {
-          resultsCountSpan.textContent = 'No articles found';
-        } else {
-          const startCount = start + 1;
-          const endCount = Math.min(end, totalPosts);
-          resultsCountSpan.textContent = `Showing ${startCount}-${endCount} of ${totalPosts} articles`;
-        }
-
-        if (postsToShow.length === 0) {
-          blogGrid.innerHTML = `
-            <div class="no-results">
-              <i class="fas fa-search"></i>
-              <h3>No articles found</h3>
-              <p>Try adjusting your filters or search query</p>
-            </div>
-          `;
-        } else {
-          blogGrid.innerHTML = postsToShow.map(post => `
-            <div class="blog-card" onclick="window.location.href='${post.url}'">
-              <div class="blog-image">
-                <i class="fas ${post.icon}"></i>
-                <span class="blog-category">${post.category}</span>
-              </div>
-              <div class="blog-content">
-                <h3 class="blog-title">${post.title}</h3>
-                <p class="blog-excerpt">${post.excerpt}</p>
-                <div class="blog-meta">
-                  <span><i class="fas fa-user"></i> ${post.author}</span>
-                  <span><i class="fas fa-calendar"></i> ${formatDate(post.date)}</span>
-                </div>
-                <div class="blog-tags">
-                  ${post.tags.slice(0, 3).map(tag => `<span class="blog-tag">${tag}</span>`).join('')}
-                </div>
-                <div class="read-more">
-                  Read article <i class="fas fa-arrow-right"></i>
-                </div>
-              </div>
-            </div>
-          `).join('');
-        }
-
-        renderPagination(totalPages);
-      }
-
-      // Format date
-      function formatDate(dateString) {
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('en-US', options);
-      }
-
-      // Render pagination
-      function renderPagination(totalPages) {
-        if (totalPages <= 1) {
-          paginationDiv.innerHTML = '';
-          return;
-        }
-
-        let paginationHTML = '';
-        
-        paginationHTML += `
-          <button class="page-btn next-prev" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}">
-            <i class="fas fa-chevron-left"></i> Prev
-          </button>
-        `;
-
-        for (let i = 1; i <= totalPages; i++) {
-          if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
-            paginationHTML += `
-              <button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">
-                ${i}
-              </button>
-            `;
-          } else if (i === currentPage - 3 || i === currentPage + 3) {
-            paginationHTML += `<span class="page-dots">...</span>`;
-          }
-        }
-
-        paginationHTML += `
-          <button class="page-btn next-prev" ${currentPage === totalPages ? 'disabled' : ''} data-page="${currentPage + 1}">
-            Next <i class="fas fa-chevron-right"></i>
-          </button>
-        `;
-
-        paginationDiv.innerHTML = paginationHTML;
-
-        document.querySelectorAll('.page-btn[data-page]').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            if (!btn.disabled) {
-              const page = parseInt(btn.dataset.page);
-              if (!isNaN(page)) {
-                currentPage = page;
-                renderPosts();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }
-            }
-          });
-        });
-      }
-
-      // Filter and render wrapper
-      function filterAndRenderPosts() {
-        renderPosts();
-      }
-
-      // Event listeners
-      searchInput.addEventListener('input', (e) => {
-        searchQuery = e.target.value;
-        currentPage = 1;
-        filterAndRenderPosts();
-      });
-
-      categorySelect.addEventListener('change', (e) => {
-        currentCategory = e.target.value;
-        currentPage = 1;
-        filterAndRenderPosts();
-      });
-
-      sortBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          sortBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentSort = btn.dataset.sort;
-          currentPage = 1;
-          filterAndRenderPosts();
-        });
-      });
-
-      clearFiltersBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        categorySelect.value = 'all';
-        document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
-        document.querySelector('.tag[data-tag="all"]').classList.add('active');
-        searchQuery = '';
-        currentCategory = 'all';
-        currentTag = 'all';
-        currentPage = 1;
-        filterAndRenderPosts();
-      });
-
-      // Initialize
-      async function init() {
-        try {
-          blogGrid.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>Loading articles...</p></div>';
-          
-          allPosts = await loadAllPosts();
-          
-          if (allPosts.length === 0) {
-            blogGrid.innerHTML = `
-              <div class="no-results">
-                <i class="fas fa-file-alt"></i>
-                <h3>No posts found</h3>
-                <p>Add HTML files to the Posts/ folder with proper meta tags</p>
-              </div>
-            `;
-            resultsCountSpan.textContent = '0 articles';
-            return;
-          }
-          
-          updateFiltersFromPosts(allPosts);
-          filterAndRenderPosts();
-          
-        } catch (error) {
-          console.error('Initialization error:', error);
-          blogGrid.innerHTML = `
-            <div class="no-results">
-              <i class="fas fa-exclamation-triangle"></i>
-              <h3>Error loading posts</h3>
-              <p>Please refresh the page or try again later</p>
-            </div>
-          `;
-        }
-      }
-
-      init();
-    })();
+// =============================================
+// Initialize - Replace your existing init function
+// =============================================
+async function init() {
+  try {
+    blogGrid.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>Loading articles...</p></div>';
+    
+    // Try manifest first, then API, then manual list
+    allPosts = await loadPostsFromManifest();
+    
+    if (allPosts.length === 0) {
+      blogGrid.innerHTML = `
+        <div class="no-results">
+          <i class="fas fa-file-alt"></i>
+          <h3>No posts found</h3>
+          <p>Add HTML files to the Posts/ folder with proper meta tags</p>
+        </div>
+      `;
+      resultsCountSpan.textContent = '0 articles';
+      return;
+    }
+    
+    updateFiltersFromPosts(allPosts);
+    filterAndRenderPosts();
+    
+  } catch (error) {
+    console.error('Initialization error:', error);
+    blogGrid.innerHTML = `
+      <div class="no-results">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3>Error loading posts</h3>
+        <p>Please refresh the page or try again later</p>
+      </div>
+    `;
+  }
+}
   </script>
 </body>
 </html>
