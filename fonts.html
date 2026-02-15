@@ -2,29 +2,603 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sarat Office</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Font Gallery | Inspiring Quotes</title>
   
-  
- <!-- Common CSS (menu, footer, global styles) -->
+  <!-- Common CSS (menu, footer, global styles) -->
   <link rel="stylesheet" href="style.css">
-  <!-- ✅ IMPORTANT: site components for header/footer etc. -->
+  <!-- Site components for header/footer -->
   <script src="assets/Scripts/site-components.js" defer></script>
   
+  <style>
+    /* Isolated styles for font gallery */
+    .font-gallery-section {
+      display: block;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e9ecf2 100%);
+      min-height: 100vh;
+    }
+
+    .font-gallery-section h1 {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .font-gallery-section .subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 1.2rem;
+      margin-bottom: 3rem;
+      font-style: italic;
+    }
+
+    /* Category headings */
+    .font-gallery-section .category {
+      font-size: 2rem;
+      margin: 3rem 0 2rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 3px solid;
+      border-image: linear-gradient(90deg, #667eea, #764ba2) 1;
+      border-bottom-style: solid;
+      border-bottom-width: 3px;
+      border-image-slice: 1;
+      color: #333;
+      font-weight: 600;
+      position: relative;
+    }
+
+    .font-gallery-section .category::before {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 3px;
+    }
+
+    /* Font grid */
+    .font-gallery-section .font-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    /* Font card */
+    .font-gallery-section .font-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .font-gallery-section .font-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .font-gallery-section .font-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    }
+
+    .font-gallery-section .font-card:hover::before {
+      opacity: 1;
+    }
+
+    .font-gallery-section .font-card:active {
+      transform: translateY(-5px) scale(0.98);
+    }
+
+    /* Font name */
+    .font-gallery-section .font-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+      width: fit-content;
+    }
+
+    .font-gallery-section .font-name::after {
+      content: '↗';
+      font-size: 1.2rem;
+      margin-left: 10px;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      display: inline-block;
+      color: #667eea;
+    }
+
+    .font-gallery-section .font-card:hover .font-name::after {
+      opacity: 1;
+      transform: translateX(5px);
+    }
+
+    /* Quote text with specific fonts */
+    .font-gallery-section .quote-text {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+      padding: 1rem 0;
+      border-left: 3px solid #e0e0e0;
+      padding-left: 1.5rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .font-gallery-section .font-card:hover .quote-text {
+      border-left-color: #667eea;
+    }
+
+    /* Attribution */
+    .font-gallery-section .attribution {
+      font-size: 0.9rem;
+      color: #999;
+      text-align: right;
+      font-style: italic;
+      margin-top: 1rem;
+      border-top: 1px dashed #eee;
+      padding-top: 1rem;
+    }
+
+    /* Font-specific styles */
+    .font-belleza { font-family: 'Belleza', sans-serif; }
+    .font-actor { font-family: 'Actor', sans-serif; }
+    .font-andika { font-family: 'Andika', sans-serif; }
+    .font-aleo { font-family: 'Aleo', serif; }
+    .font-anonymous-pro { font-family: 'Anonymous Pro', monospace; }
+    .font-carlixbrush { font-family: 'Carrois Gothic', sans-serif; }
+    .font-mongarlo { font-family: 'Montserrat', sans-serif; }
+    .font-gaciliselene { font-family: 'Gilda Display', serif; }
+    .font-charm { font-family: 'Charm', cursive; }
+    .font-sperabrings { font-family: 'Spectral', serif; }
+
+    /* Additional popular fonts */
+    .font-montserrat { font-family: 'Montserrat', sans-serif; }
+    .font-roboto { font-family: 'Roboto', sans-serif; }
+    .font-playfair { font-family: 'Playfair Display', serif; }
+    .font-lato { font-family: 'Lato', sans-serif; }
+    .font-poppins { font-family: 'Poppins', sans-serif; }
+    .font-merriweather { font-family: 'Merriweather', serif; }
+    .font-source-code { font-family: 'Source Code Pro', monospace; }
+    .font-caveat { font-family: 'Caveat', cursive; }
+    .font-dancing-script { font-family: 'Dancing Script', cursive; }
+    .font-raleway { font-family: 'Raleway', sans-serif; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .font-gallery-section .font-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .font-gallery-section h1 {
+        font-size: 2rem;
+      }
+      
+      .font-gallery-section .category {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* Loading animation for fonts */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .font-gallery-section .font-card {
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* Style for the external link indicator */
+    .font-gallery-section .external-link {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: linear-gradient(135deg, #667eea20, #764ba220);
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #667eea;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .font-gallery-section .font-card:hover .external-link {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      transform: rotate(45deg);
+    }
+
+    /* Toast notification */
+    .font-gallery-section #click-toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .font-gallery-section #click-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .font-gallery-section #click-toast span {
+      font-size: 1.2rem;
+    }
+  </style>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Belleza&family=Actor&family=Andika&family=Aleo:wght@400;700&family=Anonymous+Pro&family=Carrois+Gothic&family=Montserrat:wght@400;700&family=Gilda+Display&family=Charm&family=Spectral:wght@400;700&family=Roboto:wght@400;700&family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&family=Poppins:wght@400;700&family=Merriweather:wght@400;700&family=Source+Code+Pro&family=Caveat&family=Dancing+Script&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  
+  <div id="site-header"></div>
 
-<div id="site-header"></div>
+  <!-- Main content -->
+  <section class="font-gallery-section">
+    <h1>🎨 Font Gallery</h1>
+    <div class="subtitle">Click any card to explore the font on Coolors.co</div>
 
+    <!-- Toast notification -->
+    <div id="click-toast">
+      <span>↗</span> Opening font page...
+    </div>
 
-<!-- CONTENT -->
+    <!-- Inspirational Fonts -->
+    <h2 class="category">✨ Inspirational Quotes</h2>
+    <div class="font-grid">
+      <!-- Belleza -->
+      <div class="font-card" data-font="belleza">
+        <div class="external-link">↗</div>
+        <div class="font-name font-belleza">BELLEZA</div>
+        <div class="quote-text font-belleza">
+          Nothing is permanent. Don't stress yourself too much because no matter how bad the situation is... it will change.
+        </div>
+        <div class="attribution">— Unknown</div>
+      </div>
+
+      <!-- Actor -->
+      <div class="font-card" data-font="actor">
+        <div class="external-link">↗</div>
+        <div class="font-name font-actor">ACTOR</div>
+        <div class="quote-text font-actor">
+          Don't feel bad if someone rejects you or ignores you. People usually reject and ignore expensive things because they can't afford them.
+        </div>
+        <div class="attribution">— Unknown</div>
+      </div>
+
+      <!-- Andika -->
+      <div class="font-card" data-font="andika">
+        <div class="external-link">↗</div>
+        <div class="font-name font-andika">ANDIKA</div>
+        <div class="quote-text font-andika">
+          A person should not be too honest. Straight trees are cut first and honest people are screwed first.
+        </div>
+        <div class="attribution">— Chanakya</div>
+      </div>
+    </div>
+
+    <!-- Wisdom & Success -->
+    <h2 class="category">📚 Wisdom & Success</h2>
+    <div class="font-grid">
+      <!-- Aleo -->
+      <div class="font-card" data-font="aleo">
+        <div class="external-link">↗</div>
+        <div class="font-name font-aleo">ALEO</div>
+        <div class="quote-text font-aleo">
+          "Honesty is the first chapter in the book of wisdom."
+        </div>
+        <div class="attribution">— Thomas Jefferson</div>
+      </div>
+
+      <!-- Anonymous Pro -->
+      <div class="font-card" data-font="anonymous-pro">
+        <div class="external-link">↗</div>
+        <div class="font-name font-anonymous-pro">ANONYMOUS PRO</div>
+        <div class="quote-text font-anonymous-pro">
+          Successful is the man who builds a firm foundation with the bricks thrown at him by others.
+        </div>
+        <div class="attribution">— David Brinkley</div>
+      </div>
+
+      <!-- Carlixbrush (Carrois Gothic) -->
+      <div class="font-card" data-font="carlixbrush">
+        <div class="external-link">↗</div>
+        <div class="font-name font-carlixbrush">CARLIXBRUSH</div>
+        <div class="quote-text font-carlixbrush">
+          A clear person solves problems. A wise person avoids them.
+        </div>
+        <div class="attribution">— Albert Einstein</div>
+      </div>
+    </div>
+
+    <!-- Future & Character -->
+    <h2 class="category">🔮 Future & Character</h2>
+    <div class="font-grid">
+      <!-- Mongarlo (Montserrat) -->
+      <div class="font-card" data-font="mongarlo">
+        <div class="external-link">↗</div>
+        <div class="font-name font-mongarlo">MONGARLO</div>
+        <div class="quote-text font-mongarlo">
+          You cannot predict the future. But you can create it.
+        </div>
+        <div class="attribution">— Al Jackson</div>
+      </div>
+
+      <!-- Mongarlo duplicate - different quote -->
+      <div class="font-card" data-font="mongarlo">
+        <div class="external-link">↗</div>
+        <div class="font-name font-mongarlo">MONGARLO</div>
+        <div class="quote-text font-mongarlo">
+          You cannot predict the future. But you can create it.
+        </div>
+        <div class="attribution">— Al Jackson</div>
+      </div>
+
+      <!-- Gaciliselene (Gilda Display) -->
+      <div class="font-card" data-font="gaciliselene">
+        <div class="external-link">↗</div>
+        <div class="font-name font-gaciliselene">GACILISELENE</div>
+        <div class="quote-text font-gaciliselene">
+          The way people treat you is a reflection of their character, not yours. Let go of the need to defend yourself or explain that you are not what they accuse you of being.
+        </div>
+        <div class="attribution">— Unknown</div>
+      </div>
+    </div>
+
+    <!-- Elegant & Classic -->
+    <h2 class="category">✨ Elegant & Classic</h2>
+    <div class="font-grid">
+      <!-- Charm -->
+      <div class="font-card" data-font="charm">
+        <div class="external-link">↗</div>
+        <div class="font-name font-charm">CHARM</div>
+        <div class="quote-text font-charm">
+          Successful is the man who builds a firm foundation with the bricks thrown at him by others.
+        </div>
+        <div class="attribution">— David Brinkley</div>
+      </div>
+
+      <!-- Sperabrings (Spectral) -->
+      <div class="font-card" data-font="sperabrings">
+        <div class="external-link">↗</div>
+        <div class="font-name font-sperabrings">SPERABRINGS</div>
+        <div class="quote-text font-sperabrings">
+          All clever persons solve problems. All wise persons avoid them.
+        </div>
+        <div class="attribution">— Albert Einstein</div>
+      </div>
+
+      <!-- Gaciliselene duplicate -->
+      <div class="font-card" data-font="gaciliselene">
+        <div class="external-link">↗</div>
+        <div class="font-name font-gaciliselene">GACILISELENE</div>
+        <div class="quote-text font-gaciliselene">
+          The way people treat you is a reflection of their character, not yours. Let go of the need to defend yourself or explain that you are not what they accuse you of being.
+        </div>
+        <div class="attribution">— Unknown</div>
+      </div>
+    </div>
+
+    <!-- Additional Popular Fonts -->
+    <h2 class="category">🔥 Most Used Fonts</h2>
+    <div class="font-grid">
+      <!-- Montserrat -->
+      <div class="font-card" data-font="montserrat">
+        <div class="external-link">↗</div>
+        <div class="font-name font-montserrat">MONTSERRAT</div>
+        <div class="quote-text font-montserrat">
+          The future depends on what you do today. Every moment is a fresh beginning.
+        </div>
+        <div class="attribution">— Mahatma Gandhi</div>
+      </div>
+
+      <!-- Roboto -->
+      <div class="font-card" data-font="roboto">
+        <div class="external-link">↗</div>
+        <div class="font-name font-roboto">ROBOTO</div>
+        <div class="quote-text font-roboto">
+          The only way to do great work is to love what you do. Stay hungry, stay foolish.
+        </div>
+        <div class="attribution">— Steve Jobs</div>
+      </div>
+
+      <!-- Playfair Display -->
+      <div class="font-card" data-font="playfair">
+        <div class="external-link">↗</div>
+        <div class="font-name font-playfair">PLAYFAIR</div>
+        <div class="quote-text font-playfair">
+          Be yourself; everyone else is already taken. In the end, it's not the years in your life that count.
+        </div>
+        <div class="attribution">— Oscar Wilde</div>
+      </div>
+
+      <!-- Poppins -->
+      <div class="font-card" data-font="poppins">
+        <div class="external-link">↗</div>
+        <div class="font-name font-poppins">POPPINS</div>
+        <div class="quote-text font-poppins">
+          The greatest glory in living lies not in never falling, but in rising every time we fall.
+        </div>
+        <div class="attribution">— Nelson Mandela</div>
+      </div>
+
+      <!-- Lato -->
+      <div class="font-card" data-font="lato">
+        <div class="external-link">↗</div>
+        <div class="font-name font-lato">LATO</div>
+        <div class="quote-text font-lato">
+          The way to get started is to quit talking and begin doing. Your time is limited, don't waste it.
+        </div>
+        <div class="attribution">— Walt Disney</div>
+      </div>
+
+      <!-- Merriweather -->
+      <div class="font-card" data-font="merriweather">
+        <div class="external-link">↗</div>
+        <div class="font-name font-merriweather">MERRIWEATHER</div>
+        <div class="quote-text font-merriweather">
+          The best time to plant a tree was 20 years ago. The second best time is now.
+        </div>
+        <div class="attribution">— Chinese Proverb</div>
+      </div>
+
+      <!-- Source Code Pro -->
+      <div class="font-card" data-font="source-code">
+        <div class="external-link">↗</div>
+        <div class="font-name font-source-code">SOURCE CODE</div>
+        <div class="quote-text font-source-code">
+          First, solve the problem. Then, write the code. Make it work, make it right, make it fast.
+        </div>
+        <div class="attribution">— Jeff Atwood</div>
+      </div>
+
+      <!-- Caveat -->
+      <div class="font-card" data-font="caveat">
+        <div class="external-link">↗</div>
+        <div class="font-name font-caveat">CAVEAT</div>
+        <div class="quote-text font-caveat">
+          Life is what happens when you're busy making other plans. Everything will be okay in the end.
+        </div>
+        <div class="attribution">— John Lennon</div>
+      </div>
+
+      <!-- Dancing Script -->
+      <div class="font-card" data-font="dancing-script">
+        <div class="external-link">↗</div>
+        <div class="font-name font-dancing-script">DANCING SCRIPT</div>
+        <div class="quote-text font-dancing-script">
+          Spread love everywhere you go. Let no one ever come to you without leaving happier.
+        </div>
+        <div class="attribution">— Mother Teresa</div>
+      </div>
+
+      <!-- Raleway -->
+      <div class="font-card" data-font="raleway">
+        <div class="external-link">↗</div>
+        <div class="font-name font-raleway">RALEWAY</div>
+        <div class="quote-text font-raleway">
+          The future belongs to those who believe in the beauty of their dreams.
+        </div>
+        <div class="attribution">— Eleanor Roosevelt</div>
+      </div>
+    </div>
+  </section>
 
   <!-- FOOTER -->
-<div id="site-footer"></div>
+  <div id="site-footer"></div>
+  
   <!-- Go to Top -->
   <script src="/assets/Scripts/gototop.js"></script>
 
+  <script>
+    (function() {
+      const section = document.querySelector('.font-gallery-section');
+      const fontCards = section.querySelectorAll('.font-card');
+      const toast = section.querySelector('#click-toast');
+
+      function showToast() {
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 1500);
+      }
+
+      fontCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+          const fontName = this.dataset.font;
+          
+          // Map font names to Coolors URLs
+          const fontMap = {
+            'belleza': 'belleza',
+            'actor': 'actor',
+            'andika': 'andika',
+            'aleo': 'aleo',
+            'anonymous-pro': 'anonymous-pro',
+            'carlixbrush': 'carrois-gothic',
+            'mongarlo': 'montserrat',
+            'gaciliselene': 'gilda-display',
+            'charm': 'charm',
+            'sperabrings': 'spectral',
+            'montserrat': 'montserrat',
+            'roboto': 'roboto',
+            'playfair': 'playfair-display',
+            'lato': 'lato',
+            'poppins': 'poppins',
+            'merriweather': 'merriweather',
+            'source-code': 'source-code-pro',
+            'caveat': 'caveat',
+            'dancing-script': 'dancing-script',
+            'raleway': 'raleway'
+          };
+
+          const coolorsFont = fontMap[fontName] || fontName;
+          const url = `https://coolors.co/font/${coolorsFont}`;
+          
+          showToast();
+          
+          // Open in new tab after a small delay
+          setTimeout(() => {
+            window.open(url, '_blank');
+          }, 300);
+        });
+
+        // Add hover effect for cards
+        card.addEventListener('mouseenter', function() {
+          this.style.cursor = 'pointer';
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
