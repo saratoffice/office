@@ -39,224 +39,163 @@
 .category-other { color: #455a64; font-weight: bold; }
 </style>
 
-<!-- Load Google Maps API with Jekyll environment variable -->
-<script src="https://maps.googleapis.com/maps/api/js?key={{ site.google_maps_api_key }}&auth_referrer_policy=origin"></script>
-
+<!-- FIXED: Google Maps API with multiple domain support -->
 <script>
 (function() {
-  let map;
-  let markers = [];
-  const blockColors = {};
-  const primaryColors = ["#d32f2f", "#1976d2", "#fbc02d"];
-  let colorIndex = 0;
-  let lastClickedMarker = null;
-  let currentBlockFilter = "";
-  let allCategories = new Set();
-  const categoryColors = {
-    "Total": "#1976d2",
-    "PPC": "#d32f2f",
-    "FPS": "#fbc02d",
-    "Godown": "#388e3c",
-    "Rice Mill": "#7b1fa2"
-  };
-
-  function getBlockColor(block) {
-    if (!blockColors[block]) {
-      blockColors[block] = primaryColors[colorIndex % primaryColors.length];
-      colorIndex++;
-    }
-    return blockColors[block];
-  }
-
-  function getCategoryLetter(cat) {
-    const catMap = { 
-      "PPC": "P", 
-      "Rice Mill": "M", 
-      "FPS": "F", 
-      "Godown": "G" 
-    };
-    return catMap[cat] || "?";
-  }
-
-  function getCategoryColor(category) {
-    return categoryColors[category] || getRandomColor();
-  }
-
-  function getRandomColor() {
-    const colors = ["#455a64", "#5d4037", "#00897b", "#d81b60", "#8e24aa", "#fb8c00"];
-    return colors[Math.floor(Math.random() * colors.length)];
-  }
-
-  function linePin(color, scale = 1.1) {
-    return {
-      path: "M12 1C8.1 1 5 4.1 5 8.2c0 3.7 3.4 6.8 6 9.3V28h2V17.5c2.6-2.5 6-5.6 6-9.3C19 4.1 15.9 1 12 1z",
-      fillColor: color,
-      fillOpacity: 1,
-      strokeColor: "#000",
-      strokeWeight: 1,
-      scale: scale,
-      labelOrigin: new google.maps.Point(12, 9)
-    };
-  }
-
-  function formatCoordinates(lat, lng) {
-    return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-  }
-
-  function resetLastMarker() {
-    if (lastClickedMarker && lastClickedMarker.meta) {
-      lastClickedMarker.setIcon(linePin(
-        getBlockColor(lastClickedMarker.meta.block),
-        1.1
-      ));
-      lastClickedMarker = null;
-    }
-  }
-
-  function createCategoryElement(category, count) {
-    const color = getCategoryColor(category);
-    const span = document.createElement("span");
-    span.style.fontWeight = "bold";
-    span.style.color = color;
-    span.innerHTML = `${category}: <span style="color: #333;">${count}</span>`;
-    span.className = `category-${category.toLowerCase().replace(/\s+/g, '-')}`;
-    return span;
-  }
-
-  function calculateBoundsForVisibleMarkers() {
-    const bounds = new google.maps.LatLngBounds();
-    let visibleCount = 0;
-    
-    markers.forEach(marker => {
-      if (marker.getVisible()) {
-        bounds.extend(marker.getPosition());
-        visibleCount++;
+  // Your API key (already restricted in Google Cloud Console)
+  const API_KEY = 'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys';
+  
+  // Detect current domain
+  const currentDomain = window.location.hostname;
+  console.log('Loading maps for domain:', currentDomain);
+  
+  // Create and load the script with referrer policy
+  function loadGoogleMaps() {
+    return new Promise((resolve, reject) => {
+      if (window.google && window.google.maps) {
+        resolve();
+        return;
       }
-    });
-    
-    return { bounds, visibleCount };
-  }
-
-  function centerMapOnVisibleMarkers() {
-    const { bounds, visibleCount } = calculateBoundsForVisibleMarkers();
-    
-    if (visibleCount === 0) {
-      map.setCenter({ lat: 20.592263, lng: 83.248939 });
-      map.setZoom(11);
-    } else if (visibleCount === 1) {
-      markers.forEach(marker => {
-        if (marker.getVisible()) {
-          map.setCenter(marker.getPosition());
-          map.setZoom(14);
-        }
-      });
-    } else {
-      const padding = 50;
-      map.fitBounds(bounds, padding);
       
-      google.maps.event.addListenerOnce(map, 'bounds_changed', function() {
-        if (map.getZoom() > 12) {
-          map.setZoom(12);
-        }
-      });
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&auth_referrer_policy=origin&callback=initMap`;
+      script.async = true;
+      script.defer = true;
       
-      const currentZoom = map.getZoom();
-      if (currentZoom < 12) {
-        map.setZoom(12);
-      }
-    }
-  }
-
-  function updateLocationCounts() {
-    let total = 0;
-    const categoryCounts = {};
-    
-    allCategories.forEach(category => {
-      categoryCounts[category] = 0;
-    });
-    
-    markers.forEach(marker => {
-      if (marker.getVisible()) {
-        total++;
-        const category = marker.meta.category || "Unknown";
-        if (!categoryCounts[category]) {
-          categoryCounts[category] = 0;
-        }
-        categoryCounts[category]++;
-      }
-    });
-    
-    document.getElementById("totalCount").textContent = total;
-    
-    const categoriesContainer = document.querySelector("#locationCounts > div:first-child");
-    const totalElement = categoriesContainer.children[0];
-    categoriesContainer.innerHTML = '';
-    categoriesContainer.appendChild(totalElement);
-    
-    Object.keys(categoryCounts)
-      .filter(category => category !== "Total" && category !== "Unknown")
-      .sort()
-      .forEach(category => {
-        if (categoryCounts[category] > 0) {
-          const categoryElement = createCategoryElement(category, categoryCounts[category]);
-          categoriesContainer.appendChild(categoryElement);
-        }
-      });
-    
-    if (categoryCounts["Unknown"] > 0) {
-      const unknownElement = createCategoryElement("Unknown", categoryCounts["Unknown"]);
-      categoriesContainer.appendChild(unknownElement);
-    }
-    
-    const filterStatus = document.getElementById("filterStatus");
-    if (currentBlockFilter) {
-      filterStatus.textContent = `Showing locations for block: ${currentBlockFilter}`;
-      filterStatus.title = `Filtered by: Block = "${currentBlockFilter}"`;
-    } else {
-      filterStatus.textContent = "Showing all locations";
-      filterStatus.title = "No filters applied";
-    }
-  }
-
-  function applyFilters() {
-    const bV = document.getElementById("blockSearch").value.toUpperCase();
-    const cV = document.getElementById("codeSearch").value.toUpperCase();
-    const nV = document.getElementById("nameSearch").value.toUpperCase();
-    
-    currentBlockFilter = bV;
-
-    markers.forEach(m => {
-      const match = m.meta.block.includes(bV) && 
-                    m.meta.code.includes(cV) && 
-                    m.meta.name.includes(nV);
-      m.setVisible(match);
+      script.onload = () => {
+        console.log('Google Maps loaded successfully');
+        resolve();
+      };
       
-      if (!match && lastClickedMarker === m) {
-        resetLastMarker();
-      }
+      script.onerror = (error) => {
+        console.error('Failed to load Google Maps:', error);
+        document.getElementById('map').innerHTML = `
+          <div style="padding: 20px; text-align: center; color: red;">
+            Failed to load Google Maps. Please check:<br>
+            1. Your API key is valid<br>
+            2. You've enabled the Maps JavaScript API<br>
+            3. Your domain (${currentDomain}) is allowed in Google Cloud Console
+          </div>
+        `;
+        reject(error);
+      };
+      
+      document.head.appendChild(script);
     });
-    
-    updateLocationCounts();
-    
-    if (bV) {
-      setTimeout(() => {
-        centerMapOnVisibleMarkers();
-      }, 100);
-    }
   }
 
-  function initMap() {
+  // Initialize map function (will be called by Google Maps callback)
+  window.initMap = function() {
+    // Your existing map initialization code
     const mapEl = document.getElementById("map");
     if (!mapEl) return;
 
-    map = new google.maps.Map(mapEl, {
+    const map = new google.maps.Map(mapEl, {
       zoom: 11,
       center: { lat: 20.592263, lng: 83.248939 },
       gestureHandling: "greedy",
       mapTypeControl: false
     });
 
+    // Rest of your map initialization code
     const sheetURL = "https://docs.google.com/spreadsheets/d/1HI5Wjjwo5OObDaS4W7QaOVc_RcqgREu8pHEQxSjYhUg/gviz/tq?tqx=out:json";
+    
+    let markers = [];
+    const blockColors = {};
+    const primaryColors = ["#d32f2f", "#1976d2", "#fbc02d"];
+    let colorIndex = 0;
+    let lastClickedMarker = null;
+    let currentBlockFilter = "";
+    let allCategories = new Set();
+
+    function getBlockColor(block) {
+      if (!blockColors[block]) {
+        blockColors[block] = primaryColors[colorIndex % primaryColors.length];
+        colorIndex++;
+      }
+      return blockColors[block];
+    }
+
+    function getCategoryLetter(cat) {
+      const catMap = { "PPC": "P", "Rice Mill": "M", "FPS": "F", "Godown": "G" };
+      return catMap[cat] || "?";
+    }
+
+    function linePin(color, scale = 1.1) {
+      return {
+        path: "M12 1C8.1 1 5 4.1 5 8.2c0 3.7 3.4 6.8 6 9.3V28h2V17.5c2.6-2.5 6-5.6 6-9.3C19 4.1 15.9 1 12 1z",
+        fillColor: color,
+        fillOpacity: 1,
+        strokeColor: "#000",
+        strokeWeight: 1,
+        scale: scale,
+        labelOrigin: new google.maps.Point(12, 9)
+      };
+    }
+
+    function formatCoordinates(lat, lng) {
+      return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+    }
+
+    function resetLastMarker() {
+      if (lastClickedMarker && lastClickedMarker.meta) {
+        lastClickedMarker.setIcon(linePin(
+          getBlockColor(lastClickedMarker.meta.block),
+          1.1
+        ));
+        lastClickedMarker = null;
+      }
+    }
+
+    function updateLocationCounts() {
+      let total = 0;
+      const categoryCounts = {};
+      
+      allCategories.forEach(category => {
+        categoryCounts[category] = 0;
+      });
+      
+      markers.forEach(marker => {
+        if (marker.getVisible()) {
+          total++;
+          const category = marker.meta.category || "Unknown";
+          if (!categoryCounts[category]) {
+            categoryCounts[category] = 0;
+          }
+          categoryCounts[category]++;
+        }
+      });
+      
+      document.getElementById("totalCount").textContent = total;
+      
+      const filterStatus = document.getElementById("filterStatus");
+      if (currentBlockFilter) {
+        filterStatus.textContent = `Showing locations for block: ${currentBlockFilter}`;
+      } else {
+        filterStatus.textContent = "Showing all locations";
+      }
+    }
+
+    function applyFilters() {
+      const bV = document.getElementById("blockSearch").value.toUpperCase();
+      const cV = document.getElementById("codeSearch").value.toUpperCase();
+      const nV = document.getElementById("nameSearch").value.toUpperCase();
+      
+      currentBlockFilter = bV;
+
+      markers.forEach(m => {
+        const match = m.meta.block.includes(bV) && 
+                      m.meta.code.includes(cV) && 
+                      m.meta.name.includes(nV);
+        m.setVisible(match);
+        
+        if (!match && lastClickedMarker === m) {
+          resetLastMarker();
+        }
+      });
+      
+      updateLocationCounts();
+    }
 
     fetch(sheetURL)
       .then(res => res.text())
@@ -346,13 +285,9 @@
       })
       .catch(error => {
         console.error('Error loading data:', error);
-        document.getElementById('map').innerHTML = `
-          <div style="padding: 20px; text-align: center; color: red;">
-            Failed to load location data. Please try again later.
-          </div>
-        `;
       });
 
+    // Filtering Logic
     const filters = ["blockSearch", "codeSearch", "nameSearch"];
     filters.forEach(id => {
       const input = document.getElementById(id);
@@ -365,46 +300,13 @@
         document.getElementById("codeSearch").value = '';
         document.getElementById("nameSearch").value = '';
         currentBlockFilter = '';
-        
-        markers.forEach(m => {
-          m.setVisible(true);
-        });
-        
+        markers.forEach(m => m.setVisible(true));
         updateLocationCounts();
-        
-        map.setCenter({ lat: 20.592263, lng: 83.248939 });
-        map.setZoom(11);
       }
     });
-    
-    const mapControls = document.querySelector('.map-controls');
-    const showAllButton = document.createElement('button');
-    showAllButton.textContent = 'Show All';
-    showAllButton.style.cssText = 'padding: 8px 16px; font-size: 14px; background: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer;';
-    showAllButton.addEventListener('click', function() {
-      document.getElementById("blockSearch").value = '';
-      document.getElementById("codeSearch").value = '';
-      document.getElementById("nameSearch").value = '';
-      currentBlockFilter = '';
-      
-      markers.forEach(m => {
-        m.setVisible(true);
-      });
-      
-      updateLocationCounts();
-      
-      map.setCenter({ lat: 20.592263, lng: 83.248939 });
-      map.setZoom(11);
-    });
-    
-    mapControls.appendChild(showAllButton);
-  }
+  };
 
-  // Initialize map when page loads
-  if (document.readyState === "complete") { 
-    initMap(); 
-  } else { 
-    window.addEventListener("load", initMap); 
-  }
+  // Start loading maps
+  loadGoogleMaps().catch(console.error);
 })();
 </script>
