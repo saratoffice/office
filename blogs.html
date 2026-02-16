@@ -541,8 +541,7 @@
   <!-- Go to Top -->
   <script src="assets/Scripts/gototop.js"></script>
 
-  
-  <script>
+<script>
 (function() {
   // Configuration
   const POSTS_PER_PAGE = 12; // 4x3 grid
@@ -645,6 +644,8 @@
           design: 'fa-pencil-ruler',
           science: 'fa-flask',
           art: 'fa-palette',
+          legal: 'fa-gavel',
+          technical: 'fa-gear',
           uncategorized: 'fa-newspaper'
         };
         return icons[category] || 'fa-newspaper';
@@ -680,6 +681,37 @@
     }
   }
 
+  // Helper function to get tag icons
+  function getTagIcon(tag) {
+    const icons = {
+      'ec act': 'fa-gavel',
+      'ec act 1955': 'fa-gavel',
+      'confiscation': 'fa-box',
+      'seizure': 'fa-handcuffs',
+      'legal': 'fa-scale-balanced',
+      'smart-meter': 'fa-microchip',
+      'electricity': 'fa-bolt',
+      'energy': 'fa-solar-panel',
+      'technology': 'fa-code',
+      'genus-power': 'fa-building',
+      'jute': 'fa-leaf',
+      'textiles': 'fa-tshirt',
+      'sacking bags': 'fa-box',
+      'foodgrains': 'fa-wheat',
+      'packaging': 'fa-box-open',
+      'is standard': 'fa-certificate',
+      'is 9113': 'fa-certificate'
+    };
+    
+    const tagLower = tag.toLowerCase();
+    for (const [key, icon] of Object.entries(icons)) {
+      if (tagLower.includes(key)) {
+        return icon;
+      }
+    }
+    return 'fa-tag';
+  }
+
   // Update filters from posts
   function updateFiltersFromPosts(posts) {
     // Extract unique categories
@@ -690,30 +722,46 @@
       `<option value="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</option>`
     ).join('');
     
-    // Extract and count unique tags - WITH FILTERING
-const tagCount = new Map();
-const tagsToRemove = ['packaging', 'innovation', 'sustainability']; // Add tags you want to remove
-
-posts.forEach(post => {
-  post.tags.forEach(tag => {
-    // Skip tags in the remove list
-    if (!tagsToRemove.includes(tag)) {
-      tagCount.set(tag, (tagCount.get(tag) || 0) + 1);
-    }
-  });
-});
+    // ===== TAGS TO REMOVE =====
+    // Add any tags you want to hide from the cloud
+    const tagsToRemove = [
+      'detention',           // Similar to seizure
+      'commodities',         // Too broad
+      'section 6a',         // Too specific
+      'section-6a',         // With hyphen
+      'innovation',         // Generic
+      'sustainability',     // Generic buzzword
+      'packaging'           // Remove if too generic
+    ];
     
-    // Sort tags by frequency
+    // Extract and count unique tags - WITH FILTERING
+    const tagCount = new Map();
+    
+    posts.forEach(post => {
+      post.tags.forEach(tag => {
+        // Skip tags in the remove list (case insensitive)
+        const shouldRemove = tagsToRemove.some(removeTag => 
+          tag.toLowerCase() === removeTag.toLowerCase() ||
+          tag.toLowerCase().includes(removeTag.toLowerCase())
+        );
+        
+        if (!shouldRemove) {
+          tagCount.set(tag, (tagCount.get(tag) || 0) + 1);
+        }
+      });
+    });
+    
+    // Sort tags by frequency and take top 15
     const sortedTags = Array.from(tagCount.entries())
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 20);
+      .slice(0, 15); // Show only top 15 tags
     
-    // Update tags cloud
+    // Update tags cloud with icons
     tagsCloud.innerHTML = `
       <span class="tag active" data-tag="all"><i class="fas fa-tag"></i> All</span>
       ${sortedTags.map(([tag, count]) => `
         <span class="tag" data-tag="${tag}">
-          <i class="fas fa-tag"></i> ${tag} (${count})
+          <i class="fas ${getTagIcon(tag)}"></i> ${tag} (${count})
         </span>
       `).join('')}
     `;
@@ -954,7 +1002,6 @@ posts.forEach(post => {
 
   init();
 })();
-
-  </script>
+</script>
 </body>
 </html>
