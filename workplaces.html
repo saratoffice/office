@@ -1,6 +1,5 @@
 <!-- Container -->
 <div class="map-controls">
-  <!-- Use a custom focus handler to ensure the dropdown always opens fully -->
   <input id="blockSearch" list="blockList" type="text" placeholder="Type / Select Block Name" onfocus="this.value=''" onchange="this.blur();" />
   <datalist id="blockList"></datalist>
   
@@ -14,7 +13,6 @@
 <div id="locationCounts" style="margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; border: 1px solid #e0e0e0;">
   <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 25px; margin-bottom: 10px;">
     <span style="font-weight: bold; color: #1976d2;">Total Locations: <span id="totalCount" style="color: #333;">0</span></span>
-    <!-- Dynamic categories will be inserted here -->
   </div>
   <div style="text-align: center; font-size: 12px; color: #666; font-style: italic;">
     <span id="filterStatus">Showing all locations</span>
@@ -25,7 +23,6 @@
 .map-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
 .map-controls input { padding: 8px; font-size: 14px; min-width: 200px; border: 1px solid #ccc; border-radius: 4px; }
 #map { margin-top: 10px; }
-/* Animation for marker click */
 @keyframes markerPulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.3); }
@@ -34,7 +31,6 @@
 .marker-clicked {
   animation: markerPulse 0.3s ease-out forwards;
 }
-/* Category color styles */
 .category-total { color: #1976d2; font-weight: bold; }
 .category-ppc { color: #d32f2f; font-weight: bold; }
 .category-fps { color: #fbc02d; font-weight: bold; }
@@ -43,78 +39,9 @@
 .category-other { color: #455a64; font-weight: bold; }
 </style>
 
-<!-- SECURE GOOGLE MAPS LOADER -->
-<script>
-// Google Maps API Key Loader with Environment Variable Support
-(function() {
-  // For GitHub Pages, you'll need to set this during build
-  // OPTION 1: Direct assignment (less secure - but key should be restricted)
-  // const GOOGLE_MAPS_API_KEY = 'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys';
-  
-  // OPTION 2: Try to get from environment (for build systems)
-  const GOOGLE_MAPS_API_KEY = window.GOOGLE_MAPS_API_KEY || 
-                              'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys'; // Fallback with restricted key
-  
-  // OPTION 3: For GitHub Pages with Jekyll, you can use:
-  // const GOOGLE_MAPS_API_KEY = '{{ site.google_maps_api_key }}';
-  
-  // Load Google Maps script dynamically
-  function loadGoogleMapsScript() {
-    return new Promise((resolve, reject) => {
-      // Check if already loaded
-      if (window.google && window.google.maps) {
-        resolve();
-        return;
-      }
-      
-      // Create script element
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`;
-      script.async = true;
-      script.defer = true;
-      
-      script.onload = () => {
-        console.log('Google Maps loaded successfully');
-        resolve();
-      };
-      
-      script.onerror = (error) => {
-        console.error('Failed to load Google Maps:', error);
-        reject(error);
-      };
-      
-      document.head.appendChild(script);
-    });
-  }
+<!-- Load Google Maps API with Jekyll environment variable -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ site.google_maps_api_key }}"></script>
 
-  // Initialize map after API is loaded
-  window.initMapSafe = async function() {
-    try {
-      await loadGoogleMapsScript();
-      // Wait a tiny bit for the API to fully initialize
-      setTimeout(() => {
-        if (typeof initMap === 'function') {
-          initMap();
-        } else {
-          console.error('initMap function not found');
-        }
-      }, 100);
-    } catch (error) {
-      console.error('Failed to initialize Google Maps:', error);
-      document.getElementById('map').innerHTML = `
-        <div style="padding: 20px; text-align: center; color: red;">
-          Failed to load Google Maps. Please check your internet connection and API key.
-        </div>
-      `;
-    }
-  };
-
-  // Store the original initMap function name
-  window.initMap = window.initMap || function() {};
-})();
-</script>
-
-<!-- Main Map Script -->
 <script>
 (function() {
   let map;
@@ -214,11 +141,9 @@
     const { bounds, visibleCount } = calculateBoundsForVisibleMarkers();
     
     if (visibleCount === 0) {
-      // If no markers are visible, reset to default view
       map.setCenter({ lat: 20.592263, lng: 83.248939 });
       map.setZoom(11);
     } else if (visibleCount === 1) {
-      // If only one marker, center on it with zoom 14
       markers.forEach(marker => {
         if (marker.getVisible()) {
           map.setCenter(marker.getPosition());
@@ -226,18 +151,15 @@
         }
       });
     } else {
-      // If multiple markers, fit bounds with padding and minimum zoom
-      const padding = 50; // pixels
+      const padding = 50;
       map.fitBounds(bounds, padding);
       
-      // Set minimum zoom level to 12
       google.maps.event.addListenerOnce(map, 'bounds_changed', function() {
         if (map.getZoom() > 12) {
           map.setZoom(12);
         }
       });
       
-      // Ensure zoom doesn't go below 12
       const currentZoom = map.getZoom();
       if (currentZoom < 12) {
         map.setZoom(12);
@@ -246,16 +168,13 @@
   }
 
   function updateLocationCounts() {
-    // Count all markers that are currently visible (after filtering)
     let total = 0;
     const categoryCounts = {};
     
-    // Initialize all known categories
     allCategories.forEach(category => {
       categoryCounts[category] = 0;
     });
     
-    // Count visible markers
     markers.forEach(marker => {
       if (marker.getVisible()) {
         total++;
@@ -267,18 +186,13 @@
       }
     });
     
-    // Update total count
     document.getElementById("totalCount").textContent = total;
     
-    // Get the container for dynamic categories
     const categoriesContainer = document.querySelector("#locationCounts > div:first-child");
-    
-    // Keep the total count element and remove the rest
     const totalElement = categoriesContainer.children[0];
     categoriesContainer.innerHTML = '';
     categoriesContainer.appendChild(totalElement);
     
-    // Add category counts (sorted alphabetically)
     Object.keys(categoryCounts)
       .filter(category => category !== "Total" && category !== "Unknown")
       .sort()
@@ -289,13 +203,11 @@
         }
       });
     
-    // Add "Unknown" category if there are any
     if (categoryCounts["Unknown"] > 0) {
       const unknownElement = createCategoryElement("Unknown", categoryCounts["Unknown"]);
       categoriesContainer.appendChild(unknownElement);
     }
     
-    // Update filter status
     const filterStatus = document.getElementById("filterStatus");
     if (currentBlockFilter) {
       filterStatus.textContent = `Showing locations for block: ${currentBlockFilter}`;
@@ -326,16 +238,14 @@
     
     updateLocationCounts();
     
-    // Center map on visible markers (only if block filter is applied)
     if (bV) {
       setTimeout(() => {
         centerMapOnVisibleMarkers();
-      }, 100); // Small delay to ensure markers are updated
+      }, 100);
     }
   }
 
-  // Make initMap globally available
-  window.initMap = function() {
+  function initMap() {
     const mapEl = document.getElementById("map");
     if (!mapEl) return;
 
@@ -425,7 +335,6 @@
           resetLastMarker();
         });
 
-        // Populate block list
         const list = document.getElementById("blockList");
         [...blockSet].sort().forEach(b => {
           const opt = document.createElement("option");
@@ -433,11 +342,10 @@
           list.appendChild(opt);
         });
 
-        // Initial update of location counts
         updateLocationCounts();
       })
       .catch(error => {
-        console.error('Error loading spreadsheet data:', error);
+        console.error('Error loading data:', error);
         document.getElementById('map').innerHTML = `
           <div style="padding: 20px; text-align: center; color: red;">
             Failed to load location data. Please try again later.
@@ -445,17 +353,12 @@
         `;
       });
 
-    // Filtering Logic
     const filters = ["blockSearch", "codeSearch", "nameSearch"];
     filters.forEach(id => {
       const input = document.getElementById(id);
-      
-      input.addEventListener("input", () => {
-        applyFilters();
-      });
+      input.addEventListener("input", applyFilters);
     });
     
-    // Clear filters with Escape key
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
         document.getElementById("blockSearch").value = '';
@@ -469,18 +372,15 @@
         
         updateLocationCounts();
         
-        // Reset map to default view
         map.setCenter({ lat: 20.592263, lng: 83.248939 });
         map.setZoom(11);
       }
     });
     
-    // Add "Show All" button dynamically
     const mapControls = document.querySelector('.map-controls');
     const showAllButton = document.createElement('button');
     showAllButton.textContent = 'Show All';
     showAllButton.style.cssText = 'padding: 8px 16px; font-size: 14px; background: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer;';
-    showAllButton.title = 'Reset all filters and show all locations';
     showAllButton.addEventListener('click', function() {
       document.getElementById("blockSearch").value = '';
       document.getElementById("codeSearch").value = '';
@@ -493,19 +393,18 @@
       
       updateLocationCounts();
       
-      // Reset map to default view
       map.setCenter({ lat: 20.592263, lng: 83.248939 });
       map.setZoom(11);
     });
     
     mapControls.appendChild(showAllButton);
-  };
+  }
 
-  // Start the map initialization
-  if (document.readyState === "complete" || document.readyState === "interactive") {
-    window.initMapSafe();
-  } else {
-    document.addEventListener("DOMContentLoaded", () => window.initMapSafe());
+  // Initialize map when page loads
+  if (document.readyState === "complete") { 
+    initMap(); 
+  } else { 
+    window.addEventListener("load", initMap); 
   }
 })();
 </script>
