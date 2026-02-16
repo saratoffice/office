@@ -8,8 +8,6 @@
   <link rel="stylesheet" href="style.css">
   <!-- ✅ IMPORTANT: site components for header/footer etc. -->
   <script src="assets/Scripts/site-components.js" defer></script>
-  <!-- Load config first (contains your key) -->
-<script src="config.js"></script>
 </head>
 <body>
 <div id="site-header"></div>
@@ -39,32 +37,59 @@
 </div>
 
 <style>
+/* Ensure no horizontal scrolling anywhere */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Make everything respect container width */
+* {
+  box-sizing: border-box;
+}
+
 .map-controls { 
   display: flex; 
   gap: 10px; 
   flex-wrap: wrap; 
-  margin-bottom: 15px; /* Slightly increased margin for better spacing with taller map */
+  margin-bottom: 15px;
+  width: 100%;
 }
+
 .map-controls input { 
   padding: 8px; 
   font-size: 14px; 
   min-width: 200px; 
   border: 1px solid #ccc; 
   border-radius: 4px; 
+  max-width: 100%;
 }
+
 #map { 
   margin-top: 10px; 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for better visual separation */
+  width: 100%;
+  max-width: 100%;
+  height: 600px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
+/* Prevent Leaflet container overflow (important for GitHub Pages) */
+.leaflet-container {
+  max-width: 100% !important;
+}
+
 /* Animation for marker click */
 @keyframes markerPulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.3); }
   100% { transform: scale(1.2); }
 }
+
 .marker-clicked {
   animation: markerPulse 0.3s ease-out forwards;
 }
+
 /* Category color styles */
 .category-total { color: #1976d2; font-weight: bold; }
 .category-ppc { color: #d32f2f; font-weight: bold; }
@@ -72,19 +97,84 @@
 .category-godown { color: #388e3c; font-weight: bold; }
 .category-rice-mill { color: #7b1fa2; font-weight: bold; }
 .category-other { color: #455a64; font-weight: bold; }
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .map-controls input { 
-    min-width: 100%; 
-  }
-  #map { 
-    height: 500px; /* Slightly smaller on mobile devices */
+
+/* Info window button styles */
+.info-window-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  justify-content: space-between;
+}
+
+.info-window-btn {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.share-btn {
+  background: #4267B2;
+  color: white;
+}
+
+.share-btn:hover {
+  background: #365899;
+}
+
+.navigate-btn {
+  background: #34A853;
+  color: white;
+}
+
+.navigate-btn:hover {
+  background: #2d8e46;
+}
+
+/* =========================
+   TABLET (768px–1024px)
+   ========================= */
+@media (max-width: 1024px) {
+  #map {
+    height: 550px;
   }
 }
+
+/* =========================
+   MOBILE (768px and below)
+   ========================= */
+@media (max-width: 768px) {
+
+  .map-controls {
+    flex-direction: column;
+  }
+
+  .map-controls input { 
+    min-width: 100%;
+    width: 100%;
+  }
+
+  #map { 
+    height: 450px;
+  }
+  
+  .info-window-buttons {
+    flex-direction: column;
+  }
+}
+
 </style>
 
 <!-- Load Google Maps API with optimized loading parameter -->
-<script src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_MAPS_API_KEY&loading=async"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys&loading=async"></script>
 
 <script>
 (function() {
@@ -145,6 +235,83 @@
 
   function formatCoordinates(lat, lng) {
     return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  }
+
+  // Function to share coordinates via social media
+  function shareLocation(name, lat, lng) {
+    const coordinates = formatCoordinates(lat, lng);
+    const text = `📍 ${name}\nCoordinates: ${coordinates}\n\nView on Google Maps: https://maps.google.com/?q=${lat},${lng}`;
+    const encodedText = encodeURIComponent(text);
+    
+    // Open share dialog with multiple options
+    const shareWindow = window.open('', '_blank', 'width=550,height=400,left=200,top=100');
+    
+    shareWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Share Location</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+          .container { max-width: 500px; margin: 0 auto; background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+          h2 { margin-top: 0; color: #1976d2; }
+          .share-options { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+          .share-btn { display: block; padding: 12px; text-align: center; text-decoration: none; border-radius: 4px; color: white; font-weight: bold; transition: opacity 0.2s; }
+          .share-btn:hover { opacity: 0.9; }
+          .twitter { background: #1DA1F2; }
+          .facebook { background: #4267B2; }
+          .whatsapp { background: #25D366; }
+          .telegram { background: #0088cc; }
+          .copy-link { background: #6c757d; }
+          .coordinates-box { background: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; margin: 15px 0; word-break: break-all; }
+          .close-btn { background: #dc3545; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h2>Share Location</h2>
+          <p><strong>${name}</strong></p>
+          <div class="coordinates-box">${coordinates}</div>
+          
+          <div class="share-options">
+            <a href="https://twitter.com/intent/tweet?text=${encodedText}" target="_blank" class="share-btn twitter">Share on Twitter</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://maps.google.com/?q=${lat},${lng}&quote=${encodedText}" target="_blank" class="share-btn facebook">Share on Facebook</a>
+            <a href="https://wa.me/?text=${encodedText}" target="_blank" class="share-btn whatsapp">Share on WhatsApp</a>
+            <a href="https://t.me/share/url?url=https://maps.google.com/?q=${lat},${lng}&text=${encodedText}" target="_blank" class="share-btn telegram">Share on Telegram</a>
+            <button onclick="copyToClipboard('${text.replace(/'/g, "\\'")}')" class="share-btn copy-link">Copy to Clipboard</button>
+          </div>
+          
+          <button onclick="window.close()" class="close-btn">Close</button>
+        </div>
+        
+        <script>
+          function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+              alert('Copied to clipboard!');
+            }).catch(err => {
+              alert('Failed to copy text');
+            });
+          }
+        <\/script>
+      </body>
+      </html>
+    `);
+  }
+
+  // Function to navigate to the spot
+  function navigateToLocation(lat, lng, name) {
+    if (confirm(`Open navigation to "${name}"?\n\nChoose an option:\n• OK for Google Maps app\n• Cancel for web directions`)) {
+      // Try to open Google Maps app
+      window.location.href = `google.navigation:q=${lat},${lng}&mode=d`;
+      
+      // Fallback to web after a short delay if app doesn't open
+      setTimeout(() => {
+        window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`, '_blank');
+      }, 500);
+    } else {
+      // Open web directions
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`, '_blank');
+    }
   }
 
   function resetLastMarker() {
@@ -368,7 +535,7 @@
             marker.setIcon(linePin(getBlockColor(block), 1.5));
             
             const content = `
-              <div style="min-width: 200px; max-width: 300px;">
+              <div style="min-width: 250px; max-width: 350px;">
                 <h3 style="margin: 0 0 8px 0; color: #1976d2;">${name}</h3>
                 <div style="margin-bottom: 5px;"><strong>Code:</strong> ${code}</div>
                 <div style="margin-bottom: 5px;"><strong>Block:</strong> ${block}</div>
@@ -377,7 +544,17 @@
                   <strong>Coordinates:</strong><br>
                   ${formatCoordinates(lat, lng)}
                 </div>
-                <div style="font-size: 12px; color: #666; margin-top: 8px;">
+                
+                <div class="info-window-buttons">
+                  <button onclick="window.shareLocation('${name.replace(/'/g, "\\'")}', ${lat}, ${lng})" class="info-window-btn share-btn">
+                    📤 Share
+                  </button>
+                  <button onclick="window.navigateToLocation(${lat}, ${lng}, '${name.replace(/'/g, "\\'")}')" class="info-window-btn navigate-btn">
+                    🗺️ Navigate
+                  </button>
+                </div>
+                
+                <div style="font-size: 11px; color: #999; margin-top: 8px; text-align: center;">
                   Click anywhere to close
                 </div>
               </div>
@@ -389,6 +566,10 @@
 
           markers.push(marker);
         });
+
+        // Make share and navigate functions globally accessible
+        window.shareLocation = shareLocation;
+        window.navigateToLocation = navigateToLocation;
 
         map.addListener("click", () => {
           infoWindow.close();
