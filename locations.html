@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Workpalce Locations| Sarat Office</title>
+  <title>Sarat Office</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <!-- Common CSS (menu, footer, global styles) -->
   <link rel="stylesheet" href="style.css">
@@ -13,33 +13,36 @@
 </head>
 <body>
 <div id="site-header"></div>
-<!-- CONTENT -->
-<!-- Container -->
-<div class="map-controls">
-  <!-- Use a custom focus handler to ensure the dropdown always opens fully -->
-  <input id="blockSearch" list="blockList" type="text" placeholder="Type / Select Block Name" onfocus="this.value=''" onchange="this.blur();" />
-  <datalist id="blockList"></datalist>
-  
-  <input id="codeSearch" type="text" placeholder="Search Work Place Code" />
-  <input id="nameSearch" type="text"placeholder="Search Work Place Name" />
-</div>
 
-<!-- Map height increased from 500px to 600px -->
-<div id="map" style="width: 100%; height: 600px; background: #eee; border-radius: 8px;"></div>
-
-<!-- Dynamic Location Counts Container -->
-<div id="locationCounts" style="margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; border: 1px solid #e0e0e0;">
-  <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 25px; margin-bottom: 10px;">
-    <span style="font-weight: bold; color: #1976d2;">Total Locations: <span id="totalCount" style="color: #333;">0</span></span>
-    <!-- Dynamic categories will be inserted here -->
+<!-- CONTENT - Wrapped in unique class to isolate from header/footer -->
+<div class="sarat-office-content">
+  <!-- Container -->
+  <div class="map-controls">
+    <!-- Use a custom focus handler to ensure the dropdown always opens fully -->
+    <input id="blockSearch" list="blockList" type="text" placeholder="Type / Select Block Name" onfocus="this.value=''" onchange="this.blur();" />
+    <datalist id="blockList"></datalist>
+    
+    <input id="codeSearch" type="text" placeholder="Search Work Place Code" />
+    <input id="nameSearch" type="text"placeholder="Search Work Place Name" />
   </div>
-  <div style="text-align: center; font-size: 12px; color: #666; font-style: italic;">
-    <span id="filterStatus">Showing all locations</span>
+
+  <!-- Map height increased from 500px to 600px -->
+  <div id="map" style="width: 100%; height: 600px; background: #eee; border-radius: 8px;"></div>
+
+  <!-- Dynamic Location Counts Container -->
+  <div id="locationCounts" style="margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; border: 1px solid #e0e0e0;">
+    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 25px; margin-bottom: 10px;">
+      <span style="font-weight: bold; color: #1976d2;">Total Locations: <span id="totalCount" style="color: #333;">0</span></span>
+      <!-- Dynamic categories will be inserted here -->
+    </div>
+    <div style="text-align: center; font-size: 12px; color: #666; font-style: italic;">
+      <span id="filterStatus">Showing all locations</span>
+    </div>
   </div>
 </div>
 
 <style>
-/* Ensure no horizontal scrolling anywhere */
+/* Global resets - only minimal to ensure body works properly */
 html, body {
   margin: 0;
   padding: 0;
@@ -47,33 +50,27 @@ html, body {
   width: 100%;
 }
 
-/* Make everything respect container width */
-* {
-  box-sizing: border-box;
-  max-width: 100%;
-}
-
-/* Main container - assuming there's a container div wrapping the content */
-body > *:not(script) {
+/* UNIQUE CLASS FOR SARAT OFFICE CONTENT - Isolates from header/footer */
+.sarat-office-content {
+  display: block;
   width: 100%;
-  max-width: 100%;
-  padding-left: 15px;
-  padding-right: 15px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 1200px; /* Optional: set a max-width for better readability */
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-/* For the map controls container */
-.map-controls { 
+/* All styles are now scoped under .sarat-office-content */
+.sarat-office-content .map-controls { 
   display: flex; 
   gap: 10px; 
   flex-wrap: wrap; 
   margin-bottom: 15px;
   width: 100%;
-  max-width: 100%;
 }
 
-.map-controls input { 
+.sarat-office-content .map-controls input { 
   padding: 8px 12px; 
   font-size: 14px; 
   min-width: 200px; 
@@ -81,10 +78,11 @@ body > *:not(script) {
   border: 1px solid #ccc; 
   border-radius: 4px; 
   height: 40px;
+  box-sizing: border-box;
 }
 
 /* Show All button styling */
-.map-controls button {
+.sarat-office-content .map-controls button {
   padding: 8px 16px; 
   font-size: 14px; 
   background: #1976d2; 
@@ -96,18 +94,21 @@ body > *:not(script) {
   height: 40px;
   min-width: 100px;
   white-space: nowrap;
+  box-sizing: border-box;
 }
 
-#map { 
+.sarat-office-content #map { 
   margin-top: 10px; 
   width: 100%;
-  max-width: 100%;
-  height: 550px;
+  height: 600px;
+  background: #eee;
+  border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-sizing: border-box;
 }
 
-/* Prevent Leaflet container overflow (important for GitHub Pages) */
-.leaflet-container {
+/* Prevent Leaflet container overflow */
+.sarat-office-content .leaflet-container {
   max-width: 100% !important;
 }
 
@@ -118,27 +119,27 @@ body > *:not(script) {
   100% { transform: scale(1.2); }
 }
 
-.marker-clicked {
+.sarat-office-content .marker-clicked {
   animation: markerPulse 0.3s ease-out forwards;
 }
 
 /* Category color styles */
-.category-total { color: #1976d2; font-weight: bold; }
-.category-ppc { color: #d32f2f; font-weight: bold; }
-.category-fps { color: #fbc02d; font-weight: bold; }
-.category-godown { color: #388e3c; font-weight: bold; }
-.category-rice-mill { color: #7b1fa2; font-weight: bold; }
-.category-other { color: #455a64; font-weight: bold; }
+.sarat-office-content .category-total { color: #1976d2; font-weight: bold; }
+.sarat-office-content .category-ppc { color: #d32f2f; font-weight: bold; }
+.sarat-office-content .category-fps { color: #fbc02d; font-weight: bold; }
+.sarat-office-content .category-godown { color: #388e3c; font-weight: bold; }
+.sarat-office-content .category-rice-mill { color: #7b1fa2; font-weight: bold; }
+.sarat-office-content .category-other { color: #455a64; font-weight: bold; }
 
 /* Info window button styles */
-.info-window-buttons {
+.sarat-office-content .info-window-buttons {
   display: flex;
   gap: 12px;
   margin: 15px 0 10px;
   justify-content: center;
 }
 
-.info-window-btn {
+.sarat-office-content .info-window-btn {
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -153,24 +154,24 @@ body > *:not(script) {
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-.info-window-btn:hover {
+.sarat-office-content .info-window-btn:hover {
   transform: scale(1.1);
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
-.info-window-btn:active {
+.sarat-office-content .info-window-btn:active {
   transform: scale(0.95);
 }
 
-.share-btn {
+.sarat-office-content .share-btn {
   background: #4267B2;
 }
 
-.navigate-btn {
+.sarat-office-content .navigate-btn {
   background: #34A853;
 }
 
-/* Share Dialog Styles */
+/* Share Dialog Styles - These are global as they're appended to body */
 .share-dialog-overlay {
   position: fixed;
   top: 0;
@@ -198,6 +199,7 @@ body > *:not(script) {
   width: 90%;
   box-shadow: 0 10px 40px rgba(0,0,0,0.2);
   animation: slideUp 0.3s ease;
+  font-family: Arial, sans-serif;
 }
 
 @keyframes slideUp {
@@ -306,15 +308,42 @@ body > *:not(script) {
   display: none !important;
 }
 
+/* Toast notification */
+.toast-notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  z-index: 10000;
+  animation: fadeInOut 1.5s ease;
+  font-family: Arial, sans-serif;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translate(-50%, 20px); }
+  15% { opacity: 1; transform: translate(-50%, 0); }
+  85% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -20px); }
+}
+
 /* =========================
    TABLET (768px–1024px)
    ========================= */
 @media (max-width: 1024px) {
-  #map {
-    height: 500px;
+  .sarat-office-content {
+    padding: 15px;
   }
   
-  .map-controls input { 
+  .sarat-office-content #map {
+    height: 550px;
+  }
+  
+  .sarat-office-content .map-controls input { 
     min-width: 180px;
   }
 }
@@ -323,39 +352,36 @@ body > *:not(script) {
    MOBILE (768px and below)
    ========================= */
 @media (max-width: 768px) {
-  /* Ensure body has no horizontal scroll */
-  body {
-    overflow-x: hidden;
-    padding-left: 10px;
-    padding-right: 10px;
+  .sarat-office-content {
+    padding: 10px;
   }
 
-  .map-controls {
+  .sarat-office-content .map-controls {
     flex-direction: column;
     gap: 8px;
   }
 
-  .map-controls input { 
+  .sarat-office-content .map-controls input { 
     min-width: 100%;
     width: 100%;
     flex: none;
   }
   
-  .map-controls button {
+  .sarat-office-content .map-controls button {
     width: 100%;
     min-width: 100%;
   }
 
-  #map { 
+  .sarat-office-content #map { 
     height: 450px;
     margin-top: 8px;
   }
   
-  #locationCounts {
+  .sarat-office-content #locationCounts {
     padding: 10px !important;
   }
   
-  #locationCounts > div:first-child {
+  .sarat-office-content #locationCounts > div:first-child {
     gap: 15px !important;
   }
   
@@ -373,13 +399,17 @@ body > *:not(script) {
 
 /* Small mobile devices */
 @media (max-width: 480px) {
-  .map-controls input,
-  .map-controls button {
+  .sarat-office-content {
+    padding: 8px;
+  }
+  
+  .sarat-office-content .map-controls input,
+  .sarat-office-content .map-controls button {
     font-size: 13px;
     height: 38px;
   }
   
-  #map {
+  .sarat-office-content #map {
     height: 400px;
   }
   
@@ -405,6 +435,10 @@ body > *:not(script) {
 
 /* Handle very small devices */
 @media (max-width: 360px) {
+  .sarat-office-content {
+    padding: 5px;
+  }
+  
   .social-icons {
     gap: 8px;
   }
@@ -414,11 +448,6 @@ body > *:not(script) {
     height: 38px;
     font-size: 18px;
   }
-}
-
-/* Ensure content doesn't overflow on any device */
-img, video, iframe, table, div {
-  max-width: 100%;
 }
 
 /* Fix for Google Maps info window on mobile */
@@ -431,7 +460,7 @@ img, video, iframe, table, div {
     max-width: 280px !important;
   }
   
-  .info-window-btn {
+  .sarat-office-content .info-window-btn {
     width: 40px;
     height: 40px;
     font-size: 18px;
@@ -590,21 +619,9 @@ img, video, iframe, table, div {
         }, 1500);
       }
       
-      // Also show a small toast notification
+      // Show toast notification
       const toast = document.createElement('div');
-      toast.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #333;
-        color: white;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 14px;
-        z-index: 10000;
-        animation: fadeInOut 1.5s ease;
-      `;
+      toast.className = 'toast-notification';
       toast.textContent = 'Copied to clipboard!';
       document.body.appendChild(toast);
       
@@ -615,18 +632,6 @@ img, video, iframe, table, div {
       alert('Failed to copy text');
     });
   };
-
-  // Add animation style for toast
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes fadeInOut {
-      0% { opacity: 0; transform: translate(-50%, 20px); }
-      15% { opacity: 1; transform: translate(-50%, 0); }
-      85% { opacity: 1; transform: translate(-50%, 0); }
-      100% { opacity: 0; transform: translate(-50%, -20px); }
-    }
-  `;
-  document.head.appendChild(style);
 
   function resetLastMarker() {
     if (lastClickedMarker && lastClickedMarker.meta) {
@@ -946,7 +951,7 @@ img, video, iframe, table, div {
     });
     
     // Add "Show All" button dynamically
-    const mapControls = document.querySelector('.map-controls');
+    const mapControls = document.querySelector('.sarat-office-content .map-controls');
     const showAllButton = document.createElement('button');
     showAllButton.textContent = 'Show All';
     showAllButton.title = 'Reset all filters and show all locations';
@@ -984,9 +989,10 @@ img, video, iframe, table, div {
   }
 })();
 </script>
+
 <!-- FOOTER -->
 <div id="site-footer"></div>
-  <!-- Go to Top -->
-  <script src="/assets/Scripts/gototop.js"></script>
+<!-- Go to Top -->
+<script src="/assets/Scripts/gototop.js"></script>
 </body>
 </html>
