@@ -1,3 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sarat Office</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <!-- Common CSS (menu, footer, global styles) -->
+  <link rel="stylesheet" href="style.css">
+  <!-- ✅ IMPORTANT: site components for header/footer etc. -->
+  <script src="assets/Scripts/site-components.js" defer></script>
+</head>
+<body>
+<div id="site-header"></div>
+<!-- CONTENT -->
 <!-- Container -->
 <div class="map-controls">
   <!-- Use a custom focus handler to ensure the dropdown always opens fully -->
@@ -8,7 +22,8 @@
   <input id="nameSearch" type="text"placeholder="Search Work Place Name" />
 </div>
 
-<div id="map" style="width: 100%; height: 500px; background: #eee; border-radius: 8px;"></div>
+<!-- Map height increased from 500px to 600px -->
+<div id="map" style="width: 100%; height: 600px; background: #eee; border-radius: 8px;"></div>
 
 <!-- Dynamic Location Counts Container -->
 <div id="locationCounts" style="margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; border: 1px solid #e0e0e0;">
@@ -22,9 +37,23 @@
 </div>
 
 <style>
-.map-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-.map-controls input { padding: 8px; font-size: 14px; min-width: 200px; border: 1px solid #ccc; border-radius: 4px; }
-#map { margin-top: 10px; }
+.map-controls { 
+  display: flex; 
+  gap: 10px; 
+  flex-wrap: wrap; 
+  margin-bottom: 15px; /* Slightly increased margin for better spacing with taller map */
+}
+.map-controls input { 
+  padding: 8px; 
+  font-size: 14px; 
+  min-width: 200px; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+}
+#map { 
+  margin-top: 10px; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for better visual separation */
+}
 /* Animation for marker click */
 @keyframes markerPulse {
   0% { transform: scale(1); }
@@ -41,10 +70,19 @@
 .category-godown { color: #388e3c; font-weight: bold; }
 .category-rice-mill { color: #7b1fa2; font-weight: bold; }
 .category-other { color: #455a64; font-weight: bold; }
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .map-controls input { 
+    min-width: 100%; 
+  }
+  #map { 
+    height: 500px; /* Slightly smaller on mobile devices */
+  }
+}
 </style>
 
-<!-- Load Google Maps API (Ensure YOUR_API_KEY is updated for 2026 billing requirements) -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys"></script>
+<!-- Load Google Maps API with optimized loading parameter -->
+<script src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_MAPS_API_KEY&loading=async"></script>
 
 <script>
 (function() {
@@ -365,6 +403,15 @@
 
         // Initial update of location counts
         updateLocationCounts();
+      })
+      .catch(error => {
+        console.error('Error loading spreadsheet data:', error);
+        // Show user-friendly error message
+        document.getElementById('map').innerHTML = `
+          <div style="padding: 20px; text-align: center; color: #721c24; background: #f8d7da; border-radius: 8px;">
+            Failed to load location data. Please refresh the page or try again later.
+          </div>
+        `;
       });
 
     // Filtering Logic
@@ -401,8 +448,14 @@
     const mapControls = document.querySelector('.map-controls');
     const showAllButton = document.createElement('button');
     showAllButton.textContent = 'Show All';
-    showAllButton.style.cssText = 'padding: 8px 16px; font-size: 14px; background: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer;';
+    showAllButton.style.cssText = 'padding: 8px 16px; font-size: 14px; background: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background 0.3s;';
     showAllButton.title = 'Reset all filters and show all locations';
+    showAllButton.addEventListener('mouseenter', function() {
+      this.style.background = '#1565c0';
+    });
+    showAllButton.addEventListener('mouseleave', function() {
+      this.style.background = '#1976d2';
+    });
     showAllButton.addEventListener('click', function() {
       document.getElementById("blockSearch").value = '';
       document.getElementById("codeSearch").value = '';
@@ -423,10 +476,17 @@
     mapControls.appendChild(showAllButton);
   }
 
-  if (document.readyState === "complete") { 
-    initMap(); 
-  } else { 
-    window.addEventListener("load", initMap); 
+  // Initialize map when DOM is ready
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    setTimeout(initMap, 100); // Small delay to ensure DOM is fully ready
+  } else {
+    window.addEventListener("load", initMap);
   }
 })();
 </script>
+<!-- FOOTER -->
+<div id="site-footer"></div>
+  <!-- Go to Top -->
+  <script src="/assets/Scripts/gototop.js"></script>
+</body>
+</html>
