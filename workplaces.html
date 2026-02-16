@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="style.css">
   <!-- ✅ IMPORTANT: site components for header/footer etc. -->
   <script src="assets/Scripts/site-components.js" defer></script>
+  <!-- Font Awesome for social media icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 <div id="site-header"></div>
@@ -42,28 +44,58 @@ html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  width: 100%;
 }
 
 /* Make everything respect container width */
 * {
   box-sizing: border-box;
+  max-width: 100%;
 }
 
+/* Main container - assuming there's a container div wrapping the content */
+body > *:not(script) {
+  width: 100%;
+  max-width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* For the map controls container */
 .map-controls { 
   display: flex; 
   gap: 10px; 
   flex-wrap: wrap; 
   margin-bottom: 15px;
   width: 100%;
+  max-width: 100%;
 }
 
 .map-controls input { 
-  padding: 8px; 
+  padding: 8px 12px; 
   font-size: 14px; 
   min-width: 200px; 
+  flex: 1 1 200px;
   border: 1px solid #ccc; 
   border-radius: 4px; 
-  max-width: 100%;
+  height: 40px;
+}
+
+/* Show All button styling */
+.map-controls button {
+  padding: 8px 16px; 
+  font-size: 14px; 
+  background: #1976d2; 
+  color: white; 
+  border: none; 
+  border-radius: 4px; 
+  cursor: pointer; 
+  transition: background 0.3s;
+  height: 40px;
+  min-width: 100px;
+  white-space: nowrap;
 }
 
 #map { 
@@ -101,42 +133,177 @@ html, body {
 /* Info window button styles */
 .info-window-buttons {
   display: flex;
-  gap: 8px;
-  margin-top: 10px;
-  justify-content: space-between;
+  gap: 12px;
+  margin: 15px 0 10px;
+  justify-content: center;
 }
 
 .info-window-btn {
-  flex: 1;
-  padding: 8px 12px;
-  font-size: 13px;
-  font-weight: 500;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  font-size: 20px;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.info-window-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.info-window-btn:active {
+  transform: scale(0.95);
 }
 
 .share-btn {
   background: #4267B2;
-  color: white;
-}
-
-.share-btn:hover {
-  background: #365899;
 }
 
 .navigate-btn {
   background: #34A853;
-  color: white;
 }
 
-.navigate-btn:hover {
-  background: #2d8e46;
+/* Share Dialog Styles */
+.share-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.share-dialog {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.share-dialog h3 {
+  margin: 0 0 8px 0;
+  color: #1976d2;
+  font-size: 18px;
+}
+
+.share-dialog .location-name {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+  word-break: break-word;
+}
+
+.share-dialog .coordinates {
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 13px;
+  margin-bottom: 20px;
+  word-break: break-all;
+  text-align: center;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.social-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.social-icon:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.social-icon:active {
+  transform: translateY(0);
+}
+
+.social-icon.twitter { background: #1DA1F2; }
+.social-icon.facebook { background: #4267B2; }
+.social-icon.whatsapp { background: #25D366; }
+.social-icon.telegram { background: #0088cc; }
+.social-icon.copy { background: #6c757d; }
+
+.close-dialog-btn {
+  width: 100%;
+  padding: 12px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 10px;
+}
+
+.close-dialog-btn:hover {
+  background: #c82333;
+}
+
+/* Info window custom styling */
+.gm-style-iw {
+  padding: 12px !important;
+  border-radius: 12px !important;
+}
+
+.gm-style-iw-d {
+  overflow: hidden !important;
+}
+
+.gm-ui-hover-effect {
+  display: none !important;
 }
 
 /* =========================
@@ -146,28 +313,128 @@ html, body {
   #map {
     height: 550px;
   }
+  
+  .map-controls input { 
+    min-width: 180px;
+  }
 }
 
 /* =========================
    MOBILE (768px and below)
    ========================= */
 @media (max-width: 768px) {
+  /* Ensure body has no horizontal scroll */
+  body {
+    overflow-x: hidden;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 
   .map-controls {
     flex-direction: column;
+    gap: 8px;
   }
 
   .map-controls input { 
     min-width: 100%;
     width: 100%;
+    flex: none;
+  }
+  
+  .map-controls button {
+    width: 100%;
+    min-width: 100%;
   }
 
   #map { 
     height: 450px;
+    margin-top: 8px;
   }
   
-  .info-window-buttons {
-    flex-direction: column;
+  #locationCounts {
+    padding: 10px !important;
+  }
+  
+  #locationCounts > div:first-child {
+    gap: 15px !important;
+  }
+  
+  .social-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 22px;
+  }
+  
+  .share-dialog {
+    padding: 20px;
+    width: 95%;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .map-controls input,
+  .map-controls button {
+    font-size: 13px;
+    height: 38px;
+  }
+  
+  #map {
+    height: 400px;
+  }
+  
+  .social-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .social-icons {
+    gap: 12px;
+  }
+  
+  .share-dialog h3 {
+    font-size: 16px;
+  }
+  
+  .share-dialog .coordinates {
+    font-size: 12px;
+    padding: 10px;
+  }
+}
+
+/* Handle very small devices */
+@media (max-width: 360px) {
+  .social-icons {
+    gap: 8px;
+  }
+  
+  .social-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 18px;
+  }
+}
+
+/* Ensure content doesn't overflow on any device */
+img, video, iframe, table, div {
+  max-width: 100%;
+}
+
+/* Fix for Google Maps info window on mobile */
+@media (max-width: 480px) {
+  .gm-style-iw-c {
+    max-width: 280px !important;
+  }
+  
+  .gm-style-iw-d {
+    max-width: 280px !important;
+  }
+  
+  .info-window-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
   }
 }
 
@@ -237,82 +504,129 @@ html, body {
     return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
   }
 
-  // Function to share coordinates via social media
-  function shareLocation(name, lat, lng) {
+  // Function to navigate to location - opens Google Maps directly without popup
+  function navigateToLocation(lat, lng) {
+    // Try to open Google Maps app
+    window.location.href = `google.navigation:q=${lat},${lng}&mode=d`;
+    
+    // Fallback to web after a short delay if app doesn't open
+    setTimeout(() => {
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`, '_blank');
+    }, 500);
+  }
+
+  // Function to show share dialog with social media circles
+  function showShareDialog(name, lat, lng) {
     const coordinates = formatCoordinates(lat, lng);
     const text = `📍 ${name}\nCoordinates: ${coordinates}\n\nView on Google Maps: https://maps.google.com/?q=${lat},${lng}`;
     const encodedText = encodeURIComponent(text);
+    const mapsUrl = `https://maps.google.com/?q=${lat},${lng}`;
     
-    // Open share dialog with multiple options
-    const shareWindow = window.open('', '_blank', 'width=550,height=400,left=200,top=100');
+    // Remove any existing dialog
+    const existingDialog = document.querySelector('.share-dialog-overlay');
+    if (existingDialog) {
+      existingDialog.remove();
+    }
     
-    shareWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Share Location</title>
-        <style>
-          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
-          .container { max-width: 500px; margin: 0 auto; background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-          h2 { margin-top: 0; color: #1976d2; }
-          .share-options { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
-          .share-btn { display: block; padding: 12px; text-align: center; text-decoration: none; border-radius: 4px; color: white; font-weight: bold; transition: opacity 0.2s; }
-          .share-btn:hover { opacity: 0.9; }
-          .twitter { background: #1DA1F2; }
-          .facebook { background: #4267B2; }
-          .whatsapp { background: #25D366; }
-          .telegram { background: #0088cc; }
-          .copy-link { background: #6c757d; }
-          .coordinates-box { background: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; margin: 15px 0; word-break: break-all; }
-          .close-btn { background: #dc3545; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <h2>Share Location</h2>
-          <p><strong>${name}</strong></p>
-          <div class="coordinates-box">${coordinates}</div>
-          
-          <div class="share-options">
-            <a href="https://twitter.com/intent/tweet?text=${encodedText}" target="_blank" class="share-btn twitter">Share on Twitter</a>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=https://maps.google.com/?q=${lat},${lng}&quote=${encodedText}" target="_blank" class="share-btn facebook">Share on Facebook</a>
-            <a href="https://wa.me/?text=${encodedText}" target="_blank" class="share-btn whatsapp">Share on WhatsApp</a>
-            <a href="https://t.me/share/url?url=https://maps.google.com/?q=${lat},${lng}&text=${encodedText}" target="_blank" class="share-btn telegram">Share on Telegram</a>
-            <button onclick="copyToClipboard('${text.replace(/'/g, "\\'")}')" class="share-btn copy-link">Copy to Clipboard</button>
-          </div>
-          
-          <button onclick="window.close()" class="close-btn">Close</button>
+    // Create dialog overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'share-dialog-overlay';
+    
+    // Create dialog content
+    overlay.innerHTML = `
+      <div class="share-dialog">
+        <h3>Share Location</h3>
+        <div class="location-name">${name}</div>
+        <div class="coordinates">${coordinates}</div>
+        
+        <div class="social-icons">
+          <a href="https://twitter.com/intent/tweet?text=${encodedText}" target="_blank" class="social-icon twitter" title="Share on Twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u=${mapsUrl}&quote=${encodedText}" target="_blank" class="social-icon facebook" title="Share on Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://wa.me/?text=${encodedText}" target="_blank" class="social-icon whatsapp" title="Share on WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+          <a href="https://t.me/share/url?url=${mapsUrl}&text=${encodedText}" target="_blank" class="social-icon telegram" title="Share on Telegram">
+            <i class="fab fa-telegram-plane"></i>
+          </a>
+          <a href="#" class="social-icon copy" title="Copy to Clipboard" onclick="copyToClipboard('${text.replace(/'/g, "\\'")}'); return false;">
+            <i class="fas fa-copy"></i>
+          </a>
         </div>
         
-        <script>
-          function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-              alert('Copied to clipboard!');
-            }).catch(err => {
-              alert('Failed to copy text');
-            });
-          }
-        <\/script>
-      </body>
-      </html>
-    `);
+        <button class="close-dialog-btn">Close</button>
+      </div>
+    `;
+    
+    document.body.appendChild(overlay);
+    
+    // Add close button functionality
+    const closeBtn = overlay.querySelector('.close-dialog-btn');
+    closeBtn.addEventListener('click', () => {
+      overlay.remove();
+    });
+    
+    // Close when clicking outside
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.remove();
+      }
+    });
   }
 
-  // Function to navigate to the spot
-  function navigateToLocation(lat, lng, name) {
-    if (confirm(`Open navigation to "${name}"?\n\nChoose an option:\n• OK for Google Maps app\n• Cancel for web directions`)) {
-      // Try to open Google Maps app
-      window.location.href = `google.navigation:q=${lat},${lng}&mode=d`;
+  // Global copy function
+  window.copyToClipboard = function(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      // Show temporary success message
+      const copyIcon = document.querySelector('.social-icon.copy i');
+      if (copyIcon) {
+        const originalClass = copyIcon.className;
+        copyIcon.className = 'fas fa-check';
+        setTimeout(() => {
+          copyIcon.className = originalClass;
+        }, 1500);
+      }
       
-      // Fallback to web after a short delay if app doesn't open
+      // Also show a small toast notification
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        z-index: 10000;
+        animation: fadeInOut 1.5s ease;
+      `;
+      toast.textContent = 'Copied to clipboard!';
+      document.body.appendChild(toast);
+      
       setTimeout(() => {
-        window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`, '_blank');
-      }, 500);
-    } else {
-      // Open web directions
-      window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`, '_blank');
+        toast.remove();
+      }, 1500);
+    }).catch(err => {
+      alert('Failed to copy text');
+    });
+  };
+
+  // Add animation style for toast
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translate(-50%, 20px); }
+      15% { opacity: 1; transform: translate(-50%, 0); }
+      85% { opacity: 1; transform: translate(-50%, 0); }
+      100% { opacity: 0; transform: translate(-50%, -20px); }
     }
-  }
+  `;
+  document.head.appendChild(style);
 
   function resetLastMarker() {
     if (lastClickedMarker && lastClickedMarker.meta) {
@@ -480,7 +794,11 @@ html, body {
       zoom: 11,
       center: { lat: 20.592263, lng: 83.248939 },
       gestureHandling: "greedy",
-      mapTypeControl: false
+      mapTypeControl: false,
+      fullscreenControl: true,
+      streetViewControl: false,
+      zoomControl: true,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
     const sheetURL = "https://docs.google.com/spreadsheets/d/1HI5Wjjwo5OObDaS4W7QaOVc_RcqgREu8pHEQxSjYhUg/gviz/tq?tqx=out:json";
@@ -490,7 +808,10 @@ html, body {
       .then(text => {
         const json = JSON.parse(text.substring(47).slice(0, -2));
         const rows = json.table.rows;
-        const infoWindow = new google.maps.InfoWindow();
+        const infoWindow = new google.maps.InfoWindow({
+          maxWidth: 350,
+          pixelOffset: new google.maps.Size(0, -30)
+        });
         const blockSet = new Set();
 
         rows.forEach(r => {
@@ -516,7 +837,8 @@ html, body {
               fontWeight: "bold", 
               fontSize: "11px" 
             },
-            title: name
+            title: name,
+            optimized: false
           });
 
           marker.meta = { 
@@ -535,27 +857,23 @@ html, body {
             marker.setIcon(linePin(getBlockColor(block), 1.5));
             
             const content = `
-              <div style="min-width: 250px; max-width: 350px;">
-                <h3 style="margin: 0 0 8px 0; color: #1976d2;">${name}</h3>
-                <div style="margin-bottom: 5px;"><strong>Code:</strong> ${code}</div>
-                <div style="margin-bottom: 5px;"><strong>Block:</strong> ${block}</div>
-                <div style="margin-bottom: 5px;"><strong>Category:</strong> ${cat}</div>
-                <div style="margin-bottom: 5px; padding: 8px; background: #f5f5f5; border-radius: 4px; font-family: monospace;">
+              <div style="min-width: 220px; max-width: 300px;">
+                <h3 style="margin: 0 0 8px 0; color: #1976d2; font-size: 16px;">${name}</h3>
+                <div style="margin-bottom: 5px; font-size: 13px;"><strong>Code:</strong> ${code}</div>
+                <div style="margin-bottom: 5px; font-size: 13px;"><strong>Block:</strong> ${block}</div>
+                <div style="margin-bottom: 5px; font-size: 13px;"><strong>Category:</strong> ${cat}</div>
+                <div style="margin-bottom: 10px; padding: 8px; background: #f5f5f5; border-radius: 4px; font-family: monospace; font-size: 12px;">
                   <strong>Coordinates:</strong><br>
                   ${formatCoordinates(lat, lng)}
                 </div>
                 
                 <div class="info-window-buttons">
-                  <button onclick="window.shareLocation('${name.replace(/'/g, "\\'")}', ${lat}, ${lng})" class="info-window-btn share-btn">
-                    📤 Share
+                  <button onclick="window.showShareDialog('${name.replace(/'/g, "\\'")}', ${lat}, ${lng})" class="info-window-btn share-btn" title="Share location">
+                    <i class="fas fa-share-alt"></i>
                   </button>
-                  <button onclick="window.navigateToLocation(${lat}, ${lng}, '${name.replace(/'/g, "\\'")}')" class="info-window-btn navigate-btn">
-                    🗺️ Navigate
+                  <button onclick="window.navigateToLocation(${lat}, ${lng})" class="info-window-btn navigate-btn" title="Navigate to location">
+                    <i class="fas fa-directions"></i>
                   </button>
-                </div>
-                
-                <div style="font-size: 11px; color: #999; margin-top: 8px; text-align: center;">
-                  Click anywhere to close
                 </div>
               </div>
             `;
@@ -567,8 +885,8 @@ html, body {
           markers.push(marker);
         });
 
-        // Make share and navigate functions globally accessible
-        window.shareLocation = shareLocation;
+        // Make functions globally accessible
+        window.showShareDialog = showShareDialog;
         window.navigateToLocation = navigateToLocation;
 
         map.addListener("click", () => {
@@ -631,7 +949,6 @@ html, body {
     const mapControls = document.querySelector('.map-controls');
     const showAllButton = document.createElement('button');
     showAllButton.textContent = 'Show All';
-    showAllButton.style.cssText = 'padding: 8px 16px; font-size: 14px; background: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background 0.3s;';
     showAllButton.title = 'Reset all filters and show all locations';
     showAllButton.addEventListener('mouseenter', function() {
       this.style.background = '#1565c0';
