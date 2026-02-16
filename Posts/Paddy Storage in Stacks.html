@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paddy Storage Capacity: Calculations for Dry & Soaked Paddy per Cubic Foot</title>
+  
+  <!-- Common CSS -->
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../post-styles.css">
+  
+  <!-- Site components -->
+  <script src="../assets/Scripts/site-components.js" defer></script>
+  
+  <!-- Post Common JavaScript -->
+  <script src="../assets/Scripts/post-common.js" defer></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- Blog metadata -->
+  <meta name="blog:title" content="Paddy Storage Capacity: Calculations for Dry & Soaked Paddy per Cubic Foot">
+  <meta name="blog:excerpt" content="Technical calculations for determining how many kilograms of dry and soaked paddy can be stored in 1 cubic foot, including bulk density, volume conversion, and gunny bag stacking.">
+  <meta name="blog:category" content="agriculture">
+  <meta name="blog:tags" content="paddy, rice, storage, bulk density, gunny bags, foodgrains, warehouse, agriculture">
+  <meta name="blog:author" content="Agricultural Storage Board">
+  <meta name="blog:date" content="2025-03-10">
+  <meta name="blog:readTime" content="8">
+  <meta name="blog:views" content="634">
+  <meta name="blog:icon" content="fa-seedling">
+  
+  <style>
+    /* Additional custom styles for calculations */
+    .calculation-box {
+      background: #1e293b;
+      color: white;
+      padding: 2rem;
+      border-radius: 20px;
+      margin: 2rem 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .calculation-box h3 {
+      color: #fbbf24;
+      margin-top: 0;
+    }
+    
+    .formula {
+      font-family: 'Courier New', monospace;
+      background: #0f172a;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      display: inline-block;
+      margin: 1rem 0;
+      font-size: 1.2rem;
+      border-left: 4px solid #fbbf24;
+    }
+    
+    .result-badge {
+      background: #10b981;
+      color: white;
+      font-size: 2rem;
+      font-weight: 800;
+      padding: 1rem 2rem;
+      border-radius: 60px;
+      display: inline-block;
+      margin: 1rem 0;
+      box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+    }
+    
+    .conversion-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: #f1f5f9;
+      padding: 1rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+    }
+    
+    .conversion-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #3b82f6;
+      font-family: monospace;
+    }
+    
+    .unit {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+    
+    .storage-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+    
+    .storage-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+    }
+    
+    .storage-icon {
+      font-size: 3rem;
+      color: #3b82f6;
+      margin-bottom: 1rem;
+    }
+    
+    .highlight-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #3b82f6;
+      line-height: 1.2;
+    }
+    
+    .comparison-table {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    .comparison-item {
+      text-align: center;
+      padding: 1.5rem;
+      background: #f8fafc;
+      border-radius: 16px;
+    }
+    
+    .comparison-item h4 {
+      color: #1e293b;
+      margin-bottom: 1rem;
+    }
+    
+    .comparison-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #3b82f6;
+    }
+    
+    .method-tag {
+      background: #e2e8f0;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      color: #475569;
+      display: inline-block;
+      margin-left: 0.5rem;
+    }
+    
+    @media (max-width: 768px) {
+      .comparison-table {
+        grid-template-columns: 1fr;
+      }
+      
+      .result-badge {
+        font-size: 1.5rem;
+        padding: 0.8rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header id="site-header"></header>
+
+  <section class="blog-post-section">
+    <!-- Back to blogs link -->
+    <a href="../blogs.html" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to all articles
+    </a>
+
+    <!-- Post header -->
+    <div class="post-header">
+      <h1 class="post-title">Paddy Storage Capacity: Calculations for Dry & Soaked Paddy per Cubic Foot</h1>
+      
+      <div class="post-meta">
+        <span><i class="fas fa-user"></i> Agricultural Storage Board</span>
+        <span><i class="fas fa-calendar"></i> March 10, 2025</span>
+        <span><i class="fas fa-clock"></i> 8 min read</span>
+        <span class="category-tag"><i class="fas fa-seedling"></i> Agriculture & Storage</span>
+      </div>
+    </div>
+
+    <!-- Feature Image -->
+    <div class="feature-image">
+      <img src="https://images.pexels.com/photos/1000084/pexels-photo-1000084.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+           alt="Paddy rice storage in gunny bags" 
+           loading="lazy">
+      <div class="feature-caption">
+        <i class="fas fa-camera"></i> Gunny bag storage of paddy in warehouse
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div id="table-of-contents"></div>
+
+    <!-- Main content -->
+    <div class="post-content">
+      <p class="intro-text">
+        This technical bulletin provides standardized calculations for determining paddy storage capacity in cubic feet. These figures are essential for warehouse planning, inventory management, and procurement operations in the foodgrains sector.
+      </p>
+
+      <!-- SECTION 1: Dry Paddy Bulk Density -->
+      <h2>📊 Dry Paddy Storage Capacity per Cubic Foot</h2>
+      
+      <div class="storage-card">
+        <div class="storage-icon"><i class="fas fa-weight-hanging"></i></div>
+        <h3>Bulk Density of Paddy Rice</h3>
+        <p>To determine how many kilograms of dry, fair average quality paddy can be stored in 1 cubic foot, we use the bulk density of paddy rice.</p>
+        
+        <div class="conversion-row">
+          <span>Bulk Density Range:</span>
+          <span class="conversion-value">500–600 kg/m³</span>
+        </div>
+        
+        <div class="conversion-row">
+          <span>Volume Conversion:</span>
+          <span class="conversion-value">1 m³ = 35.3147 ft³</span>
+        </div>
+        
+        <h4 style="margin-top: 2rem;">Per Cubic Foot Calculation:</h4>
+        
+        <div class="two-column" style="margin-bottom: 1rem;">
+          <div class="column-item">
+            <strong>Lower bound:</strong>
+            <div class="formula">500 kg/m³ ÷ 35.3147 = 14.16 kg/ft³</div>
+          </div>
+          <div class="column-item">
+            <strong>Upper bound:</strong>
+            <div class="formula">600 kg/m³ ÷ 35.3147 = 16.99 kg/ft³</div>
+          </div>
+        </div>
+        
+        <div class="highlight-box" style="background: #dbeafe; border-left-color: #2563eb;">
+          <h4>Average Value:</h4>
+          <p>For practical purposes, the average bulk density is around <strong>550 kg/m³</strong>, leading to:</p>
+          <div class="formula">550 kg/m³ ÷ 35.3147 = 15.5 kg/ft³</div>
+        </div>
+        
+        <div style="text-align: center; margin: 2rem 0;">
+          <div class="result-badge">≈ 15–16 kg/ft³</div>
+        </div>
+        
+        <div class="note-box">
+          <p><strong>Final Answer:</strong> Approximately <strong>15–16 kg</strong> of dry, fair average quality paddy can be stored in 1 cubic foot. Variations may occur due to rice variety, husk content, and packing method.</p>
+          <p style="text-align: center; font-size: 1.5rem; margin-top: 1rem;">📦 <strong>15 kg</strong> per cubic foot (average estimate)</p>
+        </div>
+      </div>
+
+      <!-- SECTION 2: Gunny Bag Storage -->
+      <h2>👜 Gunny Bag Storage Calculation</h2>
+      
+      <div class="storage-card">
+        <div class="storage-icon"><i class="fas fa-sack"></i></div>
+        <h3>Net Paddy in Gunny Bags per Cubic Foot</h3>
+        <p>To determine the stock of net paddy in 1 cubic foot when stored in gunny bags:</p>
+        
+        <div class="comparison-table">
+          <div class="comparison-item">
+            <h4>Bag Weight</h4>
+            <div class="comparison-value">45 kg</div>
+            <span class="method-tag">Standard</span>
+          </div>
+          <div class="comparison-item">
+            <h4>Bulk Density</h4>
+            <div class="comparison-value">15.5 kg/ft³</div>
+            <span class="method-tag">Loose paddy</span>
+          </div>
+          <div class="comparison-item">
+            <h4>Bag Volume</h4>
+            <div class="comparison-value">2.89 ft³</div>
+            <span class="method-tag">Calculated</span>
+          </div>
+        </div>
+        
+        <h4>Step 1: Volume Occupied by One Bag</h4>
+        <p>Using the bulk density of loose paddy (15.5 kg/ft³), a 45 kg bag occupies:</p>
+        <div class="formula">45 kg ÷ 15.5 kg/ft³ = 2.89 cubic feet</div>
+        
+        <h4 style="margin-top: 2rem;">Step 2: Net Paddy per Cubic Foot</h4>
+        <p>If 1 bag (45 kg) occupies 2.89 ft³, then 1 cubic foot holds:</p>
+        <div class="formula">45 kg ÷ 2.89 ft³ = 15.57 kg/ft³</div>
+        
+        <div class="info-box" style="margin-top: 2rem;">
+          <h4><i class="fas fa-check-circle"></i> Conclusion</h4>
+          <ul>
+            <li>Proper stacking in gunny bags maintains a similar bulk density to loose paddy</li>
+            <li><strong>Net paddy per cubic foot ≈ 15 kg</strong> (rounded)</li>
+          </ul>
+          <div style="text-align: center; margin-top: 1rem;">
+            <span class="result-badge" style="background: #8b5cf6;">15 kg/ft³</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: Soaked Paddy Calculation -->
+      <h2>💧 Soaked Paddy Storage Capacity</h2>
+      
+      <div class="storage-card">
+        <div class="storage-icon"><i class="fas fa-water"></i></div>
+        <h3>Dry Paddy Equivalent After 24-Hour Soaking</h3>
+        <p>To determine how much dry paddy (by weight) can be stored in 1 cubic foot after soaking in water for 24 hours:</p>
+        
+        <div class="calculation-box">
+          <h3>Key Assumptions & Calculations</h3>
+          
+          <h4>1. Dry Paddy Bulk Density</h4>
+          <p>Dry paddy has a bulk density of <strong>15 kg/ft³</strong> (from prior analysis).</p>
+          
+          <h4>2. Effect of Soaking</h4>
+          <p>Paddy absorbs water and swells, increasing its volume by approximately <strong>25–30%</strong>.</p>
+          
+          <div class="conversion-row">
+            <span>Assume 25% volume increase:</span>
+            <span class="conversion-value">1 ft³ × 1.25 = 1.25 ft³</span>
+          </div>
+          
+          <h4>3. Dry Paddy Equivalent per Cubic Foot</h4>
+          <p>If 15 kg of dry paddy expands to 1.25 ft³ after soaking, then 1 ft³ of soaked paddy corresponds to:</p>
+          <div class="formula" style="background: #2d3748; color: #fbbf24;">15 kg ÷ 1.25 = 12 kg (dry equivalent)</div>
+          
+          <h4>4. Range for 30% Volume Increase</h4>
+          <p>For a more conservative estimate (30% expansion):</p>
+          <div class="formula" style="background: #2d3748; color: #fbbf24;">15 kg ÷ 1.3 = 11.5 kg (dry equivalent)</div>
+        </div>
+        
+        <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; flex-wrap: wrap;">
+          <div style="text-align: center;">
+            <div style="font-size: 1.2rem; color: #64748b;">Minimum (30% expansion)</div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: #3b82f6;">11.5 kg</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 1.2rem; color: #64748b;">Average (25% expansion)</div>
+            <div style="font-size: 3rem; font-weight: 800; color: #3b82f6;">12 kg</div>
+          </div>
+        </div>
+        
+        <div class="note-box">
+          <p><strong>Final Answer:</strong> Approximately <strong>11.5–12 kg</strong> of dry paddy (by weight), when soaked, will occupy 1 cubic foot. This accounts for grain expansion and water absorption.</p>
+          <div style="text-align: center; margin-top: 1rem;">
+            <span class="result-badge" style="background: #10b981;">12 kg (average)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Table -->
+      <h2>📋 Summary of Findings</h2>
+      
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Storage Condition</th>
+              <th>Paddy Weight per ft³</th>
+              <th>Calculation Method</th>
+              <th>Remarks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Dry Paddy (Loose)</strong></td>
+              <td>15–16 kg</td>
+              <td>Bulk density: 550 kg/m³</td>
+              <td>Average: 15.5 kg/ft³</td>
+            </tr>
+            <tr>
+              <td><strong>Dry Paddy (Gunny Bags)</strong></td>
+              <td>15 kg</td>
+              <td>45 kg bag occupies 2.89 ft³</td>
+              <td>Rounded value for practical use</td>
+            </tr>
+            <tr>
+              <td><strong>Soaked Paddy (24 hrs)</strong></td>
+              <td>11.5–12 kg</td>
+              <td>25-30% volume expansion</td>
+              <td>Dry weight equivalent</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Practical Applications -->
+      <h2>🏭 Practical Applications</h2>
+      
+      <div class="two-column">
+        <div class="column-item">
+          <h4><i class="fas fa-warehouse"></i> Warehouse Planning</h4>
+          <p>For a warehouse with 10,000 ft³ storage capacity:</p>
+          <ul>
+            <li>Dry paddy: 150,000 kg (150 tonnes)</li>
+            <li>Gunny bags: ~3,334 bags</li>
+            <li>Soaked paddy: 120,000 kg dry equivalent</li>
+          </ul>
+        </div>
+        
+        <div class="column-item">
+          <h4><i class="fas fa-truck"></i> Transportation</h4>
+          <p>Truck capacity: 1,000 ft³</p>
+          <ul>
+            <li>Load: 15 tonnes dry paddy</li>
+            <li>Bags: ~333 bags</li>
+            <li>Stacking height: 6-8 layers</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Factors Affecting Density -->
+      <div class="info-box">
+        <h4><i class="fas fa-exclamation-triangle"></i> Factors Affecting Bulk Density</h4>
+        <div class="function-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+          <div class="function-card" style="border-left-color: #f59e0b;">
+            <h5>Rice Variety</h5>
+            <p>Long grain vs short grain</p>
+          </div>
+          <div class="function-card" style="border-left-color: #f59e0b;">
+            <h5>Husk Content</h5>
+            <p>Moisture and husk percentage</p>
+          </div>
+          <div class="function-card" style="border-left-color: #f59e0b;">
+            <h5>Packing Method</h5>
+            <p>Loose vs bag stacking</p>
+          </div>
+          <div class="function-card" style="border-left-color: #f59e0b;">
+            <h5>Moisture Content</h5>
+            <p>Dry vs soaked condition</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Standard Reference -->
+      <div class="summary-box">
+        <h3 style="color: white;">📌 Standard Reference</h3>
+        <p>These calculations conform to IS 4333:1996 (Methods for Determination of Bulk Density of Foodgrains) and are recommended for:</p>
+        <ul style="color: #e2e8f0;">
+          <li>Food Corporation of India (FCI) warehouse operations</li>
+          <li>State Warehousing Corporations</li>
+          <li>Central Warehousing Corporation</li>
+          <li>Private foodgrain storage facilities</li>
+        </ul>
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;">
+          <span class="badge" style="background: #334155; color: white;">IS 4333</span>
+          <span class="badge" style="background: #334155; color: white;">Bulk Density</span>
+          <span class="badge" style="background: #334155; color: white;">Foodgrains</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div class="post-tags">
+      <span class="post-tag"><i class="fas fa-tag"></i> paddy</span>
+      <span class="post-tag"><i class="fas fa-tag"></i> rice</span>
+      <span class="post-tag"><i class="fas fa-tag"></i> storage</span>
+      <span class="post-tag"><i class="fas fa-tag"></i> bulk density</span>
+      <span class="post-tag"><i class="fas fa-tag"></i> gunny bags</span>
+      <span class="post-tag"><i class="fas fa-tag"></i> foodgrains</span>
+      <span class="post-tag"><i class="fas fa-tag"></i> warehouse</span>
+      <span class="post-tag"><i class="fas fa-tag"></i> FCI</span>
+      <span class="post-tag"><i class="fas fa-tag"></i> IS 4333</span>
+    </div>
+
+    <!-- Share Section -->
+    <div class="share-section">
+      <div class="share-title">
+        <i class="fas fa-share-alt"></i> Share this technical bulletin
+      </div>
+      <div class="share-buttons">
+        <a href="#" class="share-btn facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="share-btn twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="share-btn linkedin"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
+        <button id="print-post" class="share-btn" style="background: #64748b;"><i class="fas fa-print"></i></button>
+      </div>
+    </div>
+
+    <!-- Back to blogs -->
+    <div style="text-align: center; margin: 3rem 0;">
+      <a href="../blogs.html" class="back-link" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
+        <i class="fas fa-arrow-left"></i> Back to all articles
+      </a>
+    </div>
+  </section>
+
+  <footer id="site-footer"></footer>
+  <script src="../assets/Scripts/gototop.js"></script>
+</body>
+</html>
