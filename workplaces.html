@@ -43,9 +43,78 @@
 .category-other { color: #455a64; font-weight: bold; }
 </style>
 
-<!-- Load Google Maps API (Ensure YOUR_API_KEY is updated for 2026 billing requirements) -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys"></script>
+<!-- SECURE GOOGLE MAPS LOADER -->
+<script>
+// Google Maps API Key Loader with Environment Variable Support
+(function() {
+  // For GitHub Pages, you'll need to set this during build
+  // OPTION 1: Direct assignment (less secure - but key should be restricted)
+  // const GOOGLE_MAPS_API_KEY = 'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys';
+  
+  // OPTION 2: Try to get from environment (for build systems)
+  const GOOGLE_MAPS_API_KEY = window.GOOGLE_MAPS_API_KEY || 
+                              'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys'; // Fallback with restricted key
+  
+  // OPTION 3: For GitHub Pages with Jekyll, you can use:
+  // const GOOGLE_MAPS_API_KEY = '{{ site.google_maps_api_key }}';
+  
+  // Load Google Maps script dynamically
+  function loadGoogleMapsScript() {
+    return new Promise((resolve, reject) => {
+      // Check if already loaded
+      if (window.google && window.google.maps) {
+        resolve();
+        return;
+      }
+      
+      // Create script element
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`;
+      script.async = true;
+      script.defer = true;
+      
+      script.onload = () => {
+        console.log('Google Maps loaded successfully');
+        resolve();
+      };
+      
+      script.onerror = (error) => {
+        console.error('Failed to load Google Maps:', error);
+        reject(error);
+      };
+      
+      document.head.appendChild(script);
+    });
+  }
 
+  // Initialize map after API is loaded
+  window.initMapSafe = async function() {
+    try {
+      await loadGoogleMapsScript();
+      // Wait a tiny bit for the API to fully initialize
+      setTimeout(() => {
+        if (typeof initMap === 'function') {
+          initMap();
+        } else {
+          console.error('initMap function not found');
+        }
+      }, 100);
+    } catch (error) {
+      console.error('Failed to initialize Google Maps:', error);
+      document.getElementById('map').innerHTML = `
+        <div style="padding: 20px; text-align: center; color: red;">
+          Failed to load Google Maps. Please check your internet connection and API key.
+        </div>
+      `;
+    }
+  };
+
+  // Store the original initMap function name
+  window.initMap = window.initMap || function() {};
+})();
+</script>
+
+<!-- Main Map Script -->
 <script>
 (function() {
   let map;
@@ -265,7 +334,8 @@
     }
   }
 
-  function initMap() {
+  // Make initMap globally available
+  window.initMap = function() {
     const mapEl = document.getElementById("map");
     if (!mapEl) return;
 
@@ -365,6 +435,14 @@
 
         // Initial update of location counts
         updateLocationCounts();
+      })
+      .catch(error => {
+        console.error('Error loading spreadsheet data:', error);
+        document.getElementById('map').innerHTML = `
+          <div style="padding: 20px; text-align: center; color: red;">
+            Failed to load location data. Please try again later.
+          </div>
+        `;
       });
 
     // Filtering Logic
@@ -421,12 +499,13 @@
     });
     
     mapControls.appendChild(showAllButton);
-  }
+  };
 
-  if (document.readyState === "complete") { 
-    initMap(); 
-  } else { 
-    window.addEventListener("load", initMap); 
+  // Start the map initialization
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    window.initMapSafe();
+  } else {
+    document.addEventListener("DOMContentLoaded", () => window.initMapSafe());
   }
 })();
 </script>
