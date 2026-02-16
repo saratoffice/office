@@ -39,274 +39,287 @@
 .category-other { color: #455a64; font-weight: bold; }
 </style>
 
-<!-- FIXED: Google Maps API with multiple domain support -->
+<!-- Load Google Maps with proper error handling -->
 <script>
-(function() {
-  // Your API key (already restricted in Google Cloud Console)
-  const API_KEY = 'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys';
-  
-  // Detect current domain
-  const currentDomain = window.location.hostname;
-  console.log('Loading maps for domain:', currentDomain);
-  
-  // Create and load the script with referrer policy
-  function loadGoogleMaps() {
-    return new Promise((resolve, reject) => {
-      if (window.google && window.google.maps) {
-        resolve();
-        return;
-      }
-      
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&auth_referrer_policy=origin&callback=initMap`;
-      script.async = true;
-      script.defer = true;
-      
-      script.onload = () => {
-        console.log('Google Maps loaded successfully');
-        resolve();
-      };
-      
-      script.onerror = (error) => {
-        console.error('Failed to load Google Maps:', error);
-        document.getElementById('map').innerHTML = `
-          <div style="padding: 20px; text-align: center; color: red;">
-            Failed to load Google Maps. Please check:<br>
-            1. Your API key is valid<br>
-            2. You've enabled the Maps JavaScript API<br>
-            3. Your domain (${currentDomain}) is allowed in Google Cloud Console
-          </div>
-        `;
-        reject(error);
-      };
-      
-      document.head.appendChild(script);
-    });
+let map;
+let markers = [];
+const blockColors = {};
+const primaryColors = ["#d32f2f", "#1976d2", "#fbc02d"];
+let colorIndex = 0;
+let lastClickedMarker = null;
+let currentBlockFilter = "";
+let allCategories = new Set();
+
+// IMPORTANT: Your API key (already restricted)
+const API_KEY = 'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys';
+
+// Log domain info for debugging
+console.log('Loading map for domain:', window.location.hostname);
+console.log('Full URL:', window.location.href);
+
+function getBlockColor(block) {
+  if (!blockColors[block]) {
+    blockColors[block] = primaryColors[colorIndex % primaryColors.length];
+    colorIndex++;
   }
+  return blockColors[block];
+}
 
-  // Initialize map function (will be called by Google Maps callback)
-  window.initMap = function() {
-    // Your existing map initialization code
-    const mapEl = document.getElementById("map");
-    if (!mapEl) return;
+function getCategoryLetter(cat) {
+  const catMap = { "PPC": "P", "Rice Mill": "M", "FPS": "F", "Godown": "G" };
+  return catMap[cat] || "?";
+}
 
-    const map = new google.maps.Map(mapEl, {
-      zoom: 11,
-      center: { lat: 20.592263, lng: 83.248939 },
-      gestureHandling: "greedy",
-      mapTypeControl: false
+function linePin(color, scale = 1.1) {
+  return {
+    path: "M12 1C8.1 1 5 4.1 5 8.2c0 3.7 3.4 6.8 6 9.3V28h2V17.5c2.6-2.5 6-5.6 6-9.3C19 4.1 15.9 1 12 1z",
+    fillColor: color,
+    fillOpacity: 1,
+    strokeColor: "#000",
+    strokeWeight: 1,
+    scale: scale,
+    labelOrigin: new google.maps.Point(12, 9)
+  };
+}
+
+function formatCoordinates(lat, lng) {
+  return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+}
+
+function resetLastMarker() {
+  if (lastClickedMarker && lastClickedMarker.meta) {
+    lastClickedMarker.setIcon(linePin(
+      getBlockColor(lastClickedMarker.meta.block),
+      1.1
+    ));
+    lastClickedMarker = null;
+  }
+}
+
+function updateLocationCounts() {
+  let total = 0;
+  const categoryCounts = {};
+  
+  allCategories.forEach(category => {
+    categoryCounts[category] = 0;
+  });
+  
+  markers.forEach(marker => {
+    if (marker.getVisible()) {
+      total++;
+      const category = marker.meta.category || "Unknown";
+      if (!categoryCounts[category]) {
+        categoryCounts[category] = 0;
+      }
+      categoryCounts[category]++;
+    }
+  });
+  
+  document.getElementById("totalCount").textContent = total;
+  
+  const filterStatus = document.getElementById("filterStatus");
+  if (currentBlockFilter) {
+    filterStatus.textContent = `Showing locations for block: ${currentBlockFilter}`;
+  } else {
+    filterStatus.textContent = "Showing all locations";
+  }
+}
+
+function applyFilters() {
+  const bV = document.getElementById("blockSearch").value.toUpperCase();
+  const cV = document.getElementById("codeSearch").value.toUpperCase();
+  const nV = document.getElementById("nameSearch").value.toUpperCase();
+  
+  currentBlockFilter = bV;
+
+  markers.forEach(m => {
+    const match = m.meta.block.includes(bV) && 
+                  m.meta.code.includes(cV) && 
+                  m.meta.name.includes(nV);
+    m.setVisible(match);
+    
+    if (!match && lastClickedMarker === m) {
+      resetLastMarker();
+    }
+  });
+  
+  updateLocationCounts();
+}
+
+// Initialize map when API loads
+function initMap() {
+  console.log('initMap called - API loaded successfully');
+  
+  const mapEl = document.getElementById("map");
+  if (!mapEl) return;
+
+  map = new google.maps.Map(mapEl, {
+    zoom: 11,
+    center: { lat: 20.592263, lng: 83.248939 },
+    gestureHandling: "greedy",
+    mapTypeControl: false
+  });
+
+  const sheetURL = "https://docs.google.com/spreadsheets/d/1HI5Wjjwo5OObDaS4W7QaOVc_RcqgREu8pHEQxSjYhUg/gviz/tq?tqx=out:json";
+
+  fetch(sheetURL)
+    .then(res => res.text())
+    .then(text => {
+      const json = JSON.parse(text.substring(47).slice(0, -2));
+      const rows = json.table.rows;
+      const infoWindow = new google.maps.InfoWindow();
+      const blockSet = new Set();
+
+      rows.forEach(r => {
+        if (!r.c || !r.c[3] || !r.c[4]) return;
+
+        const block = r.c[0]?.v || "Unknown";
+        const name  = r.c[1]?.v || "No Name";
+        const code  = r.c[2]?.v || "N/A";
+        const lat   = parseFloat(r.c[3].v);
+        const lng   = parseFloat(r.c[4].v);
+        const cat   = r.c[5]?.v || "Unknown";
+
+        blockSet.add(block);
+        allCategories.add(cat);
+
+        const marker = new google.maps.Marker({
+          position: { lat, lng },
+          map: map, 
+          icon: linePin(getBlockColor(block)),
+          label: { 
+            text: getCategoryLetter(cat), 
+            color: "white", 
+            fontWeight: "bold", 
+            fontSize: "11px" 
+          },
+          title: name
+        });
+
+        marker.meta = { 
+          block: block.toUpperCase(), 
+          code: String(code).toUpperCase(), 
+          name: name.toUpperCase(),
+          lat: lat,
+          lng: lng,
+          category: cat
+        };
+
+        google.maps.event.addListener(marker, 'click', function(e) {
+          e.stop();
+          resetLastMarker();
+          lastClickedMarker = marker;
+          marker.setIcon(linePin(getBlockColor(block), 1.5));
+          
+          const content = `
+            <div style="min-width: 200px; max-width: 300px;">
+              <h3 style="margin: 0 0 8px 0; color: #1976d2;">${name}</h3>
+              <div style="margin-bottom: 5px;"><strong>Code:</strong> ${code}</div>
+              <div style="margin-bottom: 5px;"><strong>Block:</strong> ${block}</div>
+              <div style="margin-bottom: 5px;"><strong>Category:</strong> ${cat}</div>
+              <div style="margin-bottom: 5px; padding: 8px; background: #f5f5f5; border-radius: 4px; font-family: monospace;">
+                <strong>Coordinates:</strong><br>
+                ${formatCoordinates(lat, lng)}
+              </div>
+              <div style="font-size: 12px; color: #666; margin-top: 8px;">
+                Click anywhere to close
+              </div>
+            </div>
+          `;
+          
+          infoWindow.setContent(content);
+          infoWindow.open(map, marker);
+        });
+
+        markers.push(marker);
+      });
+
+      map.addListener("click", () => {
+        infoWindow.close();
+        resetLastMarker();
+      });
+
+      const list = document.getElementById("blockList");
+      [...blockSet].sort().forEach(b => {
+        const opt = document.createElement("option");
+        opt.value = b;
+        list.appendChild(opt);
+      });
+
+      updateLocationCounts();
+      console.log('Map initialized with', markers.length, 'markers');
+    })
+    .catch(error => {
+      console.error('Error loading data:', error);
     });
 
-    // Rest of your map initialization code
-    const sheetURL = "https://docs.google.com/spreadsheets/d/1HI5Wjjwo5OObDaS4W7QaOVc_RcqgREu8pHEQxSjYhUg/gviz/tq?tqx=out:json";
-    
-    let markers = [];
-    const blockColors = {};
-    const primaryColors = ["#d32f2f", "#1976d2", "#fbc02d"];
-    let colorIndex = 0;
-    let lastClickedMarker = null;
-    let currentBlockFilter = "";
-    let allCategories = new Set();
-
-    function getBlockColor(block) {
-      if (!blockColors[block]) {
-        blockColors[block] = primaryColors[colorIndex % primaryColors.length];
-        colorIndex++;
-      }
-      return blockColors[block];
-    }
-
-    function getCategoryLetter(cat) {
-      const catMap = { "PPC": "P", "Rice Mill": "M", "FPS": "F", "Godown": "G" };
-      return catMap[cat] || "?";
-    }
-
-    function linePin(color, scale = 1.1) {
-      return {
-        path: "M12 1C8.1 1 5 4.1 5 8.2c0 3.7 3.4 6.8 6 9.3V28h2V17.5c2.6-2.5 6-5.6 6-9.3C19 4.1 15.9 1 12 1z",
-        fillColor: color,
-        fillOpacity: 1,
-        strokeColor: "#000",
-        strokeWeight: 1,
-        scale: scale,
-        labelOrigin: new google.maps.Point(12, 9)
-      };
-    }
-
-    function formatCoordinates(lat, lng) {
-      return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-    }
-
-    function resetLastMarker() {
-      if (lastClickedMarker && lastClickedMarker.meta) {
-        lastClickedMarker.setIcon(linePin(
-          getBlockColor(lastClickedMarker.meta.block),
-          1.1
-        ));
-        lastClickedMarker = null;
-      }
-    }
-
-    function updateLocationCounts() {
-      let total = 0;
-      const categoryCounts = {};
-      
-      allCategories.forEach(category => {
-        categoryCounts[category] = 0;
-      });
-      
-      markers.forEach(marker => {
-        if (marker.getVisible()) {
-          total++;
-          const category = marker.meta.category || "Unknown";
-          if (!categoryCounts[category]) {
-            categoryCounts[category] = 0;
-          }
-          categoryCounts[category]++;
-        }
-      });
-      
-      document.getElementById("totalCount").textContent = total;
-      
-      const filterStatus = document.getElementById("filterStatus");
-      if (currentBlockFilter) {
-        filterStatus.textContent = `Showing locations for block: ${currentBlockFilter}`;
-      } else {
-        filterStatus.textContent = "Showing all locations";
-      }
-    }
-
-    function applyFilters() {
-      const bV = document.getElementById("blockSearch").value.toUpperCase();
-      const cV = document.getElementById("codeSearch").value.toUpperCase();
-      const nV = document.getElementById("nameSearch").value.toUpperCase();
-      
-      currentBlockFilter = bV;
-
-      markers.forEach(m => {
-        const match = m.meta.block.includes(bV) && 
-                      m.meta.code.includes(cV) && 
-                      m.meta.name.includes(nV);
-        m.setVisible(match);
-        
-        if (!match && lastClickedMarker === m) {
-          resetLastMarker();
-        }
-      });
-      
+  // Filtering Logic
+  const filters = ["blockSearch", "codeSearch", "nameSearch"];
+  filters.forEach(id => {
+    const input = document.getElementById(id);
+    input.addEventListener("input", applyFilters);
+  });
+  
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.getElementById("blockSearch").value = '';
+      document.getElementById("codeSearch").value = '';
+      document.getElementById("nameSearch").value = '';
+      currentBlockFilter = '';
+      markers.forEach(m => m.setVisible(true));
       updateLocationCounts();
     }
+  });
+}
 
-    fetch(sheetURL)
-      .then(res => res.text())
-      .then(text => {
-        const json = JSON.parse(text.substring(47).slice(0, -2));
-        const rows = json.table.rows;
-        const infoWindow = new google.maps.InfoWindow();
-        const blockSet = new Set();
+// Handle Google Maps errors
+window.gm_authFailure = function() {
+  console.error('Google Maps authentication failed!');
+  console.log('This means your domain is NOT allowed in Google Cloud Console');
+  console.log('Current domain:', window.location.hostname);
+  console.log('Add this to your HTTP referrers:', window.location.protocol + '//' + window.location.hostname + '/*');
+  
+  document.getElementById('map').innerHTML = `
+    <div style="padding: 30px; text-align: center; background: #fff3cd; color: #856404; border-radius: 8px;">
+      <h3>🔐 Google Maps Authentication Error</h3>
+      <p>Your domain <strong>${window.location.hostname}</strong> is not authorized to use this API key.</p>
+      <p style="background: #fff; padding: 10px; margin: 10px; border-radius: 4px;">
+        Add this to your HTTP referrers in Google Cloud Console:<br>
+        <code style="font-size: 16px;">${window.location.protocol}//${window.location.hostname}/*</code>
+      </p>
+      <p>⏱️ Wait 5 minutes after saving changes, then refresh.</p>
+    </div>
+  `;
+};
 
-        rows.forEach(r => {
-          if (!r.c || !r.c[3] || !r.c[4]) return;
-
-          const block = r.c[0]?.v || "Unknown";
-          const name  = r.c[1]?.v || "No Name";
-          const code  = r.c[2]?.v || "N/A";
-          const lat   = parseFloat(r.c[3].v);
-          const lng   = parseFloat(r.c[4].v);
-          const cat   = r.c[5]?.v || "Unknown";
-
-          blockSet.add(block);
-          allCategories.add(cat);
-
-          const marker = new google.maps.Marker({
-            position: { lat, lng },
-            map: map, 
-            icon: linePin(getBlockColor(block)),
-            label: { 
-              text: getCategoryLetter(cat), 
-              color: "white", 
-              fontWeight: "bold", 
-              fontSize: "11px" 
-            },
-            title: name
-          });
-
-          marker.meta = { 
-            block: block.toUpperCase(), 
-            code: String(code).toUpperCase(), 
-            name: name.toUpperCase(),
-            lat: lat,
-            lng: lng,
-            category: cat
-          };
-
-          google.maps.event.addListener(marker, 'click', function(e) {
-            e.stop();
-            resetLastMarker();
-            lastClickedMarker = marker;
-            marker.setIcon(linePin(getBlockColor(block), 1.5));
-            
-            const content = `
-              <div style="min-width: 200px; max-width: 300px;">
-                <h3 style="margin: 0 0 8px 0; color: #1976d2;">${name}</h3>
-                <div style="margin-bottom: 5px;"><strong>Code:</strong> ${code}</div>
-                <div style="margin-bottom: 5px;"><strong>Block:</strong> ${block}</div>
-                <div style="margin-bottom: 5px;"><strong>Category:</strong> ${cat}</div>
-                <div style="margin-bottom: 5px; padding: 8px; background: #f5f5f5; border-radius: 4px; font-family: monospace;">
-                  <strong>Coordinates:</strong><br>
-                  ${formatCoordinates(lat, lng)}
-                </div>
-                <div style="font-size: 12px; color: #666; margin-top: 8px;">
-                  Click anywhere to close
-                </div>
-              </div>
-            `;
-            
-            infoWindow.setContent(content);
-            infoWindow.open(map, marker);
-          });
-
-          markers.push(marker);
-        });
-
-        map.addListener("click", () => {
-          infoWindow.close();
-          resetLastMarker();
-        });
-
-        const list = document.getElementById("blockList");
-        [...blockSet].sort().forEach(b => {
-          const opt = document.createElement("option");
-          opt.value = b;
-          list.appendChild(opt);
-        });
-
-        updateLocationCounts();
-      })
-      .catch(error => {
-        console.error('Error loading data:', error);
-      });
-
-    // Filtering Logic
-    const filters = ["blockSearch", "codeSearch", "nameSearch"];
-    filters.forEach(id => {
-      const input = document.getElementById(id);
-      input.addEventListener("input", applyFilters);
-    });
-    
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        document.getElementById("blockSearch").value = '';
-        document.getElementById("codeSearch").value = '';
-        document.getElementById("nameSearch").value = '';
-        currentBlockFilter = '';
-        markers.forEach(m => m.setVisible(true));
-        updateLocationCounts();
-      }
-    });
+// Load the Google Maps script
+function loadGoogleMapsScript() {
+  const script = document.createElement('script');
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=initMap&auth_referrer_policy=origin`;
+  script.async = true;
+  script.defer = true;
+  
+  script.onerror = function() {
+    console.error('Failed to load Google Maps script');
+    document.getElementById('map').innerHTML = `
+      <div style="padding: 20px; text-align: center; color: red;">
+        Failed to load Google Maps. Check your internet connection.
+      </div>
+    `;
   };
+  
+  document.head.appendChild(script);
+  console.log('Google Maps script loaded with auth_referrer_policy=origin');
+}
 
-  // Start loading maps
-  loadGoogleMaps().catch(console.error);
-})();
+// Start loading
+loadGoogleMapsScript();
+</script>
+
+<!-- Debug info - shows what domain to add -->
+<script>
+console.log('%c🔑 IMPORTANT: Add this domain to your Google Cloud Console HTTP referrers:', 'font-size: 14px; font-weight: bold; color: blue;');
+console.log('%c' + window.location.protocol + '//' + window.location.hostname + '/*', 'font-size: 16px; background: yellow; padding: 4px;');
+console.log('%c' + window.location.protocol + '//' + window.location.hostname + '/', 'font-size: 16px; background: yellow; padding: 4px;');
+console.log('%c' + window.location.hostname + '/*', 'font-size: 16px; background: yellow; padding: 4px;');
 </script>
