@@ -690,13 +690,18 @@
       `<option value="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</option>`
     ).join('');
     
-    // Extract and count unique tags
-    const tagCount = new Map();
-    posts.forEach(post => {
-      post.tags.forEach(tag => {
-        tagCount.set(tag, (tagCount.get(tag) || 0) + 1);
-      });
-    });
+    // Extract and count unique tags - WITH FILTERING
+const tagCount = new Map();
+const tagsToRemove = ['packaging', 'innovation', 'sustainability']; // Add tags you want to remove
+
+posts.forEach(post => {
+  post.tags.forEach(tag => {
+    // Skip tags in the remove list
+    if (!tagsToRemove.includes(tag)) {
+      tagCount.set(tag, (tagCount.get(tag) || 0) + 1);
+    }
+  });
+});
     
     // Sort tags by frequency
     const sortedTags = Array.from(tagCount.entries())
