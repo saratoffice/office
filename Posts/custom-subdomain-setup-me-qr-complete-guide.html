@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Subdomain Setup for me-qr.com: Cloudflare & Non-Cloudflare Guide | Genus Blog</title>
+  
+  <!-- Common CSS -->
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../post-styles.css">
+  <!-- Site components -->
+  <script src="../assets/Scripts/site-components.js" defer></script>
+  <!-- Post Common JavaScript -->
+  <script src="../assets/Scripts/post-common.js" defer></script>
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- Blog metadata for dynamic blogs.html -->
+  <meta name="blog:title" content="Steps to Set Up a Custom Subdomain for me-qr.com with Cloudflare and Non-Cloudflare">
+  <meta name="blog:excerpt" content="Complete guide to setting up custom subdomains for me-qr.com QR codes. Includes step-by-step instructions for Cloudflare DNS and premium hosting providers (cPanel, Plesk).">
+  <meta name="blog:category" content="technical">
+  <meta name="blog:tags" content="me-qr, subdomain, cloudflare, dns, cname, qr-code, custom-domain, ssl, dns-propagation, hosting, cpanel, plesk">
+  <meta name="blog:author" content="Genus Power">
+  <meta name="blog:date" content="2025-02-17">
+  <meta name="blog:readTime" content="7">
+  <meta name="blog:views" content="0">
+  <meta name="blog:icon" content="fa-qrcode">
+
+  <style>
+    /* Additional styles for technical guide */
+    .guide-hero {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      color: white;
+      text-align: center;
+    }
+    
+    .platform-tabs {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .platform-tab {
+      flex: 1;
+      min-width: 250px;
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      transition: transform 0.2s ease;
+    }
+    
+    .platform-tab:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+    }
+    
+    .platform-icon {
+      background: #f59e0b;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+    }
+    
+    .platform-icon.cloudflare {
+      background: #f6821f;
+    }
+    
+    .platform-icon.hosting {
+      background: #3b82f6;
+    }
+    
+    .step-container {
+      margin: 2rem 0;
+    }
+    
+    .step-item {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      transition: all 0.2s ease;
+    }
+    
+    .step-item:hover {
+      border-left: 6px solid #3b82f6;
+    }
+    
+    .step-number {
+      background: #3b82f6;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    
+    .step-content {
+      flex: 1;
+    }
+    
+    .step-content h4 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+    
+    .dns-record {
+      background: #f1f5f9;
+      padding: 1rem;
+      border-radius: 12px;
+      font-family: 'Courier New', monospace;
+      margin: 1rem 0;
+      border-left: 4px solid #3b82f6;
+    }
+    
+    .record-row {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 0.5rem;
+      margin: 0.3rem 0;
+    }
+    
+    .record-label {
+      font-weight: 600;
+      color: #1e293b;
+    }
+    
+    .record-value {
+      color: #2563eb;
+    }
+    
+    .target-highlight {
+      background: #fef3c7;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      color: #b45309;
+    }
+    
+    .warning-box {
+      background: #fff3cd;
+      border-left: 6px solid #ffc107;
+      padding: 1.2rem;
+      border-radius: 0 12px 12px 0;
+      margin: 1.5rem 0;
+    }
+    
+    .success-box {
+      background: #e6f4ea;
+      border-left: 6px solid #34A853;
+      padding: 1.2rem;
+      border-radius: 0 12px 12px 0;
+      margin: 1.5rem 0;
+    }
+    
+    .info-box {
+      background: #dbeafe;
+      border-left: 6px solid #3b82f6;
+      padding: 1.2rem;
+      border-radius: 0 12px 12px 0;
+      margin: 1.5rem 0;
+    }
+    
+    .dns-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+    
+    .comparison-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+    
+    .setting-badge {
+      display: inline-block;
+      background: #1e293b;
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin: 0.2rem;
+    }
+    
+    .setting-badge.auto {
+      background: #10b981;
+    }
+    
+    .setting-badge.dns-only {
+      background: #f59e0b;
+    }
+    
+    .final-note {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 2rem;
+      border-radius: 24px;
+      margin: 3rem 0;
+    }
+    
+    .keyboard-shortcut {
+      display: inline-block;
+      background: #1e293b;
+      color: #fbbf24;
+      padding: 0.2rem 0.8rem;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+
+<body>
+  <header id="site-header"></header>
+
+  <!-- Main blog post section -->
+  <section class="blog-post-section">
+    <!-- Back to blogs link -->
+    <a href="../blogs.html" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to all articles
+    </a>
+
+    <!-- Post header -->
+    <div class="post-header">
+      <h1 class="post-title">Steps to Set Up a Custom Subdomain for me-qr.com</h1>
+      <p style="font-size: 1.1rem; color: #475569; margin: 0.5rem 0 0 0;">Cloudflare & Non-Cloudflare DNS Configuration Guide</p>
+      
+      <div class="post-meta">
+        <span><i class="fas fa-user"></i> Genus Power</span>
+        <span><i class="fas fa-calendar"></i> February 17, 2025</span>
+        <span><i class="fas fa-clock"></i> 7 min read</span>
+        <span class="category-tag"><i class="fas fa-tag"></i> DNS Configuration</span>
+      </div>
+    </div>
+
+    <!-- Hero Image -->
+    <div class="hero-image">
+      <img src="https://images.unsplash.com/photo-1621839673705-6617adf9e890?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&h=450&q=80" 
+           alt="QR code and domain configuration"
+           loading="lazy"
+           onerror="this.src='https://via.placeholder.com/1200x450?text=Custom+Subdomain+Setup'">
+      <div class="hero-caption">
+        <i class="fas fa-camera"></i> Configure custom subdomains for your QR codes
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="post-content">
+      
+      <!-- INTRODUCTION -->
+      <div class="guide-hero">
+        <i class="fas fa-qrcode" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+        <h2 style="color: white; margin: 0 0 1rem 0;">Custom Subdomain Setup for me-qr.com</h2>
+        <p style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">This guide provides step-by-step instructions for setting up a custom subdomain with both Cloudflare and non-Cloudflare (premium hosting) DNS configurations.</p>
+      </div>
+      
+      <!-- PLATFORM SELECTION TABS -->
+      <div class="platform-tabs">
+        <div class="platform-tab">
+          <div class="platform-icon cloudflare">
+            <i class="fab fa-cloudflare"></i>
+          </div>
+          <h3 style="margin: 0 0 0.5rem 0;">Cloudflare Setup</h3>
+          <p style="color: #64748b; margin-bottom: 0;">For domains managed through Cloudflare DNS</p>
+          <div style="margin-top: 1rem;">
+            <span class="setting-badge">CNAME Record</span>
+            <span class="setting-badge dns-only">DNS Only</span>
+          </div>
+        </div>
+        
+        <div class="platform-tab">
+          <div class="platform-icon hosting">
+            <i class="fas fa-server"></i>
+          </div>
+          <h3 style="margin: 0 0 0.5rem 0;">Non-Cloudflare Setup</h3>
+          <p style="color: #64748b; margin-bottom: 0;">For cPanel, Plesk, or other hosting providers</p>
+          <div style="margin-top: 1rem;">
+            <span class="setting-badge">CNAME Record</span>
+            <span class="setting-badge auto">TTL: Auto/3600</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- COMMON TARGET INFORMATION -->
+      <div class="success-box">
+        <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+          <div style="background: #34A853; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+            <i class="fas fa-bullseye"></i>
+          </div>
+          <div>
+            <h4 style="margin: 0;">Target for Both Setups:</h4>
+            <p style="font-size: 1.3rem; font-family: 'Courier New', monospace; margin: 0.3rem 0 0 0;"><span class="target-highlight">px106cl.me-qr.com</span></p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- SECTION 1: CLOUDFLARE SETUP -->
+      <h2 style="margin-top: 3rem;">☁️ Setup with Cloudflare</h2>
+      
+      <div class="step-container">
+        <!-- Step 1 -->
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Log in to Your Cloudflare Account</h4>
+            <p>Go to <a href="https://cloudflare.com" target="_blank">Cloudflare</a> and log in with your credentials. Select the domain where you want to add the subdomain.</p>
+          </div>
+        </div>
+        
+        <!-- Step 2 -->
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Add a Subdomain in Cloudflare</h4>
+            <p>Navigate to the <strong>DNS section</strong> for your domain within Cloudflare. Click on <strong>"Add record"</strong> to create a new DNS record.</p>
+          </div>
+        </div>
+        
+        <!-- Step 3 -->
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Configure DNS Settings for Subdomain</h4>
+            
+            <div class="dns-record">
+              <div class="record-row">
+                <span class="record-label">Type:</span>
+                <span class="record-value"><strong>CNAME</strong></span>
+              </div>
+              <div class="record-row">
+                <span class="record-label">Name:</span>
+                <span class="record-value">qrcode <span style="color: #64748b;">(or your desired subdomain)</span></span>
+              </div>
+              <div class="record-row">
+                <span class="record-label">Target:</span>
+                <span class="record-value target-highlight">px106cl.me-qr.com</span>
+              </div>
+              <div class="record-row">
+                <span class="record-label">TTL:</span>
+                <span class="record-value">Auto</span>
+              </div>
+              <div class="record-row">
+                <span class="record-label">Proxy Status:</span>
+                <span class="record-value"><strong>DNS only</strong> (⚠️ Important: not proxied)</span>
+              </div>
+            </div>
+            
+            <div class="warning-box" style="margin: 1rem 0;">
+              <p style="margin: 0;"><i class="fas fa-exclamation-triangle"></i> <strong>Critical:</strong> Set Proxy Status to <strong>DNS only</strong>. This ensures Cloudflare is not proxying the traffic and the CNAME record works correctly without interference.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Step 4 -->
+        <div class="step-item">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>Remove the "A" Record (If Needed)</h4>
+            <p>If you already have an existing <strong>A record</strong> for the subdomain (e.g., qrcode.domain.com), you will need to remove it and create the new CNAME record as mentioned above.</p>
+            <p>This step ensures that the subdomain correctly points to me-qr.com and not an old or conflicting IP address.</p>
+          </div>
+        </div>
+        
+        <!-- Step 5 -->
+        <div class="step-item">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <h4>Verify and Save Changes</h4>
+            <p>Once the DNS record is set, click <strong>Save</strong> to apply the changes.</p>
+            <p>DNS changes can take anywhere from <strong>3 to 24 hours</strong> to fully propagate, so be patient.</p>
+          </div>
+        </div>
+        
+        <!-- Step 6 -->
+        <div class="step-item">
+          <div class="step-number">6</div>
+          <div class="step-content">
+            <h4>Configure SSL (Automatically Handled)</h4>
+            <p>You don't need to worry about manually setting up SSL for your subdomain, as <strong>me-qr.com will automatically configure SSL</strong> for your subdomain.</p>
+            <p>If you decide to upload your own SSL certificate later, make sure it doesn't conflict with the automatic SSL configuration from me-qr.com.</p>
+          </div>
+        </div>
+        
+        <!-- Step 7 -->
+        <div class="step-item">
+          <div class="step-number">7</div>
+          <div class="step-content">
+            <h4>Verify DNS Propagation</h4>
+            <p>Use an online tool like <a href="https://dnschecker.org" target="_blank">DNSChecker</a> to verify that your subdomain (e.g., qrcode.domain.com) is correctly pointing to <strong>px106cl.me-qr.com</strong>.</p>
+          </div>
+        </div>
+        
+        <!-- Step 8 -->
+        <div class="step-item">
+          <div class="step-number">8</div>
+          <div class="step-content">
+            <h4>Set Up on me-qr.com</h4>
+            <p>Go to the <a href="https://me-qr.com/qr-code-generator" target="_blank">me-qr.com/qr-code-generator</a> page and navigate to the <strong>User Domain</strong> section.</p>
+            <p>Add your custom domain (e.g., qrcode.domain.com) as instructed. Select whether you want this domain to be applied to all QR codes or specific folders.</p>
+            <p>After adding the domain, <strong>all future QR codes will have links pointing to your custom subdomain</strong>.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- SECTION 2: NON-CLOUDFLARE SETUP -->
+      <h2 style="margin-top: 3rem;">🖥️ Setup Without Cloudflare (Premium Hosting)</h2>
+      
+      <div class="step-container">
+        <!-- Step 1 -->
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Log in to Your Hosting Provider's Control Panel</h4>
+            <p>Access your hosting provider's dashboard (like <strong>cPanel, Plesk</strong>, or any custom control panel).</p>
+            <p>Locate the <strong>DNS management</strong> or <strong>Zone Editor</strong> section. This is where you'll manage your domain's DNS records.</p>
+          </div>
+        </div>
+        
+        <!-- Step 2 -->
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Add a Subdomain in Your Hosting Control Panel</h4>
+            <p>Find the section where you can create or manage subdomains. This section may be under the "Domains" tab.</p>
+            <p>Create a new subdomain (e.g., <strong>qrcode.domain.com</strong>). Make sure you enter the subdomain name correctly.</p>
+            <p><strong>Example:</strong> If your domain is domain.com and you want to create qrcode.domain.com, you'll input "qrcode" as the subdomain name.</p>
+          </div>
+        </div>
+        
+        <!-- Step 3 -->
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Modify DNS Records for the Subdomain</h4>
+            <p>After creating the subdomain, navigate to the DNS management section (often called DNS Zone Editor or similar).</p>
+            
+            <div class="dns-record">
+              <div class="record-row">
+                <span class="record-label">Type:</span>
+                <span class="record-value"><strong>CNAME</strong></span>
+              </div>
+              <div class="record-row">
+                <span class="record-label">Name:</span>
+                <span class="record-value">qrcode <span style="color: #64748b;">(the subdomain you created)</span></span>
+              </div>
+              <div class="record-row">
+                <span class="record-label">Target/Value:</span>
+                <span class="record-value target-highlight">px106cl.me-qr.com</span>
+              </div>
+              <div class="record-row">
+                <span class="record-label">TTL:</span>
+                <span class="record-value">Auto or 3600 seconds</span>
+              </div>
+            </div>
+            
+            <p>This ensures that requests to your subdomain (qrcode.domain.com) will be directed to the correct location for QR code generation.</p>
+          </div>
+        </div>
+        
+        <!-- Step 4 -->
+        <div class="step-item">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>Remove Any Existing A Record (if applicable)</h4>
+            <p>If there is an <strong>A record</strong> already pointing to the subdomain (for example, qrcode.domain.com), remove it. This A record may be pointing to an old IP address.</p>
+            <p><strong>Ensure there is only one record for the subdomain: the CNAME record.</strong></p>
+          </div>
+        </div>
+        
+        <!-- Step 5 -->
+        <div class="step-item">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <h4>Check for SSL Configuration</h4>
+            <p>Some hosting providers offer SSL certificates automatically for subdomains, while others may require you to configure SSL manually.</p>
+            <p><strong>me-qr.com will automatically handle SSL for your subdomain</strong>, but if you're using a custom SSL certificate, you must ensure that it doesn't interfere with the automatic SSL configuration from me-qr.com.</p>
+          </div>
+        </div>
+        
+        <!-- Step 6 -->
+        <div class="step-item">
+          <div class="step-number">6</div>
+          <div class="step-content">
+            <h4>Save DNS Changes</h4>
+            <p>After setting up the CNAME record and removing any conflicting A records, <strong>save the changes</strong>.</p>
+            <p>DNS changes may take anywhere from <strong>3 to 24 hours to propagate</strong>, depending on your hosting provider and TTL settings.</p>
+          </div>
+        </div>
+        
+        <!-- Step 7 -->
+        <div class="step-item">
+          <div class="step-number">7</div>
+          <div class="step-content">
+            <h4>Add the Custom Domain to me-qr.com</h4>
+            <p>Go to <a href="https://me-qr.com/qr-code-generator" target="_blank">me-qr.com/qr-code-generator</a> and navigate to the <strong>User Domain</strong> section.</p>
+            <p>Enter the subdomain you created (e.g., <strong>qrcode.domain.com</strong>).</p>
+            <p>You may need to choose whether the custom domain will apply to all QR codes or specific folders.</p>
+            <p>Once you save this, <strong>all your QR codes will start using the custom subdomain</strong>.</p>
+          </div>
+        </div>
+        
+        <!-- Step 8 -->
+        <div class="step-item">
+          <div class="step-number">8</div>
+          <div class="step-content">
+            <h4>Verify DNS Propagation and Test Your Subdomain</h4>
+            <p>Use a DNS checker tool like <a href="https://dnschecker.org" target="_blank">DNSChecker</a> to verify that your subdomain is properly pointing to <strong>px106cl.me-qr.com</strong>.</p>
+            <p>Once DNS has propagated, try visiting your subdomain (e.g., qrcode.domain.com) in a browser to confirm that it correctly redirects to me-qr.com.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- DNS COMPARISON TABLE -->
+      <h2>DNS Configuration Comparison</h2>
+      
+      <div class="dns-grid">
+        <div class="comparison-card">
+          <h3 style="margin-top: 0;"><i class="fab fa-cloudflare" style="color: #f6821f;"></i> Cloudflare</h3>
+          <table style="width: 100%;">
+            <tr>
+              <td><strong>Type:</strong></td>
+              <td>CNAME</td>
+            </tr>
+            <tr>
+              <td><strong>Name:</strong></td>
+              <td>qrcode</td>
+            </tr>
+            <tr>
+              <td><strong>Target:</strong></td>
+              <td><span class="target-highlight">px106cl.me-qr.com</span></td>
+            </tr>
+            <tr>
+              <td><strong>TTL:</strong></td>
+              <td>Auto</td>
+            </tr>
+            <tr>
+              <td><strong>Proxy Status:</strong></td>
+              <td><span style="color: #f59e0b; font-weight: 600;">DNS only</span></td>
+            </tr>
+          </table>
+          <div class="warning-box" style="margin: 1rem 0 0 0;">
+            <small><i class="fas fa-exclamation-circle"></i> Must be DNS only, not proxied</small>
+          </div>
+        </div>
+        
+        <div class="comparison-card">
+          <h3 style="margin-top: 0;"><i class="fas fa-server" style="color: #3b82f6;"></i> Non-Cloudflare</h3>
+          <table style="width: 100%;">
+            <tr>
+              <td><strong>Type:</strong></td>
+              <td>CNAME</td>
+            </tr>
+            <tr>
+              <td><strong>Name:</strong></td>
+              <td>qrcode</td>
+            </tr>
+            <tr>
+              <td><strong>Target:</strong></td>
+              <td><span class="target-highlight">px106cl.me-qr.com</span></td>
+            </tr>
+            <tr>
+              <td><strong>TTL:</strong></td>
+              <td>Auto / 3600</td>
+            </tr>
+            <tr>
+              <td><strong>SSL:</strong></td>
+              <td>Auto by me-qr.com</td>
+            </tr>
+          </table>
+          <div class="info-box" style="margin: 1rem 0 0 0;">
+            <small><i class="fas fa-info-circle"></i> Remove any existing A records</small>
+          </div>
+        </div>
+      </div>
+      
+      <!-- IMPORTANT NOTES -->
+      <div class="info-box">
+        <h4 style="margin-top: 0;"><i class="fas fa-clock"></i> DNS Propagation</h4>
+        <p>DNS changes can take anywhere from <strong>3 to 24 hours</strong> to fully propagate across the internet. If it doesn't work immediately, wait and test again later.</p>
+      </div>
+      
+      <div class="info-box">
+        <h4 style="margin-top: 0;"><i class="fas fa-lock"></i> SSL Certificates</h4>
+        <p>If you manage your SSL certificates manually, be sure the SSL certificate is correctly set up for your subdomain. However, <strong>me-qr.com will automatically provide SSL for your custom subdomain</strong>, so manual SSL configuration may not be necessary unless you're using your own SSL certificates.</p>
+      </div>
+      
+      <div class="warning-box">
+        <h4 style="margin-top: 0;"><i class="fas fa-exclamation-triangle"></i> Avoid Overwriting Records</h4>
+        <p>Be cautious when editing DNS records. Ensure that you're not overwriting or accidentally deleting important records that may affect your main domain or email services.</p>
+      </div>
+      
+      <!-- FINAL NOTES -->
+      <div class="final-note">
+        <h3 style="margin-top: 0;">Final Notes</h3>
+        
+        <div class="success-box" style="margin: 1rem 0;">
+          <p style="margin: 0;"><i class="fas fa-check-circle"></i> <strong>After completing these steps, all QR codes generated through me-qr.com will use the custom subdomain (e.g., qrcode.domain.com) as their URL.</strong></p>
+        </div>
+        
+        <div class="warning-box">
+          <p style="margin: 0;"><i class="fas fa-exclamation-triangle"></i> <strong>If you remove the domain later, the links in the QR codes will no longer work until you set up a new domain.</strong></p>
+        </div>
+        
+        <div class="info-box">
+          <p style="margin: 0;"><i class="fas fa-check-circle"></i> <strong>Remember to check your QR code before distributing it to make sure the custom subdomain is functioning correctly.</strong></p>
+        </div>
+      </div>
+      
+      <!-- Tags section -->
+      <div class="post-tags">
+        <span class="post-tag"><i class="fas fa-tag"></i> me-qr</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> subdomain</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> cloudflare</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> dns</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> cname</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> qr-code</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> custom-domain</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> ssl</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> dns-propagation</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> hosting</span>
+      </div>
+    </div>
+
+    <!-- Share section -->
+    <div class="share-section">
+      <div class="share-title">
+        <i class="fas fa-share-alt"></i> Share this article
+      </div>
+      <div class="share-buttons">
+        <a href="#" class="share-btn facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="share-btn twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="share-btn linkedin"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+
+    <!-- Back to blogs -->
+    <div style="text-align: center; margin: 3rem 0;">
+      <a href="../blogs.html" class="back-link" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
+        <i class="fas fa-arrow-left"></i> Back to all articles
+      </a>
+    </div>
+  </section>
+
+  <footer id="site-footer"></footer>
+
+  <!-- Go to Top -->
+  <script src="../assets/Scripts/gototop.js"></script>
+
+</body>
+</html>
