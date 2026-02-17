@@ -20,63 +20,53 @@
       overflow-x: hidden;
     }
 
-    /* ensure header/footer are not affected – but we let site-header/footer keep their original styles.
-       we only manipulate the main content container to be full bleed */
-    #site-header,
-    #site-footer {
-      flex-shrink: 0; /* if flex column used later */
-    }
+    #site-header, #site-footer { flex-shrink: 0; }
 
-    /* make body a flexible column to push footer down (optional) */
     body {
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
 
-    /* the wrapper that contains header/footer is default – but we want sarat-office-content to take all remaining space */
     .sarat-office-content {
-      flex: 1 1 auto;         /* take rest of height */
+      flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       width: 100%;
-      max-width: 100% !important;  /* override previous max-width */
+      max-width: 100% !important;
       margin: 0;
-      padding: 0;              /* remove padding so map can be truly full width */
+      padding: 0;
       box-sizing: border-box;
       font-family: Arial, sans-serif;
     }
 
-    /* but we still want the controls and counters to have some comfortable padding/margin */
     .sarat-office-content .map-controls {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin: 15px 20px;        /* left/right margin for breathing */
+      margin: 15px 20px;
       padding: 0;
       align-items: center;
     }
 
-    /* input fields flexible */
     .sarat-office-content .map-controls input {
       padding: 10px 14px;
       font-size: 15px;
       min-width: 200px;
       flex: 1 1 200px;
       border: 1px solid #b0b0b0;
-      border-radius: 40px;       /* slightly round, modern */
+      border-radius: 40px;
       height: 48px;
       box-sizing: border-box;
       background: white;
       box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
 
-    /* button group: two buttons side by side */
     .sarat-office-content .button-duo {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
-      margin-left: auto;         /* align right on wide screens, but wrap works */
+      margin-left: auto;
     }
 
     .sarat-office-content .map-controls button {
@@ -102,36 +92,33 @@
     }
 
     .sarat-office-content .map-controls button.show-filter-btn {
-      background: #2e7d32;       /* green shade for "Show filtered" */
+      background: #2e7d32;
     }
     .sarat-office-content .map-controls button.show-filter-btn:hover {
       background: #1f5c23;
     }
 
-    /* map container: full width with dynamic height */
     .sarat-office-content #map {
       width: 100%;
-      flex: 1 1 auto;            /* takes remaining vertical space */
-      min-height: 400px;         /* fallback */
+      flex: 1 1 auto;
+      min-height: 400px;
       background: #d9e2ec;
-      border-radius: 0;          /* no radius for fullscreen look */
+      border-radius: 0;
       box-shadow: none;
       box-sizing: border-box;
     }
 
-    /* location counts strip – also with side margins */
     .sarat-office-content #locationCounts {
       margin: 15px 20px 25px 20px;
       padding: 16px 20px;
       background: #f8f9fa;
-      border-radius: 28px;        /* pill style */
+      border-radius: 28px;
       font-family: Arial, sans-serif;
       font-size: 15px;
       border: 1px solid #d4d4d4;
       box-shadow: 0 4px 8px rgba(0,0,0,0.02);
     }
 
-    /* make inner container flex wrap */
     .sarat-office-content #locationCounts > div:first-child {
       display: flex;
       justify-content: center;
@@ -140,77 +127,96 @@
       margin-bottom: 8px;
     }
 
-    /* filter status */
     .sarat-office-content #filterStatus {
       font-size: 13px;
       color: #555;
     }
 
-    /* make leaflet / google map container full width */
     .sarat-office-content .gm-style,
     .sarat-office-content .leaflet-container {
       max-width: 100% !important;
     }
 
-    /* ===== responsive fine-tuning ===== */
-    @media (max-width: 800px) {
-      .sarat-office-content .map-controls {
-        margin: 12px 16px;
-      }
-      .sarat-office-content .map-controls input {
-        min-width: 160px;
-      }
-      .sarat-office-content .button-duo {
-        margin-left: 0;
-        width: 100%;
-        justify-content: flex-start;
-      }
-      .sarat-office-content .map-controls button {
-        flex: 1 1 auto;
-      }
+    /* info window button spacing – increased gap */
+    .info-window-buttons {
+      display: flex;
+      gap: 20px;          /* increased from 12px to 20px for more space */
+      margin: 16px 0 8px;
+      justify-content: center;
     }
-
-    @media (max-width: 600px) {
-      .sarat-office-content .map-controls {
-        margin: 10px 12px;
-        gap: 8px;
-      }
-      .sarat-office-content #locationCounts {
-        margin: 10px 12px 20px 12px;
-        padding: 14px 12px;
-        font-size: 14px;
-      }
-      .sarat-office-content .map-controls input {
-        height: 44px;
-        font-size: 14px;
-      }
-      .sarat-office-content .map-controls button {
-        height: 44px;
-        font-size: 14px;
-        min-width: 100px;
-      }
+    .info-window-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: transform 0.1s;
     }
-
-    /* ensure info windows still look good */
-    .info-window-buttons { display: flex; gap: 12px; margin: 12px 0 5px; justify-content: center; }
-    .info-window-btn { width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    .info-window-btn:hover { transform: scale(1.07); }
     .share-btn { background: #4267B2; }
     .navigate-btn { background: #34A853; }
 
-    /* Share dialog styles (global) unchanged */
-    .share-dialog-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000; }
-    .share-dialog { background: white; border-radius: 28px; padding: 28px; max-width: 420px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-    .social-icons { display: flex; justify-content: center; gap: 16px; margin: 24px 0; flex-wrap: wrap; }
-    .social-icon { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 26px; text-decoration: none; transition: 0.2s; }
-    .toast-notification { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 24px; border-radius: 40px; font-size: 15px; z-index: 10001; }
+    /* Share dialog */
+    .share-dialog-overlay {
+      position: fixed; top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10000;
+    }
+    .share-dialog {
+      background: white;
+      border-radius: 28px;
+      padding: 28px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 24px 0;
+      flex-wrap: wrap;
+    }
+    .social-icon {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 26px; text-decoration: none;
+      transition: 0.2s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .social-icon:hover { transform: translateY(-3px); }
+    .toast-notification {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background: #333; color: white; padding: 10px 24px; border-radius: 40px;
+      font-size: 15px; z-index: 10001;
+    }
+
+    @media (max-width: 800px) {
+      .sarat-office-content .map-controls { margin: 12px 16px; }
+      .sarat-office-content .map-controls input { min-width: 160px; }
+      .sarat-office-content .button-duo { margin-left: 0; width: 100%; justify-content: flex-start; }
+      .sarat-office-content .map-controls button { flex: 1 1 auto; }
+    }
+    @media (max-width: 600px) {
+      .sarat-office-content .map-controls { margin: 10px 12px; gap: 8px; }
+      .sarat-office-content #locationCounts { margin: 10px 12px 20px; padding: 14px 12px; font-size: 14px; }
+      .sarat-office-content .map-controls input { height: 44px; font-size: 14px; }
+      .sarat-office-content .map-controls button { height: 44px; font-size: 14px; min-width: 100px; }
+      .info-window-buttons { gap: 16px; } /* keep slightly larger on mobile */
+    }
   </style>
 </head>
 <body>
 <div id="site-header"></div>
 
-<!-- CONTENT - full bleed with flex column -->
 <div class="sarat-office-content">
-  <!-- map controls with margin around -->
   <div class="map-controls">
     <input id="blockSearch" list="blockList" type="text" placeholder="Type / Select Block Name" onfocus="this.value=''" onchange="this.blur();" />
     <datalist id="blockList"></datalist>
@@ -218,21 +224,17 @@
     <input id="codeSearch" type="text" placeholder="Search Work Place Code" />
     <input id="nameSearch" type="text" placeholder="Search Work Place Name" />
     
-    <!-- TWO BUTTONS: Show (filtered center) + Show All -->
     <div class="button-duo">
       <button id="showFilteredBtn" class="show-filter-btn" title="Center map on currently filtered results">📍 Show filtered</button>
       <button id="showAllBtn" title="Reset filters & show all locations">🗺️ Show All</button>
     </div>
   </div>
 
-  <!-- MAP takes all remaining height -->
   <div id="map" style="width: 100%; background: #cfdbe9;"></div>
 
-  <!-- Dynamic Location Counts Container -->
   <div id="locationCounts">
     <div>
       <span style="font-weight: bold; color: #1976d2;">Total Locations: <span id="totalCount">0</span></span>
-      <!-- categories inserted here -->
     </div>
     <div style="text-align: center; font-size: 13px; color: #666; font-style: italic;">
       <span id="filterStatus">Showing all locations</span>
@@ -240,9 +242,7 @@
   </div>
 </div>
 
-<!-- FOOTER -->
 <div id="site-footer"></div>
-<!-- Go to Top -->
 <script src="/assets/Scripts/gototop.js"></script>
 
 <!-- Google Maps API -->
@@ -306,10 +306,30 @@
     }, 500);
   }
 
+  // ========= FIXED COPY FUNCTION ========= 
+  // It now copies exactly the coordinates (formatted) and shows toast
+  window.copyToClipboard = function(text) {
+    // Ensure text is a string; if coordinates object arrives, convert.
+    const finalText = String(text);
+    navigator.clipboard.writeText(finalText).then(() => {
+      const toast = document.createElement('div');
+      toast.className = 'toast-notification';
+      toast.textContent = '✓ Coordinates copied';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 1700);
+    }).catch(() => {
+      // fallback prompt
+      prompt('Copy manually (Ctrl+C):', finalText);
+    });
+  };
+
   function showShareDialog(name, lat, lng) {
     const coordinates = formatCoordinates(lat, lng);
-    const text = `📍 ${name}\nCoordinates: ${coordinates}\n\nhttps://maps.google.com/?q=${lat},${lng}`;
-    const encodedText = encodeURIComponent(text);
+    // We want the copy button to copy exactly the coordinates string
+    const textToCopy = coordinates;   // e.g. "20.123456, 83.123456"
+    // For social sharing we use a longer text
+    const shareText = `📍 ${name}\nCoordinates: ${coordinates}\n\nhttps://maps.google.com/?q=${lat},${lng}`;
+    const encodedText = encodeURIComponent(shareText);
     const mapsUrl = `https://maps.google.com/?q=${lat},${lng}`;
     
     const existing = document.querySelector('.share-dialog-overlay');
@@ -317,6 +337,9 @@
     
     const overlay = document.createElement('div');
     overlay.className = 'share-dialog-overlay';
+    // Note: the copy button now calls copyToClipboard with the exact coordinates string.
+    // We escape the string for the onclick attribute.
+    const escapedCoords = coordinates.replace(/'/g, "\\'");
     overlay.innerHTML = `
       <div class="share-dialog">
         <h3 style="margin-top:0;color:#1976d2;">Share Location</h3>
@@ -327,25 +350,15 @@
           <a href="https://www.facebook.com/sharer/sharer.php?u=${mapsUrl}&quote=${encodedText}" target="_blank" class="social-icon facebook" style="background:#4267B2;"><i class="fab fa-facebook-f"></i></a>
           <a href="https://wa.me/?text=${encodedText}" target="_blank" class="social-icon whatsapp" style="background:#25D366;"><i class="fab fa-whatsapp"></i></a>
           <a href="https://t.me/share/url?url=${mapsUrl}&text=${encodedText}" target="_blank" class="social-icon telegram" style="background:#0088cc;"><i class="fab fa-telegram-plane"></i></a>
-          <a href="#" class="social-icon copy" style="background:#6c757d;" onclick="copyToClipboard('${text.replace(/'/g, "\\'")}'); return false;"><i class="fas fa-copy"></i></a>
+          <a href="#" class="social-icon copy" style="background:#6c757d;" onclick="window.copyToClipboard('${escapedCoords}'); return false;"><i class="fas fa-copy"></i></a>
         </div>
-        <button class="close-dialog-btn" style="width:100%;padding:14px;background:#dc3545;color:white;border:none;border-radius:40px;font-size:16px;">Close</button>
+        <button class="close-dialog-btn" style="width:100%;padding:14px;background:#dc3545;color:white;border:none;border-radius:40px;font-size:16px;cursor:pointer;">Close</button>
       </div>
     `;
     document.body.appendChild(overlay);
     overlay.querySelector('.close-dialog-btn').addEventListener('click', () => overlay.remove());
     overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
   }
-
-  window.copyToClipboard = function(text) {
-    navigator.clipboard.writeText(text).then(() => {
-      const toast = document.createElement('div');
-      toast.className = 'toast-notification';
-      toast.textContent = '✓ Copied!';
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 1500);
-    });
-  };
 
   function resetLastMarker() {
     if (lastClickedMarker && lastClickedMarker.meta) {
@@ -427,10 +440,8 @@
     });
     
     updateLocationCounts();
-    // do NOT auto-center on filter change; user must click "Show filtered"
   }
 
-  // two separate actions
   function handleShowFiltered() {
     const { visibleCount } = calculateBoundsForVisibleMarkers();
     if (visibleCount === 0) {
@@ -531,12 +542,13 @@
           markers.push(marker);
         });
 
+        // Expose functions globally (they will override the fallbacks below)
         window.showShareDialog = showShareDialog;
         window.navigateToLocation = navigateToLocation;
+        // copyToClipboard already defined globally at top level
 
         map.addListener("click", () => { infoWindow.close(); resetLastMarker(); });
 
-        // populate block datalist
         const list = document.getElementById("blockList");
         [...blockSet].sort().forEach(b => {
           const opt = document.createElement("option");
@@ -551,19 +563,14 @@
         document.getElementById('map').innerHTML = `<div style="padding:30px;text-align:center;color:#721c24;">Failed to load data.</div>`;
       });
 
-    // Attach filter listeners
     ["blockSearch","codeSearch","nameSearch"].forEach(id => {
       document.getElementById(id).addEventListener("input", applyFilters);
     });
 
-    // Escape key clears
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        handleShowAll();
-      }
+      if (e.key === 'Escape') handleShowAll();
     });
 
-    // Wire up two buttons
     document.getElementById('showFilteredBtn').addEventListener('click', handleShowFiltered);
     document.getElementById('showAllBtn').addEventListener('click', handleShowAll);
   }
@@ -576,16 +583,16 @@
 })();
 </script>
 
-<!-- ensure global functions for infowindow buttons -->
+<!-- fallback globals (but they will be overwritten by the actual implementations above) -->
 <script>
-  // these are already exposed inside IIFE, but redeclare global for onclick handlers
   window.showShareDialog = window.showShareDialog || function(name, lat, lng) {
-    alert('Share dialog ready (fallback)');
+    alert('Share dialog ready');
   };
   window.navigateToLocation = window.navigateToLocation || function(lat,lng) {
     window.open(`https://www.google.com/maps?q=${lat},${lng}`);
   };
-  window.copyToClipboard = window.copyToClipboard || function(t) { prompt('Copy manually:', t); };
+  // copyToClipboard already robustly defined inside IIFE, but we keep a fallback
+  window.copyToClipboard = window.copyToClipboard || function(t) { prompt('Copy:', t); };
 </script>
 
 </body>
