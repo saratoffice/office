@@ -11,27 +11,21 @@
   <!-- Font Awesome for social media icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    /* ----- global reset to allow full bleed & NO VERTICAL SCROLLBAR ----- */
+    /* ----- global reset to allow full bleed ----- */
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      overflow: hidden;
-      position: fixed;
+      overflow-x: hidden;
     }
 
-    #site-header,
-    #site-footer {
-      flex-shrink: 0;
-    }
+    #site-header, #site-footer { flex-shrink: 0; }
 
     body {
       display: flex;
       flex-direction: column;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
+      min-height: 100vh;
     }
 
     .sarat-office-content {
@@ -44,7 +38,6 @@
       padding: 0;
       box-sizing: border-box;
       font-family: Arial, sans-serif;
-      overflow: hidden;
     }
 
     .sarat-office-content .map-controls {
@@ -54,7 +47,6 @@
       margin: 15px 20px;
       padding: 0;
       align-items: center;
-      flex-shrink: 0;
     }
 
     .sarat-office-content .map-controls input {
@@ -109,8 +101,8 @@
     .sarat-office-content #map {
       width: 100%;
       flex: 1 1 auto;
-      min-height: 0;
-      background: #f0f0f0;
+      min-height: 400px;
+      background: #d9e2ec;
       border-radius: 0;
       box-shadow: none;
       box-sizing: border-box;
@@ -125,7 +117,6 @@
       font-size: 15px;
       border: 1px solid #d4d4d4;
       box-shadow: 0 4px 8px rgba(0,0,0,0.02);
-      flex-shrink: 0;
     }
 
     .sarat-office-content #locationCounts > div:first-child {
@@ -146,166 +137,79 @@
       max-width: 100% !important;
     }
 
-    @media (max-width: 800px) {
-      .sarat-office-content .map-controls {
-        margin: 12px 16px;
-      }
-      .sarat-office-content .map-controls input {
-        min-width: 160px;
-      }
-      .sarat-office-content .button-duo {
-        margin-left: 0;
-        width: 100%;
-        justify-content: flex-start;
-      }
-      .sarat-office-content .map-controls button {
-        flex: 1 1 auto;
-      }
+    /* info window button spacing – increased gap */
+    .info-window-buttons {
+      display: flex;
+      gap: 20px;          /* increased from 12px to 20px for more space */
+      margin: 16px 0 8px;
+      justify-content: center;
     }
-
-    @media (max-width: 600px) {
-      .sarat-office-content .map-controls {
-        margin: 10px 12px;
-        gap: 8px;
-      }
-      .sarat-office-content #locationCounts {
-        margin: 10px 12px 20px 12px;
-        padding: 14px 12px;
-        font-size: 14px;
-      }
-      .sarat-office-content .map-controls input {
-        height: 44px;
-        font-size: 14px;
-      }
-      .sarat-office-content .map-controls button {
-        height: 44px;
-        font-size: 14px;
-        min-width: 100px;
-      }
+    .info-window-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: transform 0.1s;
     }
-
-    .info-window-buttons { 
-      display: flex; 
-      gap: 16px;
-      margin: 16px 0 8px; 
-      justify-content: center; 
-    }
-    .info-window-btn { 
-      width: 48px;
-      height: 48px; 
-      border-radius: 50%; 
-      border: none; 
-      cursor: pointer; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      font-size: 22px;
-      color: white; 
-      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .info-window-btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
+    .info-window-btn:hover { transform: scale(1.07); }
     .share-btn { background: #4267B2; }
     .navigate-btn { background: #34A853; }
 
-    .share-dialog-overlay { 
-      position: fixed; 
-      top:0; 
-      left:0; 
-      right:0; 
-      bottom:0; 
-      background: rgba(0,0,0,0.5); 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      z-index: 10000; 
+    /* Share dialog */
+    .share-dialog-overlay {
+      position: fixed; top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10000;
     }
-    .share-dialog { 
-      background: white; 
-      border-radius: 28px; 
-      padding: 28px; 
-      max-width: 420px; 
-      width: 90%; 
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
-      max-height: 90vh;
-      overflow-y: auto;
+    .share-dialog {
+      background: white;
+      border-radius: 28px;
+      padding: 28px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     }
-    .social-icons { 
-      display: flex; 
-      justify-content: center; 
-      gap: 16px; 
-      margin: 24px 0; 
-      flex-wrap: wrap; 
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 24px 0;
+      flex-wrap: wrap;
     }
-    .social-icon { 
-      width: 52px; 
-      height: 52px; 
-      border-radius: 50%; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      color: white; 
-      font-size: 26px; 
-      text-decoration: none; 
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-      cursor: pointer;
-      border: none;
+    .social-icon {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 26px; text-decoration: none;
+      transition: 0.2s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    .social-icon:hover {
-      transform: scale(1.1);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.25);
-    }
-    .toast-notification { 
-      position: fixed; 
-      bottom: 30px; 
-      left: 50%; 
-      transform: translateX(-50%); 
-      background: #333; 
-      color: white; 
-      padding: 12px 28px; 
-      border-radius: 40px; 
-      font-size: 16px; 
-      font-weight: 500;
-      z-index: 10001; 
-      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-      animation: fadeInUp 0.3s ease;
-    }
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translate(-50%, 20px);
-      }
-      to {
-        opacity: 1;
-        transform: translate(-50%, 0);
-      }
+    .social-icon:hover { transform: translateY(-3px); }
+    .toast-notification {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background: #333; color: white; padding: 10px 24px; border-radius: 40px;
+      font-size: 15px; z-index: 10001;
     }
 
-    /* Loading indicator */
-    .map-loading {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      z-index: 1;
+    @media (max-width: 800px) {
+      .sarat-office-content .map-controls { margin: 12px 16px; }
+      .sarat-office-content .map-controls input { min-width: 160px; }
+      .sarat-office-content .button-duo { margin-left: 0; width: 100%; justify-content: flex-start; }
+      .sarat-office-content .map-controls button { flex: 1 1 auto; }
     }
-    .spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #1976d2;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 15px;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    @media (max-width: 600px) {
+      .sarat-office-content .map-controls { margin: 10px 12px; gap: 8px; }
+      .sarat-office-content #locationCounts { margin: 10px 12px 20px; padding: 14px 12px; font-size: 14px; }
+      .sarat-office-content .map-controls input { height: 44px; font-size: 14px; }
+      .sarat-office-content .map-controls button { height: 44px; font-size: 14px; min-width: 100px; }
+      .info-window-buttons { gap: 16px; } /* keep slightly larger on mobile */
     }
   </style>
 </head>
@@ -326,20 +230,14 @@
     </div>
   </div>
 
-  <!-- MAP with loading indicator -->
-  <div id="map" style="width: 100%; background: #f0f0f0; position: relative;">
-    <div class="map-loading" id="mapLoading">
-      <div class="spinner"></div>
-      <div style="color: #666;">Loading map...</div>
-    </div>
-  </div>
+  <div id="map" style="width: 100%; background: #cfdbe9;"></div>
 
   <div id="locationCounts">
     <div>
       <span style="font-weight: bold; color: #1976d2;">Total Locations: <span id="totalCount">0</span></span>
     </div>
     <div style="text-align: center; font-size: 13px; color: #666; font-style: italic;">
-      <span id="filterStatus">Loading locations...</span>
+      <span id="filterStatus">Showing all locations</span>
     </div>
   </div>
 </div>
@@ -347,66 +245,91 @@
 <div id="site-footer"></div>
 <script src="/assets/Scripts/gototop.js"></script>
 
-<!-- Load Google Maps API with callback -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys&loading=async&callback=initMapCallback"></script>
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys&loading=async"></script>
 
 <script>
-// Global variables
-let map;
-let markers = [];
-let googleMapsLoaded = false;
-let spreadsheetDataLoaded = false;
+(function() {
+  let map;
+  let markers = [];
+  const blockColors = {};
+  const primaryColors = ["#d32f2f", "#1976d2", "#fbc02d"];
+  let colorIndex = 0;
+  let lastClickedMarker = null;
+  let currentBlockFilter = "";
+  let allCategories = new Set();
+  const categoryColors = {
+    "Total": "#1976d2",
+    "PPC": "#d32f2f",
+    "FPS": "#fbc02d",
+    "Godown": "#388e3c",
+    "Rice Mill": "#7b1fa2"
+  };
 
-// Store functions globally
-window.copyToClipboard = function(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        const toast = document.createElement('div');
-        toast.className = 'toast-notification';
-        toast.textContent = '✓ Copied to clipboard!';
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            if (toast.parentNode) toast.remove();
-        }, 2000);
-        
-        const copyIcon = document.querySelector('.social-icon.copy i');
-        if (copyIcon) {
-            const originalClass = copyIcon.className;
-            copyIcon.className = 'fas fa-check';
-            setTimeout(() => {
-                copyIcon.className = originalClass;
-            }, 2000);
-        }
-    }).catch(() => {
-        // Fallback
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        
-        const toast = document.createElement('div');
-        toast.className = 'toast-notification';
-        toast.textContent = '✓ Copied to clipboard!';
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
-    });
-    return false;
-};
-
-window.navigateToLocation = function(lat, lng) {
-    // Try to open in Google Maps app or web
-    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        window.location.href = `google.navigation:q=${lat},${lng}`;
-    } else {
-        window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
+  function getBlockColor(block) {
+    if (!blockColors[block]) {
+      blockColors[block] = primaryColors[colorIndex % primaryColors.length];
+      colorIndex++;
     }
-};
+    return blockColors[block];
+  }
 
-window.showShareDialog = function(name, lat, lng) {
-    const coordinates = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-    const text = `📍 ${name}\nCoordinates: ${coordinates}\n\nhttps://maps.google.com/?q=${lat},${lng}`;
-    const encodedText = encodeURIComponent(text);
+  function getCategoryLetter(cat) {
+    const catMap = { "PPC": "P", "Rice Mill": "M", "FPS": "F", "Godown": "G" };
+    return catMap[cat] || "•";
+  }
+
+  function getCategoryColor(category) {
+    return categoryColors[category] || "#455a64";
+  }
+
+  function linePin(color, scale = 1.1) {
+    return {
+      path: "M12 1C8.1 1 5 4.1 5 8.2c0 3.7 3.4 6.8 6 9.3V28h2V17.5c2.6-2.5 6-5.6 6-9.3C19 4.1 15.9 1 12 1z",
+      fillColor: color,
+      fillOpacity: 1,
+      strokeColor: "#000",
+      strokeWeight: 1,
+      scale: scale,
+      labelOrigin: new google.maps.Point(12, 9)
+    };
+  }
+
+  function formatCoordinates(lat, lng) {
+    return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  }
+
+  function navigateToLocation(lat, lng) {
+    window.location.href = `google.navigation:q=${lat},${lng}&mode=d`;
+    setTimeout(() => {
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`, '_blank');
+    }, 500);
+  }
+
+  // ========= FIXED COPY FUNCTION ========= 
+  // It now copies exactly the coordinates (formatted) and shows toast
+  window.copyToClipboard = function(text) {
+    // Ensure text is a string; if coordinates object arrives, convert.
+    const finalText = String(text);
+    navigator.clipboard.writeText(finalText).then(() => {
+      const toast = document.createElement('div');
+      toast.className = 'toast-notification';
+      toast.textContent = '✓ Coordinates copied';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 1700);
+    }).catch(() => {
+      // fallback prompt
+      prompt('Copy manually (Ctrl+C):', finalText);
+    });
+  };
+
+  function showShareDialog(name, lat, lng) {
+    const coordinates = formatCoordinates(lat, lng);
+    // We want the copy button to copy exactly the coordinates string
+    const textToCopy = coordinates;   // e.g. "20.123456, 83.123456"
+    // For social sharing we use a longer text
+    const shareText = `📍 ${name}\nCoordinates: ${coordinates}\n\nhttps://maps.google.com/?q=${lat},${lng}`;
+    const encodedText = encodeURIComponent(shareText);
     const mapsUrl = `https://maps.google.com/?q=${lat},${lng}`;
     
     const existing = document.querySelector('.share-dialog-overlay');
@@ -414,423 +337,262 @@ window.showShareDialog = function(name, lat, lng) {
     
     const overlay = document.createElement('div');
     overlay.className = 'share-dialog-overlay';
+    // Note: the copy button now calls copyToClipboard with the exact coordinates string.
+    // We escape the string for the onclick attribute.
+    const escapedCoords = coordinates.replace(/'/g, "\\'");
     overlay.innerHTML = `
       <div class="share-dialog">
-        <h3 style="margin-top:0;color:#1976d2; font-size:22px;">Share Location</h3>
-        <div style="font-weight:500;margin-bottom:12px; font-size:16px;">${name}</div>
-        <div class="coordinates" style="background:#f0f4f8;padding:14px;border-radius:20px;font-family:monospace;font-size:13px;word-break:break-all;">${coordinates}</div>
+        <h3 style="margin-top:0;color:#1976d2;">Share Location</h3>
+        <div style="font-weight:500;margin-bottom:12px;">${name}</div>
+        <div class="coordinates" style="background:#f0f4f8;padding:12px;border-radius:20px;font-family:monospace;">${coordinates}</div>
         <div class="social-icons">
           <a href="https://twitter.com/intent/tweet?text=${encodedText}" target="_blank" class="social-icon twitter" style="background:#1DA1F2;"><i class="fab fa-twitter"></i></a>
           <a href="https://www.facebook.com/sharer/sharer.php?u=${mapsUrl}&quote=${encodedText}" target="_blank" class="social-icon facebook" style="background:#4267B2;"><i class="fab fa-facebook-f"></i></a>
           <a href="https://wa.me/?text=${encodedText}" target="_blank" class="social-icon whatsapp" style="background:#25D366;"><i class="fab fa-whatsapp"></i></a>
           <a href="https://t.me/share/url?url=${mapsUrl}&text=${encodedText}" target="_blank" class="social-icon telegram" style="background:#0088cc;"><i class="fab fa-telegram-plane"></i></a>
-          <button class="social-icon copy" style="background:#6c757d; border:none;" onclick="window.copyToClipboard('${text.replace(/'/g, "\\'")}'); return false;"><i class="fas fa-copy"></i></button>
+          <a href="#" class="social-icon copy" style="background:#6c757d;" onclick="window.copyToClipboard('${escapedCoords}'); return false;"><i class="fas fa-copy"></i></a>
         </div>
-        <button class="close-dialog-btn" style="width:100%;padding:14px;background:#dc3545;color:white;border:none;border-radius:40px;font-size:16px;font-weight:600;cursor:pointer;">Close</button>
+        <button class="close-dialog-btn" style="width:100%;padding:14px;background:#dc3545;color:white;border:none;border-radius:40px;font-size:16px;cursor:pointer;">Close</button>
       </div>
     `;
-    
     document.body.appendChild(overlay);
     overlay.querySelector('.close-dialog-btn').addEventListener('click', () => overlay.remove());
     overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
-};
+  }
 
-// Google Maps callback
-window.initMapCallback = function() {
-    googleMapsLoaded = true;
-    hideLoading();
-    initializeMap();
-};
+  function resetLastMarker() {
+    if (lastClickedMarker && lastClickedMarker.meta) {
+      lastClickedMarker.setIcon(linePin(getBlockColor(lastClickedMarker.meta.block), 1.1));
+      lastClickedMarker = null;
+    }
+  }
 
-// Main initialization
-function initializeMap() {
-    if (!googleMapsLoaded) return;
+  function createCategoryElement(category, count) {
+    const color = getCategoryColor(category);
+    const span = document.createElement("span");
+    span.style.fontWeight = "bold";
+    span.style.color = color;
+    span.innerHTML = `${category}: <span style="color:#333;">${count}</span>`;
+    return span;
+  }
+
+  function calculateBoundsForVisibleMarkers() {
+    const bounds = new google.maps.LatLngBounds();
+    let visibleCount = 0;
+    markers.forEach(m => { if (m.getVisible()) { bounds.extend(m.getPosition()); visibleCount++; } });
+    return { bounds, visibleCount };
+  }
+
+  function centerMapOnVisibleMarkers() {
+    const { bounds, visibleCount } = calculateBoundsForVisibleMarkers();
+    if (visibleCount === 0) {
+      map.setCenter({ lat: 20.592263, lng: 83.248939 });
+      map.setZoom(11);
+    } else if (visibleCount === 1) {
+      markers.forEach(m => { if (m.getVisible()) map.setCenter(m.getPosition()); });
+      map.setZoom(14);
+    } else {
+      map.fitBounds(bounds, 50);
+      google.maps.event.addListenerOnce(map, 'bounds_changed', function() {
+        if (map.getZoom() > 12) map.setZoom(12);
+      });
+    }
+  }
+
+  function updateLocationCounts() {
+    let total = 0;
+    const categoryCounts = {};
+    allCategories.forEach(cat => categoryCounts[cat] = 0);
     
+    markers.forEach(m => {
+      if (m.getVisible()) {
+        total++;
+        const cat = m.meta.category || "Unknown";
+        categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+      }
+    });
+
+    document.getElementById("totalCount").textContent = total;
+    const container = document.querySelector("#locationCounts > div:first-child");
+    const totalSpan = container.children[0];
+    container.innerHTML = '';
+    container.appendChild(totalSpan);
+
+    Object.keys(categoryCounts).filter(c => c !== "Unknown").sort().forEach(cat => {
+      if (categoryCounts[cat] > 0) container.appendChild(createCategoryElement(cat, categoryCounts[cat]));
+    });
+    if (categoryCounts["Unknown"] > 0) container.appendChild(createCategoryElement("Unknown", categoryCounts["Unknown"]));
+
+    document.getElementById("filterStatus").innerText = currentBlockFilter ? `Showing block: ${currentBlockFilter}` : "Showing all locations";
+  }
+
+  function applyFilters() {
+    const bV = document.getElementById("blockSearch").value.toUpperCase().trim();
+    const cV = document.getElementById("codeSearch").value.toUpperCase().trim();
+    const nV = document.getElementById("nameSearch").value.toUpperCase().trim();
+    
+    currentBlockFilter = bV;
+
+    markers.forEach(m => {
+      const match = m.meta.block.includes(bV) && m.meta.code.includes(cV) && m.meta.name.includes(nV);
+      m.setVisible(match);
+      if (!match && lastClickedMarker === m) resetLastMarker();
+    });
+    
+    updateLocationCounts();
+  }
+
+  function handleShowFiltered() {
+    const { visibleCount } = calculateBoundsForVisibleMarkers();
+    if (visibleCount === 0) {
+      alert("No locations match current filters.");
+      return;
+    }
+    centerMapOnVisibleMarkers();
+  }
+
+  function handleShowAll() {
+    document.getElementById("blockSearch").value = '';
+    document.getElementById("codeSearch").value = '';
+    document.getElementById("nameSearch").value = '';
+    currentBlockFilter = '';
+    markers.forEach(m => m.setVisible(true));
+    updateLocationCounts();
+    map.setCenter({ lat: 20.592263, lng: 83.248939 });
+    map.setZoom(11);
+  }
+
+  function initMap() {
     const mapEl = document.getElementById("map");
     if (!mapEl) return;
 
-    // Hide loading indicator
-    const loadingEl = document.getElementById('mapLoading');
-    if (loadingEl) loadingEl.style.display = 'none';
-
-    // Create map
     map = new google.maps.Map(mapEl, {
-        zoom: 11,
-        center: { lat: 20.592263, lng: 83.248939 },
-        gestureHandling: "greedy",
-        mapTypeControl: false,
-        fullscreenControl: true,
-        streetViewControl: false,
-        zoomControl: true,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+      zoom: 11,
+      center: { lat: 20.592263, lng: 83.248939 },
+      gestureHandling: "greedy",
+      mapTypeControl: false,
+      fullscreenControl: true,
+      streetViewControl: false,
+      zoomControl: true,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
-    // Load spreadsheet data
-    loadSpreadsheetData();
-}
-
-function loadSpreadsheetData() {
     const sheetURL = "https://docs.google.com/spreadsheets/d/1HI5Wjjwo5OObDaS4W7QaOVc_RcqgREu8pHEQxSjYhUg/gviz/tq?tqx=out:json";
-    
-    // Use a proxy to avoid CORS issues
-    const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(sheetURL);
-    
-    fetch(proxyUrl)
-        .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.text();
-        })
-        .then(text => {
-            try {
-                // Parse the JSONP response
-                const jsonText = text.substring(47).slice(0, -2);
-                const json = JSON.parse(jsonText);
-                processSpreadsheetData(json);
-            } catch (e) {
-                console.error('Error parsing spreadsheet data:', e);
-                showSampleData();
-            }
-        })
-        .catch(error => {
-            console.error('Error loading spreadsheet:', error);
-            showSampleData();
-        });
-}
 
-function processSpreadsheetData(json) {
-    if (!json.table || !json.table.rows) {
-        showSampleData();
-        return;
-    }
+    fetch(sheetURL)
+      .then(res => res.text())
+      .then(text => {
+        const json = JSON.parse(text.substring(47).slice(0, -2));
+        const rows = json.table.rows;
+        const infoWindow = new google.maps.InfoWindow({ maxWidth: 350, pixelOffset: new google.maps.Size(0, -30) });
+        const blockSet = new Set();
 
-    const rows = json.table.rows;
-    const infoWindow = new google.maps.InfoWindow({ maxWidth: 350, pixelOffset: new google.maps.Size(0, -30) });
-    const blockSet = new Set();
-    const allCategories = new Set();
-    const blockColors = {};
-    const primaryColors = ["#d32f2f", "#1976d2", "#fbc02d"];
-    let colorIndex = 0;
+        rows.forEach(r => {
+          if (!r.c || !r.c[3] || !r.c[4]) return;
+          const block = r.c[0]?.v || "Unknown";
+          const name  = r.c[1]?.v || "No Name";
+          const code  = r.c[2]?.v || "N/A";
+          const lat   = parseFloat(r.c[3].v);
+          const lng   = parseFloat(r.c[4].v);
+          const cat   = r.c[5]?.v || "Unknown";
 
-    function getBlockColor(block) {
-        if (!blockColors[block]) {
-            blockColors[block] = primaryColors[colorIndex % primaryColors.length];
-            colorIndex++;
-        }
-        return blockColors[block];
-    }
+          blockSet.add(block);
+          allCategories.add(cat);
 
-    function getCategoryLetter(cat) {
-        const catMap = { "PPC": "P", "Rice Mill": "M", "FPS": "F", "Godown": "G" };
-        return catMap[cat] || "•";
-    }
-
-    function linePin(color, scale = 1.1) {
-        return {
-            path: "M12 1C8.1 1 5 4.1 5 8.2c0 3.7 3.4 6.8 6 9.3V28h2V17.5c2.6-2.5 6-5.6 6-9.3C19 4.1 15.9 1 12 1z",
-            fillColor: color,
-            fillOpacity: 1,
-            strokeColor: "#000",
-            strokeWeight: 1,
-            scale: scale,
-            labelOrigin: new google.maps.Point(12, 9)
-        };
-    }
-
-    // Process each row
-    rows.forEach(r => {
-        if (!r.c || !r.c[3] || !r.c[4]) return;
-        
-        const block = r.c[0]?.v || "Unknown";
-        const name = r.c[1]?.v || "No Name";
-        const code = r.c[2]?.v || "N/A";
-        const lat = parseFloat(r.c[3].v);
-        const lng = parseFloat(r.c[4].v);
-        const cat = r.c[5]?.v || "Unknown";
-
-        if (isNaN(lat) || isNaN(lng)) return;
-
-        blockSet.add(block);
-        allCategories.add(cat);
-
-        const marker = new google.maps.Marker({
+          const marker = new google.maps.Marker({
             position: { lat, lng },
             map: map,
             icon: linePin(getBlockColor(block)),
             label: { text: getCategoryLetter(cat), color: "white", fontWeight: "bold", fontSize: "11px" },
             title: name,
             optimized: false
-        });
+          });
 
-        marker.meta = { 
+          marker.meta = { 
             block: block.toUpperCase(), 
             code: String(code).toUpperCase(), 
             name: name.toUpperCase(),
             lat, lng,
             category: cat
-        };
+          };
 
-        google.maps.event.addListener(marker, 'click', function(e) {
+          google.maps.event.addListener(marker, 'click', function(e) {
             e.stop();
-            infoWindow.close();
+            resetLastMarker();
+            lastClickedMarker = marker;
+            marker.setIcon(linePin(getBlockColor(block), 1.5));
             
             const content = `
-                <div style="min-width:220px;max-width:280px;">
-                    <h3 style="margin:0 0 8px;color:#1976d2; font-size:18px;">${name}</h3>
-                    <div style="font-size:13px; margin-bottom:5px;"><strong>Code:</strong> ${code}</div>
-                    <div style="font-size:13px; margin-bottom:5px;"><strong>Block:</strong> ${block}</div>
-                    <div style="font-size:13px; margin-bottom:5px;"><strong>Category:</strong> ${cat}</div>
-                    <div style="margin:12px 0; padding:10px; background:#f0f4f8; border-radius:12px; font-family:monospace; font-size:12px; text-align:center;">${lat.toFixed(6)}, ${lng.toFixed(6)}</div>
-                    <div class="info-window-buttons">
-                        <button onclick="window.showShareDialog('${name.replace(/'/g, "\\'")}', ${lat}, ${lng})" class="info-window-btn share-btn" title="Share location"><i class="fas fa-share-alt"></i></button>
-                        <button onclick="window.navigateToLocation(${lat}, ${lng})" class="info-window-btn navigate-btn" title="Navigate to location"><i class="fas fa-directions"></i></button>
-                    </div>
+              <div style="min-width:220px;max-width:280px;">
+                <h3 style="margin:0 0 6px;color:#1976d2;">${name}</h3>
+                <div style="font-size:13px;"><strong>Code:</strong> ${code}</div>
+                <div style="font-size:13px;"><strong>Block:</strong> ${block}</div>
+                <div style="font-size:13px;"><strong>Category:</strong> ${cat}</div>
+                <div style="margin:10px 0;padding:8px;background:#f0f4f8;border-radius:12px;font-family:monospace;font-size:12px;">${formatCoordinates(lat, lng)}</div>
+                <div class="info-window-buttons">
+                  <button onclick="window.showShareDialog('${name.replace(/'/g, "\\'")}', ${lat}, ${lng})" class="info-window-btn share-btn"><i class="fas fa-share-alt"></i></button>
+                  <button onclick="window.navigateToLocation(${lat}, ${lng})" class="info-window-btn navigate-btn"><i class="fas fa-directions"></i></button>
                 </div>
+              </div>
             `;
             infoWindow.setContent(content);
             infoWindow.open(map, marker);
+          });
+
+          markers.push(marker);
         });
 
-        markers.push(marker);
-    });
+        // Expose functions globally (they will override the fallbacks below)
+        window.showShareDialog = showShareDialog;
+        window.navigateToLocation = navigateToLocation;
+        // copyToClipboard already defined globally at top level
 
-    // Populate block list
-    const list = document.getElementById("blockList");
-    if (list) {
+        map.addListener("click", () => { infoWindow.close(); resetLastMarker(); });
+
+        const list = document.getElementById("blockList");
         [...blockSet].sort().forEach(b => {
-            const opt = document.createElement("option");
-            opt.value = b;
-            list.appendChild(opt);
-        });
-    }
-
-    // Update counts
-    updateLocationCounts(markers, allCategories);
-    setupFilters(markers, map);
-    
-    document.getElementById("filterStatus").innerText = "Showing all locations";
-}
-
-function showSampleData() {
-    // Sample data in case the spreadsheet fails to load
-    const sampleLocations = [
-        { block: "Block A", name: "Office 1", code: "A001", lat: 20.592263, lng: 83.248939, cat: "PPC" },
-        { block: "Block A", name: "Warehouse 1", code: "A002", lat: 20.602263, lng: 83.258939, cat: "Godown" },
-        { block: "Block B", name: "Office 2", code: "B001", lat: 20.582263, lng: 83.238939, cat: "FPS" },
-        { block: "Block B", name: "Rice Mill 1", code: "B002", lat: 20.572263, lng: 83.228939, cat: "Rice Mill" },
-    ];
-
-    const infoWindow = new google.maps.InfoWindow({ maxWidth: 350 });
-    const blockSet = new Set();
-    const allCategories = new Set();
-    const blockColors = {};
-    const primaryColors = ["#d32f2f", "#1976d2", "#fbc02d"];
-    let colorIndex = 0;
-
-    function getBlockColor(block) {
-        if (!blockColors[block]) {
-            blockColors[block] = primaryColors[colorIndex % primaryColors.length];
-            colorIndex++;
-        }
-        return blockColors[block];
-    }
-
-    function getCategoryLetter(cat) {
-        const catMap = { "PPC": "P", "Rice Mill": "M", "FPS": "F", "Godown": "G" };
-        return catMap[cat] || "•";
-    }
-
-    function linePin(color, scale = 1.1) {
-        return {
-            path: "M12 1C8.1 1 5 4.1 5 8.2c0 3.7 3.4 6.8 6 9.3V28h2V17.5c2.6-2.5 6-5.6 6-9.3C19 4.1 15.9 1 12 1z",
-            fillColor: color,
-            fillOpacity: 1,
-            strokeColor: "#000",
-            strokeWeight: 1,
-            scale: scale,
-            labelOrigin: new google.maps.Point(12, 9)
-        };
-    }
-
-    sampleLocations.forEach(loc => {
-        blockSet.add(loc.block);
-        allCategories.add(loc.cat);
-
-        const marker = new google.maps.Marker({
-            position: { lat: loc.lat, lng: loc.lng },
-            map: map,
-            icon: linePin(getBlockColor(loc.block)),
-            label: { text: getCategoryLetter(loc.cat), color: "white", fontWeight: "bold", fontSize: "11px" },
-            title: loc.name,
-            optimized: false
+          const opt = document.createElement("option");
+          opt.value = b;
+          list.appendChild(opt);
         });
 
-        marker.meta = { 
-            block: loc.block.toUpperCase(), 
-            code: loc.code.toUpperCase(), 
-            name: loc.name.toUpperCase(),
-            lat: loc.lat, lng: loc.lng,
-            category: loc.cat
-        };
+        updateLocationCounts();
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById('map').innerHTML = `<div style="padding:30px;text-align:center;color:#721c24;">Failed to load data.</div>`;
+      });
 
-        google.maps.event.addListener(marker, 'click', function(e) {
-            e.stop();
-            infoWindow.close();
-            
-            const content = `
-                <div style="min-width:220px;max-width:280px;">
-                    <h3 style="margin:0 0 8px;color:#1976d2; font-size:18px;">${loc.name}</h3>
-                    <div style="font-size:13px; margin-bottom:5px;"><strong>Code:</strong> ${loc.code}</div>
-                    <div style="font-size:13px; margin-bottom:5px;"><strong>Block:</strong> ${loc.block}</div>
-                    <div style="font-size:13px; margin-bottom:5px;"><strong>Category:</strong> ${loc.cat}</div>
-                    <div style="margin:12px 0; padding:10px; background:#f0f4f8; border-radius:12px; font-family:monospace; font-size:12px; text-align:center;">${loc.lat.toFixed(6)}, ${loc.lng.toFixed(6)}</div>
-                    <div class="info-window-buttons">
-                        <button onclick="window.showShareDialog('${loc.name.replace(/'/g, "\\'")}', ${loc.lat}, ${loc.lng})" class="info-window-btn share-btn" title="Share location"><i class="fas fa-share-alt"></i></button>
-                        <button onclick="window.navigateToLocation(${loc.lat}, ${loc.lng})" class="info-window-btn navigate-btn" title="Navigate to location"><i class="fas fa-directions"></i></button>
-                    </div>
-                </div>
-            `;
-            infoWindow.setContent(content);
-            infoWindow.open(map, marker);
-        });
-
-        markers.push(marker);
-    });
-
-    // Populate block list
-    const list = document.getElementById("blockList");
-    if (list) {
-        [...blockSet].sort().forEach(b => {
-            const opt = document.createElement("option");
-            opt.value = b;
-            list.appendChild(opt);
-        });
-    }
-
-    updateLocationCounts(markers, allCategories);
-    setupFilters(markers, map);
-    
-    document.getElementById("filterStatus").innerText = "Showing sample data (spreadsheet unavailable)";
-}
-
-function updateLocationCounts(markers, allCategories) {
-    let total = 0;
-    const categoryCounts = {};
-    
-    markers.forEach(m => {
-        if (m.getVisible()) {
-            total++;
-            const cat = m.meta.category || "Unknown";
-            categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
-        }
-    });
-
-    document.getElementById("totalCount").textContent = total;
-    
-    // Update categories display
-    const container = document.querySelector("#locationCounts > div:first-child");
-    if (container) {
-        // Keep only the total span
-        while (container.children.length > 1) {
-            container.removeChild(container.lastChild);
-        }
-        
-        // Add category counts
-        Object.keys(categoryCounts).sort().forEach(cat => {
-            if (categoryCounts[cat] > 0) {
-                const span = document.createElement("span");
-                span.style.fontWeight = "bold";
-                span.innerHTML = `${cat}: <span style="color:#333;">${categoryCounts[cat]}</span>`;
-                container.appendChild(span);
-            }
-        });
-    }
-}
-
-function setupFilters(markers, map) {
-    let currentBlockFilter = "";
-    let lastClickedMarker = null;
-
-    function applyFilters() {
-        const bV = document.getElementById("blockSearch").value.toUpperCase().trim();
-        const cV = document.getElementById("codeSearch").value.toUpperCase().trim();
-        const nV = document.getElementById("nameSearch").value.toUpperCase().trim();
-        
-        currentBlockFilter = bV;
-
-        markers.forEach(m => {
-            const match = m.meta.block.includes(bV) && m.meta.code.includes(cV) && m.meta.name.includes(nV);
-            m.setVisible(match);
-        });
-        
-        updateLocationCounts(markers, new Set());
-        document.getElementById("filterStatus").innerText = bV ? `Showing block: ${bV}` : "Showing all locations";
-    }
-
-    function calculateBoundsForVisibleMarkers() {
-        const bounds = new google.maps.LatLngBounds();
-        let visibleCount = 0;
-        markers.forEach(m => { if (m.getVisible()) { bounds.extend(m.getPosition()); visibleCount++; } });
-        return { bounds, visibleCount };
-    }
-
-    function centerMapOnVisibleMarkers() {
-        const { bounds, visibleCount } = calculateBoundsForVisibleMarkers();
-        if (visibleCount === 0) {
-            alert("No locations match current filters.");
-            return;
-        } else if (visibleCount === 1) {
-            markers.forEach(m => { if (m.getVisible()) map.setCenter(m.getPosition()); });
-            map.setZoom(14);
-        } else {
-            map.fitBounds(bounds, 50);
-        }
-    }
-
-    function handleShowAll() {
-        document.getElementById("blockSearch").value = '';
-        document.getElementById("codeSearch").value = '';
-        document.getElementById("nameSearch").value = '';
-        currentBlockFilter = '';
-        markers.forEach(m => m.setVisible(true));
-        updateLocationCounts(markers, new Set());
-        map.setCenter({ lat: 20.592263, lng: 83.248939 });
-        map.setZoom(11);
-        document.getElementById("filterStatus").innerText = "Showing all locations";
-    }
-
-    // Attach filter listeners
     ["blockSearch","codeSearch","nameSearch"].forEach(id => {
-        document.getElementById(id).addEventListener("input", applyFilters);
+      document.getElementById(id).addEventListener("input", applyFilters);
     });
 
-    // Escape key clears
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            handleShowAll();
-        }
+      if (e.key === 'Escape') handleShowAll();
     });
 
-    // Wire up two buttons
-    document.getElementById('showFilteredBtn').addEventListener('click', centerMapOnVisibleMarkers);
+    document.getElementById('showFilteredBtn').addEventListener('click', handleShowFiltered);
     document.getElementById('showAllBtn').addEventListener('click', handleShowAll);
-}
+  }
 
-function hideLoading() {
-    const loadingEl = document.getElementById('mapLoading');
-    if (loadingEl) loadingEl.style.display = 'none';
-}
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    setTimeout(initMap, 120);
+  } else {
+    window.addEventListener("load", initMap);
+  }
+})();
+</script>
 
-// Fallback if callback doesn't fire
-setTimeout(() => {
-    if (!googleMapsLoaded && !map) {
-        hideLoading();
-        document.getElementById('map').innerHTML = `
-            <div style="padding:30px;text-align:center;color:#721c24;background:#f8d7da;border-radius:8px;margin:20px;">
-                Failed to load Google Maps. Please check your internet connection and refresh.
-            </div>
-        `;
-    }
-}, 5000);
+<!-- fallback globals (but they will be overwritten by the actual implementations above) -->
+<script>
+  window.showShareDialog = window.showShareDialog || function(name, lat, lng) {
+    alert('Share dialog ready');
+  };
+  window.navigateToLocation = window.navigateToLocation || function(lat,lng) {
+    window.open(`https://www.google.com/maps?q=${lat},${lng}`);
+  };
+  // copyToClipboard already robustly defined inside IIFE, but we keep a fallback
+  window.copyToClipboard = window.copyToClipboard || function(t) { prompt('Copy:', t); };
 </script>
 
 </body>
