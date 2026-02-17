@@ -11,13 +11,14 @@
   <!-- Font Awesome for social media icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    /* ----- global reset to allow full bleed ----- */
+    /* ----- global reset to allow full bleed & NO VERTICAL SCROLLBAR ----- */
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      overflow-x: hidden;
+      overflow: hidden;  /* Removes ALL scrollbars */
+      position: fixed;   /* Prevents any bouncing/scroll */
     }
 
     /* ensure header/footer are not affected – but we let site-header/footer keep their original styles.
@@ -31,7 +32,9 @@
     body {
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;      /* exact viewport height */
+      width: 100vw;       /* exact viewport width */
+      overflow: hidden;   /* double assurance */
     }
 
     /* the wrapper that contains header/footer is default – but we want sarat-office-content to take all remaining space */
@@ -45,6 +48,7 @@
       padding: 0;              /* remove padding so map can be truly full width */
       box-sizing: border-box;
       font-family: Arial, sans-serif;
+      overflow: hidden;        /* prevent internal scroll */
     }
 
     /* but we still want the controls and counters to have some comfortable padding/margin */
@@ -55,6 +59,7 @@
       margin: 15px 20px;        /* left/right margin for breathing */
       padding: 0;
       align-items: center;
+      flex-shrink: 0;           /* don't shrink */
     }
 
     /* input fields flexible */
@@ -112,7 +117,7 @@
     .sarat-office-content #map {
       width: 100%;
       flex: 1 1 auto;            /* takes remaining vertical space */
-      min-height: 400px;         /* fallback */
+      min-height: 0;             /* important for flex children */
       background: #d9e2ec;
       border-radius: 0;          /* no radius for fullscreen look */
       box-shadow: none;
@@ -129,6 +134,7 @@
       font-size: 15px;
       border: 1px solid #d4d4d4;
       box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+      flex-shrink: 0;             /* don't shrink */
     }
 
     /* make inner container flex wrap */
@@ -239,6 +245,8 @@
       max-width: 420px; 
       width: 90%; 
       box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
+      max-height: 90vh;          /* prevent overflow */
+      overflow-y: auto;          /* only if content too tall, but we have short content */
     }
     .social-icons { 
       display: flex; 
@@ -394,8 +402,8 @@
     }, 500);
   }
 
-  // Fixed copy function with proper event handling
-  function copyToClipboard(text) {
+  // Fixed copy function - now properly global and working
+  window.copyToClipboard = function(text) {
     // Use the clipboard API
     navigator.clipboard.writeText(text).then(() => {
       // Show success toast
@@ -408,14 +416,14 @@
       }, 2000);
       
       // Update copy icon temporarily
-      const copyIcons = document.querySelectorAll('.social-icon.copy i');
-      copyIcons.forEach(icon => {
-        const originalClass = icon.className;
-        icon.className = 'fas fa-check';
+      const copyIcon = document.querySelector('.social-icon.copy i');
+      if (copyIcon) {
+        const originalClass = copyIcon.className;
+        copyIcon.className = 'fas fa-check';
         setTimeout(() => {
-          icon.className = originalClass;
+          copyIcon.className = originalClass;
         }, 2000);
-      });
+      }
     }).catch(err => {
       // Fallback for older browsers
       const textarea = document.createElement('textarea');
@@ -434,9 +442,11 @@
       }
       document.body.removeChild(textarea);
     });
-  }
+    return false; // Prevent any default action
+  };
 
-  function showShareDialog(name, lat, lng) {
+  // Fixed showShareDialog with proper copy button handler
+  window.showShareDialog = function(name, lat, lng) {
     const coordinates = formatCoordinates(lat, lng);
     const text = `📍 ${name}\nCoordinates: ${coordinates}\n\nhttps://maps.google.com/?q=${lat},${lng}`;
     const encodedText = encodeURIComponent(text);
@@ -447,6 +457,8 @@
     
     const overlay = document.createElement('div');
     overlay.className = 'share-dialog-overlay';
+    
+    // Create dialog content with inline onclick for copy
     overlay.innerHTML = `
       <div class="share-dialog">
         <h3 style="margin-top:0;color:#1976d2; font-size:22px;">Share Location</h3>
@@ -462,16 +474,20 @@
         <button class="close-dialog-btn" style="width:100%;padding:14px;background:#dc3545;color:white;border:none;border-radius:40px;font-size:16px;font-weight:600;cursor:pointer;transition:background 0.2s;">Close</button>
       </div>
     `;
+    
     document.body.appendChild(overlay);
     
-    overlay.querySelector('.close-dialog-btn').addEventListener('click', () => overlay.remove());
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
-  }
+    // Add close button functionality
+    const closeBtn = overlay.querySelector('.close-dialog-btn');
+    closeBtn.addEventListener('click', () => overlay.remove());
+    
+    // Close when clicking outside
+    overlay.addEventListener('click', (e) => { 
+      if (e.target === overlay) overlay.remove(); 
+    });
+  };
 
-  // Make functions globally accessible with proper names
-  window.showShareDialog = showShareDialog;
   window.navigateToLocation = navigateToLocation;
-  window.copyToClipboard = copyToClipboard;
 
   function resetLastMarker() {
     if (lastClickedMarker && lastClickedMarker.meta) {
