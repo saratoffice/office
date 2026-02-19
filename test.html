@@ -1,779 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Electric Meters | Genus Power Blog</title>
-  
-  <!-- Common CSS -->
-  <link rel="stylesheet" href="../style.css">
-  <!-- Site components -->
-  <script src="../assets/Scripts/site-components.js" defer></script>
-  
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  
-  <!-- Blog metadata for dynamic blogs.html -->
-  <meta name="blog:title" content="Why Smart Electric Meters Are the Future of Energy Management">
-  <meta name="blog:excerpt" content="Traditional electric meters have long served as the backbone of energy consumption management, but as the world shifts toward sustainability and greater efficiency, smart meters are revolutionizing how we monitor and manage electricity usage.">
-  <meta name="blog:category" content="technology">
-  <meta name="blog:tags" content="smart-meter, electricity, energy, technology, genus-power, innovation, sustainability">
-  <meta name="blog:author" content="Genus Power">
-  <meta name="blog:date" content="2025-02-15">
-  <meta name="blog:readTime" content="8">
-  <meta name="blog:views" content="1234">
-  <meta name="blog:icon" content="fa-microchip">
-  
-  <style>
-    /* Isolated styles for blog post page */
-    .blog-post-section {
-      display: block;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website steps · with header/footer</title>
+    <!-- common fonts used throughout the site -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- common CSS (header, footer, global) — kept exactly as you use -->
+    <link rel="stylesheet" href="style.css">
+    <!-- site components (header/footer loader) -->
+    <script src="assets/Scripts/site-components.js" defer></script>
+    <!-- go to top script (common) -->
+    <script src="/assets/Scripts/gototop.js" defer></script>
+    <!-- only the steps card custom styles (minimal, integrated) -->
+    <style>
+        /* ensure body uses common background, flex column for sticky footer */
+        body {
+            background: #f4f7fb;           /* matches existing page */
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-    /* Back to blogs link */
-    .blog-post-section .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #3b82f6;
-      text-decoration: none;
-      font-weight: 500;
-      margin-bottom: 2rem;
-      padding: 0.5rem 1rem;
-      background: white;
-      border-radius: 30px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      transition: all 0.2s ease;
-    }
+        /* header & footer injected — they keep their original styles */
+        #site-header,
+        #site-footer {
+            flex-shrink: 0;
+        }
 
-    .blog-post-section .back-link:hover {
-      transform: translateX(-5px);
-      background: #eff6ff;
-    }
+        /* main content grows to fill space, centers the card */
+        .page-main {
+            flex: 1 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-    /* Blog header */
-    .blog-post-section .post-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
+        /* ----- redesigned steps card (fits perfectly with header/footer) ----- */
+        .custom-ol {
+            padding: 36px 42px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            max-width: 620px;
+            width: 100%;
+            border-radius: 56px 56px 56px 56px;
+            box-shadow: 0 24px 46px -16px rgba(0, 45, 80, 0.35), 0 8px 15px rgba(0,0,0,0.03);
+            font-family: "Roboto", sans-serif;
+            color: #073b4c;
+            border: 1px solid rgba(255,255,255,0.6);
+            transition: box-shadow 0.3s, transform 0.2s;
+        }
 
-    .blog-post-section .post-title {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: #1e293b;
-      margin-bottom: 1rem;
-      line-height: 1.3;
-      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+        .custom-ol:hover {
+            box-shadow: 0 32px 58px -18px #0a2a4a;
+            transform: translateY(-3px);
+        }
 
-    .blog-post-section .post-meta {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-      color: #64748b;
-      font-size: 0.95rem;
-    }
+        /* heading with accent bar (like h3 from list pages) */
+        .custom-ol h2 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin: 0 0 16px 0;
+            padding-left: 28px;
+            position: relative;
+            color: #0b2b40;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            border-bottom: 2px solid transparent;
+            display: inline-block;
+        }
 
-    .blog-post-section .post-meta i {
-      color: #3b82f6;
-      margin-right: 0.3rem;
-    }
+        .custom-ol h2::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 8px;
+            background: linear-gradient(145deg, #e11d48, #b91c1c);
+            border-radius: 20px;
+            transition: 0.3s ease;
+        }
 
-    .blog-post-section .category-tag {
-      background: #e2e8f0;
-      padding: 0.3rem 1rem;
-      border-radius: 30px;
-      font-size: 0.85rem;
-      color: #475569;
-    }
+        .custom-ol:hover h2::before {
+            width: 14px;
+            background: linear-gradient(145deg, #2563eb, #1e3a8a);
+        }
 
-    /* Hero Image - Full width at top */
-    .blog-post-section .hero-image {
-      margin: 2rem 0 3rem;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      position: relative;
-      height: 450px;
-    }
+        /* reset list */
+        .custom-ol ol {
+            margin: 32px 0 8px 0;
+            padding: 0;
+            list-style: none;
+            counter-reset: web-design;
+        }
 
-    .blog-post-section .hero-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
+        /* list items – spacious, refined hover effect */
+        .custom-ol ol li {
+            margin: 28px 0;
+            font-size: 1.35rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            padding: 8px 16px 8px 8px;
+            border-radius: 60px 20px 20px 60px;
+            cursor: default;
+            color: #1a2e3f;
+            background: transparent;
+        }
 
-    .blog-post-section .hero-image:hover img {
-      transform: scale(1.02);
-    }
+        .custom-ol ol li:hover {
+            background: linear-gradient(105deg, #ffd166 0%, #fbbf24 100%);
+            transform: translateX(12px) scale(1.01);
+            box-shadow: 0 12px 24px -16px #b45309;
+            color: #0f172a;
+        }
 
-    .blog-post-section .hero-caption {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-      color: white;
-      padding: 2rem 2rem 1rem;
-      font-size: 0.9rem;
-      font-style: italic;
-    }
+        /* step number (counter) – bigger, more presence */
+        .custom-ol ol li::before {
+            content: counter(web-design);
+            counter-increment: web-design;
+            margin-right: 28px;
+            font-size: 3rem;
+            font-weight: 800;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(130deg, #0b4b6f, #0a2472);
+            padding: 8px 24px;
+            border-radius: 0 28px 0 28px;
+            color: #f8fafc;
+            transition: all 0.4s ease;
+            line-height: 1;
+            box-shadow: 0 7px 0 #021b2b;
+            letter-spacing: -1px;
+            min-width: 84px;
+            text-align: center;
+        }
 
-    /* Content styles */
-    .blog-post-section .post-content {
-      background: white;
-      padding: 3rem;
-      border-radius: 30px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
-      margin: 2rem 0;
-    }
+        .custom-ol ol li:hover::before {
+            background: linear-gradient(145deg, #073b4c, #022c3a);
+            transform: scale(1.2) rotate(-3deg) translateY(-4px);
+            box-shadow: 0 12px 0 #02101a, 0 4px 20px rgba(0,180,255,0.4);
+            color: white;
+            border-radius: 20px 0 20px 0;
+        }
 
-    .blog-post-section .post-content h2 {
-      font-size: 1.8rem;
-      color: #1e293b;
-      margin: 2.5rem 0 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 3px solid;
-      border-image: linear-gradient(90deg, #3b82f6, #8b5cf6) 1;
-      border-bottom-style: solid;
-      border-bottom-width: 3px;
-      border-image-slice: 1;
-    }
+        /* fine tune last item */
+        .custom-ol ol li:last-child {
+            margin-bottom: 0;
+        }
 
-    .blog-post-section .post-content h2:first-of-type {
-      margin-top: 0;
-    }
+        /* optional small footer note inside card – blends in */
+        .card-footer-note {
+            margin-top: 28px;
+            text-align: right;
+            font-size: 0.95rem;
+            opacity: 0.55;
+            letter-spacing: 0.3px;
+            font-style: italic;
+            border-top: 1px dashed rgba(0,40,70,0.1);
+            padding-top: 14px;
+        }
 
-    .blog-post-section .post-content h3 {
-      font-size: 1.4rem;
-      color: #334155;
-      margin: 1.5rem 0 1rem;
-    }
+        /* responsive: keep card comfortable on all devices */
+        @media (max-width: 600px) {
+            .page-main {
+                padding: 24px 16px;
+            }
+            .custom-ol {
+                padding: 28px 24px;
+                border-radius: 40px;
+            }
+            .custom-ol h2 {
+                font-size: 1.9rem;
+                padding-left: 22px;
+            }
+            .custom-ol ol li {
+                font-size: 1.15rem;
+                margin: 22px 0;
+            }
+            .custom-ol ol li::before {
+                font-size: 2.5rem;
+                min-width: 68px;
+                padding: 6px 14px;
+                margin-right: 20px;
+            }
+        }
 
-    .blog-post-section .post-content p {
-      line-height: 1.8;
-      color: #475569;
-      margin-bottom: 1.5rem;
-      font-size: 1.1rem;
-    }
+        @media (max-width: 420px) {
+            .custom-ol h2 {
+                font-size: 1.6rem;
+            }
+            .custom-ol ol li {
+                font-size: 1rem;
+            }
+            .custom-ol ol li::before {
+                font-size: 2.1rem;
+                min-width: 58px;
+                padding: 6px 8px;
+            }
+        }
 
-    .blog-post-section .post-content strong {
-      color: #3b82f6;
-      font-weight: 600;
-    }
-
-    /* Floating image with text wrap */
-    .blog-post-section .float-image-left {
-      float: left;
-      width: 300px;
-      margin: 0.5rem 2rem 1rem 0;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      transition: transform 0.3s ease;
-    }
-
-    .blog-post-section .float-image-left:hover {
-      transform: scale(1.02) rotate(1deg);
-    }
-
-    .blog-post-section .float-image-right {
-      float: right;
-      width: 280px;
-      margin: 0.5rem 0 1rem 2rem;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      transition: transform 0.3s ease;
-    }
-
-    .blog-post-section .float-image-right:hover {
-      transform: scale(1.02) rotate(-1deg);
-    }
-
-    .blog-post-section .image-caption {
-      text-align: center;
-      font-size: 0.8rem;
-      color: #64748b;
-      margin-top: 0.3rem;
-      font-style: italic;
-    }
-
-    /* Image grid for multiple images */
-    .blog-post-section .image-grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin: 3rem 0;
-    }
-
-    .blog-post-section .grid-item {
-      background: white;
-      padding: 1rem;
-      border-radius: 16px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    .blog-post-section .grid-item img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 12px;
-      transition: transform 0.3s ease;
-    }
-
-    .blog-post-section .grid-item:hover img {
-      transform: scale(1.02);
-    }
-
-    .blog-post-section .grid-item .image-caption {
-      margin-top: 0.8rem;
-    }
-
-    /* Full width image within content */
-    .blog-post-section .full-width-image {
-      margin: 3rem 0;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-    }
-
-    .blog-post-section .full-width-image img {
-      width: 100%;
-      max-height: 400px;
-      object-fit: cover;
-    }
-
-    /* Benefits grid */
-    .blog-post-section .benefits-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin: 2rem 0;
-    }
-
-    .blog-post-section .benefit-card {
-      background: #f8fafc;
-      padding: 1.5rem;
-      border-radius: 16px;
-      border-left: 4px solid #3b82f6;
-      transition: all 0.3s ease;
-    }
-
-    .blog-post-section .benefit-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.1);
-    }
-
-    .blog-post-section .benefit-card i {
-      font-size: 1.5rem;
-      color: #3b82f6;
-      margin-bottom: 1rem;
-    }
-
-    .blog-post-section .benefit-card h4 {
-      font-size: 1.1rem;
-      color: #1e293b;
-      margin-bottom: 0.5rem;
-    }
-
-    .blog-post-section .benefit-card p {
-      font-size: 0.95rem;
-      margin-bottom: 0;
-      color: #64748b;
-    }
-
-    /* Info box */
-    .blog-post-section .info-box {
-      background: linear-gradient(135deg, #eff6ff 0%, #eef2ff 100%);
-      border-radius: 16px;
-      padding: 2rem;
-      margin: 2rem 0;
-      border-left: 6px solid #3b82f6;
-      clear: both;
-    }
-
-    .blog-post-section .info-box h4 {
-      color: #1e293b;
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
-    }
-
-    /* Meter types cards */
-    .blog-post-section .meter-types {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin: 2rem 0;
-      clear: both;
-    }
-
-    .blog-post-section .meter-type-card {
-      background: #f8fafc;
-      padding: 2rem;
-      border-radius: 20px;
-      text-align: center;
-      transition: all 0.3s ease;
-      border: 1px solid #e2e8f0;
-    }
-
-    .blog-post-section .meter-type-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-      border-color: #3b82f6;
-    }
-
-    .blog-post-section .meter-type-card i {
-      font-size: 3rem;
-      color: #3b82f6;
-      margin-bottom: 1rem;
-    }
-
-    /* Stats card */
-    .blog-post-section .stats-card {
-      background: linear-gradient(135deg, #1e293b, #0f172a);
-      color: white;
-      padding: 3rem;
-      border-radius: 20px;
-      margin: 3rem 0;
-      text-align: center;
-      clear: both;
-    }
-
-    .blog-post-section .stats-number {
-      font-size: 3.5rem;
-      font-weight: 800;
-      color: #3b82f6;
-      margin-bottom: 0.5rem;
-    }
-
-    .blog-post-section .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-
-    /* Tags section */
-    .blog-post-section .post-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin: 2rem 0 1rem;
-      clear: both;
-    }
-
-    .blog-post-section .post-tag {
-      background: #e2e8f0;
-      padding: 0.3rem 1rem;
-      border-radius: 30px;
-      font-size: 0.85rem;
-      color: #475569;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .blog-post-section .post-tag:hover {
-      background: #3b82f6;
-      color: white;
-    }
-
-    /* Share section */
-    .blog-post-section .share-section {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin: 3rem 0 2rem;
-      padding: 2rem;
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      clear: both;
-    }
-
-    .blog-post-section .share-buttons {
-      display: flex;
-      gap: 0.8rem;
-    }
-
-    .blog-post-section .share-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      transition: all 0.2s ease;
-      text-decoration: none;
-    }
-
-    .blog-post-section .share-btn:hover {
-      transform: translateY(-5px);
-    }
-
-    .blog-post-section .share-btn.facebook { background: #1877f2; }
-    .blog-post-section .share-btn.twitter { background: #1da1f2; }
-    .blog-post-section .share-btn.linkedin { background: #0a66c2; }
-    .blog-post-section .share-btn.whatsapp { background: #25d366; }
-
-    /* Clear floats */
-    .blog-post-section .clearfix::after {
-      content: "";
-      clear: both;
-      display: table;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .blog-post-section .post-title {
-        font-size: 1.8rem;
-      }
-      
-      .blog-post-section .post-content {
-        padding: 1.5rem;
-      }
-      
-      .blog-post-section .float-image-left,
-      .blog-post-section .float-image-right {
-        float: none;
-        width: 100%;
-        margin: 1rem 0;
-      }
-      
-      .blog-post-section .image-grid-2 {
-        grid-template-columns: 1fr;
-      }
-      
-      .blog-post-section .meter-types {
-        grid-template-columns: 1fr;
-      }
-      
-      .blog-post-section .stats-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-      
-      .blog-post-section .hero-image {
-        height: 250px;
-      }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .blog-post-section .post-content > * {
-      animation: fadeIn 0.5s ease forwards;
-    }
-  </style>
+        /* everything integrates: header & footer retain their original look */
+    </style>
 </head>
-
 <body>
-  <header id="site-header"></header>
+    <!-- common header loaded via site-components.js -->
+    <div id="site-header"></div>
 
-  <!-- Main blog post section -->
-  <section class="blog-post-section">
-    <!-- Back to blogs link -->
-    <a href="../blogs.html" class="back-link">
-      <i class="fas fa-arrow-left"></i> Back to all articles
-    </a>
-
-    <!-- Post header -->
-    <div class="post-header">
-      <h1 class="post-title">Why Smart Electric Meters Are the Future of Energy Management</h1>
-      
-      <div class="post-meta">
-        <span><i class="fas fa-user"></i> Genus Power</span>
-        <span><i class="fas fa-calendar"></i> February 15, 2025</span>
-        <span><i class="fas fa-clock"></i> 8 min read</span>
-        <span class="category-tag"><i class="fas fa-tag"></i> Technology</span>
-      </div>
+    <!-- main area that holds the steps card and centers it perfectly -->
+    <div class="page-main">
+        <div class="custom-ol">
+            <h2>Steps To Design A Website</h2>
+            <ol>
+                <li>The Planning Phase</li>
+                <li>Create The Wireframe</li>
+                <li>Design It</li>
+                <li>Write The Code</li>
+                <li>Publish The Website Online</li>
+            </ol>
+            <!-- a subtle card footer (purely decorative) -->
+            <div class="card-footer-note">5 streamlined steps · start today</div>
+        </div>
     </div>
 
-    <!-- Hero Image -->
-    <div class="hero-image">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhfki8k-_kVkXAVFn5D1n6P8jwPjSWBN_-wyIGtGIrLQP3hw0JsISWehDzTnVV3CswB00ipjiadCNYAEjXpGufrBpoywGtEQ5LCUGE1P41MhSIGiYE4qKRTrccdDmEclFlDsj8GDOw1FtaJTS8bfxQFgsLqmIlSHTxAtA-KGMED9ev-QhC0VYN90fpt3s8O/s1024/Smart%20Meter.jpg" 
-           alt="Modern Smart Meter"
-           loading="lazy"
-           onerror="this.src='https://via.placeholder.com/1200x450?text=Smart+Meter'">
-      <div class="hero-caption">
-        <i class="fas fa-camera"></i> Next-generation smart meter with digital display
-      </div>
-    </div>
+    <!-- common footer -->
+    <div id="site-footer"></div>
 
-    <!-- Main content -->
-    <div class="post-content">
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">Traditional electric meters have long served as the backbone of energy consumption management, but as the world shifts toward sustainability and greater efficiency, it's becoming clear that these conventional systems can no longer meet modern demands. Smart electric meters are stepping in to offer not just reliable energy monitoring, but a more efficient and sustainable way of managing electricity usage.</p>
-
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">In this blog post, we'll explore what smart electric meters are, how they work, their benefits, and why they are revolutionizing energy management.</p>
-
-      <!-- Floating image right -->
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj7ZQsTGlI2jPuMLpKXVRdNFrLrzY4TvEDGTMmvcLOVzqTG-jnp5P0NFkHrfzOZrnUe4E-LGu1jvBHt8P2Vpv2ngdGWeoOOu1Iu8rczDSoBcTWqHz5MQItQBkxanEqWFVl4eLPOHaV6HxxZCEMxytsv0yvqcJHqGgcKGJ2NUp_oOZIjb_nOdPSEEBeIwblF/s1280/Smart%20meter%20genus.jpg" 
-           alt="Genus Smart Meter" 
-           class="float-image-right"
-           loading="lazy"
-           onerror="this.src='https://via.placeholder.com/280x200?text=Genus+Meter'">
-      <div class="image-caption">Genus Power Smart Meter - Made in India</div>
-
-      <h2>What Are Smart Electric Meters?</h2>
-
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">At their core, smart electric meters function similarly to traditional meters—they measure, monitor, and record electricity usage. However, the major difference lies in their ability to communicate directly with utility operators. Equipped with a digital communication module, smart meters automatically send usage data to the utility company at regular intervals, often every 15 minutes.</p>
-
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">This real-time data transmission eliminates the need for manual meter readings, making monitoring electricity consumption more efficient and transparent.</p>
-
-      <div class="info-box">
-        <h4><i class="fas fa-bolt" style="margin-right: 0.5rem;"></i> Industry Leader</h4>
-        <p>If you're looking for advanced, reliable metering solutions, <strong>Genus Power</strong> offers a range of smart electric meters and smart grid systems, catering to both residential and commercial needs in India.</p>
-      </div>
-
-      <h2>How Do Smart Electric Meters Work?</h2>
-
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">Smart meters provide much more than just basic energy consumption readings. They continuously record and transmit your electricity usage data to the utility provider, offering a real-time overview of your energy consumption.</p>
-
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">This allows users to track energy trends during peak and off-peak hours, offering insights into when they use the most electricity. With this information, consumers can adjust their usage patterns to reduce electricity costs. Additionally, some smart meters come with in-home displays, which enable users to monitor their energy usage and associated costs in real-time.</p>
-
-      <!-- Full width image -->
-      <div class="full-width-image">
-        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj7ZQsTGlI2jPuMLpKXVRdNFrLrzY4TvEDGTMmvcLOVzqTG-jnp5P0NFkHrfzOZrnUe4E-LGu1jvBHt8P2Vpv2ngdGWeoOOu1Iu8rczDSoBcTWqHz5MQItQBkxanEqWFVl4eLPOHaV6HxxZCEMxytsv0yvqcJHqGgcKGJ2NUp_oOZIjb_nOdPSEEBeIwblF/s1280/Smart%20meter%20genus.jpg" 
-             alt="Smart Meter Installation"
-             loading="lazy">
-      </div>
-
-      <h2>Types of Smart Electric Meters</h2>
-
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">Smart electric meters are available in two main configurations:</p>
-
-      <div class="meter-types">
-        <div class="meter-type-card">
-          <i class="fas fa-industry"></i>
-          <h4>Three-Phase Smart Meters</h4>
-          <p>Designed for industrial and commercial applications where a higher power supply is required. Ideal for businesses and large-scale operations.</p>
-        </div>
-
-        <div class="meter-type-card">
-          <i class="fas fa-home"></i>
-          <h4>Single-Phase Smart Meters</h4>
-          <p>Typically used in residential properties. Ensures accurate readings and easy monitoring of electricity usage.</p>
-        </div>
-      </div>
-
-      <!-- Image grid 2-column -->
-      <div class="image-grid-2">
-        <div class="grid-item">
-          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhfki8k-_kVkXAVFn5D1n6P8jwPjSWBN_-wyIGtGIrLQP3hw0JsISWehDzTnVV3CswB00ipjiadCNYAEjXpGufrBpoywGtEQ5LCUGE1P41MhSIGiYE4qKRTrccdDmEclFlDsj8GDOw1FtaJTS8bfxQFgsLqmIlSHTxAtA-KGMED9ev-QhC0VYN90fpt3s8O/s1024/Smart%20Meter.jpg" 
-               alt="Smart Meter Front View"
-               loading="lazy">
-          <div class="image-caption">Front view with digital display</div>
-        </div>
-        <div class="grid-item">
-          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj7ZQsTGlI2jPuMLpKXVRdNFrLrzY4TvEDGTMmvcLOVzqTG-jnp5P0NFkHrfzOZrnUe4E-LGu1jvBHt8P2Vpv2ngdGWeoOOu1Iu8rczDSoBcTWqHz5MQItQBkxanEqWFVl4eLPOHaV6HxxZCEMxytsv0yvqcJHqGgcKGJ2NUp_oOZIjb_nOdPSEEBeIwblF/s1280/Smart%20meter%20genus.jpg" 
-               alt="Smart Meter Side View"
-               loading="lazy">
-          <div class="image-caption">Side view with communication module</div>
-        </div>
-      </div>
-
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">Other specialized meters, like distribution transformer-operated meters and CT-PT meters, are available for specific needs in different applications.</p>
-
-      <h2>Key Benefits of Smart Electric Meters</h2>
-
-      <div class="benefits-grid">
-        <div class="benefit-card">
-          <i class="fas fa-check-circle"></i>
-          <h4>Accuracy & Transparency</h4>
-          <p>Automated readings reduce human error, ensuring accurate billing and eliminating estimation or manipulation in energy charges.</p>
-        </div>
-
-        <div class="benefit-card">
-          <i class="fas fa-coins"></i>
-          <h4>Cost Reduction</h4>
-          <p>Consumers can monitor energy usage in real-time, adjusting habits to lower electricity costs.</p>
-        </div>
-
-        <div class="benefit-card">
-          <i class="fas fa-leaf"></i>
-          <h4>Energy Efficiency</h4>
-          <p>By providing detailed consumption data, smart meters optimize energy distribution, reduce wastage, and support grid sustainability.</p>
-        </div>
-
-        <div class="benefit-card">
-          <i class="fas fa-shield-alt"></i>
-          <h4>Enhanced Safety</h4>
-          <p>Real-time fault detection allows immediate corrective action, improving grid stability and reducing safety risks.</p>
-        </div>
-
-        <div class="benefit-card">
-          <i class="fas fa-mobile-alt"></i>
-          <h4>User-Friendly Experience</h4>
-          <p>Features like remote readings and in-home displays help consumers track usage and make informed energy decisions.</p>
-        </div>
-
-        <div class="benefit-card">
-          <i class="fas fa-chart-line"></i>
-          <h4>Real-Time Readings</h4>
-          <p>Consumers can track daily readings and bills, avoiding surprise charges at the end of the month.</p>
-        </div>
-
-        <div class="benefit-card">
-          <i class="fas fa-wallet"></i>
-          <h4>Flexible Recharge Options</h4>
-          <p>Users can recharge at their convenience, offering better control over energy usage and budget management.</p>
-        </div>
-
-        <div class="benefit-card">
-          <i class="fas fa-ban"></i>
-          <h4>No Reconnection Charges</h4>
-          <p>Disconnections don't incur reconnection fees, unlike traditional meters that often charge for reactivation.</p>
-        </div>
-
-        <div class="benefit-card">
-          <i class="fas fa-file-invoice"></i>
-          <h4>Reduced Billing Errors</h4>
-          <p>Real-time data transmission minimizes the risk of incorrect billing, ensuring accuracy based on actual consumption.</p>
-        </div>
-
-        <div class="benefit-card">
-          <i class="fas fa-globe"></i>
-          <h4>Online Monitoring</h4>
-          <p>Users can access their energy usage and bills online, making it easier to manage and monitor expenses.</p>
-        </div>
-
-        <div class="benefit-card">
-          <i class="fas fa-exclamation-triangle"></i>
-          <h4>Quick Reporting of Issues</h4>
-          <p>Any malfunctions are immediately reported to utility providers, speeding up problem resolution.</p>
-        </div>
-
-        <div class="benefit-card">
-          <i class="fas fa-sync-alt"></i>
-          <h4>Continuous Bill Generation</h4>
-          <p>Smart meters ensure consistent billing, even during off-hours, preventing discrepancies from usage when the property is closed.</p>
-        </div>
-      </div>
-
-      <h2>Disadvantages of Smart Meters</h2>
-
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">While smart meters offer many benefits, there are a few potential drawbacks to consider:</p>
-
-      <ul style="margin-top: 0cm;" type="disc">
-        <li class="MsoNormal" style="line-height: 150%; text-align: justify;"><strong>Network/Server Issues</strong>: In rare cases, network or server problems may prevent a recharge from being processed, leaving the household without power. It's advisable to recharge before the balance gets too low to avoid interruptions.</li>
-        <li class="MsoNormal" style="line-height: 150%; text-align: justify;"><strong>Average Billing During Malfunction</strong>: If the smart meter malfunctions, billing might be based on estimated consumption, which could result in overcharging or undercharging.</li>
-        <li class="MsoNormal" style="line-height: 150%; text-align: justify;"><strong>Pre-Payment Requirement</strong>: Smart meters often require payment to be made upfront, unlike traditional meters that allow post-billing. This might be inconvenient for some users.</li>
-        <li class="MsoNormal" style="line-height: 150%; text-align: justify;"><strong>No Physical Bill Copy</strong>: Smart meters generally do not provide a physical bill copy. Instead, all billing details are available online, which may not be suitable for individuals who prefer paper records.</li>
-      </ul>
-
-      <!-- Stats section -->
-      <div class="stats-card">
-        <h3 style="color: white; margin-bottom: 2rem;">Genus Power in Numbers</h3>
-        <div class="stats-grid">
-          <div>
-            <div class="stats-number">27%</div>
-            <div class="stats-label">Market Share in India</div>
-          </div>
-          <div>
-            <div class="stats-number">10M+</div>
-            <div class="stats-label">Annual Capacity</div>
-          </div>
-          <div>
-            <div class="stats-number">3</div>
-            <div class="stats-label">Manufacturing Plants</div>
-          </div>
-        </div>
-        <p style="color: #94a3b8; margin-top: 2rem; font-size: 0.9rem;">Jaipur • Haridwar • Guwahati</p>
-      </div>
-
-      <h2>Conclusion: The Future of Energy Management</h2>
-
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">Smart electric meters represent the future of energy management, offering automation, transparency, and efficiency. They enable real-time monitoring, accurate billing, and help consumers reduce their energy costs while contributing to grid stability and sustainability.</p>
-
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">As energy demands continue to grow, adopting smart metering technology will be crucial for optimizing energy consumption and promoting sustainability. Whether you need a single-phase or a three-phase meter, <strong>Genus Power</strong> provides cutting-edge solutions that cater to both residential and commercial energy needs.</p>
-
-      <h2>Connect with Genus Power</h2>
-
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">Genus Power is one of India's largest players in electricity metering solutions, holding a 27% market share. With manufacturing plants in Jaipur, Haridwar, and Guwahati, Genus Power boasts an annual installed capacity of over 10 million meters. To learn more about our advanced smart metering systems and how they can meet your energy requirements, <strong>contact us today</strong>!</p>
-
-      <!-- Tags section -->
-      <div class="post-tags">
-        <span class="post-tag"><i class="fas fa-tag"></i> smart-meter</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> electricity</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> energy</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> technology</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> genus-power</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> innovation</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> sustainability</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> india</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> smart-grid</span>
-      </div>
-    </div>
-
-    <!-- Share section -->
-    <div class="share-section">
-      <div class="share-title">
-        <i class="fas fa-share-alt"></i> Share this article
-      </div>
-      <div class="share-buttons">
-        <a href="#" class="share-btn facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="share-btn twitter"><i class="fab fa-twitter"></i></a>
-        <a href="#" class="share-btn linkedin"><i class="fab fa-linkedin-in"></i></a>
-        <a href="#" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
-      </div>
-    </div>
-
-    <!-- Back to blogs -->
-    <div style="text-align: center; margin: 3rem 0;">
-      <a href="../blogs.html" class="back-link" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
-        <i class="fas fa-arrow-left"></i> Back to all articles
-      </a>
-    </div>
-  </section>
-
-  <footer id="site-footer"></footer>
-
-  <!-- Go to Top -->
-  <script src="../assets/Scripts/gototop.js"></script>
-
-  <script>
-    // Share button functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      const shareButtons = document.querySelectorAll('.share-btn');
-      const pageUrl = encodeURIComponent(window.location.href);
-      const pageTitle = encodeURIComponent(document.title);
-
-      shareButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          
-          let shareUrl = '';
-          
-          if (btn.classList.contains('facebook')) {
-            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
-          } else if (btn.classList.contains('twitter')) {
-            shareUrl = `https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`;
-          } else if (btn.classList.contains('linkedin')) {
-            shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`;
-          } else if (btn.classList.contains('whatsapp')) {
-            shareUrl = `https://wa.me/?text=${pageTitle}%20${pageUrl}`;
-          }
-          
-          if (shareUrl) {
-            window.open(shareUrl, '_blank', 'width=600,height=400');
-          }
-        });
-      });
-    });
-  </script>
+    <!-- go to top button (already included via gototop.js) -->
+    <!-- note: gototop.js is loaded with defer, it will attach automatically -->
 </body>
 </html>
