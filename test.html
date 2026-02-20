@@ -3,241 +3,480 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>website steps · with header/footer</title>
-    <!-- common fonts used throughout the site -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-    <!-- common CSS (header, footer, global) — kept exactly as you use -->
-    <link rel="stylesheet" href="style.css">
-    <!-- site components (header/footer loader) -->
-    <script src="assets/Scripts/site-components.js" defer></script>
-    <!-- go to top script (common) -->
-    <script src="/assets/Scripts/gototop.js" defer></script>
-    <!-- only the steps card custom styles (minimal, integrated) -->
+    <title>Phrase · password generator</title>
     <style>
-        /* ensure body uses common background, flex column for sticky footer */
-        body {
-            background: #f4f7fb;           /* matches existing page */
-            font-family: 'Roboto', sans-serif;
+        /* =====================================================
+           RESET & GLOBAL (same base, no extra header/footer)
+        ===================================================== */
+        *,
+        *::before,
+        *::after {
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                         Roboto, Arial, sans-serif;
+            background: #f0f2f5;
+            line-height: 1.5;
+        }
+
+        /* =====================================================
+           WRAPPER (exact same class)
+        ===================================================== */
+        .password-wrapper {
             min-height: 100vh;
-        }
-
-        /* header & footer injected — they keep their original styles */
-        #site-header,
-        #site-footer {
-            flex-shrink: 0;
-        }
-
-        /* main content grows to fill space, centers the card */
-        .page-main {
-            flex: 1 0 auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px 24px;
+            padding: 20px;
+        }
+
+        /* =====================================================
+           CONTAINER (same look)
+        ===================================================== */
+        .password-generator-container {
             width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 520px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 28px 24px;
+            border-radius: 14px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.12);
         }
 
-        /* ----- redesigned steps card (fits perfectly with header/footer) ----- */
-        .custom-ol {
-            padding: 36px 42px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(5px);
-            max-width: 620px;
-            width: 100%;
-            border-radius: 56px 56px 56px 56px;
-            box-shadow: 0 24px 46px -16px rgba(0, 45, 80, 0.35), 0 8px 15px rgba(0,0,0,0.03);
-            font-family: "Roboto", sans-serif;
-            color: #073b4c;
-            border: 1px solid rgba(255,255,255,0.6);
-            transition: box-shadow 0.3s, transform 0.2s;
-        }
-
-        .custom-ol:hover {
-            box-shadow: 0 32px 58px -18px #0a2a4a;
-            transform: translateY(-3px);
-        }
-
-        /* heading with accent bar (like h3 from list pages) */
-        .custom-ol h2 {
-            font-size: 2.4rem;
+        /* =====================================================
+           TITLE (slightly adjusted for context)
+        ===================================================== */
+        .password-generator-container h1 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 20px;
+            font-size: clamp(22px, 5vw, 32px);
             font-weight: 700;
-            letter-spacing: -0.02em;
-            margin: 0 0 16px 0;
-            padding-left: 28px;
+        }
+
+        /* =====================================================
+           PASSWORD DISPLAY (unchanged structure)
+        ===================================================== */
+        .password-display {
+            background-color: #f7f7f7;
+            padding: 14px 16px;
+            border: 1px solid #dddddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            align-items: center;
             position: relative;
-            color: #0b2b40;
-            font-family: 'Poppins', sans-serif;
-            text-transform: uppercase;
-            border-bottom: 2px solid transparent;
-            display: inline-block;
         }
 
-        .custom-ol h2::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 8px;
-            bottom: 8px;
-            width: 8px;
-            background: linear-gradient(145deg, #e11d48, #b91c1c);
-            border-radius: 20px;
-            transition: 0.3s ease;
+        .password-text {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: clamp(14px, 4vw, 18px);
+            color: #333333;
+            word-break: break-all;
         }
 
-        .custom-ol:hover h2::before {
-            width: 14px;
-            background: linear-gradient(145deg, #2563eb, #1e3a8a);
+        /* =====================================================
+           COPY BUTTON (identical)
+        ===================================================== */
+        .copy-btn {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            position: relative;
         }
 
-        /* reset list */
-        .custom-ol ol {
-            margin: 32px 0 8px 0;
-            padding: 0;
-            list-style: none;
-            counter-reset: web-design;
+        .copy-btn svg {
+            width: 20px;
+            height: 20px;
         }
 
-        /* list items – spacious, refined hover effect */
-        .custom-ol ol li {
-            margin: 28px 0;
-            font-size: 1.35rem;
+        /* =====================================================
+           STRENGTH METER – repurposed as style hint (keeps layout)
+        ===================================================== */
+        .strength-text {
+            text-align: right;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .strength-meter {
+            height: 10px;
+            background-color: #dddddd;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .strength-meter-fill {
+            height: 100%;
+            width: 30%;
+            border-radius: 6px;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        /* =====================================================
+           SENTENCE INPUT (new, but styled like original options)
+        ===================================================== */
+        .sentence-area {
+            margin-bottom: 20px;
+        }
+        .sentence-label {
+            font-size: 15px;
+            color: #555555;
+            display: block;
+            margin-bottom: 8px;
             font-weight: 500;
+        }
+        .sentence-input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 15px;
+            border: 1px solid #dddddd;
+            border-radius: 10px;
+            background-color: #fafafa;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .sentence-input:focus {
+            outline: none;
+            border-color: #003049;
+            background-color: #ffffff;
+        }
+
+        /* =====================================================
+           OPTIONS – now three radio cards (Leetspeak, Mnemonic, Acronym)
+        ===================================================== */
+        .password-options {
+            margin-bottom: 24px;
+        }
+
+        .option-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .option-item label {
+            font-size: 15px;
+            color: #555555;
             display: flex;
             align-items: center;
-            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
-            padding: 8px 16px 8px 8px;
-            border-radius: 60px 20px 20px 60px;
-            cursor: default;
-            color: #1a2e3f;
-            background: transparent;
+            gap: 8px;
+            cursor: pointer;
         }
 
-        .custom-ol ol li:hover {
-            background: linear-gradient(105deg, #ffd166 0%, #fbbf24 100%);
-            transform: translateX(12px) scale(1.01);
-            box-shadow: 0 12px 24px -16px #b45309;
-            color: #0f172a;
+        /* custom radio – use same style as checkbox but round */
+        input[type="radio"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #003049;
+            border-radius: 50%; /* circle for radio */
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.25s, border-color 0.25s;
         }
 
-        /* step number (counter) – bigger, more presence */
-        .custom-ol ol li::before {
-            content: counter(web-design);
-            counter-increment: web-design;
-            margin-right: 28px;
-            font-size: 3rem;
-            font-weight: 800;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(130deg, #0b4b6f, #0a2472);
-            padding: 8px 24px;
-            border-radius: 0 28px 0 28px;
-            color: #f8fafc;
-            transition: all 0.4s ease;
-            line-height: 1;
-            box-shadow: 0 7px 0 #021b2b;
-            letter-spacing: -1px;
-            min-width: 84px;
-            text-align: center;
+        input[type="radio"]:checked {
+            background-color: #003049;
+            border-color: #003049;
         }
 
-        .custom-ol ol li:hover::before {
-            background: linear-gradient(145deg, #073b4c, #022c3a);
-            transform: scale(1.2) rotate(-3deg) translateY(-4px);
-            box-shadow: 0 12px 0 #02101a, 0 4px 20px rgba(0,180,255,0.4);
-            color: white;
-            border-radius: 20px 0 20px 0;
+        input[type="radio"]:checked::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
         }
 
-        /* fine tune last item */
-        .custom-ol ol li:last-child {
-            margin-bottom: 0;
+        input[type="radio"]:hover {
+            border-color: #001520;
         }
 
-        /* optional small footer note inside card – blends in */
-        .card-footer-note {
-            margin-top: 28px;
-            text-align: right;
-            font-size: 0.95rem;
-            opacity: 0.55;
-            letter-spacing: 0.3px;
-            font-style: italic;
-            border-top: 1px dashed rgba(0,40,70,0.1);
-            padding-top: 14px;
+        /* =====================================================
+           GENERATE BUTTON (same)
+        ===================================================== */
+        .generate-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #003049;
+            color: #ffffff;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        /* responsive: keep card comfortable on all devices */
-        @media (max-width: 600px) {
-            .page-main {
-                padding: 24px 16px;
-            }
-            .custom-ol {
-                padding: 28px 24px;
-                border-radius: 40px;
-            }
-            .custom-ol h2 {
-                font-size: 1.9rem;
-                padding-left: 22px;
-            }
-            .custom-ol ol li {
-                font-size: 1.15rem;
-                margin: 22px 0;
-            }
-            .custom-ol ol li::before {
-                font-size: 2.5rem;
-                min-width: 68px;
-                padding: 6px 14px;
-                margin-right: 20px;
-            }
+        .generate-btn:hover {
+            background-color: #001520;
         }
 
-        @media (max-width: 420px) {
-            .custom-ol h2 {
-                font-size: 1.6rem;
-            }
-            .custom-ol ol li {
-                font-size: 1rem;
-            }
-            .custom-ol ol li::before {
-                font-size: 2.1rem;
-                min-width: 58px;
-                padding: 6px 8px;
-            }
+        .generate-btn:active {
+            transform: translateY(1px);
         }
 
-        /* everything integrates: header & footer retain their original look */
+        /* =====================================================
+           TOOLTIP (same)
+        ===================================================== */
+        .tooltip {
+            position: absolute;
+            right: 0;
+            bottom: 110%;
+            background-color: #333333;
+            padding: 6px 10px;
+            color: #ffffff;
+            border-radius: 6px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+        }
+
+        /* =====================================================
+           SMALL SCREENS (same)
+        ===================================================== */
+        @media (max-width: 480px) {
+            .password-generator-container {
+                padding: 22px 18px;
+            }
+
+            .option-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .strength-text {
+                text-align: left;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- common header loaded via site-components.js -->
-    <div id="site-header"></div>
+<section class="password-wrapper">      <!-- using section as requested -->
+    <div class="password-generator-container">
+        <h1>✨ phrase2pass</h1>
 
-    <!-- main area that holds the steps card and centers it perfectly -->
-    <div class="page-main">
-        <div class="custom-ol">
-            <h2>Steps To Design A Website</h2>
-            <ol>
-                <li>The Planning Phase</li>
-                <li>Create The Wireframe</li>
-                <li>Design It</li>
-                <li>Write The Code</li>
-                <li>Publish The Website Online</li>
-            </ol>
-            <!-- a subtle card footer (purely decorative) -->
-            <div class="card-footer-note">5 streamlined steps · start today</div>
+        <!-- password display area (dynamic) -->
+        <div class="password-display">
+            <span class="password-text" id="generatedPassword">securePhrase42</span>
+            <button class="copy-btn" id="copyButton">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                </svg>
+                <span class="tooltip" id="tooltip">Copied!</span>
+            </button>
         </div>
+
+        <!-- strength meter kept for visual continuity (static) -->
+        <div class="strength-text">Style: <span id="styleHint">Leetspeak</span></div>
+        <div class="strength-meter">
+            <div id="strengthMeter" class="strength-meter-fill" style="width:60%; background-color:#588157;"></div>
+        </div>
+
+        <!-- SENTENCE input (new) -->
+        <div class="sentence-area">
+            <label for="sentenceInput" class="sentence-label">Your sentence / phrase</label>
+            <input type="text" id="sentenceInput" class="sentence-input" placeholder="e.g. I love secure passwords" value="My cat eats tuna">
+        </div>
+
+        <!-- three radio options: Leetspeak, Mnemonic, Acronym -->
+        <div class="password-options">
+            <div class="option-item">
+                <label for="leetRadio">
+                    <input type="radio" name="passStyle" id="leetRadio" value="leetspeak" checked> 🔣 Leetspeak
+                </label>
+                <span style="color:#777; font-size:13px;">1337</span>
+            </div>
+            <div class="option-item">
+                <label for="mneRadio">
+                    <input type="radio" name="passStyle" id="mneRadio" value="mnemonic"> 🧠 Mnemonic (initials)
+                </label>
+                <span style="color:#777; font-size:13px;">M.c.e.t</span>
+            </div>
+            <div class="option-item">
+                <label for="acroRadio">
+                    <input type="radio" name="passStyle" id="acroRadio" value="acronym"> 🔤 Acronym (caps)
+                </label>
+                <span style="color:#777; font-size:13px;">MCET</span>
+            </div>
+        </div>
+
+        <button class="generate-btn" id="generateBtn">Generate password</button>
     </div>
+</section>
 
-    <!-- common footer -->
-    <div id="site-footer"></div>
+<script>
+    (function() {
+        // ---------- DOM elements ----------
+        const passwordSpan = document.getElementById('generatedPassword');
+        const sentenceInput = document.getElementById('sentenceInput');
+        const leetRadio = document.getElementById('leetRadio');
+        const mneRadio = document.getElementById('mneRadio');
+        const acroRadio = document.getElementById('acroRadio');
+        const generateBtn = document.getElementById('generateBtn');
+        const copyBtn = document.getElementById('copyButton');
+        const tooltip = document.getElementById('tooltip');
+        const styleHint = document.getElementById('styleHint');
 
-    <!-- go to top button (already included via gototop.js) -->
-    <!-- note: gototop.js is loaded with defer, it will attach automatically -->
+        // ---------- helper functions ----------
+
+        // Leetspeak mapping (common, reversible style, some variations)
+        function toLeetspeak(phrase) {
+            const mapping = {
+                'a': '4', 'A': '4',
+                'e': '3', 'E': '3',
+                'i': '1', 'I': '1',
+                'o': '0', 'O': '0',
+                's': '5', 'S': '5',
+                't': '7', 'T': '7',
+                'b': '8', 'B': '8',
+                'g': '9', 'G': '9',
+                'l': '1', 'L': '1',  // l also becomes 1 (common)
+                'z': '2', 'Z': '2'
+            };
+            return phrase.split('').map(ch => mapping[ch] || ch).join('');
+        }
+
+        // Mnemonic: first letters (including potential apostrophe? keep simple: split by spaces, take first char, join with dot)
+        function toMnemonic(phrase) {
+            const words = phrase.trim().split(/\s+/);
+            if (words.length === 0 || (words.length === 1 && words[0] === '')) return '';
+            const initials = words.map(w => w.charAt(0).toUpperCase()).join('.');
+            return initials;  // e.g. "M.C.E.T"
+        }
+
+        // Acronym: first letters, uppercase, no separators
+        function toAcronym(phrase) {
+            const words = phrase.trim().split(/\s+/);
+            if (words.length === 0 || (words.length === 1 && words[0] === '')) return '';
+            return words.map(w => w.charAt(0).toUpperCase()).join('');
+        }
+
+        // core generate function based on selected style
+        function generatePassword() {
+            let sentence = sentenceInput.value.trim();
+            if (sentence === '') {
+                // fallback if empty
+                sentence = 'default phrase';
+            }
+
+            let result = '';
+            let styleName = 'Leetspeak';
+
+            if (leetRadio.checked) {
+                result = toLeetspeak(sentence);
+                styleName = 'Leetspeak';
+                // make sure it's not empty
+                if (result === '') result = 'leetspeak404';
+            } else if (mneRadio.checked) {
+                result = toMnemonic(sentence);
+                styleName = 'Mnemonic';
+                if (result === '') result = 'MNE';
+            } else if (acroRadio.checked) {
+                result = toAcronym(sentence);
+                styleName = 'Acronym';
+                if (result === '') result = 'ACRO';
+            }
+
+            // Extra: if result is too short, pad a little (but keep it phrase-like)
+            if (result.length < 4) {
+                if (styleName === 'Acronym' || styleName === 'Mnemonic') {
+                    // add a number from sentence length to avoid emptiness
+                    result = result + (sentence.length % 10);
+                } else {
+                    result = result + '#' + sentence.length;
+                }
+            }
+
+            passwordSpan.textContent = result;
+            styleHint.textContent = styleName;
+
+            // update meter fill just for fun – vary color (optional)
+            const meterFill = document.getElementById('strengthMeter');
+            if (meterFill) {
+                if (styleName === 'Leetspeak') {
+                    meterFill.style.backgroundColor = '#588157'; // greenish
+                    meterFill.style.width = '70%';
+                } else if (styleName === 'Mnemonic') {
+                    meterFill.style.backgroundColor = '#3a5a8c'; // blue
+                    meterFill.style.width = '55%';
+                } else {
+                    meterFill.style.backgroundColor = '#9c6b3e'; // brown/warm
+                    meterFill.style.width = '60%';
+                }
+            }
+        }
+
+        // ---------- event listeners ----------
+        generateBtn.addEventListener('click', generatePassword);
+
+        // also generate on page load to show initial demo (based on default sentence & Leetspeak)
+        window.addEventListener('DOMContentLoaded', () => {
+            generatePassword();
+        });
+
+        // copy functionality (identical to original, but using our tooltip)
+        copyBtn.addEventListener('click', async () => {
+            const textToCopy = passwordSpan.textContent;
+            if (!textToCopy) return;
+            try {
+                await navigator.clipboard.writeText(textToCopy);
+                tooltip.classList.add('visible');
+                setTimeout(() => {
+                    tooltip.classList.remove('visible');
+                }, 1500);
+            } catch (err) {
+                // fallback
+                alert('Copy failed, select manually');
+            }
+        });
+
+        // optional: generate when pressing enter in input
+        sentenceInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                generatePassword();
+            }
+        });
+
+        // minor: update style hint on radio change (visual)
+        [leetRadio, mneRadio, acroRadio].forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (radio.checked) {
+                    if (radio === leetRadio) styleHint.textContent = 'Leetspeak';
+                    else if (radio === mneRadio) styleHint.textContent = 'Mnemonic';
+                    else styleHint.textContent = 'Acronym';
+                }
+                // do not generate automatically, user clicks generate
+            });
+        });
+    })();
+</script>
+
+<!-- no header, footer, or nav – only section and content -->
 </body>
 </html>
