@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Cloud APIs: A Complete Beginner's Guide for WordPress & Blogger | Sarat Rout</title>
+  
+  <!-- Common CSS -->
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../post-styles.css">
+  <!-- Site components -->
+  <script src="../assets/Scripts/site-components.js" defer></script>
+  <!-- Post Common JavaScript -->
+  <script src="../assets/Scripts/post-common.js" defer></script>
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- Blog metadata for dynamic blogs.html -->
+  <meta name="blog:title" content="Google Cloud APIs: A Complete Beginner's Guide for WordPress & Blogger">
+  <meta name="blog:excerpt" content="Learn how to use Google Cloud APIs, API Keys, OAuth 2.0, Maps, YouTube, Drive, and Cloud Storage on WordPress and Blogger. Step-by-step guide for beginners by Sarat Rout.">
+  <meta name="blog:category" content="technology">
+  <meta name="blog:tags" content="google-cloud, api-keys, oauth2, wordpress, blogger, google-maps, youtube-api, google-drive, cloud-storage, web-development">
+  <meta name="blog:author" content="Sarat Rout">
+  <meta name="blog:date" content="2025-02-17">
+  <meta name="blog:readTime" content="12">
+  <meta name="blog:views" content="0">
+  <meta name="blog:icon" content="fa-cloud">
+
+  <style>
+    /* Additional styles for cloud API guide */
+    .cloud-hero {
+      background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      color: white;
+      text-align: center;
+    }
+    
+    /* ALL TEXT INSIDE CLOUD HERO IS WHITE */
+    .cloud-hero,
+    .cloud-hero h1,
+    .cloud-hero h2,
+    .cloud-hero h3,
+    .cloud-hero p,
+    .cloud-hero div,
+    .cloud-hero span {
+      color: white !important;
+    }
+    
+    .section-card {
+      background: white;
+      border-radius: 20px;
+      padding: 1.8rem;
+      margin: 2rem 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+    
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 0.8rem;
+    }
+    
+    .title-icon {
+      background: #4285F4;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    .domain-badge {
+      background: #f1f5f9;
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.3rem;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .domain-badge i {
+      color: #4285F4;
+    }
+    
+    .api-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    .api-card {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 1px solid #e2e8f0;
+      transition: transform 0.2s ease;
+    }
+    
+    .api-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(66, 133, 244, 0.1);
+    }
+    
+    .api-icon {
+      background: #4285F4;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+    
+    .api-name {
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.3rem;
+    }
+    
+    .platform-tabs {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .platform-tab {
+      flex: 1;
+      min-width: 250px;
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      border-top: 6px solid;
+    }
+    
+    .platform-tab.wordpress { border-top-color: #21759b; }
+    .platform-tab.blogger { border-top-color: #f57d00; }
+    
+    .code-block {
+      background: #1e293b;
+      color: #fbbf24;
+      padding: 1.2rem;
+      border-radius: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    
+    .code-block code {
+      color: #fbbf24;
+    }
+    
+    .security-box {
+      background: #dbeafe;
+      border-left: 6px solid #2563eb;
+      padding: 1.5rem;
+      border-radius: 0 16px 16px 0;
+      margin: 2rem 0;
+    }
+    
+    .security-box p, .security-box li {
+      color: #1e40af;
+    }
+    
+    .tip-box {
+      background: #fef3c7;
+      border-left: 6px solid #f59e0b;
+      padding: 1.2rem;
+      border-radius: 0 12px 12px 0;
+      margin: 1.5rem 0;
+    }
+    
+    .tip-box p {
+      color: #92400e;
+    }
+    
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin: 2rem 0;
+    }
+    
+    .comparison-table th {
+      background: #1e293b;
+      color: white;
+      padding: 1rem;
+      text-align: left;
+    }
+    
+    .comparison-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .file-id-example {
+      background: #f1f5f9;
+      padding: 0.8rem;
+      border-radius: 8px;
+      font-family: monospace;
+      word-break: break-all;
+    }
+    
+    .author-box {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 1.5rem;
+      border-radius: 16px;
+      margin: 2rem 0;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .conclusion-box {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 2rem;
+      border-radius: 24px;
+      margin: 3rem 0;
+    }
+    
+    .key-tag {
+      display: inline-block;
+      background: #4285F4;
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin: 0.2rem;
+    }
+  </style>
+</head>
+
+<body>
+  <header id="site-header"></header>
+
+  <!-- Main blog post section -->
+  <section class="blog-post-section">
+    <!-- Back to blogs link -->
+    <a href="../blogs.html" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to all articles
+    </a>
+
+    <!-- Post header -->
+    <div class="post-header">
+      <h1 class="post-title">Google Cloud APIs: A Complete Beginner's Guide</h1>
+      <p style="font-size: 1.1rem; color: #475569; margin: 0.5rem 0 0 0;">How to Use API Keys, OAuth 2.0, Maps, YouTube, Drive & Cloud Storage on WordPress and Blogger</p>
+      
+      <div class="post-meta">
+        <span><i class="fas fa-user"></i> Sarat Rout</span>
+        <span><i class="fas fa-calendar"></i> February 17, 2025</span>
+        <span><i class="fas fa-clock"></i> 12 min read</span>
+        <span class="category-tag"><i class="fas fa-tag"></i> Google Cloud</span>
+      </div>
+    </div>
+
+    <!-- Hero Image -->
+    <div class="hero-image">
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&h=450&q=80" 
+           alt="Google Cloud Platform"
+           loading="lazy"
+           onerror="this.src='https://via.placeholder.com/1200x450?text=Google+Cloud+APIs'">
+      <div class="hero-caption">
+        <i class="fas fa-camera"></i> Google Cloud Console – API & Services Dashboard
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="post-content">
+      
+      <!-- INTRODUCTION -->
+      <div class="cloud-hero">
+        <i class="fas fa-cloud" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+        <h2 style="color: white; margin: 0 0 1rem 0;">Your Google Cloud Dashboard Explained</h2>
+        <p style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">You've shared what appears to be a snapshot of your Google Cloud Console API & Services dashboard, showing API Keys, OAuth 2.0 Client IDs, and enabled APIs like Maps, YouTube, and Cloud Storage for domains like <strong>saratoffice.in</strong> and <strong>saratoffice.blogspot.com</strong>. Let's break this down step by step.</p>
+      </div>
+      
+      <!-- DOMAINS YOU'RE USING -->
+      <div style="text-align: center; margin: 2rem 0;">
+        <span class="domain-badge"><i class="fas fa-globe"></i> saratoffice.in</span>
+        <span class="domain-badge"><i class="fas fa-globe"></i> saratoffice.blogspot.com</span>
+      </div>
+      
+      <!-- 🧠 WHAT ARE API KEYS AND OAUTH 2.0? -->
+      <h2>🧠 What Are API Keys and OAuth 2.0 Client IDs?</h2>
+      
+      <div class="section-card">
+        <h3>▶️ API Keys</h3>
+        <p>An API key is a unique identifier used to authenticate requests to Google APIs. It allows your website or app to access Google services like:</p>
+        <ul>
+          <li>Maps</li>
+          <li>YouTube Data</li>
+          <li>Google Analytics</li>
+          <li>Cloud Storage</li>
+        </ul>
+        <p>Each API key can be restricted to specific services or HTTP referrers (like your domain), increasing security.</p>
+        
+        <h3 style="margin-top: 2rem;">▶️ OAuth 2.0 Client IDs</h3>
+        <p>These are used for secure user authentication—especially when your website or app accesses a user's private Google data (like Google Drive or YouTube uploads). OAuth enables:</p>
+        <ul>
+          <li>Google Sign-In on your website</li>
+          <li>Accessing a user's files with their permission</li>
+        </ul>
+      </div>
+      
+      <!-- 🔧 APIs YOU'VE ENABLED -->
+      <h2>🔧 APIs You've Enabled – and Their Uses</h2>
+      
+      <div class="api-grid">
+        <div class="api-card">
+          <div class="api-icon"><i class="fas fa-map-marked-alt"></i></div>
+          <div class="api-name">Maps JavaScript API</div>
+          <p>Embed interactive maps on your site – show locations, markers, and routes. Perfect for office locations or stores.</p>
+        </div>
+        
+        <div class="api-card">
+          <div class="api-icon"><i class="fas fa-map-pin"></i></div>
+          <div class="api-name">Geocoding API</div>
+          <p>Convert addresses into geographic coordinates (and vice versa). Use for location search or directions.</p>
+        </div>
+        
+        <div class="api-card">
+          <div class="api-icon"><i class="fas fa-mountain"></i></div>
+          <div class="api-name">Maps Elevation API</div>
+          <p>Provides elevation data – useful for travel or hiking apps.</p>
+        </div>
+        
+        <div class="api-card">
+          <div class="api-icon"><i class="fas fa-code"></i></div>
+          <div class="api-name">Maps Embed API</div>
+          <p>Embed a map as an &lt;iframe&gt; – easier alternative to JavaScript API.</p>
+        </div>
+        
+        <div class="api-card">
+          <div class="api-icon"><i class="fab fa-youtube"></i></div>
+          <div class="api-name">YouTube Data API v3</div>
+          <p>Display playlists, videos, and channel info on your site. Automate content from YouTube to your blog.</p>
+        </div>
+        
+        <div class="api-card">
+          <div class="api-icon"><i class="fas fa-chart-bar"></i></div>
+          <div class="api-name">YouTube Reporting API</div>
+          <p>Get bulk reports about your YouTube channel (views, earnings, etc.)</p>
+        </div>
+        
+        <div class="api-card">
+          <div class="api-icon"><i class="fab fa-google"></i></div>
+          <div class="api-name">Google Analytics API</div>
+          <p>Get analytics data programmatically – show most visited pages on your site.</p>
+        </div>
+        
+        <div class="api-card">
+          <div class="api-icon"><i class="fab fa-google-drive"></i></div>
+          <div class="api-name">Google Drive API</div>
+          <p>Embed or interact with Google Drive files (Docs, PDFs, Sheets).</p>
+        </div>
+        
+        <div class="api-card">
+          <div class="api-icon"><i class="fas fa-database"></i></div>
+          <div class="api-name">Cloud Storage & API</div>
+          <p>Store and serve files (images, videos, backups) – fast-loading assets for WordPress/Blogger.</p>
+        </div>
+      </div>
+      
+      <!-- 🖥️ USING APIs ON WORDPRESS AND BLOGGER -->
+      <h2>🖥️ Using These APIs on WordPress and Blogger</h2>
+      
+      <div class="platform-tabs">
+        <!-- WordPress Tab -->
+        <div class="platform-tab wordpress">
+          <div style="font-size: 2rem; color: #21759b; margin-bottom: 0.5rem;">
+            <i class="fab fa-wordpress"></i>
+          </div>
+          <h3 style="margin-top: 0;">WordPress</h3>
+          
+          <h4>🔹 1. Embed Google Maps</h4>
+          <ul>
+            <li>Install a plugin like <strong>WP Google Maps</strong> or <strong>Elementor</strong></li>
+            <li>Go to Google Cloud Console → Enable Maps JavaScript API</li>
+            <li>Copy the API Key and paste into plugin settings</li>
+          </ul>
+          
+          <h4>🔹 2. YouTube API Integration</h4>
+          <ul>
+            <li>Use plugins like <strong>Smash Balloon YouTube Feed</strong></li>
+            <li>Configure API key and Channel ID to auto-display videos</li>
+          </ul>
+          
+          <h4>🔹 3. Google Analytics API</h4>
+          <ul>
+            <li>Use <strong>MonsterInsights</strong> or <strong>Site Kit by Google</strong></li>
+            <li>Connect your site with Google Analytics</li>
+          </ul>
+          
+          <h4>🔹 4. Cloud Storage for WordPress</h4>
+          <ul>
+            <li>Store images/files on Google Cloud Storage to reduce server load</li>
+            <li>Use plugin <strong>WP Stateless</strong> to connect your site</li>
+            <li>You'll need your Service Account Key (.json file)</li>
+          </ul>
+        </div>
+        
+        <!-- Blogger Tab -->
+        <div class="platform-tab blogger">
+          <div style="font-size: 2rem; color: #f57d00; margin-bottom: 0.5rem;">
+            <i class="fab fa-blogger"></i>
+          </div>
+          <h3 style="margin-top: 0;">Blogger (Blogspot)</h3>
+          
+          <h4>🔹 1. Embed Google Maps</h4>
+          <p>Use Maps Embed API with an iframe:</p>
+          <div class="code-block">
+            &lt;iframe src="https://www.google.com/maps/embed?pb=YOUR_MAP_CODE" width="600" height="450"&gt;&lt;/iframe&gt;
+          </div>
+          
+          <h4>🔹 2. Embed YouTube Data</h4>
+          <p>Use YouTube Data API with JavaScript:</p>
+          <div class="code-block">
+            &lt;script src="https://apis.google.com/js/api.js"&gt;&lt;/script&gt;<br>
+            &lt;script&gt;<br>
+            &nbsp;&nbsp;function start() {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;gapi.client.setApiKey("YOUR_API_KEY");<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;gapi.client.load("youtube", "v3", function() {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var request = gapi.client.youtube.search.list({<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;part: "snippet",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q: "YourChannelName",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type: "video"<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;request.execute(function(response) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Loop and display videos<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;});<br>
+            &nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;gapi.load("client", start);<br>
+            &lt;/script&gt;
+          </div>
+          
+          <h4>🔹 3. Use Google Drive API for File Embeds</h4>
+          <p>Embed PDFs or images from Drive:</p>
+          <div class="code-block">
+            &lt;iframe src="https://drive.google.com/file/d/YOUR_FILE_ID/preview" width="640" height="480"&gt;&lt;/iframe&gt;
+          </div>
+        </div>
+      </div>
+      
+      <!-- 📂 GOOGLE DRIVE API DETAILS -->
+      <h2>📂 Google Drive API — Embed Files on Your Site</h2>
+      
+      <div class="section-card">
+        <h3>✅ How to Embed Google Drive Files (PDFs, Docs, etc.)</h3>
+        
+        <div class="steps-list">
+          <div class="step-item"><span class="step-number">1</span> Upload the file to your Google Drive</div>
+          <div class="step-item"><span class="step-number">2</span> Change Sharing Settings: Right-click → "Share" → "Anyone with the link can view"</div>
+          <div class="step-item"><span class="step-number">3</span> Get the File ID from the shareable link:</div>
+        </div>
+        
+        <div class="file-id-example">
+          https://drive.google.com/file/d/<strong style="color: #2563eb;">1A2B3C4D5E6F7G8H</strong>/view → ID = <strong>1A2B3C4D5E6F7G8H</strong>
+        </div>
+        
+        <div class="step-item"><span class="step-number">4</span> Use this iframe code:</div>
+        
+        <div class="code-block">
+          &lt;iframe src="https://drive.google.com/file/d/YOUR_FILE_ID/preview" width="640" height="480" allow="autoplay"&gt;&lt;/iframe&gt;
+        </div>
+        
+        <h4 style="margin-top: 2rem;">✅ Advanced: List Files from Drive Using API</h4>
+        <div class="code-block">
+          &lt;script src="https://apis.google.com/js/api.js"&gt;&lt;/script&gt;<br>
+          &lt;script&gt;<br>
+          &nbsp;&nbsp;function start() {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;gapi.client.setApiKey('YOUR_API_KEY');<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;gapi.client.load('drive', 'v3', function() {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var request = gapi.client.drive.files.list({<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q: "'FOLDER_ID' in parents and trashed = false",<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fields: "files(id, name, webViewLink)"<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;request.execute(function(response) {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var files = response.files;<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;files.forEach(file =&gt; {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;document.write(`&lt;a href="${file.webViewLink}" target="_blank"&gt;${file.name}&lt;/a&gt;&lt;br&gt;`);<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;});<br>
+          &nbsp;&nbsp;}<br>
+          &nbsp;&nbsp;gapi.load('client', start);<br>
+          &lt;/script&gt;
+        </div>
+        <p class="tip-box" style="margin-top: 0.5rem;">⚠️ Files or folder must be public or shared to "Anyone with the link"</p>
+      </div>
+      
+      <!-- ☁️ GOOGLE CLOUD STORAGE -->
+      <h2>☁️ Google Cloud Storage API — Host and Serve Files</h2>
+      
+      <div class="section-card">
+        <h3>🚀 Why Use Cloud Storage?</h3>
+        <ul>
+          <li>High-speed delivery of images, PDFs, videos</li>
+          <li>More control over file access</li>
+          <li>Reduce load on your WordPress server</li>
+        </ul>
+        
+        <h4>✅ Step-by-Step: Create a Bucket and Upload Files</h4>
+        
+        <div class="steps-list">
+          <div class="step-item"><span class="step-number">1</span> Go to Google Cloud Console → Cloud Storage → Create Bucket</div>
+          <div class="step-item"><span class="step-number">2</span> Name: unique (e.g., saratoffice-assets)</div>
+          <div class="step-item"><span class="step-number">3</span> Location: Multi-region for best performance</div>
+          <div class="step-item"><span class="step-number">4</span> Access Control: Uniform</div>
+          <div class="step-item"><span class="step-number">5</span> Upload files, then make public: Click file → Edit Permissions → Add allUsers with Storage Object Viewer</div>
+        </div>
+        
+        <h4>✅ Get Public URL</h4>
+        <div class="code-block">
+          https://storage.googleapis.com/[BUCKET_NAME]/[FILE_NAME]
+        </div>
+        
+        <h4>✅ Use in HTML</h4>
+        <div class="code-block">
+          &lt;img src="https://storage.googleapis.com/saratoffice-assets/banner.jpg" width="100%" /&gt;<br>
+          &lt;iframe src="https://storage.googleapis.com/saratoffice-assets/doc.pdf" width="640" height="480"&gt;&lt;/iframe&gt;
+        </div>
+        
+        <h4>✅ WordPress Plugin: WP Stateless</h4>
+        <p>Automatically upload future media to Cloud Storage – connect with Service Account JSON key.</p>
+      </div>
+      
+      <!-- 🔐 SECURITY BEST PRACTICES -->
+      <h2>🔐 Security Best Practices</h2>
+      
+      <div class="security-box">
+        <ol>
+          <li><strong>Restrict API Keys</strong> – Use HTTP Referrer Restrictions to limit API use to your domains: saratoffice.in and saratoffice.blogspot.com</li>
+          <li><strong>Monitor Usage</strong> – Go to Google Cloud Console → Monitoring → Set alerts for high API usage</li>
+          <li><strong>Billing & Quotas</strong> – Some APIs have free monthly quotas; exceeding them will charge your billing account</li>
+          <li><strong>Don't share keys</strong> – Never expose keys in public repositories or front-end code if not necessary</li>
+        </ol>
+      </div>
+      
+      <!-- COMPARISON TABLE -->
+      <h2>📊 Google Drive vs. Cloud Storage – Which to Use?</h2>
+      
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Google Drive API</th>
+            <th>Cloud Storage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Best for</strong></td>
+            <td>Embedding Docs, PDFs, Sheets</td>
+            <td>Hosting images, videos, large files</td>
+          </tr>
+          <tr>
+            <td><strong>Permissions</strong></td>
+            <td>Can embed shared files (view-only)</td>
+            <td>Full control – public or private</td>
+          </tr>
+          <tr>
+            <td><strong>Link format</strong></td>
+            <td>drive.google.com/file/.../preview</td>
+            <td>storage.googleapis.com/bucket/...</td>
+          </tr>
+          <tr>
+            <td><strong>WordPress Use</strong></td>
+            <td>Embed via HTML or plugin</td>
+            <td>Host media, integrate with WP Stateless</td>
+          </tr>
+          <tr>
+            <td><strong>Blogger Use</strong></td>
+            <td>Iframe embed</td>
+            <td>Direct link embed</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <!-- BONUS TIPS -->
+      <div class="tip-box">
+        <h4 style="margin-top: 0; color: #92400e;">💡 Bonus Tips</h4>
+        <ul>
+          <li><strong>Maps:</strong> Use Maps Embed API for simple maps (just an iframe)</li>
+          <li><strong>YouTube:</strong> Use YouTube Data API to auto-update latest videos on your site</li>
+          <li><strong>Analytics:</strong> Site Kit by Google connects WordPress to Analytics in one click</li>
+          <li><strong>Cloud Storage:</strong> Set Object Lifecycle Rules for automatic backups</li>
+        </ul>
+      </div>
+      
+      <!-- AUTHOR BOX -->
+      <div class="author-box">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="background: #4285F4; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <div>
+            <h4 style="margin: 0;">About the Author</h4>
+            <p style="margin: 0.3rem 0 0 0;"><strong>Sarat Rout</strong> is a web developer and technology writer specializing in Google Cloud integrations, WordPress development, and API implementations.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- SUMMARY -->
+      <div class="conclusion-box">
+        <h3 style="margin-top: 0;">📘 Summary – Your Quick Action Plan</h3>
+        
+        <table style="width: 100%;">
+          <tr>
+            <td><strong>Task</strong></td>
+            <td><strong>Action</strong></td>
+          </tr>
+          <tr>
+            <td>Show location maps</td>
+            <td>Enable Maps JavaScript API + embed map</td>
+          </tr>
+          <tr>
+            <td>Show YouTube videos</td>
+            <td>Use YouTube Data API + plugin or embed</td>
+          </tr>
+          <tr>
+            <td>Host fast images/files</td>
+            <td>Upload to Cloud Storage, embed URLs</td>
+          </tr>
+          <tr>
+            <td>Add analytics</td>
+            <td>Use Site Kit or Analytics API</td>
+          </tr>
+          <tr>
+            <td>Embed PDFs/Docs</td>
+            <td>Use Google Drive iframe preview</td>
+          </tr>
+          <tr>
+            <td>Authenticate users</td>
+            <td>Use OAuth 2.0 Client ID for Google Sign-In</td>
+          </tr>
+        </table>
+      </div>
+      
+      <!-- KEY TAGS -->
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 2rem 0;">
+        <span class="key-tag">API Keys</span>
+        <span class="key-tag">OAuth 2.0</span>
+        <span class="key-tag">Google Maps</span>
+        <span class="key-tag">YouTube API</span>
+        <span class="key-tag">Google Drive</span>
+        <span class="key-tag">Cloud Storage</span>
+        <span class="key-tag">WordPress</span>
+        <span class="key-tag">Blogger</span>
+        <span class="key-tag">saratoffice.in</span>
+      </div>
+      
+      <!-- Tags section -->
+      <div class="post-tags">
+        <span class="post-tag"><i class="fas fa-tag"></i> google-cloud</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> api-keys</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> oauth2</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> wordpress</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> blogger</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> google-maps</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> youtube-api</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> google-drive</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> cloud-storage</span>
+      </div>
+    </div>
+
+    <!-- Share section -->
+    <div class="share-section">
+      <div class="share-title">
+        <i class="fas fa-share-alt"></i> Share this article
+      </div>
+      <div class="share-buttons">
+        <a href="#" class="share-btn facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="share-btn twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="share-btn linkedin"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+
+    <!-- Back to blogs -->
+    <div style="text-align: center; margin: 3rem 0;">
+      <a href="../blogs.html" class="back-link" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
+        <i class="fas fa-arrow-left"></i> Back to all articles
+      </a>
+    </div>
+  </section>
+
+  <footer id="site-footer"></footer>
+</body>
+</html>
