@@ -10,6 +10,10 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,6 +36,9 @@ jobs:
           MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: |
           echo "🔧 Generating config.map.js..."
+          echo "Current directory: $(pwd)"
+          echo "Files before generation:"
+          ls -la
           
           # Create config file with proper formatting
           cat > config.map.js << EOF
@@ -42,19 +49,33 @@ jobs:
             OFFICE_ANNEX: { lat: 21.235850, lng: 86.632800, title: "Sarat Office (Annex)" },
             MAP_OPTIONS: { zoom: 8, mapTypeId: 'roadmap', gestureHandling: 'greedy' }
           };
+          console.log('✅ MAP_CONFIG loaded from generated file');
           EOF
           
           echo "✅ config.map.js generated"
-          echo "File content preview:"
-          head -5 config.map.js
-      
-      - name: List all files
-        run: |
-          echo "📂 Files in root:"
+          echo "Files after generation:"
           ls -la
           echo ""
-          echo "📂 config.map.js details:"
-          ls -la config.map.js
+          echo "File content preview:"
+          head -5 config.map.js
+          echo "..."
+          tail -2 config.map.js
+      
+      - name: Verify config.map.js exists
+        run: |
+          if [ -f "config.map.js" ]; then
+            echo "✅ config.map.js exists"
+            file_size=$(wc -c < "config.map.js")
+            echo "File size: $file_size bytes"
+          else
+            echo "❌ config.map.js NOT FOUND!"
+            exit 1
+          fi
+      
+      - name: List all JavaScript files
+        run: |
+          echo "📂 All .js files in repository:"
+          find . -name "*.js" -type f | sort
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -71,3 +92,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Post-deployment URL
+        run: |
+          echo "🚀 Site deployed to: ${{ steps.deployment.outputs.page_url }}"
+          echo "Config file should be at: ${{ steps.deployment.outputs.page_url }}config.map.js"
