@@ -1,6 +1,18 @@
+name: Generate Map Config
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,20 +28,30 @@ jobs:
           echo "  MAP_OPTIONS: { zoom: 8, mapTypeId: 'roadmap', gestureHandling: 'greedy' }" >> config.map.js
           echo "};" >> config.map.js
           
-      # 🔴 ADD THE DEBUG STEP HERE - RIGHT AFTER GENERATION
+          # Verify the file was created
+          echo "✅ Generated config.map.js with content:"
+          cat config.map.js
+          
       - name: Debug - List files before upload
         run: |
           echo "📂 Current directory contents:"
           ls -la
           echo ""
-          echo "📄 Content of config.map.js (first 10 lines):"
-          head -10 config.map.js
+          echo "📄 Content of config.map.js:"
+          cat config.map.js
           echo ""
           echo "📊 File stats:"
           wc -l config.map.js
           echo "File size: $(du -h config.map.js | cut -f1)"
       
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '.'  # This uploads everything including config.map.js
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
