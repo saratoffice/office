@@ -434,67 +434,89 @@
 <!-- ⭐ SMART CONFIG LOADER WITH PATH DETECTION ⭐ -->
 <script>
 (function() {
-  // Create a global config object with fallback
+  // Create a global config object with NO hardcoded key
   window.MAP_CONFIG = {
-    GOOGLE_MAPS_API_KEY: 'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys', // Fallback
+    // NO FALLBACK API KEY HERE!
     OFFICE_MAIN: { lat: 20.691424, lng: 83.474194, title: "Sarat Office (Main)" },
     OFFICE_ANNEX: { lat: 21.235850, lng: 86.632800, title: "Sarat Office (Annex)" },
     MAP_OPTIONS: { zoom: 8, mapTypeId: 'roadmap', gestureHandling: 'greedy' }
   };
   
-  // Simple approach - just try to load the config file
+  // Track if config was loaded
+  let configLoaded = false;
+  
+  // Load the config file (which contains the real API key from GitHub Secrets)
   function loadConfig() {
     const script = document.createElement('script');
     
-    // Try root path first (most common for GitHub Pages)
-    script.src = '/config.map.js?v=' + Date.now();
+    // Try multiple paths for GitHub Pages
+    const paths = [
+      '/config.map.js',
+      './config.map.js',
+      'config.map.js'
+    ];
     
-    script.onload = () => {
-      console.log('✅ config.map.js loaded successfully');
-      loadMap();
-    };
+    let attempt = 0;
     
-    script.onerror = () => {
-      console.log('⚠️ config.map.js not found, using fallback API key');
-      // Show warning but don't block map loading
-      showConfigWarning();
-      loadMap();
-    };
+    function tryNextPath() {
+      if (attempt >= paths.length) {
+        console.error('❌ Could not load config.map.js from any path');
+        showError('Failed to load map configuration. Please refresh the page.');
+        return;
+      }
+      
+      const script = document.createElement('script');
+      script.src = paths[attempt] + '?v=' + Date.now();
+      
+      script.onload = () => {
+        console.log('✅ Config loaded from:', paths[attempt]);
+        configLoaded = true;
+        
+        // Check if we actually got an API key
+        if (!window.MAP_CONFIG || !window.MAP_CONFIG.GOOGLE_MAPS_API_KEY) {
+          showError('API key not found in configuration');
+          return;
+        }
+        
+        loadMap();
+      };
+      
+      script.onerror = () => {
+        console.log('❌ Failed to load from:', paths[attempt]);
+        attempt++;
+        tryNextPath();
+      };
+      
+      document.head.appendChild(script);
+    }
     
-    document.head.appendChild(script);
+    tryNextPath();
   }
   
-  function showConfigWarning() {
-    // Only show warning in development/debug mode
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      const warning = document.createElement('div');
-      warning.id = 'config-warning';
-      warning.style.cssText = `
-        background: #fff3cd;
-        color: #856404;
-        padding: 10px 20px;
-        text-align: center;
-        font-family: monospace;
-        border-bottom: 2px solid #ffeeba;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        font-size: 14px;
+  function showError(message) {
+    const mapDiv = document.getElementById('map');
+    if (mapDiv) {
+      mapDiv.innerHTML = `
+        <div style="text-align:center; padding:50px; background:#f8d7da; color:#721c24; border-radius:8px;">
+          ❌ ${message}
+        </div>
       `;
-      warning.innerHTML = '⚠️ Using fallback API key (config.map.js not found). ' +
-                          '<button onclick="this.parentElement.remove()" style="margin-left:10px;padding:2px 10px;">Dismiss</button>';
-      document.body.insertBefore(warning, document.body.firstChild);
     }
   }
   
   function loadMap() {
+    if (!window.MAP_CONFIG || !window.MAP_CONFIG.GOOGLE_MAPS_API_KEY) {
+      showError('Map configuration missing');
+      return;
+    }
+    
     if (typeof google === 'undefined') {
       const script = document.createElement('script');
       script.src = `https://maps.googleapis.com/maps/api/js?key=${window.MAP_CONFIG.GOOGLE_MAPS_API_KEY}&callback=initMap`;
       script.async = true;
       script.defer = true;
       script.onerror = () => {
-        document.getElementById('map').innerHTML = '<div style="text-align:center; padding:50px; color:#721c24;">❌ Failed to load Google Maps</div>';
+        showError('Failed to load Google Maps');
       };
       document.head.appendChild(script);
     } else {
@@ -534,7 +556,7 @@
     bounds.extend({ lat: pos2.lat, lng: pos2.lng });
     map.fitBounds(bounds);
     
-    console.log('✅ Map initialized');
+    console.log('✅ Map initialized successfully');
   };
   
   // Start loading when DOM is ready
@@ -547,6 +569,7 @@
   });
 })();
 </script>
+  
 <style>
 .map-loading {
   position: absolute;
