@@ -21,7 +21,13 @@ jobs:
         env:
           MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: |
-          # Create config file with the secret API key from GitHub Secrets
+          # Check if secret exists
+          if [ -z "${{ secrets.GOOGLE_MAPS_API_KEY }}" ]; then
+            echo "❌ ERROR: GOOGLE_MAPS_API_KEY secret is not set!"
+            exit 1
+          fi
+          
+          # Create config file
           echo "window.MAP_CONFIG = {" > config.map.js
           echo "  GOOGLE_MAPS_API_KEY: '${{ secrets.GOOGLE_MAPS_API_KEY }}'," >> config.map.js
           echo "  OFFICE_MAIN: { lat: 20.691424, lng: 83.474194, title: 'Sarat Office (Main)' }," >> config.map.js
@@ -29,27 +35,56 @@ jobs:
           echo "  MAP_OPTIONS: { zoom: 8, mapTypeId: 'roadmap', gestureHandling: 'greedy' }" >> config.map.js
           echo "};" >> config.map.js
           
-          # Verify the file was created (without exposing the key in logs)
-          echo "✅ Generated config.map.js successfully"
+          echo "✅ config.map.js generated successfully"
           
-      - name: Debug - Check file exists
+      - name: Debug - Show file structure
         run: |
           echo "📂 Current directory contents:"
           ls -la
           echo ""
-          echo "📊 File stats:"
-          wc -l config.map.js
-          echo "File size: $(du -h config.map.js | cut -f1)"
-          # Don't cat the file to avoid exposing the key in logs
+          echo "📂 Root directory contents:"
+          ls -la /
+          echo ""
+          echo "📄 Checking config.map.js:"
+          if [ -f "config.map.js" ]; then
+            echo "✅ config.map.js exists"
+            echo "📊 File size: $(du -h config.map.js | cut -f1)"
+            echo "📊 Line count: $(wc -l config.map.js)"
+            # Show first line only (doesn't expose the full key)
+            echo "📄 First line: $(head -1 config.map.js)"
+          else
+            echo "❌ config.map.js NOT FOUND!"
+            exit 1
+          fi
       
+      - name: Create deployment directory
+        run: |
+          # Create a clean deployment directory
+          mkdir -p deployment
+          # Copy all files to deployment directory
+          cp -r * deployment/ 2>/dev/null || :
+          cp -r .??* deployment/ 2>/dev/null || :
+          # Make sure config.map.js is there
+          if [ -f "deployment/config.map.js" ]; then
+            echo "✅ config.map.js copied to deployment directory"
+          else
+            echo "❌ Failed to copy config.map.js to deployment directory"
+            exit 1
+          fi
+          
+      - name: Debug - Show deployment directory
+        run: |
+          echo "📂 Deployment directory contents:"
+          ls -la deployment/
+          
       - name: Setup Pages
         uses: actions/configure-pages@v4
-      
+        
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
-      
+          path: 'deployment'
+          
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
