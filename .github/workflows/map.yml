@@ -14,19 +14,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
       
       - name: Generate config.map.js
         env:
           MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: |
-          echo "window.MAP_CONFIG = {
-            GOOGLE_MAPS_API_KEY: '$MAPS_API_KEY',
-            OFFICE_MAIN: { lat: 20.691424, lng: 83.474194, title: 'Sarat Office (Main)' },
-            OFFICE_ANNEX: { lat: 21.235850, lng: 86.632800, title: 'Sarat Office (Annex)' },
-            MAP_OPTIONS: { zoom: 8, mapTypeId: 'roadmap', gestureHandling: 'greedy' }
-          };" > config.map.js
+          echo "window.MAP_CONFIG = {" > config.map.js
+          echo "  GOOGLE_MAPS_API_KEY: '${{ secrets.GOOGLE_MAPS_API_KEY }}'," >> config.map.js
+          echo "  OFFICE_MAIN: { lat: 20.691424, lng: 83.474194, title: 'Sarat Office (Main)' }," >> config.map.js
+          echo "  OFFICE_ANNEX: { lat: 21.235850, lng: 86.632800, title: 'Sarat Office (Annex)' }," >> config.map.js
+          echo "  MAP_OPTIONS: { zoom: 8, mapTypeId: 'roadmap', gestureHandling: 'greedy' }" >> config.map.js
+          echo "};" >> config.map.js
+          echo "console.log('✅ MAP_CONFIG loaded');" >> config.map.js
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -34,9 +35,12 @@ jobs:
           path: '.'
           
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Deploy
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
-
