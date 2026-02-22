@@ -3,20 +3,12 @@ name: Map Config Deploy
 on:
   push:
     branches: [ "main", "master" ]
-    paths:
-      - 'index.html'
-      - 'config.map.template.js'
-      - 'assets/**'
   workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
   build:
@@ -29,18 +21,40 @@ jobs:
         run: |
           if [ "${{ secrets.GOOGLE_MAPS_API_KEY }}" != "" ]; then
             echo "✅ GOOGLE_MAPS_API_KEY secret is set"
+            echo "Key length: ${#secrets.GOOGLE_MAPS_API_KEY}"
           else
             echo "❌ GOOGLE_MAPS_API_KEY secret is NOT set"
             exit 1
           fi
       
-      - name: Generate config.map.js from template
+      - name: Generate config.map.js
         env:
           MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: |
           echo "🔧 Generating config.map.js..."
-          sed "s|{{GOOGLE_MAPS_API_KEY}}|${MAPS_API_KEY}|g" config.map.template.js > config.map.js
+          
+          # Create config file with proper formatting
+          cat > config.map.js << EOF
+          // Generated on $(date)
+          window.MAP_CONFIG = {
+            GOOGLE_MAPS_API_KEY: '${MAPS_API_KEY}',
+            OFFICE_MAIN: { lat: 20.691424, lng: 83.474194, title: "Sarat Office (Main)" },
+            OFFICE_ANNEX: { lat: 21.235850, lng: 86.632800, title: "Sarat Office (Annex)" },
+            MAP_OPTIONS: { zoom: 8, mapTypeId: 'roadmap', gestureHandling: 'greedy' }
+          };
+          EOF
+          
           echo "✅ config.map.js generated"
+          echo "File content preview:"
+          head -5 config.map.js
+      
+      - name: List all files
+        run: |
+          echo "📂 Files in root:"
+          ls -la
+          echo ""
+          echo "📂 config.map.js details:"
+          ls -la config.map.js
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
