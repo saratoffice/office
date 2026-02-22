@@ -431,144 +431,169 @@
 <script src="/assets/Scripts/gototop.js"></script>
 
 <!-- Google Maps API with callback and error handling -->
+<!-- ⭐ SMART CONFIG LOADER WITH PATH DETECTION ⭐ -->
 <script>
-  // Global flag to track if map initialized
-  window.mapInitialized = false;
+(function() {
+  // Create a global config object with fallback
+  window.MAP_CONFIG = {
+    GOOGLE_MAPS_API_KEY: 'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys', // Fallback
+    OFFICE_MAIN: { lat: 20.691424, lng: 83.474194, title: "Sarat Office (Main)" },
+    OFFICE_ANNEX: { lat: 21.235850, lng: 86.632800, title: "Sarat Office (Annex)" },
+    MAP_OPTIONS: { zoom: 8, mapTypeId: 'roadmap', gestureHandling: 'greedy' }
+  };
   
-  // Configuration
-  const pos1 = { lat: 20.691424, lng: 83.474194 };
-  const pos2 = { lat: 21.235850, lng: 86.632800 };
-
-  // Initialize map function (called by Google Maps API)
+  // Detect correct base path
+  function getBasePath() {
+    const path = window.location.pathname;
+    // If we're in a subdirectory (like /repo-name/)
+    if (path.split('/').length > 2) {
+      return path.split('/').slice(0, -1).join('/') + '/';
+    }
+    return '/';
+  }
+  
+  // Try multiple possible paths for config.map.js
+  function tryLoadConfig(attempts = 0) {
+    const possiblePaths = [
+      'config.map.js',                          // relative
+      './config.map.js',                         // same directory
+      '/config.map.js',                           // root
+      window.location.pathname + 'config.map.js', // full current path
+      getBasePath() + 'config.map.js'             // detected base path
+    ];
+    
+    if (attempts >= possiblePaths.length) {
+      console.warn('⚠️ config.map.js not found after all attempts, using fallback');
+      showFallbackWarning();
+      loadMapWithFallback();
+      return;
+    }
+    
+    const script = document.createElement('script');
+    script.src = possiblePaths[attempts] + '?v=' + Date.now(); // cache bust
+    script.onload = () => {
+      console.log('✅ config.map.js loaded from:', possiblePaths[attempts]);
+      window.__CONFIG_LOADED = true;
+      loadMapWithConfig();
+    };
+    script.onerror = () => {
+      console.log('❌ Failed from:', possiblePaths[attempts]);
+      tryLoadConfig(attempts + 1); // try next path
+    };
+    document.head.appendChild(script);
+  }
+  
+  function showFallbackWarning() {
+    const warning = document.createElement('div');
+    warning.id = 'config-warning';
+    warning.style.cssText = `
+      background: #fff3cd;
+      color: #856404;
+      padding: 10px 20px;
+      text-align: center;
+      font-family: monospace;
+      border-bottom: 2px solid #ffeeba;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      font-size: 14px;
+    `;
+    warning.innerHTML = '⚠️ Using fallback API key (config.map.js not found). ' +
+                        '<button onclick="this.parentElement.remove()" style="margin-left:10px;padding:2px 10px;">Dismiss</button>';
+    document.body.insertBefore(warning, document.body.firstChild);
+  }
+  
+  function loadMapWithConfig() {
+    // Use the loaded config (might be fallback or real)
+    if (typeof google === 'undefined') {
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${window.MAP_CONFIG.GOOGLE_MAPS_API_KEY}&callback=initMap`;
+      script.async = true;
+      script.defer = true;
+      script.onerror = () => {
+        document.getElementById('map').innerHTML = '<div style="text-align:center; padding:50px; color:#721c24;">❌ Failed to load Google Maps</div>';
+      };
+      document.head.appendChild(script);
+    } else {
+      initMap(); // if already loaded
+    }
+  }
+  
+  function loadMapWithFallback() {
+    loadMapWithConfig(); // same function, uses fallback config
+  }
+  
+  // Define initMap globally
   window.initMap = function() {
-    // Center map between the two points
+    const config = window.MAP_CONFIG;
+    const pos1 = config.OFFICE_MAIN;
+    const pos2 = config.OFFICE_ANNEX;
+    
     const centerLat = (pos1.lat + pos2.lat) / 2;
     const centerLng = (pos1.lng + pos2.lng) / 2;
-
-    // Create map with ROADMAP type (default)
+    
     const map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 16,
+      zoom: config.MAP_OPTIONS.zoom,
       center: { lat: centerLat, lng: centerLng },
-      mapTypeId: google.maps.MapTypeId.ROADMAP, // explicitly set to roadmap
+      mapTypeId: config.MAP_OPTIONS.mapTypeId,
+      gestureHandling: config.MAP_OPTIONS.gestureHandling,
       mapTypeControl: true,
-      mapTypeControlOptions: {
-        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-        position: google.maps.ControlPosition.TOP_RIGHT,
-      },
       zoomControl: true,
-      zoomControlOptions: {
-        position: google.maps.ControlPosition.RIGHT_CENTER,
-      },
       streetViewControl: true,
       fullscreenControl: true,
-      gestureHandling: 'greedy', // better for mobile scrolling
     });
-
-    // Create markers
+    
     const marker1 = new google.maps.Marker({
-      position: pos1,
+      position: { lat: pos1.lat, lng: pos1.lng },
       map: map,
-      title: "Sarat Office (Main)",
-      icon: {
-        url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-        scaledSize: new google.maps.Size(40, 40),
-      },
-      animation: google.maps.Animation.DROP,
+      title: pos1.title,
+      icon: { url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png", scaledSize: new google.maps.Size(40, 40) },
     });
-
+    
     const marker2 = new google.maps.Marker({
-      position: pos2,
+      position: { lat: pos2.lat, lng: pos2.lng },
       map: map,
-      title: "Sarat Office (Annex)",
-      icon: {
-        url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
-        scaledSize: new google.maps.Size(40, 40),
-      },
-      animation: google.maps.Animation.DROP,
-    });
-
-    // Info windows
-    const infowindow1 = new google.maps.InfoWindow({
-      content: "<strong>📍 Sarat Office (Main)</strong><br>20.691424, 83.474194",
+      title: pos2.title,
+      icon: { url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png", scaledSize: new google.maps.Size(40, 40) },
     });
     
-    const infowindow2 = new google.maps.InfoWindow({
-      content: "<strong>📍 Sarat Office (Annex)</strong><br>21.235850, 86.632800",
-    });
-
-    marker1.addListener("click", () => {
-      infowindow1.open(map, marker1);
-    });
+    const infowindow1 = new google.maps.InfoWindow({ content: `<strong>📍 ${pos1.title}</strong><br>${pos1.lat}, ${pos1.lng}` });
+    const infowindow2 = new google.maps.InfoWindow({ content: `<strong>📍 ${pos2.title}</strong><br>${pos2.lat}, ${pos2.lng}` });
     
-    marker2.addListener("click", () => {
-      infowindow2.open(map, marker2);
-    });
-
-    // Fit bounds to show both markers
+    marker1.addListener("click", () => infowindow1.open(map, marker1));
+    marker2.addListener("click", () => infowindow2.open(map, marker2));
+    
     const bounds = new google.maps.LatLngBounds();
-    bounds.extend(pos1);
-    bounds.extend(pos2);
+    bounds.extend({ lat: pos1.lat, lng: pos1.lng });
+    bounds.extend({ lat: pos2.lat, lng: pos2.lng });
     map.fitBounds(bounds);
     
-    // Mark as initialized
-    window.mapInitialized = true;
-    
-    // Remove any loading indicator if present
-    const loadingEl = document.querySelector('.map-loading');
-    if (loadingEl) loadingEl.remove();
+    console.log('✅ Map initialized with', window.__CONFIG_LOADED ? 'real config' : 'fallback config');
   };
-
-  // Fallback in case API fails to load
-  window.onerror = function(msg, url, line) {
-    if (msg.includes('google') || url.includes('maps')) {
-      document.getElementById('map').innerHTML = '<div style="text-align:center; padding:50px; background:#f5f5f5;">⚠️ Map could not be loaded. Please check your connection.</div>';
-    }
-  };
-</script>
-
-<!-- Load Google Maps API with key and callback, async but with proper refresh handling -->
-<script>
-  (function() {
-    // Remove any existing google maps script to prevent conflicts on refresh
-    const existingScripts = document.querySelectorAll('script[src*="maps.googleapis"]');
-    existingScripts.forEach(script => script.remove());
-    
-    // Create new script element
-    const script = document.createElement('script');
-    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys&callback=initMap&v=weekly';
-    script.async = true;
-    script.defer = true;
-    
-    // Error handling
-    script.onerror = function() {
-      document.getElementById('map').innerHTML = '<div style="text-align:center; padding:50px; background:#f5f5f5;">❌ Failed to load Google Maps. Please refresh the page.</div>';
-    };
-    
-    // Append to head
-    document.head.appendChild(script);
-    
-    // Add loading indicator
-    const mapContainer = document.getElementById('map');
-    if (mapContainer) {
-      mapContainer.innerHTML = '<div class="map-loading">Loading map...</div>';
-    }
-  })();
-</script>
-
-<!-- Ensure map container gets proper styling -->
-<style>
-  #map { 
-    min-height: 400px; 
-    background-color: #f0f2f5;
-  }
-  .gm-style .gm-style-cc { display: none; } /* cleaner look */
   
-  /* responsive adjustments for map controls */
-  @media (max-width: 600px) {
-    .gm-control-active, .gm-svpc {
-      transform: scale(0.8);
-    }
-  }
+  // Show loading
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('map').innerHTML = '<div class="map-loading">Loading map...</div>';
+    tryLoadConfig(); // start trying paths
+  });
+})();
+</script>
+
+<style>
+.map-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.9);
+  padding: 12px 24px;
+  border-radius: 40px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  color: #0b3c5d;
+  font-weight: 500;
+  z-index: 2;
+}
+#map { min-height: 400px; background: #f0f2f5; position: relative; }
 </style>
 
 </body>
