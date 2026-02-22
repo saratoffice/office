@@ -36,7 +36,6 @@
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Scoped styles for home page only */
     .home-page * {
       box-sizing: border-box;
     }
@@ -69,9 +68,8 @@
     }
    .home-page section.slider-section {
       padding: 0 !important;
-          margin: 0 !important;
-        }       
-
+      margin: 0 !important;
+   }       
 
     .home-page .section-header {
       text-align: center;
@@ -159,7 +157,7 @@
       background: linear-gradient(135deg, var(--accent-purple), var(--primary-blue));
       color: var(--white);
       box-shadow: var(--shadow-light);
-      justify-content: flex-end; /* Right alignment */
+      justify-content: flex-end;
     }
 
     .home-page .btn-secondary:hover {
@@ -179,1920 +177,668 @@
       transform: translateY(-3px);
     }
     @media (max-width: 680px) {
-  .home-page section.slider-section {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-}
-
-/* ----- SLIDER SECTION (full viewport width) ----- */
-    
-.slider-section {
-  width: 100%;
-  background: #0e1e32;
-}
-
-.slider-container {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-}
-
-.slider-track {
-  display: flex;
-  transition: transform 0.65s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.slide {
-  flex: 0 0 100%;               /* each slide takes full container width */
-  height: 70vh;                 /* default height (desktop) */
-  min-height: 500px;
-  background-size: cover;       /* cover by default (crops on mobile) */
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex;
-  align-items: flex-end;        /* push button to bottom */
-  justify-content: flex-end;    /* push button to right */
-  padding: 0;                   /* REMOVED PADDING - was 2rem 2.5rem */
-  position: relative;
-}
-
-/* subtle overlay for better button visibility */
-.slide::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 70%);
-  pointer-events: none;         /* lets button stay clickable */
-}
-
-/* slide unique backgrounds */
-.slide-1 {
-  background-image: url('assets/images/Sliders/Slider_Sarat.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); /* tools */
-}
-.slide-2 {
-  background-image: url('assets/images/Sliders/Slider_SaratSom.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');  /* contact */
-}
-.slide-3 {
-  background-image: url('assets/images/Sliders/Slider_Som.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); /* legal */
-}
-
-/* ----- bottom right button (down arrow + text) ----- */
-.slide-btn {
-  position: relative;
-  z-index: 10;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: rgba(245, 245, 255, 0.92);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,0.4);
-  border-radius: 60px;
-  padding: 0.9rem 2.2rem 0.9rem 2.4rem;
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: #10131e;
-  box-shadow: 0 15px 30px -10px rgba(0,0,0,0.3);
-  cursor: pointer;
-  transition: transform 0.18s, background 0.2s, box-shadow 0.2s;
-  border: none;
-  outline: 2px solid transparent;
-  letter-spacing: 0.5px;
-  margin: 0 2.5rem 2rem 0;      /* ADDED margin to position button from edges */
-}
-
-.slide-btn i {               /* downward arrow icon */
-  font-style: normal;
-  font-size: 2rem;
-  line-height: 1;
-  transform: translateY(2px);
-  transition: transform 0.2s;
-}
-
-.slide-btn:hover {
-  background: #ffffff;
-  transform: scale(1.04);
-  box-shadow: 0 22px 35px -12px #030b14;
-}
-
-.slide-btn:hover i {
-  transform: translateY(5px);
-}
-
-/* ----- navigation arrows (bottom left corner) ----- */
-.nav-arrows {
-  position: absolute;
-  bottom: 2rem;
-  left: 2.5rem;
-  z-index: 25;
-  display: flex;
-  gap: 1.2rem;
-}
-
-.arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 54px;
-  height: 54px;
-  background: rgba(20, 30, 45, 0.75);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 40px;
-  color: white;
-  font-size: 2.4rem;
-  font-weight: 300;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s, border-color 0.2s;
-  user-select: none;
-  box-shadow: 0 10px 18px -8px black;
-  line-height: 1;
-}
-
-.arrow:hover {
-  background: #1f334b;
-  border-color: rgba(255,255,255,0.7);
-  transform: scale(1.07);
-}
-
-.arrow:active {
-  transform: scale(0.98);
-}
-
-/* pause on hover */
-.slider-container.pause-autoplay .slider-track {
-  transition-duration: 0.4s;
-}
-
-/* ========== MOBILE FIX: REDUCE HEIGHT + SHOW FULL IMAGE ========== */
-@media (max-width: 680px) {
-  .slide {
-    height: auto;                    /* Let height be determined by content */
-    min-height: 300px;               /* Set a reasonable minimum */
-    background-size: cover !important; /* Cover fills the space without gaps */
-    background-color: #111d2f;
-    background-position: center center;
-    padding: 0;
-  }
-  
-  /* Remove the separate rule that enforces contain */
-  /* .slide-1, .slide-2, .slide-3 {
-    background-size: contain !important;
-  } */
-}
-
-  /* adjust overlay to be lighter (still visible over dark gaps) */
-  .slide::after {
-    background: linear-gradient(90deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.2) 80%);
-  }
-
-  /* button size & position for mobile */
-  .slide-btn {
-    padding: 0.6rem 1.4rem 0.6rem 1.6rem;
-    font-size: 1.25rem;
-    gap: 0.4rem;
-    margin: 0 1.2rem 1.2rem 0;      /* ADJUSTED margin for mobile */
-  }
-  .slide-btn i {
-    font-size: 1.7rem;
-  }
-
-  /* bottom arrows a bit smaller */
-  .nav-arrows {
-    bottom: 1.2rem;
-    left: 1.2rem;
-    gap: 0.7rem;
-  }
-  .arrow {
-    width: 44px;
-    height: 44px;
-    font-size: 2rem;
-  }
-}
-
-/* extra small devices: even shorter height, keep contain */
-@media (max-width: 480px) {
-  .slide {
-    height: 38vh !important;
-    min-height: 260px;
-  }
-  .slide-btn {
-    font-size: 1.1rem;
-    padding: 0.5rem 1.2rem 0.5rem 1.4rem;
-    margin: 0 0.9rem 0.9rem 0;      /* ADJUSTED margin for smaller screens */
-  }
-  .slide-btn i {
-    font-size: 1.5rem;
-  }
-  .nav-arrows {
-    bottom: 0.9rem;
-    left: 0.9rem;
-  }
-  .arrow {
-    width: 40px;
-    height: 40px;
-    font-size: 1.8rem;
-  }
-}
-
-/* make sure background-size contain is enforced on all mobile */
-@media (max-width: 680px) {
-  .slide-1, .slide-2, .slide-3 {
-    background-size: cover;
-
-  }
-}
-
-/* smoothness */
-.slider-track, .slide-btn, .arrow {
-  -webkit-tap-highlight-color: transparent;
-}
-    /* =================================
-       HERO SECTION
-    ================================= */
-    .home-page .hero {
-      padding: 20px 40px 60px;
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 60px;
-      background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-      max-width: 100%;
-      box-sizing: border-box;
-      margin: 0;
-    }
-
-    @media (max-width: 768px) {
-      .home-page .hero {
-        padding: 80px 20px 40px;
-        margin-top: 30px; 
+      .home-page section.slider-section {
+        padding: 0 !important;
+        margin: 0 !important;
       }
     }
 
-    .home-page .hero::before {
-      content: '';
-      position: absolute;
-      top: -100px;
-      right: -100px;
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(124, 255, 0, 0.1) 0%, rgba(0, 51, 204, 0.05) 70%, transparent 100%);
-      border-radius: 50%;
-      z-index: 0;
-    }
-
-    .home-page .hero-text {
-      position: relative;
-      z-index: 1;
-      max-width: 100%;
-    }
-
-    .home-page .hero-text h1 {
-      font-size: 3.8rem;
-      margin-bottom: 25px;
-      background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-weight: 900;
-      line-height: 1.1;
-      letter-spacing: -0.5px;
-    }
-
-    .home-page .hero-text p {
-      font-size: 1.2rem;
-      margin-bottom: 25px;
-      line-height: 1.8;
-      color: var(--text-medium);
-      text-align: justify;
-      text-indent: 2em;
-    }
-
-    .home-page .hero-stats {
-      display: flex;
-      gap: 40px;
-      margin-top: 40px;
-      flex-wrap: wrap;
-      max-width: 100%;
-    }
-
-    .home-page .stat-item {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .home-page .stat-number {
-      font-size: 2.5rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .home-page .stat-label {
-      font-size: 0.9rem;
-      color: var(--text-light);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-top: 5px;
-    }
-
-    .home-page .hero-image {
-      position: relative;
-      z-index: 1;
-      max-width: 100%;
-    }
-
-    .home-page .hero-image img {
+    /* ----- SLIDER SECTION (full viewport width) ----- */
+    .slider-section {
       width: 100%;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-strong);
-      transition: var(--transition);
-      transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
-      border: 12px solid var(--white);
-      max-width: 100%;
-      height: auto;
+      background: #0e1e32;
     }
 
-    .home-page .hero-image img:hover {
-      transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1.02);
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
-    }
-
-    /* =================================
-       TOOLS SECTION
-    ================================= */
-    .home-page .tools-section {
-      background: var(--white);
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .home-page .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      margin-top: 40px;
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .home-page .tool-card {
-      background: var(--card-bg);
-      border-radius: var(--border-radius);
-      padding: 35px 30px;
-      box-shadow: var(--shadow-light);
-      transition: var(--transition);
-      border: 1px solid rgba(0, 0, 0, 0.05);
+    .slider-container {
       position: relative;
+      width: 100%;
       overflow: hidden;
-      max-width: 100%;
     }
 
-    .home-page .tool-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 5px;
-      height: 100%;
-      background: linear-gradient(to bottom, var(--primary-green), var(--primary-blue));
-      transition: width 0.3s ease;
-    }
-
-    .home-page .tool-card:hover {
-      transform: translateY(-10px);
-      box-shadow: var(--shadow-strong);
-    }
-
-    .home-page .tool-card:hover::before {
-      width: 8px;
-    }
-
-    .home-page .tool-icon {
-      width: 70px;
-      height: 70px;
-      background: linear-gradient(135deg, rgba(124, 255, 0, 0.1), rgba(0, 51, 204, 0.1));
-      border-radius: 50%;
+    .slider-track {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 25px;
-      font-size: 28px;
-      color: var(--primary-blue);
+      transition: transform 0.65s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    .home-page .tool-card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-      color: var(--text-dark);
-    }
-
-    .home-page .tool-card p {
-      color: var(--text-medium);
-      margin-bottom: 20px;
-      line-height: 1.7;
-    }
-
-    /* =================================
-       HEALTH TOOLS SECTION
-    ================================= */
-    .home-page .health-tools-section {
-      background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .home-page .health-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      margin-top: 40px;
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .home-page .health-card {
-      background: var(--card-bg);
-      border-radius: var(--border-radius);
-      padding: 35px 30px;
-      box-shadow: var(--shadow-light);
-      transition: var(--transition);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-      text-align: center;
-      max-width: 100%;
-    }
-
-    .home-page .health-card:hover {
-      transform: translateY(-8px);
-      box-shadow: var(--shadow-strong);
-    }
-
-    .home-page .health-icon {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, rgba(0, 180, 216, 0.1), rgba(255, 107, 53, 0.1));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 25px;
-      font-size: 32px;
-      color: var(--accent-teal);
-    }
-
-    .home-page .health-card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-      color: var(--text-dark);
-    }
-
-    .home-page .health-card p {
-      color: var(--text-medium);
-      margin-bottom: 20px;
-      line-height: 1.7;
-    }
-
-    /* =================================
-       LEGAL DOCUMENTS SECTION
-    ================================= */
-    .home-page .documents-section {
-      background: var(--white);
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .home-page .documents-tabs {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 40px;
-      flex-wrap: wrap;
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .home-page .tab-btn {
-      padding: 12px 28px;
-      background: var(--white);
-      border: 2px solid #e2e8f0;
-      border-radius: 50px;
-      font-weight: 600;
-      color: var(--text-medium);
-      cursor: pointer;
-      transition: var(--transition);
-      white-space: nowrap;
-    }
-
-    .home-page .tab-btn.active,
-    .home-page .tab-btn:hover {
-      background: var(--primary-blue);
-      color: var(--white);
-      border-color: var(--primary-blue);
-    }
-
-    .home-page .documents-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 30px;
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .home-page .document-card {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      overflow: hidden;
-      box-shadow: var(--shadow-light);
-      transition: var(--transition);
-      max-width: 100%;
-    }
-
-    .home-page .document-card:hover {
-      transform: translateY(-8px);
-      box-shadow: var(--shadow-strong);
-    }
-
-    .home-page .document-header {
-      padding: 25px;
-      background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
-      color: var(--white);
-    }
-
-    .home-page .document-header h3 {
-      font-size: 1.4rem;
-      margin-bottom: 10px;
-    }
-
-    .home-page .document-body {
-      padding: 25px;
-    }
-
-    .home-page .document-body p {
-      color: var(--text-medium);
-      margin-bottom: 20px;
-      line-height: 1.7;
-    }
-
-    .home-page .document-meta {
-      display: flex;
-      justify-content: space-between;
-      color: var(--text-light);
-      font-size: 0.9rem;
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid #e2e8f0;
-      flex-wrap: wrap;
-    }
-
-    /* =================================
-       RESOURCES SECTION
-    ================================= */
-    .home-page .resources-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 30px;
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .home-page .resource-card {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      padding: 30px;
-      text-align: center;
-      box-shadow: var(--shadow-light);
-      transition: var(--transition);
-      border: 2px solid transparent;
-      max-width: 100%;
-    }
-
-    .home-page .resource-card:hover {
-      border-color: var(--primary-green);
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-medium);
-    }
-
-    .home-page .resource-icon {
-      font-size: 2.5rem;
-      color: var(--primary-blue);
-      margin-bottom: 20px;
-    }
-
-    .home-page .resource-card h3 {
-      font-size: 1.4rem;
-      margin-bottom: 15px;
-      color: var(--text-dark);
-    }
-
-    .home-page .resource-card p {
-      color: var(--text-medium);
-      margin-bottom: 20px;
-    }
-
-    /* =================================
-       CONTACT SECTION
-    ================================= */
-    .home-page .contact-section {
-      background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .home-page .contact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 40px;
-      margin-top: 40px;
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .home-page .contact-card {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      padding: 40px;
-      text-align: center;
-      box-shadow: var(--shadow-light);
-      transition: var(--transition);
-      max-width: 100%;
-    }
-
-    .home-page .contact-card:hover {
-      transform: translateY(-10px);
-      box-shadow: var(--shadow-strong);
-    }
-
-    .home-page .contact-icon {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, rgba(124, 255, 0, 0.1), rgba(0, 51, 204, 0.1));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 25px;
-      font-size: 32px;
-      color: var(--primary-blue);
-    }
-
-    .home-page .contact-card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-      color: var(--text-dark);
-    }
-
-    .home-page .contact-card p {
-      color: var(--text-medium);
-      margin-bottom: 25px;
-      line-height: 1.7;
-    }
-
-    /* =================================
-       CTA SECTION
-    ================================= */
-    .home-page .cta-section {
-      background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
-      color: var(--white);
-      text-align: center;
-      padding: 100px 40px;
-      border-radius: var(--border-radius);
-      margin: 80px auto;
-      max-width: 1200px;
-      position: relative;
-      overflow: hidden;
-      width: calc(100% - 40px);
-      box-sizing: border-box;
-    }
-
-    @media (max-width: 768px) {
-      .home-page .cta-section {
-        width: calc(100% - 20px);
-        padding: 60px 20px;
-        margin: 40px auto;
-      }
-    }
-
-    .home-page .cta-section::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"/></svg>');
+    .slide {
+      flex: 0 0 100%;
+      height: 70vh;
+      min-height: 500px;
       background-size: cover;
-      opacity: 0.1;
-    }
-
-    .home-page .cta-content {
-      position: relative;
-      z-index: 1;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .home-page .cta-content h2 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      font-weight: 800;
-    }
-
-    .home-page .cta-content p {
-      font-size: 1.3rem;
-      margin-bottom: 40px;
-      opacity: 0.9;
-    }
-
-    .home-page .cta-buttons {
+      background-position: center;
+      background-repeat: no-repeat;
       display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 0;
+      position: relative;
     }
 
-    .home-page .cta-btn {
-      background: var(--white);
-      color: var(--primary-blue);
-      padding: 16px 36px;
-      border-radius: 50px;
-      font-weight: 700;
-      text-decoration: none;
-      transition: var(--transition);
+    .slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 70%);
+      pointer-events: none;
+    }
+
+    .slide-1 { background-image: url('assets/images/Sliders/Slider_Sarat.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); }
+    .slide-2 { background-image: url('assets/images/Sliders/Slider_SaratSom.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); }
+    .slide-3 { background-image: url('assets/images/Sliders/Slider_Som.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); }
+
+    .slide-btn {
+      position: relative;
+      z-index: 10;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 0.75rem;
+      background: rgba(245, 245, 255, 0.92);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 60px;
+      padding: 0.9rem 2.2rem 0.9rem 2.4rem;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #10131e;
+      box-shadow: 0 15px 30px -10px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: transform 0.18s, background 0.2s, box-shadow 0.2s;
+      border: none;
+      outline: 2px solid transparent;
+      letter-spacing: 0.5px;
+      margin: 0 2.5rem 2rem 0;
     }
 
-    .home-page .cta-btn:hover {
-      background: var(--primary-green);
-      color: var(--white);
-      transform: translateY(-3px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    .slide-btn i {
+      font-style: normal;
+      font-size: 2rem;
+      line-height: 1;
+      transform: translateY(2px);
+      transition: transform 0.2s;
     }
 
-    /* =================================
-       ABOUT HIGHLIGHT SECTION
-    ================================= */
-    .home-page .about-highlight {
-      background: linear-gradient(135deg, var(--white) 0%, #f8fafc 100%);
-      position: relative;
-      width: 100%;
-      max-width: 100%;
+    .slide-btn:hover {
+      background: #ffffff;
+      transform: scale(1.04);
+      box-shadow: 0 22px 35px -12px #030b14;
     }
 
-    .home-page .about-highlight::before {
-      content: '';
+    .slide-btn:hover i { transform: translateY(5px); }
+
+    .nav-arrows {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary-green), var(--primary-blue), var(--accent-purple));
-    }
-
-    .home-page .about-wrapper {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 70px;
-      align-items: center;
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .home-page .about-photo {
-      text-align: center;
-      position: relative;
-      max-width: 100%;
-    }
-
-    .home-page .about-photo::before {
-      content: '';
-      position: absolute;
-      width: 120%;
-      height: 120%;
-      top: -10%;
-      left: -10%;
-      background: linear-gradient(135deg, var(--primary-green) 0%, transparent 50%, var(--primary-blue) 100%);
-      border-radius: 50%;
-      z-index: 0;
-      opacity: 0.1;
-    }
-
-    .home-page .about-photo img {
-      width: 100%;
-      max-width: 450px; /* Increased size */
-      border-radius: 50%;
-      transition: var(--transition);
-      position: relative;
-      z-index: 1;
-      border: 12px solid var(--white); /* Thicker border */
-      box-shadow: var(--shadow-strong);
-    }
-
-    .home-page .about-photo img:hover {
-      transform: scale(1.08) rotate(5deg);
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-    }
-
-    /* =================================
-       SOCIAL ICONS STYLING
-    ================================= */
-    .home-page .about-social {
-      margin-top: 30px;
+      bottom: 2rem;
+      left: 2.5rem;
+      z-index: 25;
       display: flex;
-      justify-content: center;
-      gap: 18px; /* Increased gap */
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 2;
+      gap: 1.2rem;
     }
 
-    .home-page .about-social a {
-      width: 30px; /* Increased from 42px */
-      height: 30px; /* Increased from 42px */
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-purple), var(--primary-blue));
+    .arrow {
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--white);
-      text-decoration: none;
-      font-size: 1.3rem; /* Increased font size */
-      transition: var(--transition);
-      box-shadow: var(--shadow-light);
+      width: 54px;
+      height: 54px;
+      background: rgba(20, 30, 45, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 40px;
+      color: white;
+      font-size: 2.4rem;
+      font-weight: 300;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, border-color 0.2s;
+      user-select: none;
+      box-shadow: 0 10px 18px -8px black;
+      line-height: 1;
     }
 
-    .home-page .about-social a:hover {
-      transform: translateY(-5px) scale(1.1);
-      box-shadow: var(--shadow-strong);
-      background: linear-gradient(135deg, var(--primary-green), var(--accent-purple));
+    .arrow:hover {
+      background: #1f334b;
+      border-color: rgba(255,255,255,0.7);
+      transform: scale(1.07);
     }
 
-    .home-page .about-social a i {
-      transition: transform 0.3s ease;
-    }
+    .arrow:active { transform: scale(0.98); }
 
-    .home-page .about-social a:hover i {
-      transform: scale(1.2);
-    }
+    .slider-container.pause-autoplay .slider-track { transition-duration: 0.4s; }
 
-    /* Specific colors for each social media */
-    .home-page .about-social a:nth-child(1) { background: linear-gradient(135deg, #1877F2, #0d5fcc); } /* Facebook */
-    .home-page .about-social a:nth-child(2) { background: linear-gradient(135deg, #E60023, #cc001f); } /* Pinterest */
-    .home-page .about-social a:nth-child(3) { background: linear-gradient(135deg, #000000, #333333); } /* Twitter/X */
-    .home-page .about-social a:nth-child(4) { background: linear-gradient(135deg, #E4405F, #d42c53); } /* Instagram */
-    .home-page .about-social a:nth-child(5) { background: linear-gradient(135deg, #FF0000, #cc0000); } /* YouTube */
-    .home-page .about-social a:nth-child(6) { background: linear-gradient(135deg, #0A66C2, #0855a3); } /* LinkedIn */
-    .home-page .about-social a:nth-child(7) { background: linear-gradient(135deg, #181717, #333333); } /* GitHub */
-
-    .home-page .about-text h2 {
-      font-size: 2.5rem;
-      margin-bottom: 25px;
-      color: var(--text-dark);
-      font-weight: 800;
-      line-height: 1.2;
-      position: relative;
-      padding-bottom: 15px;
-    }
-
-    .home-page .about-text h2::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 80px;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary-green), var(--accent-purple));
-      border-radius: 2px;
-    }
-
-    .home-page .about-text p {
-      margin-bottom: 25px;
-      line-height: 1.8;
-      color: var(--text-medium);
-      font-size: 1.125rem;
-      text-align: justify;
-      text-indent: 2em;
-      position: relative;
-      padding-left: 20px;
-      border-left: 3px solid rgba(124, 255, 0, 0.3);
-    }
-
-    /* =================================
-       NEW SECTION: LATEST UPDATES
-    ================================= */
-    .home-page .latest-updates {
-      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .home-page .updates-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      margin-top: 40px;
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .home-page .update-card {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      padding: 30px;
-      box-shadow: var(--shadow-light);
-      transition: var(--transition);
-      border-left: 5px solid var(--primary-green);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .home-page .update-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary-green), var(--primary-blue));
-    }
-
-    .home-page .update-card:hover {
-      transform: translateY(-8px);
-      box-shadow: var(--shadow-strong);
-    }
-
-    .home-page .update-icon {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, rgba(124, 255, 0, 0.1), rgba(0, 51, 204, 0.1));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-      font-size: 24px;
-      color: var(--primary-blue);
-    }
-
-    .home-page .update-card h3 {
-      font-size: 1.4rem;
-      margin-bottom: 15px;
-      color: var(--text-dark);
-    }
-
-    .home-page .update-card p {
-      color: var(--text-medium);
-      margin-bottom: 20px;
-      line-height: 1.7;
-    }
-
-    .home-page .update-date {
-      color: var(--text-light);
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid #e2e8f0;
-    }
-
-    /* =================================
-       RESPONSIVE DESIGN
-    ================================= */
-    @media (max-width: 1200px) {
-      .home-page .hero-text h1 {
-        font-size: 3.2rem;
+    @media (max-width: 680px) {
+      .slide {
+        height: auto;
+        min-height: 300px;
+        background-size: cover !important;
+        background-color: #111d2f;
+        background-position: center center;
+        padding: 0;
       }
-      
-      .home-page .about-wrapper {
-        gap: 50px;
+      .slide::after { background: linear-gradient(90deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.2) 80%); }
+      .slide-btn {
+        padding: 0.6rem 1.4rem 0.6rem 1.6rem;
+        font-size: 1.25rem;
+        gap: 0.4rem;
+        margin: 0 1.2rem 1.2rem 0;
       }
-      
-      .home-page .about-photo img {
-        max-width: 380px;
+      .slide-btn i { font-size: 1.7rem; }
+      .nav-arrows {
+        bottom: 1.2rem;
+        left: 1.2rem;
+        gap: 0.7rem;
       }
-    }
-
-    @media (max-width: 992px) {
-      .home-page .hero {
-        grid-template-columns: 1fr;
-        text-align: center;
-        padding: 80px 20px 40px;
-        gap: 40px;
-      }
-      
-      .home-page .hero-text h1 {
-        font-size: 2.8rem;
-      }
-      
-      .home-page .hero-text p {
-        text-align: left;
-      }
-      
-      .home-page .hero-image img {
-        transform: none;
-        max-width: 100%;
-        margin: 0 auto;
-      }
-      
-      .home-page .hero-stats {
-        justify-content: center;
-      }
-      
-      .home-page .about-highlight,
-      .home-page .tools-section,
-      .home-page .documents-section,
-      .home-page .health-tools-section,
-      .home-page .contact-section,
-      .home-page .latest-updates {
-        padding: 60px 0;
-      }
-      
-      .home-page .about-wrapper {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 40px;
-      }
-      
-      .home-page .about-text h2::after {
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      
-      .home-page .about-text p {
-        padding-left: 0;
-        border-left: none;
-        text-align: left;
-        padding-top: 15px;
-        border-top: 3px solid rgba(124, 255, 0, 0.3);
-      }
-      
-      .home-page .about-photo::before {
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-      }
-      
-      .home-page .cta-content h2 {
-        font-size: 2.5rem;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .home-page .hero-text h1 {
-        font-size: 2.2rem;
-      }
-      
-      .home-page .hero-text p,
-      .home-page .about-text p {
-        font-size: 1rem;
-      }
-      
-      .home-page .section-header h2 {
-        font-size: 2.2rem;
-      }
-      
-      .home-page .tools-grid,
-      .home-page .health-grid,
-      .home-page .documents-grid,
-      .home-page .resources-grid,
-      .home-page .contact-grid,
-      .home-page .updates-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .home-page .stat-number {
+      .arrow {
+        width: 44px;
+        height: 44px;
         font-size: 2rem;
-      }
-      
-      .home-page .cta-buttons {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .home-page .cta-btn {
-        width: 100%;
-        max-width: 300px;
-        justify-content: center;
-      }
-      
-      .home-page .about-photo img {
-        max-width: 300px;
-      }
-      
-      .home-page .about-social a {
-        width: 48px;
-        height: 48px;
-        font-size: 1.2rem;
-      }
-      
-      .home-page .documents-tabs {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .home-page .tab-btn {
-        width: 100%;
-        max-width: 300px;
       }
     }
 
     @media (max-width: 480px) {
-      .home-page .hero-text h1 {
-        font-size: 1.8rem;
+      .slide {
+        height: 38vh !important;
+        min-height: 260px;
       }
-      
-      .home-page .section-header h2 {
-        font-size: 1.8rem;
-      }
-      
-      .home-page .hero-stats {
-        gap: 20px;
-      }
-      
-      .home-page .stat-number {
-        font-size: 1.8rem;
-      }
-      
-      .home-page .about-photo img {
-        max-width: 250px;
-      }
-      
-      .home-page .about-social a {
-        width: 44px;
-        height: 44px;
+      .slide-btn {
         font-size: 1.1rem;
+        padding: 0.5rem 1.2rem 0.5rem 1.4rem;
+        margin: 0 0.9rem 0.9rem 0;
       }
-      
-      .home-page .container {
-        padding: 0 15px;
+      .slide-btn i { font-size: 1.5rem; }
+      .nav-arrows {
+        bottom: 0.9rem;
+        left: 0.9rem;
+      }
+      .arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1.8rem;
       }
     }
+
+    @media (max-width: 680px) {
+      .slide-1, .slide-2, .slide-3 { background-size: cover; }
+    }
+
+    .slider-track, .slide-btn, .arrow { -webkit-tap-highlight-color: transparent; }
 
     /* =================================
-       ANIMATIONS
+       SLIDER STYLES FOR CARDS (tools, docs)
     ================================= */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .card-slider-container {
+      position: relative;
+      width: 100%;
+      padding: 0 10px;
     }
 
-    .home-page .hero-text,
-    .home-page .hero-image,
-    .home-page .tool-card,
-    .home-page .health-card,
-    .home-page .document-card,
-    .home-page .resource-card,
-    .home-page .contact-card,
-    .home-page .update-card,
-    .home-page .about-photo,
-    .home-page .about-text {
-      animation: fadeInUp 0.8s ease-out forwards;
-      opacity: 0;
+    .card-slider-track {
+      display: flex;
+      gap: 30px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      padding: 20px 5px 30px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary-blue) #e2e8f0;
     }
 
+    .card-slider-track::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .card-slider-track::-webkit-scrollbar-track {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+
+    .card-slider-track::-webkit-scrollbar-thumb {
+      background: var(--primary-blue);
+      border-radius: 10px;
+    }
+
+    .card-slide {
+      flex: 0 0 340px;
+      max-width: 340px;
+      scroll-snap-align: start;
+      transition: transform 0.3s ease;
+    }
+
+    /* redesigned tool card with hover effect (also used for health tools now inside utility) */
+    .tool-card-modern {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      padding: 30px 20px;
+      box-shadow: var(--shadow-light);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(124, 255, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tool-card-modern::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, var(--primary-green), var(--primary-blue), var(--accent-purple));
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .tool-card-modern:hover {
+      transform: translateY(-15px) scale(1.02);
+      box-shadow: var(--shadow-strong);
+    }
+
+    .tool-card-modern:hover::before {
+      transform: translateX(0);
+    }
+
+    .tool-card-modern .tool-icon {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, rgba(124, 255, 0, 0.15), rgba(0, 51, 204, 0.15));
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+      font-size: 30px;
+      color: var(--primary-blue);
+      transition: all 0.3s ease;
+    }
+
+    .tool-card-modern:hover .tool-icon {
+      background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+      color: white;
+      border-radius: 50%;
+      transform: rotate(360deg);
+    }
+
+    .tool-card-modern h3 {
+      font-size: 1.6rem;
+      margin-bottom: 15px;
+      color: var(--text-dark);
+    }
+
+    .tool-card-modern p {
+      color: var(--text-medium);
+      margin-bottom: 25px;
+      line-height: 1.7;
+      flex-grow: 1;
+    }
+
+    /* document card modern redesign */
+    .doc-card-modern {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-light);
+      transition: all 0.4s ease;
+      border: 1px solid rgba(0, 51, 204, 0.1);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .doc-card-modern:hover {
+      transform: translateY(-12px) scale(1.01);
+      box-shadow: var(--shadow-strong);
+    }
+
+    .doc-card-modern .doc-header {
+      padding: 22px 20px;
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .doc-card-modern .doc-header::after {
+      content: "📄";
+      position: absolute;
+      bottom: -10px;
+      right: -10px;
+      font-size: 5rem;
+      opacity: 0.15;
+      transform: rotate(15deg);
+    }
+
+    .doc-card-modern .doc-header h3 {
+      font-size: 1.4rem;
+      margin-bottom: 5px;
+    }
+
+    .doc-card-modern .doc-body {
+      padding: 25px 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .doc-card-modern .doc-body p {
+      color: var(--text-medium);
+      margin-bottom: 20px;
+      line-height: 1.7;
+    }
+
+    .doc-card-modern .doc-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 2px dashed #e2e8f0;
+    }
+
+    /* slider arrows for card sliders */
+    .card-nav {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .card-arrow {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--white);
+      box-shadow: var(--shadow-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--primary-blue);
+      border: 2px solid transparent;
+    }
+
+    .card-arrow:hover {
+      background: var(--primary-blue);
+      color: white;
+      border-color: var(--primary-green);
+      transform: scale(1.1);
+    }
+
+    /* ============ MODERNIZED RESOURCES GRID (expanded, now includes contact cards) ============ */
+    .resources-grid-modern {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .resource-card-modern {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      padding: 35px 25px;
+      text-align: center;
+      box-shadow: var(--shadow-light);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .resource-card-modern::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(124, 255, 0, 0.05), rgba(0, 51, 204, 0.05));
+      clip-path: circle(0% at 50% 50%);
+      transition: clip-path 0.6s ease;
+      z-index: 0;
+    }
+
+    .resource-card-modern:hover {
+      border-color: var(--primary-green);
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: var(--shadow-strong);
+    }
+
+    .resource-card-modern:hover::before {
+      clip-path: circle(100% at 50% 50%);
+    }
+
+    .resource-card-modern > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .resource-card-modern .resource-icon {
+      font-size: 3rem;
+      color: var(--primary-blue);
+      margin-bottom: 20px;
+      transition: transform 0.3s;
+    }
+
+    .resource-card-modern:hover .resource-icon {
+      transform: scale(1.2) rotate(5deg);
+      color: var(--primary-green);
+    }
+
+    .resource-card-modern h3 {
+      font-size: 1.6rem;
+      margin-bottom: 15px;
+      color: var(--text-dark);
+    }
+
+    .resource-card-modern p {
+      color: var(--text-medium);
+      margin-bottom: 25px;
+      line-height: 1.7;
+    }
+
+    /* ============ RETAIN ORIGINAL STYLES (HERO, ABOUT, CTA, ETC) ============ */
+    .home-page .hero { padding: 20px 40px 60px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%); align-items: center; position: relative; overflow: hidden; max-width: 100%; box-sizing: border-box; margin: 0; }
+    @media (max-width: 768px) { .home-page .hero { padding: 80px 20px 40px; margin-top: 30px; } }
+    .home-page .hero::before { content: ''; position: absolute; top: -100px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(124, 255, 0, 0.1) 0%, rgba(0, 51, 204, 0.05) 70%, transparent 100%); border-radius: 50%; z-index: 0; }
+    .home-page .hero-text { position: relative; z-index: 1; max-width: 100%; }
+    .home-page .hero-text h1 { font-size: 3.8rem; margin-bottom: 25px; background: linear-gradient(135deg, var(--primary-blue), var(--primary-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 900; line-height: 1.1; letter-spacing: -0.5px; }
+    .home-page .hero-text p { font-size: 1.2rem; margin-bottom: 25px; line-height: 1.8; color: var(--text-medium); text-align: justify; text-indent: 2em; }
+    .home-page .hero-stats { display: flex; gap: 40px; margin-top: 40px; flex-wrap: wrap; max-width: 100%; }
+    .home-page .stat-item { display: flex; flex-direction: column; }
+    .home-page .stat-number { font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .home-page .stat-label { font-size: 0.9rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+    .home-page .hero-image { position: relative; z-index: 1; max-width: 100%; }
+    .home-page .hero-image img { width: 100%; border-radius: var(--border-radius); box-shadow: var(--shadow-strong); transition: var(--transition); transform: perspective(1000px) rotateY(-5deg) rotateX(5deg); border: 12px solid var(--white); max-width: 100%; height: auto; }
+    .home-page .hero-image img:hover { transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1.02); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2); }
+    .home-page .cta-section { background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue)); color: var(--white); text-align: center; padding: 100px 40px; border-radius: var(--border-radius); margin: 80px auto; max-width: 1200px; position: relative; overflow: hidden; width: calc(100% - 40px); box-sizing: border-box; }
+    @media (max-width: 768px) { .home-page .cta-section { width: calc(100% - 20px); padding: 60px 20px; margin: 40px auto; } }
+    .home-page .cta-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"/></svg>'); background-size: cover; opacity: 0.1; }
+    .home-page .cta-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+    .home-page .cta-content h2 { font-size: 3rem; margin-bottom: 20px; font-weight: 800; }
+    .home-page .cta-content p { font-size: 1.3rem; margin-bottom: 40px; opacity: 0.9; }
+    .home-page .cta-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+    .home-page .cta-btn { background: var(--white); color: var(--primary-blue); padding: 16px 36px; border-radius: 50px; font-weight: 700; text-decoration: none; transition: var(--transition); display: inline-flex; align-items: center; gap: 10px; }
+    .home-page .cta-btn:hover { background: var(--primary-green); color: var(--white); transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); }
+    .home-page .about-highlight { background: linear-gradient(135deg, var(--white) 0%, #f8fafc 100%); position: relative; width: 100%; max-width: 100%; }
+    .home-page .about-highlight::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--primary-green), var(--primary-blue), var(--accent-purple)); }
+    .home-page .about-wrapper { display: grid; grid-template-columns: 1fr 1.2fr; gap: 70px; align-items: center; width: 100%; max-width: 100%; }
+    .home-page .about-photo { text-align: center; position: relative; max-width: 100%; }
+    .home-page .about-photo::before { content: ''; position: absolute; width: 120%; height: 120%; top: -10%; left: -10%; background: linear-gradient(135deg, var(--primary-green) 0%, transparent 50%, var(--primary-blue) 100%); border-radius: 50%; z-index: 0; opacity: 0.1; }
+    .home-page .about-photo img { width: 100%; max-width: 450px; border-radius: 50%; transition: var(--transition); position: relative; z-index: 1; border: 12px solid var(--white); box-shadow: var(--shadow-strong); }
+    .home-page .about-photo img:hover { transform: scale(1.08) rotate(5deg); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3); }
+    .home-page .about-social { margin-top: 30px; display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; position: relative; z-index: 2; }
+    .home-page .about-social a { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-purple), var(--primary-blue)); display: flex; align-items: center; justify-content: center; color: var(--white); text-decoration: none; font-size: 1.3rem; transition: var(--transition); box-shadow: var(--shadow-light); }
+    .home-page .about-social a:hover { transform: translateY(-5px) scale(1.1); box-shadow: var(--shadow-strong); background: linear-gradient(135deg, var(--primary-green), var(--accent-purple)); }
+    .home-page .about-social a i { transition: transform 0.3s ease; }
+    .home-page .about-social a:hover i { transform: scale(1.2); }
+    .home-page .about-social a:nth-child(1) { background: linear-gradient(135deg, #1877F2, #0d5fcc); }
+    .home-page .about-social a:nth-child(2) { background: linear-gradient(135deg, #E60023, #cc001f); }
+    .home-page .about-social a:nth-child(3) { background: linear-gradient(135deg, #000000, #333333); }
+    .home-page .about-social a:nth-child(4) { background: linear-gradient(135deg, #E4405F, #d42c53); }
+    .home-page .about-social a:nth-child(5) { background: linear-gradient(135deg, #FF0000, #cc0000); }
+    .home-page .about-social a:nth-child(6) { background: linear-gradient(135deg, #0A66C2, #0855a3); }
+    .home-page .about-social a:nth-child(7) { background: linear-gradient(135deg, #181717, #333333); }
+    .home-page .about-text h2 { font-size: 2.5rem; margin-bottom: 25px; color: var(--text-dark); font-weight: 800; line-height: 1.2; position: relative; padding-bottom: 15px; }
+    .home-page .about-text h2::after { content: ''; position: absolute; bottom: 0; left: 0; width: 80px; height: 4px; background: linear-gradient(90deg, var(--primary-green), var(--accent-purple)); border-radius: 2px; }
+    .home-page .about-text p { margin-bottom: 25px; line-height: 1.8; color: var(--text-medium); font-size: 1.125rem; text-align: justify; text-indent: 2em; position: relative; padding-left: 20px; border-left: 3px solid rgba(124, 255, 0, 0.3); }
+    @media (max-width: 1200px) { .home-page .hero-text h1 { font-size: 3.2rem; } .home-page .about-wrapper { gap: 50px; } .home-page .about-photo img { max-width: 380px; } }
+    @media (max-width: 992px) { .home-page .hero { grid-template-columns: 1fr; text-align: center; padding: 80px 20px 40px; gap: 40px; } .home-page .hero-text h1 { font-size: 2.8rem; } .home-page .hero-text p { text-align: left; } .home-page .hero-image img { transform: none; max-width: 100%; margin: 0 auto; } .home-page .hero-stats { justify-content: center; } .home-page .about-highlight, .home-page .tools-section, .home-page .documents-section { padding: 60px 0; } .home-page .about-wrapper { grid-template-columns: 1fr; text-align: center; gap: 40px; } .home-page .about-text h2::after { left: 50%; transform: translateX(-50%); } .home-page .about-text p { padding-left: 0; border-left: none; text-align: left; padding-top: 15px; border-top: 3px solid rgba(124, 255, 0, 0.3); } .home-page .about-photo::before { width: 100%; height: 100%; top: 0; left: 0; } .home-page .cta-content h2 { font-size: 2.5rem; } }
+    @media (max-width: 768px) { .home-page .hero-text h1 { font-size: 2.2rem; } .home-page .hero-text p, .home-page .about-text p { font-size: 1rem; } .home-page .section-header h2 { font-size: 2.2rem; } .home-page .stat-number { font-size: 2rem; } .home-page .cta-buttons { flex-direction: column; align-items: center; } .home-page .cta-btn { width: 100%; max-width: 300px; justify-content: center; } .home-page .about-photo img { max-width: 300px; } .home-page .about-social a { width: 48px; height: 48px; font-size: 1.2rem; } }
+    @media (max-width: 480px) { .home-page .hero-text h1 { font-size: 1.8rem; } .home-page .section-header h2 { font-size: 1.8rem; } .home-page .hero-stats { gap: 20px; } .home-page .stat-number { font-size: 1.8rem; } .home-page .about-photo img { max-width: 250px; } .home-page .about-social a { width: 44px; height: 44px; font-size: 1.1rem; } .home-page .container { padding: 0 15px; } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .home-page .hero-text, .home-page .hero-image, .home-page .about-photo, .home-page .about-text { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; }
     .home-page .hero-image { animation-delay: 0.2s; }
-    .home-page .tool-card:nth-child(1) { animation-delay: 0.1s; }
-    .home-page .tool-card:nth-child(2) { animation-delay: 0.2s; }
-    .home-page .tool-card:nth-child(3) { animation-delay: 0.3s; }
-    .home-page .tool-card:nth-child(4) { animation-delay: 0.4s; }
-    .home-page .health-card:nth-child(1) { animation-delay: 0.1s; }
-    .home-page .health-card:nth-child(2) { animation-delay: 0.2s; }
-    .home-page .document-card:nth-child(1) { animation-delay: 0.1s; }
-    .home-page .document-card:nth-child(2) { animation-delay: 0.2s; }
-    .home-page .document-card:nth-child(3) { animation-delay: 0.3s; }
-    .home-page .update-card:nth-child(1) { animation-delay: 0.1s; }
-    .home-page .update-card:nth-child(2) { animation-delay: 0.2s; }
-    .home-page .update-card:nth-child(3) { animation-delay: 0.3s; }
     .home-page .about-photo { animation-delay: 0.3s; }
     .home-page .about-text { animation-delay: 0.4s; }
-
-    /* =================================
-       SCROLL ANIMATIONS
-    ================================= */
-    .home-page .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .home-page .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
   </style>
 </head>
-
 <body class="home-page">
 
 <div id="site-header"></div>
 
 <main>
-<!-- FULL WIDTH SLIDER (mobile: reduced height & contain to show full image) -->
+  <!-- FULL WIDTH SLIDER (unchanged) -->
   <section class="slider-section">
     <div class="slider-container" id="sliderContainer">
       <div class="slider-track" id="sliderTrack">
-        <!-- slide 1: Tools (button text "Utility Tools" as requested) -->
-        <div class="slide slide-1">
-          <button class="slide-btn" data-target="tools">
-            Utility Tools <i>↓</i>
-          </button>
-        </div>
-        <!-- slide 2: Resources -->
-        <div class="slide slide-2">
-          <button class="slide-btn" data-target="resources">
-            Resources <i>↓</i>
-          </button>
-        </div>
-        <!-- slide 3: Legal Docs -->
-        <div class="slide slide-3">
-          <button class="slide-btn" data-target="legaldocs">
-            Legal Docs <i>↓</i>
-          </button>
-        </div>
+        <div class="slide slide-1"><button class="slide-btn" data-target="tools">Utility Tools <i>↓</i></button></div>
+        <div class="slide slide-2"><button class="slide-btn" data-target="resources">Resources <i>↓</i></button></div>
+        <div class="slide slide-3"><button class="slide-btn" data-target="legaldocs">Legal Docs <i>↓</i></button></div>
       </div>
-
-      <!-- navigation arrows bottom left -->
-      <div class="nav-arrows">
-        <div class="arrow" id="arrowLeft">←</div>
-        <div class="arrow" id="arrowRight">→</div>
-      </div>
+      <div class="nav-arrows"><div class="arrow" id="arrowLeft">←</div><div class="arrow" id="arrowRight">→</div></div>
     </div>
   </section>
 
-  <!-- HERO SECTION -->
+  <!-- HERO SECTION (unchanged) -->
   <section class="hero container">
-    <div class="hero-text">
-      <h1>Empowering All, Through Accessible Information</h1>
-      
-      <p>
-        A comprehensive platform provides curated government documents, essential tools, and 
-        reliable information to simplify bureaucratic processes for everyone. The bridge the gap between government resources and public accessibility.
-      </p>
-      
-      <p>
-        From legal acts and regulations to practical utilities like Electric Bill Downloader and 
-        Fuel Density calculators, a one-stop solution for citizens, professionals, 
-        and researchers alike.
-      </p>
-      
-      <div class="hero-stats">
-        <div class="stat-item">
-          <span class="stat-number">10+</span>
-          <span class="stat-label">Tools</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">20+</span>
-          <span class="stat-label">Pages</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">50+</span>
-          <span class="stat-label">Posts</span>
-        </div>
-      </div>
-      
-      <a href="#tools" class="btn btn-primary">
-        <span>Explore The Tools</span>
-        <i class="fas fa-arrow-down"></i>
-      </a>
-    </div>
-    
-    <div class="hero-image">
-      <img src="assets/images/other/Sub-Collector-Balangir.jpeg" alt="Government Resources & Tools Platform" loading="lazy">
-    </div>
+    <div class="hero-text"><h1>Empowering All, Through Accessible Information</h1><p>A comprehensive platform provides curated government documents, essential tools, and reliable information to simplify bureaucratic processes for everyone. The bridge the gap between government resources and public accessibility.</p><p>From legal acts and regulations to practical utilities like Electric Bill Downloader and Fuel Density calculators, a one-stop solution for citizens, professionals, and researchers alike.</p><div class="hero-stats"><div class="stat-item"><span class="stat-number">10+</span><span class="stat-label">Tools</span></div><div class="stat-item"><span class="stat-number">20+</span><span class="stat-label">Pages</span></div><div class="stat-item"><span class="stat-number">50+</span><span class="stat-label">Posts</span></div></div><a href="#tools" class="btn btn-primary"><span>Explore The Tools</span><i class="fas fa-arrow-down"></i></a></div>
+    <div class="hero-image"><img src="assets/images/other/Sub-Collector-Balangir.jpeg" alt="Government Resources & Tools Platform" loading="lazy"></div>
   </section>
 
-  <!-- TOOLS SECTION -->
+  <!-- TOOLS SECTION (includes Age and BMR calculators) -->
   <section id="tools" class="tools-section container">
-    <div class="section-header">
-      <h2>Utility Tools & Calculators</h2>
-      <p>Practical utilities designed to simplify everyday tasks and calculations</p>
-    </div>
-    
-    <div class="tools-grid">
-      <div class="tool-card">
-        <div class="tool-icon">
-          <i class="fas fa-money-bill-wave"></i>
-        </div>
-        <h3>Currency Converter</h3>
-        <p>Real-time currency conversion with up-to-date exchange rates. Perfect for travelers, importers, and financial calculations.</p>
-        <a href="currency-converter.html" class="btn btn-outline">Use Converter</a>
-      </div>
-      
-      <div class="tool-card">
-        <div class="tool-icon">
-          <i class="fas fa-weight-scale"></i>
-        </div>
-        <h3>Density Converter</h3>
-        <p>Convert between different density units instantly. Essential for scientific calculations, engineering, and academic purposes.</p>
-        <a href="density-converter.html" class="btn btn-outline">Convert Density</a>
-      </div>
-      
-      <div class="tool-card">
-        <div class="tool-icon">
-          <i class="fas fa-lightbulb"></i>
-        </div>
-        <h3>Electricity Calculator</h3>
-        <p>Calculate electricity bills, estimate power consumption, and understand tariff structures for better energy management.</p>
-        <a href="electricity-bill.html" class="btn btn-outline">Calculate Bill</a>
-      </div>
-      
-      <div class="tool-card">
-        <div class="tool-icon">
-          <i class="fas fa-key"></i>
-        </div>
-        <h3>Password Generator</h3>
-        <p>Generate strong, secure passwords with customizable options for length, characters, and special symbols.</p>
-        <a href="password-generator.html" class="btn btn-outline">Generate Password</a>
-      </div>
-    </div>
+    <div class="section-header"><h2>Utility Tools & Calculators</h2><p>Practical utilities designed to simplify everyday tasks and calculations</p></div>
+    <div class="card-nav"><div class="card-arrow" id="toolsScrollLeft">←</div><div class="card-arrow" id="toolsScrollRight">→</div></div>
+    <div class="card-slider-container"><div class="card-slider-track" id="toolsSliderTrack">
+      <!-- existing tools -->
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-money-bill-wave"></i></div><h3>Currency Converter</h3><p>Real-time currency conversion with up-to-date exchange rates. Perfect for travelers, importers, and financial calculations.</p><a href="currency-converter.html" class="btn btn-outline">Use Converter</a></div></div>
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-weight-scale"></i></div><h3>Density Converter</h3><p>Convert between different density units instantly. Essential for scientific calculations, engineering, and academic purposes.</p><a href="density-converter.html" class="btn btn-outline">Convert Density</a></div></div>
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-lightbulb"></i></div><h3>Electricity Calculator</h3><p>Calculate electricity bills, estimate power consumption, and understand tariff structures for better energy management.</p><a href="electricity-bill.html" class="btn btn-outline">Calculate Bill</a></div></div>
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-key"></i></div><h3>Password Generator</h3><p>Generate strong, secure passwords with customizable options for length, characters, and special symbols.</p><a href="password-generator.html" class="btn btn-outline">Generate Password</a></div></div>
+      <!-- added Age Calculator -->
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-calculator"></i></div><h3>Age Calculator</h3><p>Calculate your exact age in years, months, and days. Useful for official documentation, health tracking, and personal records.</p><a href="age-calculator.html" class="btn btn-outline">Calculate Age</a></div></div>
+      <!-- added BMR Calculator -->
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-heartbeat"></i></div><h3>BMR Calculator</h3><p>Calculate your Basal Metabolic Rate to understand your daily calorie needs for weight management and fitness planning.</p><a href="bmr-calculator.html" class="btn btn-outline">Calculate BMR</a></div></div>
+    </div></div>
   </section>
 
-  <!-- HEALTH TOOLS SECTION -->
-  <section class="health-tools-section container">
-    <div class="section-header">
-      <h2>Health & Wellness Calculators</h2>
-      <p>Tools to help you monitor and improve your health and wellbeing</p>
-    </div>
-    
-    <div class="health-grid">
-      <div class="health-card">
-        <div class="health-icon">
-          <i class="fas fa-calculator"></i>
-        </div>
-        <h3>Age Calculator</h3>
-        <p>Calculate your exact age in years, months, and days. Useful for official documentation, health tracking, and personal records.</p>
-        <a href="age-calculator.html" class="btn btn-outline">Calculate Age</a>
-      </div>
-      
-      <div class="health-card">
-        <div class="health-icon">
-          <i class="fas fa-heartbeat"></i>
-        </div>
-        <h3>BMR Calculator</h3>
-        <p>Calculate your Basal Metabolic Rate to understand your daily calorie needs for weight management and fitness planning.</p>
-        <a href="bmr-calculator.html" class="btn btn-outline">Calculate BMR</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- LEGAL DOCUMENTS SECTION -->
+  <!-- LEGAL DOCUMENTS SECTION (slider view, no tabs, includes HSD License) -->
   <section id="legaldocs" class="documents-section container">
-    <div class="section-header">
-      <h2>Legal Documents & Acts</h2>
-      <p>Comprehensive collection of important government acts and regulations</p>
-    </div>
-    
-    <div class="documents-tabs">
-      <button class="tab-btn active" data-tab="petroleum">Petroleum Acts</button>
-      <button class="tab-btn" data-tab="commodity">Essential Commodities</button>
-      <button class="tab-btn" data-tab="other">Other Resources</button>
-    </div>
-    
-    <div class="documents-grid">
-      <div class="document-card">
-        <div class="document-header">
-          <h3>Petroleum Act 1934</h3>
-          <p>Historical petroleum legislation</p>
-        </div>
-        <div class="document-body">
-          <p>The Petroleum Act, 1934 regulates the import, transport, storage, production, and refining of petroleum in India.</p>
-          <div class="document-meta">
-            <span><i class="far fa-calendar"></i> Enacted: 1934</span>
-            <span><i class="far fa-file-pdf"></i> PDF Available</span>
-          </div>
-          <a href="petroleum-act-1934.html" class="btn btn-primary">View Details</a>
-        </div>
-      </div>
-      
-      <div class="document-card">
-        <div class="document-header">
-          <h3>Petroleum Rules 2002</h3>
-          <p>Modern petroleum regulations</p>
-        </div>
-        <div class="document-body">
-          <p>Detailed rules and safety regulations for handling petroleum products under the Petroleum Act, 1934.</p>
-          <div class="document-meta">
-            <span><i class="far fa-calendar"></i> Updated: 2002</span>
-            <span><i class="far fa-file-pdf"></i> PDF Available</span>
-          </div>
-          <a href="petroleum-rules-2002.html" class="btn btn-primary">View Rules</a>
-        </div>
-      </div>
-      
-      <div class="document-card">
-        <div class="document-header">
-          <h3>Essential Commodity Act 1955</h3>
-          <p>Commodities regulation legislation</p>
-        </div>
-        <div class="document-body">
-          <p>An act to provide for the control of the production, supply and distribution of essential commodities.</p>
-          <div class="document-meta">
-            <span><i class="far fa-calendar"></i> Enacted: 1955</span>
-            <span><i class="far fa-file-pdf"></i> PDF Available</span>
-          </div>
-          <a href="ec-act-1955.html" class="btn btn-primary">Read Act</a>
-        </div>
-      </div>
-    </div>
+    <div class="section-header"><h2>Legal Documents & Acts</h2><p>Comprehensive collection of important government acts and regulations</p></div>
+    <div class="card-nav"><div class="card-arrow" id="docsScrollLeft">←</div><div class="card-arrow" id="docsScrollRight">→</div></div>
+    <div class="card-slider-container"><div class="card-slider-track" id="docsSliderTrack">
+      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>Petroleum Act 1934</h3><p>Historical petroleum legislation</p></div><div class="doc-body"><p>The Petroleum Act, 1934 regulates the import, transport, storage, production, and refining of petroleum in India.</p><div class="doc-meta"><span><i class="far fa-calendar"></i> 1934</span><span><i class="far fa-file-pdf"></i> PDF</span></div><a href="petroleum-act-1934.html" class="btn btn-primary">View Details</a></div></div></div>
+      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>Petroleum Rules 2002</h3><p>Modern petroleum regulations</p></div><div class="doc-body"><p>Detailed rules and safety regulations for handling petroleum products under the Petroleum Act, 1934.</p><div class="doc-meta"><span><i class="far fa-calendar"></i> 2002</span><span><i class="far fa-file-pdf"></i> PDF</span></div><a href="petroleum-rules-2002.html" class="btn btn-primary">View Rules</a></div></div></div>
+      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>Essential Commodity Act 1955</h3><p>Commodities regulation</p></div><div class="doc-body"><p>An act to provide for the control of the production, supply and distribution of essential commodities.</p><div class="doc-meta"><span><i class="far fa-calendar"></i> 1955</span><span><i class="far fa-file-pdf"></i> PDF</span></div><a href="ec-act-1955.html" class="btn btn-primary">Read Act</a></div></div></div>
+      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>HSD License 1979</h3><p>High Speed Diesel licensing</p></div><div class="doc-body"><p>Information and guidelines for High Speed Diesel licensing under 1979 regulations. Essential for dealers and distributors.</p><div class="doc-meta"><span><i class="far fa-calendar"></i> 1979</span><span><i class="far fa-file-pdf"></i> PDF</span></div><a href="hsd-license-1979.html" class="btn btn-primary">View License</a></div></div></div>
+    </div></div>
   </section>
 
-  <!-- RESOURCES SECTION -->
+  <!-- EXPANDED RESOURCES SECTION (original 4 + 3 contact cards = 7 cards) -->
   <section class="container">
-    <div class="section-header">
-      <h2>Additional Resources</h2>
-      <p>More useful tools and information for various needs</p>
-    </div>
-    
-    <div class="resources-grid">
-      <div class="resource-card">
-        <div class="resource-icon">
-          <i class="fas fa-file-shield"></i>
-        </div>
-        <h3>Guard File System</h3>
-        <p>Secure document management and protection system for important files and records.</p>
-        <a href="guard-file.html" class="btn btn-outline">Access System</a>
-      </div>
-      
-      <div class="resource-card">
-        <div class="resource-icon">
-          <i class="fas fa-map-marker-alt"></i>
-        </div>
-        <h3>Office Locations</h3>
-        <p>Find government office locations, contact information, and service details.</p>
-        <a href="locations.html" class="btn btn-outline">Find Locations</a>
-      </div>
-      
-      <div class="resource-card">
-        <div class="resource-icon">
-          <i class="fas fa-link"></i>
-        </div>
-        <h3>Useful Web Links</h3>
-        <p>Curated collection of reliable websites for government services and information.</p>
-        <a href="weblinks.html" class="btn btn-outline">Browse Links</a>
-      </div>
-      
-      <div class="resource-card">
-        <div class="resource-icon">
-          <i class="fas fa-id-card"></i>
-        </div>
-        <h3>HSD License 1979</h3>
-        <p>Information and guidelines for High Speed Diesel licensing under 1979 regulations.</p>
-        <a href="hsd-license-1979.html" class="btn btn-outline">View License Info</a>
-      </div>
+    <div class="section-header"><h2>Additional Resources</h2><p>More useful tools, information, and ways to connect</p></div>
+    <div class="resources-grid-modern">
+      <!-- original resource cards -->
+       <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-user-circle"></i></div><h3>About Me</h3><p>Learn more about my journey, philosophy, and commitment to public service and information accessibility.</p><a href="about.html" class="btn btn-outline">Learn More</a></div>
+      <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-file-shield"></i></div><h3>Guard File System</h3><p>Secure document management and protection system for important files and records.</p><a href="guard-file.html" class="btn btn-outline">Access System</a></div>
+      <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-newspaper"></i></div><h3>Govt. Circulars</h3><p>Latest government circulars and office memoranda updated regularly for public reference.</p><a href="circulars.html" class="btn btn-outline">View Circulars</a></div>
+      <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-link"></i></div><h3>Useful Web Links</h3><p>Curated collection of reliable websites for government services and information.</p><a href="weblinks.html" class="btn btn-outline">Browse Links</a></div>
+      <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-envelope"></i></div><h3>Contact Me</h3><p>Have questions or suggestions? Reach out to us directly for assistance with our resources and tools.</p><a href="contact.html" class="btn btn-outline">Contact Now</a></div>
+      <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-sitemap"></i></div><h3>All Pages Index</h3><p>Browse through our complete collection of pages, tools, and resources in one organized place.</p><a href="page-index.html" class="btn btn-outline">View Index</a></div>
+      <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-map-marker-alt"></i></div><h3>Office Locations</h3><p>Find government office locations, contact information, and service details.</p><a href="locations.html" class="btn btn-outline">Find Locations</a></div>
     </div>
   </section>
 
-  <!-- CONTACT SECTION -->
-  <section class="contact-section container">
-    <div class="section-header">
-      <h2>Get In Touch</h2>
-      <p>Connect with us for inquiries, suggestions, or support</p>
-    </div>
-    
-    <div class="contact-grid">
-      <div class="contact-card">
-        <div class="contact-icon">
-          <i class="fas fa-user-circle"></i>
-        </div>
-        <h3>About Me</h3>
-        <p>Learn more about my journey, philosophy, and commitment to public service and information accessibility.</p>
-        <a href="about.html" class="btn btn-primary">Learn More</a>
-      </div>
-      
-      <div class="contact-card">
-        <div class="contact-icon">
-          <i class="fas fa-envelope"></i>
-        </div>
-        <h3>Contact Us</h3>
-        <p>Have questions or suggestions? Reach out to us directly for assistance with our resources and tools.</p>
-        <a href="contact.html" class="btn btn-primary">Contact Now</a>
-      </div>
-      
-      <div class="contact-card">
-        <div class="contact-icon">
-          <i class="fas fa-sitemap"></i>
-        </div>
-        <h3>All Pages Index</h3>
-        <p>Browse through our complete collection of pages, tools, and resources in one organized place.</p>
-        <a href="page-index.html" class="btn btn-primary">View Index</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA SECTION -->
-  <section class="cta-section">
-    <div class="cta-content">
-      <h2>Start Exploring Resources Today</h2>
-      <p>Access all our tools, documents, and resources in one place. Simplify your work with our comprehensive platform.</p>
-      <div class="cta-buttons">
-        <a href="page-index.html" class="cta-btn">
-          <i class="fas fa-sitemap"></i>
-          <span>Browse All Pages</span>
-        </a>
-        <a href="#tools" class="cta-btn">
-          <i class="fas fa-tools"></i>
-          <span>Try Our Tools</span>
-        </a>
-        <a href="contact.html" class="cta-btn">
-          <i class="fas fa-envelope"></i>
-          <span>Contact Us</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT HIGHLIGHT SECTION -->
-  <section id="resources" class="about-highlight container">
-    <div class="about-wrapper">
-      <div class="about-photo">
-        <img src="assets/images/Sarat/Profile.jpg" alt="Sarat Rout - Public Servant & Information Advocate" loading="lazy">
-        
-        <div class="about-social">
-          <a href="https://www.facebook.com/saratoffice/" title="Facebook" target="_blank" rel="noopener">
-            <i class="fab fa-facebook-f"></i>
-          </a>
-          <a href="https://in.pinterest.com/saratoffice/" title="Pinterest" target="_blank" rel="noopener">
-            <i class="fab fa-pinterest-p"></i>
-          </a>
-          <a href="https://x.com/saratoffice" title="X (Twitter)" target="_blank" rel="noopener">
-            <i class="fab fa-twitter"></i>
-          </a>
-          <a href="https://www.instagram.com/saratoffice" title="Instagram" target="_blank" rel="noopener">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <a href="https://www.youtube.com/@saratoffice" title="YouTube" target="_blank" rel="noopener">
-            <i class="fab fa-youtube"></i>
-          </a>
-          <a href="https://www.linkedin.com/in/routsaratkumar/" title="LinkedIn" target="_blank" rel="noopener">
-            <i class="fab fa-linkedin-in"></i>
-          </a>
-          <a href="https://github.com/saratoffice" title="GitHub" target="_blank" rel="noopener">
-            <i class="fab fa-github"></i>
-          </a>
-        </div>
-      </div>
-      
-      <div class="about-text">
-        <h2>A Life Between Duty and Devotion</h2>
-        
-        <p>
-          Nature, to me, is a sacred reflection of the divine — a living expression of beauty,
-          balance, and higher purpose. In its quiet resilience and boundless generosity, I find
-          spiritual grounding. Every tree preserved, every plant nurtured, deepens my connection
-          to something greater than myself.
-        </p>
-        
-        <p>
-          Knowledge, too, is a sacred tool — not just to inform, but to elevate. When used with
-          intention, it unlocks the potential to inspire, transform systems, and create meaningful
-          change in the world around us.
-        </p>
-        
-        <p>
-          My approach to public service is rooted in quiet, consistent action — in refining the
-          unnoticed details, solving everyday challenges, and respecting the dignity of every
-          living being. Governance, for me, is not a position of power but a practice of purpose.
-        </p>
-        
-        <a href="about.html" class="btn btn-secondary">
-          <span>Know More About Me</span>
-          <i class="fas fa-user-circle"></i>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- NEW SECTION: LATEST UPDATES -->
-  <section class="latest-updates container">
-    <div class="section-header">
-      <h2>Latest Updates & News</h2>
-      <p>Stay informed about new features, resources, and important announcements</p>
-    </div>
-    
-    <div class="updates-grid">
-      <div class="update-card">
-        <div class="update-icon">
-          <i class="fas fa-newspaper"></i>
-        </div>
-        <h3>New Tools Added</h3>
-        <p>We've recently expanded our collection with new calculators and converters to better serve your needs. Check out our latest additions in the tools section.</p>
-        <div class="update-date">
-          <i class="far fa-calendar"></i>
-          <span>Updated: January 2024</span>
-        </div>
-        <a href="page-index.html" class="btn btn-outline">View All Tools</a>
-      </div>
-      
-      <div class="update-card">
-        <div class="update-icon">
-          <i class="fas fa-file-contract"></i>
-        </div>
-        <h3>Legal Documents Updated</h3>
-        <p>Our repository of government acts and regulations has been updated with the latest amendments and official PDF versions for easy access.</p>
-        <div class="update-date">
-          <i class="far fa-calendar"></i>
-          <span>Updated: December 2023</span>
-        </div>
-        <a href="page-index.html" class="btn btn-outline">Browse Documents</a>
-      </div>
-      
-      <div class="update-card">
-        <div class="update-icon">
-          <i class="fas fa-mobile-alt"></i>
-        </div>
-        <h3>Mobile Optimization</h3>
-        <p>Our platform is now fully optimized for mobile devices. Access all resources and tools seamlessly from your smartphone or tablet.</p>
-        <div class="update-date">
-          <i class="far fa-calendar"></i>
-          <span>Launched: November 2023</span>
-        </div>
-        <a href="page-index.html" class="btn btn-outline">Explore Features</a>
-      </div>
-    </div>
-  </section>
+  <!-- ABOUT HIGHLIGHT (unchanged) -->
+  <section id="resources" class="about-highlight container"><div class="about-wrapper"><div class="about-photo"><img src="assets/images/Sarat/Profile.jpg" alt="Sarat Rout - Public Servant & Information Advocate" loading="lazy"><div class="about-social"><a href="https://www.facebook.com/saratoffice/" title="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a><a href="https://in.pinterest.com/saratoffice/" title="Pinterest" target="_blank"><i class="fab fa-pinterest-p"></i></a><a href="https://x.com/saratoffice" title="X (Twitter)" target="_blank"><i class="fab fa-twitter"></i></a><a href="https://www.instagram.com/saratoffice" title="Instagram" target="_blank"><i class="fab fa-instagram"></i></a><a href="https://www.youtube.com/@saratoffice" title="YouTube" target="_blank"><i class="fab fa-youtube"></i></a><a href="https://www.linkedin.com/in/routsaratkumar/" title="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a><a href="https://github.com/saratoffice" title="GitHub" target="_blank"><i class="fab fa-github"></i></a></div></div><div class="about-text"><h2>A Life Between Duty and Devotion</h2><p>Nature, to me, is a sacred reflection of the divine — a living expression of beauty, balance, and higher purpose. In its quiet resilience and boundless generosity, I find spiritual grounding. Every tree preserved, every plant nurtured, deepens my connection to something greater than myself.</p><p>Knowledge, too, is a sacred tool — not just to inform, but to elevate. When used with intention, it unlocks the potential to inspire, transform systems, and create meaningful change in the world around us.</p><p>My approach to public service is rooted in quiet, consistent action — in refining the unnoticed details, solving everyday challenges, and respecting the dignity of every living being. Governance, for me, is not a position of power but a practice of purpose.</p><a href="about.html" class="btn btn-secondary"><span>Know More About Me</span><i class="fas fa-user-circle"></i></a></div></div></section>
 </main>
 
 <div id="site-footer"></div>
- <!-- Go to Top -->
-  <script src="/assets/Scripts/gototop.js"></script>
+<!-- Go to Top -->
+<script src="/assets/Scripts/gototop.js"></script>
 <script>
-  // =================================
-// SLIDER FUNCTIONALITY - MOBILE OPTIMIZED
-// =================================
-
+// slider for main hero (unchanged)
 (function() {
   const track = document.getElementById('sliderTrack');
-  const slides = Array.from(document.querySelectorAll('.slide'));
   const leftArrow = document.getElementById('arrowLeft');
   const rightArrow = document.getElementById('arrowRight');
   const container = document.getElementById('sliderContainer');
-
   let currentIndex = 0;
   let autoPlayInterval;
-  const totalSlides = slides.length; // 3
-
-  // ----- helper to move to a specific slide (loop) -----
+  const totalSlides = document.querySelectorAll('.slide').length;
   function goToSlide(index) {
     if (index < 0) index = totalSlides - 1;
     if (index >= totalSlides) index = 0;
     currentIndex = index;
-    const shiftPercent = -currentIndex * 100;
-    track.style.transform = `translateX(${shiftPercent}%)`;
+    track.style.transform = `translateX(-${currentIndex * 100}%)`;
   }
-
-  function nextSlide() {
-    goToSlide(currentIndex + 1);
-  }
-
-  function prevSlide() {
-    goToSlide(currentIndex - 1);
-  }
-
-  // ----- autoplay -----
-  function startAutoPlay() {
-    if (autoPlayInterval) clearInterval(autoPlayInterval);
-    autoPlayInterval = setInterval(() => {
-      nextSlide();
-    }, 4000);
-  }
-
-  function stopAutoPlay() {
-    if (autoPlayInterval) {
-      clearInterval(autoPlayInterval);
-      autoPlayInterval = null;
-    }
-  }
-
-  function restartAutoPlay() {
-    if (!autoPlayInterval) {
-      startAutoPlay();
-    }
-  }
-
-  // hover pause
-  container.addEventListener('mouseenter', () => {
-    container.classList.add('pause-autoplay');
-    stopAutoPlay();
-  });
-
-  container.addEventListener('mouseleave', () => {
-    container.classList.remove('pause-autoplay');
-    restartAutoPlay();
-  });
-
-  // arrow click events
-  leftArrow.addEventListener('click', (e) => {
-    e.stopPropagation();
-    prevSlide();
-    stopAutoPlay();
-    restartAutoPlay();
-  });
-
-  rightArrow.addEventListener('click', (e) => {
-    e.stopPropagation();
-    nextSlide();
-    stopAutoPlay();
-    restartAutoPlay();
-  });
-
-  // BUTTON CLICK: navigate to corresponding section (smooth)
+  function nextSlide() { goToSlide(currentIndex + 1); }
+  function prevSlide() { goToSlide(currentIndex - 1); }
+  function startAutoPlay() { if (autoPlayInterval) clearInterval(autoPlayInterval); autoPlayInterval = setInterval(() => { nextSlide(); }, 4000); }
+  function stopAutoPlay() { if (autoPlayInterval) { clearInterval(autoPlayInterval); autoPlayInterval = null; } }
+  function restartAutoPlay() { if (!autoPlayInterval) startAutoPlay(); }
+  container.addEventListener('mouseenter', () => { container.classList.add('pause-autoplay'); stopAutoPlay(); });
+  container.addEventListener('mouseleave', () => { container.classList.remove('pause-autoplay'); restartAutoPlay(); });
+  leftArrow.addEventListener('click', (e) => { e.stopPropagation(); prevSlide(); stopAutoPlay(); restartAutoPlay(); });
+  rightArrow.addEventListener('click', (e) => { e.stopPropagation(); nextSlide(); stopAutoPlay(); restartAutoPlay(); });
   document.querySelectorAll('.slide-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
       e.stopPropagation();
       const targetId = this.getAttribute('data-target');
-      if (targetId) {
-        const targetSection = document.getElementById(targetId);
-        if (targetSection) {
-          targetSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
+      if (targetId) { const targetSection = document.getElementById(targetId); if (targetSection) targetSection.scrollIntoView({ behavior: 'smooth' }); }
     });
   });
-
-  // initial slide
   goToSlide(0);
   startAutoPlay();
-
-  // optional: visibilitychange
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      stopAutoPlay();
-    } else {
-      if (!container.matches(':hover')) {
-        restartAutoPlay();
-      }
-    }
-  });
-
-  // on load, if container hovered stop autoplay
-  window.addEventListener('load', () => {
-    if (container.matches(':hover')) {
-      stopAutoPlay();
-    }
-  });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stopAutoPlay(); else if (!container.matches(':hover')) restartAutoPlay(); });
+  window.addEventListener('load', () => { if (container.matches(':hover')) stopAutoPlay(); });
 })();
 
-// =================================
-// SMOOTH SCROLLING FOR SECTION LINKS
-// =================================
+// card slider controls for tools and docs
+function initCardSlider(sliderId, leftBtnId, rightBtnId) {
+  const slider = document.getElementById(sliderId);
+  if (!slider) return;
+  const left = document.getElementById(leftBtnId);
+  const right = document.getElementById(rightBtnId);
+  const scrollAmount = 360;
+  left.addEventListener('click', () => { slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); });
+  right.addEventListener('click', () => { slider.scrollBy({ left: scrollAmount, behavior: 'smooth' }); });
+}
+initCardSlider('toolsSliderTrack', 'toolsScrollLeft', 'toolsScrollRight');
+initCardSlider('docsSliderTrack', 'docsScrollLeft', 'docsScrollRight');
 
-// Enable smooth scrolling for anchor links
+// scroll margin offset
 document.addEventListener('DOMContentLoaded', function() {
-  // Add smooth scrolling to the entire page
-  if ('scrollBehavior' in document.documentElement.style) {
-    // Use native smooth scrolling if supported
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (href === '#' || href === '#!') return;
-        
-        const target = document.querySelector(href);
-        if (target) {
-          e.preventDefault();
-          
-          // Calculate offset for fixed headers
-          const headerHeight = document.querySelector('header')?.offsetHeight || 0;
-          const offset = headerHeight + 20;
-          
-          window.scrollTo({
-            top: target.offsetTop - offset,
-            behavior: 'smooth'
-          });
-        }
-      });
-    });
-  } else {
-    // Fallback for older browsers
-    document.documentElement.style.scrollBehavior = 'smooth';
-  }
-});
-
-// Optional: Add scroll offset for sections
-function addScrollOffset() {
-  const sections = document.querySelectorAll('section[id]');
-  sections.forEach(section => {
-    section.style.scrollMarginTop = '100px';
-  });
-}
-
-// Call this after page loads
-setTimeout(addScrollOffset, 100);
-
-
-// =================================
-// INITIALIZE PAGE FUNCTIONALITY
-// =================================
-
-function initializePage() {
-  // Tab functionality for documents section
-  const tabButtons = document.querySelectorAll('.tab-btn');
-  
-  tabButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      // Remove active class from all buttons
-      tabButtons.forEach(btn => btn.classList.remove('active'));
-      // Add active class to clicked button
-      button.classList.add('active');
-      
-      // Filter cards based on tab
-      const filter = button.getAttribute('data-tab');
-      const documentCards = document.querySelectorAll('.document-card');
-      
-      documentCards.forEach(card => {
-        if (filter === 'petroleum') {
-          if (card.querySelector('h3').textContent.includes('Petroleum')) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
-        } else if (filter === 'commodity') {
-          if (card.querySelector('h3').textContent.includes('Essential Commodity')) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
-        } else {
-          card.style.display = 'block';
-        }
-      });
-    });
-  });
-  
-  // Mobile menu logic
-  document.addEventListener("click", function (e) {
-    /* Toggle main menu */
-    if (e.target.classList.contains("menu-toggle")) {
-      const menu = document.querySelector(".menu");
-      if (menu) {
-        menu.classList.toggle("open");
-        e.stopPropagation();
-      }
-    }
-
-    /* Toggle dropdowns on mobile */
-    const dropdownLink = e.target.closest(".dropdown > a");
-    if (dropdownLink && window.innerWidth <= 900) {
-      e.preventDefault();
-      dropdownLink.parentElement.classList.toggle("open");
-    }
-
-    /* Close menu when clicking outside */
-    if (!e.target.closest('.menu') && !e.target.closest('.menu-toggle')) {
-      const openMenu = document.querySelector('.menu.open');
-      if (openMenu) {
-        openMenu.classList.remove('open');
-      }
-      
-      const openDropdowns = document.querySelectorAll('.dropdown.open');
-      openDropdowns.forEach(dropdown => {
-        dropdown.classList.remove('open');
-      });
-    }
-  });
-
-  // Smooth scroll for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      const targetId = this.getAttribute('href');
-      if (targetId === '#') return;
-      
-      const targetElement = document.querySelector(targetId);
-      if (targetElement) {
-        window.scrollTo({
-          top: targetElement.offsetTop - 80,
-          behavior: 'smooth'
-        });
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#' || href === '#!') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        const headerHeight = document.querySelector('header')?.offsetHeight || 0;
+        window.scrollTo({ top: target.offsetTop - headerHeight - 20, behavior: 'smooth' });
       }
     });
   });
-
-  // Add keyboard navigation for accessibility
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      const openMenu = document.querySelector('.menu.open');
-      if (openMenu) {
-        openMenu.classList.remove('open');
-      }
-    }
-  });
-}
+  const sections = document.querySelectorAll('section[id]');
+  sections.forEach(section => { section.style.scrollMarginTop = '100px'; });
+});
 </script>
 </body>
 </html>
