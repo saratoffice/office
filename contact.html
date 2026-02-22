@@ -432,147 +432,486 @@
 
 <!-- Google Maps API with callback and error handling -->
 <!-- ⭐ SMART CONFIG LOADER WITH PATH DETECTION ⭐ -->
+<!-- Add this at the end of your contact.html, before the closing </body> tag -->
 <script>
 (function() {
-  // Show loading state
-  document.addEventListener('DOMContentLoaded', () => {
-    const mapDiv = document.getElementById('map');
-    if (mapDiv) {
-      mapDiv.innerHTML = '<div class="map-loading">Loading map...</div>';
-      loadConfig();
-    }
-  });
+    'use strict';
+    
+    // =============================================
+    // CONFIGURATION AND STATE
+    // =============================================
+    const STATE = {
+        configLoaded: false,
+        mapInitialized: false,
+        retryCount: 0,
+        maxRetries: 3
+    };
 
-  function loadConfig() {
-    // Try the simplest path first - root of GitHub Pages
-    const configPath = '/config.map.js';
-    
-    const script = document.createElement('script');
-    script.src = configPath + '?v=' + Date.now();
-    
-    script.onload = function() {
-      console.log('✅ Config loaded successfully');
-      console.log('📍 Office Main:', window.MAP_CONFIG?.OFFICE_MAIN);
-      console.log('📍 Office Annex:', window.MAP_CONFIG?.OFFICE_ANNEX);
-      
-      if (window.MAP_CONFIG?.GOOGLE_MAPS_API_KEY) {
-        // Key exists, load the map
-        loadMap();
-      } else {
-        console.error('❌ API key missing in config');
-        showError('API key configuration missing');
-      }
-    };
-    
-    script.onerror = function() {
-      console.error('❌ Failed to load config from', configPath);
-      
-      // Try alternative path
-      const altScript = document.createElement('script');
-      altScript.src = './config.map.js?v=' + Date.now();
-      
-      altScript.onload = function() {
-        console.log('✅ Config loaded from relative path');
-        if (window.MAP_CONFIG?.GOOGLE_MAPS_API_KEY) {
-          loadMap();
+    // =============================================
+    // UTILITY FUNCTIONS
+    // =============================================
+    function log(message, type = 'info') {
+        const prefix = '📍 Map:';
+        if (type === 'error') {
+            console.error(prefix, message);
+        } else if (type === 'warn') {
+            console.warn(prefix, message);
         } else {
-          showError('API key configuration missing');
+            console.log(prefix, message);
         }
-      };
-      
-      altScript.onerror = function() {
-        console.error('❌ Failed to load config from all paths');
-        showError('Failed to load map configuration. Please check that config.map.js exists in the deployment.');
+    }
+
+    function showMapError(message, isWarning = false) {
+        const mapDiv = document.getElementById('map');
+        if (!mapDiv) return;
         
-        // Show debugging info
-        console.log('🔍 Current URL:', window.location.href);
-        console.log('🔍 Pathname:', window.location.pathname);
-        console.log('🔍 Hostname:', window.location.hostname);
-      };
-      
-      document.head.appendChild(altScript);
+        const style = isWarning ? {
+            bg: '#fff3cd',
+            color: '#856404',
+            border: '#ffeeba'
+        } : {
+            bg: '#f8d7da',
+            color: '#721c24',
+            border: '#f5c6cb'
+        };
+        
+        mapDiv.innerHTML = `
+            <div style="
+                text-align: center;
+                padding: 40px 20px;
+                background: ${style.bg};
+                color: ${style.color};
+                border-radius: 12px;
+                margin: 20px;
+                border: 1px solid ${style.border};
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            ">
+                <div style="font-size: 48px; margin-bottom: 15px;">${isWarning ? '⚠️' : '❌'}</div>
+                <div style="font-size: 18px; font-weight: 500; margin-bottom: 10px;">${message}</div>
+                <div style="font-size: 14px; opacity: 0.9;">Please check the browser console for details (F12)</div>
+            </div>
+        `;
+    }
+
+    function showLoading() {
+        const mapDiv = document.getElementById('map');
+        if (mapDiv) {
+            mapDiv.innerHTML = `
+                <div style="
+                    text-align: center;
+                    padding: 50px 20px;
+                    background: #f8f9fa;
+                    color: #495057;
+                    border-radius: 12px;
+                    margin: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 15px;
+                ">
+                    <div style="
+                        width: 40px;
+                        height: 40px;
+                        border: 3px solid #e9ecef;
+                        border-top-color: #0b3c5d;
+                        border-radius: 50%;
+                        animation: spin 1s linear infinite;
+                    "></div>
+                    <div style="font-size: 16px;">Loading Google Maps...</div>
+                </div>
+                <style>
+                    @keyframes spin {
+                        to { transform: rotate(360deg); }
+                    }
+                </style>
+            `;
+        }
+    }
+
+    // =============================================
+    // PATH DETECTION FOR GITHUB PAGES
+    // =============================================
+    function getPossibleConfigPaths() {
+        const paths = [];
+        const currentUrl = window.location.href;
+        const pathname = window.location.pathname;
+        const origin = window.location.origin;
+        
+        // Log debugging info
+        log(`Current URL: ${currentUrl}`);
+        log(`Pathname: ${pathname}`);
+        log(`Origin: ${origin}`);
+        
+        // 1. Root path (most common for GitHub Pages user sites)
+        paths.push('/config.map.js');
+        
+        // 2. Current directory
+        paths.push('./config.map.js');
+        
+        // 3. Relative path
+        paths.push('config.map.js');
+        
+        // 4. If we're in a subfolder (repository site), try with repo name
+        const pathSegments = pathname.split('/').filter(p => p);
+        if (pathSegments.length > 0) {
+            const repoName = pathSegments[0];
+            paths.push(`/${repoName}/config.map.js`);
+            paths.push(`/${repoName}/config.map.js`);
+        }
+        
+        // 5. Full URL with origin
+        paths.push(`${origin}/config.map.js`);
+        
+        // 6. With cache busting versions of the above
+        return [...new Set(paths)]; // Remove duplicates
+    }
+
+    // =============================================
+    // CONFIG LOADING WITH FALLBACKS
+    // =============================================
+    function loadConfig() {
+        showLoading();
+        
+        // First, check if we already have config (from previous load)
+        if (window.MAP_CONFIG && window.MAP_CONFIG.GOOGLE_MAPS_API_KEY) {
+            log('Config already loaded, using existing');
+            loadMap();
+            return;
+        }
+        
+        const paths = getPossibleConfigPaths();
+        log(`Trying ${paths.length} possible paths for config...`);
+        
+        let currentPathIndex = 0;
+        
+        function tryNextPath() {
+            if (currentPathIndex >= paths.length) {
+                // All paths failed
+                log('All config paths failed!', 'error');
+                showMapError('Failed to load map configuration. Please refresh the page.', false);
+                
+                // Create a dummy config for testing (REMOVE THIS IN PRODUCTION)
+                // This is only for debugging - in production, you should NOT have a fallback key
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    log('Local development: Using fallback config', 'warn');
+                    window.MAP_CONFIG = {
+                        GOOGLE_MAPS_API_KEY: 'YOUR_TEST_KEY_HERE', // Never put real key here!
+                        OFFICE_MAIN: { lat: 20.691424, lng: 83.474194, title: 'Sarat Office (Main)' },
+                        OFFICE_ANNEX: { lat: 21.235850, lng: 86.632800, title: 'Sarat Office (Annex)' },
+                        MAP_OPTIONS: { zoom: 8, mapTypeId: 'roadmap', gestureHandling: 'greedy' }
+                    };
+                    loadMap();
+                }
+                return;
+            }
+            
+            const path = paths[currentPathIndex];
+            const script = document.createElement('script');
+            script.src = path + '?v=' + Date.now(); // Cache bust
+            script.async = true;
+            
+            script.onload = function() {
+                log(`✅ Config loaded successfully from: ${path}`);
+                
+                // Verify the config has the API key
+                if (!window.MAP_CONFIG) {
+                    log('Config loaded but MAP_CONFIG not defined!', 'error');
+                    currentPathIndex++;
+                    tryNextPath();
+                    return;
+                }
+                
+                if (!window.MAP_CONFIG.GOOGLE_MAPS_API_KEY) {
+                    log('Config loaded but API key missing!', 'error');
+                    currentPathIndex++;
+                    tryNextPath();
+                    return;
+                }
+                
+                if (window.MAP_CONFIG.GOOGLE_MAPS_API_KEY === 'YOUR_API_KEY_HERE' || 
+                    window.MAP_CONFIG.GOOGLE_MAPS_API_KEY.includes('{{')) {
+                    log('Config loaded but API key is placeholder!', 'error');
+                    currentPathIndex++;
+                    tryNextPath();
+                    return;
+                }
+                
+                log('✅ API key found in config');
+                STATE.configLoaded = true;
+                loadMap();
+            };
+            
+            script.onerror = function() {
+                log(`❌ Failed to load from: ${path}`);
+                currentPathIndex++;
+                tryNextPath();
+            };
+            
+            document.head.appendChild(script);
+        }
+        
+        tryNextPath();
+    }
+
+    // =============================================
+    // GOOGLE MAPS INITIALIZATION
+    // =============================================
+    window.initMap = function() {
+        if (STATE.mapInitialized) {
+            log('Map already initialized, skipping');
+            return;
+        }
+        
+        const mapDiv = document.getElementById('map');
+        if (!mapDiv) {
+            log('Map div not found!', 'error');
+            return;
+        }
+        
+        try {
+            const config = window.MAP_CONFIG;
+            
+            // Validate config
+            if (!config) {
+                throw new Error('Map configuration not found');
+            }
+            
+            const pos1 = config.OFFICE_MAIN;
+            const pos2 = config.OFFICE_ANNEX;
+            
+            if (!pos1 || !pos2) {
+                throw new Error('Office coordinates missing in config');
+            }
+            
+            // Calculate center point between the two offices
+            const center = {
+                lat: (pos1.lat + pos2.lat) / 2,
+                lng: (pos1.lng + pos2.lng) / 2
+            };
+            
+            // Create map
+            const map = new google.maps.Map(mapDiv, {
+                zoom: config.MAP_OPTIONS?.zoom || 8,
+                center: center,
+                mapTypeId: config.MAP_OPTIONS?.mapTypeId || 'roadmap',
+                gestureHandling: config.MAP_OPTIONS?.gestureHandling || 'greedy',
+                mapTypeControl: true,
+                zoomControl: true,
+                streetViewControl: true,
+                fullscreenControl: true,
+                styles: [
+                    {
+                        featureType: 'poi',
+                        elementType: 'labels',
+                        stylers: [{ visibility: 'off' }]
+                    }
+                ]
+            });
+            
+            // Create markers with custom icons
+            const mainMarker = new google.maps.Marker({
+                position: { lat: pos1.lat, lng: pos1.lng },
+                map: map,
+                title: pos1.title,
+                animation: google.maps.Animation.DROP,
+                icon: {
+                    url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                    scaledSize: new google.maps.Size(40, 40)
+                }
+            });
+            
+            const annexMarker = new google.maps.Marker({
+                position: { lat: pos2.lat, lng: pos2.lng },
+                map: map,
+                title: pos2.title,
+                animation: google.maps.Animation.DROP,
+                icon: {
+                    url: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+                    scaledSize: new google.maps.Size(40, 40)
+                }
+            });
+            
+            // Create info windows
+            const mainInfo = new google.maps.InfoWindow({
+                content: `
+                    <div style="padding: 10px; max-width: 200px;">
+                        <strong style="color: #0b3c5d; font-size: 16px;">${pos1.title}</strong>
+                        <p style="margin: 5px 0 0; color: #666; font-size: 14px;">
+                            Balangir District, Odisha
+                        </p>
+                    </div>
+                `
+            });
+            
+            const annexInfo = new google.maps.InfoWindow({
+                content: `
+                    <div style="padding: 10px; max-width: 200px;">
+                        <strong style="color: #0b3c5d; font-size: 16px;">${pos2.title}</strong>
+                        <p style="margin: 5px 0 0; color: #666; font-size: 14px;">
+                            Balangir District, Odisha
+                        </p>
+                    </div>
+                `
+            });
+            
+            // Add click listeners
+            mainMarker.addListener('click', () => {
+                mainInfo.open(map, mainMarker);
+            });
+            
+            annexMarker.addListener('click', () => {
+                annexInfo.open(map, annexMarker);
+            });
+            
+            // Fit map to show both markers
+            const bounds = new google.maps.LatLngBounds();
+            bounds.extend({ lat: pos1.lat, lng: pos1.lng });
+            bounds.extend({ lat: pos2.lat, lng: pos2.lng });
+            map.fitBounds(bounds);
+            
+            // Add a listener for when bounds change (for responsive design)
+            google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
+                // Don't zoom in too far if bounds are very close
+                const currentZoom = map.getZoom();
+                if (currentZoom > 12) {
+                    map.setZoom(12);
+                }
+            });
+            
+            STATE.mapInitialized = true;
+            log('✅ Map initialized successfully');
+            
+            // Remove loading indicator
+            const loadingIndicator = mapDiv.querySelector('.map-loading, [style*="Loading"]');
+            if (loadingIndicator) {
+                loadingIndicator.remove();
+            }
+            
+        } catch (error) {
+            log(`Map initialization error: ${error.message}`, 'error');
+            showMapError('Failed to initialize map. Please refresh the page.');
+        }
     };
-    
-    document.head.appendChild(script);
-  }
-  
-  function loadMap() {
-    if (!window.MAP_CONFIG?.GOOGLE_MAPS_API_KEY) {
-      showError('Map configuration missing');
-      return;
+
+    // =============================================
+    // LOAD GOOGLE MAPS API
+    // =============================================
+    function loadMap() {
+        if (!window.MAP_CONFIG || !window.MAP_CONFIG.GOOGLE_MAPS_API_KEY) {
+            log('Cannot load map: API key missing', 'error');
+            showMapError('Map configuration is incomplete');
+            return;
+        }
+        
+        // Check if Google Maps is already loaded
+        if (window.google && window.google.maps) {
+            log('Google Maps already loaded, initializing...');
+            window.initMap();
+            return;
+        }
+        
+        log('Loading Google Maps API...');
+        
+        // Create callback function name
+        const callbackName = 'initGoogleMapsCallback';
+        
+        // Define callback
+        window[callbackName] = function() {
+            log('Google Maps API loaded successfully');
+            delete window[callbackName]; // Clean up
+            window.initMap();
+        };
+        
+        // Load the API
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${window.MAP_CONFIG.GOOGLE_MAPS_API_KEY}&callback=${callbackName}&loading=async`;
+        script.async = true;
+        script.defer = true;
+        
+        script.onerror = function() {
+            log('Failed to load Google Maps API', 'error');
+            delete window[callbackName];
+            showMapError('Failed to load Google Maps. Please check your internet connection.');
+        };
+        
+        document.head.appendChild(script);
     }
-    
-    // Load Google Maps API
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${window.MAP_CONFIG.GOOGLE_MAPS_API_KEY}&callback=initMap`;
-    script.async = true;
-    script.defer = true;
-    script.onerror = () => {
-      showError('Failed to load Google Maps API');
-    };
-    document.head.appendChild(script);
-  }
-  
-  window.initMap = function() {
-    const config = window.MAP_CONFIG;
-    if (!config) {
-      showError('Config not available');
-      return;
+
+    // =============================================
+    // INITIALIZATION
+    // =============================================
+    function initialize() {
+        log('Initializing map component...');
+        
+        // Check if map element exists
+        if (!document.getElementById('map')) {
+            log('Map element not found on this page', 'warn');
+            return;
+        }
+        
+        // Start loading config when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(loadConfig, 100); // Small delay for other scripts
+            });
+        } else {
+            setTimeout(loadConfig, 100);
+        }
     }
-    
-    const pos1 = config.OFFICE_MAIN;
-    const pos2 = config.OFFICE_ANNEX;
-    
-    const mapDiv = document.getElementById("map");
-    if (!mapDiv) return;
-    
-    const map = new google.maps.Map(mapDiv, {
-      zoom: config.MAP_OPTIONS.zoom,
-      center: { lat: (pos1.lat + pos2.lat)/2, lng: (pos1.lng + pos2.lng)/2 },
-      mapTypeId: config.MAP_OPTIONS.mapTypeId,
-      gestureHandling: config.MAP_OPTIONS.gestureHandling,
-    });
-    
-    // Add markers
-    new google.maps.Marker({
-      position: { lat: pos1.lat, lng: pos1.lng },
-      map: map,
-      title: pos1.title,
-    });
-    
-    new google.maps.Marker({
-      position: { lat: pos2.lat, lng: pos2.lng },
-      map: map,
-      title: pos2.title,
-    });
-    
-    // Fit bounds
-    const bounds = new google.maps.LatLngBounds();
-    bounds.extend({ lat: pos1.lat, lng: pos1.lng });
-    bounds.extend({ lat: pos2.lat, lng: pos2.lng });
-    map.fitBounds(bounds);
-    
-    console.log('✅ Map initialized successfully');
-    
-    // Remove loading message
-    const loading = mapDiv.querySelector('.map-loading');
-    if (loading) loading.remove();
-  };
-  
-  function showError(message) {
-    const mapDiv = document.getElementById('map');
-    if (mapDiv) {
-      mapDiv.innerHTML = `
-        <div style="text-align:center; padding:30px; background:#fff3cd; color:#856404; border-radius:8px; margin:20px;">
-          <strong>⚠️ ${message}</strong>
-          <p style="margin-top:10px; font-size:14px;">Please check browser console for details (F12)</p>
-        </div>
-      `;
-    }
-    console.error('Map error:', message);
-  }
+
+    // Start everything
+    initialize();
+
 })();
 </script>
+
+<!-- Add this CSS for better map container -->
+<style>
+    #map {
+        width: 100%;
+        height: 460px;
+        background-color: #e9ecef;
+        border-radius: 36px 36px 0 0;
+        box-shadow: 0 -4px 30px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    @media (max-width: 900px) {
+        #map {
+            height: 380px;
+            border-radius: 24px 24px 0 0;
+        }
+    }
+    
+    @media (max-width: 600px) {
+        #map {
+            height: 320px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        #map {
+            height: 280px;
+            border-radius: 16px 16px 0 0;
+        }
+    }
+    
+    /* Style for info windows */
+    .gm-style .gm-style-iw-c {
+        border-radius: 12px !important;
+        padding: 8px !important;
+    }
+    
+    .gm-style .gm-style-iw-d {
+        overflow: hidden !important;
+    }
+    
+    .gm-style .gm-ui-hover-effect {
+        top: 4px !important;
+        right: 4px !important;
+    }
+</style>
   
 <style>
 .map-loading {
