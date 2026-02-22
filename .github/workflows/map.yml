@@ -21,6 +21,7 @@ jobs:
         env:
           MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: |
+          # Create config file with the secret API key from GitHub Secrets
           echo "window.MAP_CONFIG = {" > config.map.js
           echo "  GOOGLE_MAPS_API_KEY: '${{ secrets.GOOGLE_MAPS_API_KEY }}'," >> config.map.js
           echo "  OFFICE_MAIN: { lat: 20.691424, lng: 83.474194, title: 'Sarat Office (Main)' }," >> config.map.js
@@ -28,21 +29,18 @@ jobs:
           echo "  MAP_OPTIONS: { zoom: 8, mapTypeId: 'roadmap', gestureHandling: 'greedy' }" >> config.map.js
           echo "};" >> config.map.js
           
-          # Verify the file was created
-          echo "✅ Generated config.map.js with content:"
-          cat config.map.js
+          # Verify the file was created (without exposing the key in logs)
+          echo "✅ Generated config.map.js successfully"
           
-      - name: Debug - List files before upload
+      - name: Debug - Check file exists
         run: |
           echo "📂 Current directory contents:"
           ls -la
           echo ""
-          echo "📄 Content of config.map.js:"
-          cat config.map.js
-          echo ""
           echo "📊 File stats:"
           wc -l config.map.js
           echo "File size: $(du -h config.map.js | cut -f1)"
+          # Don't cat the file to avoid exposing the key in logs
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -50,7 +48,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'  # This uploads everything including config.map.js
+          path: '.'
       
       - name: Deploy to GitHub Pages
         id: deployment
