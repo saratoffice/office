@@ -2,598 +2,709 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Work Locations | Sarat Office – fullscreen map</title>
+  <title>Sarat Office | Web Links</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Common CSS (menu, footer, global styles) -->
+  <!-- Common CSS -->
   <link rel="stylesheet" href="style.css">
-  <!-- ✅ IMPORTANT: site components for header/footer etc. -->
+  <!-- ✅ IMPORTANT: script for common header/footer etc with defer -->
   <script src="assets/Scripts/site-components.js" defer></script>
-  <!-- Font Awesome for social media icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    /* ----- global reset to allow full bleed ----- */
-    html, body {
+    /* ===== RESET / BASE (ensure consistent) ===== */
+    * {
       margin: 0;
       padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow-x: hidden;
+      box-sizing: border-box;
     }
-
-    #site-header, #site-footer { flex-shrink: 0; }
 
     body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      background: #f8faff;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      line-height: 1.5;
+      color: #1e293b;
     }
 
-    .sarat-office-content {
-      flex: 1 1 auto;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 100% !important;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
+    /* ===== GLOBAL HEADING STYLE WITH BLUE ACCENT ===== */
+    .weblink-heading {
+      text-align: center;
+      margin: 50px 0 30px;
+      position: relative;
     }
 
-    .sarat-office-content .map-controls {
+    .weblink-heading h2 {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #0b2b4f;        /* deep blue */
+      text-transform: uppercase;
+      display: inline-block;
+      background: linear-gradient(145deg, #ffffff, #f0f5ff);
+      padding: 0.4rem 2rem;
+      border-radius: 60px;
+      box-shadow: 0 10px 18px -8px rgba(0,70,150,0.2);
+      border: 2px solid #1e4f8a;
+      border-top-color: #5b9ae0;
+      border-bottom-color: #0a2f5a;
+    }
+
+    .heading-line {
+      width: 280px;
+      margin: 16px auto 0;
+      border-bottom: 4px dotted #1e4f8a;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+      .weblink-heading h2 {
+        font-size: 30px;
+        padding: 0.3rem 1.2rem;
+      }
+      .heading-line {
+        width: 180px;
+      }
+    }
+
+    /* ===== WRAPPER (FULL WIDTH WITH PADDING) ===== */
+    .weblinks-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    /* ===== 3‑COLUMN GRID (PRIMARY) ===== */
+    .weblink-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    /* ===== CARD DESIGN – BLUE BORDER & HOVER ===== */
+    .weblink-card {
+      background: #ffffff;
+      padding: 24px 22px;
+      border-radius: 24px;
+      border: 2px solid #3b82f6;          /* bold blue border */
+      box-shadow: 0 12px 22px -10px rgba(25, 85, 200, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.2s;
       display: flex;
+      flex-direction: column;
+    }
+
+    .weblink-card:hover {
+      transform: translateY(-6px);
+      border-color: #1e3a8a;              /* darker blue on hover */
+      box-shadow: 0 24px 32px -12px rgba(20, 70, 160, 0.3);
+    }
+
+    /* card title with icon (via pseudo or style) */
+    .weblink-card h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #0a2a44;
+      border-bottom: 3px solid #b1d0ff;
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
       gap: 10px;
-      flex-wrap: wrap;
-      margin: 15px 20px;
-      padding: 0;
-      align-items: center;
     }
 
-    .sarat-office-content .map-controls input {
-      padding: 10px 14px;
-      font-size: 15px;
-      min-width: 200px;
-      flex: 1 1 200px;
-      border: 1px solid #b0b0b0;
-      border-radius: 40px;
-      height: 48px;
-      box-sizing: border-box;
-      background: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    /* add some generic icon before each H3 (using unicode / font free) */
+    .weblink-card h3::before {
+      content: "🔷";
+      font-size: 1.8rem;
+      color: #1e4f8a;
+      filter: drop-shadow(0 2px 2px #7ca5ff);
     }
 
-    .sarat-office-content .button-duo {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-left: auto;
+    /* list styling */
+    .weblink-card ul, .weblink-card ol {
+      padding-left: 24px;
+      margin: 0 0 8px 0;
     }
 
-    .sarat-office-content .map-controls button {
-      padding: 0 20px;
-      font-size: 15px;
+    .weblink-card li {
+      margin-bottom: 12px;
+      font-size: 0.98rem;
+      line-height: 1.5;
+      color: #1e293b;
+    }
+
+    .weblink-card li::marker {
+      color: #2563eb;
       font-weight: 600;
-      background: #1976d2;
+    }
+
+    /* links inside cards – blue with nice hover */
+    .weblink-card a {
+      color: #1e4f8a;
+      text-decoration: none;
+      font-weight: 500;
+      background: linear-gradient(to right, #eef4ff, transparent);
+      padding: 2px 8px;
+      border-radius: 30px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      word-break: break-word;
+    }
+
+    .weblink-card a:hover {
+      background: #1e4f8a;
+      color: #ffffff;
+      border-color: #ffdd8e;
+      text-decoration: none;
+      box-shadow: 0 4px 8px rgba(0, 60, 130, 0.3);
+    }
+
+    /* special for "INSTALL" links in android section – keep distinct */
+    .weblink-card a[href*="play.google"] {
+      background: #0f2b50;
       color: white;
-      border: none;
+      font-weight: 600;
+      padding: 3px 12px;
       border-radius: 40px;
-      cursor: pointer;
-      transition: background 0.2s, box-shadow 0.2s;
-      height: 48px;
-      min-width: 120px;
+      border: 1px solid #74b9ff;
+      margin-left: 6px;
       white-space: nowrap;
-      letter-spacing: 0.3px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
-    .sarat-office-content .map-controls button:hover {
-      background: #0f5bb5;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    .weblink-card a[href*="play.google"]:hover {
+      background: #1e88e5;
+      color: #fff;
+      border-color: #ffd966;
     }
 
-    .sarat-office-content .map-controls button.show-filter-btn {
-      background: #2e7d32;
-    }
-    .sarat-office-content .map-controls button.show-filter-btn:hover {
-      background: #1f5c23;
-    }
-
-    .sarat-office-content #map {
-      width: 100%;
-      flex: 1 1 auto;
-      min-height: 400px;
-      background: #d9e2ec;
-      border-radius: 0;
-      box-shadow: none;
-      box-sizing: border-box;
+    /* ordered list in android cards - extra spacing */
+    .weblink-card ol {
+      list-style-type: decimal;
+      font-weight: 500;
     }
 
-    .sarat-office-content #locationCounts {
-      margin: 15px 20px 25px 20px;
-      padding: 16px 20px;
-      background: #f8f9fa;
-      border-radius: 28px;
-      font-family: Arial, sans-serif;
-      font-size: 15px;
-      border: 1px solid #d4d4d4;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+    .weblink-card ol li {
+      margin-bottom: 16px;
+      border-bottom: 1px dashed #dbe7fe;
+      padding-bottom: 6px;
     }
 
-    .sarat-office-content #locationCounts > div:first-child {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 30px;
-      margin-bottom: 8px;
-    }
-
-    .sarat-office-content #filterStatus {
-      font-size: 13px;
-      color: #555;
-    }
-
-    .sarat-office-content .gm-style,
-    .sarat-office-content .leaflet-container {
-      max-width: 100% !important;
-    }
-
-    /* info window button spacing – increased gap */
-    .info-window-buttons {
-      display: flex;
-      gap: 20px;          /* increased from 12px to 20px for more space */
-      margin: 16px 0 8px;
-      justify-content: center;
-    }
-    .info-window-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      color: white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      transition: transform 0.1s;
-    }
-    .info-window-btn:hover { transform: scale(1.07); }
-    .share-btn { background: #4267B2; }
-    .navigate-btn { background: #34A853; }
-
-    /* Share dialog */
-    .share-dialog-overlay {
-      position: fixed; top:0; left:0; right:0; bottom:0;
-      background: rgba(0,0,0,0.5);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 10000;
-    }
-    .share-dialog {
+    /* ===== TABLE (ALTERNATIVES) WITH BLUE THEME ===== */
+    .app-table {
+      width: 90%;
+      max-width: 1300px;
+      margin: 40px auto;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-family: inherit;
+      font-size: 0.95rem;
       background: white;
       border-radius: 28px;
-      padding: 28px;
-      max-width: 420px;
-      width: 90%;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-    }
-    .social-icons {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin: 24px 0;
-      flex-wrap: wrap;
-    }
-    .social-icon {
-      width: 52px; height: 52px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      color: white; font-size: 26px; text-decoration: none;
-      transition: 0.2s;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .social-icon:hover { transform: translateY(-3px); }
-    .toast-notification {
-      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-      background: #333; color: white; padding: 10px 24px; border-radius: 40px;
-      font-size: 15px; z-index: 10001;
+      overflow: hidden;
+      box-shadow: 0 15px 30px -12px #1e4f8a55;
+      border: 2px solid #2b6ed7;
     }
 
-    @media (max-width: 800px) {
-      .sarat-office-content .map-controls { margin: 12px 16px; }
-      .sarat-office-content .map-controls input { min-width: 160px; }
-      .sarat-office-content .button-duo { margin-left: 0; width: 100%; justify-content: flex-start; }
-      .sarat-office-content .map-controls button { flex: 1 1 auto; }
+    .app-table th {
+      background: #0b2f57;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 16px 18px;
+      text-align: left;
+      border-bottom: 3px solid #5f9eff;
     }
-    @media (max-width: 600px) {
-      .sarat-office-content .map-controls { margin: 10px 12px; gap: 8px; }
-      .sarat-office-content #locationCounts { margin: 10px 12px 20px; padding: 14px 12px; font-size: 14px; }
-      .sarat-office-content .map-controls input { height: 44px; font-size: 14px; }
-      .sarat-office-content .map-controls button { height: 44px; font-size: 14px; min-width: 100px; }
-      .info-window-buttons { gap: 16px; } /* keep slightly larger on mobile */
+
+    .app-table td {
+      padding: 14px 18px;
+      background-color: #fdfdfd;
+      border-bottom: 1px solid #bdd3ff;
     }
+
+    .app-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .app-table a {
+      color: #1750a0;
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px dotted #6d9eff;
+    }
+
+    .app-table a:hover {
+      color: #022b57;
+      border-bottom: 2px solid #022b57;
+    }
+
+    .app-table tr:hover td {
+      background: #eaf1ff;
+    }
+
+    /* ===== ANDROID APPS ALTERNATIVES HEADING ===== */
+    h2 strong {
+      color: #0b2f57;
+      border-bottom: 4px solid #4682b4;
+      padding-bottom: 5px;
+    }
+
+    p {
+      text-align: center;
+      color: #1e3a5f;
+      margin: 20px 10px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .weblink-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .weblink-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .app-table {
+        width: 96%;
+        font-size: 0.9rem;
+      }
+
+      .app-table td, .app-table th {
+        padding: 10px 8px;
+      }
+    }
+
+    /* minor utility for consistent spacing */
+    .weblink-section {
+      scroll-margin-top: 20px;
+    }
+
+    /* icon adjustment for cards with special headings */
+    .weblink-card:nth-child(odd) h3::before {
+      content: "🔹";
+    }
+    .weblink-card:nth-child(3n) h3::before {
+      content: "💠";
+    }
+
+    /* keep all content exactly as provided, only design enhanced */
   </style>
 </head>
 <body>
+
 <div id="site-header"></div>
 
-<div class="sarat-office-content">
-  <div class="map-controls">
-    <input id="blockSearch" list="blockList" type="text" placeholder="Type / Select Block Name" onfocus="this.value=''" onchange="this.blur();" />
-    <datalist id="blockList"></datalist>
-    
-    <input id="codeSearch" type="text" placeholder="Search Work Place Code" />
-    <input id="nameSearch" type="text" placeholder="Search Work Place Name" />
-    
-    <div class="button-duo">
-      <button id="showFilteredBtn" class="show-filter-btn" title="Center map on currently filtered results">📍 Show filtered</button>
-      <button id="showAllBtn" title="Reset filters & show all locations">🗺️ Show All</button>
-    </div>
+<!-- CONTENT (FULLY PRESERVED, ONLY DESIGN/BORDERS/ICONS ADDED) -->
+
+<!-- OFFICE USE WEBSITES -->
+<section class="weblink-section">
+  <div class="weblink-heading">
+    <h2>OFFICE USE WEBSITES</h2>
+    <div class="heading-line"></div>
   </div>
-
-  <div id="map" style="width: 100%; background: #cfdbe9;"></div>
-
-  <div id="locationCounts">
-    <div>
-      <span style="font-weight: bold; color: #1976d2;">Total Locations: <span id="totalCount">0</span></span>
-    </div>
-    <div style="text-align: center; font-size: 13px; color: #666; font-style: italic;">
-      <span id="filterStatus">Showing all locations</span>
-    </div>
-  </div>
-</div>
-
-<div id="site-footer"></div>
-<script src="/assets/Scripts/gototop.js"></script>
-
-<!-- Google Maps API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys&loading=async"></script>
-
-<script>
-(function() {
-  let map;
-  let markers = [];
-  const blockColors = {};
-  const primaryColors = ["#d32f2f", "#1976d2", "#fbc02d"];
-  let colorIndex = 0;
-  let lastClickedMarker = null;
-  let currentBlockFilter = "";
-  let allCategories = new Set();
-  const categoryColors = {
-    "Total": "#1976d2",
-    "PPC": "#d32f2f",
-    "FPS": "#fbc02d",
-    "Godown": "#388e3c",
-    "Rice Mill": "#7b1fa2"
-  };
-
-  function getBlockColor(block) {
-    if (!blockColors[block]) {
-      blockColors[block] = primaryColors[colorIndex % primaryColors.length];
-      colorIndex++;
-    }
-    return blockColors[block];
-  }
-
-  function getCategoryLetter(cat) {
-    const catMap = { "PPC": "P", "Rice Mill": "M", "FPS": "F", "Godown": "G" };
-    return catMap[cat] || "•";
-  }
-
-  function getCategoryColor(category) {
-    return categoryColors[category] || "#455a64";
-  }
-
-  function linePin(color, scale = 1.1) {
-    return {
-      path: "M12 1C8.1 1 5 4.1 5 8.2c0 3.7 3.4 6.8 6 9.3V28h2V17.5c2.6-2.5 6-5.6 6-9.3C19 4.1 15.9 1 12 1z",
-      fillColor: color,
-      fillOpacity: 1,
-      strokeColor: "#000",
-      strokeWeight: 1,
-      scale: scale,
-      labelOrigin: new google.maps.Point(12, 9)
-    };
-  }
-
-  function formatCoordinates(lat, lng) {
-    return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-  }
-
-  function navigateToLocation(lat, lng) {
-    window.location.href = `google.navigation:q=${lat},${lng}&mode=d`;
-    setTimeout(() => {
-      window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`, '_blank');
-    }, 500);
-  }
-
-  // ========= FIXED COPY FUNCTION ========= 
-  // It now copies exactly the coordinates (formatted) and shows toast
-  window.copyToClipboard = function(text) {
-    // Ensure text is a string; if coordinates object arrives, convert.
-    const finalText = String(text);
-    navigator.clipboard.writeText(finalText).then(() => {
-      const toast = document.createElement('div');
-      toast.className = 'toast-notification';
-      toast.textContent = '✓ Coordinates copied';
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 1700);
-    }).catch(() => {
-      // fallback prompt
-      prompt('Copy manually (Ctrl+C):', finalText);
-    });
-  };
-
-  function showShareDialog(name, lat, lng) {
-    const coordinates = formatCoordinates(lat, lng);
-    // We want the copy button to copy exactly the coordinates string
-    const textToCopy = coordinates;   // e.g. "20.123456, 83.123456"
-    // For social sharing we use a longer text
-    const shareText = `📍 ${name}\nCoordinates: ${coordinates}\n\nhttps://maps.google.com/?q=${lat},${lng}`;
-    const encodedText = encodeURIComponent(shareText);
-    const mapsUrl = `https://maps.google.com/?q=${lat},${lng}`;
-    
-    const existing = document.querySelector('.share-dialog-overlay');
-    if (existing) existing.remove();
-    
-    const overlay = document.createElement('div');
-    overlay.className = 'share-dialog-overlay';
-    // Note: the copy button now calls copyToClipboard with the exact coordinates string.
-    // We escape the string for the onclick attribute.
-    const escapedCoords = coordinates.replace(/'/g, "\\'");
-    overlay.innerHTML = `
-      <div class="share-dialog">
-        <h3 style="margin-top:0;color:#1976d2;">Share Location</h3>
-        <div style="font-weight:500;margin-bottom:12px;">${name}</div>
-        <div class="coordinates" style="background:#f0f4f8;padding:12px;border-radius:20px;font-family:monospace;">${coordinates}</div>
-        <div class="social-icons">
-          <a href="https://twitter.com/intent/tweet?text=${encodedText}" target="_blank" class="social-icon twitter" style="background:#1DA1F2;"><i class="fab fa-twitter"></i></a>
-          <a href="https://www.facebook.com/sharer/sharer.php?u=${mapsUrl}&quote=${encodedText}" target="_blank" class="social-icon facebook" style="background:#4267B2;"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://wa.me/?text=${encodedText}" target="_blank" class="social-icon whatsapp" style="background:#25D366;"><i class="fab fa-whatsapp"></i></a>
-          <a href="https://t.me/share/url?url=${mapsUrl}&text=${encodedText}" target="_blank" class="social-icon telegram" style="background:#0088cc;"><i class="fab fa-telegram-plane"></i></a>
-          <a href="#" class="social-icon copy" style="background:#6c757d;" onclick="window.copyToClipboard('${escapedCoords}'); return false;"><i class="fas fa-copy"></i></a>
-        </div>
-        <button class="close-dialog-btn" style="width:100%;padding:14px;background:#dc3545;color:white;border:none;border-radius:40px;font-size:16px;cursor:pointer;">Close</button>
+  <div class="weblinks-wrapper">
+    <div class="weblink-grid">
+      <!-- COLUMN 1 -->
+      <div class="weblink-card">
+        <h3>🌐 Web Tools and Utilities</h3>
+        <ul>
+          <li>Print Friendly: <a href="https://www.printfriendly.com" target="_blank">PrintFriendly.com</a></li>
+          <li>URL Shortener: <a href="https://bitly.com" target="_blank">Bitly.com</a></li>
+          <li>Website Speed Test: <a href="https://gtmetrix.com" target="_blank">Gtmetrix.com</a></li>
+          <li>Password Manager: <a href="https://www.lastpass.com" target="_blank">LastPass.com</a></li>
+          <li>Password Manager: <a href="https://www.dashlane.com" target="_blank">DashLane.com</a></li>
+          <li>Website Uptime Monitor: <a href="https://www.pingdom.com" target="_blank">Pingdom.com</a></li>
+          <li>Random Password Generator: <a href="https://www.random.org" target="_blank">Random.org</a></li>
+          <li>IP Address Tracking: <a href="https://www.whatismyip.com" target="_blank">WhatIsMyIP.com</a></li>
+          <li>QR Code Generator: <a href="https://www.qr-code-generator.com" target="_blank">QRCodeGenerator.com</a></li>
+        </ul>
       </div>
-    `;
-    document.body.appendChild(overlay);
-    overlay.querySelector('.close-dialog-btn').addEventListener('click', () => overlay.remove());
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
-  }
+      <!-- COLUMN 2 -->
+      <div class="weblink-card">
+        <h3>📄 Online PDF & Document Tools</h3>
+        <ul>
+          <li>PDF to Word (OCR): <a href="https://www.onlineocr.net" target="_blank">OnlineOCR.net</a></li>
+          <li>File Converter: <a href="https://www.gonitro.com" target="_blank">Gonitro.com</a></li>
+          <li>PDF Deskew / Whiteout: <a href="https://www.pdfescape.com" target="_blank">Pdfescape.com</a></li>
+          <li>PDF Page Resize: <a href="https://www.deftpdf.com" target="_blank">DeftPDF.com</a></li>
+          <li>PDF Editing & Conversion: <a href="https://www.pdfill.com" target="_blank">Pdfill.com</a></li>
+          <li>Convert File to PDF: <a href="https://online2pdf.com" target="_blank">Online2PDF.com</a></li>
+          <li>PDF to Word: <a href="https://pdf2doc.com" target="_blank">Pdf2Doc.com</a></li>
+        </ul>
+      </div>
+      <!-- COLUMN 3 -->
+      <div class="weblink-card">
+        <h3>🏛 Government & Official Services</h3>
+        <ul>
+          <li>Aadhaar Kiosk: <a href="https://uidai.gov.in" target="_blank">Uidai.gov.in</a></li>
+          <li>Income Tax Rules: <a href="https://www.incometaxindia.gov.in" target="_blank">IncomeTaxIndia.gov.in</a></li>
+          <li>CEO Odisha: <a href="https://ceoodisha.nic.in" target="_blank">CeoOdisha.nic.in</a></li>
+          <li>Election Commission of India: <a href="https://eci.gov.in" target="_blank">Eci.gov.in</a></li>
+          <li>Odisha Land Records: <a href="https://bhulekh.ori.nic.in" target="_blank">Bhulekh.ori.nic.in</a></li>
+          <li>Odisha Land Revenue: <a href="https://odishalandrevenue.nic.in" target="_blank">Odishalandrevenue.nic.in</a></li>
+          <li>Density Conversion Tool: <a href="https://energy1.ru" target="_blank">energy1.ru</a></li>
+          <li>PESO License Download: <a href="https://online.peso.gov.in" target="_blank">online.peso.gov.in</a></li>
+          <li>Electricity Bill Odisha: <a href="https://tpcentralodisha.com" target="_blank">tpcentralodisha.com</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
-  function resetLastMarker() {
-    if (lastClickedMarker && lastClickedMarker.meta) {
-      lastClickedMarker.setIcon(linePin(getBlockColor(lastClickedMarker.meta.block), 1.1));
-      lastClickedMarker = null;
-    }
-  }
+<!-- USEFUL WEB SITES -->
+<section class="weblink-section">
+  <div class="weblink-heading">
+    <h2>USEFUL WEB SITES</h2>
+    <div class="heading-line"></div>
+  </div>
+  <div class="weblinks-wrapper">
+    <div class="weblink-grid">
+      <!-- FILE SHARING -->
+      <div class="weblink-card">
+        <h3>FILE SHARING AND TRANSFER:</h3>
+        <ul>
+          <li>File hosting: <a href="https://www.mediafire.com" target="_blank">Mediafire.com</a></li>
+          <li>Online conversion: <a href="https://www.zamzar.com" target="_blank">Zamzar.com</a></li>
+          <li>WiFi transfer: <a href="https://www.pushbullet.com" target="_blank">Pushbullet</a></li>
+          <li>Capture web pages: <a href="https://www.webcapture.net" target="_blank">WebCapture.net</a></li>
+          <li>Screenshot sharing: <a href="https://puush.me" target="_blank">Puush.me</a></li>
+          <li>File security scan: <a href="https://www.virustotal.com" target="_blank">VirusTotal.com</a></li>
+        </ul>
+      </div>
+      <!-- PRODUCTIVITY -->
+      <div class="weblink-card">
+        <h3>PRODUCTIVITY AND INFORMATION:</h3>
+        <ul>
+          <li>Screen warmth: <a href="https://justgetflux.com" target="_blank">JustGetFlux.com</a></li>
+          <li>Amazon price tracking: <a href="https://camelcamelcamel.com" target="_blank">CamelCamelCamel.com</a></li>
+          <li>Login credentials: <a href="https://bugmenot.com" target="_blank">BugMeNot.com</a></li>
+          <li>Delete accounts: <a href="https://www.accountkiller.com" target="_blank">AccountKiller.com</a></li>
+          <li>Temporary email: <a href="https://www.mailinator.com" target="_blank">Mailinator.com</a></li>
+          <li>Social media analytics: <a href="https://socialblade.com" target="_blank">SocialBlade.com</a></li>
+          <li>Global statistics: <a href="https://www.worldometers.info" target="_blank">Worldometers.info</a></li>
+        </ul>
+      </div>
+      <!-- FOOD & LIFESTYLE -->
+      <div class="weblink-card">
+        <h3>FOOD AND LIFESTYLE:</h3>
+        <ul>
+          <li>Compare food nutrition: <a href="https://www.twofoods.com" target="_blank">TwoFoods.com</a></li>
+          <li>Recipe by ingredients: <a href="https://myfridgefood.com" target="_blank">MyFridgeFood.com</a></li>
+          <li>Meal planning: <a href="https://www.eatthismuch.com" target="_blank">EatThisMuch.com</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
-  function createCategoryElement(category, count) {
-    const color = getCategoryColor(category);
-    const span = document.createElement("span");
-    span.style.fontWeight = "bold";
-    span.style.color = color;
-    span.innerHTML = `${category}: <span style="color:#333;">${count}</span>`;
-    return span;
-  }
+<!-- USEFUL SOFTWARES -->
+<section class="weblink-section">
+  <div class="weblink-heading">
+    <h2>USEFUL SOFTWARES</h2>
+    <div class="heading-line"></div>
+  </div>
+  <div class="weblinks-wrapper">
+    <div class="weblink-grid">
+      <!-- DATA RECOVERY -->
+      <div class="weblink-card">
+        <h3>DATA RECOVERY & FILE MANAGEMENT TOOLS:</h3>
+        <ul>
+          <li>WinToBootic: <a href="https://www.wintobootic.com" target="_blank">WinToBootic.com</a></li>
+          <li>PowerISO: <a href="https://www.poweriso.com" target="_blank">PowerISO.com</a></li>
+          <li>WinSetupFromUSB: <a href="https://www.winsetupfromusb.com" target="_blank">WinSetupFromUSB.com</a></li>
+          <li>Wondershare Data Recovery: <a href="https://recoverit.wondershare.net" target="_blank">Recoverit.Wondershare.net</a></li>
+          <li>WordPress builder: <a href="https://www.livecomposerplugin.com" target="_blank">LiveComposerPlugin.com</a></li>
+        </ul>
+      </div>
+      <!-- SCREEN RECORDING -->
+      <div class="weblink-card">
+        <h3>SCREEN RECORDING, AND VIDEO EDITING TOOLS:</h3>
+        <ul>
+          <li>Free Screen Recorder: <a href="https://www.electa.com" target="_blank">eLecta.com</a></li>
+          <li>IceCream Screen Recorder: <a href="https://icecreamapps.com" target="_blank">IceCreamApps.com</a></li>
+          <li>Internet Download Manager: <a href="https://www.internetdownloadmanager.com" target="_blank">InternetDownloadManager.com</a></li>
+          <li>OpenShot: <a href="https://www.openshot.org" target="_blank">OpenShot.org</a></li>
+          <li>Filmora: <a href="https://filmora.wondershare.net" target="_blank">Filmora.Wondershare.net</a></li>
+          <li>HitFilm Express: <a href="https://fxhome.com" target="_blank">Fxhome.com</a></li>
+          <li>Shotcut: <a href="https://shotcut.org" target="_blank">Shotcut.org</a></li>
+        </ul>
+      </div>
+      <!-- SYSTEM UTILITIES -->
+      <div class="weblink-card">
+        <h3>SYSTEM UTILITIES AND OPTIMIZATION TOOLS:</h3>
+        <ul>
+          <li>DriverToolkit: <a href="https://www.drivertoolkit.com" target="_blank">DriverToolkit.com</a></li>
+          <li>Duplicate file finder: <a href="https://www.digitalvolcano.co.uk" target="_blank">DigitalVolcano.co.uk</a></li>
+          <li>Revo Uninstaller: <a href="https://www.revouninstaller.com" target="_blank">RevoUninstaller.com</a></li>
+          <li>CCleaner: <a href="https://www.ccleaner.com" target="_blank">CCleaner.com</a></li>
+          <li>Find and Mount: <a href="https://findandmount.com" target="_blank">FindandMount.com</a></li>
+          <li>Partition Tool: <a href="https://www.partition-tool.com" target="_blank">Partition-Tool.com</a></li>
+          <li>Repair Flash: <a href="https://www.malvastyle.com" target="_blank">MalvaStyle.com</a></li>
+          <li>Belarc: <a href="https://www.belarc.com" target="_blank">Belarc.com</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
-  function calculateBoundsForVisibleMarkers() {
-    const bounds = new google.maps.LatLngBounds();
-    let visibleCount = 0;
-    markers.forEach(m => { if (m.getVisible()) { bounds.extend(m.getPosition()); visibleCount++; } });
-    return { bounds, visibleCount };
-  }
+<!-- SOFTWARE DOWNLOAD -->
+<section class="weblink-section">
+  <div class="weblink-heading">
+    <h2>SOFTWARE DOWNLOAD</h2>
+    <div class="heading-line"></div>
+  </div>
+  <div class="weblinks-wrapper">
+    <div class="weblink-grid">
+      <!-- DOWNLOAD COL1 -->
+      <div class="weblink-card">
+        <h3>SOFTWARE DOWNLOAD</h3>
+        <ul>
+          <li><a href="https://ninite.com" target="_blank">ninite.com</a></li>
+          <li><a href="https://getintopc.com" target="_blank">getintopc.com</a></li>
+          <li><a href="https://filecroco.com" target="_blank">Filecroco.com</a></li>
+          <li><a href="https://www.softonic.com" target="_blank">softonic.com</a></li>
+          <li><a href="https://alternativeto.net" target="_blank">alternativeto.net</a></li>
+          <li><a href="https://soft98.ir" target="_blank">soft98.ir</a></li>
+          <li><a href="https://serials.ws" target="_blank">serials.ws</a></li>
+        </ul>
+      </div>
+      <!-- SYSTEM UTILITY -->
+      <div class="weblink-card">
+        <h3>SYSTEM UTILITY:</h3>
+        <ul>
+          <li>Microsoft Indic Language: <a href="https://www.microsoft.com/en-in/bhashaindia" target="_blank">BhashaIndiaInputSetup</a></li>
+          <li>PickPick: <a href="https://picpick.app" target="_blank">PicPick.app</a></li>
+          <li>Greenshot: <a href="https://getgreenshot.org" target="_blank">GetGreenshot.org</a></li>
+          <li>Print Lock: <a href="https://printlock.com" target="_blank">PrintLock.com</a></li>
+        </ul>
+      </div>
+      <!-- EXCEL TOOLS -->
+      <div class="weblink-card">
+        <h3>TOOLS FOR EXCEL AND FILE MANAGEMENT:</h3>
+        <ul>
+          <li>Spell Number Excel: <a href="https://stackoverflow.com" target="_blank">Stackoverflow.com</a></li>
+          <li>Un-protect Excel VBA: <a href="https://www.instructables.com" target="_blank">Instructables.com</a></li>
+          <li>VBA Codes: <a href="https://github.com" target="_blank">Github.com</a></li>
+          <li>Save as PDF add-in: <a href="https://www.techspot.com" target="_blank">Techspot.com</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
-  function centerMapOnVisibleMarkers() {
-    const { bounds, visibleCount } = calculateBoundsForVisibleMarkers();
-    if (visibleCount === 0) {
-      map.setCenter({ lat: 20.592263, lng: 83.248939 });
-      map.setZoom(11);
-    } else if (visibleCount === 1) {
-      markers.forEach(m => { if (m.getVisible()) map.setCenter(m.getPosition()); });
-      map.setZoom(14);
-    } else {
-      map.fitBounds(bounds, 50);
-      google.maps.event.addListenerOnce(map, 'bounds_changed', function() {
-        if (map.getZoom() > 12) map.setZoom(12);
-      });
-    }
-  }
+<!-- VIDEO & IMAGE SITES -->
+<section class="weblink-section">
+  <div class="weblink-heading">
+    <h2>VIDEO & IMAGE SITES</h2>
+    <div class="heading-line"></div>
+  </div>
+  <div class="weblinks-wrapper">
+    <div class="weblink-grid">
+      <!-- VIDEO STREAMING -->
+      <div class="weblink-card">
+        <h3>VIDEO STREAMING</h3>
+        <ul>
+          <li><a href="https://livestream.com" target="_blank">Livestream.com</a></li>
+          <li><a href="https://ytmp3.cc" target="_blank">YtMp3.cc</a></li>
+          <li><a href="https://thepiratebay.org" target="_blank">ThePirateBay.org</a></li>
+          <li><a href="https://www.calm.com" target="_blank">Calm.com</a></li>
+        </ul>
+      </div>
+      <!-- STOCK PHOTOS -->
+      <div class="weblink-card">
+        <h3>FREE STOCK PHOTOS, IMAGES, AND CREATIVE TOOLS:</h3>
+        <ul>
+          <li><a href="https://stocksnap.io" target="_blank">Stocksnap.io</a></li>
+          <li><a href="https://unsplash.com" target="_blank">Unsplash.com</a></li>
+          <li><a href="https://www.lifeofpix.com" target="_blank">LifeofPix.com</a></li>
+          <li><a href="https://pixabay.com" target="_blank">Pixabay.com</a></li>
+          <li><a href="https://www.pexels.com" target="_blank">Pexels.com</a></li>
+          <li><a href="https://freerangestock.com" target="_blank">FreerangeStock.com</a></li>
+          <li><a href="https://sumopaint.com" target="_blank">SumoPaint.com</a></li>
+          <li><a href="https://tinypng.com" target="_blank">TinyPNG.com</a></li>
+        </ul>
+      </div>
+      <!-- VIDEO SHARING -->
+      <div class="weblink-card">
+        <h3>VIDEO SHARING, DOWNLOADING, AND EDITING:</h3>
+        <ul>
+          <li><a href="https://www.dailymotion.com" target="_blank">Dailymotion.com</a></li>
+          <li><a href="https://vimeo.com" target="_blank">Vimeo.com</a></li>
+          <li><a href="https://keepvid.online" target="_blank">KeepVid.online</a></li>
+          <li><a href="https://mastihot.info" target="_blank">Mastihot.info</a></li>
+          <li><a href="https://rxhd.info" target="_blank">RxHd.info</a></li>
+          <li><a href="https://moviezoon.com" target="_blank">Moviezoon.com</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
-  function updateLocationCounts() {
-    let total = 0;
-    const categoryCounts = {};
-    allCategories.forEach(cat => categoryCounts[cat] = 0);
-    
-    markers.forEach(m => {
-      if (m.getVisible()) {
-        total++;
-        const cat = m.meta.category || "Unknown";
-        categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
-      }
-    });
+<!-- FREE E-BOOKS SITES -->
+<section class="weblink-section">
+  <div class="weblink-heading">
+    <h2>FREE E-BOOKS SITES</h2>
+    <div class="heading-line"></div>
+  </div>
+  <div class="weblinks-wrapper">
+    <div class="weblink-grid">
+      <!-- EBOOKS REPOSITORIES -->
+      <div class="weblink-card">
+        <h3>FREE EBOOKS AND ONLINE BOOK REPOSITORIES:</h3>
+        <ul>
+          <li><a href="https://planetpublish.com" target="_blank">planetpublish.com</a></li>
+          <li><a href="https://www.freetechbooks.com" target="_blank">freetechbooks.com</a></li>
+          <li><a href="https://freecomputerbooks.com" target="_blank">freecomputerbooks.com</a></li>
+          <li><a href="https://openlibrary.org" target="_blank">OpenLibrary.org</a></li>
+          <li><a href="https://www.tradepub.com" target="_blank">TradePub.com</a></li>
+        </ul>
+      </div>
+      <!-- BOOK RECOMMENDATION -->
+      <div class="weblink-card">
+        <h3>BOOK RECOMMENDATION AND REVIEWS:</h3>
+        <ul>
+          <li><a href="https://www.goodreads.com" target="_blank">Goodreads</a></li>
+          <li><a href="https://www.loyalbooks.com" target="_blank">LoyalBooks.com</a></li>
+          <li><a href="https://searchquotes.com" target="_blank">searchquotes.com</a></li>
+          <li><a href="https://www.timeanddate.com" target="_blank">Time and Date</a></li>
+          <li><a href="https://www.wikipedia.org" target="_blank">Wikipedia</a></li>
+        </ul>
+      </div>
+      <!-- QUOTES -->
+      <div class="weblink-card">
+        <h3>QUOTES AND INSPIRATIONAL CONTENT:</h3>
+        <ul>
+          <li><a href="https://quotegarden.com" target="_blank">quotegarden.com</a></li>
+          <li><a href="https://www.brainyquote.com" target="_blank">brainyquote.com</a></li>
+          <li><a href="https://quotesarchive.com" target="_blank">quotesarchive.com</a></li>
+          <li><a href="https://quotefancy.com" target="_blank">quotefancy.com</a></li>
+          <li><a href="https://wisdomquotes.com" target="_blank">wisdomquotes.com</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
-    document.getElementById("totalCount").textContent = total;
-    const container = document.querySelector("#locationCounts > div:first-child");
-    const totalSpan = container.children[0];
-    container.innerHTML = '';
-    container.appendChild(totalSpan);
+<!-- ANDROID APPS (3‑COLUMN, PRESERVED) -->
+<section class="weblink-section">
+  <div class="weblink-heading">
+    <h2>ANDROID APPS</h2>
+    <div class="heading-line"></div>
+  </div>
+  <div class="weblinks-wrapper">
+    <div class="weblink-grid">
+      <!-- COLUMN 1 -->
+      <div class="weblink-card">
+        <h3>ANDROID APPS:</h3>
+        <ol>
+          <li>mAadhaar <a href="https://play.google.com/store/apps/details?id=in.gov.uidai.mAadhaarPlus&hl=en" target="_blank">INSTALL</a></li>
+          <li>Universal Copy <a href="https://play.google.com/store/apps/details?id=com.camel.corp.universalcopy&hl=en" target="_blank">INSTALL</a></li>
+          <li>Stream – Live Video Community <a href="https://play.google.com/store/apps/details?id=com.sparc.stream&hl=en" target="_blank">INSTALL</a></li>
+          <li>FileChef <a href="https://play.google.com/store/apps/details?id=com.zqlabs.filechef&hl=en" target="_blank">INSTALL</a></li>
+          <li>CTRL-F <a href="https://play.google.com/store/apps/details?id=com.ctrlf.app&hl=en" target="_blank">INSTALL</a></li>
+          <li>Screen Lock & App Lock <a href="https://play.google.com/store/apps/details?id=com.pingenie.screenlocker" target="_blank">INSTALL</a></li>
+          <li>A Wallet <a href="https://play.google.com/store/apps/details?id=org.awallet.free&hl=en-GB" target="_blank">INSTALL</a></li>
+          <li>Evernote <a href="https://play.google.com/store/apps/details?id=com.evernote&hl=en" target="_blank">INSTALL</a></li>
+          <li>Truecaller <a href="https://play.google.com/store/apps/details?id=com.truecaller&hl=en" target="_blank">INSTALL</a></li>
+          <li>Texpand Pro <a href="https://play.google.com/store/apps/details?id=com.isaiasmatewos.texpandpro&hl=en" target="_blank">INSTALL</a></li>
+          <li>Texpand <a href="https://play.google.com/store/apps/details?id=com.isaiasmatewos.texpand&hl=en" target="_blank">INSTALL</a></li>
+          <li>Files Go <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.nbu.files&hl=en" target="_blank">INSTALL</a></li>
+          <li>Mobile App Store <a href="https://play.google.com/store/apps/details?id=com.vapps.mobileappstore&hl=en" target="_blank">INSTALL</a></li>
+          <li>MacroDroid <a href="https://play.google.com/store/apps/details?id=com.arlosoft.macrodroid" target="_blank">INSTALL</a></li>
+          <li>A-Z App Store <a href="https://play.google.com/store/apps/details?id=com.atozappstore&hl=en" target="_blank">INSTALL</a></li>
+          <li>Car Info <a href="https://play.google.com/store/apps/details?id=com.cuvora.carinfo&hl=en-GB" target="_blank">INSTALL</a></li>
+        </ol>
+      </div>
+      <!-- COLUMN 2 -->
+      <div class="weblink-card">
+        <h3>ANDROID APPS:</h3>
+        <ol>
+          <li>SIP Planner <a href="https://play.google.com/store/apps/details?id=com.ankit.sipcalculator" target="_blank">INSTALL</a></li>
+          <li>State Bank Anywhere <a href="https://play.google.com/store/apps/details?id=com.sbi.SBIFreedomPlus&hl=en" target="_blank">INSTALL</a></li>
+          <li>Internet Banking <a href="https://play.google.com/store/apps/details?id=com.andromo.dev574165.app545980&hl=en-GB" target="_blank">INSTALL</a></li>
+          <li>Indian Railway Offline <a href="https://play.google.com/store/search?q=irctc&c=apps" target="_blank">INSTALL</a></li>
+          <li>IRCTC <a href="https://play.google.com/store/search?q=irctc&c=apps" target="_blank">INSTALL</a></li>
+          <li>Cleartrip <a href="https://play.google.com/store/apps/details?id=com.cleartrip.android&hl=en" target="_blank">INSTALL</a></li>
+          <li>BHIM <a href="https://play.google.com/store/apps/details?id=in.org.npci.upiapp&hl=en-GB" target="_blank">INSTALL</a></li>
+          <li>Moneycontrol <a href="https://play.google.com/store/apps/details?id=com.divum.MoneyControl.android&hl=en" target="_blank">INSTALL</a></li>
+          <li>DigiLocker <a href="https://play.google.com/store/apps/details?id=com.digilocker.android&hl=en-GB" target="_blank">INSTALL</a></li>
+          <li>Android App Lock <a href="https://play.google.com/store/apps/details?id=com.domobile.applock&hl=en" target="_blank">INSTALL</a></li>
+          <li>Snapseed <a href="https://play.google.com/store/apps/details?id=com.niksoftware.snapseed&hl=en-GB" target="_blank">INSTALL</a></li>
+          <li>PicsArt <a href="https://play.google.com/store/apps/details?id=com.picsart.studio&hl=en" target="_blank">INSTALL</a></li>
+          <li>Polarr <a href="https://play.google.com/store/apps/details?id=photo.editor.polarr&hl=en-GB" target="_blank">INSTALL</a></li>
+          <li>Easy Background Change <a href="https://play.google.com/store/apps/details?id=bg.remove.android" target="_blank">INSTALL</a></li>
+          <li>KineMaster <a href="https://play.google.com/store/apps/details?id=com.nexstreaming.app.kinemasterfree&hl=en" target="_blank">INSTALL</a></li>
+          <li>PowerDirector <a href="https://play.google.com/store/apps/details?id=com.cyberlink.powerdirector.DRA140225_01&hl=en" target="_blank">INSTALL</a></li>
+          <li>FilmoraGo <a href="https://play.google.com/store/apps/details?id=com.wondershare.filmorago&hl=en" target="_blank">INSTALL</a></li>
+          <li>Mobizen <a href="https://play.google.com/store/apps/details?id=com.rsupport.mobizen.sec&hl=en" target="_blank">INSTALL</a></li>
+          <li>Square Home <a href="https://play.google.com/store/apps/details?id=com.ss.squarehome2" target="_blank">INSTALL</a></li>
+          <li>Vehicle Registration <a href="https://play.google.com/store/apps/details?id=in.navaratna9.www.vehicle_registration_details_Ind" target="_blank">INSTALL</a></li>
+          <li>RTO Info <a href="https://play.google.com/store/apps/details?id=com.vehicle.rto.vahan.status.information.register" target="_blank">INSTALL</a></li>
+        </ol>
+      </div>
+      <!-- COLUMN 3 -->
+      <div class="weblink-card">
+        <h3>ANDROID APPS:</h3>
+        <ol>
+          <li>Clipboard Manager <a href="https://play.google.com/store/apps/details?id=devdnua.clipboard&hl=en_IN" target="_blank">INSTALL</a></li>
+          <li>Adobe Scan <a href="https://play.google.com/store/apps/details?id=com.adobe.scan.android&hl=en" target="_blank">INSTALL</a></li>
+          <li>CamScanner (Pro) <a href="https://play.google.com/store/apps/details?id=com.intsig.lic.camscanner&hl=en" target="_blank">INSTALL</a></li>
+          <li>Adobe Acrobat <a href="https://play.google.com/store/apps/details?id=com.adobe.reader&hl=en-GB" target="_blank">INSTALL</a></li>
+          <li>Xodo PDF <a href="https://play.google.com/store/apps/details?id=com.xodo.pdf.reader" target="_blank">INSTALL</a></li>
+          <li>PDF Editor Pro <a href="https://play.google.com/store/apps/details?id=com.pdfbuddies.pdfutilspro" target="_blank">INSTALL</a></li>
+          <li>AirDroid <a href="https://play.google.com/store/apps/details?id=com.sand.airdroid&hl=en" target="_blank">INSTALL</a></li>
+          <li>Lockwatch <a href="https://play.google.com/store/apps/details?id=com.bloketech.lockwatch&hl=en" target="_blank">INSTALL</a></li>
+          <li>Cerberus <a href="https://play.google.com/store/search?q=Cerberus%20anti%20theft&c=apps" target="_blank">INSTALL</a></li>
+          <li>Retrica <a href="https://play.google.com/store/apps/details?id=com.venticake.retrica&hl=en" target="_blank">INSTALL</a></li>
+          <li>AZ Camera <a href="https://play.google.com/store/apps/details?id=com.hecorat.camera" target="_blank">INSTALL</a></li>
+          <li>SMS Backup+ <a href="https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_IN" target="_blank">INSTALL</a></li>
+          <li>Delta Icon Pack <a href="https://play.google.com/store/apps/details?id=website.leifs.delta&hl=en-GB" target="_blank">INSTALL</a></li>
+          <li>Google Indic Keyboard <a href="https://play.google.com/store/apps/details?id=org.smc.inputmethod.indic" target="_blank">INSTALL</a></li>
+          <li>SONGily <a href="https://play.google.com/store/apps/details?id=com.songily.app" target="_blank">INSTALL</a></li>
+          <li>Solo Music <a href="https://play.google.com/store/apps/details?id=com.ushowmedia.mipha" target="_blank">INSTALL</a></li>
+          <li>SMS Organizer <a href="https://play.google.com/store/apps/details?id=com.microsoft.android.smsorganizer&hl=en_IN" target="_blank">INSTALL</a></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
 
-    Object.keys(categoryCounts).filter(c => c !== "Unknown").sort().forEach(cat => {
-      if (categoryCounts[cat] > 0) container.appendChild(createCategoryElement(cat, categoryCounts[cat]));
-    });
-    if (categoryCounts["Unknown"] > 0) container.appendChild(createCategoryElement("Unknown", categoryCounts["Unknown"]));
+<!-- ALTERNATIVES TABLE -->
+<h2 style="text-align:center;"><strong>The Best Alternatives to Top Android Apps</strong></h2>
+<p style="text-align:center;">Here is a roundup of top Android apps with recommended alternatives if the original pick doesn’t meet your needs.</p>
+<table class="app-table">
+  <thead><tr><th>Category</th><th>Recommended App</th><th>Popular Alternatives</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Web Browser</strong></td><td><a href="https://www.mozilla.org/en-US/firefox/">Firefox</a></td><td><a href="https://brave.com/">Brave</a>, <a href="https://www.microsoft.com/en-us/edge">Edge</a></td></tr>
+    <tr><td><strong>Text Editor</strong></td><td><a href="https://ia.net/writer">iA Writer</a></td><td><a href="https://play.google.com/store/apps/details?id=com.dropbox.paper">Dropbox Paper</a>, <a href="https://ulysses.app/">Ulysses</a>, <a href="https://bear.app/">Bear</a></td></tr>
+    <tr><td><strong>Document Scanner</strong></td><td><a href="https://www.microsoft.com/en-us/microsoft-365/mobile-scanning-app">Office Lens</a></td><td><a href="https://www.adobe.com/products/scanner-app.html">Adobe Scan</a>, <a href="https://scanbot.io/">Scan Bot</a></td></tr>
+    <tr><td><strong>Podcasts</strong></td><td><a href="https://castbox.fm/">Cast Box</a></td><td><a href="https://www.pocketcasts.com/">Pocket Casts</a>, <a href="https://subcast.app/">SubCast</a></td></tr>
+    <tr><td><strong>Security</strong></td><td><a href="https://authy.com/">Authy</a></td><td><a href="https://www.microsoft.com/en-us/account/authenticator">MS Authenticator</a>, <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Auth</a></td></tr>
+    <tr><td><strong>Video Editor</strong></td><td><a href="https://www.kinemaster.com/">Kinemaster</a></td><td><a href="https://play.google.com/store/apps/details?id=com.cyberlink.powerdirector.DRA140225_01">PowerDirector</a>, <a href="https://www.adobe.com/products/premiere-clip.html">Adobe Premiere Clip</a></td></tr>
+    <tr><td><strong>Photo Editors</strong></td><td><a href="https://snapseed.online/">Snapseed</a></td><td><a href="https://www.adobe.com/products/photoshop-lightroom.html">Lightroom</a>, <a href="https://www.adobe.com/products/photoshop-express.html">PS Express</a>, <a href="https://picsart.com/">PicsArt</a></td></tr>
+    <tr><td><strong>Photo Effects</strong></td><td><a href="https://prisma-ai.com/">Prisma</a></td><td><a href="https://www.portraitai.app/">Portrait</a>, <a href="https://www.deleo.app/">Deleo</a>, <a href="https://play.google.com/store/apps/details?id=com.giphy.messenger">GiphyCam</a>, <a href="https://www.adobe.com/products/photoshop-mix.html">PS Mix</a>, <a href="https://www.animatorapp.com/">Animator</a></td></tr>
+    <tr><td><strong>Music Videos</strong></td><td>Quik</td><td><a href="https://vueapp.co/">VUE</a>, <a href="https://triller.co/">Triller</a></td></tr>
+    <tr><td><strong>Graphic Design</strong></td><td><a href="https://www.canva.com/">Canva</a></td><td><a href="https://sprightly.io/">Sprightly</a>, <a href="https://crello.com/">Crello</a>, <a href="https://www.fotor.com/">Fotor</a></td></tr>
+    <tr><td><strong>Launchers</strong></td><td><a href="https://www.microsoft.com/en-us/p/microsoft-launcher/9nblggh42ths">MS Launcher</a></td><td><a href="https://novalauncher.com/">Nova</a>, <a href="https://actionlauncher.com/">Action</a>, <a href="https://www.apexlauncher.com/">Apex</a></td></tr>
+    <tr><td><strong>Notes</strong></td><td><a href="https://www.zoho.com/notebook/">Zoho Notebook</a></td><td><a href="https://evernote.com/">Evernote</a>, <a href="https://to-do.microsoft.com/">MS To-Do</a>, <a href="https://keep.google.com/">Google Keep</a></td></tr>
+    <tr><td><strong>Online Meetings</strong></td><td><a href="https://zoom.us/">Zoom</a></td><td><a href="https://www.skype.com/">Skype</a>, <a href="https://duo.google.com/">Duo</a>, <a href="https://www.microsoft.com/en-us/microsoft-teams/group-chat-software">Teams</a></td></tr>
+    <tr><td><strong>Email Client</strong></td><td><a href="https://mail.google.com/">Gmail</a></td><td><a href="https://outlook.live.com/">Outlook</a>, <a href="https://protonmail.com/">ProtonMail</a>, <a href="https://mail.yahoo.com/">Yahoo Mail</a></td></tr>
+    <tr><td><strong>Language Translation</strong></td><td><a href="https://translate.google.com/">Google Translate</a></td><td><a href="https://www.microsoft.com/en-us/translator">MS Translator</a>, <a href="https://www.deepl.com/">DeepL</a>, <a href="https://www.itranslate.com/">iTranslate</a></td></tr>
+    <tr><td><strong>File Manager</strong></td><td><a href="https://www.solidexplorerapp.com/">Solid Explorer</a></td><td><a href="https://play.google.com/store/apps/details?id=com.estrongs.android.pop">ES File</a>, <a href="https://play.google.com/store/apps/details?id=com.nextapp.fx">FX</a>, <a href="https://play.google.com/store/apps/details?id=com.lonelycatgames.Xplore">X-Plore</a></td></tr>
+    <tr><td><strong>Cloud Storage</strong></td><td><a href="https://www.google.com/drive/">Google Drive</a></td><td><a href="https://www.dropbox.com/">Dropbox</a>, <a href="https://www.microsoft.com/en-us/microsoft-365/onedrive/online-cloud-storage">OneDrive</a>, <a href="https://www.pcloud.com/">pCloud</a></td></tr>
+    <tr><td><strong>Task Manager</strong></td><td><a href="https://todoist.com/">Todoist</a></td><td><a href="https://to-do.microsoft.com/">MS To Do</a>, <a href="https://www.any.do/">Any.do</a>, <a href="https://trello.com/">Trello</a></td></tr>
+    <tr><td><strong>VPN</strong></td><td><a href="https://www.nordvpn.com/">NordVPN</a></td><td><a href="https://www.expressvpn.com/">ExpressVPN</a>, <a href="https://www.cyberghostvpn.com/">CyberGhost</a>, <a href="https://protonvpn.com/">ProtonVPN</a></td></tr>
+    <tr><td><strong>Weather</strong></td><td><a href="https://www.accuweather.com/">AccuWeather</a></td><td><a href="https://weather.com/">Weather Channel</a>, <a href="https://www.yahoo.com/news/weather/">Yahoo Weather</a>, <a href="https://darksky.net/">Dark Sky</a></td></tr>
+    <tr><td><strong>News Reader</strong></td><td><a href="https://feedly.com/">Feedly</a></td><td><a href="https://flipboard.com/">Flipboard</a>, <a href="https://getpocket.com/">Pocket</a>, <a href="https://newsblur.com/">NewsBlur</a></td></tr>
+    <tr><td><strong>Health & Fitness</strong></td><td><a href="https://www.google.com/fit/">Google Fit</a></td><td><a href="https://www.strava.com/">Strava</a>, <a href="https://www.myfitnesspal.com/">MyFitnessPal</a>, <a href="https://www.runkeeper.com/">Runkeeper</a></td></tr>
+    <tr><td><strong>Password Manager</strong></td><td><a href="https://1password.com/">1Password</a></td><td><a href="https://www.lastpass.com/">LastPass</a>, <a href="https://bitwarden.com/">Bitwarden</a>, <a href="https://www.dashlane.com/">Dashlane</a></td></tr>
+    <tr><td><strong>Streaming Music</strong></td><td><a href="https://www.spotify.com/">Spotify</a></td><td><a href="https://www.apple.com/apple-music/">Apple Music</a>, <a href="https://music.youtube.com/">YouTube Music</a>, <a href="https://www.tidal.com/">Tidal</a></td></tr>
+    <tr><td><strong>E-book Reader</strong></td><td><a href="https://www.amazon.com/kindle-dbs/fd/kcp">Amazon Kindle</a></td><td><a href="https://www.aldiko.com/">Aldiko</a>, <a href="https://www.moonreader.com/">Moon+ Reader</a>, <a href="https://fbreader.org/">FBReader</a></td></tr>
+  </tbody>
+</table>
 
-    document.getElementById("filterStatus").innerText = currentBlockFilter ? `Showing block: ${currentBlockFilter}` : "Showing all locations";
-  }
+<!-- FOOTER -->
+<div id="site-footer"></div>
 
-  function applyFilters() {
-    const bV = document.getElementById("blockSearch").value.toUpperCase().trim();
-    const cV = document.getElementById("codeSearch").value.toUpperCase().trim();
-    const nV = document.getElementById("nameSearch").value.toUpperCase().trim();
-    
-    currentBlockFilter = bV;
-
-    markers.forEach(m => {
-      const match = m.meta.block.includes(bV) && m.meta.code.includes(cV) && m.meta.name.includes(nV);
-      m.setVisible(match);
-      if (!match && lastClickedMarker === m) resetLastMarker();
-    });
-    
-    updateLocationCounts();
-  }
-
-  function handleShowFiltered() {
-    const { visibleCount } = calculateBoundsForVisibleMarkers();
-    if (visibleCount === 0) {
-      alert("No locations match current filters.");
-      return;
-    }
-    centerMapOnVisibleMarkers();
-  }
-
-  function handleShowAll() {
-    document.getElementById("blockSearch").value = '';
-    document.getElementById("codeSearch").value = '';
-    document.getElementById("nameSearch").value = '';
-    currentBlockFilter = '';
-    markers.forEach(m => m.setVisible(true));
-    updateLocationCounts();
-    map.setCenter({ lat: 20.592263, lng: 83.248939 });
-    map.setZoom(11);
-  }
-
-  function initMap() {
-    const mapEl = document.getElementById("map");
-    if (!mapEl) return;
-
-    map = new google.maps.Map(mapEl, {
-      zoom: 11,
-      center: { lat: 20.592263, lng: 83.248939 },
-      gestureHandling: "greedy",
-      mapTypeControl: false,
-      fullscreenControl: true,
-      streetViewControl: false,
-      zoomControl: true,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    });
-
-    const sheetURL = "https://docs.google.com/spreadsheets/d/1HI5Wjjwo5OObDaS4W7QaOVc_RcqgREu8pHEQxSjYhUg/gviz/tq?tqx=out:json";
-
-    fetch(sheetURL)
-      .then(res => res.text())
-      .then(text => {
-        const json = JSON.parse(text.substring(47).slice(0, -2));
-        const rows = json.table.rows;
-        const infoWindow = new google.maps.InfoWindow({ maxWidth: 350, pixelOffset: new google.maps.Size(0, -30) });
-        const blockSet = new Set();
-
-        rows.forEach(r => {
-          if (!r.c || !r.c[3] || !r.c[4]) return;
-          const block = r.c[0]?.v || "Unknown";
-          const name  = r.c[1]?.v || "No Name";
-          const code  = r.c[2]?.v || "N/A";
-          const lat   = parseFloat(r.c[3].v);
-          const lng   = parseFloat(r.c[4].v);
-          const cat   = r.c[5]?.v || "Unknown";
-
-          blockSet.add(block);
-          allCategories.add(cat);
-
-          const marker = new google.maps.Marker({
-            position: { lat, lng },
-            map: map,
-            icon: linePin(getBlockColor(block)),
-            label: { text: getCategoryLetter(cat), color: "white", fontWeight: "bold", fontSize: "11px" },
-            title: name,
-            optimized: false
-          });
-
-          marker.meta = { 
-            block: block.toUpperCase(), 
-            code: String(code).toUpperCase(), 
-            name: name.toUpperCase(),
-            lat, lng,
-            category: cat
-          };
-
-          google.maps.event.addListener(marker, 'click', function(e) {
-            e.stop();
-            resetLastMarker();
-            lastClickedMarker = marker;
-            marker.setIcon(linePin(getBlockColor(block), 1.5));
-            
-            const content = `
-              <div style="min-width:220px;max-width:280px;">
-                <h3 style="margin:0 0 6px;color:#1976d2;">${name}</h3>
-                <div style="font-size:13px;"><strong>Code:</strong> ${code}</div>
-                <div style="font-size:13px;"><strong>Block:</strong> ${block}</div>
-                <div style="font-size:13px;"><strong>Category:</strong> ${cat}</div>
-                <div style="margin:10px 0;padding:8px;background:#f0f4f8;border-radius:12px;font-family:monospace;font-size:12px;">${formatCoordinates(lat, lng)}</div>
-                <div class="info-window-buttons">
-                  <button onclick="window.showShareDialog('${name.replace(/'/g, "\\'")}', ${lat}, ${lng})" class="info-window-btn share-btn"><i class="fas fa-share-alt"></i></button>
-                  <button onclick="window.navigateToLocation(${lat}, ${lng})" class="info-window-btn navigate-btn"><i class="fas fa-directions"></i></button>
-                </div>
-              </div>
-            `;
-            infoWindow.setContent(content);
-            infoWindow.open(map, marker);
-          });
-
-          markers.push(marker);
-        });
-
-        // Expose functions globally (they will override the fallbacks below)
-        window.showShareDialog = showShareDialog;
-        window.navigateToLocation = navigateToLocation;
-        // copyToClipboard already defined globally at top level
-
-        map.addListener("click", () => { infoWindow.close(); resetLastMarker(); });
-
-        const list = document.getElementById("blockList");
-        [...blockSet].sort().forEach(b => {
-          const opt = document.createElement("option");
-          opt.value = b;
-          list.appendChild(opt);
-        });
-
-        updateLocationCounts();
-      })
-      .catch(err => {
-        console.error(err);
-        document.getElementById('map').innerHTML = `<div style="padding:30px;text-align:center;color:#721c24;">Failed to load data.</div>`;
-      });
-
-    ["blockSearch","codeSearch","nameSearch"].forEach(id => {
-      document.getElementById(id).addEventListener("input", applyFilters);
-    });
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') handleShowAll();
-    });
-
-    document.getElementById('showFilteredBtn').addEventListener('click', handleShowFiltered);
-    document.getElementById('showAllBtn').addEventListener('click', handleShowAll);
-  }
-
-  if (document.readyState === "complete" || document.readyState === "interactive") {
-    setTimeout(initMap, 120);
-  } else {
-    window.addEventListener("load", initMap);
-  }
-})();
-</script>
-
-<!-- fallback globals (but they will be overwritten by the actual implementations above) -->
-<script>
-  window.showShareDialog = window.showShareDialog || function(name, lat, lng) {
-    alert('Share dialog ready');
-  };
-  window.navigateToLocation = window.navigateToLocation || function(lat,lng) {
-    window.open(`https://www.google.com/maps?q=${lat},${lng}`);
-  };
-  // copyToClipboard already robustly defined inside IIFE, but we keep a fallback
-  window.copyToClipboard = window.copyToClipboard || function(t) { prompt('Copy:', t); };
-</script>
-
+<!-- Go to Top -->
+<script src="/assets/Scripts/gototop.js"></script>
 </body>
 </html>
