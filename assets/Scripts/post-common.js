@@ -453,3 +453,8 @@ const PostCommon = (function() {
   };
 
 })();
+fetch('../post-footer-share.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('post-footer-share-container').innerHTML = data;
+    });
