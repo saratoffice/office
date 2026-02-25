@@ -64,12 +64,12 @@
       gap: 26px;
     }
 
-    /* ----- card style (blue border, hover) ----- */
+    /* ----- card style ----- */
     .weblink-card {
       background: white;
       border-radius: 24px;
       padding: 22px 22px 26px;
-      border: 2px solid #2e6edf;         /* bright blue border */
+      border: 2px solid #2e6edf;
       box-shadow: 0 12px 24px -14px #163a6b70;
       transition: all 0.2s ease;
       display: flex;
@@ -82,9 +82,8 @@
       box-shadow: 0 24px 32px -16px #0c2f5e;
     }
 
-    /* --- smaller card title (h3) with subtle icon --- */
     .weblink-card h3 {
-      font-size: 1.3rem;           /* smaller than before */
+      font-size: 1.3rem;
       font-weight: 700;
       margin-bottom: 1.2rem;
       color: #0b2f57;
@@ -102,11 +101,9 @@
       color: #1e4f8a;
     }
 
-    /* alternate icons for variety */
     .weblink-card:nth-child(3n+1) h3::before { content: "🔹"; }
     .weblink-card:nth-child(3n+2) h3::before { content: "💠"; }
 
-    /* list styling */
     .weblink-card ul, .weblink-card ol {
       padding-left: 1.6rem;
       margin: 0 0 0.5rem;
@@ -117,6 +114,11 @@
       font-size: 0.95rem;
       color: #1e293b;
       position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
     }
 
     .weblink-card li::marker {
@@ -146,67 +148,58 @@
       box-shadow: 0 3px 8px #00285650;
     }
 
-    /* ----- INSTALL buttons: right‑aligned within li (flex) ----- */
-    .weblink-card li {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;  /* pushes INSTALL to the right */
-      gap: 8px;
+    /* ===== PREMIUM INSTALL BUTTON ===== */
+    .weblink-card li a[href*="play.google"] {
+      background: linear-gradient(135deg, #0f2b50, #1e4f8a);
+      color: #ffffff;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 50px;
+      border: 1px solid #79b4ff;
+      font-size: 0.82rem;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      margin-left: auto;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 47, 120, 0.25);
     }
 
-    .weblink-card li a[href*="play.google"] {
-      background: #0f2b50;
-      color: white;
-      font-weight: 600;
-      padding: 4px 14px;
-      border-radius: 40px;
-      border: 1px solid #79b4ff;
-      white-space: nowrap;
-      font-size: 0.85rem;
-      margin-left: auto;    /* ensures right alignment even without flex parent? but parent is flex, so 'margin-left:auto' pushes it */
-      margin-right: 0;
-      order: 1;            /* keep at the end */
+    .weblink-card li a[href*="play.google"]::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        rgba(255,255,255,0.15) 0%,
+        rgba(255,255,255,0.4) 50%,
+        rgba(255,255,255,0.15) 100%
+      );
+      transform: skewX(-25deg);
+      transition: all 0.6s ease;
+    }
+
+    .weblink-card li a[href*="play.google"]:hover::before {
+      left: 130%;
     }
 
     .weblink-card li a[href*="play.google"]:hover {
-      background: #1e88e5;
+      background: linear-gradient(135deg, #1e88e5, #0b2f57);
       border-color: #ffd966;
+      box-shadow: 0 8px 18px rgba(0, 47, 120, 0.35);
+      transform: translateY(-2px);
     }
 
-    /* for ordinary links that are not INSTALL, we keep them inline */
-    .weblink-card li a:not([href*="play.google"]) {
-      margin-right: auto;   /* keeps text together */
+    .weblink-card li a[href*="play.google"]:active {
+      transform: scale(0.95);
+      box-shadow: 0 3px 6px rgba(0, 47, 120, 0.3);
     }
 
-    /* override for plain lists where we don't want flex on every li? 
-       we apply flex only to android cards to avoid breaking layout in other cards */
-    .weblink-card:has(ol) li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* but also for safety, target android sections specifically by context (they all contain INSTALL) */
-    .weblink-card:has(a[href*="play.google"]) li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* other cards keep normal list block */
-    .weblink-card:not(:has(a[href*="play.google"])) li {
-      display: block;
-    }
-
-    /* better spacing for ordered list */
-    .weblink-card ol {
-      list-style-type: decimal;
-      font-weight: 500;
-      width: 100%;
-    }
-
-    /* ----- TABLE (blue themed) ----- */
+    /* ----- TABLE ----- */
     .app-table {
       width: 90%;
       max-width: 1300px;
@@ -256,7 +249,6 @@
       background: #eaf1ff;
     }
 
-    /* responsive */
     @media (max-width: 1024px) {
       .weblink-grid { grid-template-columns: repeat(2, 1fr); }
     }
@@ -267,7 +259,6 @@
       .app-table { width: 96%; font-size: 0.9rem; }
     }
 
-    /* small extra */
     h2 strong {
       color: #0b2f57;
       border-bottom: 4px solid #4682b4;
@@ -279,7 +270,7 @@
       color: #1e3a5f;
       margin: 20px 10px;
     }
-  </style>
+</style>
 </head>
 <body>
 
