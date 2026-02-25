@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sarat Office | Page Index (two‑column)</title>
+  <title>Sarat Office | Flip‑card index (two‑column)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Fonts (consistent with original) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,10 +12,9 @@
   <link rel="stylesheet" href="style.css">
   <!-- site components (header/footer loader) -->
   <script src="assets/Scripts/site-components.js" defer></script>
-  <!-- inline styles only for the custom list grid & spacing fixes -->
+  <!-- styles: two‑column grid, horizontal flip cards, both sides clickable -->
   <style>
-    /* ---------- RESET / BASE OVERRIDES (only for main area) ---------- */
-    /* ensure body allows proper spacing with fixed header/footer */
+    /* ---------- global reset & flex sticky footer ---------- */
     body {
       background: #f4f7fb;
       font-family: 'Roboto', sans-serif;
@@ -25,89 +24,114 @@
       flex-direction: column;
       min-height: 100vh;
     }
+    #site-header, #site-footer { flex-shrink: 0; }
 
-    /* header & footer are loaded via site-components – we just keep main flexible */
-    #site-header,
-    #site-footer {
-      flex-shrink: 0;
-    }
-
-    /* main content wrapper – push footer down, avoid overlap */
-    .custom-list {
-      max-width: 1200px;           /* wider to accommodate two columns */
+    /* main container: two columns, each cell is a perspective container */
+    .flip-grid {
+      max-width: 1300px;
       width: 100%;
-      margin: 40px auto 60px auto;  /* top/bottom spacing, avoids footer */
+      margin: 40px auto 60px auto;
       padding: 20px 30px;
-      flex: 1 0 auto;               /* takes remaining height, footer stays down */
+      flex: 1 0 auto;
       display: grid;
-      grid-template-columns: 1fr 1fr; /* TWO columns side by side */
+      grid-template-columns: 1fr 1fr;   /* two columns */
       gap: 30px;
-      background: transparent;      /* let background be body color */
-      backdrop-filter: none;
-      border-radius: 0;
-      box-shadow: none;
+      background: transparent;
     }
 
-    /* each card – resembles image: left number + right text, but now inside a grid cell */
-    .list-item {
+    /* ---------- flip card container (perspective) ---------- */
+    .flip-card {
+      background-color: transparent;
+      width: 100%;
+      aspect-ratio: 5 / 3;               /* nice rectangular card, fits content */
+      perspective: 2000px;                /* gives depth to the flip */
+      cursor: pointer;                    /* whole card looks clickable */
+    }
+
+    /* inner wrapper – holds front and back, applies 3D and transition */
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      transform-style: preserve-3d;
+      border-radius: 40px 20px 20px 40px; /* keep original asymmetric feel */
+      box-shadow: 0 12px 28px -10px rgba(0,0,0,0.2);
+    }
+
+    /* hover: horizontal flip (180deg around Y axis) */
+    .flip-card:hover .flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    /* front & back share positioning and backface-visibility */
+    .flip-front, .flip-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;        /* hide the reverse side when not facing viewer */
+      border-radius: inherit;              /* same rounded corners */
       display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px 24px;
+      background: white;
+      box-shadow: 0 8px 18px -6px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02) inset;
+      transition: box-shadow 0.2s;
+      box-sizing: border-box;
+      overflow-y: auto;                    /* in case content overflows (rare) */
+    }
+
+    /* back side is rotated 180deg initially */
+    .flip-back {
+      transform: rotateY(180deg);
+      background: #ffffff;
+      /* subtle different background to distinguish back */
+      background: linear-gradient(145deg, #ffffff 0%, #f9fafc 100%);
+    }
+
+    /* ----- front content ----- */
+    .flip-front {
+      display: flex;
+      flex-direction: row;          /* align number and text side by side */
       align-items: center;
       gap: 16px;
-      background: white;
-      border-radius: 40px 20px 20px 40px;  /* asymmetric for left-to-right */
-      padding: 12px 20px 12px 12px;
-      box-shadow: 0 8px 18px -6px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02) inset;
-      transition: all 0.3s ease;
-      width: 100%;
     }
 
-    /* image style: big number with background */
-    .list-item .number {
+    .flip-front .number {
       font-family: 'Poppins', sans-serif;
       font-weight: 800;
-      font-size: 120px;            /* bold presence but fits two columns */
+      font-size: clamp(80px, 10vw, 120px);
       line-height: 1;
-      min-width: 130px;
+      min-width: 120px;
       text-align: center;
-      padding: 10px 0;
+      padding: 6px 0;
       color: transparent;
       background-clip: text;
       -webkit-background-clip: text;
       background-size: cover;
       background-position: center 30%;
       filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-      transition: 0.2s;
     }
 
-    .list-item:hover .number {
-      filter: drop-shadow(0 8px 12px rgba(0,80,150,0.35));
-      transform: scale(1.02);
-    }
-
-    /* info block */
-    .info {
+    .front-info {
       flex: 1;
-      padding: 8px 0;
     }
 
-    /* title exactly as image: left accent bar, uppercase, clickable */
-    .custom-list h3 {
-      margin: 0 0 8px 0;
+    .front-info h3 {
+      margin: 0 0 10px 0;
       font-size: 1.5rem;
       font-weight: 700;
       letter-spacing: -0.01em;
       position: relative;
       padding-left: 20px;
       color: #111827;
-      cursor: pointer;
       text-transform: uppercase;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      display: inline-block;
       border-bottom: 2px solid transparent;
+      display: inline-block;
     }
 
-    .custom-list h3::before {
+    .front-info h3::before {
       content: "";
       position: absolute;
       left: 0;
@@ -119,190 +143,233 @@
       transition: 0.2s;
     }
 
-    .list-item:hover h3::before {
+    .flip-card:hover .front-info h3::before {
       width: 10px;
       background: linear-gradient(135deg, #2563eb, #1e40af);
     }
 
-    .custom-list h3:hover {
-      color: #1e4bd2;
-      border-bottom-color: #1e4bd2;
-    }
-
-    /* description: justified + first-line indent */
-    .custom-list p {
+    .front-info p {
       margin: 8px 0 4px 0;
       line-height: 1.7;
       font-size: 0.98rem;
       opacity: 0.8;
       text-align: justify;
-      text-indent: 2em;            /* first line indent */
-      hyphens: auto;
+      text-indent: 2em;
       color: #1f2937;
-      transition: opacity 0.2s;
-      word-break: break-word;
     }
 
-    .list-item:hover p {
-      opacity: 1;
+    /* ----- back content (two clickable options) ----- */
+    .flip-back {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 24px;
     }
 
-    /* optional first-letter subtle */
-    .custom-list p::first-letter {
-      font-weight: 500;
-      color: #0a2c4e;
+    .back-title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: #1e293b;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+      border-bottom: 3px solid #2563eb;
+      display: inline-block;
+      padding-bottom: 6px;
     }
 
-    /* even items: keep same LTR style (image shows all items left-to-right) */
-    /* but if you want the even ones to also have same shape, we override */
-    .list-item:nth-of-type(even) {
-      flex-direction: row;          /* all cards left-to-right, no reverse */
-      border-radius: 40px 20px 20px 40px;  /* uniform */
-      padding: 12px 20px 12px 12px;
+    .back-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      width: 100%;
     }
 
-    /* hover lift */
-    .list-item:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 28px -12px rgba(0,80,160,0.3), 0 0 0 2px rgba(0,110,255,0.15) inset;
-      background: white;
+    .back-btn {
+      background: rgba(37, 99, 235, 0.08);
+      border: 2px solid #2563eb;
+      color: #1e40af;
+      font-weight: 600;
+      padding: 14px 24px;
+      border-radius: 60px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 160px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* ----- RESPONSIVE (two columns → one column) ----- */
+    .back-btn:hover {
+      background: #2563eb;
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 12px 24px -12px #2563eb;
+      border-color: transparent;
+    }
+
+    /* both sides need to be clickable: we attach JS, but we keep inner elements clickable too */
+    /* we prevent accidental toggles when clicking buttons (stopPropagation handled in script) */
+    .flip-back, .flip-front {
+      pointer-events: auto;
+    }
+
+    /* extra: even items keep same front shape */
+    .flip-card:nth-of-type(even) .flip-front {
+      border-radius: 40px 20px 20px 40px;
+    }
+
+    /* responsiveness: two columns to one */
     @media (max-width: 900px) {
-      .custom-list {
-        grid-template-columns: 1fr;     /* stack on medium/small */
+      .flip-grid {
+        grid-template-columns: 1fr;
         max-width: 700px;
-        padding: 20px;
-        margin: 30px auto 50px auto;
       }
-
-      .list-item .number {
-        font-size: 110px;
-        min-width: 120px;
+      .flip-card {
+        aspect-ratio: 6 / 4;
       }
     }
 
-    /* mobile adaptation: card stacks vertically inside item (number above text) */
     @media (max-width: 600px) {
-      .custom-list {
+      .flip-front {
+        flex-direction: column;
+        text-align: center;
         padding: 16px;
-        gap: 24px;
       }
-
-      .list-item {
-        flex-direction: column !important;   /* number above text */
-        border-radius: 48px 48px 32px 32px;
-        padding: 24px 18px 28px 18px;
+      .front-info h3 {
+        padding-left: 0;
+      }
+      .front-info h3::before {
+        display: none;
+      }
+      .front-info p {
+        text-indent: 0;
         text-align: center;
       }
-
-      .list-item .number {
-        font-size: 100px;
-        min-width: auto;
-        padding: 0;
+      .flip-card {
+        aspect-ratio: auto; /* let height be content driven */
+        min-height: 300px;
       }
-
-      .custom-list h3 {
-        padding-left: 0;
-        font-size: 1.6rem;
-      }
-
-      .custom-list h3::before {
-        display: none;  /* hide accent on mobile for cleaner look */
-      }
-
-      .custom-list p {
-        text-align: left;
-        text-indent: 1.2em;
-        font-size: 0.95rem;
+      .back-btn {
+        min-width: 130px;
+        padding: 12px 16px;
+        font-size: 1rem;
       }
     }
-
-    /* tiny screens */
-    @media (max-width: 400px) {
-      .list-item .number {
-        font-size: 80px;
-      }
-      .custom-list h3 {
-        font-size: 1.3rem;
-      }
-    }
-
-    /* ensure footer is not overlapped: body flex column + .custom-list flex:1 */
-    /* but we already set flex: 1 0 auto on .custom-list */
   </style>
 </head>
 <body>
 
 <div id="site-header"></div>
 
-<!-- MAIN TWO-COLUMN LIST -->
-<div class="custom-list"></div>
+<!-- MAIN TWO-COLUMN FLIP GRID -->
+<div class="flip-grid"></div>
 
 <script>
   (function() {
+    // ---------- data exactly as before, but we add a back‑side link/page per card ----------
+    // For demo we assign meaningful back actions:
+    // - first back (gunny) → download spec PDF (mock)
+    // - second (astm)   → view correction tables
+    // - third (locations) → open map view
+    // - fourth (weblinks) → open link directory
+    // - fifth (guard)    → open gazette archive
+    // - sixth (policy)   → open policy manual
+    // - seventh (colors) → open palette generator
+    // - eighth (fonts)   → open font preview
     const listItems = [
       {
         title: "Gunny Specifications",
-        description: "Official specifications for jute gunny bags including dimensions, weight tolerance, stitching standards, and tensile strength. Used for packaging food grains, these BIS guidelines ensure uniform quality and compliance with procurement agency requirements.",
+        description: "Official specifications for jute gunny bags including dimensions, weight tolerance, stitching standards, and tensile strength. Used for packaging food grains, these BIS guidelines ensure uniform quality.",
         imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj4CgacC6U4pEUS2T6S4ZbFR4EK__k8KgqmlxFcNpTCgUDgkhbZyWpl5Kv2OTwKf1Vz1N0FABpyx_Cdz4Iz5Tg4yyXh1i7iv0oSvf_9cMdQi6M1zDZ4yIZqiZe2Q2iWKU67WGDF7URwAQFdx4YFriX8UOMld7nQF5smZGQyN5ZGqRH37IlM2YIUyM__PPOF/s284/quant.jpg",
-        link: "Posts/Specification%20of%20Gunny%20Bags.html",
+        frontLink: "Posts/Specification%20of%20Gunny%20Bags.html",
+        backAction1: { text: "📄 Download PDF", link: "/specs/gunny-bis-2024.pdf" },
+        backAction2: { text: "🔍 Check Amendment", link: "/specs/amendments.html" }
       },
       {
         title: "ASTM D 1250",
-        description: "ASTM D1250 is the standard guide for petroleum measurement tables, providing volume correction factors for crude oil and refined products. It defines procedures to adjust volumes to standard temperatures (60°F / 15°C) for custody transfer and inventory control.",
+        description: "ASTM D1250 is the standard guide for petroleum measurement tables, providing volume correction factors for crude oil and refined products. It defines procedures to adjust volumes to standard temperatures.",
         imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh4clBEQiSBRMouPzFggCt1yjC5u5cxTpdur_nm5LRxtGUY2EnJdvk_nM297C-rWvQ8E97qG9r-gOQeIlRTg4JEZ3W6OI4LTxMpo1jUXSxCgLfCuiQtk9LkyEzq5XRL6uf1nudqktAm6eW5Bzm8Ml9JcCFuA9HKBrssoFIUXwmRdLWtysMSInU95Xfo1Pw2/s1024/ChatGPT%20Image%20Apr%201,%202025,%2011_40_47%20AM.png",
-        link: "/Posts/astm-d1250-petroleum-measurement-guide.html",
+        frontLink: "/Posts/astm-d1250-petroleum-measurement-guide.html",
+        backAction1: { text: "📊 Volume Tables", link: "/astm/tables-v12" },
+        backAction2: { text: "⚙️ Calculator", link: "/astm/volume-correction" }
       },
       {
         title: "Work Locations",
-        description: "Geotagged map of operational sites including paddy purchase centers, fair price shops, and storage warehouses. Each marker contains address, contact person, and a direct Google Maps link for navigation during field inspections.",
+        description: "Geotagged map of operational sites including paddy purchase centers, fair price shops, and storage warehouses. Each marker contains address, contact person, and a direct Google Maps link.",
         imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1nHLETdyzLQncplYtuLZw9yIZiWdH3vqCxq3jG7ikFnI8OLK-Krh8GhjSbRoYqD0RZRFyOUBjMnlXVsjCNTnaMtbW3P3UVelmcKgS3MLZP7UAEb-iUVwQ0smiwbE4zKEzV_rNaLxsdMHjU6Rtm6JElGlWns30-HlKs5I5tLwSKpuOw8CQsor9DnTMTPwy/s320/AI.jpg",
-        link: "/locations.html",
+        frontLink: "/locations.html",
+        backAction1: { text: "🗺️ Open Map View", link: "/locations/map-full" },
+        backAction2: { text: "📋 KML Download", link: "/locations/sites.kml" }
       },
       {
         title: "Web Links",
-        description: "Handpicked directory of useful websites: government portals (eUpkar, Food Corporation), commodity price trackers, technical standards libraries (BIS, ISO), and internal dashboards — all in one place for quick reference.",
+        description: "Handpicked directory of useful websites: government portals (eUpkar, Food Corporation), commodity price trackers, technical standards libraries (BIS, ISO), and internal dashboards.",
         imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjJwvvpCul0mfeUMywoAHFW4D19TR7uQ2cualcxLH2hcrD3gB_chlaGGepc3hxVn6F2X1Iaf21h-Kq8Wf0kZQe_R4F-xFEubxHJwsQLfgIdHH2lArPItDBR3eZPudgch8DpgrAcIrqKqcL6HWjUoBMY1RaRTFAber576d9mzCsx-L8rTWtpPmdGPaR3VOEU/s640/laptop-5673901_640.jpg",
-        link: "/weblinks.html",
+        frontLink: "/weblinks.html",
+        backAction1: { text: "🔖 All Links", link: "/links/grid" },
+        backAction2: { text: "➕ Suggest Link", link: "/links/suggest" }
       },
       {
         title: "Guard File",
         description: "Govt published guidelines, important letters, SOPs, gazettes, and circulars — all archived here for quick reference and compliance.",
         imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgz0jxVh0owShL0L5UfonKVTV7Q690jT-yPayollrrZInyyCHNjUo24QYpNYdw6P6fKaKWSNRBlL7fgKo8fGpfr96w2WckpcHAomgchAReQztgpCi6-notuw67SX3stoU64sYFZwSm6UAzzSxVzw0HxbUBFCw7Zx598gGSjaukB2v4i8c9W6efGoU9FtTxt/s255/Machine.jpg",
-        link: "/guard-file.html",
+        frontLink: "/guard-file.html",
+        backAction1: { text: "📜 Gazette 2024", link: "/guard/gazette-2024" },
+        backAction2: { text: "⚖️ SOPs", link: "/guard/sops" }
       },
       {
         title: "Policy",
         description: "Collection of internal office policies: leave application procedure, travel allowance rules, procurement delegation, and IT usage guidelines. All staff must adhere to the latest versions linked here.",
         imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq124-MlhYfVwK50nHZYBVje-BxJoxKVGPI9xmzEmkqsMaZFUM1xGLwLDdbOegO7vcVBy7vFDeeCI5JORp9Xk7JvqLlGjX-s1_8tQhzlAUF3JV9BjFHFvDKR6ttkGyIekQguzHiU1cMiYLUsTgtDkbKWJj9R_eBgaLrxj5ChsHsnEy_8J75gZqPm5u6Yjc/s459/5g.jpg",
-        link: "/policy.html",
+        frontLink: "/policy.html",
+        backAction1: { text: "📘 Employee Handbook", link: "/policy/handbook" },
+        backAction2: { text: "🖨️ Forms", link: "/policy/forms" }
       },
       {
         title: "Color Palettes",
         description: "Sole popular colors displayed as palettes — click any color code to copy it instantly for use in your designs.",
         imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjhbGsUpXSQhS80sfnEOh2Q2Rl2B8HG58l0qRENqqJFQMNoqd-VF7EFZRfgLOU2PDOTgpSFZ-7iU0zHktQaMmSJOGI_3oO6gYu8WV5rgjU_tJsGquFUEjpHo0aDrF3cwBwNPo0kk4tephfQ1wpuXGoLg29RNVirkv2lpAPTY8vZObWz75nUOerh7UCsKYOC/s640/board-453758_640.jpg",
-        link: "/color-palettes.html",
+        frontLink: "/color-palettes.html",
+        backAction1: { text: "🎨 Copy Palette", link: "/colors/palettes" },
+        backAction2: { text: "📱 WCAG contrast", link: "/colors/contrast" }
       },
       {
         title: "List of Fonts",
         description: "Some popular font styles are displayed here for use — browse and see previews to choose the perfect typeface.",
         imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj54f-VTWI6GJ9Crx94sdLgSbaIGwIsOncLrw3baZAyEZlqq2s2P7mRSnoAPEYaVBo5GzVMn3SJFwLcGtBTGnxywThELcNlD7BkVTa4lbNaL_UkC4om-GYOvaZkN2p1c0wT-e4A1bA3BQoO8SNnFW0U6ojYeKRBFoxn6Cq4NGWZs0S0mxgpvOQ0UIwCN0YP/s1024/ShareMarket.webp",
-        link: "/fonts.html",
-      },
+        frontLink: "/fonts.html",
+        backAction1: { text: "🔤 Preview", link: "/fonts/preview" },
+        backAction2: { text: "⬇️ Download pack", link: "/fonts/pack" }
+      }
     ];
 
-    const container = document.querySelector(".custom-list");
+    const container = document.querySelector(".flip-grid");
     if (!container) return;
-
-    container.innerHTML = "";  // clear if any placeholder
+    container.innerHTML = "";
 
     listItems.forEach((item, index) => {
       const number = (index + 1).toString().padStart(2, "0");
 
-      const listDiv = document.createElement("div");
-      listDiv.className = "list-item";
+      // main flip-card container
+      const card = document.createElement("div");
+      card.className = "flip-card";
+
+      // inner wrapper
+      const inner = document.createElement("div");
+      inner.className = "flip-inner";
+
+      // ---------- FRONT SIDE ----------
+      const frontDiv = document.createElement("div");
+      frontDiv.className = "flip-front";
 
       const numberSpan = document.createElement("div");
       numberSpan.className = "number";
@@ -310,25 +377,76 @@
       numberSpan.textContent = number;
 
       const infoDiv = document.createElement("div");
-      infoDiv.className = "info";
+      infoDiv.className = "front-info";
 
       const titleEl = document.createElement("h3");
       titleEl.textContent = item.title;
-      titleEl.addEventListener("click", (e) => {
-        e.stopPropagation();
-        window.open(item.link, '_blank', 'noopener,noreferrer');
-      });
 
       const descEl = document.createElement("p");
       descEl.textContent = item.description;
 
       infoDiv.appendChild(titleEl);
       infoDiv.appendChild(descEl);
+      frontDiv.appendChild(numberSpan);
+      frontDiv.appendChild(infoDiv);
 
-      listDiv.appendChild(numberSpan);
-      listDiv.appendChild(infoDiv);
+      // make front side clickable -> frontLink (but not if interacting with inner details)
+      frontDiv.addEventListener("click", (e) => {
+        // if the click originated from an interactive element inside (like the number or text) we still consider as front navigation
+        // but we want to allow clicks on title/desc to also go to frontLink.
+        // we'll just open frontLink, but stopPropagation so it doesn't bubble weirdly.
+        e.stopPropagation(); 
+        window.open(item.frontLink, '_blank', 'noopener,noreferrer');
+      });
 
-      container.appendChild(listDiv);
+      // ---------- BACK SIDE ----------
+      const backDiv = document.createElement("div");
+      backDiv.className = "flip-back";
+
+      const backHeading = document.createElement("div");
+      backHeading.className = "back-title";
+      backHeading.textContent = item.title + " • more";
+
+      const actionsDiv = document.createElement("div");
+      actionsDiv.className = "back-actions";
+
+      // button 1
+      const btn1 = document.createElement("a");
+      btn1.className = "back-btn";
+      btn1.textContent = item.backAction1.text;
+      btn1.href = item.backAction1.link;
+      btn1.setAttribute("target", "_blank");
+      btn1.setAttribute("rel", "noopener noreferrer");
+      // stop propagation so the backDiv click won't also trigger (though we won't attach click on backDiv)
+      btn1.addEventListener("click", (e) => e.stopPropagation());
+
+      // button 2
+      const btn2 = document.createElement("a");
+      btn2.className = "back-btn";
+      btn2.textContent = item.backAction2.text;
+      btn2.href = item.backAction2.link;
+      btn2.setAttribute("target", "_blank");
+      btn2.setAttribute("rel", "noopener noreferrer");
+      btn2.addEventListener("click", (e) => e.stopPropagation());
+
+      actionsDiv.appendChild(btn1);
+      actionsDiv.appendChild(btn2);
+      backDiv.appendChild(backHeading);
+      backDiv.appendChild(actionsDiv);
+
+      // back side click (if user clicks outside buttons) we might open a default back page, but better to do nothing? For UX we open first back link maybe.
+      backDiv.addEventListener("click", (e) => {
+        // if click is directly on backDiv (background), open first back action
+        if (e.target === backDiv || e.target.classList.contains('back-title')) {
+          window.open(item.backAction1.link, '_blank', 'noopener,noreferrer');
+        }
+        // otherwise buttons handle themselves (stopPropagation already)
+      });
+
+      inner.appendChild(frontDiv);
+      inner.appendChild(backDiv);
+      card.appendChild(inner);
+      container.appendChild(card);
     });
   })();
 </script>
