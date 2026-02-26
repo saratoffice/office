@@ -56,6 +56,13 @@
       border-left: 4px solid #667eea;
     }
     
+    h4 {
+      font-size: 16px;
+      color: #2c3e50;
+      margin: 15px 0 10px;
+      font-weight: 600;
+    }
+    
     .input-section {
       background: #f8f9fa;
       padding: 25px;
@@ -99,12 +106,6 @@
       grid-template-columns: 1fr 1fr;
       gap: 25px;
       margin-bottom: 25px;
-    }
-    
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 25px;
     }
     
     .income-card {
@@ -166,6 +167,19 @@
       justify-content: space-between;
       align-items: center;
       border: 2px solid #27ae60;
+    }
+    
+    .info-box {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 10px 15px;
+      margin: 15px 0;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    
+    .info-box i {
+      color: #856404;
     }
     
     .metro-question {
@@ -342,6 +356,15 @@
       box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
     }
     
+    .marginal-relief-box {
+      background: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    
     .note {
       font-size: 12px;
       color: #666;
@@ -350,7 +373,7 @@
     }
     
     @media (max-width: 1200px) {
-      .grid-2, .grid-3, .cg-container {
+      .grid-2, .cg-container {
         grid-template-columns: 1fr;
       }
     }
@@ -382,31 +405,41 @@
         <h3>💰 Income Details</h3>
         <div class="input-row">
           <label>Gross salary income</label>
-          <input type="number" id="grossSalary" value="128769" step="0.01">
+          <input type="number" id="grossSalary" value="1228769" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
         </div>
         <div class="input-row">
           <label>Annual income from other sources</label>
-          <input type="number" id="otherSources" value="0" step="0.01">
+          <input type="number" id="otherSources" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
         </div>
         <div class="input-row">
           <label>Annual income from interest</label>
-          <input type="number" id="interestIncome" value="0" step="0.01">
+          <input type="number" id="interestIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
         </div>
         <div class="input-row">
           <label>Annual income from let-out house property (rental)</label>
-          <input type="number" id="rentalIncome" value="0" step="0.01">
-        </div>
-        <div class="input-row">
-          <label>Annual interest paid on home loan (self-occupied)</label>
-          <input type="number" id="selfOccupiedLoan" value="0" step="0.01">
-        </div>
-        <div class="input-row">
-          <label>Annual interest paid on home loan (let-out)</label>
-          <input type="number" id="letOutLoan" value="0" step="0.01">
+          <input type="number" id="rentalIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
         </div>
         <div class="total-row" id="totalIncomeRow">
           <span>Total Income</span>
-          <span id="totalIncomeDisplay">₹1,28,769.00</span>
+          <span id="totalIncomeDisplay">₹12,28,769.00</span>
+        </div>
+        
+        <h4 style="margin-top: 20px;">🏠 Home Loan Interest</h4>
+        <div class="info-box">
+          <i>ℹ️ Under new regime: Self-occupied interest deduction is REMOVED, Let-out interest deduction continues.</i>
+        </div>
+        <div class="input-row">
+          <label>Annual interest paid on home loan (self-occupied)</label>
+          <input type="number" id="selfOccupiedLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
+        </div>
+        <div class="input-row">
+          <label>Annual interest paid on home loan (let-out)</label>
+          <input type="number" id="letOutLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
+        </div>
+        
+        <div class="total-row" style="margin-top: 20px; background: #d1ecf1; border-color: #17a2b8;" id="totalTaxableRow">
+          <span>Total taxable income after deducting HRA and interest on house rent deduction</span>
+          <span id="taxableIncomeDisplay">₹12,04,769.00</span>
         </div>
       </div>
       
@@ -415,28 +448,28 @@
         <h3>🏠 HRA Exemption Details</h3>
         <div class="input-row">
           <label>Basic salary received per annum</label>
-          <input type="number" id="basicSalary" value="60000" step="0.01">
+          <input type="number" id="basicSalary" value="600000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
         </div>
         <div class="input-row">
           <label>Dearness allowance (DA) received per annum</label>
-          <input type="number" id="da" value="12000" step="0.01">
+          <input type="number" id="da" value="120000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
         </div>
         <div class="input-row">
           <label>HRA received per annum</label>
-          <input type="number" id="hraReceived" value="36000" step="0.01">
+          <input type="number" id="hraReceived" value="360000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
         </div>
         <div class="input-row">
           <label>Total rent paid per annum</label>
-          <input type="number" id="rentPaid" value="48000" step="0.01">
+          <input type="number" id="rentPaid" value="480000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
         </div>
         <div class="metro-question">
           <span>Do you live in a metro city?</span>
-          <label><input type="radio" name="metro" value="yes" checked> Yes</label>
-          <label><input type="radio" name="metro" value="no"> No</label>
+          <label><input type="radio" name="metro" value="yes" checked onchange="calculateTax()"> Yes</label>
+          <label><input type="radio" name="metro" value="no" onchange="calculateTax()"> No</label>
         </div>
         <div class="total-row" style="margin-top: 20px;" id="hraExemptionRow">
-          <span>HRA Exemption</span>
-          <span id="hraExemptionDisplay">₹24,000.00</span>
+          <span>HRA Exemption (Least of three rules)</span>
+          <span id="hraExemptionDisplay">₹2,40,000.00</span>
         </div>
       </div>
     </div>
@@ -456,7 +489,7 @@
             </td>
           </tr>
           <tr>
-            <td>Exemption (Max: Rs 1,25,000 for LTCG)</td>
+            <td>Exemption (Max: Rs 0 for STCG)</td>
             <td id="stcgExemption">₹0.00</td>
           </tr>
           <tr>
@@ -498,7 +531,7 @@
     
     <button onclick="calculateTax()">Calculate Tax</button>
     
-    <!-- Tax Calculation Breakdown - New Regime 2025 (Moved UP) -->
+    <!-- Tax Calculation Breakdown - New Regime 2025 -->
     <h2>📊 Tax Calculation Breakdown - New Regime 2025</h2>
     <table class="slabs-table">
       <thead>
@@ -527,17 +560,27 @@
       </tbody>
     </table>
     
-    <!-- Final Tax Calculation Summary (Moved DOWN) -->
+    <!-- Marginal Relief Information -->
+    <div class="marginal-relief-box" id="marginalReliefInfo">
+      <strong>🛡️ Marginal Relief:</strong> For income slightly above ₹12,00,000, tax is limited to (Income - ₹12,00,000) + 4% cess.
+      <span id="marginalReliefAmount" style="display: block; margin-top: 5px; font-weight: 600;"></span>
+    </div>
+    
+    <!-- Final Tax Calculation Summary -->
     <div class="summary-container">
       <h3>💰 Total Income from Salary & Other Sources - Final Calculation</h3>
       <table class="summary-table">
         <tr>
           <td>Total Income from Salary & Other Sources</td>
-          <td id="summaryTotalIncome">₹1,28,769.00</td>
+          <td id="summaryTotalIncome">₹12,28,769.00</td>
         </tr>
         <tr>
           <td>HRA Exemption</td>
-          <td id="summaryHRA">₹24,000.00</td>
+          <td id="summaryHRA">₹2,40,000.00</td>
+        </tr>
+        <tr>
+          <td>Let-out Property Interest Deduction</td>
+          <td id="summaryLetOutInterest">₹0.00</td>
         </tr>
         <tr>
           <td>Standard Deduction</td>
@@ -545,7 +588,7 @@
         </tr>
         <tr>
           <td>Net Taxable Income (Regular)</td>
-          <td id="summaryNetTaxable">₹29,769.00</td>
+          <td id="summaryNetTaxable">₹9,13,769.00</td>
         </tr>
         <tr>
           <td>Short Term Capital Gain Tax</td>
@@ -599,33 +642,50 @@
       const stcgAmount = parseFloat(document.getElementById('stcgAmount').value) || 0;
       const ltcgAmount = parseFloat(document.getElementById('ltcgAmount').value) || 0;
       
-      // Calculate HRA Exemption
+      // Calculate HRA Exemption - Least of three rules
       let hraExemption = 0;
-      if (isSalaried && rentPaid > 0) {
+      if (isSalaried && rentPaid > 0 && basicSalary > 0) {
         const salaryForHRA = basicSalary + da;
-        const actualHRA = hraReceived;
-        const rentMinus10Percent = rentPaid - (0.1 * salaryForHRA);
-        const percentOfSalary = isMetro ? 0.5 * salaryForHRA : 0.4 * salaryForHRA;
         
-        hraExemption = Math.min(actualHRA, rentMinus10Percent, percentOfSalary);
+        // Rule 1: Actual HRA received
+        const rule1 = hraReceived;
+        
+        // Rule 2: Rent paid minus 10% of salary
+        const rule2 = rentPaid - (0.1 * salaryForHRA);
+        
+        // Rule 3: 50% of salary for metro, 40% for non-metro
+        const rule3 = isMetro ? 0.5 * salaryForHRA : 0.4 * salaryForHRA;
+        
+        hraExemption = Math.min(rule1, rule2, rule3);
         hraExemption = Math.max(0, hraExemption);
       }
       
-      // Calculate total income
+      // Calculate total income before deductions
       let totalIncome = grossSalary + otherSources + interestIncome + rentalIncome;
       
-      // Adjust for home loan interest
-      const selfOccupiedDeduction = Math.min(selfOccupiedLoan, 200000);
-      totalIncome = totalIncome - selfOccupiedDeduction - letOutLoan;
+      // Apply home loan interest rules under new regime
+      // Self-occupied interest: NO DEDUCTION under new regime
+      // Let-out interest: Full deduction allowed
+      const letOutDeduction = letOutLoan; // Full deduction for let-out property
+      
+      // Income after interest deductions
+      let incomeAfterInterest = totalIncome - letOutDeduction;
       
       // Update Total Income row
       document.getElementById('totalIncomeDisplay').textContent = `₹${formatMoney(totalIncome)}`;
       document.getElementById('hraExemptionDisplay').textContent = `₹${formatMoney(hraExemption)}`;
       
-      // Apply HRA and standard deduction
-      const incomeAfterHRA = totalIncome - hraExemption;
+      // Apply HRA exemption
+      const incomeAfterHRA = incomeAfterInterest - hraExemption;
+      
+      // Standard deduction for salaried
       const stdDeduction = isSalaried ? 75000 : 0;
+      
+      // Net taxable regular income
       const netTaxableIncome = Math.max(0, incomeAfterHRA - stdDeduction);
+      
+      // Update taxable income display
+      document.getElementById('taxableIncomeDisplay').textContent = `₹${formatMoney(incomeAfterHRA)}`;
       
       // Calculate LTCG exemption and tax
       const ltcgExemption = Math.min(ltcgAmount, 125000);
@@ -633,11 +693,12 @@
       const ltcgTax = taxableLTCG * 0.125;
       
       // STCG tax (no exemption)
+      const stcgExemption = 0;
       const taxableSTCG = stcgAmount;
       const stcgTax = stcgAmount * 0.20;
       
       // Update Capital Gains tables
-      document.getElementById('stcgExemption').textContent = `₹${formatMoney(0)}`;
+      document.getElementById('stcgExemption').textContent = `₹${formatMoney(stcgExemption)}`;
       document.getElementById('taxableSTCG').textContent = `₹${formatMoney(taxableSTCG)}`;
       document.getElementById('stcgTaxAmount').textContent = `₹${formatMoney(stcgTax)}`;
       
@@ -658,26 +719,56 @@
       // Total tax before cess
       const totalTaxBeforeCess = regularTaxResult.tax + totalCGTax;
       
-      // Apply the formula: =ROUNDUP(IF(SUM(D11:D17)>70588.2,SUM(D11:D17)*1.04,IF(SUM(D11:D17)>60000,(D7-1200000)*1.04,0)),0)
+      // Apply marginal relief for income slightly above ₹12L
       let finalTax = 0;
+      let marginalRelief applied = false;
       
-      if (totalTaxBeforeCess > 70588.2) {
-        finalTax = Math.ceil(totalTaxBeforeCess * 1.04);
-      } else if (totalTaxBeforeCess > 60000) {
-        if (netTaxableIncome > 1200000) {
-          finalTax = Math.ceil((netTaxableIncome - 1200000) * 1.04);
+      // Check if net taxable income is between ₹12L and ₹12.75L (approx)
+      if (netTaxableIncome > 1200000 && netTaxableIncome <= 1275000) {
+        // Marginal relief: tax should not exceed (income - 12L)
+        const taxWithoutRebate = regularTaxResult.tax + regularTaxResult.rebate; // Tax before rebate
+        const maxTaxUnderRelief = netTaxableIncome - 1200000;
+        
+        if (taxWithoutRebate > maxTaxUnderRelief) {
+          finalTax = maxTaxUnderRelief + totalCGTax;
+          applied = true;
+          document.getElementById('marginalReliefAmount').innerHTML = 
+            `Marginal Relief Applied: Tax limited to ₹${formatMoney(maxTaxUnderRelief)} + Capital Gains Tax`;
         } else {
-          finalTax = 0;
+          finalTax = totalTaxBeforeCess;
         }
       } else {
-        finalTax = 0;
+        finalTax = totalTaxBeforeCess;
       }
       
-      const cessAmount = finalTax > 0 ? (finalTax * 0.04) : 0;
+      // Apply the formula with 4% cess
+      let finalTaxWithCess = 0;
+      if (finalTax > 70588.2) {
+        finalTaxWithCess = Math.ceil(finalTax * 1.04);
+      } else if (finalTax > 60000) {
+        if (netTaxableIncome > 1200000) {
+          finalTaxWithCess = Math.ceil((netTaxableIncome - 1200000) * 1.04);
+        } else {
+          finalTaxWithCess = 0;
+        }
+      } else {
+        finalTaxWithCess = 0;
+      }
+      
+      const cessAmount = finalTaxWithCess > 0 ? (finalTaxWithCess * 0.04) : 0;
+      
+      if (!applied && netTaxableIncome > 1200000 && netTaxableIncome <= 1275000) {
+        document.getElementById('marginalReliefAmount').innerHTML = 
+          `No Marginal Relief needed. Regular tax: ₹${formatMoney(regularTaxResult.tax)}`;
+      } else if (netTaxableIncome > 1275000) {
+        document.getElementById('marginalReliefAmount').innerHTML = 
+          `Income above marginal relief threshold. Regular tax applicable.`;
+      }
       
       // Update Summary table
       document.getElementById('summaryTotalIncome').textContent = `₹${formatMoney(totalIncome)}`;
       document.getElementById('summaryHRA').textContent = `₹${formatMoney(hraExemption)}`;
+      document.getElementById('summaryLetOutInterest').textContent = `₹${formatMoney(letOutDeduction)}`;
       document.getElementById('summaryStdDeduction').textContent = `₹${formatMoney(stdDeduction)}`;
       document.getElementById('summaryNetTaxable').textContent = `₹${formatMoney(netTaxableIncome)}`;
       document.getElementById('summarySTCG').textContent = `₹${formatMoney(stcgTax)}`;
@@ -685,7 +776,7 @@
       document.getElementById('summaryTotalCG').textContent = `₹${formatMoney(totalCGTax)}`;
       document.getElementById('summaryRegularTax').textContent = `₹${formatMoney(regularTaxResult.tax)}`;
       document.getElementById('summaryCess').textContent = `₹${formatMoney(cessAmount)}`;
-      document.getElementById('summaryFinalTax').innerHTML = `<strong>₹${formatMoney(finalTax)}</strong>`;
+      document.getElementById('summaryFinalTax').innerHTML = `<strong>₹${formatMoney(finalTaxWithCess)}</strong>`;
     }
     
     function calculateNewRegimeTax(income) {
