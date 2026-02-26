@@ -540,249 +540,267 @@
 
 <!-- CONTENT -->
   
-  <div class="calculator-container">
-    <h1>🧮 INCOME TAX CALCULATOR FY 2025-26 (NEW REGIME)</h1>
+  <!-- Main Calculator Section -->
+  <section class="tc-calculator">
+    <h1 class="tc-heading-primary">🧮 INCOME TAX CALCULATOR FY 2025-26 (NEW REGIME)</h1>
     
     <!-- Radio Buttons Section -->
-    <div class="radio-main-container">
-      <div class="radio-group">
-        <span style="font-weight: 600; min-width: 100px;">Age Group:</span>
-        <label><input type="radio" name="age" value="below60" checked onchange="calculateTax()"> Below 60 years</label>
-        <label><input type="radio" name="age" value="senior" onchange="calculateTax()"> 60-79 years</label>
-        <label><input type="radio" name="age" value="supersenior" onchange="calculateTax()"> 80+ years</label>
-      </div>
-      
-      <div class="radio-group">
-        <span style="font-weight: 600; min-width: 100px;">Employment:</span>
-        <label><input type="radio" name="employment" value="salaried" checked onchange="calculateTax()"> Salaried</label>
-        <label><input type="radio" name="employment" value="business" onchange="calculateTax()"> Business</label>
-        <label><input type="radio" name="employment" value="pensioner" onchange="calculateTax()"> Pensioner</label>
-      </div>
-    </div>
-    
-    <!-- Income and HRA Section -->
-    <div class="grid-2">
-      <!-- Income Details Card -->
-      <div class="card">
-        <div class="card-header">
-          <span>💰</span> Income Details
-        </div>
-        <div class="input-row">
-          <label>Gross salary income</label>
-          <input type="number" id="grossSalary" value="1228769" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>Income from other sources</label>
-          <input type="number" id="otherSources" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>Income from interest</label>
-          <input type="number" id="interestIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>Income from dividends</label>
-          <input type="number" id="dividendIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>Rental income (let-out property)</label>
-          <input type="number" id="rentalIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="total-row">
-          <span>Total Income</span>
-          <span id="totalIncomeDisplay">₹12,28,769.00</span>
-        </div>
-      </div>
-      
-      <!-- HRA Exemption Card -->
-      <div class="card">
-        <div class="card-header">
-          <span>🏠</span> HRA Exemption Details
-        </div>
-        <div class="input-row">
-          <label>Basic salary per annum</label>
-          <input type="number" id="basicSalary" value="600000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>Dearness allowance (DA)</label>
-          <input type="number" id="da" value="420000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>HRA received per annum</label>
-          <input type="number" id="hraReceived" value="90000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>Total rent paid per annum</label>
-          <input type="number" id="rentPaid" value="100000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="metro-question">
-          <span>Metro city?</span>
-          <div>
-            <label><input type="radio" name="metro" value="yes" onchange="calculateTax()"> Yes</label>
-            <label><input type="radio" name="metro" value="no" checked onchange="calculateTax()"> No</label>
-          </div>
-        </div>
-        <div class="total-row">
-          <span>HRA Exemption (Least of 3 rules)</span>
-          <span id="hraExemptionDisplay">₹0.00</span>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Home Loan Interest Card -->
-    <div class="card" style="margin-bottom: 20px;">
-      <div class="card-header">
-        <span>🏠</span> Home Loan Interest
-      </div>
-      <div class="note-box">
-        ℹ️ Under new regime: Self-occupied interest deduction is REMOVED, Let-out interest deduction continues.
-      </div>
-      <div class="grid-2" style="margin-bottom: 15px;">
-        <div class="input-row">
-          <label>Self-occupied interest</label>
-          <input type="number" id="selfOccupiedLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>Let-out interest</label>
-          <input type="number" id="letOutLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-      </div>
-      <div class="info-row">
-        <span>Total Annual interest exempted</span>
-        <span id="totalInterestExempted">₹0.00</span>
-      </div>
-    </div>
-    
-    <!-- Taxable Income Card -->
-    <div class="card" style="background: #e3f2fd; margin-bottom: 20px; border: 1px solid #90caf9;">
-      <div class="total-row" style="border-color: #2196f3; background: transparent;">
-        <span style="font-size: 16px;">Total taxable income after deductions</span>
-        <span id="taxableIncomeDisplay">₹12,28,769.00</span>
-      </div>
-    </div>
-    
-    <!-- Capital Gains Section -->
-    <h2>📈 Capital Gain & Digital Assets Tax</h2>
-    <div class="cg-container">
-      <!-- Short Term -->
-      <div class="cg-card">
-        <div class="cg-header">Short Term Capital Gain (20%)</div>
-        <table class="cg-table">
-          <tr><td>Short Term Capital Gain</td><td><input type="number" id="stcgAmount" class="cg-input" value="0" onchange="calculateTax()"></td></tr>
-          <tr><td>Exemption</td><td id="stcgExemption">₹0.00</td></tr>
-          <tr><td>Taxable Amount</td><td id="taxableSTCG">₹0.00</td></tr>
-          <tr class="highlight"><td>Tax @ 20%</td><td id="stcgTaxAmount">₹0.00</td></tr>
-        </table>
-      </div>
-      
-      <!-- Long Term -->
-      <div class="cg-card">
-        <div class="cg-header">Long Term Capital Gain (12.5%)</div>
-        <table class="cg-table">
-          <tr><td>Long Term Capital Gain</td><td><input type="number" id="ltcgAmount" class="cg-input" value="0" onchange="calculateTax()"></td></tr>
-          <tr><td>Exemption (Max ₹1,25,000)</td><td id="ltcgExemption">₹0.00</td></tr>
-          <tr><td>Taxable Amount</td><td id="taxableLTCG">₹0.00</td></tr>
-          <tr class="highlight"><td>Tax @ 12.5%</td><td id="ltcgTaxAmount">₹0.00</td></tr>
-        </table>
-      </div>
-      
-      <!-- Digital Assets -->
-      <div class="cg-card">
-        <div class="cg-header">Digital Assets (30%)</div>
-        <table class="cg-table">
-          <tr><td>Income from Digital Assets</td><td><input type="number" id="digitalAssetsAmount" class="cg-input" value="0" onchange="calculateTax()"></td></tr>
-          <tr><td>Exemption</td><td id="digitalExemption">₹0.00</td></tr>
-          <tr><td>Taxable Amount</td><td id="taxableDigital">₹0.00</td></tr>
-          <tr class="highlight"><td>Tax @ 30%</td><td id="digitalTaxAmount">₹0.00</td></tr>
-        </table>
-      </div>
-    </div>
-    
-    <!-- Tax Slabs -->
-    <h2>📊 Tax Calculation Breakdown - New Regime 2025</h2>
-    <div class="slabs-container">
-      <table class="slabs-table">
-        <thead><tr><th>Tax Slab</th><th>Rate</th><th>Tax Amount</th></tr></thead>
-        <tbody>
-          <tr><td>Upto ₹4,00,000</td><td>0%</td><td id="slab1">₹0.00</td></tr>
-          <tr><td>₹4,00,001 - ₹8,00,000</td><td>5%</td><td id="slab2">₹0.00</td></tr>
-          <tr><td>₹8,00,001 - ₹12,00,000</td><td>10%</td><td id="slab3">₹0.00</td></tr>
-          <tr><td>₹12,00,001 - ₹16,00,000</td><td>15%</td><td id="slab4">₹0.00</td></tr>
-          <tr><td>₹16,00,001 - ₹20,00,000</td><td>20%</td><td id="slab5">₹0.00</td></tr>
-          <tr><td>₹20,00,001 - ₹24,00,000</td><td>25%</td><td id="slab6">₹0.00</td></tr>
-          <tr><td>Above ₹24,00,000</td><td>30%</td><td id="slab7">₹0.00</td></tr>
-          <tr class="highlight"><td colspan="2">Rebate u/s 87A</td><td id="rebate">₹0.00</td></tr>
-        </tbody>
-      </table>
-    </div>
-    
-    <!-- Marginal Relief -->
-    <div class="marginal-relief-box" id="marginalReliefInfo">
-      <strong>🛡️ Marginal Relief:</strong> For income slightly above ₹12,00,000, tax is limited to (Income - ₹12,00,000) + 4% cess.
-      <div id="marginalReliefAmount" style="margin-top: 10px; font-weight: 600;"></div>
-    </div>
-    
-    <!-- Final Summary -->
-    <div class="summary-container">
-      <h3>💰 Final Tax Calculation Summary</h3>
-      <div class="summary-grid">
-        <div class="summary-item">
-          <div class="label">Total Income</div>
-          <div class="value" id="summaryTotalIncome">₹12,28,769</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">STCG Tax</div>
-          <div class="value" id="summarySTCG">₹0</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Standard Deduction</div>
-          <div class="value" id="summaryStdDeduction">₹75,000</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">LTCG Tax</div>
-          <div class="value" id="summaryLTCG">₹0</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">HRA Exemption</div>
-          <div class="value" id="summaryHRA">₹0</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Digital Assets Tax</div>
-          <div class="value" id="summaryDigital">₹0</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Let-out Interest Deduction</div>
-          <div class="value" id="summaryLetOutInterest">₹0</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Total Capital Gains Tax</div>
-          <div class="value" id="summaryTotalCG">₹0</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Total Deductions</div>
-          <div class="value" id="summaryTotalDeductions">₹0</div>
+    <section class="tc-section">
+      <div class="tc-radio-container">
+        <div class="tc-radio-group">
+          <span class="tc-radio-group-label" style="font-weight: 600; min-width: 100px;">Age Group:</span>
+          <label class="tc-radio-label"><input type="radio" name="age" value="below60" checked onchange="calculateTax()" class="tc-radio-input"> Below 60 years</label>
+          <label class="tc-radio-label"><input type="radio" name="age" value="senior" onchange="calculateTax()" class="tc-radio-input"> 60-79 years</label>
+          <label class="tc-radio-label"><input type="radio" name="age" value="supersenior" onchange="calculateTax()" class="tc-radio-input"> 80+ years</label>
         </div>
         
-        <div class="summary-item">
-          <div class="label">Net Taxable Income</div>
-          <div class="value" id="summaryNetTaxable">₹11,53,769</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Regular Income Tax</div>
-          <div class="value" id="summaryRegularTax">₹0</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Health & Education Cess (4%)</div>
-          <div class="value" id="summaryCess">₹0</div>
-        </div>
-        <div class="summary-total">
-          <span>FINAL TAX PAYABLE</span>
-          <span id="summaryFinalTax">₹0</span>
+        <div class="tc-radio-group">
+          <span class="tc-radio-group-label" style="font-weight: 600; min-width: 100px;">Employment:</span>
+          <label class="tc-radio-label"><input type="radio" name="employment" value="salaried" checked onchange="calculateTax()" class="tc-radio-input"> Salaried</label>
+          <label class="tc-radio-label"><input type="radio" name="employment" value="business" onchange="calculateTax()" class="tc-radio-input"> Business</label>
+          <label class="tc-radio-label"><input type="radio" name="employment" value="pensioner" onchange="calculateTax()" class="tc-radio-input"> Pensioner</label>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
+    
+    <!-- Income and HRA Section -->
+    <section class="tc-section">
+      <div class="tc-grid-2">
+        <!-- Income Details Card -->
+        <article class="tc-card">
+          <header class="tc-card-header">
+            <span>💰</span> Income Details
+          </header>
+          <div class="tc-input-row">
+            <label>Gross salary income</label>
+            <input type="number" id="grossSalary" value="1228769" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>Income from other sources</label>
+            <input type="number" id="otherSources" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>Income from interest</label>
+            <input type="number" id="interestIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>Income from dividends</label>
+            <input type="number" id="dividendIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>Rental income (let-out property)</label>
+            <input type="number" id="rentalIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <footer class="tc-total-row">
+            <span>Total Income</span>
+            <span id="totalIncomeDisplay">₹12,28,769.00</span>
+          </footer>
+        </article>
+        
+        <!-- HRA Exemption Card -->
+        <article class="tc-card">
+          <header class="tc-card-header">
+            <span>🏠</span> HRA Exemption Details
+          </header>
+          <div class="tc-input-row">
+            <label>Basic salary per annum</label>
+            <input type="number" id="basicSalary" value="600000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>Dearness allowance (DA)</label>
+            <input type="number" id="da" value="420000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>HRA received per annum</label>
+            <input type="number" id="hraReceived" value="90000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>Total rent paid per annum</label>
+            <input type="number" id="rentPaid" value="100000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-metro-question">
+            <span>Metro city?</span>
+            <div class="tc-metro-options">
+              <label class="tc-radio-label"><input type="radio" name="metro" value="yes" onchange="calculateTax()" class="tc-radio-input"> Yes</label>
+              <label class="tc-radio-label"><input type="radio" name="metro" value="no" checked onchange="calculateTax()" class="tc-radio-input"> No</label>
+            </div>
+          </div>
+          <footer class="tc-total-row">
+            <span>HRA Exemption (Least of 3 rules)</span>
+            <span id="hraExemptionDisplay">₹0.00</span>
+          </footer>
+        </article>
+      </div>
+    </section>
+    
+    <!-- Home Loan Interest Section -->
+    <section class="tc-section">
+      <article class="tc-card">
+        <header class="tc-card-header">
+          <span>🏠</span> Home Loan Interest
+        </header>
+        <div class="tc-note-box">
+          ℹ️ Under new regime: Self-occupied interest deduction is REMOVED, Let-out interest deduction continues.
+        </div>
+        <div class="tc-grid-2">
+          <div class="tc-input-row">
+            <label>Self-occupied interest</label>
+            <input type="number" id="selfOccupiedLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>Let-out interest</label>
+            <input type="number" id="letOutLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+        </div>
+        <div class="tc-info-row">
+          <span>Total Annual interest exempted</span>
+          <span id="totalInterestExempted">₹0.00</span>
+        </div>
+      </article>
+    </section>
+    
+    <!-- Taxable Income Section -->
+    <section class="tc-section">
+      <article class="tc-card" style="background: #e3f2fd; border: 1px solid #90caf9;">
+        <footer class="tc-total-row" style="border-color: #2196f3; background: transparent;">
+          <span style="font-size: 16px;">Total taxable income after deductions</span>
+          <span id="taxableIncomeDisplay">₹12,28,769.00</span>
+        </footer>
+      </article>
+    </section>
+    
+    <!-- Capital Gains Section -->
+    <section class="tc-section">
+      <h2 class="tc-heading-secondary">📈 Capital Gain & Digital Assets Tax</h2>
+      <div class="tc-cg-container">
+        <!-- Short Term -->
+        <article class="tc-cg-card">
+          <header class="tc-cg-header">Short Term Capital Gain (20%)</header>
+          <table class="tc-cg-table">
+            <tr><td>Short Term Capital Gain</td><td><input type="number" id="stcgAmount" class="tc-cg-input" value="0" onchange="calculateTax()"></td></tr>
+            <tr><td>Exemption</td><td id="stcgExemption">₹0.00</td></tr>
+            <tr><td>Taxable Amount</td><td id="taxableSTCG">₹0.00</td></tr>
+            <tr class="tc-highlight"><td>Tax @ 20%</td><td id="stcgTaxAmount">₹0.00</td></tr>
+          </table>
+        </article>
+        
+        <!-- Long Term -->
+        <article class="tc-cg-card">
+          <header class="tc-cg-header">Long Term Capital Gain (12.5%)</header>
+          <table class="tc-cg-table">
+            <tr><td>Long Term Capital Gain</td><td><input type="number" id="ltcgAmount" class="tc-cg-input" value="0" onchange="calculateTax()"></td></tr>
+            <tr><td>Exemption (Max ₹1,25,000)</td><td id="ltcgExemption">₹0.00</td></tr>
+            <tr><td>Taxable Amount</td><td id="taxableLTCG">₹0.00</td></tr>
+            <tr class="tc-highlight"><td>Tax @ 12.5%</td><td id="ltcgTaxAmount">₹0.00</td></tr>
+          </table>
+        </article>
+        
+        <!-- Digital Assets -->
+        <article class="tc-cg-card">
+          <header class="tc-cg-header">Digital Assets (30%)</header>
+          <table class="tc-cg-table">
+            <tr><td>Income from Digital Assets</td><td><input type="number" id="digitalAssetsAmount" class="tc-cg-input" value="0" onchange="calculateTax()"></td></tr>
+            <tr><td>Exemption</td><td id="digitalExemption">₹0.00</td></tr>
+            <tr><td>Taxable Amount</td><td id="taxableDigital">₹0.00</td></tr>
+            <tr class="tc-highlight"><td>Tax @ 30%</td><td id="digitalTaxAmount">₹0.00</td></tr>
+          </table>
+        </article>
+      </div>
+    </section>
+    
+    <!-- Tax Slabs Section -->
+    <section class="tc-section">
+      <h2 class="tc-heading-secondary">📊 Tax Calculation Breakdown - New Regime 2025</h2>
+      <div class="tc-slabs-container">
+        <table class="tc-slabs-table">
+          <thead><tr><th>Tax Slab</th><th>Rate</th><th>Tax Amount</th></tr></thead>
+          <tbody>
+            <tr><td>Upto ₹4,00,000</td><td>0%</td><td id="slab1">₹0.00</td></tr>
+            <tr><td>₹4,00,001 - ₹8,00,000</td><td>5%</td><td id="slab2">₹0.00</td></tr>
+            <tr><td>₹8,00,001 - ₹12,00,000</td><td>10%</td><td id="slab3">₹0.00</td></tr>
+            <tr><td>₹12,00,001 - ₹16,00,000</td><td>15%</td><td id="slab4">₹0.00</td></tr>
+            <tr><td>₹16,00,001 - ₹20,00,000</td><td>20%</td><td id="slab5">₹0.00</td></tr>
+            <tr><td>₹20,00,001 - ₹24,00,000</td><td>25%</td><td id="slab6">₹0.00</td></tr>
+            <tr><td>Above ₹24,00,000</td><td>30%</td><td id="slab7">₹0.00</td></tr>
+            <tr class="tc-highlight"><td colspan="2">Rebate u/s 87A</td><td id="rebate">₹0.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    
+    <!-- Marginal Relief Section -->
+    <section class="tc-section">
+      <div class="tc-marginal-relief" id="marginalReliefInfo">
+        <strong>🛡️ Marginal Relief:</strong> For income slightly above ₹12,00,000, tax is limited to (Income - ₹12,00,000) + 4% cess.
+        <div id="marginalReliefAmount" class="tc-relief-amount"></div>
+      </div>
+    </section>
+    
+    <!-- Final Summary Section -->
+    <section class="tc-section">
+      <div class="tc-summary-container">
+        <h3 class="tc-heading-tertiary">💰 Final Tax Calculation Summary</h3>
+        <div class="tc-summary-grid">
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Total Income</div>
+            <div class="tc-summary-value" id="summaryTotalIncome">₹12,28,769</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">STCG Tax</div>
+            <div class="tc-summary-value" id="summarySTCG">₹0</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Standard Deduction</div>
+            <div class="tc-summary-value" id="summaryStdDeduction">₹75,000</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">LTCG Tax</div>
+            <div class="tc-summary-value" id="summaryLTCG">₹0</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">HRA Exemption</div>
+            <div class="tc-summary-value" id="summaryHRA">₹0</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Digital Assets Tax</div>
+            <div class="tc-summary-value" id="summaryDigital">₹0</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Let-out Interest Deduction</div>
+            <div class="tc-summary-value" id="summaryLetOutInterest">₹0</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Total Capital Gains Tax</div>
+            <div class="tc-summary-value" id="summaryTotalCG">₹0</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Total Deductions</div>
+            <div class="tc-summary-value" id="summaryTotalDeductions">₹0</div>
+          </div>
+          
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Net Taxable Income</div>
+            <div class="tc-summary-value" id="summaryNetTaxable">₹11,53,769</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Regular Income Tax</div>
+            <div class="tc-summary-value" id="summaryRegularTax">₹0</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Health & Education Cess (4%)</div>
+            <div class="tc-summary-value" id="summaryCess">₹0</div>
+          </div>
+          <div class="tc-summary-total">
+            <span>FINAL TAX PAYABLE</span>
+            <span id="summaryFinalTax">₹0</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
 
   <script>
+    // JavaScript remains exactly the same as original
     function calculateTax() {
       // Get all values with proper error handling
       const grossSalary = parseFloat(document.getElementById('grossSalary')?.value) || 0;
