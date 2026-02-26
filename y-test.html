@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Income Tax Calculator FY 2025-26</title>
+  <title>Income Tax Calculator FY 2025-26 (New Regime)</title>
   <style>
     /* Tax Calculator Styles - Namespaced with prefix 'tc-' */
     .tc-calculator * {
@@ -57,6 +57,19 @@
       color: #2c3e50;
       margin: 12px 0 8px;
       font-weight: 600;
+    }
+    
+    /* Regime Badge */
+    .tc-regime-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 20px;
+      text-align: center;
     }
     
     /* Radio Section */
@@ -322,28 +335,6 @@
       color: #1976d2;
     }
     
-    /* Metro Question */
-    .tc-metro-question {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin: 15px 0;
-      padding: 12px 15px;
-      background: #f0f3ff;
-      border-radius: 12px;
-      border: 1px solid #d0d9ff;
-    }
-    
-    .tc-metro-question span {
-      font-weight: 500;
-      color: #2c3e50;
-    }
-    
-    .tc-metro-options {
-      display: flex;
-      gap: 15px;
-    }
-    
     /* Capital Gains Tables */
     .tc-cg-container {
       display: grid;
@@ -598,11 +589,6 @@
         width: 100%;
       }
       
-      .tc-metro-question {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
       .tc-tooltip {
         width: 280px;
         left: 0;
@@ -657,7 +643,10 @@
 <body>
   <!-- Main Calculator Section -->
   <section class="tc-calculator">
-    <h1 class="tc-heading-primary">🧮 INCOME TAX CALCULATOR FY 2025-26 (NEW REGIME)</h1>
+    <div style="text-align: center;">
+      <span class="tc-regime-badge">NEW TAX REGIME FY 2025-26</span>
+    </div>
+    <h1 class="tc-heading-primary">🧮 INCOME TAX CALCULATOR</h1>
     
     <!-- Radio Buttons Section -->
     <section class="tc-section">
@@ -670,7 +659,7 @@
         </div>
         
         <div class="tc-radio-group">
-          <span class="tc-radio-group-label" style="font-weight: 600; min-width: 100px;">Employment:</span>
+          <span class="tc-radio-group-label" style="font-weight: 600; min-width: 100px;">Employment Type:</span>
           <label class="tc-radio-label"><input type="radio" name="employment" value="salaried" checked onchange="calculateTax()" class="tc-radio-input"> Salaried</label>
           <label class="tc-radio-label"><input type="radio" name="employment" value="business" onchange="calculateTax()" class="tc-radio-input"> Business</label>
           <label class="tc-radio-label"><input type="radio" name="employment" value="pensioner" onchange="calculateTax()" class="tc-radio-input"> Pensioner</label>
@@ -678,7 +667,7 @@
       </div>
     </section>
     
-    <!-- Income and HRA Section -->
+    <!-- Income Section -->
     <section class="tc-section">
       <div class="tc-grid-2">
         <!-- Income Details Card -->
@@ -712,90 +701,58 @@
           </footer>
         </article>
         
-        <!-- HRA Exemption Card -->
+        <!-- Home Loan Interest Card -->
         <article class="tc-card">
           <header class="tc-card-header">
-            <span>🏠</span> HRA Exemption Details
+            <span>🏠</span> Home Loan Interest
             <div class="tc-info-icon">
               i
               <div class="tc-tooltip">
-                <h4>Calculate Exempt Allowances (HRA, LTA, etc.)</h4>
-                <p>Certain allowances are tax-exempt and must be excluded from your gross income.</p>
-                <h4>HRA Exemption Calculation:</h4>
-                <p>Take the lowest value among:</p>
+                <h4>Home Loan Interest in New Regime</h4>
+                <p>Under the new tax regime:</p>
                 <ul>
-                  <li>Actual HRA received</li>
-                  <li>Actual rent paid minus 10% of (Basic Salary + DA)</li>
-                  <li>40% of (Basic Salary + DA) for non-metro cities, OR 50% for metro cities</li>
+                  <li><strong>Self-occupied property:</strong> Interest deduction is NOT available</li>
+                  <li><strong>Let-out property:</strong> Interest deduction continues to be available</li>
                 </ul>
+                <p>Rental income from let-out property is taxable, but you can claim deduction for interest paid on home loan for that property.</p>
                 <div class="tc-note">
-                  <strong>Note:</strong> In the new tax regime, HRA exemption is NOT available. The above applies only if you opt for the old tax regime.
+                  <strong>Note:</strong> No deduction is available for self-occupied property under new regime.
                 </div>
               </div>
             </div>
           </header>
-          <div class="tc-input-row">
-            <label>Basic salary per annum</label>
-            <input type="number" id="basicSalary" value="600000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          <div class="tc-note-box">
+            ℹ️ Self-occupied interest: ❌ Not deductible | Let-out interest: ✅ Deductible
           </div>
           <div class="tc-input-row">
-            <label>Dearness allowance (DA)</label>
-            <input type="number" id="da" value="420000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+            <label>Self-occupied interest (Not deductible)</label>
+            <input type="number" id="selfOccupiedLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field" disabled style="background:#f0f0f0;">
           </div>
           <div class="tc-input-row">
-            <label>HRA received per annum</label>
-            <input type="number" id="hraReceived" value="90000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+            <label>Let-out interest (Deductible)</label>
+            <input type="number" id="letOutLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
           </div>
-          <div class="tc-input-row">
-            <label>Total rent paid per annum</label>
-            <input type="number" id="rentPaid" value="100000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          <div class="tc-info-row">
+            <span>Total Interest Deducted</span>
+            <span id="totalInterestExempted">₹0.00</span>
           </div>
-          <div class="tc-metro-question">
-            <span>Metro city?</span>
-            <div class="tc-metro-options">
-              <label class="tc-radio-label"><input type="radio" name="metro" value="yes" onchange="calculateTax()" class="tc-radio-input"> Yes</label>
-              <label class="tc-radio-label"><input type="radio" name="metro" value="no" checked onchange="calculateTax()" class="tc-radio-input"> No</label>
-            </div>
-          </div>
-          <footer class="tc-total-row">
-            <span>HRA Exemption (Least of 3 rules)</span>
-            <span id="hraExemptionDisplay">₹0.00</span>
-          </footer>
         </article>
       </div>
     </section>
     
-    <!-- Home Loan Interest Section -->
+    <!-- Standard Deduction Notice for Salaried -->
     <section class="tc-section">
-      <article class="tc-card">
-        <header class="tc-card-header">
-          <span>🏠</span> Home Loan Interest
-        </header>
-        <div class="tc-note-box">
-          ℹ️ Under new regime: Self-occupied interest deduction is REMOVED, Let-out interest deduction continues.
-        </div>
-        <div class="tc-grid-2">
-          <div class="tc-input-row">
-            <label>Self-occupied interest</label>
-            <input type="number" id="selfOccupiedLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-          </div>
-          <div class="tc-input-row">
-            <label>Let-out interest</label>
-            <input type="number" id="letOutLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-          </div>
-        </div>
-        <div class="tc-info-row">
-          <span>Total Annual interest exempted</span>
-          <span id="totalInterestExempted">₹0.00</span>
-        </div>
-      </article>
+      <div class="tc-info-row" id="stdDeductionNotice" style="background: #e8f5e9; border-left-color: #4caf50;">
+        <span>📌 Standard Deduction (Salaried/Pensioner)</span>
+        <span>₹75,000 will be automatically deducted</span>
+      </div>
     </section>
     
-    <!-- Taxable Income Section -->
+    <!-- Taxable Income Card -->
     <section class="tc-section">
       <article class="tc-card" style="background: #e3f2fd; border: 1px solid #90caf9;">
         <footer class="tc-total-row" style="border-color: #2196f3; background: transparent;">
-          <span style="font-size: 16px;">Total taxable income after deductions</span>
+          <span style="font-size: 16px;">Net Taxable Income (after deductions)</span>
           <span id="taxableIncomeDisplay">₹12,28,769.00</span>
         </footer>
       </article>
@@ -803,7 +760,7 @@
     
     <!-- Capital Gains Section -->
     <section class="tc-section">
-      <h2 class="tc-heading-secondary">📈 Capital Gain & Digital Assets Tax</h2>
+      <h2 class="tc-heading-secondary">📈 Capital Gains & Digital Assets Tax</h2>
       <div class="tc-cg-container">
         <!-- Short Term -->
         <article class="tc-cg-card">
@@ -854,7 +811,7 @@
             <tr><td>₹16,00,001 - ₹20,00,000</td><td>20%</td><td id="slab5">₹0.00</td></tr>
             <tr><td>₹20,00,001 - ₹24,00,000</td><td>25%</td><td id="slab6">₹0.00</td></tr>
             <tr><td>Above ₹24,00,000</td><td>30%</td><td id="slab7">₹0.00</td></tr>
-            <tr class="tc-highlight"><td colspan="2">Rebate u/s 87A</td><td id="rebate">₹0.00</td></tr>
+            <tr class="tc-highlight"><td colspan="2">Rebate u/s 87A (Up to ₹12L income)</td><td id="rebate">₹0.00</td></tr>
           </tbody>
         </table>
       </div>
@@ -908,24 +865,20 @@
             <div class="tc-summary-value" id="summaryLTCG">₹0</div>
           </div>
           <div class="tc-summary-item">
-            <div class="tc-summary-label">HRA Exemption</div>
-            <div class="tc-summary-value" id="summaryHRA">₹0</div>
+            <div class="tc-summary-label">Let-out Interest</div>
+            <div class="tc-summary-value" id="summaryLetOutInterest">₹0</div>
           </div>
           <div class="tc-summary-item">
             <div class="tc-summary-label">Digital Assets Tax</div>
             <div class="tc-summary-value" id="summaryDigital">₹0</div>
           </div>
           <div class="tc-summary-item">
-            <div class="tc-summary-label">Let-out Interest Deduction</div>
-            <div class="tc-summary-value" id="summaryLetOutInterest">₹0</div>
+            <div class="tc-summary-label">Total Deductions</div>
+            <div class="tc-summary-value" id="summaryTotalDeductions">₹0</div>
           </div>
           <div class="tc-summary-item">
             <div class="tc-summary-label">Total Capital Gains Tax</div>
             <div class="tc-summary-value" id="summaryTotalCG">₹0</div>
-          </div>
-          <div class="tc-summary-item">
-            <div class="tc-summary-label">Total Deductions</div>
-            <div class="tc-summary-value" id="summaryTotalDeductions">₹0</div>
           </div>
           
           <div class="tc-summary-item">
@@ -958,76 +911,56 @@
       const dividendIncome = parseFloat(document.getElementById('dividendIncome')?.value) || 0;
       const rentalIncome = parseFloat(document.getElementById('rentalIncome')?.value) || 0;
       
-      const basicSalary = parseFloat(document.getElementById('basicSalary')?.value) || 0;
-      const da = parseFloat(document.getElementById('da')?.value) || 0;
-      const hraReceived = parseFloat(document.getElementById('hraReceived')?.value) || 0;
-      const rentPaid = parseFloat(document.getElementById('rentPaid')?.value) || 0;
-      
-      const metroRadios = document.getElementsByName('metro');
-      let isMetro = false;
-      for (let i = 0; i < metroRadios.length; i++) {
-        if (metroRadios[i].checked) {
-          isMetro = metroRadios[i].value === 'yes';
-          break;
-        }
-      }
-      
       const employmentRadios = document.getElementsByName('employment');
       let isSalaried = true;
       for (let i = 0; i < employmentRadios.length; i++) {
         if (employmentRadios[i].checked) {
-          isSalaried = employmentRadios[i].value === 'salaried';
+          isSalaried = employmentRadios[i].value === 'salaried' || employmentRadios[i].value === 'pensioner';
           break;
         }
       }
       
-      const selfOccupiedLoan = parseFloat(document.getElementById('selfOccupiedLoan')?.value) || 0;
       const letOutLoan = parseFloat(document.getElementById('letOutLoan')?.value) || 0;
       
       const stcgAmount = parseFloat(document.getElementById('stcgAmount')?.value) || 0;
       const ltcgAmount = parseFloat(document.getElementById('ltcgAmount')?.value) || 0;
       const digitalAssetsAmount = parseFloat(document.getElementById('digitalAssetsAmount')?.value) || 0;
       
-      // Calculate HRA Exemption
-      let hraExemption = 0;
-      if (isSalaried && rentPaid > 0 && basicSalary > 0) {
-        const salaryForHRA = basicSalary + da;
-        const rule1 = hraReceived;
-        const rule2 = rentPaid - (0.1 * salaryForHRA);
-        const rule3 = isMetro ? 0.5 * salaryForHRA : 0.4 * salaryForHRA;
-        hraExemption = Math.max(0, Math.min(rule1, rule2, rule3));
-      }
-      
       // Total Income
       let totalIncome = grossSalary + otherSources + interestIncome + dividendIncome + rentalIncome;
       
       // Home Loan Interest (only let-out is deductible)
       const letOutDeduction = letOutLoan;
-      const totalInterestExempted = letOutDeduction;
       
-      // Income after deductions
+      // Income after interest deduction
       let incomeAfterInterest = totalIncome - letOutDeduction;
-      let incomeAfterHRA = incomeAfterInterest - hraExemption;
       
-      // Standard Deduction
+      // Standard Deduction (only for salaried/pensioner)
       const stdDeduction = isSalaried ? 75000 : 0;
-      const netTaxableIncome = Math.max(0, incomeAfterHRA - stdDeduction);
+      const netTaxableIncome = Math.max(0, incomeAfterInterest - stdDeduction);
       
       // Total Deductions
-      const totalDeductions = hraExemption + letOutDeduction;
+      const totalDeductions = letOutDeduction + stdDeduction;
       
-      // Update displays with null checks
+      // Update displays
       const totalIncomeDisplay = document.getElementById('totalIncomeDisplay');
       if (totalIncomeDisplay) totalIncomeDisplay.textContent = `₹${formatMoney(totalIncome)}`;
       
-      const hraExemptionDisplay = document.getElementById('hraExemptionDisplay');
-      if (hraExemptionDisplay) hraExemptionDisplay.textContent = `₹${formatMoney(hraExemption)}`;
-      
       const totalInterestExemptedDisplay = document.getElementById('totalInterestExempted');
-      if (totalInterestExemptedDisplay) totalInterestExemptedDisplay.textContent = `₹${formatMoney(totalInterestExempted)}`;
+      if (totalInterestExemptedDisplay) totalInterestExemptedDisplay.textContent = `₹${formatMoney(letOutDeduction)}`;
       
       const taxableIncomeDisplay = document.getElementById('taxableIncomeDisplay');
-      if (taxableIncomeDisplay) taxableIncomeDisplay.textContent = `₹${formatMoney(incomeAfterHRA)}`;
+      if (taxableIncomeDisplay) taxableIncomeDisplay.textContent = `₹${formatMoney(netTaxableIncome)}`;
+      
+      // Update standard deduction notice
+      const stdDeductionNotice = document.getElementById('stdDeductionNotice');
+      if (stdDeductionNotice) {
+        if (isSalaried) {
+          stdDeductionNotice.style.display = 'flex';
+        } else {
+          stdDeductionNotice.style.display = 'none';
+        }
+      }
       
       // Capital Gains
       const ltcgExemption = Math.min(ltcgAmount, 125000);
@@ -1106,12 +1039,9 @@
       const cessAmount = totalTaxBeforeCess * 0.04;
       const finalTax = Math.ceil(totalTaxBeforeCess + cessAmount);
       
-      // Update Summary with null checks
+      // Update Summary
       const summaryTotalIncome = document.getElementById('summaryTotalIncome');
       if (summaryTotalIncome) summaryTotalIncome.textContent = `₹${formatMoney(totalIncome)}`;
-      
-      const summaryHRA = document.getElementById('summaryHRA');
-      if (summaryHRA) summaryHRA.textContent = `₹${formatMoney(hraExemption)}`;
       
       const summaryLetOutInterest = document.getElementById('summaryLetOutInterest');
       if (summaryLetOutInterest) summaryLetOutInterest.textContent = `₹${formatMoney(letOutDeduction)}`;
