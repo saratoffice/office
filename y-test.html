@@ -5,22 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Income Tax Calculator FY 2025-26</title>
   <style>
-    * {
+    /* Tax Calculator Styles - Namespaced with prefix 'tc-' */
+    .tc-calculator * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
-    body {
-      background: white;
-      min-height: 100vh;
-      padding: 30px 20px;
-      display: flex;
-      justify-content: center;
-    }
-    
-    .calculator-container {
+    .tc-calculator {
       max-width: 1200px;
       width: 100%;
       margin: 0 auto;
@@ -30,7 +23,7 @@
       box-shadow: 0 20px 40px rgba(0,0,0,0.05);
     }
     
-    h1 {
+    .tc-heading-primary {
       font-size: clamp(24px, 4vw, 32px);
       color: #2c3e50;
       margin-bottom: 25px;
@@ -43,7 +36,7 @@
       text-align: center;
     }
     
-    h2 {
+    .tc-heading-secondary {
       font-size: clamp(20px, 3vw, 24px);
       color: #2c3e50;
       margin: 25px 0 15px;
@@ -51,7 +44,7 @@
       border-bottom: 3px solid #e74c3c;
     }
     
-    h3 {
+    .tc-heading-tertiary {
       font-size: 18px;
       color: #667eea;
       margin: 15px 0 12px;
@@ -59,15 +52,15 @@
       border-left: 4px solid #667eea;
     }
     
-    h4 {
+    .tc-heading-quaternary {
       font-size: 16px;
       color: #2c3e50;
       margin: 12px 0 8px;
       font-weight: 600;
     }
     
-    /* Radio Group */
-    .radio-main-container {
+    /* Radio Section */
+    .tc-radio-container {
       background: #f8faff;
       padding: 20px;
       border-radius: 20px;
@@ -75,7 +68,7 @@
       border: 1px solid #eaeef5;
     }
     
-    .radio-group {
+    .tc-radio-group {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
@@ -86,11 +79,11 @@
       border: 1px solid #eaeef5;
     }
     
-    .radio-group:last-child {
+    .tc-radio-group:last-child {
       margin-bottom: 0;
     }
     
-    .radio-group label {
+    .tc-radio-label {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -102,27 +95,27 @@
       border: 1px solid #e0e0e0;
     }
     
-    .radio-group label:hover {
+    .tc-radio-label:hover {
       background: #667eea20;
       border-color: #667eea;
       transform: translateY(-2px);
     }
     
-    input[type="radio"], input[type="checkbox"] {
+    .tc-radio-input, .tc-checkbox-input {
       accent-color: #667eea;
       width: 18px;
       height: 18px;
     }
     
-    /* Grid Layout */
-    .grid-2 {
+    /* Grid Layouts */
+    .tc-grid-2 {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 20px;
       margin-bottom: 20px;
     }
     
-    .grid-3 {
+    .tc-grid-3 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 20px;
@@ -130,7 +123,7 @@
     }
     
     /* Cards */
-    .card {
+    .tc-card {
       background: white;
       padding: 20px;
       border-radius: 20px;
@@ -138,12 +131,12 @@
       transition: all 0.3s;
     }
     
-    .card:hover {
+    .tc-card:hover {
       box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
       border-color: #667eea;
     }
     
-    .card-header {
+    .tc-card-header {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -153,12 +146,111 @@
       color: #667eea;
     }
     
-    .card-header i {
+    .tc-card-header i {
       font-size: 24px;
     }
     
+    /* Info Icon & Tooltip */
+    .tc-info-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #667eea;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 8px;
+      position: relative;
+    }
+    
+    .tc-info-icon:hover {
+      background: #764ba2;
+    }
+    
+    .tc-tooltip {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      color: #2c3e50;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      width: 320px;
+      z-index: 1000;
+      transition: all 0.3s;
+      border: 1px solid #667eea;
+      font-size: 14px;
+      font-weight: normal;
+      text-align: left;
+      pointer-events: none;
+    }
+    
+    .tc-tooltip::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid #667eea;
+    }
+    
+    .tc-info-icon:hover .tc-tooltip {
+      visibility: visible;
+      opacity: 1;
+      top: 25px;
+    }
+    
+    .tc-tooltip h4 {
+      color: #667eea;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    
+    .tc-tooltip ul, .tc-tooltip ol {
+      margin-left: 20px;
+      margin-bottom: 10px;
+    }
+    
+    .tc-tooltip li {
+      margin-bottom: 5px;
+      line-height: 1.5;
+    }
+    
+    .tc-tooltip p {
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    
+    .tc-tooltip .tc-note {
+      background: #fff3cd;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: #856404;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+    
+    .tc-tooltip .tc-example {
+      background: #e8f5e9;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: #2e7d32;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+    
     /* Input Rows */
-    .input-row {
+    .tc-input-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -167,14 +259,16 @@
       border-bottom: 1px solid #eaeef5;
     }
     
-    .input-row label {
+    .tc-input-row label {
       color: #555;
       font-weight: 500;
       font-size: 14px;
       flex: 1;
+      display: flex;
+      align-items: center;
     }
     
-    .input-row input {
+    .tc-input-field {
       width: 140px;
       padding: 8px 12px;
       border: 1px solid #e0e0e0;
@@ -185,7 +279,7 @@
       background: #fafafa;
     }
     
-    .input-row input:focus {
+    .tc-input-field:focus {
       outline: none;
       border-color: #667eea;
       box-shadow: 0 0 0 4px #667eea20;
@@ -193,7 +287,7 @@
     }
     
     /* Total Rows */
-    .total-row {
+    .tc-total-row {
       background: #e8f5e9;
       font-weight: 700;
       padding: 15px;
@@ -206,12 +300,12 @@
       font-size: 15px;
     }
     
-    .total-row span:last-child {
+    .tc-total-row span:last-child {
       font-size: 18px;
       color: #2c3e50;
     }
     
-    .info-row {
+    .tc-info-row {
       background: #e3f2fd;
       border-left: 4px solid #2196f3;
       padding: 12px 15px;
@@ -223,13 +317,13 @@
       align-items: center;
     }
     
-    .info-row span:last-child {
+    .tc-info-row span:last-child {
       font-weight: 600;
       color: #1976d2;
     }
     
     /* Metro Question */
-    .metro-question {
+    .tc-metro-question {
       display: flex;
       align-items: center;
       gap: 15px;
@@ -240,32 +334,32 @@
       border: 1px solid #d0d9ff;
     }
     
-    .metro-question span {
+    .tc-metro-question span {
       font-weight: 500;
       color: #2c3e50;
     }
     
-    .metro-question div {
+    .tc-metro-options {
       display: flex;
       gap: 15px;
     }
     
     /* Capital Gains Tables */
-    .cg-container {
+    .tc-cg-container {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 20px;
       margin: 20px 0;
     }
     
-    .cg-card {
+    .tc-cg-card {
       background: white;
       border-radius: 20px;
       overflow: hidden;
       border: 1px solid #eaeef5;
     }
     
-    .cg-header {
+    .tc-cg-header {
       background: #667eea;
       color: white;
       padding: 15px;
@@ -274,33 +368,33 @@
       text-align: center;
     }
     
-    .cg-table {
+    .tc-cg-table {
       width: 100%;
       border-collapse: collapse;
     }
     
-    .cg-table td {
+    .tc-cg-table td {
       padding: 12px 15px;
       border-bottom: 1px solid #eaeef5;
     }
     
-    .cg-table td:first-child {
+    .tc-cg-table td:first-child {
       font-weight: 500;
       color: #555;
     }
     
-    .cg-table td:last-child {
+    .tc-cg-table td:last-child {
       text-align: right;
       font-weight: 600;
     }
     
-    .cg-table .highlight {
+    .tc-cg-table .tc-highlight {
       background: #e8f5e9;
       font-weight: 700;
       color: #2c3e50;
     }
     
-    .cg-input {
+    .tc-cg-input {
       width: 100px;
       padding: 6px 10px;
       border: 1px solid #e0e0e0;
@@ -310,12 +404,12 @@
     }
     
     /* Slabs Table */
-    .slabs-container {
+    .tc-slabs-container {
       overflow-x: auto;
       margin: 20px 0;
     }
     
-    .slabs-table {
+    .tc-slabs-table {
       width: 100%;
       border-collapse: collapse;
       background: white;
@@ -324,7 +418,7 @@
       border: 1px solid #eaeef5;
     }
     
-    .slabs-table th {
+    .tc-slabs-table th {
       background: #667eea;
       color: white;
       padding: 15px;
@@ -332,28 +426,28 @@
       font-size: 15px;
     }
     
-    .slabs-table td {
+    .tc-slabs-table td {
       padding: 12px 15px;
       border-bottom: 1px solid #eaeef5;
     }
     
-    .slabs-table tr:last-child td {
+    .tc-slabs-table tr:last-child td {
       border-bottom: none;
     }
     
-    .slabs-table td:last-child {
+    .tc-slabs-table td:last-child {
       text-align: right;
       font-weight: 600;
     }
     
-    .slabs-table .highlight {
+    .tc-slabs-table .tc-highlight {
       background: #f8f9fa;
       font-weight: 700;
       color: #667eea;
     }
     
     /* Summary Container */
-    .summary-container {
+    .tc-summary-container {
       background: #667eea;
       padding: 25px;
       border-radius: 20px;
@@ -361,39 +455,41 @@
       color: white;
     }
     
-    .summary-container h3 {
+    .tc-summary-container .tc-heading-tertiary {
       color: white;
       border-left-color: white;
       margin-top: 0;
       font-size: 20px;
     }
     
-    .summary-grid {
+    .tc-summary-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 15px;
       margin-top: 20px;
     }
     
-    .summary-item {
+    .tc-summary-item {
       background: rgba(255,255,255,0.1);
       padding: 15px;
       border-radius: 15px;
       border: 1px solid rgba(255,255,255,0.2);
     }
     
-    .summary-item .label {
+    .tc-summary-label {
       font-size: 13px;
       opacity: 0.9;
       margin-bottom: 5px;
+      display: flex;
+      align-items: center;
     }
     
-    .summary-item .value {
+    .tc-summary-value {
       font-size: 18px;
       font-weight: 700;
     }
     
-    .summary-total {
+    .tc-summary-total {
       grid-column: span 2;
       background: rgba(255,255,255,0.2);
       padding: 20px;
@@ -407,12 +503,12 @@
       border: 2px solid rgba(255,255,255,0.3);
     }
     
-    .summary-total span:last-child {
+    .tc-summary-total span:last-child {
       font-size: 28px;
     }
     
     /* Marginal Relief Box */
-    .marginal-relief-box {
+    .tc-marginal-relief {
       background: #fff3e0;
       border-left: 6px solid #f39c12;
       padding: 20px;
@@ -420,14 +516,26 @@
       margin: 20px 0;
       font-size: 14px;
       border: 1px solid #ffe0b2;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
     }
     
-    .marginal-relief-box strong {
+    .tc-marginal-relief strong {
       color: #e67e22;
     }
     
+    .tc-relief-amount {
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    
+    .tc-relief-content {
+      flex: 1;
+    }
+    
     /* Note Box */
-    .note-box {
+    .tc-note-box {
       background: #fff8e1;
       border-left: 4px solid #ffc107;
       padding: 15px;
@@ -438,337 +546,408 @@
       border: 1px solid #ffeeba;
     }
     
+    /* Section spacing */
+    .tc-section {
+      margin-bottom: 30px;
+    }
+    
+    .tc-section:last-child {
+      margin-bottom: 0;
+    }
+    
     /* Mobile Responsive */
     @media (max-width: 992px) {
-      body {
-        padding: 15px 10px;
-      }
-      
-      .calculator-container {
+      .tc-calculator {
         padding: 20px;
       }
       
-      .grid-2, .grid-3 {
+      .tc-grid-2, .tc-grid-3 {
         grid-template-columns: 1fr;
         gap: 15px;
       }
       
-      .cg-container {
+      .tc-cg-container {
         grid-template-columns: 1fr;
         gap: 15px;
       }
       
-      .summary-grid {
+      .tc-summary-grid {
         grid-template-columns: 1fr;
       }
       
-      .summary-total {
+      .tc-summary-total {
         grid-column: span 1;
       }
       
-      .radio-group {
+      .tc-radio-group {
         flex-direction: column;
         gap: 10px;
       }
       
-      .radio-group label {
+      .tc-radio-label {
         width: 100%;
       }
       
-      .input-row {
+      .tc-input-row {
         flex-direction: column;
         align-items: flex-start;
         gap: 5px;
       }
       
-      .input-row input {
+      .tc-input-field {
         width: 100%;
       }
       
-      .metro-question {
+      .tc-metro-question {
         flex-direction: column;
         align-items: flex-start;
+      }
+      
+      .tc-tooltip {
+        width: 280px;
+        left: 0;
+        transform: none;
+      }
+      
+      .tc-tooltip::before {
+        left: 20px;
       }
     }
     
     @media (max-width: 480px) {
-      .cg-table td {
+      .tc-cg-table td {
         padding: 8px 10px;
         font-size: 13px;
       }
       
-      .cg-input {
+      .tc-cg-input {
         width: 80px;
       }
       
-      .total-row {
+      .tc-total-row {
         flex-direction: column;
         gap: 5px;
         text-align: center;
       }
       
-      .summary-item .value {
+      .tc-summary-value {
         font-size: 16px;
       }
       
-      .summary-total span:last-child {
+      .tc-summary-total span:last-child {
         font-size: 22px;
+      }
+      
+      .tc-tooltip {
+        width: 240px;
       }
     }
     
     /* Animations */
-    @keyframes fadeIn {
+    @keyframes tc-fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
     
-    .card, .cg-card, .summary-container {
-      animation: fadeIn 0.5s ease-out;
+    .tc-card, .tc-cg-card, .tc-summary-container {
+      animation: tc-fadeIn 0.5s ease-out;
     }
   </style>
 </head>
 <body>
-  <div class="calculator-container">
-    <h1>🧮 INCOME TAX CALCULATOR FY 2025-26 (NEW REGIME)</h1>
+  <!-- Main Calculator Section -->
+  <section class="tc-calculator">
+    <h1 class="tc-heading-primary">🧮 INCOME TAX CALCULATOR FY 2025-26 (NEW REGIME)</h1>
     
     <!-- Radio Buttons Section -->
-    <div class="radio-main-container">
-      <div class="radio-group">
-        <span style="font-weight: 600; min-width: 100px;">Age Group:</span>
-        <label><input type="radio" name="age" value="below60" checked onchange="calculateTax()"> Below 60 years</label>
-        <label><input type="radio" name="age" value="senior" onchange="calculateTax()"> 60-79 years</label>
-        <label><input type="radio" name="age" value="supersenior" onchange="calculateTax()"> 80+ years</label>
-      </div>
-      
-      <div class="radio-group">
-        <span style="font-weight: 600; min-width: 100px;">Employment:</span>
-        <label><input type="radio" name="employment" value="salaried" checked onchange="calculateTax()"> Salaried</label>
-        <label><input type="radio" name="employment" value="business" onchange="calculateTax()"> Business</label>
-        <label><input type="radio" name="employment" value="pensioner" onchange="calculateTax()"> Pensioner</label>
-      </div>
-    </div>
-    
-    <!-- Income and HRA Section -->
-    <div class="grid-2">
-      <!-- Income Details Card -->
-      <div class="card">
-        <div class="card-header">
-          <span>💰</span> Income Details
-        </div>
-        <div class="input-row">
-          <label>Gross salary income</label>
-          <input type="number" id="grossSalary" value="1228769" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>Income from other sources</label>
-          <input type="number" id="otherSources" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>Income from interest</label>
-          <input type="number" id="interestIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>Income from dividends</label>
-          <input type="number" id="dividendIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>Rental income (let-out property)</label>
-          <input type="number" id="rentalIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="total-row">
-          <span>Total Income</span>
-          <span id="totalIncomeDisplay">₹12,28,769.00</span>
-        </div>
-      </div>
-      
-      <!-- HRA Exemption Card -->
-      <div class="card">
-        <div class="card-header">
-          <span>🏠</span> HRA Exemption Details
-        </div>
-        <div class="input-row">
-          <label>Basic salary per annum</label>
-          <input type="number" id="basicSalary" value="600000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>Dearness allowance (DA)</label>
-          <input type="number" id="da" value="420000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>HRA received per annum</label>
-          <input type="number" id="hraReceived" value="90000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>Total rent paid per annum</label>
-          <input type="number" id="rentPaid" value="100000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="metro-question">
-          <span>Metro city?</span>
-          <div>
-            <label><input type="radio" name="metro" value="yes" onchange="calculateTax()"> Yes</label>
-            <label><input type="radio" name="metro" value="no" checked onchange="calculateTax()"> No</label>
-          </div>
-        </div>
-        <div class="total-row">
-          <span>HRA Exemption (Least of 3 rules)</span>
-          <span id="hraExemptionDisplay">₹0.00</span>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Home Loan Interest Card -->
-    <div class="card" style="margin-bottom: 20px;">
-      <div class="card-header">
-        <span>🏠</span> Home Loan Interest
-      </div>
-      <div class="note-box">
-        ℹ️ Under new regime: Self-occupied interest deduction is REMOVED, Let-out interest deduction continues.
-      </div>
-      <div class="grid-2" style="margin-bottom: 15px;">
-        <div class="input-row">
-          <label>Self-occupied interest</label>
-          <input type="number" id="selfOccupiedLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-        <div class="input-row">
-          <label>Let-out interest</label>
-          <input type="number" id="letOutLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()">
-        </div>
-      </div>
-      <div class="info-row">
-        <span>Total Annual interest exempted</span>
-        <span id="totalInterestExempted">₹0.00</span>
-      </div>
-    </div>
-    
-    <!-- Taxable Income Card -->
-    <div class="card" style="background: #e3f2fd; margin-bottom: 20px; border: 1px solid #90caf9;">
-      <div class="total-row" style="border-color: #2196f3; background: transparent;">
-        <span style="font-size: 16px;">Total taxable income after deductions</span>
-        <span id="taxableIncomeDisplay">₹12,28,769.00</span>
-      </div>
-    </div>
-    
-    <!-- Capital Gains Section -->
-    <h2>📈 Capital Gain & Digital Assets Tax</h2>
-    <div class="cg-container">
-      <!-- Short Term -->
-      <div class="cg-card">
-        <div class="cg-header">Short Term Capital Gain (20%)</div>
-        <table class="cg-table">
-          <tr><td>Short Term Capital Gain</td><td><input type="number" id="stcgAmount" class="cg-input" value="0" onchange="calculateTax()"></td></tr>
-          <tr><td>Exemption</td><td id="stcgExemption">₹0.00</td></tr>
-          <tr><td>Taxable Amount</td><td id="taxableSTCG">₹0.00</td></tr>
-          <tr class="highlight"><td>Tax @ 20%</td><td id="stcgTaxAmount">₹0.00</td></tr>
-        </table>
-      </div>
-      
-      <!-- Long Term -->
-      <div class="cg-card">
-        <div class="cg-header">Long Term Capital Gain (12.5%)</div>
-        <table class="cg-table">
-          <tr><td>Long Term Capital Gain</td><td><input type="number" id="ltcgAmount" class="cg-input" value="0" onchange="calculateTax()"></td></tr>
-          <tr><td>Exemption (Max ₹1,25,000)</td><td id="ltcgExemption">₹0.00</td></tr>
-          <tr><td>Taxable Amount</td><td id="taxableLTCG">₹0.00</td></tr>
-          <tr class="highlight"><td>Tax @ 12.5%</td><td id="ltcgTaxAmount">₹0.00</td></tr>
-        </table>
-      </div>
-      
-      <!-- Digital Assets -->
-      <div class="cg-card">
-        <div class="cg-header">Digital Assets (30%)</div>
-        <table class="cg-table">
-          <tr><td>Income from Digital Assets</td><td><input type="number" id="digitalAssetsAmount" class="cg-input" value="0" onchange="calculateTax()"></td></tr>
-          <tr><td>Exemption</td><td id="digitalExemption">₹0.00</td></tr>
-          <tr><td>Taxable Amount</td><td id="taxableDigital">₹0.00</td></tr>
-          <tr class="highlight"><td>Tax @ 30%</td><td id="digitalTaxAmount">₹0.00</td></tr>
-        </table>
-      </div>
-    </div>
-    
-    <!-- Tax Slabs -->
-    <h2>📊 Tax Calculation Breakdown - New Regime 2025</h2>
-    <div class="slabs-container">
-      <table class="slabs-table">
-        <thead><tr><th>Tax Slab</th><th>Rate</th><th>Tax Amount</th></tr></thead>
-        <tbody>
-          <tr><td>Upto ₹4,00,000</td><td>0%</td><td id="slab1">₹0.00</td></tr>
-          <tr><td>₹4,00,001 - ₹8,00,000</td><td>5%</td><td id="slab2">₹0.00</td></tr>
-          <tr><td>₹8,00,001 - ₹12,00,000</td><td>10%</td><td id="slab3">₹0.00</td></tr>
-          <tr><td>₹12,00,001 - ₹16,00,000</td><td>15%</td><td id="slab4">₹0.00</td></tr>
-          <tr><td>₹16,00,001 - ₹20,00,000</td><td>20%</td><td id="slab5">₹0.00</td></tr>
-          <tr><td>₹20,00,001 - ₹24,00,000</td><td>25%</td><td id="slab6">₹0.00</td></tr>
-          <tr><td>Above ₹24,00,000</td><td>30%</td><td id="slab7">₹0.00</td></tr>
-          <tr class="highlight"><td colspan="2">Rebate u/s 87A</td><td id="rebate">₹0.00</td></tr>
-        </tbody>
-      </table>
-    </div>
-    
-    <!-- Marginal Relief -->
-    <div class="marginal-relief-box" id="marginalReliefInfo">
-      <strong>🛡️ Marginal Relief:</strong> For income slightly above ₹12,00,000, tax is limited to (Income - ₹12,00,000) + 4% cess.
-      <div id="marginalReliefAmount" style="margin-top: 10px; font-weight: 600;"></div>
-    </div>
-    
-    <!-- Final Summary -->
-    <div class="summary-container">
-      <h3>💰 Final Tax Calculation Summary</h3>
-      <div class="summary-grid">
-        <div class="summary-item">
-          <div class="label">Total Income</div>
-          <div class="value" id="summaryTotalIncome">₹12,28,769</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">STCG Tax</div>
-          <div class="value" id="summarySTCG">₹0</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Standard Deduction</div>
-          <div class="value" id="summaryStdDeduction">₹75,000</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">LTCG Tax</div>
-          <div class="value" id="summaryLTCG">₹0</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">HRA Exemption</div>
-          <div class="value" id="summaryHRA">₹0</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Digital Assets Tax</div>
-          <div class="value" id="summaryDigital">₹0</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Let-out Interest Deduction</div>
-          <div class="value" id="summaryLetOutInterest">₹0</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Total Capital Gains Tax</div>
-          <div class="value" id="summaryTotalCG">₹0</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Total Deductions</div>
-          <div class="value" id="summaryTotalDeductions">₹0</div>
+    <section class="tc-section">
+      <div class="tc-radio-container">
+        <div class="tc-radio-group">
+          <span class="tc-radio-group-label" style="font-weight: 600; min-width: 100px;">Age Group:</span>
+          <label class="tc-radio-label"><input type="radio" name="age" value="below60" checked onchange="calculateTax()" class="tc-radio-input"> Below 60 years</label>
+          <label class="tc-radio-label"><input type="radio" name="age" value="senior" onchange="calculateTax()" class="tc-radio-input"> 60-79 years</label>
+          <label class="tc-radio-label"><input type="radio" name="age" value="supersenior" onchange="calculateTax()" class="tc-radio-input"> 80+ years</label>
         </div>
         
-        <div class="summary-item">
-          <div class="label">Net Taxable Income</div>
-          <div class="value" id="summaryNetTaxable">₹11,53,769</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Regular Income Tax</div>
-          <div class="value" id="summaryRegularTax">₹0</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Health & Education Cess (4%)</div>
-          <div class="value" id="summaryCess">₹0</div>
-        </div>
-        <div class="summary-total">
-          <span>FINAL TAX PAYABLE</span>
-          <span id="summaryFinalTax">₹0</span>
+        <div class="tc-radio-group">
+          <span class="tc-radio-group-label" style="font-weight: 600; min-width: 100px;">Employment:</span>
+          <label class="tc-radio-label"><input type="radio" name="employment" value="salaried" checked onchange="calculateTax()" class="tc-radio-input"> Salaried</label>
+          <label class="tc-radio-label"><input type="radio" name="employment" value="business" onchange="calculateTax()" class="tc-radio-input"> Business</label>
+          <label class="tc-radio-label"><input type="radio" name="employment" value="pensioner" onchange="calculateTax()" class="tc-radio-input"> Pensioner</label>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
+    
+    <!-- Income and HRA Section -->
+    <section class="tc-section">
+      <div class="tc-grid-2">
+        <!-- Income Details Card -->
+        <article class="tc-card">
+          <header class="tc-card-header">
+            <span>💰</span> Income Details
+          </header>
+          <div class="tc-input-row">
+            <label>Gross salary income</label>
+            <input type="number" id="grossSalary" value="1228769" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>Income from other sources</label>
+            <input type="number" id="otherSources" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>Income from interest</label>
+            <input type="number" id="interestIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>Income from dividends</label>
+            <input type="number" id="dividendIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>Rental income (let-out property)</label>
+            <input type="number" id="rentalIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <footer class="tc-total-row">
+            <span>Total Income</span>
+            <span id="totalIncomeDisplay">₹12,28,769.00</span>
+          </footer>
+        </article>
+        
+        <!-- HRA Exemption Card -->
+        <article class="tc-card">
+          <header class="tc-card-header">
+            <span>🏠</span> HRA Exemption Details
+            <div class="tc-info-icon">
+              i
+              <div class="tc-tooltip">
+                <h4>Calculate Exempt Allowances (HRA, LTA, etc.)</h4>
+                <p>Certain allowances are tax-exempt and must be excluded from your gross income.</p>
+                <h4>HRA Exemption Calculation:</h4>
+                <p>Take the lowest value among:</p>
+                <ul>
+                  <li>Actual HRA received</li>
+                  <li>Actual rent paid minus 10% of (Basic Salary + DA)</li>
+                  <li>40% of (Basic Salary + DA) for non-metro cities, OR 50% for metro cities</li>
+                </ul>
+                <div class="tc-note">
+                  <strong>Note:</strong> In the new tax regime, HRA exemption is NOT available. The above applies only if you opt for the old tax regime.
+                </div>
+              </div>
+            </div>
+          </header>
+          <div class="tc-input-row">
+            <label>Basic salary per annum</label>
+            <input type="number" id="basicSalary" value="600000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>Dearness allowance (DA)</label>
+            <input type="number" id="da" value="420000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>HRA received per annum</label>
+            <input type="number" id="hraReceived" value="90000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>Total rent paid per annum</label>
+            <input type="number" id="rentPaid" value="100000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-metro-question">
+            <span>Metro city?</span>
+            <div class="tc-metro-options">
+              <label class="tc-radio-label"><input type="radio" name="metro" value="yes" onchange="calculateTax()" class="tc-radio-input"> Yes</label>
+              <label class="tc-radio-label"><input type="radio" name="metro" value="no" checked onchange="calculateTax()" class="tc-radio-input"> No</label>
+            </div>
+          </div>
+          <footer class="tc-total-row">
+            <span>HRA Exemption (Least of 3 rules)</span>
+            <span id="hraExemptionDisplay">₹0.00</span>
+          </footer>
+        </article>
+      </div>
+    </section>
+    
+    <!-- Home Loan Interest Section -->
+    <section class="tc-section">
+      <article class="tc-card">
+        <header class="tc-card-header">
+          <span>🏠</span> Home Loan Interest
+        </header>
+        <div class="tc-note-box">
+          ℹ️ Under new regime: Self-occupied interest deduction is REMOVED, Let-out interest deduction continues.
+        </div>
+        <div class="tc-grid-2">
+          <div class="tc-input-row">
+            <label>Self-occupied interest</label>
+            <input type="number" id="selfOccupiedLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+          <div class="tc-input-row">
+            <label>Let-out interest</label>
+            <input type="number" id="letOutLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          </div>
+        </div>
+        <div class="tc-info-row">
+          <span>Total Annual interest exempted</span>
+          <span id="totalInterestExempted">₹0.00</span>
+        </div>
+      </article>
+    </section>
+    
+    <!-- Taxable Income Section -->
+    <section class="tc-section">
+      <article class="tc-card" style="background: #e3f2fd; border: 1px solid #90caf9;">
+        <footer class="tc-total-row" style="border-color: #2196f3; background: transparent;">
+          <span style="font-size: 16px;">Total taxable income after deductions</span>
+          <span id="taxableIncomeDisplay">₹12,28,769.00</span>
+        </footer>
+      </article>
+    </section>
+    
+    <!-- Capital Gains Section -->
+    <section class="tc-section">
+      <h2 class="tc-heading-secondary">📈 Capital Gain & Digital Assets Tax</h2>
+      <div class="tc-cg-container">
+        <!-- Short Term -->
+        <article class="tc-cg-card">
+          <header class="tc-cg-header">Short Term Capital Gain (20%)</header>
+          <table class="tc-cg-table">
+            <tr><td>Short Term Capital Gain</td><td><input type="number" id="stcgAmount" class="tc-cg-input" value="0" onchange="calculateTax()"></td></tr>
+            <tr><td>Exemption</td><td id="stcgExemption">₹0.00</td></tr>
+            <tr><td>Taxable Amount</td><td id="taxableSTCG">₹0.00</td></tr>
+            <tr class="tc-highlight"><td>Tax @ 20%</td><td id="stcgTaxAmount">₹0.00</td></tr>
+          </table>
+        </article>
+        
+        <!-- Long Term -->
+        <article class="tc-cg-card">
+          <header class="tc-cg-header">Long Term Capital Gain (12.5%)</header>
+          <table class="tc-cg-table">
+            <tr><td>Long Term Capital Gain</td><td><input type="number" id="ltcgAmount" class="tc-cg-input" value="0" onchange="calculateTax()"></td></tr>
+            <tr><td>Exemption (Max ₹1,25,000)</td><td id="ltcgExemption">₹0.00</td></tr>
+            <tr><td>Taxable Amount</td><td id="taxableLTCG">₹0.00</td></tr>
+            <tr class="tc-highlight"><td>Tax @ 12.5%</td><td id="ltcgTaxAmount">₹0.00</td></tr>
+          </table>
+        </article>
+        
+        <!-- Digital Assets -->
+        <article class="tc-cg-card">
+          <header class="tc-cg-header">Digital Assets (30%)</header>
+          <table class="tc-cg-table">
+            <tr><td>Income from Digital Assets</td><td><input type="number" id="digitalAssetsAmount" class="tc-cg-input" value="0" onchange="calculateTax()"></td></tr>
+            <tr><td>Exemption</td><td id="digitalExemption">₹0.00</td></tr>
+            <tr><td>Taxable Amount</td><td id="taxableDigital">₹0.00</td></tr>
+            <tr class="tc-highlight"><td>Tax @ 30%</td><td id="digitalTaxAmount">₹0.00</td></tr>
+          </table>
+        </article>
+      </div>
+    </section>
+    
+    <!-- Tax Slabs Section -->
+    <section class="tc-section">
+      <h2 class="tc-heading-secondary">📊 Tax Calculation Breakdown - New Regime 2025</h2>
+      <div class="tc-slabs-container">
+        <table class="tc-slabs-table">
+          <thead><tr><th>Tax Slab</th><th>Rate</th><th>Tax Amount</th></tr></thead>
+          <tbody>
+            <tr><td>Upto ₹4,00,000</td><td>0%</td><td id="slab1">₹0.00</td></tr>
+            <tr><td>₹4,00,001 - ₹8,00,000</td><td>5%</td><td id="slab2">₹0.00</td></tr>
+            <tr><td>₹8,00,001 - ₹12,00,000</td><td>10%</td><td id="slab3">₹0.00</td></tr>
+            <tr><td>₹12,00,001 - ₹16,00,000</td><td>15%</td><td id="slab4">₹0.00</td></tr>
+            <tr><td>₹16,00,001 - ₹20,00,000</td><td>20%</td><td id="slab5">₹0.00</td></tr>
+            <tr><td>₹20,00,001 - ₹24,00,000</td><td>25%</td><td id="slab6">₹0.00</td></tr>
+            <tr><td>Above ₹24,00,000</td><td>30%</td><td id="slab7">₹0.00</td></tr>
+            <tr class="tc-highlight"><td colspan="2">Rebate u/s 87A</td><td id="rebate">₹0.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    
+    <!-- Marginal Relief Section -->
+    <section class="tc-section">
+      <div class="tc-marginal-relief" id="marginalReliefInfo">
+        <div class="tc-info-icon">
+          i
+          <div class="tc-tooltip">
+            <h4>Marginal Relief for Income Slightly Above Rs. 12 Lakh</h4>
+            <p>For taxpayers with income slightly above Rs. 12 lakh, marginal relief ensures they don't pay excessive tax compared to those earning Rs. 12 lakh or below.</p>
+            <div class="tc-example">
+              <strong>Example (Income Rs. 12,10,000):</strong>
+              <ul style="margin-top: 5px;">
+                <li>Normal tax payable: Rs. 61,500 (Rs. 20,000 + Rs. 40,000 + 15% of Rs. 10,000)</li>
+                <li>Without marginal relief, this would be the tax.</li>
+                <li>With marginal relief: Tax payable is limited to the excess over Rs. 12 lakh = Rs. 10,000 only</li>
+              </ul>
+            </div>
+            <p><strong>Marginal relief is available for incomes between Rs. 12,00,001 and Rs. 12,75,000 approximately.</strong></p>
+          </div>
+        </div>
+        <div class="tc-relief-content">
+          <strong>🛡️ Marginal Relief:</strong> For income slightly above ₹12,00,000, tax is limited to (Income - ₹12,00,000) + 4% cess.
+          <div id="marginalReliefAmount" class="tc-relief-amount"></div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Final Summary Section -->
+    <section class="tc-section">
+      <div class="tc-summary-container">
+        <h3 class="tc-heading-tertiary">💰 Final Tax Calculation Summary</h3>
+        <div class="tc-summary-grid">
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Total Income</div>
+            <div class="tc-summary-value" id="summaryTotalIncome">₹12,28,769</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">STCG Tax</div>
+            <div class="tc-summary-value" id="summarySTCG">₹0</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Standard Deduction</div>
+            <div class="tc-summary-value" id="summaryStdDeduction">₹75,000</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">LTCG Tax</div>
+            <div class="tc-summary-value" id="summaryLTCG">₹0</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">HRA Exemption</div>
+            <div class="tc-summary-value" id="summaryHRA">₹0</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Digital Assets Tax</div>
+            <div class="tc-summary-value" id="summaryDigital">₹0</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Let-out Interest Deduction</div>
+            <div class="tc-summary-value" id="summaryLetOutInterest">₹0</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Total Capital Gains Tax</div>
+            <div class="tc-summary-value" id="summaryTotalCG">₹0</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Total Deductions</div>
+            <div class="tc-summary-value" id="summaryTotalDeductions">₹0</div>
+          </div>
+          
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Net Taxable Income</div>
+            <div class="tc-summary-value" id="summaryNetTaxable">₹11,53,769</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Regular Income Tax</div>
+            <div class="tc-summary-value" id="summaryRegularTax">₹0</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">Health & Education Cess (4%)</div>
+            <div class="tc-summary-value" id="summaryCess">₹0</div>
+          </div>
+          <div class="tc-summary-total">
+            <span>FINAL TAX PAYABLE</span>
+            <span id="summaryFinalTax">₹0</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
 
   <script>
     function calculateTax() {
