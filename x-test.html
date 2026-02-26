@@ -1,461 +1,1176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Sarat Office | Flip‑card index (two‑column)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Fonts (consistent with original) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
-  <!-- Common CSS (header/footer/global) — do not modify -->
-  <link rel="stylesheet" href="style.css">
-  <!-- site components (header/footer loader) -->
-  <script src="assets/Scripts/site-components.js" defer></script>
-  <!-- styles: two‑column grid, horizontal flip cards, both sides clickable -->
-  <style>
-    /* ---------- global reset & flex sticky footer ---------- */
-    body {
-      background: #f4f7fb;
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    #site-header, #site-footer { flex-shrink: 0; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory License Compliance Guide - Factories Act 1948 | Saratrout</title>
+    <meta name="description" content="Complete guide to Factory License compliance under Factories Act 1948. Learn about registration, renewal, safety requirements, and legal obligations for manufacturing units in India.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* main container: two columns, each cell is a perspective container */
-    .flip-grid {
-      max-width: 1300px;
-      width: 100%;
-      margin: 40px auto 60px auto;
-      padding: 20px 30px;
-      flex: 1 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;   /* two columns */
-      gap: 30px;
-      background: transparent;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
 
-    /* ---------- flip card container (perspective) ---------- */
-    .flip-card {
-      background-color: transparent;
-      width: 100%;
-      aspect-ratio: 5 / 3;               /* nice rectangular card, fits content */
-      perspective: 2000px;                /* gives depth to the flip */
-      cursor: pointer;                    /* whole card looks clickable */
-    }
+        /* Navigation - matching your existing style */
+        nav {
+            background: #1a2639;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
 
-    /* inner wrapper – holds front and back, applies 3D and transition */
-    .flip-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-      transform-style: preserve-3d;
-      border-radius: 40px 20px 20px 40px; /* keep original asymmetric feel */
-      box-shadow: 0 12px 28px -10px rgba(0,0,0,0.2);
-    }
+        .menu {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
 
-    /* hover: horizontal flip (180deg around Y axis) */
-    .flip-card:hover .flip-inner {
-      transform: rotateY(180deg);
-    }
+        .menu > li {
+            position: relative;
+        }
 
-    /* front & back share positioning and backface-visibility */
-    .flip-front, .flip-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;        /* hide the reverse side when not facing viewer */
-      border-radius: inherit;              /* same rounded corners */
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 20px 24px;
-      background: white;
-      box-shadow: 0 8px 18px -6px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02) inset;
-      transition: box-shadow 0.2s;
-      box-sizing: border-box;
-      overflow-y: auto;                    /* in case content overflows (rare) */
-    }
+        .menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            display: block;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
 
-    /* back side is rotated 180deg initially */
-    .flip-back {
-      transform: rotateY(180deg);
-      background: #ffffff;
-      /* subtle different background to distinguish back */
-      background: linear-gradient(145deg, #ffffff 0%, #f9fafc 100%);
-    }
+        .menu a:hover {
+            color: #ffd700;
+        }
 
-    /* ----- front content ----- */
-    .flip-front {
-      display: flex;
-      flex-direction: row;          /* align number and text side by side */
-      align-items: center;
-      gap: 16px;
-    }
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #2c3e50;
+            min-width: 220px;
+            border-radius: 4px;
+            padding: 0.5rem 0;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+        }
 
-    .flip-front .number {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 800;
-      font-size: clamp(80px, 10vw, 120px);
-      line-height: 1;
-      min-width: 120px;
-      text-align: center;
-      padding: 6px 0;
-      color: transparent;
-      background-clip: text;
-      -webkit-background-clip: text;
-      background-size: cover;
-      background-position: center 30%;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-    }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
 
-    .front-info {
-      flex: 1;
-    }
+        .dropdown-menu li {
+            list-style: none;
+        }
 
-    .front-info h3 {
-      margin: 0 0 10px 0;
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      position: relative;
-      padding-left: 20px;
-      color: #111827;
-      text-transform: uppercase;
-      border-bottom: 2px solid transparent;
-      display: inline-block;
-    }
+        .dropdown-menu a {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+        }
 
-    .front-info h3::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 6px;
-      bottom: 6px;
-      width: 6px;
-      background: linear-gradient(135deg, #e11d48, #b91c1c);
-      border-radius: 12px;
-      transition: 0.2s;
-    }
+        .dropdown-menu a:hover {
+            background: #34495e;
+            color: #ffd700;
+        }
 
-    .flip-card:hover .front-info h3::before {
-      width: 10px;
-      background: linear-gradient(135deg, #2563eb, #1e40af);
-    }
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
 
-    .front-info p {
-      margin: 8px 0 4px 0;
-      line-height: 1.7;
-      font-size: 0.98rem;
-      opacity: 0.8;
-      text-align: justify;
-      text-indent: 2em;
-      color: #1f2937;
-    }
+        /* Header Section */
+        .page-header {
+            background: linear-gradient(135deg, #1a2639 0%, #2c3e50 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
 
-    /* ----- back content (two clickable options) ----- */
-    .flip-back {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      gap: 24px;
-    }
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
 
-    .back-title {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 700;
-      font-size: 1.6rem;
-      color: #1e293b;
-      margin-bottom: 8px;
-      letter-spacing: -0.01em;
-      border-bottom: 3px solid #2563eb;
-      display: inline-block;
-      padding-bottom: 6px;
-    }
+        .page-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+        }
 
-    .back-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-      width: 100%;
-    }
+        .last-updated {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+        }
 
-    .back-btn {
-      background: rgba(37, 99, 235, 0.08);
-      border: 2px solid #2563eb;
-      color: #1e40af;
-      font-weight: 600;
-      padding: 14px 24px;
-      border-radius: 60px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      min-width: 160px;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.03);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
+        /* Quick Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
 
-    .back-btn:hover {
-      background: #2563eb;
-      color: white;
-      transform: scale(1.05);
-      box-shadow: 0 12px 24px -12px #2563eb;
-      border-color: transparent;
-    }
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+        }
 
-    /* both sides need to be clickable: we attach JS, but we keep inner elements clickable too */
-    /* we prevent accidental toggles when clicking buttons (stopPropagation handled in script) */
-    .flip-back, .flip-front {
-      pointer-events: auto;
-    }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a2639;
+            margin-bottom: 0.5rem;
+        }
 
-    /* extra: even items keep same front shape */
-    .flip-card:nth-of-type(even) .flip-front {
-      border-radius: 40px 20px 20px 40px;
-    }
+        .stat-label {
+            color: #6c757d;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
-    /* responsiveness: two columns to one */
-    @media (max-width: 900px) {
-      .flip-grid {
-        grid-template-columns: 1fr;
-        max-width: 700px;
-      }
-      .flip-card {
-        aspect-ratio: 6 / 4;
-      }
-    }
+        /* Content Sections */
+        .content-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+        }
 
-    @media (max-width: 600px) {
-      .flip-front {
-        flex-direction: column;
-        text-align: center;
-        padding: 16px;
-      }
-      .front-info h3 {
-        padding-left: 0;
-      }
-      .front-info h3::before {
-        display: none;
-      }
-      .front-info p {
-        text-indent: 0;
-        text-align: center;
-      }
-      .flip-card {
-        aspect-ratio: auto; /* let height be content driven */
-        min-height: 300px;
-      }
-      .back-btn {
-        min-width: 130px;
-        padding: 12px 16px;
-        font-size: 1rem;
-      }
-    }
-  </style>
+        .section-title {
+            color: #1a2639;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #ffd700;
+            display: inline-block;
+        }
+
+        .subsection-title {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem;
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #1a2639;
+        }
+
+        .info-card h4 {
+            color: #1a2639;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .info-card ul, .compliance-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-card li, .compliance-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .info-card li:before, .compliance-list li:before {
+            content: "✓";
+            color: #28a745;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Checklist */
+        .checklist-container {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-right: 1rem;
+            margin-top: 0.2rem;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checklist-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .checklist-item strong {
+            color: #1a2639;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .checklist-item small {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-item {
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #ffd700;
+        }
+
+        .timeline-date {
+            color: #1a2639;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Tables */
+        .compliance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .compliance-table th {
+            background: #1a2639;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .compliance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .compliance-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Documents Required */
+        .doc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .doc-item {
+            background: #e9ecef;
+            padding: 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .doc-item:before {
+            content: "📄";
+            font-size: 1.2rem;
+        }
+
+        /* Alert Boxes */
+        .alert {
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            color: #856404;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            color: #0c5460;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            color: #155724;
+        }
+
+        /* Fee Table */
+        .fee-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .fee-table th {
+            background: #1a2639;
+            color: white;
+            padding: 1rem;
+        }
+
+        .fee-table td {
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+        }
+
+        .fee-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        /* Download Buttons */
+        .download-section {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .btn {
+            padding: 0.8rem 1.8rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: #1a2639;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-outline {
+            border: 2px solid #1a2639;
+            color: #1a2639;
+        }
+
+        /* FAQ Section */
+        .faq-item {
+            margin-bottom: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.2rem;
+            background: #f8f9fa;
+            cursor: pointer;
+            font-weight: 600;
+            color: #1a2639;
+            position: relative;
+        }
+
+        .faq-question:after {
+            content: "▼";
+            position: absolute;
+            right: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .faq-question.active:after {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .faq-answer.show {
+            padding: 1.2rem;
+            max-height: 500px;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a2639;
+            color: white;
+            padding: 3rem 2rem 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+
+        .footer-section a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .footer-section a:hover {
+            opacity: 1;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+            
+            .menu {
+                gap: 1rem;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .content-section {
+                padding: 1.5rem;
+            }
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #1a2639;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav>
+        <ul class="menu">
+            <li><a href="/index.html">WELCOME</a></li>                    
+            <li><a href="/guard-file.html">GUARD FILE</a></li>            
+            <li><a href="/weblinks.html">WEBLINKS</a></li>   
+            <li class="dropdown">
+                <a href="#">UTILITY</a>
+                <ul class="dropdown-menu">
+                    <li><a href="/electricity-bill.html">Electricity Bill</a></li>
+                    <li><a href="/density-converter.html">Density Converter</a></li>
+                    <li><a href="/currency-converter.html">Currency Converter</a></li>
+                    <li><a href="/age-calculator.html">Age Calculator</a></li>
+                    <li><a href="/bmr-calculator.html">BMR Calculator</a></li>
+                    <li><a href="/password-generator.html">Password Generator</a></li>
+                    <li><a href="/color-palettes.html">Color Palettes</a></li>
+                    <li><a href="/fonts.html">List of Fonts</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">DOCUMENTATION</a>
+                <ul class="dropdown-menu">
+                    <li><a href="/ec-act-1955.html">EC Act 1955</a></li>
+                    <li><a href="/petroleum-act-1934.html">Petroleum Act</a></li>
+                    <li><a href="/petroleum-rules-2002.html">Petroleum Rules</a></li>
+                    <li><a href="/partnership-act-1932.html">Partnership Act</a></li>
+                    <li><a href="/consumer-protection-act-1986.html">Consumer Protection Act</a></li>
+                    <li><a href="/hsd-license-1979.html">HSD License</a></li>
+                    <li><a href="/factories-act-1948.html">Factories Act 1948</a></li>
+                    <li><a href="/factory-license-compliance.html" style="color: #ffd700;">Factory License Compliance</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">COMPLIANCE</a>
+                <ul class="dropdown-menu">
+                    <li><a href="/petrol-pump-setup-checklist.html">Petrol Pump Setup Guide</a></li>
+                    <li><a href="/gas-agency-license.html">LPG/CNG Agency License</a></li>
+                    <li><a href="/puc-certificate-guide.html">PUC Certificate Guide</a></li>
+                    <li><a href="/fire-license-noc.html">Fire License NOC Process</a></li>
+                    <li><a href="/factory-license-compliance.html">Factory License Compliance</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
 
-<div id="site-header"></div>
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1>🏭 Factory License Compliance Guide</h1>
+            <p>Complete compliance framework under the Factories Act, 1948 - Your comprehensive resource for factory registration, safety standards, and legal obligations in India.</p>
+            <span class="last-updated">📅 Last Updated: February 2025 | Next Review: March 2025</span>
+        </div>
 
-<!-- MAIN TWO-COLUMN FLIP GRID -->
-<div class="flip-grid"></div>
+        <!-- Quick Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">30+</div>
+                <div class="stat-label">Compliance Requirements</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">14</div>
+                <div class="stat-label">Days Processing Time</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">₹5,000+</div>
+                <div class="stat-label">Penalty for Non-compliance</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">1948</div>
+                <div class="stat-label">Act Established</div>
+            </div>
+        </div>
 
-<script>
-  (function() {
-    // ---------- data exactly as before, but we add a back‑side link/page per card ----------
-    // For demo we assign meaningful back actions:
-    // - first back (gunny) → download spec PDF (mock)
-    // - second (astm)   → view correction tables
-    // - third (locations) → open map view
-    // - fourth (weblinks) → open link directory
-    // - fifth (guard)    → open gazette archive
-    // - sixth (policy)   → open policy manual
-    // - seventh (colors) → open palette generator
-    // - eighth (fonts)   → open font preview
-    const listItems = [
-      {
-        title: "Gunny Specifications",
-        description: "Official specifications for jute gunny bags including dimensions, weight tolerance, stitching standards, and tensile strength. Used for packaging food grains, these BIS guidelines ensure uniform quality.",
-        imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj4CgacC6U4pEUS2T6S4ZbFR4EK__k8KgqmlxFcNpTCgUDgkhbZyWpl5Kv2OTwKf1Vz1N0FABpyx_Cdz4Iz5Tg4yyXh1i7iv0oSvf_9cMdQi6M1zDZ4yIZqiZe2Q2iWKU67WGDF7URwAQFdx4YFriX8UOMld7nQF5smZGQyN5ZGqRH37IlM2YIUyM__PPOF/s284/quant.jpg",
-        frontLink: "Posts/Specification%20of%20Gunny%20Bags.html",
-        backAction1: { text: "📄 Download PDF", link: "/specs/gunny-bis-2024.pdf" },
-        backAction2: { text: "🔍 Check Amendment", link: "/specs/amendments.html" }
-      },
-      {
-        title: "ASTM D 1250",
-        description: "ASTM D1250 is the standard guide for petroleum measurement tables, providing volume correction factors for crude oil and refined products. It defines procedures to adjust volumes to standard temperatures.",
-        imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh4clBEQiSBRMouPzFggCt1yjC5u5cxTpdur_nm5LRxtGUY2EnJdvk_nM297C-rWvQ8E97qG9r-gOQeIlRTg4JEZ3W6OI4LTxMpo1jUXSxCgLfCuiQtk9LkyEzq5XRL6uf1nudqktAm6eW5Bzm8Ml9JcCFuA9HKBrssoFIUXwmRdLWtysMSInU95Xfo1Pw2/s1024/ChatGPT%20Image%20Apr%201,%202025,%2011_40_47%20AM.png",
-        frontLink: "/Posts/astm-d1250-petroleum-measurement-guide.html",
-        backAction1: { text: "📊 Volume Tables", link: "/astm/tables-v12" },
-        backAction2: { text: "⚙️ Calculator", link: "/astm/volume-correction" }
-      },
-      {
-        title: "Work Locations",
-        description: "Geotagged map of operational sites including paddy purchase centers, fair price shops, and storage warehouses. Each marker contains address, contact person, and a direct Google Maps link.",
-        imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1nHLETdyzLQncplYtuLZw9yIZiWdH3vqCxq3jG7ikFnI8OLK-Krh8GhjSbRoYqD0RZRFyOUBjMnlXVsjCNTnaMtbW3P3UVelmcKgS3MLZP7UAEb-iUVwQ0smiwbE4zKEzV_rNaLxsdMHjU6Rtm6JElGlWns30-HlKs5I5tLwSKpuOw8CQsor9DnTMTPwy/s320/AI.jpg",
-        frontLink: "/locations.html",
-        backAction1: { text: "🗺️ Open Map View", link: "/locations/map-full" },
-        backAction2: { text: "📋 KML Download", link: "/locations/sites.kml" }
-      },
-      {
-        title: "Web Links",
-        description: "Handpicked directory of useful websites: government portals (eUpkar, Food Corporation), commodity price trackers, technical standards libraries (BIS, ISO), and internal dashboards.",
-        imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjJwvvpCul0mfeUMywoAHFW4D19TR7uQ2cualcxLH2hcrD3gB_chlaGGepc3hxVn6F2X1Iaf21h-Kq8Wf0kZQe_R4F-xFEubxHJwsQLfgIdHH2lArPItDBR3eZPudgch8DpgrAcIrqKqcL6HWjUoBMY1RaRTFAber576d9mzCsx-L8rTWtpPmdGPaR3VOEU/s640/laptop-5673901_640.jpg",
-        frontLink: "/weblinks.html",
-        backAction1: { text: "🔖 All Links", link: "/links/grid" },
-        backAction2: { text: "➕ Suggest Link", link: "/links/suggest" }
-      },
-      {
-        title: "Guard File",
-        description: "Govt published guidelines, important letters, SOPs, gazettes, and circulars — all archived here for quick reference and compliance.",
-        imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgz0jxVh0owShL0L5UfonKVTV7Q690jT-yPayollrrZInyyCHNjUo24QYpNYdw6P6fKaKWSNRBlL7fgKo8fGpfr96w2WckpcHAomgchAReQztgpCi6-notuw67SX3stoU64sYFZwSm6UAzzSxVzw0HxbUBFCw7Zx598gGSjaukB2v4i8c9W6efGoU9FtTxt/s255/Machine.jpg",
-        frontLink: "/guard-file.html",
-        backAction1: { text: "📜 Gazette 2024", link: "/guard/gazette-2024" },
-        backAction2: { text: "⚖️ SOPs", link: "/guard/sops" }
-      },
-      {
-        title: "Policy",
-        description: "Collection of internal office policies: leave application procedure, travel allowance rules, procurement delegation, and IT usage guidelines. All staff must adhere to the latest versions linked here.",
-        imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq124-MlhYfVwK50nHZYBVje-BxJoxKVGPI9xmzEmkqsMaZFUM1xGLwLDdbOegO7vcVBy7vFDeeCI5JORp9Xk7JvqLlGjX-s1_8tQhzlAUF3JV9BjFHFvDKR6ttkGyIekQguzHiU1cMiYLUsTgtDkbKWJj9R_eBgaLrxj5ChsHsnEy_8J75gZqPm5u6Yjc/s459/5g.jpg",
-        frontLink: "/policy.html",
-        backAction1: { text: "📘 Employee Handbook", link: "/policy/handbook" },
-        backAction2: { text: "🖨️ Forms", link: "/policy/forms" }
-      },
-      {
-        title: "Color Palettes",
-        description: "Sole popular colors displayed as palettes — click any color code to copy it instantly for use in your designs.",
-        imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjhbGsUpXSQhS80sfnEOh2Q2Rl2B8HG58l0qRENqqJFQMNoqd-VF7EFZRfgLOU2PDOTgpSFZ-7iU0zHktQaMmSJOGI_3oO6gYu8WV5rgjU_tJsGquFUEjpHo0aDrF3cwBwNPo0kk4tephfQ1wpuXGoLg29RNVirkv2lpAPTY8vZObWz75nUOerh7UCsKYOC/s640/board-453758_640.jpg",
-        frontLink: "/color-palettes.html",
-        backAction1: { text: "🎨 Copy Palette", link: "/colors/palettes" },
-        backAction2: { text: "📱 WCAG contrast", link: "/colors/contrast" }
-      },
-      {
-        title: "List of Fonts",
-        description: "Some popular font styles are displayed here for use — browse and see previews to choose the perfect typeface.",
-        imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj54f-VTWI6GJ9Crx94sdLgSbaIGwIsOncLrw3baZAyEZlqq2s2P7mRSnoAPEYaVBo5GzVMn3SJFwLcGtBTGnxywThELcNlD7BkVTa4lbNaL_UkC4om-GYOvaZkN2p1c0wT-e4A1bA3BQoO8SNnFW0U6ojYeKRBFoxn6Cq4NGWZs0S0mxgpvOQ0UIwCN0YP/s1024/ShareMarket.webp",
-        frontLink: "/fonts.html",
-        backAction1: { text: "🔤 Preview", link: "/fonts/preview" },
-        backAction2: { text: "⬇️ Download pack", link: "/fonts/pack" }
-      }
-    ];
+        <!-- Applicability Section -->
+        <div class="content-section">
+            <h2 class="section-title">📋 Applicability Criteria</h2>
+            <p>A factory license is mandatory if your manufacturing unit meets any of these conditions:</p>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>⚡ With Power</h4>
+                    <ul>
+                        <li>10 or more workers</li>
+                        <li>Manufacturing process using power</li>
+                        <li>Any industry with electrical equipment</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h4>🔧 Without Power</h4>
+                    <ul>
+                        <li>20 or more workers</li>
+                        <li>Manual manufacturing process</li>
+                        <li>Traditional/handicraft units</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h4>⚠️ Hazardous Industries</h4>
+                    <ul>
+                        <li>Chemical plants</li>
+                        <li>Petroleum refineries</li>
+                        <li>Explosive manufacturing</li>
+                        <li>All sizes require license</li>
+                    </ul>
+                </div>
+            </div>
 
-    const container = document.querySelector(".flip-grid");
-    if (!container) return;
-    container.innerHTML = "";
+            <div class="alert alert-info">
+                <strong>💡 Note:</strong> Even if your unit has less than 10 workers but deals with hazardous processes, you MUST obtain a factory license under Chapter IV of the Factories Act.
+            </div>
+        </div>
 
-    listItems.forEach((item, index) => {
-      const number = (index + 1).toString().padStart(2, "0");
+        <!-- Documents Required -->
+        <div class="content-section">
+            <h2 class="section-title">📑 Required Documents</h2>
+            
+            <div class="doc-grid">
+                <div class="doc-item">Building plan approval</div>
+                <div class="doc-item">Site plan/location sketch</div>
+                <div class="doc-item">List of directors/partners</div>
+                <div class="doc-item">Incorporation certificate</div>
+                <div class="doc-item">Memorandum of Association</div>
+                <div class="doc-item">Articles of Association</div>
+                <div class="doc-item">Partnership deed (if applicable)</div>
+                <div class="doc-item">GST registration certificate</div>
+                <div class="doc-item">PAN card of business</div>
+                <div class="doc-item">Property tax receipt</div>
+                <div class="doc-item">Rent/lease agreement</div>
+                <div class="doc-item">NOC from fire department</div>
+                <div class="doc-item">NOC from pollution board</div>
+                <div class="doc-item">NOC from municipality</div>
+                <div class="doc-item">Manufacturing process details</div>
+                <div class="doc-item">Machinery list & specifications</div>
+                <div class="doc-item">Worker details & register</div>
+                <div class="doc-item">Safety equipment list</div>
+                <div class="doc-item">First aid facilities</div>
+                <div class="doc-item">Waste disposal plan</div>
+            </div>
 
-      // main flip-card container
-      const card = document.createElement("div");
-      card.className = "flip-card";
+            <div class="download-section">
+                <a href="#" class="btn btn-primary">📥 Download Complete Checklist (PDF)</a>
+                <a href="#" class="btn btn-outline">📋 Application Form Form-1</a>
+            </div>
+        </div>
 
-      // inner wrapper
-      const inner = document.createElement("div");
-      inner.className = "flip-inner";
+        <!-- Fee Structure -->
+        <div class="content-section">
+            <h2 class="section-title">💰 License Fee Structure</h2>
+            <p>Fees vary by state and factory size. General guidelines under The Factories Act, 1948:</p>
 
-      // ---------- FRONT SIDE ----------
-      const frontDiv = document.createElement("div");
-      frontDiv.className = "flip-front";
+            <table class="fee-table">
+                <thead>
+                    <tr>
+                        <th>Factory Category</th>
+                        <th>Annual Fee Range</th>
+                        <th>Validity</th>
+                        <th>Renewal Fee</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Small-scale (10-50 workers)</strong></td>
+                        <td>₹1,000 - ₹5,000</td>
+                        <td>1-5 years</td>
+                        <td>Same as new</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Medium-scale (51-250 workers)</strong></td>
+                        <td>₹5,001 - ₹15,000</td>
+                        <td>1-5 years</td>
+                        <td>+15% penalty if delayed</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Large-scale (251+ workers)</strong></td>
+                        <td>₹15,001 - ₹50,000</td>
+                        <td>1 year</td>
+                        <td>+25% penalty if delayed</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hazardous industries</strong></td>
+                        <td>₹25,000 - ₹1,00,000</td>
+                        <td>1 year</td>
+                        <td>Mandatory annual renewal</td>
+                    </tr>
+                </tbody>
+            </table>
 
-      const numberSpan = document.createElement("div");
-      numberSpan.className = "number";
-      numberSpan.style.backgroundImage = `url('${item.imageUrl}')`;
-      numberSpan.textContent = number;
+            <div class="alert alert-warning">
+                <strong>⚠️ Important:</strong> Fees vary by state. Check with your state's Directorate of Industrial Safety and Health (DISH) for exact amounts.
+            </div>
+        </div>
 
-      const infoDiv = document.createElement("div");
-      infoDiv.className = "front-info";
+        <!-- Application Process Timeline -->
+        <div class="content-section">
+            <h2 class="section-title">⏱️ Application Process Timeline</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">📌 Step 1: Document Collection (3-7 days)</div>
+                    <p>Gather all required documents, prepare building plans, obtain NOCs</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">📌 Step 2: Form Submission (1 day)</div>
+                    <p>Submit Form 1 along with documents to Chief Inspector of Factories</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">📌 Step 3: Scrutiny (7-10 days)</div>
+                    <p>Department verifies documents, may request clarifications</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">📌 Step 4: Site Inspection (3-5 days)</div>
+                    <p>Inspector visits factory to verify safety measures and working conditions</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">📌 Step 5: Fee Payment (1 day)</div>
+                    <p>Pay prescribed fee after inspection approval</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">📌 Step 6: License Issuance (2-3 days)</div>
+                    <p>License granted valid for specified period (1-5 years)</p>
+                </div>
+            </div>
 
-      const titleEl = document.createElement("h3");
-      titleEl.textContent = item.title;
+            <p><strong>Total Processing Time:</strong> 15-30 working days typically</p>
+        </div>
 
-      const descEl = document.createElement("p");
-      descEl.textContent = item.description;
+        <!-- Post-License Compliance Checklist -->
+        <div class="content-section">
+            <h2 class="section-title">✅ Post-License Compliance Checklist</h2>
+            <p>After obtaining license, these are ongoing compliance requirements:</p>
 
-      infoDiv.appendChild(titleEl);
-      infoDiv.appendChild(descEl);
-      frontDiv.appendChild(numberSpan);
-      frontDiv.appendChild(infoDiv);
+            <div class="checklist-container" id="compliance-checklist">
+                <div class="checklist-item">
+                    <input type="checkbox" id="check1">
+                    <label for="check1">
+                        <strong>📊 Register of Workers</strong>
+                        <small>Maintain register with worker details, attendance, working hours</small>
+                    </label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check2">
+                    <label for="check2">
+                        <strong>⚕️ Health & Safety Records</strong>
+                        <small>Document all safety inspections, accident reports, first aid logs</small>
+                    </label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check3">
+                    <label for="check3">
+                        <strong>🕒 Working Hours Register</strong>
+                        <small>Record daily working hours, overtime, rest intervals</small>
+                    </label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check4">
+                    <label for="check4">
+                        <strong>👩‍🦱 Leave with Wages Register</strong>
+                        <small>Track earned leave, sick leave, casual leave for workers</small>
+                    </label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check5">
+                    <label for="check5">
+                        <strong>🔧 Machinery Inspection Register</strong>
+                        <small>Monthly inspection of all machinery and equipment</small>
+                    </label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check6">
+                    <label for="check6">
+                        <strong>🧯 Fire Safety Equipment</strong>
+                        <small>Monthly check of fire extinguishers, sprinklers, alarms</small>
+                    </label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check7">
+                    <label for="check7">
+                        <strong>🥼 Hazardous Process Records</strong>
+                        <small>For chemical industries - maintain material safety data sheets</small>
+                    </label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check8">
+                    <label for="check8">
+                        <strong>📅 Annual Return Filing</strong>
+                        <small>File Form 2 (Annual Return) by January 31st each year</small>
+                    </label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check9">
+                    <label for="check9">
+                        <strong>👨‍⚕️ Medical Examination Records</strong>
+                        <small>Periodical health checkups for workers in hazardous units</small>
+                    </label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check10">
+                    <label for="check10">
+                        <strong>📌 Display of License</strong>
+                        <small>Factory license must be displayed prominently at workplace</small>
+                    </label>
+                </div>
+            </div>
 
-      // make front side clickable -> frontLink (but not if interacting with inner details)
-      frontDiv.addEventListener("click", (e) => {
-        // if the click originated from an interactive element inside (like the number or text) we still consider as front navigation
-        // but we want to allow clicks on title/desc to also go to frontLink.
-        // we'll just open frontLink, but stopPropagation so it doesn't bubble weirdly.
-        e.stopPropagation(); 
-        window.open(item.frontLink, '_blank', 'noopener,noreferrer');
-      });
+            <button class="btn btn-success" onclick="saveChecklist()" style="margin-top: 1rem;">💾 Save Checklist Progress</button>
+        </div>
 
-      // ---------- BACK SIDE ----------
-      const backDiv = document.createElement("div");
-      backDiv.className = "flip-back";
+        <!-- Safety Requirements -->
+        <div class="content-section">
+            <h2 class="section-title">🛡️ Mandatory Safety Requirements</h2>
 
-      const backHeading = document.createElement("div");
-      backHeading.className = "back-title";
-      backHeading.textContent = item.title + " • more";
+            <table class="compliance-table">
+                <thead>
+                    <tr>
+                        <th>Safety Aspect</th>
+                        <th>Requirement</th>
+                        <th>Legal Provision</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Fire Safety</strong></td>
+                        <td>Fire extinguishers, alarms, exits, training</td>
+                        <td>Section 38</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Machinery Guarding</strong></td>
+                        <td>All moving parts must be securely fenced</td>
+                        <td>Section 21</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ventilation</strong></td>
+                        <td>Adequate fresh air, dust/fume control</td>
+                        <td>Section 13</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lighting</strong></td>
+                        <td>Sufficient natural/artificial light</td>
+                        <td>Section 17</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Drinking Water</strong></td>
+                        <td>Clean drinking water at accessible points</td>
+                        <td>Section 18</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sanitary Facilities</strong></td>
+                        <td>Separate toilets for men/women</td>
+                        <td>Section 19</td>
+                    </tr>
+                    <tr>
+                        <td><strong>First Aid</strong></td>
+                        <td>First aid boxes, trained personnel</td>
+                        <td>Section 45</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Welfare Facilities</strong></td>
+                        <td>Canteen, restrooms, lunch rooms (based on size)</td>
+                        <td>Sections 42-48</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-      const actionsDiv = document.createElement("div");
-      actionsDiv.className = "back-actions";
+        <!-- Penalties for Non-Compliance -->
+        <div class="content-section">
+            <h2 class="section-title">⚖️ Penalties for Non-Compliance</h2>
 
-      // button 1
-      const btn1 = document.createElement("a");
-      btn1.className = "back-btn";
-      btn1.textContent = item.backAction1.text;
-      btn1.href = item.backAction1.link;
-      btn1.setAttribute("target", "_blank");
-      btn1.setAttribute("rel", "noopener noreferrer");
-      // stop propagation so the backDiv click won't also trigger (though we won't attach click on backDiv)
-      btn1.addEventListener("click", (e) => e.stopPropagation());
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>🚫 Operating without license</h4>
+                    <ul>
+                        <li>Imprisonment up to 2 years</li>
+                        <li>Fine up to ₹1,00,000</li>
+                        <li>Additional fine per day of continuing offense</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h4>📋 Safety violations</h4>
+                    <ul>
+                        <li>Fine up to ₹50,000</li>
+                        <li>Imprisonment up to 6 months</li>
+                        <li>Factory can be sealed</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h4>📊 Record keeping failures</h4>
+                    <ul>
+                        <li>Fine up to ₹25,000</li>
+                        <li>Prosecution of manager/occupier</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h4>⚕️ Health/welfare violations</h4>
+                    <ul>
+                        <li>Fine up to ₹35,000</li>
+                        <li>Renewal may be denied</li>
+                    </ul>
+                </div>
+            </div>
 
-      // button 2
-      const btn2 = document.createElement("a");
-      btn2.className = "back-btn";
-      btn2.textContent = item.backAction2.text;
-      btn2.href = item.backAction2.link;
-      btn2.setAttribute("target", "_blank");
-      btn2.setAttribute("rel", "noopener noreferrer");
-      btn2.addEventListener("click", (e) => e.stopPropagation());
+            <div class="alert alert-warning">
+                <strong>⚠️ Important:</strong> In case of accident causing death/serious injury, penalties include imprisonment up to 7 years and fine up to ₹5,00,000 under Section 92 of Factories Act.
+            </div>
+        </div>
 
-      actionsDiv.appendChild(btn1);
-      actionsDiv.appendChild(btn2);
-      backDiv.appendChild(backHeading);
-      backDiv.appendChild(actionsDiv);
+        <!-- Renewal Process -->
+        <div class="content-section">
+            <h2 class="section-title">🔄 Renewal Process</h2>
+            
+            <div class="info-card" style="margin-bottom: 1rem;">
+                <h4>When to renew:</h4>
+                <ul>
+                    <li>Apply 60-90 days before expiry</li>
+                    <li>Late renewal: File within 30 days of expiry with penalty</li>
+                    <li>After 30 days: Fresh application required</li>
+                </ul>
+            </div>
 
-      // back side click (if user clicks outside buttons) we might open a default back page, but better to do nothing? For UX we open first back link maybe.
-      backDiv.addEventListener("click", (e) => {
-        // if click is directly on backDiv (background), open first back action
-        if (e.target === backDiv || e.target.classList.contains('back-title')) {
-          window.open(item.backAction1.link, '_blank', 'noopener,noreferrer');
+            <div class="info-card">
+                <h4>Documents for renewal:</h4>
+                <ul>
+                    <li>Previous year's license copy</li>
+                    <li>Updated worker register</li>
+                    <li>Annual return (Form 2) of previous year</li>
+                    <li>Affidavit of no change in factory setup</li>
+                    <li>Fee payment challan</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- State-wise Variations -->
+        <div class="content-section">
+            <h2 class="section-title">🗺️ State-wise Variations</h2>
+            <p>Different states have additional requirements. Quick links to state portals:</p>
+
+            <div class="doc-grid">
+                <a href="#" class="doc-item">Maharashtra</a>
+                <a href="#" class="doc-item">Gujarat</a>
+                <a href="#" class="doc-item">Tamil Nadu</a>
+                <a href="#" class="doc-item">Karnataka</a>
+                <a href="#" class="doc-item">Telangana</a>
+                <a href="#" class="doc-item">Uttar Pradesh</a>
+                <a href="#" class="doc-item">West Bengal</a>
+                <a href="#" class="doc-item">Rajasthan</a>
+                <a href="#" class="doc-item">Madhya Pradesh</a>
+                <a href="#" class="doc-item">Punjab</a>
+                <a href="#" class="doc-item">Haryana</a>
+                <a href="#" class="doc-item">Delhi</a>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="content-section">
+            <h2 class="section-title">❓ Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Who is the "occupier" under Factories Act?
+                </div>
+                <div class="faq-answer">
+                    The occupier is the person who has ultimate control over the affairs of the factory. In case of a company, any one of the directors can be designated as occupier. The occupier is personally responsible for compliance with the Act.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Can a factory license be transferred?
+                </div>
+                <div class="faq-answer">
+                    Yes, factory license can be transferred with prior permission from the Chief Inspector of Factories. Application for transfer must be made within 30 days of change of ownership/management.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    What is the validity period of factory license?
+                </div>
+                <div class="faq-answer">
+                    Validity ranges from 1 to 5 years depending on state rules and category of factory. Hazardous industries typically get 1-year validity, while others may get up to 5 years subject to compliance history.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Is factory license required for a small workshop with 5 workers?
+                </div>
+                <div class="faq-answer">
+                    No, if it's a non-hazardous unit with less than 10 workers (with power) or 20 workers (without power), factory license is not required. However, other local municipal/industry licenses may be needed.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    What are the working hour limits for adult workers?
+                </div>
+                <div class="faq-answer">
+                    No adult worker can work more than 9 hours a day and 48 hours a week. Rest interval of at least 30 minutes after 5 hours of work. Overtime paid at double the normal rate.
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Resources -->
+        <div class="content-section">
+            <h2 class="section-title">📚 Related Resources</h2>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4><a href="/factories-act-1948.html" style="text-decoration: none; color: inherit;">Factories Act 1948 - Full Text</a></h4>
+                    <p>Complete legislation with all sections and schedules</p>
+                </div>
+                <div class="info-card">
+                    <h4><a href="/fire-license-noc.html" style="text-decoration: none; color: inherit;">Fire License NOC Guide</a></h4>
+                    <p>Step-by-step process for fire department clearance</p>
+                </div>
+                <div class="info-card">
+                    <h4><a href="/petrol-pump-setup-checklist.html" style="text-decoration: none; color: inherit;">HSD License Requirements</a></h4>
+                    <p>If your factory has diesel storage tanks</p>
+                </div>
+                <div class="info-card">
+                    <h4><a href="/environment-protection-act.html" style="text-decoration: none; color: inherit;">Environmental Compliance</a></h4>
+                    <p>Pollution control board requirements for factories</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About Saratrout</h4>
+                <p>Your trusted resource for legal documentation, compliance guides, and utility tools for Indian businesses.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="/index.html">Home</a>
+                <a href="/guard-file.html">Guard File</a>
+                <a href="/weblinks.html">Weblinks</a>
+                <a href="/privacy-policy.html">Privacy Policy</a>
+            </div>
+            <div class="footer-section">
+                <h4>Popular Resources</h4>
+                <a href="/petroleum-act-1934.html">Petroleum Act 1934</a>
+                <a href="/ec-act-1955.html">EC Act 1955</a>
+                <a href="/consumer-protection-act-1986.html">Consumer Protection Act</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: info@saratrout.in</p>
+                <p>Response time: 24-48 hours</p>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 Saratrout. All rights reserved. This is for informational purposes only. Consult legal professional for specific advice.
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+
+    <script>
+        // Back to top button
+        window.onscroll = function() {
+            const backToTop = document.getElementById('backToTop');
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        };
+
+        // Save checklist progress
+        function saveChecklist() {
+            const checkboxes = document.querySelectorAll('#compliance-checklist input[type="checkbox"]');
+            const progress = [];
+            checkboxes.forEach((checkbox, index) => {
+                progress.push(checkbox.checked);
+            });
+            localStorage.setItem('factoryComplianceChecklist', JSON.stringify(progress));
+            alert('Checklist progress saved locally!');
         }
-        // otherwise buttons handle themselves (stopPropagation already)
-      });
 
-      inner.appendChild(frontDiv);
-      inner.appendChild(backDiv);
-      card.appendChild(inner);
-      container.appendChild(card);
-    });
-  })();
-</script>
+        // Load saved checklist
+        function loadChecklist() {
+            const saved = localStorage.getItem('factoryComplianceChecklist');
+            if (saved) {
+                const progress = JSON.parse(saved);
+                const checkboxes = document.querySelectorAll('#compliance-checklist input[type="checkbox"]');
+                checkboxes.forEach((checkbox, index) => {
+                    if (progress[index]) {
+                        checkbox.checked = progress[index];
+                    }
+                });
+            }
+        }
 
-<!-- FOOTER -->
-<div id="site-footer"></div>
+        // FAQ Toggle
+        function toggleFAQ(element) {
+            element.classList.toggle('active');
+            const answer = element.nextElementSibling;
+            answer.classList.toggle('show');
+        }
 
-<!-- Go to Top (existing) -->
-<script src="/assets/Scripts/gototop.js"></script>
+        // Load checklist on page load
+        window.onload = function() {
+            loadChecklist();
+            
+            // Add click event to all FAQ questions
+            document.querySelectorAll('.faq-question').forEach(question => {
+                question.addEventListener('click', function() {
+                    toggleFAQ(this);
+                });
+            });
+        };
 
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
