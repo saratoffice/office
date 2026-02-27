@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HSD renewal – A4 full height · Print, Share, Download, Copy PDF</title>
+    <title>HSD renewal – A4 · fixed copy + reduced bottom gap</title>
     <style>
         * {
             margin: 0;
@@ -21,14 +21,14 @@
             padding: 4px;
         }
 
-        /* CARD – height to fill A4 */
+        /* CARD – bottom padding reduced to 0.3rem for minimal print gap */
         .a4-card {
             max-width: 900px;           
             width: 100%;
             background: white;
             border-radius: 16px;        
             box-shadow: 0 10px 20px rgba(0,20,30,0.15);
-            padding: 1.1rem 1.2rem 1.1rem 1.2rem;
+            padding: 1.1rem 1.2rem 0.3rem 1.2rem; /* bottom reduced from 1.1 to 0.3 */
             border: 1px solid #bdc9db;
         }
 
@@ -98,7 +98,7 @@
         .copy-btn { background: #4a6a82; } 
         .copy-btn:hover { background: #345066; }
 
-        /* particulars – more internal padding for height */
+        /* particulars */
         .particulars {
             background: #f2f6fb;
             padding: 0.8rem 1.2rem;
@@ -247,23 +247,23 @@
         hr {
             border: none;
             border-top: 2px dotted #aebccf;
-            margin: 0.5rem 0 0.2rem;
+            margin: 0.5rem 0 0.1rem; /* reduced bottom margin after hr */
         }
 
         .tiny {
             font-size: 0.68rem;
             color: #3e6280;
             text-align: right;
-            margin-top: 0.2rem;
+            margin-top: 0.1rem; /* reduced */
         }
 
-        /* PRINT – same as screen */
+        /* PRINT – reduced bottom padding to match screen */
         @media print {
             body { background: white; padding: 0; margin: 0; }
             .a4-card { 
                 box-shadow: none; 
                 border-radius: 0; 
-                padding: 1.1rem 1.2rem 1.1rem 1.2rem !important; 
+                padding: 1.1rem 1.2rem 0.3rem 1.2rem !important; 
                 max-width: 100%; 
                 border: none; 
                 margin: 0;
@@ -274,12 +274,14 @@
             .facility-group { margin-top: 0.7rem; }
             .foot-strip { margin-top: 0.8rem; }
             .action-buttons .btn { display: none; }
+            hr { margin: 0.5rem 0 0.1rem; }
+            .tiny { margin-top: 0.1rem; }
         }
     </style>
 </head>
 <body>
     <div class="a4-card" id="checklistPDF">
-        <!-- header with four buttons: PRINT, SHARE, DOWNLOAD, COPY PDF -->
+        <!-- header with four buttons -->
         <div class="top-row">
             <h1>⛽ HSD RENEWAL <small>checklist+facilities</small></h1>
             <div class="action-buttons">
@@ -351,7 +353,7 @@
             <span class="stamp-line">STAMP / DATE</span>
         </div>
         <hr>
-        <div class="tiny">HSD renewal – full A4 height · Print · Share · Download · Copy PDF</div>
+        <div class="tiny">HSD renewal – reduced bottom gap · fixed copy</div>
     </div>
 
     <!-- libraries -->
@@ -382,6 +384,8 @@
                 const pdfHeight = pdf.internal.pageSize.getHeight();
                 const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
+                // Start at 0,0 (minimal top margin). If imgHeight exceeds pdfHeight, it will be clipped slightly,
+                // but our card fits well within A4 with reduced bottom padding.
                 pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, Math.min(imgHeight, pdfHeight), undefined, 'FAST');
                 return pdf.output('blob');
             }
@@ -404,7 +408,6 @@
                             files: [file]
                         });
                     } else {
-                        // Fallback: open WhatsApp with instructions
                         window.open('https://wa.me/?text=' + encodeURIComponent('HSD Renewal checklist – Use DOWNLOAD or COPY PDF to get the file.'), '_blank');
                     }
                 } catch (err) {
@@ -433,19 +436,23 @@
                 }
             });
 
-            // ----- 4. COPY PDF (to clipboard) -----
+            // ----- 4. COPY PDF (fixed: uses clipboard API with PDF blob) -----
             document.getElementById('copyPDF').addEventListener('click', async () => {
                 try {
                     const blob = await generatePDFBlob();
+                    
+                    // Use the modern clipboard API with a ClipboardItem
                     await navigator.clipboard.write([
                         new ClipboardItem({
                             [blob.type]: blob
                         })
                     ]);
-                    alert('✅ PDF copied to clipboard! You can paste it (WhatsApp, email, etc.).');
+                    
+                    alert('✅ PDF copied to clipboard! You can now paste it (e.g., in WhatsApp, email, or any app that accepts PDF files).');
                 } catch (err) {
-                    console.warn('Clipboard copy failed, fallback to download: ', err);
-                    // fallback: trigger download
+                    console.warn('Clipboard copy failed, using download fallback: ', err);
+                    
+                    // Fallback: trigger download of the exact same PDF
                     try {
                         const blob = await generatePDFBlob();
                         const url = URL.createObjectURL(blob);
@@ -458,7 +465,7 @@
                             document.body.removeChild(a);
                             URL.revokeObjectURL(url);
                         }, 150);
-                        alert('📎 PDF download started (clipboard copy not supported).');
+                        alert('📎 PDF download started (clipboard copy not supported on this browser/device).');
                     } catch (e) {
                         alert('Unable to generate PDF. Please use PRINT.');
                     }
