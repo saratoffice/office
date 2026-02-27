@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HSD renewal – A4 full height · copy PDF with message</title>
+    <title>HSD renewal – A4 full height · copy PDF (fixed) + download fallback</title>
     <style>
         * {
             margin: 0;
@@ -21,18 +21,18 @@
             padding: 4px;
         }
 
-        /* CARD – top/bottom padding increased to better fill A4 */
+        /* CARD – height to fill A4 */
         .a4-card {
             max-width: 900px;           
             width: 100%;
             background: white;
             border-radius: 16px;        
             box-shadow: 0 10px 20px rgba(0,20,30,0.15);
-            padding: 1.1rem 1.2rem 1.1rem 1.2rem;  /* more height, but not excessive */
+            padding: 1.1rem 1.2rem 1.1rem 1.2rem;
             border: 1px solid #bdc9db;
         }
 
-        /* header – three buttons */
+        /* header – two buttons: PRINT and COPY PDF (renamed) */
         .top-row {
             display: flex;
             justify-content: space-between;
@@ -87,9 +87,6 @@
 
         .print-btn { background: #1a3e5c; }
         .print-btn:hover { background: #0f2d44; }
-
-        .whatsapp-btn { background: #25D366; }
-        .whatsapp-btn:hover { background: #20b859; }
 
         .copy-btn { background: #4a6a82; } 
         .copy-btn:hover { background: #345066; }
@@ -253,7 +250,7 @@
             margin-top: 0.2rem;
         }
 
-        /* PRINT – keep similar increased height (fills A4) */
+        /* PRINT – same as screen */
         @media print {
             body { background: white; padding: 0; margin: 0; }
             .a4-card { 
@@ -275,12 +272,11 @@
 </head>
 <body>
     <div class="a4-card" id="checklistPDF">
-        <!-- header with three buttons -->
+        <!-- header with two buttons: PRINT and COPY PDF (renamed) -->
         <div class="top-row">
             <h1>⛽ HSD RENEWAL <small>checklist+facilities</small></h1>
             <div class="action-buttons">
                 <button class="btn print-btn" id="printPDF">📋 PRINT</button>
-                <button class="btn whatsapp-btn" id="shareWhatsApp">📲 WhatsApp</button>
                 <button class="btn copy-btn" id="copyPDF">📋 COPY PDF</button>
             </div>
         </div>
@@ -346,7 +342,7 @@
             <span class="stamp-line">STAMP / DATE</span>
         </div>
         <hr>
-        <div class="tiny">HSD renewal – full A4 height · copy PDF with confirmation</div>
+        <div class="tiny">HSD renewal – full A4 height · COPY PDF (exact print version)</div>
     </div>
 
     <!-- libraries -->
@@ -356,91 +352,67 @@
     <script>
         (function() {
             const printBtn = document.getElementById('printPDF');
-            const whatsappBtn = document.getElementById('shareWhatsApp');
             const copyBtn = document.getElementById('copyPDF');
             const element = document.getElementById('checklistPDF');
 
-            // PRINT
+            // PRINT (exactly as shown)
             printBtn.addEventListener('click', () => window.print());
 
-            // Generate PDF blob (A4, minimal top margin)
-            function generatePDFBlob() {
-                return new Promise((resolve, reject) => {
-                    html2canvas(element, {
-                        scale: 2,
-                        backgroundColor: '#ffffff',
-                        logging: false,
-                        allowTaint: false,
-                        useCORS: true
-                    }).then((canvas) => {
-                        const { jsPDF } = window.jspdf;
-                        const pdf = new jsPDF({
-                            orientation: 'portrait',
-                            unit: 'mm',
-                            format: 'a4'
-                        });
-                        const imgData = canvas.toDataURL('image/png');
-                        const pdfWidth = pdf.internal.pageSize.getWidth();
-                        const pdfHeight = pdf.internal.pageSize.getHeight();
-                        const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-
-                        // start at 0,0 (minimal top margin). If slightly taller, scale to fit
-                        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, Math.min(imgHeight, pdfHeight), undefined, 'FAST');
-                        const blob = pdf.output('blob');
-                        resolve(blob);
-                    }).catch(reject);
+            // Generate PDF blob – same output as print view
+            async function generatePDFBlob() {
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    allowTaint: false,
+                    useCORS: true
                 });
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+                const imgData = canvas.toDataURL('image/png');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, Math.min(imgHeight, pdfHeight), undefined, 'FAST');
+                return pdf.output('blob');
             }
 
-            // WHATSAPP SHARE (opens WhatsApp with instructions, plus fallback)
-            whatsappBtn.addEventListener('click', () => {
-                generatePDFBlob().then((blob) => {
-                    const file = new File([blob], 'HSD_Renewal.pdf', { type: 'application/pdf' });
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        navigator.share({
-                            title: 'HSD Renewal Checklist',
-                            text: 'HSD renewal one‑page checklist',
-                            files: [file]
-                        }).catch((err) => {
-                            if (err.name !== 'AbortError') {
-                                window.open('https://wa.me/?text=' + encodeURIComponent('HSD Renewal checklist – PDF generated. Use "Copy PDF" button to share the file.'), '_blank');
-                            }
-                        });
-                    } else {
-                        window.open('https://wa.me/?text=' + encodeURIComponent('HSD Renewal checklist – Use the "COPY PDF" button, then paste the PDF into WhatsApp.'), '_blank');
-                    }
-                }).catch(() => {
-                    window.open('https://wa.me/?text=' + encodeURIComponent('HSD Renewal checklist – please copy PDF from the page (COPY PDF button).'), '_blank');
-                });
-            });
-
-            // COPY PDF to clipboard with confirmation message
+            // COPY PDF button – copies the actual PDF blob to clipboard with confirmation
             copyBtn.addEventListener('click', async () => {
                 try {
                     const blob = await generatePDFBlob();
+
+                    // Try modern clipboard API with PDF type
                     await navigator.clipboard.write([
                         new ClipboardItem({
                             [blob.type]: blob
                         })
                     ]);
-                    // Success message – copied PDF (not code)
-                    alert('✅ PDF copied to clipboard! You can now paste it (e.g., in WhatsApp).');
+                    alert('✅ PDF copied to clipboard! You can now paste it (e.g., in WhatsApp, email, or chat).');
                 } catch (err) {
-                    console.warn('Clipboard write failed, fallback download: ', err);
-                    // fallback: trigger download and alert
-                    const blob = await generatePDFBlob(); // regenerate (safe)
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'HSD_Renewal.pdf';
-                    a.textContent = 'Download PDF';
-                    document.body.appendChild(a);
-                    a.click();
-                    setTimeout(() => {
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                    }, 100);
-                    alert('📎 PDF download started. Save and share manually (clipboard copy not supported).');
+                    console.warn('Clipboard write failed, using download fallback: ', err);
+                    // Fallback: trigger download of the exact same PDF
+                    try {
+                        const blob = await generatePDFBlob(); // regenerate (safe)
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'HSD_Renewal.pdf';
+                        document.body.appendChild(a);
+                        a.click();
+                        setTimeout(() => {
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                        }, 150);
+                        alert('📎 PDF download started (clipboard copy not supported). Save and share manually.');
+                    } catch (e) {
+                        alert('❌ Unable to generate PDF. Please try printing.');
+                    }
                 }
             });
         })();
