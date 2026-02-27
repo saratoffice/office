@@ -847,7 +847,7 @@
           <header class="tc-cg-header">Short Term Capital Gain (20%)</header>
           <table class="tc-cg-table">
             <tr><td>Short Term Capital Gain</td><td><input type="number" id="stcgAmount" class="tc-cg-input" value="0" onchange="calculateTax()"></td></tr>
-            <tr><td>Exemption</td><td id="stcgExemption">₹0.00</td></tr>
+            <tr><td>Exemption (No Exemption Allowed)</td><td id="stcgExemption">₹0.00</td></tr>
             <tr><td>Taxable Amount</td><td id="taxableSTCG">₹0.00</td></tr>
             <tr class="tc-highlight"><td>Tax @ 20%</td><td id="stcgTaxAmount">₹0.00</td></tr>
           </table>
@@ -869,7 +869,7 @@
           <header class="tc-cg-header">Digital Assets (30%)</header>
           <table class="tc-cg-table">
             <tr><td>Income from Digital Assets</td><td><input type="number" id="digitalAssetsAmount" class="tc-cg-input" value="0" onchange="calculateTax()"></td></tr>
-            <tr><td>Exemption</td><td id="digitalExemption">₹0.00</td></tr>
+            <tr><td>Exemption (No Exemption Allowed)</td><td id="digitalExemption">₹0.00</td></tr>
             <tr><td>Taxable Amount</td><td id="taxableDigital">₹0.00</td></tr>
             <tr class="tc-highlight"><td>Tax @ 30%</td><td id="digitalTaxAmount">₹0.00</td></tr>
           </table>
@@ -968,205 +968,206 @@
 
   <script>
     function calculateTax() {
-      // Get all values
-      const grossSalary = parseFloat(document.getElementById('grossSalary')?.value) || 0;
-      const otherSources = parseFloat(document.getElementById('otherSources')?.value) || 0;
-      const interestIncome = parseFloat(document.getElementById('interestIncome')?.value) || 0;
-      const dividendIncome = parseFloat(document.getElementById('dividendIncome')?.value) || 0;
-      const rentalIncome = parseFloat(document.getElementById('rentalIncome')?.value) || 0;
-      
-      // Employment type
-      const employmentRadios = document.getElementsByName('employment');
-      let isSalariedOrPensioner = true;
-      for (let i = 0; i < employmentRadios.length; i++) {
-        if (employmentRadios[i].checked) {
-          isSalariedOrPensioner = (employmentRadios[i].value === 'salaried' || employmentRadios[i].value === 'pensioner');
-          break;
-        }
-      }
-      
-      const letOutLoan = parseFloat(document.getElementById('letOutLoan')?.value) || 0;
-      
-      const stcgAmount = parseFloat(document.getElementById('stcgAmount')?.value) || 0;
-      const ltcgAmount = parseFloat(document.getElementById('ltcgAmount')?.value) || 0;
-      const digitalAssetsAmount = parseFloat(document.getElementById('digitalAssetsAmount')?.value) || 0;
-      
-      // Total Income
-      let totalIncome = grossSalary + otherSources + interestIncome + dividendIncome + rentalIncome;
-      
-      // Home Loan Interest (only let-out)
-      const letOutDeduction = letOutLoan;
-      
-      // Income after interest deduction
-      let incomeAfterInterest = totalIncome - letOutDeduction;
-      
-      // --- CORRECTED STANDARD DEDUCTION LOGIC ---
-      // Standard deduction: lesser of ₹75,000 or gross salary (only for salaried/pensioner)
-      let stdDeduction = 0;
-      if (isSalariedOrPensioner) {
-        stdDeduction = Math.min(grossSalary, 75000);
-      }
-      const netTaxableIncome = Math.max(0, incomeAfterInterest - stdDeduction);
-      
-      // Total Deductions
-      const totalDeductions = letOutDeduction + stdDeduction;
-      
-      // Update displays
-      document.getElementById('totalIncomeDisplay').textContent = `₹${formatMoney(totalIncome)}`;
-      document.getElementById('totalInterestExempted').textContent = `₹${formatMoney(letOutDeduction)}`;
-      document.getElementById('taxableIncomeDisplay').textContent = `₹${formatMoney(netTaxableIncome)}`;
-      
-      // Update Standard Deduction row
-      const stdDeductionSpan = document.getElementById('stdDeductionValue');
-      if (stdDeductionSpan) stdDeductionSpan.textContent = `₹${formatMoney(stdDeduction)}`;
-      
-      const stdDeductionStatus = document.getElementById('stdDeductionStatus');
-      if (stdDeductionStatus) {
-        if (isSalariedOrPensioner) {
-          stdDeductionStatus.innerHTML = `✔️ Standard deduction applicable: ₹${formatMoney(stdDeduction)} (limited to salary)`;
-          stdDeductionStatus.style.color = '#1e7e34';
-        } else {
-          stdDeductionStatus.innerHTML = '⚠️ Standard deduction not applicable (business/profession)';
-          stdDeductionStatus.style.color = '#b85c00';
-        }
-      }
-      
-      // Capital Gains
-      const ltcgExemption = Math.min(ltcgAmount, 125000);
-      const taxableLTCG = Math.max(0, ltcgAmount - ltcgExemption);
-      const ltcgTax = taxableLTCG * 0.125;
-      
-      const taxableSTCG = stcgAmount;
-      const stcgTax = stcgAmount * 0.20;
-      
-      const digitalTax = digitalAssetsAmount * 0.30;
-      
-      document.getElementById('stcgExemption').textContent = `₹${formatMoney(0)}`;
-      document.getElementById('taxableSTCG').textContent = `₹${formatMoney(taxableSTCG)}`;
-      document.getElementById('stcgTaxAmount').textContent = `₹${formatMoney(stcgTax)}`;
-      document.getElementById('ltcgExemption').textContent = `₹${formatMoney(ltcgExemption)}`;
-      document.getElementById('taxableLTCG').textContent = `₹${formatMoney(taxableLTCG)}`;
-      document.getElementById('ltcgTaxAmount').textContent = `₹${formatMoney(ltcgTax)}`;
-      document.getElementById('digitalExemption').textContent = `₹${formatMoney(0)}`;
-      document.getElementById('taxableDigital').textContent = `₹${formatMoney(digitalAssetsAmount)}`;
-      document.getElementById('digitalTaxAmount').textContent = `₹${formatMoney(digitalTax)}`;
-      
-      const totalCGTax = stcgTax + ltcgTax + digitalTax;
-      
-      // Regular Income Tax
-      const regularTaxResult = calculateNewRegimeTax(netTaxableIncome);
-      
-      // Update slabs
-      updateSlabTable(regularTaxResult.breakdown);
-      
-      document.getElementById('rebate').textContent = `₹${formatMoney(regularTaxResult.rebate)}`;
-      
-      // Marginal Relief Check
-      let finalRegularTax = regularTaxResult.tax;
-      let marginalReliefText = "";
-      
-      if (netTaxableIncome > 1200000 && netTaxableIncome <= 1275000) {
-        const taxBeforeRebate = regularTaxResult.tax + regularTaxResult.rebate; // tax without rebate
-        const maxTaxUnderRelief = netTaxableIncome - 1200000;
-        
-        if (taxBeforeRebate > maxTaxUnderRelief) {
-          finalRegularTax = maxTaxUnderRelief;
-          marginalReliefText = `✨ Marginal Relief Applied: Tax limited to ₹${formatMoney(maxTaxUnderRelief)} (instead of ₹${formatMoney(taxBeforeRebate)})`;
-        } else {
-          marginalReliefText = `Regular tax applicable: ₹${formatMoney(regularTaxResult.tax)}`;
-        }
-      } else if (netTaxableIncome > 1275000) {
-        marginalReliefText = `Income above marginal relief threshold (₹12.75L)`;
-      } else {
-        marginalReliefText = `✅ No tax on regular income (below ₹12L)`;
-      }
-      
-      document.getElementById('marginalReliefAmount').innerHTML = marginalReliefText;
-      
-      // Total Tax
-      const totalTaxBeforeCess = finalRegularTax + totalCGTax;
-      const cessAmount = totalTaxBeforeCess * 0.04;
-      const finalTax = Math.ceil(totalTaxBeforeCess + cessAmount);
-      
-      // Update Summary
-      document.getElementById('summaryTotalIncome').textContent = `₹${formatMoney(totalIncome)}`;
-      document.getElementById('summaryLetOutInterest').textContent = `₹${formatMoney(letOutDeduction)}`;
-      document.getElementById('summaryTotalDeductions').textContent = `₹${formatMoney(totalDeductions)}`;
-      document.getElementById('summaryStdDeduction').textContent = `₹${formatMoney(stdDeduction)}`;
-      document.getElementById('summaryNetTaxable').textContent = `₹${formatMoney(netTaxableIncome)}`;
-      document.getElementById('summaryRegularTax').textContent = `₹${formatMoney(finalRegularTax)}`;
-      document.getElementById('summarySTCG').textContent = `₹${formatMoney(stcgTax)}`;
-      document.getElementById('summaryLTCG').textContent = `₹${formatMoney(ltcgTax)}`;
-      document.getElementById('summaryDigital').textContent = `₹${formatMoney(digitalTax)}`;
-      document.getElementById('summaryTotalCG').textContent = `₹${formatMoney(totalCGTax)}`;
-      document.getElementById('summaryCess').textContent = `₹${formatMoney(cessAmount)}`;
-      document.getElementById('summaryFinalTax').innerHTML = `₹${formatMoney(finalTax)}`;
+  // Get all values
+  const grossSalary = parseFloat(document.getElementById('grossSalary')?.value) || 0;
+  const otherSources = parseFloat(document.getElementById('otherSources')?.value) || 0;
+  const interestIncome = parseFloat(document.getElementById('interestIncome')?.value) || 0;
+  const dividendIncome = parseFloat(document.getElementById('dividendIncome')?.value) || 0;
+  const rentalIncome = parseFloat(document.getElementById('rentalIncome')?.value) || 0;
+  
+  // Employment type
+  const employmentRadios = document.getElementsByName('employment');
+  let isSalariedOrPensioner = true;
+  for (let i = 0; i < employmentRadios.length; i++) {
+    if (employmentRadios[i].checked) {
+      isSalariedOrPensioner = (employmentRadios[i].value === 'salaried' || employmentRadios[i].value === 'pensioner');
+      break;
     }
-    
-    function calculateNewRegimeTax(income) {
-      let tax = 0;
-      let breakdown = { slab1:0, slab2:0, slab3:0, slab4:0, slab5:0, slab6:0, slab7:0, rebate:0 };
-      
-      if (income > 2400000) {
-        breakdown.slab7 = (income - 2400000) * 0.30;
-        breakdown.slab6 = 400000 * 0.25;
-        breakdown.slab5 = 400000 * 0.20;
-        breakdown.slab4 = 400000 * 0.15;
-        breakdown.slab3 = 400000 * 0.10;
-        breakdown.slab2 = 400000 * 0.05;
-      } else if (income > 2000000) {
-        breakdown.slab6 = (income - 2000000) * 0.25;
-        breakdown.slab5 = 400000 * 0.20;
-        breakdown.slab4 = 400000 * 0.15;
-        breakdown.slab3 = 400000 * 0.10;
-        breakdown.slab2 = 400000 * 0.05;
-      } else if (income > 1600000) {
-        breakdown.slab5 = (income - 1600000) * 0.20;
-        breakdown.slab4 = 400000 * 0.15;
-        breakdown.slab3 = 400000 * 0.10;
-        breakdown.slab2 = 400000 * 0.05;
-      } else if (income > 1200000) {
-        breakdown.slab4 = (income - 1200000) * 0.15;
-        breakdown.slab3 = 400000 * 0.10;
-        breakdown.slab2 = 400000 * 0.05;
-      } else if (income > 800000) {
-        breakdown.slab3 = (income - 800000) * 0.10;
-        breakdown.slab2 = 400000 * 0.05;
-      } else if (income > 400000) {
-        breakdown.slab2 = (income - 400000) * 0.05;
-      }
-      
-      tax = Object.values(breakdown).reduce((a, b) => a + b, 0);
-      
-      if (income <= 1200000 && tax > 0) {
-        breakdown.rebate = Math.min(tax, 60000);
-        tax -= breakdown.rebate;
-      }
-      
-      return { tax, rebate: breakdown.rebate, breakdown };
+  }
+  
+  const letOutLoan = parseFloat(document.getElementById('letOutLoan')?.value) || 0;
+  
+  const stcgAmount = parseFloat(document.getElementById('stcgAmount')?.value) || 0;
+  const ltcgAmount = parseFloat(document.getElementById('ltcgAmount')?.value) || 0;
+  const digitalAssetsAmount = parseFloat(document.getElementById('digitalAssetsAmount')?.value) || 0;
+  
+  // TOTAL INCOME - sum of all incomes (NO DEDUCTIONS)
+  let totalIncome = grossSalary + otherSources + interestIncome + dividendIncome + rentalIncome;
+  
+  // Home Loan Interest (only let-out is deductible)
+  const letOutDeduction = letOutLoan;
+  
+  // Income after interest deduction
+  let incomeAfterInterest = totalIncome - letOutDeduction;
+  
+  // Standard deduction: lesser of ₹75,000 or gross salary (only for salaried/pensioner)
+  let stdDeduction = 0;
+  if (isSalariedOrPensioner) {
+    stdDeduction = Math.min(grossSalary, 75000);
+  }
+  
+  // NET TAXABLE INCOME - after all deductions
+  const netTaxableIncome = Math.max(0, incomeAfterInterest - stdDeduction);
+  
+  // Total Deductions
+  const totalDeductions = letOutDeduction + stdDeduction;
+  
+  // Update displays
+  document.getElementById('totalIncomeDisplay').textContent = `₹${formatMoney(totalIncome)}`;
+  document.getElementById('totalInterestExempted').textContent = `₹${formatMoney(letOutDeduction)}`;
+  document.getElementById('taxableIncomeDisplay').textContent = `₹${formatMoney(netTaxableIncome)}`;
+  
+  // Update Standard Deduction row
+  const stdDeductionSpan = document.getElementById('stdDeductionValue');
+  if (stdDeductionSpan) stdDeductionSpan.textContent = `₹${formatMoney(stdDeduction)}`;
+  
+  const stdDeductionStatus = document.getElementById('stdDeductionStatus');
+  if (stdDeductionStatus) {
+    if (isSalariedOrPensioner) {
+      stdDeductionStatus.innerHTML = `✔️ Standard deduction applicable: ₹${formatMoney(stdDeduction)} (limited to salary)`;
+      stdDeductionStatus.style.color = '#1e7e34';
+    } else {
+      stdDeductionStatus.innerHTML = '⚠️ Standard deduction not applicable (business/profession)';
+      stdDeductionStatus.style.color = '#b85c00';
     }
+  }
+  
+  // Capital Gains calculations...
+  const ltcgExemption = Math.min(ltcgAmount, 125000);
+  const taxableLTCG = Math.max(0, ltcgAmount - ltcgExemption);
+  const ltcgTax = taxableLTCG * 0.125;
+  
+  const taxableSTCG = stcgAmount;
+  const stcgTax = stcgAmount * 0.20;
+  
+  const digitalTax = digitalAssetsAmount * 0.30;
+  
+  document.getElementById('stcgExemption').textContent = `₹${formatMoney(0)}`;
+  document.getElementById('taxableSTCG').textContent = `₹${formatMoney(taxableSTCG)}`;
+  document.getElementById('stcgTaxAmount').textContent = `₹${formatMoney(stcgTax)}`;
+  document.getElementById('ltcgExemption').textContent = `₹${formatMoney(ltcgExemption)}`;
+  document.getElementById('taxableLTCG').textContent = `₹${formatMoney(taxableLTCG)}`;
+  document.getElementById('ltcgTaxAmount').textContent = `₹${formatMoney(ltcgTax)}`;
+  document.getElementById('digitalExemption').textContent = `₹${formatMoney(0)}`;
+  document.getElementById('taxableDigital').textContent = `₹${formatMoney(digitalAssetsAmount)}`;
+  document.getElementById('digitalTaxAmount').textContent = `₹${formatMoney(digitalTax)}`;
+  
+  const totalCGTax = stcgTax + ltcgTax + digitalTax;
+  
+  // Regular Income Tax
+  const regularTaxResult = calculateNewRegimeTax(netTaxableIncome);
+  
+  // Update slabs
+  updateSlabTable(regularTaxResult.breakdown);
+  
+  document.getElementById('rebate').textContent = `₹${formatMoney(regularTaxResult.rebate)}`;
+  
+  // Marginal Relief Check
+  let finalRegularTax = regularTaxResult.tax;
+  let marginalReliefText = "";
+  
+  if (netTaxableIncome > 1200000 && netTaxableIncome <= 1275000) {
+    const taxBeforeRebate = regularTaxResult.tax + regularTaxResult.rebate;
+    const maxTaxUnderRelief = netTaxableIncome - 1200000;
     
-    function updateSlabTable(breakdown) {
-      document.getElementById('slab1').textContent = `₹${formatMoney(breakdown.slab1 || 0)}`;
-      document.getElementById('slab2').textContent = `₹${formatMoney(breakdown.slab2 || 0)}`;
-      document.getElementById('slab3').textContent = `₹${formatMoney(breakdown.slab3 || 0)}`;
-      document.getElementById('slab4').textContent = `₹${formatMoney(breakdown.slab4 || 0)}`;
-      document.getElementById('slab5').textContent = `₹${formatMoney(breakdown.slab5 || 0)}`;
-      document.getElementById('slab6').textContent = `₹${formatMoney(breakdown.slab6 || 0)}`;
-      document.getElementById('slab7').textContent = `₹${formatMoney(breakdown.slab7 || 0)}`;
+    if (taxBeforeRebate > maxTaxUnderRelief) {
+      finalRegularTax = maxTaxUnderRelief;
+      marginalReliefText = `✨ Marginal Relief Applied: Tax limited to ₹${formatMoney(maxTaxUnderRelief)} (instead of ₹${formatMoney(taxBeforeRebate)})`;
+    } else {
+      marginalReliefText = `Regular tax applicable: ₹${formatMoney(regularTaxResult.tax)}`;
     }
-    
-    function formatMoney(amount) {
-      if (isNaN(amount) || amount === null) amount = 0;
-      return Math.round(amount).toLocaleString('en-IN', {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2
-      });
-    }
-    
-    window.onload = function() {
-      calculateTax();
-    };
+  } else if (netTaxableIncome > 1275000) {
+    marginalReliefText = `Income above marginal relief threshold (₹12.75L)`;
+  } else {
+    marginalReliefText = `✅ No tax on regular income (below ₹12L)`;
+  }
+  
+  document.getElementById('marginalReliefAmount').innerHTML = marginalReliefText;
+  
+  // Total Tax
+  const totalTaxBeforeCess = finalRegularTax + totalCGTax;
+  const cessAmount = totalTaxBeforeCess * 0.04;
+  const finalTax = Math.ceil(totalTaxBeforeCess + cessAmount);
+  
+  // Update Summary
+  document.getElementById('summaryTotalIncome').textContent = `₹${formatMoney(totalIncome)}`;
+  document.getElementById('summaryLetOutInterest').textContent = `₹${formatMoney(letOutDeduction)}`;
+  document.getElementById('summaryTotalDeductions').textContent = `₹${formatMoney(totalDeductions)}`;
+  document.getElementById('summaryStdDeduction').textContent = `₹${formatMoney(stdDeduction)}`;
+  document.getElementById('summaryNetTaxable').textContent = `₹${formatMoney(netTaxableIncome)}`;
+  document.getElementById('summaryRegularTax').textContent = `₹${formatMoney(finalRegularTax)}`;
+  document.getElementById('summarySTCG').textContent = `₹${formatMoney(stcgTax)}`;
+  document.getElementById('summaryLTCG').textContent = `₹${formatMoney(ltcgTax)}`;
+  document.getElementById('summaryDigital').textContent = `₹${formatMoney(digitalTax)}`;
+  document.getElementById('summaryTotalCG').textContent = `₹${formatMoney(totalCGTax)}`;
+  document.getElementById('summaryCess').textContent = `₹${formatMoney(cessAmount)}`;
+  document.getElementById('summaryFinalTax').innerHTML = `₹${formatMoney(finalTax)}`;
+}
+
+function calculateNewRegimeTax(income) {
+  let tax = 0;
+  let breakdown = { slab1:0, slab2:0, slab3:0, slab4:0, slab5:0, slab6:0, slab7:0, rebate:0 };
+  
+  if (income > 2400000) {
+    breakdown.slab7 = (income - 2400000) * 0.30;
+    breakdown.slab6 = 400000 * 0.25;
+    breakdown.slab5 = 400000 * 0.20;
+    breakdown.slab4 = 400000 * 0.15;
+    breakdown.slab3 = 400000 * 0.10;
+    breakdown.slab2 = 400000 * 0.05;
+  } else if (income > 2000000) {
+    breakdown.slab6 = (income - 2000000) * 0.25;
+    breakdown.slab5 = 400000 * 0.20;
+    breakdown.slab4 = 400000 * 0.15;
+    breakdown.slab3 = 400000 * 0.10;
+    breakdown.slab2 = 400000 * 0.05;
+  } else if (income > 1600000) {
+    breakdown.slab5 = (income - 1600000) * 0.20;
+    breakdown.slab4 = 400000 * 0.15;
+    breakdown.slab3 = 400000 * 0.10;
+    breakdown.slab2 = 400000 * 0.05;
+  } else if (income > 1200000) {
+    breakdown.slab4 = (income - 1200000) * 0.15;
+    breakdown.slab3 = 400000 * 0.10;
+    breakdown.slab2 = 400000 * 0.05;
+  } else if (income > 800000) {
+    breakdown.slab3 = (income - 800000) * 0.10;
+    breakdown.slab2 = 400000 * 0.05;
+  } else if (income > 400000) {
+    breakdown.slab2 = (income - 400000) * 0.05;
+  }
+  
+  tax = Object.values(breakdown).reduce((a, b) => a + b, 0);
+  
+  if (income <= 1200000 && tax > 0) {
+    breakdown.rebate = Math.min(tax, 60000);
+    tax -= breakdown.rebate;
+  }
+  
+  return { tax, rebate: breakdown.rebate, breakdown };
+}
+
+function updateSlabTable(breakdown) {
+  document.getElementById('slab1').textContent = `₹${formatMoney(breakdown.slab1 || 0)}`;
+  document.getElementById('slab2').textContent = `₹${formatMoney(breakdown.slab2 || 0)}`;
+  document.getElementById('slab3').textContent = `₹${formatMoney(breakdown.slab3 || 0)}`;
+  document.getElementById('slab4').textContent = `₹${formatMoney(breakdown.slab4 || 0)}`;
+  document.getElementById('slab5').textContent = `₹${formatMoney(breakdown.slab5 || 0)}`;
+  document.getElementById('slab6').textContent = `₹${formatMoney(breakdown.slab6 || 0)}`;
+  document.getElementById('slab7').textContent = `₹${formatMoney(breakdown.slab7 || 0)}`;
+}
+
+function formatMoney(amount) {
+  if (isNaN(amount) || amount === null) amount = 0;
+  return Math.round(amount).toLocaleString('en-IN', {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2
+  });
+}
+
+window.onload = function() {
+  calculateTax();
+};
   </script>
   <div id="site-footer"></div>
 <script src="/assets/Scripts/gototop.js"></script>
