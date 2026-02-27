@@ -611,7 +611,7 @@
       color: #ffd966;
     }
     
-    /* Marginal Relief */
+    /* Marginal Relief - Enhanced */
     .tc-marginal-relief {
       background: linear-gradient(135deg, #fff8e7, #ffeed9);
       border-left: 8px solid #f39c12;
@@ -635,10 +635,65 @@
     .tc-relief-amount {
       margin-top: 12px;
       font-weight: 600;
-      color: #e67e22;
       background: white;
-      padding: 12px 15px;
+      padding: 15px;
       border-radius: 15px;
+      border-left: 4px solid #f39c12;
+    }
+    
+    .tc-relief-status {
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    
+    .tc-status-applicable {
+      background: #27ae60;
+      color: white;
+    }
+    
+    .tc-status-not-applicable {
+      background: #e74c3c;
+      color: white;
+    }
+    
+    .tc-relief-detail {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .tc-relief-detail-item {
+      background: #f8f9fc;
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    
+    .tc-relief-detail-label {
+      font-size: 12px;
+      color: #7f8c8d;
+      margin-bottom: 5px;
+    }
+    
+    .tc-relief-detail-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2a3f8e;
+    }
+    
+    .tc-relief-difference {
+      grid-column: span 2;
+      background: #2a3f8e;
+      color: white;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 16px;
     }
     
     .tc-relief-content {
@@ -897,7 +952,7 @@
       </div>
     </section>
     
-    <!-- Marginal Relief Section -->
+    <!-- Marginal Relief Section - Enhanced -->
     <section>
       <div class="tc-marginal-relief" id="marginalReliefInfo">
         <span class="tc-info-icon" data-tooltip="top-right">
@@ -914,8 +969,10 @@
           </span>
         </span>
         <div class="tc-relief-content">
-          <strong>🛡️ Marginal Relief:</strong> Tax limited to (Income - ₹12,00,000) + 4% cess
-          <div id="marginalReliefAmount" class="tc-relief-amount"></div>
+          <strong>🛡️ Marginal Relief Analysis</strong>
+          <div id="marginalReliefAmount" class="tc-relief-amount">
+            <!-- Dynamic content will be inserted here -->
+          </div>
         </div>
       </div>
     </section>
@@ -1074,27 +1131,84 @@
   
   document.getElementById('rebate').textContent = `₹${formatMoney(regularTaxResult.rebate)}`;
   
-  // Marginal Relief Check
+  // Marginal Relief Check - Enhanced
   let finalRegularTax = regularTaxResult.tax;
-  let marginalReliefText = "";
+  let marginalReliefHTML = "";
   
-  if (netTaxableIncome > 1200000 && netTaxableIncome <= 1275000) {
-    const taxBeforeRebate = regularTaxResult.tax + regularTaxResult.rebate;
-    const maxTaxUnderRelief = netTaxableIncome - 1200000;
-    
+  const income = netTaxableIncome;
+  const taxBeforeRebate = regularTaxResult.tax + regularTaxResult.rebate;
+  const maxTaxUnderRelief = Math.max(0, income - 1200000);
+  
+  if (income > 1200000 && income <= 1275000) {
     if (taxBeforeRebate > maxTaxUnderRelief) {
       finalRegularTax = maxTaxUnderRelief;
-      marginalReliefText = `✨ Marginal Relief Applied: Tax limited to ₹${formatMoney(maxTaxUnderRelief)} (instead of ₹${formatMoney(taxBeforeRebate)})`;
+      const savings = taxBeforeRebate - maxTaxUnderRelief;
+      marginalReliefHTML = `
+        <div>
+          <span class="tc-relief-status tc-status-applicable">✓ MARGINAL RELIEF APPLICABLE</span>
+          <div class="tc-relief-detail">
+            <div class="tc-relief-detail-item">
+              <div class="tc-relief-detail-label">Normal Tax</div>
+              <div class="tc-relief-detail-value">₹${formatMoney(taxBeforeRebate)}</div>
+            </div>
+            <div class="tc-relief-detail-item">
+              <div class="tc-relief-detail-label">Tax with Relief</div>
+              <div class="tc-relief-detail-value">₹${formatMoney(maxTaxUnderRelief)}</div>
+            </div>
+            <div class="tc-relief-difference">
+              💰 YOU SAVE: ₹${formatMoney(savings)}
+            </div>
+          </div>
+          <div style="margin-top: 10px; font-size: 14px; color: #2a3f8e;">
+            Tax limited to (Income - ₹12,00,000) = ₹${formatMoney(maxTaxUnderRelief)}
+          </div>
+        </div>
+      `;
     } else {
-      marginalReliefText = `Regular tax applicable: ₹${formatMoney(regularTaxResult.tax)}`;
+      finalRegularTax = taxBeforeRebate;
+      marginalReliefHTML = `
+        <div>
+          <span class="tc-relief-status tc-status-not-applicable">✗ MARGINAL RELIEF NOT APPLICABLE</span>
+          <div class="tc-relief-detail">
+            <div class="tc-relief-detail-item">
+              <div class="tc-relief-detail-label">Normal Tax</div>
+              <div class="tc-relief-detail-value">₹${formatMoney(taxBeforeRebate)}</div>
+            </div>
+            <div class="tc-relief-detail-item">
+              <div class="tc-relief-detail-label">Maximum Relief Tax</div>
+              <div class="tc-relief-detail-value">₹${formatMoney(maxTaxUnderRelief)}</div>
+            </div>
+          </div>
+          <div style="margin-top: 10px; font-size: 14px; color: #e74c3c;">
+            Normal tax is already less than or equal to (Income - ₹12,00,000)
+          </div>
+        </div>
+      `;
     }
-  } else if (netTaxableIncome > 1275000) {
-    marginalReliefText = `Income above marginal relief threshold (₹12.75L)`;
+  } else if (income <= 1200000) {
+    marginalReliefHTML = `
+      <div>
+        <span class="tc-relief-status tc-status-not-applicable">✗ MARGINAL RELIEF NOT APPLICABLE</span>
+        <div style="margin-top: 10px; font-size: 14px;">
+          Income is ₹${formatMoney(income)} which is below ₹12,00,000 threshold.<br>
+          Full rebate u/s 87A applicable: ₹${formatMoney(regularTaxResult.rebate)}
+        </div>
+      </div>
+    `;
   } else {
-    marginalReliefText = `✅ No tax on regular income (below ₹12L)`;
+    finalRegularTax = taxBeforeRebate;
+    marginalReliefHTML = `
+      <div>
+        <span class="tc-relief-status tc-status-not-applicable">✗ MARGINAL RELIEF NOT APPLICABLE</span>
+        <div style="margin-top: 10px; font-size: 14px;">
+          Income is ₹${formatMoney(income)} which is above ₹12,75,000 threshold.<br>
+          Regular tax calculation applies.
+        </div>
+      </div>
+    `;
   }
   
-  document.getElementById('marginalReliefAmount').innerHTML = marginalReliefText;
+  document.getElementById('marginalReliefAmount').innerHTML = marginalReliefHTML;
   
   // Total Tax
   const totalTaxBeforeCess = finalRegularTax + totalCGTax;
