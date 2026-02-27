@@ -168,191 +168,199 @@
       padding-bottom: 15px;
     }
     
-    /* Info Icon & Tooltip - Premium Version */
-    .tc-info-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #4f5fb5;
-      color: white;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      position: relative;
-      flex-shrink: 0;
-      transition: all 0.2s;
-      box-shadow: 0 4px 8px rgba(79, 95, 181, 0.2);
-    }
-    
-    .tc-info-icon:hover {
-      background: #2a3f8e;
-      transform: scale(1.1);
-      box-shadow: 0 6px 12px rgba(42, 63, 142, 0.3);
-    }
-    
-    /* Tooltip Base Styles */
+   /* Info Icon & Tooltip - Premium Version */
+.tc-info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #4f5fb5;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  box-shadow: 0 4px 8px rgba(79, 95, 181, 0.2);
+  z-index: 10;
+}
+
+.tc-info-icon:hover {
+  background: #2a3f8e;
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(42, 63, 142, 0.3);
+}
+
+/* Tooltip Base Styles - FIXED WIDTH */
+.tc-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  background: white;
+  color: #1e2b4f;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+  width: 320px; /* Fixed width instead of 300px */
+  min-width: 280px;
+  max-width: 350px;
+  z-index: 999999;
+  border: 1px solid #4f5fb5;
+  font-size: 14px;
+  font-weight: normal;
+  text-align: left;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.98);
+  line-height: 1.6;
+  /* Ensure tooltip is not constrained by parent */
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  top: 30px !important;
+  bottom: auto !important;
+  right: auto !important;
+}
+
+/* Tooltip Arrow - FIXED POSITIONING */
+.tc-tooltip::before {
+  content: '';
+  position: absolute;
+  border: 10px solid transparent;
+  top: -20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  border-bottom-color: #4f5fb5 !important;
+  border-top: none !important;
+  bottom: auto !important;
+  right: auto !important;
+}
+
+/* Remove all individual positioning data attributes */
+.tc-info-icon[data-tooltip="top-right"] .tc-tooltip,
+.tc-info-icon[data-tooltip="top-left"] .tc-tooltip,
+.tc-info-icon[data-tooltip="bottom-right"] .tc-tooltip,
+.tc-info-icon[data-tooltip="bottom-left"] .tc-tooltip,
+.tc-info-icon[data-tooltip="bottom-center"] .tc-tooltip {
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  top: 30px !important;
+  bottom: auto !important;
+  right: auto !important;
+}
+
+.tc-info-icon[data-tooltip="top-right"] .tc-tooltip::before,
+.tc-info-icon[data-tooltip="top-left"] .tc-tooltip::before,
+.tc-info-icon[data-tooltip="bottom-right"] .tc-tooltip::before,
+.tc-info-icon[data-tooltip="bottom-left"] .tc-tooltip::before,
+.tc-info-icon[data-tooltip="bottom-center"] .tc-tooltip::before {
+  top: -20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  border-bottom-color: #4f5fb5 !important;
+  border-top: none !important;
+  bottom: auto !important;
+  right: auto !important;
+}
+
+/* Ensure tooltip stays above everything */
+.tc-info-icon {
+  z-index: 100;
+}
+
+.tc-info-icon:hover .tc-tooltip {
+  visibility: visible;
+  opacity: 1;
+  z-index: 1000;
+}
+
+/* Tooltip Content Styling */
+.tc-tooltip h4 {
+  color: #2a3f8e;
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  white-space: normal;
+}
+
+.tc-tooltip ul, .tc-tooltip ol {
+  margin-left: 20px;
+  margin-bottom: 12px;
+  color: #1e2b4f;
+  white-space: normal;
+}
+
+.tc-tooltip li {
+  margin-bottom: 6px;
+  white-space: normal;
+}
+
+.tc-tooltip p {
+  margin-bottom: 12px;
+  color: #1e2b4f;
+  white-space: normal;
+}
+
+.tc-tooltip strong {
+  color: #2a3f8e;
+}
+
+.tc-tooltip .tc-note {
+  background: #fff8e7;
+  padding: 12px 15px;
+  border-radius: 12px;
+  color: #b16f0e;
+  font-size: 13px;
+  margin-top: 12px;
+  border-left: 4px solid #f1c40f;
+  white-space: normal;
+}
+
+.tc-tooltip .tc-example {
+  background: #e8f0fe;
+  padding: 12px 15px;
+  border-radius: 12px;
+  color: #1e2b4f;
+  font-size: 13px;
+  margin-top: 12px;
+  border-left: 4px solid #4f5fb5;
+  white-space: normal;
+}
+
+.tc-tooltip .tc-warning {
+  background: #fee9e7;
+  padding: 12px 15px;
+  border-radius: 12px;
+  color: #c0392b;
+  font-size: 13px;
+  margin-top: 12px;
+  border-left: 4px solid #e74c3c;
+  white-space: normal;
+}
+
+/* Mobile Responsive Tooltips */
+@media (max-width: 768px) {
+  .tc-tooltip {
+    width: 280px;
+    min-width: 250px;
+    max-width: 300px;
+    padding: 15px;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+  
+  /* Adjust for edge of screen on very small devices */
+  @media (max-width: 480px) {
     .tc-tooltip {
-      visibility: hidden;
-      opacity: 0;
-      position: absolute;
-      background: white;
-      color: #1e2b4f;  /* Black/dark text for all tooltips */
-      padding: 20px;
-      border-radius: 20px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-      width: 300px;
-      z-index: 999999;
-      border: 1px solid #4f5fb5;
-      font-size: 14px;
-      font-weight: normal;
-      text-align: left;
-      pointer-events: none;
-      transition: all 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
-      backdrop-filter: blur(10px);
-      background: rgba(255, 255, 255, 0.98);
-      line-height: 1.6;
+      width: 260px;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
     }
-    
-    /* Tooltip Arrow */
-    .tc-tooltip::before {
-      content: '';
-      position: absolute;
-      border: 10px solid transparent;
-    }
-    
-    /* Tooltip Positions */
-    .tc-info-icon[data-tooltip="top-right"] .tc-tooltip {
-      bottom: 30px;
-      left: 0;
-      transform: translateX(-10%);
-    }
-    
-    .tc-info-icon[data-tooltip="top-right"] .tc-tooltip::before {
-      bottom: -20px;
-      left: 20px;
-      border-top-color: #4f5fb5;
-      border-bottom: none;
-    }
-    
-    .tc-info-icon[data-tooltip="top-left"] .tc-tooltip {
-      bottom: 30px;
-      right: 0;
-      left: auto;
-      transform: translateX(10%);
-    }
-    
-    .tc-info-icon[data-tooltip="top-left"] .tc-tooltip::before {
-      bottom: -20px;
-      right: 20px;
-      border-top-color: #4f5fb5;
-      border-bottom: none;
-    }
-    
-    .tc-info-icon[data-tooltip="bottom-right"] .tc-tooltip {
-      top: 30px;
-      left: 0;
-      transform: translateX(-10%);
-    }
-    
-    .tc-info-icon[data-tooltip="bottom-right"] .tc-tooltip::before {
-      top: -20px;
-      left: 20px;
-      border-bottom-color: #4f5fb5;
-      border-top: none;
-    }
-    
-    .tc-info-icon[data-tooltip="bottom-left"] .tc-tooltip {
-      top: 30px;
-      right: 0;
-      left: auto;
-      transform: translateX(10%);
-    }
-    
-    .tc-info-icon[data-tooltip="bottom-left"] .tc-tooltip::before {
-      top: -20px;
-      right: 20px;
-      border-bottom-color: #4f5fb5;
-      border-top: none;
-    }
-    
-    .tc-info-icon[data-tooltip="bottom-center"] .tc-tooltip {
-      top: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-    
-    .tc-info-icon[data-tooltip="bottom-center"] .tc-tooltip::before {
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-bottom-color: #4f5fb5;
-      border-top: none;
-    }
-    
-    .tc-info-icon:hover .tc-tooltip {
-      visibility: visible;
-      opacity: 1;
-    }
-    
-    /* Tooltip Content Styling */
-    .tc-tooltip h4 {
-      color: #2a3f8e;
-      margin-bottom: 12px;
-      font-size: 16px;
-      font-weight: 700;
-    }
-    
-    .tc-tooltip ul, .tc-tooltip ol {
-      margin-left: 20px;
-      margin-bottom: 12px;
-      color: #1e2b4f;
-    }
-    
-    .tc-tooltip li {
-      margin-bottom: 6px;
-    }
-    
-    .tc-tooltip p {
-      margin-bottom: 12px;
-      color: #1e2b4f;
-    }
-    
-    .tc-tooltip strong {
-      color: #2a3f8e;
-    }
-    
-    .tc-tooltip .tc-note {
-      background: #fff8e7;
-      padding: 12px 15px;
-      border-radius: 12px;
-      color: #b16f0e;
-      font-size: 13px;
-      margin-top: 12px;
-      border-left: 4px solid #f1c40f;
-    }
-    
-    .tc-tooltip .tc-example {
-      background: #e8f0fe;
-      padding: 12px 15px;
-      border-radius: 12px;
-      color: #1e2b4f;
-      font-size: 13px;
-      margin-top: 12px;
-      border-left: 4px solid #4f5fb5;
-    }
-    
-    .tc-tooltip .tc-warning {
-      background: #fee9e7;
-      padding: 12px 15px;
-      border-radius: 12px;
-      color: #c0392b;
-      font-size: 13px;
-      margin-top: 12px;
-      border-left: 4px solid #e74c3c;
-    }
+  }
+}
     
     /* Input Rows */
     .tc-input-row {
