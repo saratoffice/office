@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HSD renewal – A4 · fixed copy + reduced bottom gap</title>
+    <title>HSD renewal – A4 · only print button (clean)</title>
     <style>
         * {
             margin: 0;
@@ -21,18 +21,18 @@
             padding: 4px;
         }
 
-        /* CARD – bottom padding reduced to 0.3rem for minimal print gap */
+        /* CARD – bottom padding reduced */
         .a4-card {
             max-width: 900px;           
             width: 100%;
             background: white;
             border-radius: 16px;        
             box-shadow: 0 10px 20px rgba(0,20,30,0.15);
-            padding: 1.1rem 1.2rem 0.3rem 1.2rem; /* bottom reduced from 1.1 to 0.3 */
+            padding: 1.1rem 1.2rem 0.3rem 1.2rem;
             border: 1px solid #bdc9db;
         }
 
-        /* header – four buttons */
+        /* header – only print button remains */
         .top-row {
             display: flex;
             justify-content: space-between;
@@ -62,41 +62,24 @@
             margin-left: 8px;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .btn {
+        .print-btn {
+            background: #1a3e5c;
             border: none;
             color: white;
             font-weight: 600;
-            font-size: 0.8rem;
-            padding: 0.3rem 0.9rem;
+            font-size: 0.9rem;
+            padding: 0.4rem 1.5rem;
             border-radius: 40px;
             cursor: pointer;
             box-shadow: 0 2px 5px rgba(0,35,60,0.2);
             transition: background 0.15s;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             border: 1px solid rgba(0,0,0,0.1);
-            white-space: nowrap;
         }
 
-        .print-btn { background: #1a3e5c; }
         .print-btn:hover { background: #0f2d44; }
-
-        .share-btn { background: #25D366; } 
-        .share-btn:hover { background: #20b859; }
-
-        .download-btn { background: #a3572c; } 
-        .download-btn:hover { background: #8b451f; }
-
-        .copy-btn { background: #4a6a82; } 
-        .copy-btn:hover { background: #345066; }
 
         /* particulars */
         .particulars {
@@ -247,17 +230,17 @@
         hr {
             border: none;
             border-top: 2px dotted #aebccf;
-            margin: 0.5rem 0 0.1rem; /* reduced bottom margin after hr */
+            margin: 0.5rem 0 0.1rem;
         }
 
         .tiny {
             font-size: 0.68rem;
             color: #3e6280;
             text-align: right;
-            margin-top: 0.1rem; /* reduced */
+            margin-top: 0.1rem;
         }
 
-        /* PRINT – reduced bottom padding to match screen */
+        /* PRINT – reduced bottom padding */
         @media print {
             body { background: white; padding: 0; margin: 0; }
             .a4-card { 
@@ -273,7 +256,7 @@
             .photo-badge { margin-bottom: 0.8rem; }
             .facility-group { margin-top: 0.7rem; }
             .foot-strip { margin-top: 0.8rem; }
-            .action-buttons .btn { display: none; }
+            .print-btn { display: none; }
             hr { margin: 0.5rem 0 0.1rem; }
             .tiny { margin-top: 0.1rem; }
         }
@@ -281,15 +264,10 @@
 </head>
 <body>
     <div class="a4-card" id="checklistPDF">
-        <!-- header with four buttons -->
+        <!-- header with only PRINT button -->
         <div class="top-row">
             <h1>⛽ HSD RENEWAL <small>checklist+facilities</small></h1>
-            <div class="action-buttons">
-                <button class="btn print-btn" id="printPDF">📋 PRINT</button>
-                <button class="btn share-btn" id="sharePDF">📲 SHARE</button>
-                <button class="btn download-btn" id="downloadPDF">⬇️ DOWNLOAD</button>
-                <button class="btn copy-btn" id="copyPDF">📋 COPY PDF</button>
-            </div>
+            <button class="print-btn" id="printPDF">📋 PRINT</button>
         </div>
 
         <!-- particulars block -->
@@ -353,125 +331,14 @@
             <span class="stamp-line">STAMP / DATE</span>
         </div>
         <hr>
-        <div class="tiny">HSD renewal – reduced bottom gap · fixed copy</div>
+        <div class="tiny">HSD renewal – reduced bottom gap · only print button</div>
     </div>
 
-    <!-- libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
     <script>
-        (function() {
-            const element = document.getElementById('checklistPDF');
-
-            // ----- PDF GENERATOR (returns blob) -----
-            async function generatePDFBlob() {
-                const canvas = await html2canvas(element, {
-                    scale: 2,
-                    backgroundColor: '#ffffff',
-                    logging: false,
-                    allowTaint: false,
-                    useCORS: true
-                });
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
-                const imgData = canvas.toDataURL('image/png');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-                const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-
-                // Start at 0,0 (minimal top margin). If imgHeight exceeds pdfHeight, it will be clipped slightly,
-                // but our card fits well within A4 with reduced bottom padding.
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, Math.min(imgHeight, pdfHeight), undefined, 'FAST');
-                return pdf.output('blob');
-            }
-
-            // ----- 1. PRINT -----
-            document.getElementById('printPDF').addEventListener('click', () => {
-                window.print();
-            });
-
-            // ----- 2. SHARE (Web Share API with file) -----
-            document.getElementById('sharePDF').addEventListener('click', async () => {
-                try {
-                    const blob = await generatePDFBlob();
-                    const file = new File([blob], 'HSD_Renewal.pdf', { type: 'application/pdf' });
-
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        await navigator.share({
-                            title: 'HSD Renewal Checklist',
-                            text: 'HSD renewal one‑page checklist',
-                            files: [file]
-                        });
-                    } else {
-                        window.open('https://wa.me/?text=' + encodeURIComponent('HSD Renewal checklist – Use DOWNLOAD or COPY PDF to get the file.'), '_blank');
-                    }
-                } catch (err) {
-                    if (err.name !== 'AbortError') {
-                        alert('Sharing failed. Use DOWNLOAD or COPY PDF instead.');
-                    }
-                }
-            });
-
-            // ----- 3. DOWNLOAD -----
-            document.getElementById('downloadPDF').addEventListener('click', async () => {
-                try {
-                    const blob = await generatePDFBlob();
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'HSD_Renewal.pdf';
-                    document.body.appendChild(a);
-                    a.click();
-                    setTimeout(() => {
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                    }, 150);
-                } catch (e) {
-                    alert('Download failed. Please try PRINT.');
-                }
-            });
-
-            // ----- 4. COPY PDF (fixed: uses clipboard API with PDF blob) -----
-            document.getElementById('copyPDF').addEventListener('click', async () => {
-                try {
-                    const blob = await generatePDFBlob();
-                    
-                    // Use the modern clipboard API with a ClipboardItem
-                    await navigator.clipboard.write([
-                        new ClipboardItem({
-                            [blob.type]: blob
-                        })
-                    ]);
-                    
-                    alert('✅ PDF copied to clipboard! You can now paste it (e.g., in WhatsApp, email, or any app that accepts PDF files).');
-                } catch (err) {
-                    console.warn('Clipboard copy failed, using download fallback: ', err);
-                    
-                    // Fallback: trigger download of the exact same PDF
-                    try {
-                        const blob = await generatePDFBlob();
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = 'HSD_Renewal.pdf';
-                        document.body.appendChild(a);
-                        a.click();
-                        setTimeout(() => {
-                            document.body.removeChild(a);
-                            URL.revokeObjectURL(url);
-                        }, 150);
-                        alert('📎 PDF download started (clipboard copy not supported on this browser/device).');
-                    } catch (e) {
-                        alert('Unable to generate PDF. Please use PRINT.');
-                    }
-                }
-            });
-        })();
+        // Simple print functionality
+        document.getElementById('printPDF').addEventListener('click', function() {
+            window.print();
+        });
     </script>
 </body>
 </html>
