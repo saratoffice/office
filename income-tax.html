@@ -21,7 +21,7 @@
       padding: 35px;
       border-radius: 40px;
       box-shadow: 0 30px 60px rgba(0,0,0,0.08);
-      position: relative; /* Creates stacking context */
+      position: relative;
       z-index: 1;
     }
     
@@ -191,14 +191,14 @@
       flex-shrink: 0;
       transition: all 0.2s;
       box-shadow: 0 4px 8px rgba(79, 95, 181, 0.2);
-      z-index: 100; /* Higher than card */
+      z-index: 100;
     }
     
     .tc-info-icon:hover {
       background: #2a3f8e;
       transform: scale(1.1);
       box-shadow: 0 6px 12px rgba(42, 63, 142, 0.3);
-      z-index: 1000; /* Increase z-index on hover */
+      z-index: 1000;
     }
     
     /* Tooltip Base Styles - Fixed Positioning for Top Layer */
@@ -212,7 +212,7 @@
       border-radius: 20px;
       box-shadow: 0 20px 50px rgba(0,0,0,0.3);
       width: 320px;
-      z-index: 999999; /* Extremely high z-index */
+      z-index: 999999;
       border: 2px solid #4f5fb5;
       font-size: 14px;
       font-weight: normal;
@@ -220,7 +220,6 @@
       pointer-events: none;
       transition: opacity 0.2s ease, visibility 0.2s ease;
       line-height: 1.6;
-      /* Ensure tooltip is above everything */
       isolation: isolate;
     }
     
@@ -233,7 +232,7 @@
       z-index: 1000000;
     }
     
-    /* Tooltip Positions - All with proper z-index */
+    /* Tooltip Positions */
     .tc-info-icon[data-tooltip="top-right"] .tc-tooltip {
       bottom: 30px;
       left: 0;
@@ -302,13 +301,12 @@
       border-top: none;
     }
     
-    /* Show tooltip on hover */
     .tc-info-icon:hover .tc-tooltip {
       visibility: visible;
       opacity: 1;
     }
     
-    /* Tooltip Content Styling - All text black */
+    /* Tooltip Content Styling */
     .tc-tooltip h4 {
       color: #2a3f8e;
       margin-bottom: 12px;
@@ -468,7 +466,7 @@
     .tc-cg-card {
       background: white;
       border-radius: 30px;
-      overflow: visible; /* Changed from hidden to allow tooltip overflow */
+      overflow: visible;
       border: 1px solid rgba(79, 95, 181, 0.1);
       box-shadow: 0 15px 30px rgba(0,0,0,0.02);
       transition: all 0.3s;
@@ -479,7 +477,7 @@
     .tc-cg-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 25px 50px rgba(79, 95, 181, 0.1);
-      z-index: 50; /* Increase z-index on hover */
+      z-index: 50;
     }
     
     .tc-cg-header {
@@ -554,6 +552,47 @@
     .tc-cg-input:focus {
       outline: none;
       border-color: #4f5fb5;
+    }
+    
+    /* Standard Deduction Full Width Card */
+    .tc-card-full {
+      grid-column: 1 / -1; /* spans full width in any grid */
+      width: 100%;
+      background: white;
+      padding: 25px;
+      border-radius: 30px;
+      border: 1px solid rgba(79, 95, 181, 0.1);
+      transition: all 0.3s;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.02);
+      margin-bottom: 25px;
+    }
+    
+    .tc-card-full:hover {
+      box-shadow: 0 20px 40px rgba(79, 95, 181, 0.08);
+      border-color: #4f5fb5;
+      transform: translateY(-3px);
+    }
+    
+    .tc-deduction-highlight {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #e8f0fe, #d4e3fd);
+      padding: 20px 25px;
+      border-radius: 20px;
+      border-left: 6px solid #2a3f8e;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1e2b4f;
+    }
+    
+    .tc-deduction-highlight span:last-child {
+      color: #2a3f8e;
+      font-size: 22px;
+      background: white;
+      padding: 8px 25px;
+      border-radius: 40px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     }
     
     /* Slabs Table */
@@ -780,7 +819,6 @@
         width: 100%;
       }
       
-      /* Adjust tooltip for mobile */
       .tc-tooltip {
         width: 250px;
       }
@@ -805,126 +843,130 @@
       </div>
     </section>
     
-    <!-- Income Section -->
-    <section>
-      <div class="tc-grid-2">
-        <!-- Income Details Card -->
-        <article class="tc-card">
-          <header class="tc-card-header">
-            <span>💰</span> Income Details
-            <span class="tc-info-icon" data-tooltip="bottom-right">
-              i
-              <span class="tc-tooltip">
-                <h4>Income Details</h4>
-                <p>Enter all your income sources for the financial year:</p>
-                <ul>
-                  <li><strong>Gross Salary:</strong> Total salary before deductions</li>
-                  <li><strong>Other Sources:</strong> Freelance, consulting income</li>
-                  <li><strong>Interest Income:</strong> Savings, FDs, bonds interest</li>
-                  <li><strong>Dividend Income:</strong> Shares & mutual fund dividends</li>
-                  <li><strong>Rental Income:</strong> Income from let-out property</li>
-                </ul>
-                <div class="tc-note">All incomes are aggregated to calculate total taxable income.</div>
-              </span>
-            </span>
-          </header>
-          <div class="tc-input-row">
-            <label>Gross salary income</label>
-            <input type="number" id="grossSalary" value="1228769" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-          </div>
-          <div class="tc-input-row">
-            <label>Income from other sources</label>
-            <input type="number" id="otherSources" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-          </div>
-          <div class="tc-input-row">
-            <label>Income from interest</label>
-            <input type="number" id="interestIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-          </div>
-          <div class="tc-input-row">
-            <label>Income from dividends</label>
-            <input type="number" id="dividendIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-          </div>
-          <div class="tc-input-row">
-            <label>Rental income (let-out property)</label>
-            <input type="number" id="rentalIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-          </div>
-          <footer class="tc-total-row">
-            <span>Total Income</span>
-            <span id="totalIncomeDisplay">₹12,28,769.00</span>
-          </footer>
-        </article>
-        
-        <!-- Home Loan Interest Card -->
-        <article class="tc-card">
-          <header class="tc-card-header">
-            <span>🏠</span> Home Loan Interest
-            <span class="tc-info-icon" data-tooltip="bottom-left">
-              i
-              <span class="tc-tooltip">
-                <h4>Home Loan Interest in New Regime</h4>
-                <p>Under the new tax regime:</p>
-                <ul>
-                  <li><strong>Self-occupied property:</strong> ❌ Not deductible</li>
-                  <li><strong>Let-out property:</strong> ✅ Fully deductible</li>
-                </ul>
-                <div class="tc-warning">No deduction for self-occupied property under new regime.</div>
-              </span>
-            </span>
-          </header>
-          <div class="tc-note-box">
-            ℹ️ Self-occupied: ❌ Not deductible | Let-out: ✅ Deductible
-          </div>
-          <div class="tc-input-row">
-            <label>
-              Self-occupied interest
-              <span class="tc-info-icon" data-tooltip="top-right">
-                i
-                <span class="tc-tooltip">
-                  <strong>Not deductible</strong><br>Interest on self-occupied property is NOT allowed in new regime.
-                </span>
-              </span>
-            </label>
-            <input type="number" id="selfOccupiedLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field" disabled>
-          </div>
-          <div class="tc-input-row">
-            <label>
-              Let-out interest
-              <span class="tc-info-icon" data-tooltip="top-right">
-                i
-                <span class="tc-tooltip">
-                  <strong>Deductible</strong><br>Interest on let-out property can be claimed as deduction.
-                </span>
-              </span>
-            </label>
-            <input type="number" id="letOutLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-          </div>
-          <div class="tc-info-row">
-            <span>Total Interest Deducted</span>
-            <span id="totalInterestExempted">₹0.00</span>
-          </div>
-        </article>
-      </div>
-    </section>
-    
-    <!-- Standard Deduction Notice -->
-    <section>
-      <div class="tc-info-row" id="stdDeductionNotice">
-        <span>
-          📌 Standard Deduction (Salaried/Pensioner)
-          <span class="tc-info-icon" data-tooltip="top-right">
+    <!-- Income Section + Home Loan Interest (Grid 2) -->
+    <div class="tc-grid-2">
+      <!-- Income Details Card -->
+      <article class="tc-card">
+        <header class="tc-card-header">
+          <span>💰</span> Income Details
+          <span class="tc-info-icon" data-tooltip="bottom-right">
             i
             <span class="tc-tooltip">
-              <strong>Standard Deduction u/s 16(ia)</strong><br>
-              A flat deduction of ₹75,000 is available to salaried individuals and pensioners.<br>
-              <em>Introduced in Budget 2025</em>
+              <h4>Income Details</h4>
+              <p>Enter all your income sources for the financial year:</p>
+              <ul>
+                <li><strong>Gross Salary:</strong> Total salary before deductions</li>
+                <li><strong>Other Sources:</strong> Freelance, consulting income</li>
+                <li><strong>Interest Income:</strong> Savings, FDs, bonds interest</li>
+                <li><strong>Dividend Income:</strong> Shares & mutual fund dividends</li>
+                <li><strong>Rental Income:</strong> Income from let-out property</li>
+              </ul>
+              <div class="tc-note">All incomes are aggregated to calculate total taxable income.</div>
             </span>
           </span>
+        </header>
+        <div class="tc-input-row">
+          <label>Gross salary income</label>
+          <input type="number" id="grossSalary" value="1228769" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+        </div>
+        <div class="tc-input-row">
+          <label>Income from other sources</label>
+          <input type="number" id="otherSources" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+        </div>
+        <div class="tc-input-row">
+          <label>Income from interest</label>
+          <input type="number" id="interestIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+        </div>
+        <div class="tc-input-row">
+          <label>Income from dividends</label>
+          <input type="number" id="dividendIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+        </div>
+        <div class="tc-input-row">
+          <label>Rental income (let-out property)</label>
+          <input type="number" id="rentalIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+        </div>
+        <footer class="tc-total-row">
+          <span>Total Income</span>
+          <span id="totalIncomeDisplay">₹12,28,769.00</span>
+        </footer>
+      </article>
+      
+      <!-- Home Loan Interest Card -->
+      <article class="tc-card">
+        <header class="tc-card-header">
+          <span>🏠</span> Home Loan Interest
+          <span class="tc-info-icon" data-tooltip="bottom-left">
+            i
+            <span class="tc-tooltip">
+              <h4>Home Loan Interest in New Regime</h4>
+              <p>Under the new tax regime:</p>
+              <ul>
+                <li><strong>Self-occupied property:</strong> ❌ Not deductible</li>
+                <li><strong>Let-out property:</strong> ✅ Fully deductible</li>
+              </ul>
+              <div class="tc-warning">No deduction for self-occupied property under new regime.</div>
+            </span>
+          </span>
+        </header>
+        <div class="tc-note-box">
+          ℹ️ Self-occupied: ❌ Not deductible | Let-out: ✅ Deductible
+        </div>
+        <div class="tc-input-row">
+          <label>
+            Self-occupied interest
+            <span class="tc-info-icon" data-tooltip="top-right">
+              i
+              <span class="tc-tooltip">
+                <strong>Not deductible</strong><br>Interest on self-occupied property is NOT allowed in new regime.
+              </span>
+            </span>
+          </label>
+          <input type="number" id="selfOccupiedLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field" disabled>
+        </div>
+        <div class="tc-input-row">
+          <label>
+            Let-out interest
+            <span class="tc-info-icon" data-tooltip="top-right">
+              i
+              <span class="tc-tooltip">
+                <strong>Deductible</strong><br>Interest on let-out property can be claimed as deduction.
+              </span>
+            </span>
+          </label>
+          <input type="number" id="letOutLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+        </div>
+        <div class="tc-info-row">
+          <span>Total Interest Deducted</span>
+          <span id="totalInterestExempted">₹0.00</span>
+        </div>
+      </article>
+    </div> <!-- end grid-2 -->
+    
+    <!-- STANDARD DEDUCTION – Full width card with heading -->
+    <section style="margin-top: 10px;">
+      <h2 class="tc-heading-secondary" style="margin-top: 0;">
+        📋 Standard Deduction (Salaried / Pensioner)
+        <span class="tc-info-icon" data-tooltip="top-right">
+          i
+          <span class="tc-tooltip">
+            <strong>Standard Deduction u/s 16(ia)</strong><br>
+            A flat deduction of ₹75,000 is available to salaried individuals and pensioners.<br>
+            <em>Introduced in Budget 2025</em>
+          </span>
         </span>
-        <span>₹75,000 will be automatically deducted</span>
+      </h2>
+      <div class="tc-card-full" id="stdDeductionFullCard">
+        <div class="tc-deduction-highlight">
+          <span>💼 Standard Deduction (automatically applied)</span>
+          <span id="stdDeductionValue">₹75,000</span>
+        </div>
+        <p style="color: #4a5a72; margin-top: 15px; font-size: 15px; padding-left: 8px;">
+          <span id="stdDeductionStatus">✔️ Available for salaried / pensioner individuals</span>
+        </p>
       </div>
     </section>
     
-    <!-- Taxable Income Card -->
+    <!-- Net Taxable Income Card -->
     <section>
       <article class="tc-card" style="background: linear-gradient(135deg, #e8f0fe, #d4e3fd);">
         <footer class="tc-total-row" style="border-color: #4f5fb5; background: transparent;">
@@ -1162,7 +1204,7 @@
                 <span class="tc-tooltip">Interest + standard deduction</span>
               </span>
             </div>
-            <div class="tc-summary-value" id="summaryTotalDeductions">₹0</div>
+            <div class="tc-summary-value" id="summaryTotalDeductions">₹75,000</div>
           </div>
           <div class="tc-summary-item">
             <div class="tc-summary-label">
@@ -1263,10 +1305,19 @@
       const taxableIncomeDisplay = document.getElementById('taxableIncomeDisplay');
       if (taxableIncomeDisplay) taxableIncomeDisplay.textContent = `₹${formatMoney(netTaxableIncome)}`;
       
-      // Update standard deduction notice
-      const stdDeductionNotice = document.getElementById('stdDeductionNotice');
-      if (stdDeductionNotice) {
-        stdDeductionNotice.style.display = isSalaried ? 'flex' : 'none';
+      // Update Standard Deduction card
+      const stdDeductionValueSpan = document.getElementById('stdDeductionValue');
+      if (stdDeductionValueSpan) stdDeductionValueSpan.textContent = `₹${formatMoney(stdDeduction)}`;
+      
+      const stdDeductionStatus = document.getElementById('stdDeductionStatus');
+      if (stdDeductionStatus) {
+        if (isSalaried) {
+          stdDeductionStatus.innerHTML = '✔️ Available for salaried / pensioner individuals';
+          stdDeductionStatus.style.color = '#1e7e34';
+        } else {
+          stdDeductionStatus.innerHTML = '⚠️ Not available for business / professional (selected employment type)';
+          stdDeductionStatus.style.color = '#b85c00';
+        }
       }
       
       // Capital Gains
