@@ -1,572 +1,404 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HSD License Renewal – Document & Facility Checklist</title>
-  <!-- using the same design language as tax calculator (common style) -->
-  <style>
-    /* common styles – same family as tax calculator */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-    
-    body {
-      background: linear-gradient(145deg, #f0f4fa 0%, #eef2f6 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    
-    .checklist-container {
-      max-width: 1300px;
-      width: 100%;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 40px;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.12);
-      padding: 35px;
-      border: 1px solid rgba(79, 95, 181, 0.15);
-    }
-    
-    /* header badge */
-    .license-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, #b23c1c, #d96c2b);
-      color: white;
-      padding: 10px 30px;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 16px;
-      letter-spacing: 0.5px;
-      box-shadow: 0 10px 20px rgba(185, 60, 28, 0.25);
-      margin-bottom: 20px;
-    }
-    
-    h1 {
-      font-size: clamp(26px, 5vw, 36px);
-      color: #1e2b4f;
-      margin-bottom: 10px;
-      background: linear-gradient(135deg, #1e2b4f, #2a3f8e);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-weight: 700;
-    }
-    
-    .subhead {
-      color: #4a5568;
-      font-size: 18px;
-      margin-bottom: 30px;
-      border-left: 6px solid #d96c2b;
-      padding-left: 20px;
-      background: #fef8f0;
-      border-radius: 0 20px 20px 0;
-      line-height: 1.5;
-      font-weight: 500;
-    }
-    
-    /* grid layout */
-    .checklist-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 30px;
-      margin-top: 20px;
-    }
-    
-    /* cards */
-    .doc-card {
-      background: white;
-      border-radius: 30px;
-      border: 1px solid rgba(79, 95, 181, 0.15);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.04);
-      transition: all 0.2s;
-      overflow: hidden;
-    }
-    
-    .doc-card:hover {
-      box-shadow: 0 20px 40px rgba(79, 95, 181, 0.12);
-      border-color: #4f5fb5;
-    }
-    
-    .card-header {
-      background: linear-gradient(105deg, #f3f5fd, #ffffff);
-      padding: 18px 25px;
-      border-bottom: 2px solid #4f5fb5;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .card-header span:first-child {
-      font-size: 28px;
-    }
-    
-    .card-header h2 {
-      font-size: 22px;
-      font-weight: 600;
-      color: #1e2b4f;
-    }
-    
-    .card-header .info-icon {
-      margin-left: auto;
-      background: #4f5fb5;
-      color: white;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: default;
-    }
-    
-    /* list styling */
-    .checklist-items {
-      padding: 15px 20px 20px 20px;
-    }
-    
-    .checklist-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      padding: 12px 10px;
-      border-bottom: 1px dashed #e2e8f0;
-    }
-    
-    .checklist-item:last-child {
-      border-bottom: none;
-    }
-    
-    .item-check {
-      width: 24px;
-      height: 24px;
-      background: white;
-      border: 2px solid #a0b3d9;
-      border-radius: 8px;
-      margin-top: 2px;
-      cursor: pointer;
-      transition: 0.1s;
-      flex-shrink: 0;
-      appearance: none;
-      -webkit-appearance: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .item-check:checked {
-      background: #4f5fb5;
-      border-color: #4f5fb5;
-      position: relative;
-    }
-    
-    .item-check:checked::after {
-      content: "✓";
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-    }
-    
-    .item-text {
-      flex: 1;
-      color: #1e293b;
-      font-size: 16px;
-      font-weight: 500;
-      line-height: 1.5;
-    }
-    
-    .item-note {
-      font-size: 13px;
-      color: #64748b;
-      margin-left: 8px;
-      font-weight: 400;
-      background: #f1f5f9;
-      padding: 2px 10px;
-      border-radius: 30px;
-      display: inline-block;
-    }
-    
-    .highlight {
-      background: #fff8e7;
-      border-left: 6px solid #d96c2b;
-    }
-    
-    .badge-photo {
-      background: #c5283d;
-      color: white;
-      font-size: 13px;
-      font-weight: 600;
-      padding: 4px 14px;
-      border-radius: 30px;
-      margin-left: 12px;
-      letter-spacing: 0.3px;
-    }
-    
-    /* facility row special */
-    .facility-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-      padding: 5px 0;
-    }
-    
-    .facility-item {
-      background: #f8fafc;
-      border-radius: 20px;
-      padding: 14px 16px;
-      border: 1px solid #e9edf2;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    
-    .facility-item .item-check {
-      margin-top: 0;
-    }
-    
-    /* contact / identity row */
-    .id-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 20px;
-      background: #f2f5ff;
-      border-radius: 30px;
-      padding: 15px 25px;
-      margin: 20px 0 10px 0;
-    }
-    
-    .id-row .label {
-      font-weight: 600;
-      color: #1e2b4f;
-      min-width: 120px;
-    }
-    
-    .id-row input {
-      border: none;
-      background: white;
-      padding: 12px 20px;
-      border-radius: 40px;
-      flex: 1;
-      min-width: 200px;
-      border: 2px solid #e2e8f0;
-      font-size: 15px;
-    }
-    
-    .id-row input:focus {
-      outline: none;
-      border-color: #4f5fb5;
-    }
-    
-    /* police station & block row (inline) */
-    .inline-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin: 20px 0;
-    }
-    
-    .inline-field {
-      flex: 1 1 200px;
-      background: #f8fafd;
-      padding: 12px 20px;
-      border-radius: 30px;
-      border: 1px solid #e0e7ef;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .inline-field strong {
-      color: #1e2b4f;
-      font-weight: 600;
-      min-width: 90px;
-    }
-    
-    .inline-field span {
-      color: #334155;
-      background: white;
-      padding: 5px 20px;
-      border-radius: 40px;
-      border: 1px dashed #a0b3d9;
-    }
-    
-    /* photo copy required – standalone tag */
-    .photo-required {
-      background: #fee9e7;
-      border: 2px solid #c5283d;
-      border-radius: 40px;
-      padding: 12px 28px;
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 700;
-      color: #a51d2b;
-      margin: 20px 0 10px 0;
-    }
-    
-    /* small tooltip style (optional) */
-    .info-hint {
-      border-bottom: 1px dashed #4f5fb5;
-      cursor: help;
-      position: relative;
-    }
-    
-    /* responsive */
-    @media (max-width: 900px) {
-      .checklist-grid { grid-template-columns: 1fr; }
-      .facility-grid { grid-template-columns: 1fr; }
-      .id-row { flex-direction: column; align-items: stretch; }
-    }
-    
-    /* note for NOC / date */
-    .meta-date {
-      color: #2a3f8e;
-      font-weight: 500;
-      background: #e8f0fe;
-      padding: 3px 12px;
-      border-radius: 30px;
-      font-size: 14px;
-    }
-    
-    .footer-note {
-      margin-top: 35px;
-      background: #f0f4fe;
-      border-radius: 30px;
-      padding: 20px 30px;
-      color: #1e2b4f;
-      border-left: 8px solid #d96c2b;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    
-    .footer-note span:first-child {
-      font-size: 28px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSD License · Renewal checklist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #e6e9ef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            padding: 16px;
+        }
+
+        /* card / paper effect */
+        .checklist-card {
+            max-width: 1000px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px -10px rgba(0, 20, 30, 0.25), 0 8px 20px rgba(0,0,0,0.1);
+            padding: 2rem 2.2rem;
+            transition: all 0.2s;
+        }
+
+        /* header section */
+        .header-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 3px solid #1e3a5f;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-title h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #0b2a41;
+            line-height: 1.2;
+        }
+
+        .header-title h1 span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #4a5568;
+            background: #edf2f7;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            margin-left: 15px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .download-btn {
+            background: #1e3a5f;
+            border: none;
+            color: white;
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 0.7rem 1.8rem;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0,40,70,0.2);
+            transition: background 0.15s;
+            border: 1px solid #2b4c73;
+        }
+
+        .download-btn:hover {
+            background: #123150;
+        }
+
+        .download-btn i {
+            font-size: 1.2rem;
+            font-style: normal;
+        }
+
+        /* agency info strip */
+        .particulars-grid {
+            background: #f4f7fb;
+            padding: 1.5rem 1.8rem;
+            border-radius: 24px;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem 3rem;
+            border: 1px solid #dbe1ec;
+        }
+
+        .particular-item {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            font-size: 1.05rem;
+        }
+
+        .particular-item .label {
+            font-weight: 600;
+            color: #1e3a5f;
+            min-width: 110px;
+        }
+
+        .particular-item .value-placeholder {
+            color: #1f2a41;
+            background: white;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            border: 1px dashed #8b9eb0;
+            min-width: 200px;
+            font-size: 0.95rem;
+        }
+
+        .photo-note {
+            background: #fef7e9;
+            border-left: 6px solid #e7a922;
+            padding: 0.7rem 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-weight: 500;
+        }
+
+        .photo-note strong {
+            background: #e7a922;
+            color: #1e1e1e;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+        }
+
+        /* main checklist */
+        .checklist-section h2 {
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: #103450;
+            margin-bottom: 1.2rem;
+            border-left: 8px solid #e7a922;
+            padding-left: 1.2rem;
+        }
+
+        .two-col-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem 1.8rem;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 0.4rem 0;
+            border-bottom: 1px dashed #d7dfea;
+        }
+
+        .check-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            accent-color: #1e3a5f;
+            transform: scale(1.1);
+            flex-shrink: 0;
+        }
+
+        .check-item .item-text {
+            font-size: 1rem;
+            color: #192f42;
+            line-height: 1.45;
+        }
+
+        .item-text .extra-hint {
+            color: #4e6b82;
+            font-size: 0.9rem;
+            display: block;
+            font-style: italic;
+        }
+
+        .single-col {
+            margin-top: 1.2rem;
+        }
+
+        .single-col .check-item {
+            grid-column: span 2;
+        }
+
+        .footnote {
+            margin-top: 2.2rem;
+            background: #eef2f6;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 0.95rem;
+            color: #1e3a5f;
+        }
+
+        .stamp-place {
+            font-family: 'Courier New', monospace;
+            border: 2px dotted #1e3a5f;
+            padding: 0.5rem 2rem;
+            border-radius: 40px;
+            background: white;
+            font-weight: 600;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px dotted #a3b8d0;
+            margin: 1.8rem 0 1rem;
+        }
+        /* small tweaks */
+        @media (max-width: 700px) {
+            .checklist-card { padding: 1.5rem; }
+            .two-col-list { grid-template-columns: 1fr; }
+            .particular-item .value-placeholder { min-width: 140px; }
+        }
+    </style>
 </head>
 <body>
-  <div class="checklist-container">
-    <!-- header -->
-    <div class="license-badge">⛽ HSD LICENSE RENEWAL · FY 2025-26</div>
-    <h1>High Speed Diesel (HSD) · Renewal Checklist</h1>
-    <div class="subhead">📋 All documents & facilities mandatory for renewal · verify each item</div>
-    
-    <!-- quick identity & contact row (Email / Mobile / Aadhaar) -->
-    <div class="id-row">
-      <span class="label">📧 Email ID</span>
-      <input type="email" placeholder="enter email" value="petrolpump@example.com">
-      <span class="label">📱 WhatsApp/Mobile</span>
-      <input type="tel" placeholder="mobile number" value="9876543210">
-      <span class="label">🆔 Aadhaar</span>
-      <input type="text" placeholder="XXXX XXXX XXXX" value="1234 5678 9012">
+    <div class="checklist-card" id="checklistToDownload">
+        <!-- header with download button -->
+        <div class="header-title">
+            <h1>⛽ HSD LICENSE RENEWAL <span>checklist</span></h1>
+            <button class="download-btn" id="downloadPDF" aria-label="download as PDF">
+                <i>📄</i> Download PDF
+            </button>
+        </div>
+
+        <!-- PARTICULARS section (as per required fields) -->
+        <div class="particulars-grid">
+            <div class="particular-item"><span class="label">Email ID :</span><span class="value-placeholder">___________________</span></div>
+            <div class="particular-item"><span class="label">WhatsApp/Mobile :</span><span class="value-placeholder">___________________</span></div>
+            <div class="particular-item"><span class="label">Aadhaar Number :</span><span class="value-placeholder">___________________</span></div>
+            <div class="particular-item"><span class="label">Police Station :</span><span class="value-placeholder">___________________</span></div>
+            <div class="particular-item"><span class="label">Block :</span><span class="value-placeholder">___________________</span></div>
+            <div class="particular-item"><span class="label">Year of establishment :</span><span class="value-placeholder">___________________</span></div>
+            <div class="particular-item"><span class="label">Oil Co. letter (no./date) :</span><span class="value-placeholder">___________________</span></div>
+            <div class="particular-item"><span class="label">Agreement with O.C. (date) :</span><span class="value-placeholder">___________________</span></div>
+            <div class="particular-item"><span class="label">NOC Collector/Local Auth :</span><span class="value-placeholder">no.________ date____</span></div>
+            <div class="particular-item"><span class="label">Power supply (last bill) :</span><span class="value-placeholder">___________________</span></div>
+        </div>
+
+        <!-- PHOTOCOPY REQUIRED banner (explicit) -->
+        <div class="photo-note">
+            <strong>📸 PHOTOCOPY REQUIRED</strong> <span>for every document marked below — attach self‑attested copies</span>
+        </div>
+
+        <!-- MAIN CHECKLIST : exactly all items from prompt, in logical order -->
+        <div class="checklist-section">
+            <h2>☑ Mandatory documents & licences</h2>
+            <div class="two-col-list">
+                <!-- item 1 -->
+                <div class="check-item">
+                    <input type="checkbox" id="lic1"> <label for="lic1" class="item-text">License/Certificate – HSD <span class="extra-hint">(high speed diesel)</span></label>
+                </div>
+                <!-- item 2 -->
+                <div class="check-item">
+                    <input type="checkbox" id="lic2"> <label for="lic2" class="item-text">License/Certificate – Lubricants</label>
+                </div>
+                <!-- item 3 -->
+                <div class="check-item">
+                    <input type="checkbox" id="ror"> <label for="ror" class="item-text">R.O.R. (record of rights) <span class="extra-hint">Plot No. / Khata No. / Kisam</span></label>
+                </div>
+                <!-- item 4 -->
+                <div class="check-item">
+                    <input type="checkbox" id="fireSafety"> <label for="fireSafety" class="item-text">Fire Safety Certificate</label>
+                </div>
+                <!-- item 5 -->
+                <div class="check-item">
+                    <input type="checkbox" id="fireEquip"> <label for="fireEquip" class="item-text">Firefighting Equipment bill <span class="extra-hint">mention last expiry date</span></label>
+                </div>
+                <!-- item 6 -->
+                <div class="check-item">
+                    <input type="checkbox" id="peso"> <label for="peso" class="item-text">Explosive Licence (PESO) <span class="extra-hint">storage Petroleum class A & B in tank</span></label>
+                </div>
+                <!-- item 7 -->
+                <div class="check-item">
+                    <input type="checkbox" id="gstPan"> <label for="gstPan" class="item-text">Copy of GSTIN & PAN</label>
+                </div>
+                <!-- item 8 -->
+                <div class="check-item">
+                    <input type="checkbox" id="legalMetrology"> <label for="legalMetrology" class="item-text">Verification by Legal Metrology <span class="extra-hint">all dispensing pumps + measuring can</span></label>
+                </div>
+                <!-- item 9 (NOC from collector etc already partly in particulars, but document itself) -->
+                <div class="check-item">
+                    <input type="checkbox" id="nocDoc"> <label for="nocDoc" class="item-text">NOC from Collector & Local Authority <span class="extra-hint">letter no. & date (as above)</span></label>
+                </div>
+                <!-- item 10 agreement with oil company (copy) -->
+                <div class="check-item">
+                    <input type="checkbox" id="agreeCopy"> <label for="agreeCopy" class="item-text">Date of agreement with Oil Company <span class="extra-hint">copy of agreement</span></label>
+                </div>
+                <!-- item 11 recommendation letter from oil company -->
+                <div class="check-item">
+                    <input type="checkbox" id="oilRec"> <label for="oilRec" class="item-text">Recommendation of Oil Company <span class="extra-hint">letter no. & date</span></label>
+                </div>
+                <!-- item 12 power supply detail (electricity bill) -->
+                <div class="check-item">
+                    <input type="checkbox" id="powerBill"> <label for="powerBill" class="item-text">Power Supply details <span class="extra-hint">last electric bill copy</span></label>
+                </div>
+                <!-- item 13 Aadhaar (photocopy) -->
+                <div class="check-item">
+                    <input type="checkbox" id="aadhaarCopy"> <label for="aadhaarCopy" class="item-text">Aadhaar Number (photocopy)</label>
+                </div>
+                <!-- item 14 whatsapp/mobile (notarised? but included as required) -->
+                <div class="check-item">
+                    <input type="checkbox" id="contactCopy"> <label for="contactCopy" class="item-text">WhatsApp / Mobile number (visible on docs)</label>
+                </div>
+                <!-- item 15 email ID -->
+                <div class="check-item">
+                    <input type="checkbox" id="emailCopy"> <label for="emailCopy" class="item-text">Email ID (correspondence record)</label>
+                </div>
+                <!-- item 16 police station / block (reference) -->
+                <div class="check-item">
+                    <input type="checkbox" id="stationBlock"> <label for="stationBlock" class="item-text">Police Station & Block (mentioned in forms)</label>
+                </div>
+                <!-- item 17 year of establishment proof -->
+                <div class="check-item">
+                    <input type="checkbox" id="yearEst"> <label for="yearEst" class="item-text">Year of establishment of Petrol Pump <span class="extra-hint">supporting document</span></label>
+                </div>
+            </div>
+
+            <!-- extra line for any missing PESO / explosive details (already above) but add single line for tank storage -->
+            <div class="single-col" style="margin-top:0.5rem">
+                <div class="check-item">
+                    <input type="checkbox" id="pesoExplicit"> <label for="pesoExplicit" class="item-text"><strong>PESO explosive licence</strong> (storage class A & B in tank) – certificate number & validity</label>
+                </div>
+                <!-- duplicate avoided, but we keep for emphasis. Also add "firefighting equipment last expiry" -->
+                <div class="check-item">
+                    <input type="checkbox" id="fireExpiry"> <label for="fireExpiry" class="item-text">Firefighting equipment – last expiry date (as per bill)</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- spacer with hint about photocopy -->
+        <hr>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: space-between; align-items: center">
+            <div><span style="background:#1e3a5f; color:white; padding:0.2rem 1.2rem; border-radius:30px;">✔ Tick what's attached</span></div>
+            <div style="color:#b22234; font-weight:500;">🗂️ All photocopies must be legible</div>
+        </div>
+
+        <!-- footer with station and block repetition (as per particular) -->
+        <div class="footnote">
+            <div>📌 <strong>HSD renewal checklist</strong> · Police Station: ................. Block: .................</div>
+            <div class="stamp-place">signature / stamp</div>
+        </div>
+
+        <!-- tiny note to include all items from prompt -->
+        <p style="text-align: right; font-size:0.8rem; color:#5b7f9c; margin-top:1rem;">* includes Lubricants license, ROR, Legal metrology, GST/PAN, PESO, NOC etc.</p>
     </div>
-    
-    <!-- Police station & block (as per design) -->
-    <div class="inline-row">
-      <div class="inline-field"><strong>🚔 Police Station:</strong> <span>Sadar Bazar</span></div>
-      <div class="inline-field"><strong>🗺️ Block:</strong> <span>Civil Lines</span></div>
-    </div>
-    
-    <!-- PHOTOCOPY REQUIRED tag -->
-    <div class="photo-required">
-      <span>📸</span> PHOTOCOPY REQUIRED (self-attested) <span>📸</span>
-    </div>
-    
-    <!-- main grid: two columns -->
-    <div class="checklist-grid">
-      <!-- LEFT COLUMN – documents & oil company details -->
-      <div class="doc-card">
-        <div class="card-header">
-          <span>📄</span><h2>Establishment & Oil Company</h2>
-          <span class="info-icon">i</span>
-        </div>
-        <div class="checklist-items">
-          <!-- Year of establishment -->
-          <div class="checklist-item">
-            <input type="checkbox" class="item-check" id="estYear" checked>
-            <label for="estYear" class="item-text">Year of establishment of Petrol Pump <span class="item-note">e.g., 2012</span></label>
-          </div>
-          <!-- Recommendation of Oil Company -->
-          <div class="checklist-item">
-            <input type="checkbox" class="item-check" id="oilCo" checked>
-            <label for="oilCo" class="item-text">Recommendation of Oil Company (with Letter No. / date) <span class="meta-date">Ltr No. IOC/2025/89 · 12.03.2025</span></label>
-          </div>
-          <!-- Date of agreement -->
-          <div class="checklist-item">
-            <input type="checkbox" class="item-check" id="agreeDate" checked>
-            <label for="agreeDate" class="item-text">Date of agreement with Oil Company <span class="meta-date">15.04.2015</span></label>
-          </div>
-          <!-- NOC from Collector & Local Authority -->
-          <div class="checklist-item highlight">
-            <input type="checkbox" class="item-check" id="nocCollector" checked>
-            <label for="nocCollector" class="item-text">NOC from Collector and Local Authority <span class="item-note">No. & date of Authority</span></label>
-          </div>
-          <!-- Power Supply details -->
-          <div class="checklist-item">
-            <input type="checkbox" class="item-check" id="powerBill" checked>
-            <label for="powerBill" class="item-text">Power Supply details <span class="item-note">Last Electric Bill attached</span></label>
-          </div>
-        </div>
-      </div>
-      
-      <!-- RIGHT COLUMN – licenses, certificates, ROR -->
-      <div class="doc-card">
-        <div class="card-header">
-          <span>🔖</span><h2>Licenses & Statutory</h2>
-          <span class="info-icon">i</span>
-        </div>
-        <div class="checklist-items">
-          <div class="checklist-item">
-            <input type="checkbox" class="item-check" id="hsdLicense" checked>
-            <label for="hsdLicense" class="item-text">License/Certificate details of HSD <span class="item-note">No. HSD/L/142/2018</span></label>
-          </div>
-          <div class="checklist-item">
-            <input type="checkbox" class="item-check" id="lubeLicense" checked>
-            <label for="lubeLicense" class="item-text">License/Certificate details of Lubricants</label>
-          </div>
-          <div class="checklist-item">
-            <input type="checkbox" class="item-check" id="rorCopy" checked>
-            <label for="rorCopy" class="item-text">Copy of R.O.R. about Plot No., Khata No. & Kisam.</label>
-          </div>
-          <div class="checklist-item">
-            <input type="checkbox" class="item-check" id="fireSafetyCert" checked>
-            <label for="fireSafetyCert" class="item-text">Fire Safety Certificate <span class="item-note">valid up to 12/2025</span></label>
-          </div>
-          <div class="checklist-item">
-            <input type="checkbox" class="item-check" id="fireEquipBill" checked>
-            <label for="fireEquipBill" class="item-text">Firefighting Equipment Bill with expiry <span class="item-note">last expiry 30.06.2025</span></label>
-          </div>
-        </div>
-      </div>
-      
-      <!-- SECOND ROW LEFT – explosive, GST, legal metrology -->
-      <div class="doc-card">
-        <div class="card-header">
-          <span>💣</span><h2>Safety & Tax Registration</h2>
-        </div>
-        <div class="checklist-items">
-          <div class="checklist-item">
-            <input type="checkbox" class="item-check" id="pesoLicense" checked>
-            <label for="pesoLicense" class="item-text">Explosive Licence (PESO) – Petroleum Class A & B in Tank</label>
-          </div>
-          <div class="checklist-item">
-            <input type="checkbox" class="item-check" id="gstPan" checked>
-            <label for="gstPan" class="item-text">Copy of GSTIN & PAN <span class="item-note">GST: 07AABCU9603R1ZM</span></label>
-          </div>
-          <div class="checklist-item">
-            <input type="checkbox" class="item-check" id="legalMetrology" checked>
-            <label for="legalMetrology" class="item-text">Certificate of Verification by Legal Metrology (all dispensing pumps & measuring can)</label>
-          </div>
-          <!-- extra: photo copy already mentioned above -->
-          <div style="font-size:14px; color:#4f5fb5; padding:10px 0 0 10px;">✓ All photocopies attached</div>
-        </div>
-      </div>
-      
-      <!-- SECOND ROW RIGHT – mandatory facilities (as per list) -->
-      <div class="doc-card">
-        <div class="card-header">
-          <span>🧰</span><h2>Mandatory Facilities (on site)</h2>
-        </div>
-        <div class="checklist-items" style="padding-bottom:5px;">
-          <!-- facility grid inside checklist items -->
-          <div class="facility-grid">
-            <div class="facility-item">
-              <input type="checkbox" class="item-check" id="water" checked><label for="water"> Free portable water & sanitation</label>
-            </div>
-            <div class="facility-item">
-              <input type="checkbox" class="item-check" id="toilet" checked><label for="toilet"> Free toilet facility</label>
-            </div>
-            <div class="facility-item">
-              <input type="checkbox" class="item-check" id="firstAid" checked><label for="firstAid"> First Aid Kit (no expiry)</label>
-            </div>
-            <div class="facility-item">
-              <input type="checkbox" class="item-check" id="freeAir" checked><label for="freeAir"> Free Air for Vehicles (working)</label>
-            </div>
-            <div class="facility-item">
-              <input type="checkbox" class="item-check" id="complaintReg" checked><label for="complaintReg"> Complaint Register (available)</label>
-            </div>
-            <div class="facility-item">
-              <input type="checkbox" class="item-check" id="filterPaper" checked><label for="filterPaper"> Filter paper for quality check</label>
-            </div>
-          </div>
-          <!-- sump and sand buckets as separate items (numbers) -->
-          <div style="margin-top: 20px;">
-            <div class="checklist-item">
-              <input type="checkbox" class="item-check" id="sump" checked>
-              <label for="sump" class="item-text">No. of Sump with adequate water <span class="item-note">2 sumps</span></label>
-            </div>
-            <div class="checklist-item">
-              <input type="checkbox" class="item-check" id="sandBucket" checked>
-              <label for="sandBucket" class="item-text">No. Sand Buckets with sufficient sand <span class="item-note">8 buckets</span></label>
-            </div>
-          </div>
-          <!-- small note -->
-          <p style="background:#ebf4ff; border-radius:20px; padding:12px; margin-top:10px; color:#1e2b4f; font-size:14px;">
-            ✅ All facilities are operational as per norms.
-          </p>
-        </div>
-      </div>
-    </div> <!-- end grid -->
-    
-    <!-- additional line: fire safety, explosive already included but we ensure the list is complete.
-         also show the “police station” line again? it's above.  -->
-    
-    <!-- extra row to display any missing fields: License details, recommendation already covered. 
-         but we need “Fire Safety Certificate” is inside column 2. All good.
-         Now also include: Firefighting Equipment Bill we have, Explosive licence – present.
-    -->
-    
-    <!-- summary / footer note with PESO / explosive line and last checks -->
-    <div class="footer-note">
-      <span>⛽</span> 
-      <div style="flex:1">
-        <strong>📌 PESO Explosive Licence (Class A & B) · storage in tank · verified</strong><br>
-        <span style="font-size:14px;">Fire NOC, Legal Metrology, ROR copy, and all facility items checked – ready for HSD renewal submission.</span>
-      </div>
-      <span style="background:#2a3f8e; color:white; padding:12px 25px; border-radius:40px;">✔ 22/22 documents</span>
-    </div>
-    
-    <!-- hidden note: all items from your list appear:
-        - Email, mobile, aadhaar, police station, block,
-        - photocopy required,
-        - year of establishment, recommendation, agreement date, NOC collector, power supply,
-        - HSD license, lubricants, ROR, fire safety, fire equipment bill,
-        - explosive (PESO), GST/PAN, legal metrology,
-        - 8 facility points + sump & sand buckets.
-    -->
-    <p style="text-align:right; color:#6f7c91; margin-top:20px; font-size:14px;">checklist v1.0 · HSD renewal · all fields mandatory</p>
-  </div>
-  
-  <!-- interactive note: checkboxes are functional but no backend -->
-  <script>
-    // just to keep style consistent, maybe a small console reminder
-    (function() {
-      console.log('HSD Renewal Checklist – use checkboxes to track progress');
-      const checkboxes = document.querySelectorAll('.item-check');
-      checkboxes.forEach(cb => {
-        cb.addEventListener('change', function(e) {
-          // optional: just update the footer count
-          const total = document.querySelectorAll('.item-check').length;
-          const checked = document.querySelectorAll('.item-check:checked').length;
-          const footerSpan = document.querySelector('.footer-note span:last-child');
-          if (footerSpan) {
-            footerSpan.innerText = `✔ ${checked}/${total} documents`;
-          }
+
+    <!-- simple script to print/download as PDF (client side) -->
+    <script>
+        document.getElementById('downloadPDF').addEventListener('click', function() {
+            // Use window.print() to simulate PDF download with high quality.
+            // We can tweak print appearance via @media print.
+            // This preserves the exact checklist layout, checkboxes, etc.
+            window.print();
         });
-      });
-    })();
-  </script>
+
+        // minor addition: style for print (hide button, keep clean)
+        const style = document.createElement('style');
+        style.innerHTML = `@media print { body { background: white; padding: 0; } .checklist-card { box-shadow: none; border-radius: 0; padding: 1.5rem; } .download-btn { display: none; } .header-title h1 span { background: none; border: 1px solid gray; } .value-placeholder { border: 1px solid #aaa; background: #f9f9f9; } }`;
+        document.head.appendChild(style);
+    </script>
+
+    <!-- ensure that all items from the "particulars" raw list are represented: 
+         - Email ID, WhatsApp/Mobile, Aadhaar, Police Station, Block,
+         - Year of establishment of Petrol Pump,
+         - Recommendation of Oil Company (letter no./date),
+         - Date of agreement with Oil Company,
+         - NOC from Collector and Local Authority (no./date),
+         - Power Supply details (last electric bill),
+         - License/Certificate details of HSD,
+         - License/Certificate details of Lubricants,
+         - Copy of R.O.R. about Plot No., Khata No. & Kisam.,
+         - Fire Safety Certificate,
+         - Firefighting Equipment (bill with expiry),
+         - Explosive Licence with storage of Petroleum Class A and B in Tank from PESO,
+         - Copy of GSTIN & PAN,
+         - Certificate of Verification by Legal Metrology (all dispensing pumps & measuring can).
+         also "PHOTOCOPY REQUIRED" is prominently displayed.
+    -->
 </body>
 </html>
