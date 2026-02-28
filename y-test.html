@@ -1119,9 +1119,16 @@
       const digitalAssetsAmount = parseFloat(document.getElementById('digitalAssetsAmount')?.value) || 0;
       
       // Calculate House Property Income
-      const nav = Math.max(0, grossRent - municipalTaxes);
-      const standardDeductionHP = nav * 0.30;
-      let hpIncome = nav - standardDeductionHP - letOutLoan;
+let hpIncome;
+if (grossRent <= 0) {
+    // If no rental income, only interest deduction is allowed (treated as loss from house property)
+    hpIncome = -letOutLoan;
+} else {
+    // Normal calculation when there is rental income
+    const nav = Math.max(0, grossRent - municipalTaxes);
+    const standardDeductionHP = nav * 0.30;
+    hpIncome = nav - standardDeductionHP - letOutLoan;
+}
       
       // TOTAL INCOME (before any deductions)
       const totalIncome = grossSalary + otherSources + interestIncome + dividendIncome + grossRent;
