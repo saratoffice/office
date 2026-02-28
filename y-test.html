@@ -203,7 +203,7 @@
       padding: 20px;
       border-radius: 20px;
       box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-      width: 320px;
+      width: 340px;
       z-index: 999999;
       border: 2px solid #4f5fb5;
       font-size: 14px;
@@ -277,6 +277,30 @@
       font-size: 13px;
       margin-top: 12px;
       border-left: 4px solid #f1c40f;
+    }
+    
+    .tc-tooltip table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+    }
+    
+    .tc-tooltip td {
+      padding: 8px 5px;
+      border-bottom: 1px dashed #eef2f7;
+    }
+    
+    .tc-tooltip td:last-child {
+      text-align: right;
+      font-weight: 600;
+    }
+    
+    .tc-tooltip .tc-total-row {
+      background: #e8f0fe;
+      font-weight: 700;
+      padding: 8px;
+      border-radius: 8px;
+      margin-top: 8px;
     }
     
     /* Input Rows */
@@ -366,6 +390,26 @@
     .tc-info-row span:last-child {
       font-weight: 700;
       color: #2a3f8e;
+    }
+    
+    /* House Property Card - Simplified */
+    .tc-hp-simple {
+      background: linear-gradient(135deg, #f0f7ff, #e6f0fa);
+      border-radius: 20px;
+      padding: 15px;
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid #2a3f8e;
+    }
+    
+    .tc-hp-simple span:last-child {
+      font-weight: 700;
+      color: #2a3f8e;
+      background: white;
+      padding: 5px 15px;
+      border-radius: 30px;
     }
     
     /* Capital Gains Cards */
@@ -458,57 +502,6 @@
       text-align: right;
       font-size: 14px;
       font-weight: 500;
-    }
-    
-    /* House Property Income Card - NEW */
-    .tc-hp-card {
-      background: linear-gradient(135deg, #f0f7ff, #e6f0fa);
-      border-radius: 25px;
-      padding: 20px;
-      margin: 15px 0;
-      border-left: 5px solid #2a3f8e;
-    }
-    
-    .tc-hp-title {
-      font-weight: 700;
-      color: #1e2b4f;
-      margin-bottom: 15px;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .tc-hp-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px dashed #b0c4de;
-    }
-    
-    .tc-hp-row:last-child {
-      border-bottom: none;
-    }
-    
-    .tc-hp-label {
-      color: #2a3f8e;
-      font-weight: 500;
-    }
-    
-    .tc-hp-value {
-      font-weight: 700;
-      color: #1e2b4f;
-    }
-    
-    .tc-hp-highlight {
-      background: #d4edda;
-      padding: 12px 15px;
-      border-radius: 15px;
-      margin-top: 10px;
-      font-weight: 700;
-      display: flex;
-      justify-content: space-between;
-      border: 2px solid #27ae60;
     }
     
     /* Standard deduction row inside Home Loan card */
@@ -821,7 +814,7 @@
       </div>
     </section>
     
-    <!-- Income Section + House Property Income (Grid 2) -->
+    <!-- Income Section + House Property (Grid 2) -->
     <div class="tc-grid-2">
       <!-- Income Details Card -->
       <article class="tc-card">
@@ -851,31 +844,39 @@
           <label>Income from dividends</label>
           <input type="number" id="dividendIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
         </div>
+        <div class="tc-input-row">
+          <label>Rental income (let-out property)</label>
+          <input type="number" id="grossRent" value="50000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+        </div>
         <footer class="tc-total-row">
-          <span>Total Other Income</span>
-          <span id="totalOtherIncomeDisplay">₹12,28,769.00</span>
+          <span>Total Income (before deductions)</span>
+          <span id="totalIncomeDisplay">₹12,78,769.00</span>
         </footer>
       </article>
 
-      <!-- House Property Income Card (Revised) -->
+      <!-- House Property Deductions Card -->
       <article class="tc-card">
         <header class="tc-card-header">
-          <span>🏠</span> House Property Income
+          <span>🏠</span> House Property Deductions
           <span class="tc-info-icon" data-tooltip="bottom-left">
             i
             <span class="tc-tooltip">
-              <h4>House Property Income - New Regime</h4>
-              <p><strong>Let-Out Property:</strong> Full interest deduction + 30% standard deduction on NAV</p>
-              <p><strong>Self-Occupied:</strong> No interest deduction allowed</p>
-              <p><strong>NAV = Gross Rent - Municipal Taxes</strong></p>
+              <h4>House Property Calculation</h4>
+              <table style="width:100%;">
+                <tr><td>Gross Annual Value (GAV):</td><td id="tooltipGAV">₹50,000</td></tr>
+                <tr><td>Less: Municipal Taxes:</td><td id="tooltipMunicipal">₹3,000</td></tr>
+                <tr style="font-weight:700;"><td>Net Annual Value (NAV):</td><td id="tooltipNAV">₹47,000</td></tr>
+                <tr><td>Less: 30% Standard Deduction:</td><td id="tooltipStdDed">₹14,100</td></tr>
+                <tr><td>Less: Interest on Let-Out:</td><td id="tooltipInterest">₹1,00,000</td></tr>
+                <tr style="background:#e8f0fe; font-weight:700;"><td>Income from House Property:</td><td id="tooltipHPIncome">₹-67,100</td></tr>
+              </table>
+              <div class="tc-note" style="margin-top:10px;">
+                <strong>⚠️ Important:</strong> Any negative balance (loss) from house property cannot be set off against salary or other income under new regime.
+              </div>
             </span>
           </span>
         </header>
         
-        <div class="tc-input-row">
-          <label>Gross Rent Received</label>
-          <input type="number" id="grossRent" value="50000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-        </div>
         <div class="tc-input-row">
           <label>Municipal Taxes Paid</label>
           <input type="number" id="municipalTaxes" value="3000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
@@ -885,39 +886,18 @@
           <input type="number" id="letOutLoan" value="100000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
         </div>
         
-        <!-- House Property Calculation Display -->
-        <div class="tc-hp-card">
-          <div class="tc-hp-title">
-            <span>📊 House Property Calculation</span>
-          </div>
-          <div class="tc-hp-row">
-            <span class="tc-hp-label">Gross Annual Value (GAV):</span>
-            <span class="tc-hp-value" id="gavDisplay">₹50,000</span>
-          </div>
-          <div class="tc-hp-row">
-            <span class="tc-hp-label">Less: Municipal Taxes:</span>
-            <span class="tc-hp-value" id="municipalDisplay">₹3,000</span>
-          </div>
-          <div class="tc-hp-row" style="font-weight: 700; color: #2a3f8e;">
-            <span class="tc-hp-label">Net Annual Value (NAV):</span>
-            <span class="tc-hp-value" id="navDisplay">₹47,000</span>
-          </div>
-          <div class="tc-hp-row">
-            <span class="tc-hp-label">Less: 30% Standard Deduction:</span>
-            <span class="tc-hp-value" id="stdDedHPDisplay">₹14,100</span>
-          </div>
-          <div class="tc-hp-row">
-            <span class="tc-hp-label">Less: Interest on Let-Out:</span>
-            <span class="tc-hp-value" id="interestHPDisplay">₹1,00,000</span>
-          </div>
-          <div class="tc-hp-highlight">
-            <span>Income from House Property:</span>
-            <span id="hpIncomeDisplay">₹-67,100</span>
-          </div>
-        </div>
-        
-        <div class="tc-note-box">
-          ℹ️ <strong>Note:</strong> In New Regime, self-occupied property interest is NOT deductible. Loss from house property cannot be set off against other income.
+        <div class="tc-hp-simple">
+          <span style="display: flex; align-items: center; gap: 5px;">
+            <span>📊 House Property Income</span>
+            <span class="tc-info-icon" style="background: #2a3f8e; width: 18px; height: 18px; font-size: 12px;">
+              i
+              <span class="tc-tooltip" style="width: 280px;">
+                <strong>Loss cannot be set off</strong><br>
+                Any loss from house property remains a loss and cannot reduce your salary or other income.
+              </span>
+            </span>
+          </span>
+          <span id="hpIncomeSimple">₹-67,100</span>
         </div>
         
         <!-- STANDARD DEDUCTION row (Salaried / Pensioner) -->
@@ -952,12 +932,12 @@
               i
               <span class="tc-tooltip">
                 <strong>Net Taxable Income</strong><br>
-                Income after deducting house property loss and standard deduction.
-                <br><em>Note: House property loss CANNOT be set off against other income in new regime.</em>
+                Income after deducting house property deductions and standard deduction.
+                <br><br><strong>Note:</strong> If house property shows a loss, it does NOT reduce other income.
               </span>
             </span>
           </span>
-          <span id="taxableIncomeDisplay" style="color: #2a3f8e;">₹12,28,769.00</span>
+          <span id="taxableIncomeDisplay" style="color: #2a3f8e;">₹11,53,769.00</span>
         </footer>
       </article>
     </section>
@@ -1066,8 +1046,8 @@
         <h3 class="tc-heading-tertiary">💰 Final Tax Summary</h3>
         <div class="tc-summary-grid">
           <div class="tc-summary-item">
-            <div class="tc-summary-label">Other Income (Salary etc.)</div>
-            <div class="tc-summary-value" id="summaryOtherIncome">₹12,28,769</div>
+            <div class="tc-summary-label">Total Income (Gross)</div>
+            <div class="tc-summary-value" id="summaryTotalIncome">₹12,78,769</div>
           </div>
           <div class="tc-summary-item">
             <div class="tc-summary-label">House Property Income</div>
@@ -1117,6 +1097,7 @@
       const otherSources = parseFloat(document.getElementById('otherSources')?.value) || 0;
       const interestIncome = parseFloat(document.getElementById('interestIncome')?.value) || 0;
       const dividendIncome = parseFloat(document.getElementById('dividendIncome')?.value) || 0;
+      const grossRent = parseFloat(document.getElementById('grossRent')?.value) || 0;
       
       // Employment type
       const employmentRadios = document.getElementsByName('employment');
@@ -1129,7 +1110,6 @@
       }
       
       // House Property values
-      const grossRent = parseFloat(document.getElementById('grossRent')?.value) || 0;
       const municipalTaxes = parseFloat(document.getElementById('municipalTaxes')?.value) || 0;
       const letOutLoan = parseFloat(document.getElementById('letOutLoan')?.value) || 0;
       
@@ -1139,34 +1119,38 @@
       const digitalAssetsAmount = parseFloat(document.getElementById('digitalAssetsAmount')?.value) || 0;
       
       // Calculate House Property Income
-      // Net Annual Value (NAV) = Gross Rent - Municipal Taxes
       const nav = Math.max(0, grossRent - municipalTaxes);
-      
-      // 30% Standard Deduction on NAV
       const standardDeductionHP = nav * 0.30;
-      
-      // Income from House Property = NAV - 30% Std Deduction - Interest on Let-Out
-      // Note: If result is negative, it's a loss, but cannot be set off against other income
       let hpIncome = nav - standardDeductionHP - letOutLoan;
       
-      // Update House Property displays
-      document.getElementById('gavDisplay').textContent = `₹${formatMoney(grossRent)}`;
-      document.getElementById('municipalDisplay').textContent = `₹${formatMoney(municipalTaxes)}`;
-      document.getElementById('navDisplay').textContent = `₹${formatMoney(nav)}`;
-      document.getElementById('stdDedHPDisplay').textContent = `₹${formatMoney(standardDeductionHP)}`;
-      document.getElementById('interestHPDisplay').textContent = `₹${formatMoney(letOutLoan)}`;
-      document.getElementById('hpIncomeDisplay').textContent = `₹${formatMoney(hpIncome)}`;
-      
-      // TOTAL OTHER INCOME (excluding house property)
-      const totalOtherIncome = grossSalary + otherSources + interestIncome + dividendIncome;
-      
-      document.getElementById('totalOtherIncomeDisplay').textContent = `₹${formatMoney(totalOtherIncome)}`;
+      // TOTAL INCOME (before any deductions)
+      const totalIncome = grossSalary + otherSources + interestIncome + dividendIncome + grossRent;
       
       // Standard deduction: lesser of ₹75,000 or gross salary (only for salaried/pensioner)
       let stdDeduction = 0;
       if (isSalariedOrPensioner) {
         stdDeduction = Math.min(grossSalary, 75000);
       }
+      
+      // IMPORTANT: In New Regime, house property loss CANNOT be set off against other income
+      // So net taxable income = totalOtherIncome - stdDeduction (house property is separate)
+      // But for tax calculation, we need to include hpIncome only if it's positive
+      // Negative hpIncome (loss) does not reduce taxable income
+      const otherIncome = grossSalary + otherSources + interestIncome + dividendIncome;
+      const netTaxableIncome = Math.max(0, otherIncome - stdDeduction + (hpIncome > 0 ? hpIncome : 0));
+      
+      // Update displays
+      document.getElementById('totalIncomeDisplay').textContent = `₹${formatMoney(totalIncome)}`;
+      document.getElementById('hpIncomeSimple').textContent = `₹${formatMoney(hpIncome)}`;
+      document.getElementById('taxableIncomeDisplay').textContent = `₹${formatMoney(netTaxableIncome)}`;
+      
+      // Update tooltip values
+      document.getElementById('tooltipGAV').textContent = `₹${formatMoney(grossRent)}`;
+      document.getElementById('tooltipMunicipal').textContent = `₹${formatMoney(municipalTaxes)}`;
+      document.getElementById('tooltipNAV').textContent = `₹${formatMoney(nav)}`;
+      document.getElementById('tooltipStdDed').textContent = `₹${formatMoney(standardDeductionHP)}`;
+      document.getElementById('tooltipInterest').textContent = `₹${formatMoney(letOutLoan)}`;
+      document.getElementById('tooltipHPIncome').textContent = `₹${formatMoney(hpIncome)}`;
       
       // Update Standard Deduction row
       const stdDeductionSpan = document.getElementById('stdDeductionValue');
@@ -1182,16 +1166,6 @@
           stdDeductionStatus.style.color = '#b85c00';
         }
       }
-      
-      // IMPORTANT: In New Regime, house property loss CANNOT be set off against other income
-      // So net taxable income = totalOtherIncome - stdDeduction (house property is separate)
-      // But for tax calculation, house property income is still part of total income
-      
-      // For tax slabs, we need to include house property income in total income
-      // But if hpIncome is negative, it reduces total income
-      const netTaxableIncome = Math.max(0, totalOtherIncome + hpIncome - stdDeduction);
-      
-      document.getElementById('taxableIncomeDisplay').textContent = `₹${formatMoney(netTaxableIncome)}`;
       
       // Capital Gains calculations
       const ltcgExemption = Math.min(ltcgAmount, 125000);
@@ -1215,7 +1189,7 @@
       
       const totalCGTax = stcgTax + ltcgTax + digitalTax;
       
-      // Regular Income Tax (on netTaxableIncome which includes hpIncome)
+      // Regular Income Tax (on netTaxableIncome which excludes house property loss)
       const regularTaxResult = calculateNewRegimeTax(netTaxableIncome);
       
       // Update slabs
@@ -1308,7 +1282,7 @@
       const finalTax = Math.ceil(totalTaxBeforeCess + cessAmount);
       
       // Update Summary
-      document.getElementById('summaryOtherIncome').textContent = `₹${formatMoney(totalOtherIncome)}`;
+      document.getElementById('summaryTotalIncome').textContent = `₹${formatMoney(totalIncome)}`;
       document.getElementById('summaryHPIncome').textContent = `₹${formatMoney(hpIncome)}`;
       document.getElementById('summaryStdDeduction').textContent = `₹${formatMoney(stdDeduction)}`;
       document.getElementById('summaryNetTaxable').textContent = `₹${formatMoney(netTaxableIncome)}`;
