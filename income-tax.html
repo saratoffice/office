@@ -203,7 +203,7 @@
       padding: 20px;
       border-radius: 20px;
       box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-      width: 320px;
+      width: 340px;
       z-index: 999999;
       border: 2px solid #4f5fb5;
       font-size: 14px;
@@ -277,6 +277,30 @@
       font-size: 13px;
       margin-top: 12px;
       border-left: 4px solid #f1c40f;
+    }
+    
+    .tc-tooltip table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+    }
+    
+    .tc-tooltip td {
+      padding: 8px 5px;
+      border-bottom: 1px dashed #eef2f7;
+    }
+    
+    .tc-tooltip td:last-child {
+      text-align: right;
+      font-weight: 600;
+    }
+    
+    .tc-tooltip .tc-total-row {
+      background: #e8f0fe;
+      font-weight: 700;
+      padding: 8px;
+      border-radius: 8px;
+      margin-top: 8px;
     }
     
     /* Input Rows */
@@ -366,6 +390,26 @@
     .tc-info-row span:last-child {
       font-weight: 700;
       color: #2a3f8e;
+    }
+    
+    /* House Property Card - Simplified */
+    .tc-hp-simple {
+      background: linear-gradient(135deg, #f0f7ff, #e6f0fa);
+      border-radius: 20px;
+      padding: 15px;
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid #2a3f8e;
+    }
+    
+    .tc-hp-simple span:last-child {
+      font-weight: 700;
+      color: #2a3f8e;
+      background: white;
+      padding: 5px 15px;
+      border-radius: 30px;
     }
     
     /* Capital Gains Cards */
@@ -770,7 +814,7 @@
       </div>
     </section>
     
-    <!-- Income Section + Home Loan Interest (Grid 2) -->
+    <!-- Income Section + House Property (Grid 2) -->
     <div class="tc-grid-2">
       <!-- Income Details Card -->
       <article class="tc-card">
@@ -802,43 +846,61 @@
         </div>
         <div class="tc-input-row">
           <label>Rental income (let-out property)</label>
-          <input type="number" id="rentalIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          <input type="number" id="grossRent" value="50000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
         </div>
         <footer class="tc-total-row">
-          <span>Total Income</span>
-          <span id="totalIncomeDisplay">₹12,28,769.00</span>
+          <span>Total Income (before deductions)</span>
+          <span id="totalIncomeDisplay">₹12,78,769.00</span>
         </footer>
       </article>
 
-      <!-- Home Loan Interest card (Standard Deduction inside) -->
+      <!-- House Property Deductions Card -->
       <article class="tc-card">
         <header class="tc-card-header">
-          <span>🏠</span> Home Loan Interest
+          <span>🏠</span> House Property Deductions
           <span class="tc-info-icon" data-tooltip="bottom-left">
             i
             <span class="tc-tooltip">
-              <h4>Home Loan Interest in New Regime</h4>
-              <p>Only let-out property interest is deductible.</p>
+              <h4>House Property Calculation</h4>
+              <table style="width:100%;">
+                <tr><td>Gross Annual Value (GAV):</td><td id="tooltipGAV">₹50,000</td></tr>
+                <tr><td>Less: Municipal Taxes:</td><td id="tooltipMunicipal">₹3,000</td></tr>
+                <tr style="font-weight:700;"><td>Net Annual Value (NAV):</td><td id="tooltipNAV">₹47,000</td></tr>
+                <tr><td>Less: 30% Standard Deduction on NAV:</td><td id="tooltipStdDed">₹14,100</td></tr>
+                <tr><td>Less: Interest on Let-Out:</td><td id="tooltipInterest">₹1,00,000</td></tr>
+                <tr style="background:#e8f0fe; font-weight:700;"><td>Income from House Property:</td><td id="tooltipHPIncome">₹-67,100</td></tr>
+              </table>
+              <div class="tc-note" style="margin-top:10px;">
+                <strong>⚠️ Important:</strong> Any negative balance (loss) from house property cannot be set off against salary or other income under new regime.
+              </div>
             </span>
           </span>
         </header>
-        <div class="tc-note-box">
-          ℹ️ Self-occupied: ❌ Not deductible | Let-out: ✅ Deductible
+        
+        <div class="tc-input-row">
+          <label>Municipal Taxes Paid</label>
+          <input type="number" id="municipalTaxes" value="3000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
         </div>
         <div class="tc-input-row">
-          <label>Self-occupied interest (disabled)</label>
-          <input type="number" id="selfOccupiedLoan" value="0" step="0.01" disabled class="tc-input-field">
-        </div>
-        <div class="tc-input-row">
-          <label>Let-out interest</label>
-          <input type="number" id="letOutLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          <label>Interest on Let-Out Property</label>
+          <input type="number" id="letOutLoan" value="100000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
         </div>
         
-        <div class="tc-info-row">
-          <span>Total Interest Deducted</span>
-          <span id="totalInterestExempted">₹0.00</span>
+        <div class="tc-hp-simple">
+          <span style="display: flex; align-items: center; gap: 5px;">
+            <span>📊 House Property Income</span>
+            <span class="tc-info-icon" style="background: #2a3f8e; width: 18px; height: 18px; font-size: 12px;">
+              i
+              <span class="tc-tooltip" style="width: 280px;">
+                <strong>Loss cannot be set off</strong><br>
+                Any loss from house property remains a loss and cannot reduce your salary or other income.
+              </span>
+            </span>
+          </span>
+          <span id="hpIncomeSimple">₹-67,100</span>
         </div>
-        <!-- STANDARD DEDUCTION row (Salaried / Pensioner) with corrected logic: cannot exceed salary income -->
+        
+        <!-- STANDARD DEDUCTION row (Salaried / Pensioner) -->
         <div class="tc-deduction-row" id="stdDeductionRow">
           <span style="display: flex; align-items: center; gap: 5px;">
             <span>📌 Standard Deduction (Salaried/Pensioner)</span>
@@ -870,11 +932,12 @@
               i
               <span class="tc-tooltip">
                 <strong>Net Taxable Income</strong><br>
-                Income after deducting let-out interest and standard deduction.
+                Income after deducting house property deductions and standard deduction.
+                <br><br><strong>Note:</strong> If house property shows a loss, it does NOT reduce other income.
               </span>
             </span>
           </span>
-          <span id="taxableIncomeDisplay" style="color: #2a3f8e;">₹12,28,769.00</span>
+          <span id="taxableIncomeDisplay" style="color: #2a3f8e;">₹11,53,769.00</span>
         </footer>
       </article>
     </section>
@@ -912,7 +975,7 @@
         <article class="tc-cg-card">
           <header class="tc-cg-header">Long Term Capital Gain (12.5%)</header>
           <table class="tc-cg-table">
-            <tr><td>Long Term Capital Gain</td><td><input type="number" id="ltcgAmount" class="tc-cg-input" value="0" onchange="calculateTax()"></td></tr>
+            <tr><td>Long Term Capital Gain</td><td><input type="number" id="ltcgAmount" value="0" step="0.01" onchange="calculateTax()" class="tc-cg-input"></td></tr>
             <tr><td>Exemption (Max ₹1,25,000)</td><td id="ltcgExemption">₹0.00</td></tr>
             <tr><td>Taxable Amount</td><td id="taxableLTCG">₹0.00</td></tr>
             <tr class="tc-highlight"><td>Tax @ 12.5%</td><td id="ltcgTaxAmount">₹0.00</td></tr>
@@ -983,8 +1046,12 @@
         <h3 class="tc-heading-tertiary">💰 Final Tax Summary</h3>
         <div class="tc-summary-grid">
           <div class="tc-summary-item">
-            <div class="tc-summary-label">Total Income</div>
-            <div class="tc-summary-value" id="summaryTotalIncome">₹12,28,769</div>
+            <div class="tc-summary-label">Total Income (Gross)</div>
+            <div class="tc-summary-value" id="summaryTotalIncome">₹12,78,769</div>
+          </div>
+          <div class="tc-summary-item">
+            <div class="tc-summary-label">House Property Income</div>
+            <div class="tc-summary-value" id="summaryHPIncome">₹-67,100</div>
           </div>
           <div class="tc-summary-item">
             <div class="tc-summary-label">STCG Tax</div>
@@ -999,20 +1066,8 @@
             <div class="tc-summary-value" id="summaryLTCG">₹0</div>
           </div>
           <div class="tc-summary-item">
-            <div class="tc-summary-label">Let-out Interest</div>
-            <div class="tc-summary-value" id="summaryLetOutInterest">₹0</div>
-          </div>
-          <div class="tc-summary-item">
             <div class="tc-summary-label">Digital Tax</div>
             <div class="tc-summary-value" id="summaryDigital">₹0</div>
-          </div>
-          <div class="tc-summary-item">
-            <div class="tc-summary-label">Total Deductions</div>
-            <div class="tc-summary-value" id="summaryTotalDeductions">₹75,000</div>
-          </div>
-          <div class="tc-summary-item">
-            <div class="tc-summary-label">Total CG Tax</div>
-            <div class="tc-summary-value" id="summaryTotalCG">₹0</div>
           </div>
           <div class="tc-summary-item">
             <div class="tc-summary-label">Net Taxable</div>
@@ -1036,131 +1091,175 @@
   </section>
 
   <script>
-    function calculateTax() {
-  // Get all values
-  const grossSalary = parseFloat(document.getElementById('grossSalary')?.value) || 0;
-  const otherSources = parseFloat(document.getElementById('otherSources')?.value) || 0;
-  const interestIncome = parseFloat(document.getElementById('interestIncome')?.value) || 0;
-  const dividendIncome = parseFloat(document.getElementById('dividendIncome')?.value) || 0;
-  const rentalIncome = parseFloat(document.getElementById('rentalIncome')?.value) || 0;
-  
-  // Employment type
-  const employmentRadios = document.getElementsByName('employment');
-  let isSalariedOrPensioner = true;
-  for (let i = 0; i < employmentRadios.length; i++) {
-    if (employmentRadios[i].checked) {
-      isSalariedOrPensioner = (employmentRadios[i].value === 'salaried' || employmentRadios[i].value === 'pensioner');
-      break;
+  function calculateTax() {
+    // Get all values
+    const grossSalary = parseFloat(document.getElementById('grossSalary')?.value) || 0;
+    const otherSources = parseFloat(document.getElementById('otherSources')?.value) || 0;
+    const interestIncome = parseFloat(document.getElementById('interestIncome')?.value) || 0;
+    const dividendIncome = parseFloat(document.getElementById('dividendIncome')?.value) || 0;
+    const grossRent = parseFloat(document.getElementById('grossRent')?.value) || 0;
+    
+    // Employment type
+    const employmentRadios = document.getElementsByName('employment');
+    let isSalariedOrPensioner = true;
+    for (let i = 0; i < employmentRadios.length; i++) {
+      if (employmentRadios[i].checked) {
+        isSalariedOrPensioner = (employmentRadios[i].value === 'salaried' || employmentRadios[i].value === 'pensioner');
+        break;
+      }
     }
-  }
-  
-  const letOutLoan = parseFloat(document.getElementById('letOutLoan')?.value) || 0;
-  
-  const stcgAmount = parseFloat(document.getElementById('stcgAmount')?.value) || 0;
-  const ltcgAmount = parseFloat(document.getElementById('ltcgAmount')?.value) || 0;
-  const digitalAssetsAmount = parseFloat(document.getElementById('digitalAssetsAmount')?.value) || 0;
-  
-  // TOTAL INCOME - sum of all incomes (NO DEDUCTIONS)
-  let totalIncome = grossSalary + otherSources + interestIncome + dividendIncome + rentalIncome;
-  
-  // Home Loan Interest (only let-out is deductible)
-  const letOutDeduction = letOutLoan;
-  
-  // Income after interest deduction
-  let incomeAfterInterest = totalIncome - letOutDeduction;
-  
-  // Standard deduction: lesser of ₹75,000 or gross salary (only for salaried/pensioner)
-  let stdDeduction = 0;
-  if (isSalariedOrPensioner) {
-    stdDeduction = Math.min(grossSalary, 75000);
-  }
-  
-  // NET TAXABLE INCOME - after all deductions
-  const netTaxableIncome = Math.max(0, incomeAfterInterest - stdDeduction);
-  
-  // Total Deductions
-  const totalDeductions = letOutDeduction + stdDeduction;
-  
-  // Update displays
-  document.getElementById('totalIncomeDisplay').textContent = `₹${formatMoney(totalIncome)}`;
-  document.getElementById('totalInterestExempted').textContent = `₹${formatMoney(letOutDeduction)}`;
-  document.getElementById('taxableIncomeDisplay').textContent = `₹${formatMoney(netTaxableIncome)}`;
-  
-  // Update Standard Deduction row
-  const stdDeductionSpan = document.getElementById('stdDeductionValue');
-  if (stdDeductionSpan) stdDeductionSpan.textContent = `₹${formatMoney(stdDeduction)}`;
-  
-  const stdDeductionStatus = document.getElementById('stdDeductionStatus');
-  if (stdDeductionStatus) {
+    
+    // House Property values
+    const municipalTaxes = parseFloat(document.getElementById('municipalTaxes')?.value) || 0;
+    const letOutLoan = parseFloat(document.getElementById('letOutLoan')?.value) || 0;
+    
+    // Capital Gains
+    const stcgAmount = parseFloat(document.getElementById('stcgAmount')?.value) || 0;
+    const ltcgAmount = parseFloat(document.getElementById('ltcgAmount')?.value) || 0;
+    const digitalAssetsAmount = parseFloat(document.getElementById('digitalAssetsAmount')?.value) || 0;
+    
+    // Calculate House Property Income
+    // Calculate NAV - can be negative (allow municipal taxes to exceed rent)
+    const nav = grossRent - municipalTaxes;
+    // Standard deduction is 30% of NAV only if NAV is positive
+    const standardDeductionHP = nav > 0 ? nav * 0.30 : 0;
+    let hpIncome = nav - standardDeductionHP - letOutLoan;
+    
+    // TOTAL INCOME (before any deductions)
+    const totalIncome = grossSalary + otherSources + interestIncome + dividendIncome + grossRent;
+    
+    // Standard deduction: lesser of ₹75,000 or gross salary (only for salaried/pensioner)
+    let stdDeduction = 0;
     if (isSalariedOrPensioner) {
-      stdDeductionStatus.innerHTML = `✔️ Standard deduction applicable: ₹${formatMoney(stdDeduction)} (limited to salary)`;
-      stdDeductionStatus.style.color = '#1e7e34';
-    } else {
-      stdDeductionStatus.innerHTML = '⚠️ Standard deduction not applicable (business/profession)';
-      stdDeductionStatus.style.color = '#b85c00';
+      stdDeduction = Math.min(grossSalary, 75000);
     }
-  }
-  
-  // Capital Gains calculations...
-  const ltcgExemption = Math.min(ltcgAmount, 125000);
-  const taxableLTCG = Math.max(0, ltcgAmount - ltcgExemption);
-  const ltcgTax = taxableLTCG * 0.125;
-  
-  const taxableSTCG = stcgAmount;
-  const stcgTax = stcgAmount * 0.20;
-  
-  const digitalTax = digitalAssetsAmount * 0.30;
-  
-  document.getElementById('stcgExemption').textContent = `₹${formatMoney(0)}`;
-  document.getElementById('taxableSTCG').textContent = `₹${formatMoney(taxableSTCG)}`;
-  document.getElementById('stcgTaxAmount').textContent = `₹${formatMoney(stcgTax)}`;
-  document.getElementById('ltcgExemption').textContent = `₹${formatMoney(ltcgExemption)}`;
-  document.getElementById('taxableLTCG').textContent = `₹${formatMoney(taxableLTCG)}`;
-  document.getElementById('ltcgTaxAmount').textContent = `₹${formatMoney(ltcgTax)}`;
-  document.getElementById('digitalExemption').textContent = `₹${formatMoney(0)}`;
-  document.getElementById('taxableDigital').textContent = `₹${formatMoney(digitalAssetsAmount)}`;
-  document.getElementById('digitalTaxAmount').textContent = `₹${formatMoney(digitalTax)}`;
-  
-  const totalCGTax = stcgTax + ltcgTax + digitalTax;
-  
-  // Regular Income Tax
-  const regularTaxResult = calculateNewRegimeTax(netTaxableIncome);
-  
-  // Update slabs
-  updateSlabTable(regularTaxResult.breakdown);
-  
-  document.getElementById('rebate').textContent = `₹${formatMoney(regularTaxResult.rebate)}`;
-  
-  // Marginal Relief Check - Enhanced
-  let finalRegularTax = regularTaxResult.tax;
-  let marginalReliefHTML = "";
-  
-  const income = netTaxableIncome;
-  const taxBeforeRebate = regularTaxResult.tax + regularTaxResult.rebate;
-  const maxTaxUnderRelief = Math.max(0, income - 1200000);
-  
-  if (income > 1200000 && income <= 1275000) {
-    if (taxBeforeRebate > maxTaxUnderRelief) {
-      finalRegularTax = maxTaxUnderRelief;
-      const savings = taxBeforeRebate - maxTaxUnderRelief;
-      marginalReliefHTML = `
-        <div>
-          <span class="tc-relief-status tc-status-applicable">✓ MARGINAL RELIEF APPLICABLE</span>
-          <div class="tc-relief-detail">
-            <div class="tc-relief-detail-item">
-              <div class="tc-relief-detail-label">Normal Tax</div>
-              <div class="tc-relief-detail-value">₹${formatMoney(taxBeforeRebate)}</div>
+    
+    // IMPORTANT: In New Regime, house property loss CANNOT be set off against other income
+    // So net taxable income = totalOtherIncome - stdDeduction (house property is separate)
+    // But for tax calculation, we need to include hpIncome only if it's positive
+    // Negative hpIncome (loss) does not reduce taxable income
+    const otherIncome = grossSalary + otherSources + interestIncome + dividendIncome;
+    const netTaxableIncome = Math.max(0, otherIncome - stdDeduction + (hpIncome > 0 ? hpIncome : 0));
+    
+    // Update displays
+    document.getElementById('totalIncomeDisplay').textContent = `₹${formatMoney(totalIncome)}`;
+    document.getElementById('hpIncomeSimple').textContent = `₹${formatMoney(hpIncome)}`;
+    document.getElementById('taxableIncomeDisplay').textContent = `₹${formatMoney(netTaxableIncome)}`;
+    
+    // Update tooltip values
+    document.getElementById('tooltipGAV').textContent = `₹${formatMoney(grossRent)}`;
+    document.getElementById('tooltipMunicipal').textContent = `₹${formatMoney(municipalTaxes)}`;
+    document.getElementById('tooltipNAV').textContent = `₹${formatMoney(nav)}`;
+    document.getElementById('tooltipStdDed').textContent = `₹${formatMoney(standardDeductionHP)}`;
+    document.getElementById('tooltipInterest').textContent = `₹${formatMoney(letOutLoan)}`;
+    document.getElementById('tooltipHPIncome').textContent = `₹${formatMoney(hpIncome)}`;
+    
+    // Update Standard Deduction row
+    const stdDeductionSpan = document.getElementById('stdDeductionValue');
+    if (stdDeductionSpan) stdDeductionSpan.textContent = `₹${formatMoney(stdDeduction)}`;
+    
+    const stdDeductionStatus = document.getElementById('stdDeductionStatus');
+    if (stdDeductionStatus) {
+      if (isSalariedOrPensioner) {
+        stdDeductionStatus.innerHTML = `✔️ Standard deduction applicable: ₹${formatMoney(stdDeduction)} (limited to salary)`;
+        stdDeductionStatus.style.color = '#1e7e34';
+      } else {
+        stdDeductionStatus.innerHTML = '⚠️ Standard deduction not applicable (business/profession)';
+        stdDeductionStatus.style.color = '#b85c00';
+      }
+    }
+    
+    // Capital Gains calculations
+    const ltcgExemption = Math.min(ltcgAmount, 125000);
+    const taxableLTCG = Math.max(0, ltcgAmount - ltcgExemption);
+    const ltcgTax = taxableLTCG * 0.125;
+    
+    const taxableSTCG = stcgAmount;
+    const stcgTax = stcgAmount * 0.20;
+    
+    const digitalTax = digitalAssetsAmount * 0.30;
+    
+    document.getElementById('stcgExemption').textContent = `₹${formatMoney(0)}`;
+    document.getElementById('taxableSTCG').textContent = `₹${formatMoney(taxableSTCG)}`;
+    document.getElementById('stcgTaxAmount').textContent = `₹${formatMoney(stcgTax)}`;
+    document.getElementById('ltcgExemption').textContent = `₹${formatMoney(ltcgExemption)}`;
+    document.getElementById('taxableLTCG').textContent = `₹${formatMoney(taxableLTCG)}`;
+    document.getElementById('ltcgTaxAmount').textContent = `₹${formatMoney(ltcgTax)}`;
+    document.getElementById('digitalExemption').textContent = `₹${formatMoney(0)}`;
+    document.getElementById('taxableDigital').textContent = `₹${formatMoney(digitalAssetsAmount)}`;
+    document.getElementById('digitalTaxAmount').textContent = `₹${formatMoney(digitalTax)}`;
+    
+    const totalCGTax = stcgTax + ltcgTax + digitalTax;
+    
+    // Regular Income Tax (on netTaxableIncome which excludes house property loss)
+    const regularTaxResult = calculateNewRegimeTax(netTaxableIncome);
+    
+    // Update slabs
+    updateSlabTable(regularTaxResult.breakdown);
+    
+    document.getElementById('rebate').textContent = `₹${formatMoney(regularTaxResult.rebate)}`;
+    
+    // Marginal Relief Check
+    let finalRegularTax = regularTaxResult.tax;
+    let marginalReliefHTML = "";
+    
+    const income = netTaxableIncome;
+    const taxBeforeRebate = regularTaxResult.tax + regularTaxResult.rebate;
+    const maxTaxUnderRelief = Math.max(0, income - 1200000);
+    
+    if (income > 1200000 && income <= 1275000) {
+      if (taxBeforeRebate > maxTaxUnderRelief) {
+        finalRegularTax = maxTaxUnderRelief;
+        const savings = taxBeforeRebate - maxTaxUnderRelief;
+        marginalReliefHTML = `
+          <div>
+            <span class="tc-relief-status tc-status-applicable">✓ MARGINAL RELIEF APPLICABLE</span>
+            <div class="tc-relief-detail">
+              <div class="tc-relief-detail-item">
+                <div class="tc-relief-detail-label">Normal Tax</div>
+                <div class="tc-relief-detail-value">₹${formatMoney(taxBeforeRebate)}</div>
+              </div>
+              <div class="tc-relief-detail-item">
+                <div class="tc-relief-detail-label">Tax with Relief</div>
+                <div class="tc-relief-detail-value">₹${formatMoney(maxTaxUnderRelief)}</div>
+              </div>
+              <div class="tc-relief-difference">
+                💰 YOU SAVE: ₹${formatMoney(savings)}
+              </div>
             </div>
-            <div class="tc-relief-detail-item">
-              <div class="tc-relief-detail-label">Tax with Relief</div>
-              <div class="tc-relief-detail-value">₹${formatMoney(maxTaxUnderRelief)}</div>
-            </div>
-            <div class="tc-relief-difference">
-              💰 YOU SAVE: ₹${formatMoney(savings)}
+            <div style="margin-top: 10px; font-size: 14px; color: #2a3f8e;">
+              Tax limited to (Income - ₹12,00,000) = ₹${formatMoney(maxTaxUnderRelief)}
             </div>
           </div>
-          <div style="margin-top: 10px; font-size: 14px; color: #2a3f8e;">
-            Tax limited to (Income - ₹12,00,000) = ₹${formatMoney(maxTaxUnderRelief)}
+        `;
+      } else {
+        finalRegularTax = taxBeforeRebate;
+        marginalReliefHTML = `
+          <div>
+            <span class="tc-relief-status tc-status-not-applicable">✗ MARGINAL RELIEF NOT APPLICABLE</span>
+            <div class="tc-relief-detail">
+              <div class="tc-relief-detail-item">
+                <div class="tc-relief-detail-label">Normal Tax</div>
+                <div class="tc-relief-detail-value">₹${formatMoney(taxBeforeRebate)}</div>
+              </div>
+              <div class="tc-relief-detail-item">
+                <div class="tc-relief-detail-label">Maximum Relief Tax</div>
+                <div class="tc-relief-detail-value">₹${formatMoney(maxTaxUnderRelief)}</div>
+              </div>
+            </div>
+            <div style="margin-top: 10px; font-size: 14px; color: #e74c3c;">
+              Normal tax is already less than or equal to (Income - ₹12,00,000)
+            </div>
+          </div>
+        `;
+      }
+    } else if (income <= 1200000) {
+      marginalReliefHTML = `
+        <div>
+          <span class="tc-relief-status tc-status-not-applicable">✗ MARGINAL RELIEF NOT APPLICABLE</span>
+          <div style="margin-top: 10px; font-size: 14px;">
+            Income is ₹${formatMoney(income)} which is below ₹12,00,000 threshold.<br>
+            Full rebate u/s 87A applicable: ₹${formatMoney(regularTaxResult.rebate)}
           </div>
         </div>
       `;
@@ -1169,132 +1268,99 @@
       marginalReliefHTML = `
         <div>
           <span class="tc-relief-status tc-status-not-applicable">✗ MARGINAL RELIEF NOT APPLICABLE</span>
-          <div class="tc-relief-detail">
-            <div class="tc-relief-detail-item">
-              <div class="tc-relief-detail-label">Normal Tax</div>
-              <div class="tc-relief-detail-value">₹${formatMoney(taxBeforeRebate)}</div>
-            </div>
-            <div class="tc-relief-detail-item">
-              <div class="tc-relief-detail-label">Maximum Relief Tax</div>
-              <div class="tc-relief-detail-value">₹${formatMoney(maxTaxUnderRelief)}</div>
-            </div>
-          </div>
-          <div style="margin-top: 10px; font-size: 14px; color: #e74c3c;">
-            Normal tax is already less than or equal to (Income - ₹12,00,000)
+          <div style="margin-top: 10px; font-size: 14px;">
+            Income is ₹${formatMoney(income)} which is above ₹12,75,000 threshold.<br>
+            Regular tax calculation applies.
           </div>
         </div>
       `;
     }
-  } else if (income <= 1200000) {
-    marginalReliefHTML = `
-      <div>
-        <span class="tc-relief-status tc-status-not-applicable">✗ MARGINAL RELIEF NOT APPLICABLE</span>
-        <div style="margin-top: 10px; font-size: 14px;">
-          Income is ₹${formatMoney(income)} which is below ₹12,00,000 threshold.<br>
-          Full rebate u/s 87A applicable: ₹${formatMoney(regularTaxResult.rebate)}
-        </div>
-      </div>
-    `;
-  } else {
-    finalRegularTax = taxBeforeRebate;
-    marginalReliefHTML = `
-      <div>
-        <span class="tc-relief-status tc-status-not-applicable">✗ MARGINAL RELIEF NOT APPLICABLE</span>
-        <div style="margin-top: 10px; font-size: 14px;">
-          Income is ₹${formatMoney(income)} which is above ₹12,75,000 threshold.<br>
-          Regular tax calculation applies.
-        </div>
-      </div>
-    `;
+    
+    document.getElementById('marginalReliefAmount').innerHTML = marginalReliefHTML;
+    
+    // Total Tax
+    const totalTaxBeforeCess = finalRegularTax + totalCGTax;
+    const cessAmount = totalTaxBeforeCess * 0.04;
+    const finalTax = Math.ceil(totalTaxBeforeCess + cessAmount);
+    
+    // Update Summary
+    document.getElementById('summaryTotalIncome').textContent = `₹${formatMoney(totalIncome)}`;
+    document.getElementById('summaryHPIncome').textContent = `₹${formatMoney(hpIncome)}`;
+    document.getElementById('summaryStdDeduction').textContent = `₹${formatMoney(stdDeduction)}`;
+    document.getElementById('summaryNetTaxable').textContent = `₹${formatMoney(netTaxableIncome)}`;
+    document.getElementById('summaryRegularTax').textContent = `₹${formatMoney(finalRegularTax)}`;
+    document.getElementById('summarySTCG').textContent = `₹${formatMoney(stcgTax)}`;
+    document.getElementById('summaryLTCG').textContent = `₹${formatMoney(ltcgTax)}`;
+    document.getElementById('summaryDigital').textContent = `₹${formatMoney(digitalTax)}`;
+    document.getElementById('summaryCess').textContent = `₹${formatMoney(cessAmount)}`;
+    document.getElementById('summaryFinalTax').innerHTML = `₹${formatMoney(finalTax)}`;
   }
-  
-  document.getElementById('marginalReliefAmount').innerHTML = marginalReliefHTML;
-  
-  // Total Tax
-  const totalTaxBeforeCess = finalRegularTax + totalCGTax;
-  const cessAmount = totalTaxBeforeCess * 0.04;
-  const finalTax = Math.ceil(totalTaxBeforeCess + cessAmount);
-  
-  // Update Summary
-  document.getElementById('summaryTotalIncome').textContent = `₹${formatMoney(totalIncome)}`;
-  document.getElementById('summaryLetOutInterest').textContent = `₹${formatMoney(letOutDeduction)}`;
-  document.getElementById('summaryTotalDeductions').textContent = `₹${formatMoney(totalDeductions)}`;
-  document.getElementById('summaryStdDeduction').textContent = `₹${formatMoney(stdDeduction)}`;
-  document.getElementById('summaryNetTaxable').textContent = `₹${formatMoney(netTaxableIncome)}`;
-  document.getElementById('summaryRegularTax').textContent = `₹${formatMoney(finalRegularTax)}`;
-  document.getElementById('summarySTCG').textContent = `₹${formatMoney(stcgTax)}`;
-  document.getElementById('summaryLTCG').textContent = `₹${formatMoney(ltcgTax)}`;
-  document.getElementById('summaryDigital').textContent = `₹${formatMoney(digitalTax)}`;
-  document.getElementById('summaryTotalCG').textContent = `₹${formatMoney(totalCGTax)}`;
-  document.getElementById('summaryCess').textContent = `₹${formatMoney(cessAmount)}`;
-  document.getElementById('summaryFinalTax').innerHTML = `₹${formatMoney(finalTax)}`;
-}
 
-function calculateNewRegimeTax(income) {
-  let tax = 0;
-  let breakdown = { slab1:0, slab2:0, slab3:0, slab4:0, slab5:0, slab6:0, slab7:0, rebate:0 };
-  
-  if (income > 2400000) {
-    breakdown.slab7 = (income - 2400000) * 0.30;
-    breakdown.slab6 = 400000 * 0.25;
-    breakdown.slab5 = 400000 * 0.20;
-    breakdown.slab4 = 400000 * 0.15;
-    breakdown.slab3 = 400000 * 0.10;
-    breakdown.slab2 = 400000 * 0.05;
-  } else if (income > 2000000) {
-    breakdown.slab6 = (income - 2000000) * 0.25;
-    breakdown.slab5 = 400000 * 0.20;
-    breakdown.slab4 = 400000 * 0.15;
-    breakdown.slab3 = 400000 * 0.10;
-    breakdown.slab2 = 400000 * 0.05;
-  } else if (income > 1600000) {
-    breakdown.slab5 = (income - 1600000) * 0.20;
-    breakdown.slab4 = 400000 * 0.15;
-    breakdown.slab3 = 400000 * 0.10;
-    breakdown.slab2 = 400000 * 0.05;
-  } else if (income > 1200000) {
-    breakdown.slab4 = (income - 1200000) * 0.15;
-    breakdown.slab3 = 400000 * 0.10;
-    breakdown.slab2 = 400000 * 0.05;
-  } else if (income > 800000) {
-    breakdown.slab3 = (income - 800000) * 0.10;
-    breakdown.slab2 = 400000 * 0.05;
-  } else if (income > 400000) {
-    breakdown.slab2 = (income - 400000) * 0.05;
+  function calculateNewRegimeTax(income) {
+    let tax = 0;
+    let breakdown = { slab1:0, slab2:0, slab3:0, slab4:0, slab5:0, slab6:0, slab7:0, rebate:0 };
+    
+    if (income > 2400000) {
+      breakdown.slab7 = (income - 2400000) * 0.30;
+      breakdown.slab6 = 400000 * 0.25;
+      breakdown.slab5 = 400000 * 0.20;
+      breakdown.slab4 = 400000 * 0.15;
+      breakdown.slab3 = 400000 * 0.10;
+      breakdown.slab2 = 400000 * 0.05;
+    } else if (income > 2000000) {
+      breakdown.slab6 = (income - 2000000) * 0.25;
+      breakdown.slab5 = 400000 * 0.20;
+      breakdown.slab4 = 400000 * 0.15;
+      breakdown.slab3 = 400000 * 0.10;
+      breakdown.slab2 = 400000 * 0.05;
+    } else if (income > 1600000) {
+      breakdown.slab5 = (income - 1600000) * 0.20;
+      breakdown.slab4 = 400000 * 0.15;
+      breakdown.slab3 = 400000 * 0.10;
+      breakdown.slab2 = 400000 * 0.05;
+    } else if (income > 1200000) {
+      breakdown.slab4 = (income - 1200000) * 0.15;
+      breakdown.slab3 = 400000 * 0.10;
+      breakdown.slab2 = 400000 * 0.05;
+    } else if (income > 800000) {
+      breakdown.slab3 = (income - 800000) * 0.10;
+      breakdown.slab2 = 400000 * 0.05;
+    } else if (income > 400000) {
+      breakdown.slab2 = (income - 400000) * 0.05;
+    }
+    
+    tax = Object.values(breakdown).reduce((a, b) => a + b, 0);
+    
+    if (income <= 1200000 && tax > 0) {
+      breakdown.rebate = Math.min(tax, 60000);
+      tax -= breakdown.rebate;
+    }
+    
+    return { tax, rebate: breakdown.rebate, breakdown };
   }
-  
-  tax = Object.values(breakdown).reduce((a, b) => a + b, 0);
-  
-  if (income <= 1200000 && tax > 0) {
-    breakdown.rebate = Math.min(tax, 60000);
-    tax -= breakdown.rebate;
+
+  function updateSlabTable(breakdown) {
+    document.getElementById('slab1').textContent = `₹${formatMoney(breakdown.slab1 || 0)}`;
+    document.getElementById('slab2').textContent = `₹${formatMoney(breakdown.slab2 || 0)}`;
+    document.getElementById('slab3').textContent = `₹${formatMoney(breakdown.slab3 || 0)}`;
+    document.getElementById('slab4').textContent = `₹${formatMoney(breakdown.slab4 || 0)}`;
+    document.getElementById('slab5').textContent = `₹${formatMoney(breakdown.slab5 || 0)}`;
+    document.getElementById('slab6').textContent = `₹${formatMoney(breakdown.slab6 || 0)}`;
+    document.getElementById('slab7').textContent = `₹${formatMoney(breakdown.slab7 || 0)}`;
   }
-  
-  return { tax, rebate: breakdown.rebate, breakdown };
-}
 
-function updateSlabTable(breakdown) {
-  document.getElementById('slab1').textContent = `₹${formatMoney(breakdown.slab1 || 0)}`;
-  document.getElementById('slab2').textContent = `₹${formatMoney(breakdown.slab2 || 0)}`;
-  document.getElementById('slab3').textContent = `₹${formatMoney(breakdown.slab3 || 0)}`;
-  document.getElementById('slab4').textContent = `₹${formatMoney(breakdown.slab4 || 0)}`;
-  document.getElementById('slab5').textContent = `₹${formatMoney(breakdown.slab5 || 0)}`;
-  document.getElementById('slab6').textContent = `₹${formatMoney(breakdown.slab6 || 0)}`;
-  document.getElementById('slab7').textContent = `₹${formatMoney(breakdown.slab7 || 0)}`;
-}
+  function formatMoney(amount) {
+    if (isNaN(amount) || amount === null) amount = 0;
+    return Math.round(amount).toLocaleString('en-IN', {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2
+    });
+  }
 
-function formatMoney(amount) {
-  if (isNaN(amount) || amount === null) amount = 0;
-  return Math.round(amount).toLocaleString('en-IN', {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 2
-  });
-}
-
-window.onload = function() {
-  calculateTax();
-};
-  </script>
+  window.onload = function() {
+    calculateTax();
+  };
+</script>
   <div id="site-footer"></div>
 <script src="/assets/Scripts/gototop.js"></script>
 </body>
