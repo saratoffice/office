@@ -7,7 +7,12 @@
 
   <!-- Papaparse for CSV parsing -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-<!-- Common CSS (menu, footer, global styles) -->
+  <!-- DataTables & jQuery for All Files tab -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  
+  <!-- Common CSS (menu, footer, global styles) -->
   <link rel="stylesheet" href="style.css">
   <!-- ✅ IMPORTANT: site components for header/footer etc. -->
   <script src="assets/Scripts/site-components.js" defer></script>
@@ -420,34 +425,111 @@
         width: 100%;
       }
     }
-    /* Additional styling for All Files tab table */
-    .all-files-table-wrapper {
-      width: 80%;
+    /* All Files tab specific styles - from guard-file.html */
+    #pdfTable thead th {
+      background-color: #101535;
+      color: #ffffff;
+      font-weight: bold;
+      border-bottom: 2px solid #b20bb3;
+    }
+
+    #pdfTable tbody tr:hover td {
+      background-color: #e6f9db;
+    }
+
+    #pdfTable {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 14px;
+      border-collapse: collapse;
+      width: 100% !important;
+    }
+
+    #pdfTable th, #pdfTable td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    #pdfTable td:last-child {
+      text-align: center;
+    }
+
+    .all-files-wrapper {
+      width: 90%;
       margin: 0 auto;
       background: white;
+      padding: 20px;
       border-radius: 8px;
       box-shadow: 0 0 0 4px #e8f0fe, 0 8px 20px rgba(0, 80, 150, 0.2);
-      overflow-x: auto;
     }
-    .all-files-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    .all-files-table th {
-      background: linear-gradient(135deg, #0a1e3c, #13294b);
-      color: white;
-      padding: 16px 12px;
+
+    .download-btn {
+      padding: 6px 14px;
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      transition: background 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
     }
-    .all-files-table td {
-      padding: 14px 12px;
-      border-bottom: 1px solid #d4e3f0;
+
+    .download-btn:hover {
+      background-color: #e615ed;
+      transform: translateY(-2px);
+      box-shadow: 0 3px 10px rgba(230, 21, 237, 0.4);
     }
-    .all-files-table tbody tr:hover {
-      background-color: #f0f9ff;
+
+    /* Responsive tweaks for All Files table */
+    @media only screen and (max-width: 768px) {
+      #pdfTable, #pdfTable thead, #pdfTable tbody, #pdfTable th, #pdfTable td, #pdfTable tr {
+        display: block;
+        width: 100%;
+      }
+
+      #pdfTable thead {
+        display: none;
+      }
+
+      #pdfTable tr {
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 10px;
+        background: #fff;
+      }
+
+      #pdfTable td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 10px;
+        font-size: 13px;
+        border: none;
+      }
+
+      #pdfTable td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #555;
+        flex: 1;
+        margin-right: 10px;
+      }
+
+      #pdfTable td:last-child {
+        justify-content: center;
+      }
+    }
+
+    /* DataTables custom styling */
+    .dataTables_wrapper {
+      padding: 20px 0;
+    }
+    
+    .dataTables_length, .dataTables_filter {
+      margin-bottom: 15px;
+    }
+    
+    .dataTables_info, .dataTables_paginate {
+      margin-top: 15px;
     }
   </style>
 </head>
@@ -538,9 +620,10 @@
     // ------- CONFIGURATION --------
     const CSV_URL = "https://docs.google.com/spreadsheets/d/1mLh8E5JEHP-HCrBgs42pVpiY4ZpP7LG-O__3Av2-MgY/export?format=csv&gid=884226509";
     const GOVT_CALENDARS_URL = "https://raw.githubusercontent.com/saratoffice/office/main/calendars.html";
-    const ALL_FILES_URL = "https://raw.githubusercontent.com/saratoffice/office/refs/heads/main/guard-file.html";
+    const ALL_FILES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTBx2QFmcm79K2dkyShsmZEV490KKtEMIYIrzG7HrxAw1Z5AxPFHzvoFhKNdOigjRnb7VAbrSpUPtII/pub?output=csv";
     
     let parsedRows = [];
+    let allFilesDataTable = null;
 
     // ---------- LOAD CSV DATA ----------
     function loadAllCSVTables() {
@@ -690,51 +773,99 @@
         });
     }
 
-    // ---------- LOAD ALL FILES (GUARD FILE TABLE) ----------
+    // ---------- LOAD ALL FILES (GUARD FILE TABLE) - USING CSV DIRECTLY ----------
     function loadAllFilesTab() {
       const container = document.getElementById('tab-AllFiles');
       if (!container) return;
       const placeholder = container.querySelector('.csv-table-placeholder');
       if (!placeholder) return;
 
-      placeholder.innerHTML = '<div style="text-align: center; padding: 40px;">⏳ Loading All Files from guard-file.html...</div>';
+      placeholder.innerHTML = '<div style="text-align: center; padding: 40px;">⏳ Loading All Files...</div>';
 
-      fetch(ALL_FILES_URL)
-        .then(response => {
-          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-          return response.text();
-        })
-        .then(html => {
-          // Parse the HTML to extract the table from guard-file.html
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
+      // Destroy existing DataTable if it exists
+      if (allFilesDataTable) {
+        allFilesDataTable.destroy();
+        allFilesDataTable = null;
+      }
+
+      // Parse CSV directly from the Google Sheets export URL
+      Papa.parse(ALL_FILES_CSV_URL, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          console.log("CSV loaded, rows:", results.data.length);
           
-          // Try to find the main table (assuming it's the first significant table)
-          const table = doc.querySelector('table');
+          // Create wrapper div
+          const wrapper = document.createElement('div');
+          wrapper.className = 'all-files-wrapper';
           
-          if (table) {
-            // Clone the table to avoid modifying the original
-            const clonedTable = table.cloneNode(true);
-            // Add a wrapper with custom class for styling consistency
-            placeholder.innerHTML = `<div class="all-files-table-wrapper">${clonedTable.outerHTML}</div>`;
-          } else {
-            // Fallback: look for any table
-            const anyTable = doc.querySelector('table');
-            if (anyTable) {
-              placeholder.innerHTML = `<div class="all-files-table-wrapper">${anyTable.outerHTML}</div>`;
-            } else {
-              placeholder.innerHTML = `
-                <div style="text-align: center; padding: 50px; background: white; border-radius: 12px;">
-                  <h2 style="color: #0083ed;">ALL FILES</h2>
-                  <p style="color: #666;">No table found in guard-file.html. Displaying raw content:</p>
-                  <pre style="text-align: left; background: #f4f4f4; padding: 20px; overflow-x: auto;">${html.replace(/</g, '&lt;')}</pre>
-                </div>
-              `;
-            }
-          }
-        })
-        .catch(error => {
-          console.error('Error loading All Files:', error);
+          // Create table HTML
+          let tableHtml = `
+            <table id="pdfTable" class="display" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th>S.N.</th>
+                  <th>Letter No.</th>
+                  <th>Date</th>
+                  <th>Subject</th>
+                  <th>Download</th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
+          
+          results.data.forEach(row => {
+            // Skip empty rows
+            if (!row["S.N."] || !row["Subject"]) return;
+            
+            // Generate download link
+            const match = row["Link"]?.match(/id=([a-zA-Z0-9_-]+)/);
+            const fileId = match ? match[1] : null;
+            const downloadLink = fileId
+              ? `https://saratoffice.in/download.php?id=${row["S.N."]}`
+              : "#";
+            
+            // Add data-label attributes for responsive design
+            tableHtml += `
+              <tr>
+                <td data-label="S.N.">${row["S.N."] || ''}</td>
+                <td data-label="Letter No.">${row["Letter No."] || '-'}</td>
+                <td data-label="Date">${row["Date"] || '-'}</td>
+                <td data-label="Subject">${row["Subject"] || ''}</td>
+                <td data-label="Download">
+                  <a href="${downloadLink}" target="_blank" rel="noopener noreferrer">
+                    <button class="download-btn">Download</button>
+                  </a>
+                </td>
+              </tr>
+            `;
+          });
+          
+          tableHtml += `
+              </tbody>
+            </table>
+          `;
+          
+          wrapper.innerHTML = tableHtml;
+          
+          // Clear placeholder and add wrapper
+          placeholder.innerHTML = '';
+          placeholder.appendChild(wrapper);
+          
+          // Initialize DataTable
+          allFilesDataTable = $('#pdfTable').DataTable({
+            responsive: true,
+            paging: true,
+            searching: true,
+            info: true,
+            ordering: true,
+            pageLength: 25,
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
+          });
+        },
+        error: function(error) {
+          console.error('Error parsing CSV:', error);
           placeholder.innerHTML = `
             <div style="text-align: center; padding: 50px; background: white; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
               <h2 style="color: #0083ed; font-size: 28pt; margin-bottom: 20px;">ALL FILES</h2>
@@ -742,7 +873,8 @@
               <p style="color: #999; margin-top: 20px;">Error: ${error.message}</p>
             </div>
           `;
-        });
+        }
+      });
     }
 
     // ---------- TAB CLICK HANDLER ----------
@@ -780,7 +912,9 @@
         // Load data if needed
         if (category === 'AllFiles') {
           loadAllFilesTab();
-        } else if (category !== 'Govt Calendars' && parsedRows.length > 0) {
+        } else if (category === 'Govt Calendars') {
+          loadGovtCalendars();
+        } else if (parsedRows.length > 0) {
           const target = containers[category];
           if (target) {
             const placeholder = target.querySelector('.csv-table-placeholder');
@@ -788,11 +922,6 @@
               placeholder.innerHTML = buildTableHTML(category);
             }
           }
-        }
-        
-        // Special handling for Govt. Calendars
-        if (category === 'Govt Calendars') {
-          loadGovtCalendars();
         }
       }
 
@@ -812,9 +941,6 @@
     document.addEventListener('DOMContentLoaded', function() {
       initTabs();
       loadAllCSVTables(); // Load CSV data for other tabs
-      
-      // AllFiles tab is active, so load its content
-      loadAllFilesTab();
     });
 
   })();
