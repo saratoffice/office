@@ -3,422 +3,639 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Map - Complete Page Index</title>
+    <title>Site Map · Visual Index</title>
     <style>
+        /* Modern Reset & Variables */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            background: #f5f5f5;
-            color: #333;
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-light: #475569;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            --radius-sm: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
         }
 
-        .container {
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Modern gradient header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path d="M0 0 L100 100 M100 0 L0 100" stroke="white" stroke-width="2"/><circle cx="50" cy="50" r="20" fill="none" stroke="white" stroke-width="2"/></svg>');
+            background-size: 60px 60px;
+            animation: move 20s linear infinite;
+        }
+
+        @keyframes move {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(30px, 30px) rotate(10deg); }
+        }
+
+        .header-content {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px 0;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
         }
 
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 4rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .header p {
-            font-size: 1.1em;
-            opacity: 0.95;
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.9);
+            max-width: 600px;
+            font-weight: 400;
         }
 
-        /* Site Map Grid */
-        .sitemap-grid {
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Modern Stats Cards */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: -3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 10;
         }
 
-        .category {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+        .stat-card {
+            background: var(--surface);
+            padding: 1.75rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .category:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
         }
 
-        .category h2 {
-            color: #667eea;
-            border-bottom: 3px solid #764ba2;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-
-        .category ul {
-            list-style: none;
-        }
-
-        .category li {
-            margin-bottom: 12px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 8px;
-        }
-
-        .category li:last-child {
-            border-bottom: none;
-        }
-
-        .category a {
-            color: #555;
-            text-decoration: none;
-            display: block;
-            padding: 5px 0;
-            transition: all 0.3s ease;
-        }
-
-        .category a:hover {
-            color: #667eea;
-            padding-left: 10px;
-            font-weight: 500;
-        }
-
-        .category a::before {
-            content: "📄 ";
-            font-size: 0.9em;
-            opacity: 0.7;
-        }
-
-        /* Special links styling */
-        .category .external-link::before {
-            content: "🔗 ";
-        }
-
-        .category .pdf-link::before {
-            content: "📕 ";
-        }
-
-        /* Stats Section */
-        .stats {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            text-align: center;
-        }
-
-        .stat-item {
-            padding: 15px;
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
         }
 
         .stat-number {
-            font-size: 2em;
-            font-weight: bold;
-            display: block;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
         }
 
         .stat-label {
-            font-size: 0.9em;
-            opacity: 0.9;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        /* Quick Jump */
+        /* Quick Jump - Modern Pills */
         .quick-jump {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
         }
 
         .quick-jump h3 {
-            margin-bottom: 15px;
-            color: #764ba2;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-light);
+            margin-bottom: 1rem;
         }
 
-        .jump-links {
+        .jump-pills {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 0.75rem;
         }
 
-        .jump-links a {
-            color: #667eea;
+        .pill {
+            padding: 0.6rem 1.2rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--text);
             text-decoration: none;
-            padding: 5px 15px;
-            background: #f0f0ff;
-            border-radius: 20px;
-            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
         }
 
-        .jump-links a:hover {
-            background: #667eea;
+        .pill:hover {
+            background: var(--primary);
             color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
         }
 
-        /* Footer */
+        /* Modern Category Grid */
+        .sitemap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .category-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .category-card:hover {
+            box-shadow: var(--shadow-xl);
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .category-icon {
+            font-size: 1.8rem;
+            line-height: 1;
+            filter: drop-shadow(0 4px 6px rgba(59,130,246,0.2));
+        }
+
+        .category-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .category-count {
+            margin-left: auto;
+            background: var(--background);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Modern Link List */
+        .link-list {
+            list-style: none;
+        }
+
+        .link-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .link-list a {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .link-list a:hover {
+            background: var(--background);
+            color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .link-icon {
+            font-size: 1.1rem;
+            opacity: 0.7;
+        }
+
+        .new-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 100px;
+            margin-left: auto;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        /* Update Timeline */
+        .updates-section {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .updates-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .timeline {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: var(--background);
+            border-radius: var(--radius-md);
+            border-left: 4px solid;
+            border-image: linear-gradient(to bottom, var(--primary), var(--secondary));
+            border-image-slice: 1;
+        }
+
+        .timeline-date {
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 100px;
+        }
+
+        .timeline-desc {
+            color: var(--text);
+        }
+
+        /* Modern Footer */
         .footer {
-            background: white;
-            padding: 30px 0;
-            margin-top: 40px;
-            border-top: 1px solid #ddd;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            margin-top: 4rem;
         }
 
         .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 1rem;
         }
 
-        .last-updated {
-            color: #666;
-            font-size: 0.9em;
+        .footer-links {
+            display: flex;
+            gap: 2rem;
         }
 
-        .print-button {
-            background: #667eea;
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .print-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            padding: 10px 25px;
-            border-radius: 5px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 100px;
+            font-weight: 500;
             cursor: pointer;
-            font-size: 1em;
-            transition: background 0.3s ease;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .print-button:hover {
-            background: #764ba2;
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .header h1 {
-                font-size: 2em;
+                font-size: 2.5rem;
             }
             
-            .category {
-                padding: 15px;
-            }
-            
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .stats {
-                grid-template-columns: 1fr;
+            .stats-grid {
+                margin-top: -2rem;
             }
             
             .footer-content {
                 flex-direction: column;
                 text-align: center;
             }
+            
+            .footer-links {
+                justify-content: center;
+            }
+            
+            .timeline-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
         }
+
+        /* Loading Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-card {
+            animation: fadeIn 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .category-card:nth-child(1) { animation-delay: 0.1s; }
+        .category-card:nth-child(2) { animation-delay: 0.2s; }
+        .category-card:nth-child(3) { animation-delay: 0.3s; }
+        .category-card:nth-child(4) { animation-delay: 0.4s; }
+        .category-card:nth-child(5) { animation-delay: 0.5s; }
+        .category-card:nth-child(6) { animation-delay: 0.6s; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="container">
-            <h1>🗺️ Site Map</h1>
-            <p>Complete index of all pages and resources available on this website</p>
+    <header class="header">
+        <div class="header-content">
+            <h1>Site Map</h1>
+            <p>Complete visual index of all pages and resources • Updated March 2026</p>
         </div>
-    </div>
+    </header>
 
     <div class="container">
-        <!-- Quick Jump Navigation -->
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">22</div>
+                <div class="stat-label">Total Pages</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Interactive Tools</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">7</div>
+                <div class="stat-label">Legal Docs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Resources</div>
+            </div>
+        </div>
+
+        <!-- Quick Jump Pills -->
         <div class="quick-jump">
-            <h3>📌 Quick Jump</h3>
-            <div class="jump-links">
-                <a href="#main-pages">Main Pages</a>
-                <a href="#tools">Tools</a>
-                <a href="#legal">Legal</a>
-                <a href="#resources">Resources</a>
-                <a href="#external">External</a>
+            <h3>Jump to section</h3>
+            <div class="jump-pills">
+                <a href="#main" class="pill">🏠 Main</a>
+                <a href="#tools" class="pill">🧮 Tools</a>
+                <a href="#legal" class="pill">⚖️ Legal</a>
+                <a href="#resources" class="pill">📚 Resources</a>
+                <a href="#external" class="pill">🔗 External</a>
+                <a href="#info" class="pill">ℹ️ Site Info</a>
             </div>
         </div>
 
-        <!-- Site Statistics -->
-        <div class="stats">
-            <div class="stat-item">
-                <span class="stat-number">22</span>
-                <span class="stat-label">Total Pages</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">8</span>
-                <span class="stat-label">Tools & Calculators</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">7</span>
-                <span class="stat-label">Legal Documents</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">5</span>
-                <span class="stat-label">Resources</span>
-            </div>
-        </div>
-
-        <!-- Site Map Grid -->
+        <!-- Main Grid -->
         <div class="sitemap-grid">
-            <!-- Main Pages Category -->
-            <div class="category" id="main-pages">
-                <h2>🏠 Main Pages</h2>
-                <ul>
-                    <li><a href="/index.html">Welcome / Home Page</a></li>
-                    <li><a href="/about.html">About Me</a></li>
-                    <li><a href="/guard-file.html">Guard File</a></li>
-                    <li><a href="/policy.html">Website Policy</a></li>
-                    <li><a href="/weblinks.html">Weblinks</a></li>
-                    <li><a href="/contact.html">Contact Me</a></li>
-                    <li><a href="/fonts.html">List of Fonts</a></li>
-                    <li><a href="/page-index.html">Page Index</a></li>
-                    <li><a href="/locations.html">Work Locations</a></li>
+            <!-- Main Pages -->
+            <div class="category-card" id="main">
+                <div class="category-header">
+                    <span class="category-icon">🏠</span>
+                    <span class="category-title">Main Pages</span>
+                    <span class="category-count">9</span>
+                </div>
+                <ul class="link-list">
+                    <li><a href="/index.html"><span class="link-icon">📄</span> Welcome / Home</a></li>
+                    <li><a href="/about.html"><span class="link-icon">👤</span> About Me</a></li>
+                    <li><a href="/guard-file.html"><span class="link-icon">🛡️</span> Guard File</a></li>
+                    <li><a href="/policy.html"><span class="link-icon">📋</span> Policy</a></li>
+                    <li><a href="/weblinks.html"><span class="link-icon">🔗</span> Weblinks</a></li>
+                    <li><a href="/contact.html"><span class="link-icon">📧</span> Contact Me</a></li>
+                    <li><a href="/fonts.html"><span class="link-icon">🔤</span> List of Fonts</a></li>
+                    <li><a href="/page-index.html"><span class="link-icon">🗂️</span> Page Index</a></li>
+                    <li><a href="/locations.html"><span class="link-icon">📍</span> Work Locations</a></li>
                 </ul>
             </div>
 
-            <!-- Tools & Calculators Category -->
-            <div class="category" id="tools">
-                <h2>🧮 Tools & Calculators</h2>
-                <ul>
-                    <li><a href="/electricity-bill.html">Electricity Bill Calculator</a></li>
-                    <li><a href="/density-converter.html">Density Converter</a></li>
-                    <li><a href="/age-calculator.html">Age Calculator</a></li>
-                    <li><a href="/currency-converter.html">Currency Converter</a></li>
-                    <li><a href="/password-generator.html">Password Generator</a></li>
-                    <li><a href="/emi-calculator.html" class="new">EMI Calculator <span style="color: #28a745; font-size: 0.8em;">(New)</span></a></li>
-                    <li><a href="/bmi-calculator.html" class="new">BMI Calculator <span style="color: #28a745; font-size: 0.8em;">(New)</span></a></li>
-                    <li><a href="/fuel-calculator.html" class="new">Fuel Cost Calculator <span style="color: #28a745; font-size: 0.8em;">(New)</span></a></li>
+            <!-- Tools & Calculators -->
+            <div class="category-card" id="tools">
+                <div class="category-header">
+                    <span class="category-icon">🧮</span>
+                    <span class="category-title">Tools & Calculators</span>
+                    <span class="category-count">8</span>
+                </div>
+                <ul class="link-list">
+                    <li><a href="/electricity-bill.html"><span class="link-icon">⚡</span> Electricity Bill</a></li>
+                    <li><a href="/density-converter.html"><span class="link-icon">📊</span> Density Converter</a></li>
+                    <li><a href="/age-calculator.html"><span class="link-icon">🎂</span> Age Calculator</a></li>
+                    <li><a href="/currency-converter.html"><span class="link-icon">💱</span> Currency Converter</a></li>
+                    <li><a href="/password-generator.html"><span class="link-icon">🔐</span> Password Generator</a></li>
+                    <li><a href="/emi-calculator.html"><span class="link-icon">💰</span> EMI Calculator <span class="new-badge">New</span></a></li>
+                    <li><a href="/bmi-calculator.html"><span class="link-icon">❤️</span> BMI Calculator <span class="new-badge">New</span></a></li>
+                    <li><a href="/fuel-calculator.html"><span class="link-icon">⛽</span> Fuel Cost Calculator <span class="new-badge">New</span></a></li>
                 </ul>
             </div>
 
-            <!-- Legal & Regulatory Category -->
-            <div class="category" id="legal">
-                <h2>⚖️ Legal & Regulatory</h2>
-                <ul>
-                    <li><a href="/ec-act-1955.html">EC Act 1955</a></li>
-                    <li><a href="/petroleum-act-1934.html">Petroleum Act 1934</a></li>
-                    <li><a href="/petroleum-rules-2002.html">Petroleum Rules 2002</a></li>
-                    <li><a href="/hsd-license-1979.html">HSD License 1979</a></li>
-                    <li><a href="/explosives-rules-2008.html" class="new">Explosives Rules 2008 <span style="color: #28a745; font-size: 0.8em;">(New)</span></a></li>
-                    <li><a href="/gas-cylinder-rules-2016.html" class="new">Gas Cylinder Rules 2016 <span style="color: #28a745; font-size: 0.8em;">(New)</span></a></li>
-                    <li><a href="/factory-act-1948.html" class="new">Factory Act 1948 <span style="color: #28a745; font-size: 0.8em;">(New)</span></a></li>
+            <!-- Legal & Regulatory -->
+            <div class="category-card" id="legal">
+                <div class="category-header">
+                    <span class="category-icon">⚖️</span>
+                    <span class="category-title">Legal & Regulatory</span>
+                    <span class="category-count">7</span>
+                </div>
+                <ul class="link-list">
+                    <li><a href="/ec-act-1955.html"><span class="link-icon">📜</span> EC Act 1955</a></li>
+                    <li><a href="/petroleum-act-1934.html"><span class="link-icon">🛢️</span> Petroleum Act 1934</a></li>
+                    <li><a href="/petroleum-rules-2002.html"><span class="link-icon">📑</span> Petroleum Rules 2002</a></li>
+                    <li><a href="/hsd-license-1979.html"><span class="link-icon">📄</span> HSD License 1979</a></li>
+                    <li><a href="/explosives-rules-2008.html"><span class="link-icon">💥</span> Explosives Rules 2008 <span class="new-badge">New</span></a></li>
+                    <li><a href="/gas-cylinder-rules-2016.html"><span class="link-icon">🫧</span> Gas Cylinder Rules 2016 <span class="new-badge">New</span></a></li>
+                    <li><a href="/factory-act-1948.html"><span class="link-icon">🏭</span> Factory Act 1948 <span class="new-badge">New</span></a></li>
                 </ul>
             </div>
 
-            <!-- Resources Category -->
-            <div class="category" id="resources">
-                <h2>📚 Resources</h2>
-                <ul>
-                    <li><a href="/faq.html" class="new">Frequently Asked Questions (FAQ)</a></li>
-                    <li><a href="/glossary.html" class="new">Technical Glossary</a></li>
-                    <li><a href="/downloads.html" class="new">Downloads & Forms</a></li>
-                    <li><a href="/checklists.html" class="new">Safety Checklists</a></li>
-                    <li><a href="/templates.html" class="new">Document Templates</a></li>
+            <!-- Resources -->
+            <div class="category-card" id="resources">
+                <div class="category-header">
+                    <span class="category-icon">📚</span>
+                    <span class="category-title">Resources</span>
+                    <span class="category-count">5</span>
+                </div>
+                <ul class="link-list">
+                    <li><a href="/faq.html"><span class="link-icon">❓</span> FAQ</a></li>
+                    <li><a href="/glossary.html"><span class="link-icon">📖</span> Technical Glossary</a></li>
+                    <li><a href="/downloads.html"><span class="link-icon">⬇️</span> Downloads & Forms</a></li>
+                    <li><a href="/checklists.html"><span class="link-icon">✅</span> Safety Checklists</a></li>
+                    <li><a href="/templates.html"><span class="link-icon">📝</span> Document Templates</a></li>
                 </ul>
             </div>
 
-            <!-- External Resources (for weblinks page content) -->
-            <div class="category" id="external">
-                <h2>🔗 External Resources</h2>
-                <ul>
-                    <li><a href="https://www.pngb.gov.in/" target="_blank" class="external-link">PNG Bureau (External)</a></li>
-                    <li><a href="https://www.ppac.gov.in/" target="_blank" class="external-link">PPAC (External)</a></li>
-                    <li><a href="https://www.pngrb.gov.in/" target="_blank" class="external-link">PNGRB (External)</a></li>
-                    <li><a href="https://www.mopng.gov.in/" target="_blank" class="external-link">Ministry of Petroleum (External)</a></li>
-                    <li><a href="/industry-news.html" class="new">Industry News & Updates</a></li>
+            <!-- External & Industry -->
+            <div class="category-card" id="external">
+                <div class="category-header">
+                    <span class="category-icon">🔗</span>
+                    <span class="category-title">External & Industry</span>
+                    <span class="category-count">5</span>
+                </div>
+                <ul class="link-list">
+                    <li><a href="https://www.pngb.gov.in/" target="_blank"><span class="link-icon">🌐</span> PNG Bureau</a></li>
+                    <li><a href="https://www.ppac.gov.in/" target="_blank"><span class="link-icon">🌐</span> PPAC</a></li>
+                    <li><a href="https://www.pngrb.gov.in/" target="_blank"><span class="link-icon">🌐</span> PNGRB</a></li>
+                    <li><a href="https://www.mopng.gov.in/" target="_blank"><span class="link-icon">🌐</span> Ministry of Petroleum</a></li>
+                    <li><a href="/industry-news.html"><span class="link-icon">📰</span> Industry News</a></li>
                 </ul>
             </div>
 
-            <!-- Hidden Pages / Sitemap Specific -->
-            <div class="category">
-                <h2>🗂️ Site Information</h2>
-                <ul>
-                    <li><a href="/sitemap.xml">XML Sitemap</a></li>
-                    <li><a href="/robots.txt">robots.txt</a></li>
-                    <li><a href="/privacy-policy.html">Privacy Policy</a></li>
-                    <li><a href="/terms-of-use.html">Terms of Use</a></li>
-                    <li><a href="/disclaimer.html">Disclaimer</a></li>
+            <!-- Site Information -->
+            <div class="category-card" id="info">
+                <div class="category-header">
+                    <span class="category-icon">ℹ️</span>
+                    <span class="category-title">Site Information</span>
+                    <span class="category-count">5</span>
+                </div>
+                <ul class="link-list">
+                    <li><a href="/sitemap.xml"><span class="link-icon">🗺️</span> XML Sitemap</a></li>
+                    <li><a href="/robots.txt"><span class="link-icon">🤖</span> robots.txt</a></li>
+                    <li><a href="/privacy-policy.html"><span class="link-icon">🔒</span> Privacy Policy</a></li>
+                    <li><a href="/terms-of-use.html"><span class="link-icon">📜</span> Terms of Use</a></li>
+                    <li><a href="/disclaimer.html"><span class="link-icon">⚠️</span> Disclaimer</a></li>
                 </ul>
             </div>
         </div>
 
-        <!-- Page Update Information -->
-        <div style="background: #f9f9f9; padding: 20px; border-radius: 10px; margin-top: 20px;">
-            <h3 style="color: #764ba2; margin-bottom: 15px;">📅 Page Updates</h3>
-            <ul style="list-style: none;">
-                <li style="margin-bottom: 10px;">✅ <strong>March 2026:</strong> Added new calculators (EMI, BMI, Fuel Cost)</li>
-                <li style="margin-bottom: 10px;">✅ <strong>March 2026:</strong> Updated legal section with Explosives Rules 2008</li>
-                <li style="margin-bottom: 10px;">✅ <strong>February 2026:</strong> Added Resources section (FAQ, Glossary, Downloads)</li>
-                <li style="margin-bottom: 10px;">✅ <strong>January 2026:</strong> Initial site structure established</li>
-            </ul>
+        <!-- Updates Timeline -->
+        <div class="updates-section">
+            <div class="updates-title">
+                <span>📅</span>
+                <h3>Recent Updates</h3>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <span class="timeline-date">Mar 2026</span>
+                    <span class="timeline-desc">Added EMI, BMI, and Fuel Cost Calculators</span>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-date">Mar 2026</span>
+                    <span class="timeline-desc">Added Explosives Rules & Gas Cylinder Rules</span>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-date">Feb 2026</span>
+                    <span class="timeline-desc">Launched Resources section (FAQ, Glossary, Downloads)</span>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-date">Jan 2026</span>
+                    <span class="timeline-desc">Initial site structure launched</span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="last-updated">
-                    🕒 Last Updated: March 1, 2026 | Total Pages: 22
-                </div>
-                <div>
-                    <button class="print-button" onclick="window.print()">
-                        🖨️ Print Site Map
-                    </button>
-                </div>
-                <div>
-                    <a href="/index.html" style="color: #667eea; text-decoration: none;">🏠 Home</a>
-                    <span style="margin: 0 10px; color: #ccc;">|</span>
-                    <a href="/contact.html" style="color: #667eea; text-decoration: none;">📧 Contact</a>
-                </div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/index.html">Home</a>
+                <a href="/about.html">About</a>
+                <a href="/contact.html">Contact</a>
+                <a href="/policy.html">Privacy</a>
+            </div>
+            <button class="print-btn" onclick="window.print()">
+                <span>🖨️</span> Print Site Map
+            </button>
+            <div style="color: var(--text-light); font-size: 0.9rem;">
+                Last sync: March 2026 · 22 pages
             </div>
         </div>
-    </div>
-
-    <script>
-        // Optional: Add smooth scrolling for anchor links
-        document.querySelectorAll('.jump-links a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Optional: Highlight new pages
-        const newPages = document.querySelectorAll('.new');
-        newPages.forEach(page => {
-            page.style.borderLeft = '3px solid #28a745';
-            page.style.paddingLeft = '8px';
-        });
-    </script>
+    </footer>
 </body>
 </html>
