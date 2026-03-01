@@ -2,15 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Guard File</title>
+  <title>Acts, Rules, Orders | Sarat Office</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Papaparse for CSV parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <!-- DataTables & jQuery -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  
   <!-- Common CSS (menu, footer, global styles) -->
   <link rel="stylesheet" href="style.css">
   <!-- ✅ IMPORTANT: site components for header/footer etc. -->
   <script src="assets/Scripts/site-components.js" defer></script>
   
   <style>
-/* ================================
+    /* ================================
    GUARD FILE – HERO SECTION
    ================================ */
 
@@ -122,174 +130,1015 @@
   }
 }
 
+    /* ----- GLOBAL RESET ----- */
+    body {
+      margin: 0;
+      background: #f5f9ff;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* ----- NAMESPACED WRAPPER – all custom CSS is scoped inside .sarat-docs ----- */
+    .sarat-docs {
+      display: block;
+      width: 100%;
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 20px 80px;
+      box-sizing: border-box;
+    }
+
+    /* ---- HORIZONTAL TABS – RECTANGULAR 3D STYLE (EXACTLY AS IMAGE) ---- */
+    .sarat-docs .tab-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      background: transparent;
+      padding: 25px 0;
+      margin: 20px 0 40px 0;
+      border-bottom: none;
+    }
+
+    .sarat-docs .tab-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 36px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: #1e3a5f;
+      background: #ffffff;
+      border: none;
+      border-radius: 0;
+      box-shadow: 
+        0 8px 0 #a0a0a0,
+        0 10px 15px rgba(0,0,0,0.2),
+        inset 0 -2px 0 rgba(0,0,0,0.05);
+      transition: all 0.15s ease;
+      cursor: pointer;
+      text-decoration: none;
+      text-transform: uppercase;
+      border: 1px solid #c0c0c0;
+      border-bottom: none;
+      min-width: 160px;
+    }
+
+    .sarat-docs .tab-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 10px 0 #7a7a7a,
+        0 15px 25px rgba(0,0,0,0.25),
+        inset 0 -2px 0 rgba(0,0,0,0.05);
+      background: #f0f7ff;
+      color: #003366;
+    }
+
+    .sarat-docs .tab-item.active {
+      background: #0066b3;
+      color: white !important;
+      box-shadow: 
+        0 8px 0 #00407a,
+        0 12px 20px rgba(0,102,179,0.35),
+        inset 0 -2px 0 rgba(0,0,0,0.15);
+      border-color: #005095;
+      border-bottom: none;
+      transform: translateY(0);
+    }
+
+    .sarat-docs .tab-item.active:hover {
+      background: #005095;
+      box-shadow: 
+        0 10px 0 #00355c,
+        0 18px 28px rgba(0,80,150,0.4);
+      transform: translateY(-3px);
+      color: white;
+    }
+
+    .sarat-docs .tab-divider {
+      display: none !important;
+    }
+
+    /* ----- CSV TABLE STYLES - 80% WIDTH AS REQUESTED ----- */
+    .sarat-docs .csv-tab-container {
+      overflow-x: auto;
+      padding: 20px 0 40px 0;
+      background: transparent;
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .sarat-docs .csv-table {
+      width: 80%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 16px;
+      min-width: 600px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow:
+        0 0 0 4px #e8f0fe,
+        0 8px 20px rgba(0, 80, 150, 0.2),
+        inset 0 0 6px rgba(0, 120, 210, 0.1);
+      margin: 0 auto;
+    }
+
+    .sarat-docs .csv-table thead {
+      background: linear-gradient(135deg, #0a1e3c, #13294b);
+    }
+
+    .sarat-docs .csv-table thead th {
+      color: #fff !important;
+      font-weight: 700;
+      text-align: center;
+      padding: 20px 18px;
+      letter-spacing: 0.8px;
+      font-size: 16px;
+      text-transform: uppercase;
+    }
+
+    .sarat-docs .csv-table td {
+      padding: 18px 20px;
+      border-bottom: 1px solid #d4e3f0;
+      vertical-align: middle;
+      background-color: white;
+      font-size: 15px;
+    }
+
+    .sarat-docs .csv-table td:nth-child(1) {
+      text-align: center;
+      font-weight: 600;
+      color: #0a2e4a;
+      width: 80px;
+    }
+
+    .sarat-docs .csv-table td:nth-child(2) {
+      text-align: left;
+      font-weight: 500;
+      color: #1e3a5f;
+    }
+
+    .sarat-docs .csv-table td:nth-child(3),
+    .sarat-docs .csv-table td:nth-child(4) {
+      text-align: center;
+      width: 140px;
+    }
+
+    .sarat-docs .csv-table tbody tr:hover {
+      background-color: #f0f9ff;
+      transition: background-color 0.15s;
+    }
+
+    .sarat-docs .download-btn,
+    .sarat-docs .share-btn {
+      min-width: 120px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+      box-shadow:
+        inset 0 -3px 0 rgba(0,0,0,0.15),
+        0 5px 12px rgba(0,0,0,0.12);
+      transform: translateY(0);
+      transition: all 0.2s ease;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .sarat-docs .download-btn {
+      background: linear-gradient(to bottom, #2e7d32, #1b5e20);
+    }
+
+    .sarat-docs .download-btn:hover {
+      background: linear-gradient(to bottom, #1b5e20, #0e4212);
+      transform: translateY(-2px);
+      box-shadow:
+        inset 0 -3px 0 rgba(0,0,0,0.2),
+        0 8px 18px rgba(46,125,50,0.4);
+    }
+
+    .sarat-docs .share-btn {
+      background: linear-gradient(to bottom, #1976d2, #0d47a1);
+    }
+
+    .sarat-docs .share-btn:hover {
+      background: linear-gradient(to bottom, #0d47a1, #062a5c);
+      transform: translateY(-2px);
+      box-shadow:
+        inset 0 -3px 0 rgba(0,0,0,0.2),
+        0 8px 18px rgba(25,118,210,0.4);
+    }
+    
+    /* ----- GOVT. CALENDARS TABLE - FIX COLUMN WIDTHS (AS IN IMAGE) ----- */
+    .sarat-docs #tab-Govt\ Calendars .csv-table {
+      width: 80%;
+      table-layout: fixed;
+    }
+
+    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(1),
+    .sarat-docs #tab-Govt\ Calendars .csv-table td:nth-child(1) {
+      width: 35% !important;
+      min-width: 220px !important;
+      text-align: left !important;
+      padding-left: 30px !important;
+    }
+
+    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(2),
+    .sarat-docs #tab-Govt\ Calendars .csv-table td:nth-child(2) {
+      width: 32.5% !important;
+      text-align: center !important;
+    }
+
+    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(3),
+    .sarat-docs #tab-Govt\ Calendars .csv-table td:nth-child(3) {
+      width: 32.5% !important;
+      text-align: center !important;
+    }
+
+    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(1) {
+      text-align: left !important;
+      padding-left: 30px !important;
+    }
+
+    .sarat-docs #tab-Govt\ Calendars .csv-table {
+      table-layout: fixed !important;
+    }
+    
+    /* fallback header/footer */
+    .fallback-header {
+      background: #0c1f33;
+      color: white;
+      padding: 18px 30px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .fallback-footer {
+      background: #0a1929;
+      color: #bbd6ff;
+      padding: 20px 30px;
+      text-align: center;
+    }
+
+    @media (max-width: 1200px) {
+      .sarat-docs {
+        padding: 20px 50px;
+      }
+      .sarat-docs .tab-item {
+        padding: 14px 28px;
+        min-width: 140px;
+        font-size: 1.1rem;
+      }
+      .sarat-docs .csv-table {
+        width: 90%;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .sarat-docs {
+        padding: 15px 20px;
+      }
+      .sarat-docs .tab-strip {
+        gap: 15px;
+      }
+      .sarat-docs .tab-item {
+        padding: 12px 20px;
+        min-width: 120px;
+        font-size: 1rem;
+      }
+      .sarat-docs .csv-table {
+        width: 95%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sarat-docs .csv-table {
+        width: 100%;
+      }
+    }
+
+    /* ================================
+       ALL FILES TAB STYLES (from provided code)
+    ================================ */
+    
+    /* Table Container */
+    .sara-table-container-v2 {
+      width: 100%;
+      max-width: 95vw;
+      overflow-x: auto;
+      background: #fefefe;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      margin: 20px auto;
+      box-sizing: border-box;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+                  0 10px 20px rgba(0, 0, 0, 0.15),
+                  0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Main Table Styling */
+    #saraCsvTableV2 {
+      width: 100% !important;
+      background: white;
+      color: black;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 14px;
+      border-collapse: collapse !important;
+      margin: 0 auto;
+      table-layout: auto;
+    }
+
+    #saraCsvTableV2 th,
+    #saraCsvTableV2 td {
+      padding: 12px 15px;
+      vertical-align: top;
+      text-align: left;
+      word-break: break-word;
+      white-space: normal;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #saraCsvTableV2 td[data-label="Download"],
+    #saraCsvTableV2 td[data-label="File Size"] {
+      text-align: right;
+      vertical-align: middle;
+    }
+
+    #saraCsvTableV2 thead tr th {
+      background-color: #101535 !important;
+      color: #ffffff !important;
+      font-weight: bold;
+      border-bottom: 2px solid #b20bb3 !important;
+      position: relative;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    #saraCsvTableV2 thead th.sorting:after,
+    #saraCsvTableV2 thead th.sorting_asc:after,
+    #saraCsvTableV2 thead th.sorting_desc:after {
+      content: "";
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+    }
+
+    #saraCsvTableV2 thead th.sorting:after {
+      content: "↕";
+      opacity: 0.5;
+    }
+
+    #saraCsvTableV2 thead th.sorting_asc:after {
+      content: "↑";
+    }
+
+    #saraCsvTableV2 thead th.sorting_desc:after {
+      content: "↓";
+    }
+
+    #saraCsvTableV2 tbody tr:hover td {
+      background-color: #707070 !important;
+      color: white;
+      transition: background 0.2s ease-in-out;
+    }
+
+    .sara-download-btn,
+    #saraCsvTableV2 td a button {
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: #ffffff !important;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: background 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .sara-download-btn:hover,
+    #saraCsvTableV2 td a button:hover {
+      background-color: #e615ed !important;
+      transform: translateY(-2px);
+      box-shadow: 0 3px 10px rgba(230, 21, 237, 0.4);
+    }
+
+    /* DataTables Wrapper Styles */
+    .dataTables_wrapper {
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .dataTables_wrapper .dataTables_filter {
+      float: right;
+      margin-bottom: 15px;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+      width: 300px !important;
+      padding: 8px 15px !important;
+      border: 1px solid #ccc !important;
+      border-radius: 6px !important;
+      margin-left: 10px;
+      font-size: 14px;
+    }
+
+    .dataTables_wrapper .dataTables_length {
+      float: left;
+      margin-bottom: 15px;
+    }
+
+    /* Subject column dynamic max-width with percentage */
+    #saraCsvTableV2 td[data-label="Subject"] {
+      max-width: 60%;
+      white-space: normal !important;
+      word-wrap: break-word !important;
+      overflow-wrap: break-word !important;
+      hyphens: auto;
+    }
+
+    /* S.N. column no wrap */
+    #saraCsvTableV2 td[data-label="S.N."],
+    #saraCsvTableV2 th:nth-child(1) {
+      white-space: nowrap !important;
+      max-width: 50px;
+    }
+
+    /* Force nowrap on these columns */
+    #saraCsvTableV2 td[data-label="Date"],
+    #saraCsvTableV2 td[data-label="Download"],
+    #saraCsvTableV2 td[data-label="Letter No."],
+    #saraCsvTableV2 td[data-label="File Size"] {
+      white-space: nowrap;
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+      padding: 8px 15px !important;
+      border-radius: 6px !important;
+      border: 1px solid #ccc !important;
+      font-size: 14px;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+      float: left;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+      float: right;
+      margin-top: 15px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+      padding: 8px 12px !important;
+      border: 1px solid #ddd !important;
+      margin: 0 2px !important;
+      border-radius: 4px !important;
+      transition: all 0.2s ease;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+      background: #00bbff !important;
+      color: white !important;
+      border-color: #00bbff !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+      background: #b20bb3 !important;
+      color: white !important;
+      border-color: #b20bb3 !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .sara-table-container-v2 {
+        padding: 10px;
+      }
+
+      #saraCsvTableV2,
+      #saraCsvTableV2 thead,
+      #saraCsvTableV2 tbody,
+      #saraCsvTableV2 th,
+      #saraCsvTableV2 td,
+      #saraCsvTableV2 tr {
+        display: block;
+        width: 100%;
+      }
+
+      #saraCsvTableV2 thead {
+        display: none;
+      }
+
+      #saraCsvTableV2 tr {
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 10px;
+        background: #fff;
+      }
+
+      #saraCsvTableV2 td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 10px;
+        font-size: 13px;
+        text-align: left !important;
+        border-bottom: none;
+      }
+
+      #saraCsvTableV2 td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #555;
+        flex: 1;
+        margin-right: 10px;
+      }
+
+      .dataTables_wrapper .dataTables_length,
+      .dataTables_wrapper .dataTables_filter,
+      .dataTables_wrapper .dataTables_info,
+      .dataTables_wrapper .dataTables_paginate {
+        float: none !important;
+        text-align: center !important;
+        width: 100% !important;
+        margin: 10px 0 !important;
+      }
+
+      .dataTables_wrapper .dataTables_filter input {
+        width: 100% !important;
+        margin: 10px 0 !important;
+      }
+
+      .dataTables_wrapper .dataTables_length select {
+        width: 100% !important;
+      }
+    }
   </style>
 </head>
-
 <body>
 
+<!-- HEADER -->
 <div id="site-header"></div>
 
-
-<!-- CONTENT -->  
+<!-- MAIN DOCS COMPONENT -->
 <section class="guard-hero">
-
   <div class="guard-hero-inner animate-on-scroll">
-
     <h1 class="guard-title">GUARD FILE</h1>
-
     <p class="guard-subtitle">
       Government Letters and Guidelines Archive
     </p>
-
     <div class="guard-actions">
-      <a href="policy.html" class="guard-btn">Policy</a>
-     
+      <a href="guard-file.html" class="guard-btn">Guard File</a>
     </div>
+  </div>
+</section>
+<script src="assets/Scripts/Guardfile-animations.js"></script>
+  
+<div class="sarat-docs">
 
+  <!-- Horizontal tab strip -->
+  <div class="tab-strip" id="horizontalTabStrip">
+    <!-- All Files tab (active by default) -->
+    <button class="tab-item active" data-category="AllFiles">ALL FILES</button>
+    <button class="tab-item" data-category="Act">ACTS</button>
+    <button class="tab-item" data-category="Rules">RULES</button>
+    <button class="tab-item" data-category="Order">ORDERS</button>
+    <button class="tab-item" data-category="MSP">PADDY MSP</button>
+    <button class="tab-item" data-category="Procurement">PROC GUIDELINES</button>
+    <button class="tab-item" data-category="Food">FOOD POLICY</button>
+    <button class="tab-item" data-category="Misc">MISCELLANEOUS</button>
+    <button class="tab-item" data-category="Govt Calendars">GOVT. CALENDARS</button>
   </div>
 
-</section>
+  <!-- Dynamic table area -->
+  <div id="dynamicTableArea">
+    <!-- All Files tab container -->
+    <div class="csv-tab-container" id="tab-AllFiles" style="display: block;">
+      <div class="csv-table-placeholder">
+        <!-- All Files table will be loaded here -->
+      </div>
+    </div>
 
-  <!-- ✅ DataTables CSS -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" />
-  
-  <!-- ✅  Load CSS from GitHub CDN to Style CSV Table -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/saratoffice/Hosting@main/guard-file/guidelines.css">
+    <!-- Other tab containers -->
+    <div class="csv-tab-container" id="tab-Act" style="display: none;">
+      <div class="csv-table-placeholder">Loading Acts...</div>
+    </div>
+    <div class="csv-tab-container" id="tab-Rules" style="display: none;">
+      <div class="csv-table-placeholder">Loading Rules...</div>
+    </div>
+    <div class="csv-tab-container" id="tab-Order" style="display: none;">
+      <div class="csv-table-placeholder">Loading Orders...</div>
+    </div>
+    <div class="csv-tab-container" id="tab-MSP" style="display: none;">
+      <div class="csv-table-placeholder">Loading Paddy MSP...</div>
+    </div>
+    <div class="csv-tab-container" id="tab-Procurement" style="display: none;">
+      <div class="csv-table-placeholder">Loading Proc Guidelines...</div>
+    </div>
+    <div class="csv-tab-container" id="tab-Food" style="display: none;">
+      <div class="csv-table-placeholder">Loading Food Policy...</div>
+    </div>
+    <div class="csv-tab-container" id="tab-Misc" style="display: none;">
+      <div class="csv-table-placeholder">Loading Miscellaneous...</div>
+    </div>
+    
+    <!-- GOVT. CALENDARS TAB -->
+    <div class="csv-tab-container" id="tab-Govt Calendars" style="display: none;">
+      <div class="csv-table-placeholder">Loading Govt. Calendars...</div>
+    </div>
+  </div>
 
-
-<!-- ✅ Table Container -->
-<div class="sara-table-container-v2">
-  <table id="saraCsvTableV2" class="display nowrap">
-    <thead>
-      <tr>
-        <th>Index</th>
-        <th>Letter No.</th>
-        <th>Date</th>
-        <th>Subject</th>
-        <th>Download</th>
-        <th>Size</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
 </div>
-  <script> 
-    $(document).ready(function () {
-  const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSSOfHNpEttmFST4PX2HIgKv0Gd0O2XzUBU17D0-gJHQbgQxnB_1mYNEI90diCjvVXsDJ1oBJ6iAeL2/pub?gid=51131841&single=true&output=csv';
 
-  Papa.parse(csvUrl, {
-    download: true,
-    header: true,
-    complete: function (results) {
-      let data = results.data;
+<script>
+  (function() {
+    "use strict";
 
-      // First process all data and add SortDate
-      data = data.map((row, index) => {
-        row["Subject"] = (row["Subject"] || "").replace(/_/g, " ").replace(/\.pdf$/i, "").trim();
-       const rawDate = (row["Date"] || "").trim();
-       const parts = rawDate.split("/");
-        if (parts.length === 3) {
-          let [dd, mm, yyyy] = parts;
-          dd = dd.padStart(2, '0');
-          mm = mm.padStart(2, '0');
-          if (yyyy.length === 4) {
-            row["SortDate"] = `${yyyy}-${mm}-${dd}`;
-            row["Date"] = `${dd}-${mm}-${yyyy}`;
-          } else {
-            row["SortDate"] = null;
+    // ------- CONFIGURATION --------
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/1mLh8E5JEHP-HCrBgs42pVpiY4ZpP7LG-O__3Av2-MgY/export?format=csv&gid=884226509";
+    const GOVT_CALENDARS_URL = "https://raw.githubusercontent.com/saratoffice/office/main/calendars.html";
+    const ALL_FILES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTagonyub0K84Tg9xZVxeLhQ8rfb417bTqKwSP3xzhkQ5mbnZY6mOFFdB6kK8Hl0EZtYY7t3e8qd-kO/pub?gid=51131841&single=true&output=csv';
+    
+    let parsedRows = [];
+    let allFilesDataTable = null;
+
+    // ---------- LOAD CSV DATA FOR OTHER TABS ----------
+    function loadAllCSVTables() {
+      updateAllPlaceholders('⏳ Loading documents...');
+      
+      fetch(CSV_URL)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
           }
-        } else {
-          row["SortDate"] = null;
-        }
-
-        return row;
-      });
-
-      // Sort by date first
-      data.sort((a, b) => {
-        if (!a.SortDate && !b.SortDate) return 0;
-        if (!a.SortDate) return 1;
-        if (!b.SortDate) return -1;
-        return new Date(b.SortDate) - new Date(a.SortDate);
-      });
-
-      // Now add sequential S.N. after sorting
-      data.forEach((row, index) => {
-        row["S.N."] = index + 1;
-      });
-
-      const tbody = $('#saraCsvTableV2 tbody');
-      tbody.empty();
-
-      data.forEach(row => {
-        const tableRow = `
-          <tr>
-            <td data-label="S.N.">${row["S.N."]}</td>
-            <td data-label="Letter No.">${row["Letter No."] || ""}</td>
-            <td data-label="Date" data-sort="${row["SortDate"] || ''}">${row["Date"] || ""}</td>
-            <td data-label="Subject">${row["Subject"] || ""}</td>
-            <td data-label="Download">${row["Button"] || ""}</td>
-            <td data-label="File Size">${row["File Size (MB)"] || "—"}</td>
-          </tr>`;
-        tbody.append(tableRow);
-      });
-
-      $('#saraCsvTableV2').DataTable({
-        responsive: true,
-        pageLength: 10,
-        lengthMenu: [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]],
-        autoWidth: false,
-        order: [[2, 'desc']], // Keep default sorting by date
-        columnDefs: [
-          {
-            targets: 0, // S.N. column
-            orderable: false // Disable sorting on this column
+          return response.text();
+        })
+        .then(csvText => {
+          const parsed = Papa.parse(csvText, { header: false });
+          const rows = parsed.data.slice(1);
+          parsedRows = rows.filter(row => row && row.length > 1);
+          
+          if (parsedRows.length === 0) {
+            throw new Error('No data found in CSV');
           }
-        ],
-        language: {
-          search: "Search:",
-          lengthMenu: "Show _MENU_ entries",
-          info: "Showing _START_ to _END_ of _TOTAL_ entries",
-          infoEmpty: "No records available",
-          infoFiltered: "(filtered from _MAX_ total entries)",
-          paginate: {
-            first: "First",
-            last: "Last",
-            next: "Next",
-            previous: "Previous"
-          }
-        },
-        drawCallback: function(settings) {
-          // Re-number the S.N. column after each draw (sort/filter/page)
-          const api = this.api();
-          api.column(0, {page: 'current'}).nodes().each(function(cell, i) {
-            cell.innerHTML = i + 1 + (api.page() * api.page.len());
-          });
-        }
-      });
-    },
-    error: function (err) {
-      console.error('CSV Load Error:', err);
-      alert('Failed to load data. Please try again later.');
+          
+          populateTableForCategory('Act');
+          populateTableForCategory('Rules');
+          populateTableForCategory('Order');
+          populateTableForCategory('MSP');
+          populateTableForCategory('Procurement');
+          populateTableForCategory('Food');
+          populateTableForCategory('Misc');
+        })
+        .catch(err => {
+          console.error("CSV Load Error:", err);
+          showErrorMessage(err.message);
+        });
     }
-  });
-});
-  </script>
-<script src="assets/Scripts/Guardfile-animations.js"></script>
-<!-- ✅ jQuery -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    function updateAllPlaceholders(message) {
+      const categories = ['Act', 'Rules', 'Order', 'MSP', 'Procurement', 'Food', 'Misc'];
+      categories.forEach(cat => {
+        const tabDiv = document.getElementById(`tab-${cat}`);
+        if (tabDiv) {
+          const placeholder = tabDiv.querySelector('.csv-table-placeholder');
+          if (placeholder) placeholder.innerHTML = message;
+        }
+      });
+    }
+    
+    function showErrorMessage(errorText) {
+      const categories = ['Act', 'Rules', 'Order', 'MSP', 'Procurement', 'Food', 'Misc'];
+      categories.forEach(cat => {
+        const tabDiv = document.getElementById(`tab-${cat}`);
+        if (tabDiv) {
+          const placeholder = tabDiv.querySelector('.csv-table-placeholder');
+          if (placeholder) {
+            placeholder.innerHTML = `
+              <div style="text-align: center; padding: 40px; background: #fff3f3; border-radius: 8px;">
+                <h3 style="color: #d32f2f; margin-bottom: 15px;">⚠️ Error Loading Documents</h3>
+                <p style="color: #666;">${errorText}</p>
+                <p style="color: #999; margin-top: 20px;">Please try refreshing the page or contact support.</p>
+              </div>
+            `;
+          }
+        }
+      });
+    }
 
-<!-- ✅ DataTables JS -->
-<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    function buildTableHTML(category) {
+      const filtered = parsedRows.filter(row => row[1] && row[1].trim() === category);
+      if (filtered.length === 0) {
+        return `<table class="csv-table"><thead><tr><th>S.No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center; padding:40px;">📁 No documents for ${category}</td></tr></tbody></table>`;
+      }
 
-<!-- ✅ PapaParse -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+      const rowsHtml = filtered.map((row, idx) => {
+        let subject = (row[2] || "").replace(/_/g, " ").replace(/\.pdf$/i, "").trim() || "Untitled";
+        const link = row[5] ? row[5].trim() : "#";
+        const safeLink = (link.startsWith("http") || link.startsWith("/")) ? link : "#";
+        const encodedSubject = encodeURIComponent("📄 " + subject + "\n🔗 " + safeLink);
+        return `<tr>
+          <td>${idx + 1}</td>
+          <td>${subject}</td>
+          <td><a href="${safeLink}" target="_blank" rel="noopener noreferrer"><button class="download-btn">Download</button></a></td>
+          <td><a href="https://wa.me/?text=${encodedSubject}" target="_blank" rel="noopener noreferrer"><button class="share-btn">Share</button></a></td>
+        </tr>`;
+      }).join("");
 
+      return `<table class="csv-table">
+        <thead><tr><th>S.No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>`;
+    }
 
-  <!-- FOOTER -->
+    function populateTableForCategory(category) {
+      const tabDiv = document.getElementById(`tab-${category}`);
+      if (!tabDiv) return;
+      const placeholder = tabDiv.querySelector('.csv-table-placeholder');
+      if (!placeholder) return;
+      if (parsedRows.length === 0) {
+        placeholder.innerHTML = '⏳ Loading...';
+        return;
+      }
+      placeholder.innerHTML = buildTableHTML(category);
+    }
+
+    // ---------- LOAD GOVT. CALENDARS ----------
+    function loadGovtCalendars() {
+      const calendarContainer = document.getElementById('tab-Govt Calendars');
+      if (!calendarContainer) return;
+      
+      const placeholder = calendarContainer.querySelector('.csv-table-placeholder');
+      if (!placeholder) return;
+      
+      placeholder.innerHTML = '<div style="text-align: center; padding: 40px;">📅 Loading Government Calendars...</div>';
+      
+      fetch(GOVT_CALENDARS_URL)
+        .then(response => {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.text();
+        })
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const calendarSection = doc.querySelector('.govt-calendars-section');
+          
+          if (calendarSection) {
+            placeholder.innerHTML = calendarSection.outerHTML;
+          } else {
+            placeholder.innerHTML = html;
+          }
+        })
+        .catch(error => {
+          console.error('Error loading Govt. Calendars:', error);
+          placeholder.innerHTML = `
+            <div style="text-align: center; padding: 50px; background: white; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+              <h2 style="color: #0083ed; font-size: 28pt; margin-bottom: 20px;">GOVT. CALENDARS</h2>
+              <p style="color: #666; font-size: 18px;">⚠️ Unable to load calendars. Please try again later.</p>
+              <p style="color: #999; margin-top: 20px;">Error: ${error.message}</p>
+            </div>
+          `;
+        });
+    }
+
+    // ---------- LOAD ALL FILES TAB (using provided code) ----------
+    function loadAllFilesTab() {
+      const container = document.getElementById('tab-AllFiles');
+      if (!container) return;
+      
+      const placeholder = container.querySelector('.csv-table-placeholder');
+      if (!placeholder) return;
+
+      placeholder.innerHTML = '<div style="text-align: center; padding: 40px;">⏳ Loading All Files...</div>';
+
+      // Destroy existing DataTable if it exists
+      if (allFilesDataTable) {
+        allFilesDataTable.destroy();
+        allFilesDataTable = null;
+      }
+
+      // Create the table structure
+      const tableContainer = document.createElement('div');
+      tableContainer.className = 'sara-table-container-v2';
+      tableContainer.innerHTML = `
+        <table id="saraCsvTableV2" class="display nowrap">
+          <thead>
+            <tr>
+              <th>Index</th>
+              <th>Letter No.</th>
+              <th>Date</th>
+              <th>Subject</th>
+              <th>Download</th>
+              <th>Size</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      `;
+      
+      placeholder.innerHTML = '';
+      placeholder.appendChild(tableContainer);
+
+      // Parse CSV using PapaParse with the provided code
+      Papa.parse(ALL_FILES_CSV_URL, {
+        download: true,
+        header: true,
+        complete: function (results) {
+          let data = results.data;
+
+          // Process data: clean subject and format date
+          data = data.map((row, index) => {
+            row["Subject"] = (row["Subject"] || "").replace(/_/g, " ").replace(/\.pdf$/i, "").trim();
+            const rawDate = (row["Date"] || "").trim();
+            const parts = rawDate.split("/");
+            if (parts.length === 3) {
+              let [dd, mm, yyyy] = parts;
+              dd = dd.padStart(2, '0');
+              mm = mm.padStart(2, '0');
+              if (yyyy.length === 4) {
+                row["SortDate"] = `${yyyy}-${mm}-${dd}`;
+                row["Date"] = `${dd}-${mm}-${yyyy}`;
+              } else {
+                row["SortDate"] = null;
+              }
+            } else {
+              row["SortDate"] = null;
+            }
+            return row;
+          });
+
+          // Sort by date first (latest first)
+          data.sort((a, b) => {
+            if (!a.SortDate && !b.SortDate) return 0;
+            if (!a.SortDate) return 1;
+            if (!b.SortDate) return -1;
+            return new Date(b.SortDate) - new Date(a.SortDate);
+          });
+
+          // Add sequential S.N. after sorting
+          data.forEach((row, index) => {
+            row["S.N."] = index + 1;
+          });
+
+          const tbody = $('#saraCsvTableV2 tbody');
+          tbody.empty();
+
+          data.forEach(row => {
+            // Handle download button - check if Button column exists or create from Link
+            let downloadButton = row["Button"] || "";
+            if (!downloadButton && row["Link"]) {
+              downloadButton = `<a href="${row["Link"]}" target="_blank" rel="noopener noreferrer"><button class="sara-download-btn">Download</button></a>`;
+            }
+            
+            const tableRow = `
+              <tr>
+                <td data-label="S.N.">${row["S.N."]}</td>
+                <td data-label="Letter No.">${row["Letter No."] || ""}</td>
+                <td data-label="Date" data-sort="${row["SortDate"] || ''}">${row["Date"] || ""}</td>
+                <td data-label="Subject">${row["Subject"] || ""}</td>
+                <td data-label="Download">${downloadButton}</td>
+                <td data-label="File Size">${row["File Size (MB)"] || "—"}</td>
+              </tr>`;
+            tbody.append(tableRow);
+          });
+
+          // Initialize DataTable
+          allFilesDataTable = $('#saraCsvTableV2').DataTable({
+            responsive: true,
+            pageLength: 10,
+            lengthMenu: [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]],
+            autoWidth: false,
+            order: [[2, 'desc']], // Keep default sorting by date
+            columnDefs: [
+              {
+                targets: 0, // S.N. column
+                orderable: false // Disable sorting on this column
+              }
+            ],
+            language: {
+              search: "Search:",
+              lengthMenu: "Show _MENU_ entries",
+              info: "Showing _START_ to _END_ of _TOTAL_ entries",
+              infoEmpty: "No records available",
+              infoFiltered: "(filtered from _MAX_ total entries)",
+              paginate: {
+                first: "First",
+                last: "Last",
+                next: "Next",
+                previous: "Previous"
+              }
+            },
+            drawCallback: function(settings) {
+              // Re-number the S.N. column after each draw (sort/filter/page)
+              const api = this.api();
+              api.column(0, {page: 'current'}).nodes().each(function(cell, i) {
+                cell.innerHTML = i + 1 + (api.page() * api.page.len());
+              });
+            }
+          });
+        },
+        error: function (err) {
+          console.error('CSV Load Error:', err);
+          placeholder.innerHTML = `
+            <div style="text-align: center; padding: 50px; background: white; border-radius: 12px;">
+              <h2 style="color: #0083ed;">ALL FILES</h2>
+              <p style="color: #666;">Failed to load data. Please try again later.</p>
+              <p style="color: #999; margin-top: 20px;">Error: ${err.message}</p>
+            </div>
+          `;
+        }
+      });
+    }
+
+    // ---------- TAB CLICK HANDLER ----------
+    function initTabs() {
+      const tabStrip = document.querySelector('.sarat-docs .tab-strip');
+      if (!tabStrip) return;
+      const tabButtons = tabStrip.querySelectorAll('.tab-item');
+      
+      const containers = {
+        AllFiles: document.getElementById('tab-AllFiles'),
+        Act: document.getElementById('tab-Act'),
+        Rules: document.getElementById('tab-Rules'),
+        Order: document.getElementById('tab-Order'),
+        MSP: document.getElementById('tab-MSP'),
+        Procurement: document.getElementById('tab-Procurement'),
+        Food: document.getElementById('tab-Food'),
+        Misc: document.getElementById('tab-Misc'),
+        'Govt Calendars': document.getElementById('tab-Govt Calendars')
+      };
+
+      function activateTab(category) {
+        // Update active class
+        tabButtons.forEach(btn => {
+          const btnCat = btn.getAttribute('data-category');
+          btn.classList.toggle('active', btnCat === category);
+        });
+
+        // Show/hide containers
+        Object.keys(containers).forEach(key => {
+          if (containers[key]) {
+            containers[key].style.display = key === category ? 'block' : 'none';
+          }
+        });
+
+        // Load data if needed
+        if (category === 'AllFiles') {
+          loadAllFilesTab();
+        } else if (category === 'Govt Calendars') {
+          loadGovtCalendars();
+        } else if (parsedRows.length > 0) {
+          const target = containers[category];
+          if (target) {
+            const placeholder = target.querySelector('.csv-table-placeholder');
+            if (placeholder && placeholder.innerHTML.includes('Loading')) {
+              placeholder.innerHTML = buildTableHTML(category);
+            }
+          }
+        }
+      }
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const category = this.getAttribute('data-category');
+          activateTab(category);
+        });
+      });
+
+      // Initial active tab: AllFiles
+      activateTab('AllFiles');
+    }
+
+    // ---------- INITIALIZE EVERYTHING ----------
+    document.addEventListener('DOMContentLoaded', function() {
+      initTabs();
+      loadAllCSVTables(); // Load CSV data for other tabs
+    });
+
+  })();
+</script>
+
+<script src="/assets/Scripts/gototop.js"></script>
+
+<!-- FOOTER -->
 <div id="site-footer"></div>
 
- <!-- Go to Top -->
-  <script src="/assets/Scripts/gototop.js"></script>
 </body>
 </html>
