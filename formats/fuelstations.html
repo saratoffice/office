@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSD renewal – A4 · only print button (clean)</title>
+    <!-- Common CSS (menu, footer, global styles) -->
+    <link rel="stylesheet" href="style.css">
+    <!-- ✅ IMPORTANT: site components for header/footer etc. -->
+    <script src="assets/Scripts/site-components.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #eef1f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            padding: 4px;
+        }
+
+        /* CARD – bottom padding reduced */
+        .a4-card {
+            max-width: 900px;           
+            width: 100%;
+            background: white;
+            border-radius: 16px;        
+            box-shadow: 0 10px 20px rgba(0,20,30,0.15);
+            padding: 1.1rem 1.2rem 0.3rem 1.2rem;
+            border: 1px solid #bdc9db;
+        }
+
+        /* header – only print button remains */
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #1a3e5c;
+            padding-bottom: 0.4rem;
+            margin-bottom: 0.7rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .top-row h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1a3e5c;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .top-row h1 small {
+            font-size: 0.85rem;
+            font-weight: 400;
+            background: #e2eaf3;
+            color: #1d3f5e;
+            padding: 0.2rem 0.7rem;
+            border-radius: 40px;
+            margin-left: 8px;
+        }
+
+        .print-btn {
+            background: #1a3e5c;
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.4rem 1.5rem;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,35,60,0.2);
+            transition: background 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .print-btn:hover { background: #0f2d44; }
+
+        /* particulars */
+        .particulars {
+            background: #f2f6fb;
+            padding: 0.8rem 1.2rem;
+            border-radius: 20px;
+            margin-bottom: 0.8rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.6rem 1.5rem;
+            border: 1px solid #cbd6e4;
+        }
+
+        .part-item {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            font-size: 0.92rem;
+        }
+
+        .part-item .tag {
+            font-weight: 600;
+            color: #1a3e5c;
+            min-width: 105px;
+            font-size: 0.88rem;
+        }
+
+        .part-item .dash {
+            color: #3d5a78;
+            background: white;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            border: 1px dashed #6f8da8;
+            width: 100%;
+            max-width: 220px;
+            font-size: 0.88rem;
+            line-height: 1.4;
+        }
+
+        .photo-badge {
+            background: #fef3e0;
+            border-left: 6px solid #d19c2a;
+            padding: 0.6rem 1rem;
+            border-radius: 18px;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-weight: 500;
+            font-size: 0.92rem;
+        }
+
+        .photo-badge span {
+            background: #d19c2a;
+            color: #1e2b38;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.88rem;
+        }
+
+        .check-two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.3rem 1.5rem;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            padding: 0.2rem 0;
+            border-bottom: 1px dotted #cbd2dd;
+        }
+
+        .item-row input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin-top: 2px;
+            accent-color: #1a3e5c;
+            flex-shrink: 0;
+        }
+
+        .item-text {
+            font-size: 0.88rem;
+            color: #152b3b;
+            line-height: 1.3;
+        }
+
+        .facility-group {
+            background: #f5f8fe;
+            border-radius: 20px;
+            padding: 0.7rem 1rem 0.9rem;
+            margin-top: 0.7rem;
+            border: 1px solid #c9d7ea;
+        }
+
+        .facility-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.2rem 1rem;
+        }
+
+        .facility-item {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            font-size: 0.88rem;
+            border-bottom: 1px dotted #a0b6ce;
+            padding: 0.2rem 0;
+        }
+
+        .facility-item .yes-badge {
+            background: #1a3e5c;
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: 30px;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        .foot-strip {
+            margin-top: 0.8rem;
+            background: #eef2f6;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            font-size: 0.88rem;
+            color: #1a3e5c;
+        }
+
+        .stamp-line {
+            border: 2px dotted #1a3e5c;
+            padding: 0.2rem 1.4rem;
+            border-radius: 30px;
+            background: white;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px dotted #aebccf;
+            margin: 0.5rem 0 0.1rem;
+        }
+
+        .tiny {
+            font-size: 0.68rem;
+            color: #3e6280;
+            text-align: right;
+            margin-top: 0.1rem;
+        }
+
+        /* PRINT – reduced bottom padding */
+        @media print {
+            body { background: white; padding: 0; margin: 0; }
+            .a4-card { 
+                box-shadow: none; 
+                border-radius: 0; 
+                padding: 1.1rem 1.2rem 0.3rem 1.2rem !important; 
+                max-width: 100%; 
+                border: none; 
+                margin: 0;
+            }
+            .top-row { margin-bottom: 0.7rem; }
+            .particulars { margin-bottom: 0.8rem; }
+            .photo-badge { margin-bottom: 0.8rem; }
+            .facility-group { margin-top: 0.7rem; }
+            .foot-strip { margin-top: 0.8rem; }
+            .print-btn { display: none; }
+            hr { margin: 0.5rem 0 0.1rem; }
+            .tiny { margin-top: 0.1rem; }
+        }
+    </style>
+</head>
+<body>
+  <div id="site-header"></div>
+
+    <div class="a4-card" id="checklistPDF">
+        <!-- header with only PRINT button -->
+        <div class="top-row">
+            <h1>⛽ HSD RENEWAL <small>checklist+facilities</small></h1>
+            <button class="print-btn" id="printPDF">📋 PRINT</button>
+        </div>
+
+        <!-- particulars block -->
+        <div class="particulars">
+            <div class="part-item"><span class="tag">WhatsApp/Mobile :</span><span class="dash">_________________</span></div>
+            <div class="part-item"><span class="tag">Email ID :</span><span class="dash">_________________</span></div>
+            <div class="part-item"><span class="tag">Police Station :</span><span class="dash">_________________</span></div>
+            <div class="part-item"><span class="tag">Block :</span><span class="dash">_________________</span></div>
+            <div class="part-item"><span class="tag">Year of estab. :</span><span class="dash">______________</span></div>
+        </div>
+
+        <!-- photocopy banner -->
+        <div class="photo-badge">
+            <span>📸 PHOTOCOPY REQUIRED</span> self‑attested copies for every marked document
+        </div>
+
+        <!-- document checklist (20) two columns -->
+        <div style="font-weight: 700; color:#1a3e5c; margin:0 0 0.2rem 0; font-size:0.92rem;">📋 DOCUMENTS TO BE ATTACHED</div>
+        <div class="check-two">
+            <div class="item-row"><input type="checkbox" id="c1"><label for="c1" class="item-text">License – HSD (certificate copy)</label></div>
+            <div class="item-row"><input type="checkbox" id="c2"><label for="c2" class="item-text">License – Lubricants (certificate)</label></div>
+            <div class="item-row"><input type="checkbox" id="c3"><label for="c3" class="item-text">R.O.R. (record of rights) Plot/Khata</label></div>
+            <div class="item-row"><input type="checkbox" id="c4"><label for="c4" class="item-text">Fire Safety Certificate</label></div>
+            <div class="item-row"><input type="checkbox" id="c5"><label for="c5" class="item-text">Firefighting equip. bill (expiry)</label></div>
+            <div class="item-row"><input type="checkbox" id="c6"><label for="c6" class="item-text">Explosive Licence (PESO) class A/B</label></div>
+            <div class="item-row"><input type="checkbox" id="c7"><label for="c7" class="item-text">Aadhar, PAN & GSTIN copy</label></div>
+            <div class="item-row"><input type="checkbox" id="c8"><label for="c8" class="item-text">Legal Metrology (pumps + can)</label></div>
+            <div class="item-row"><input type="checkbox" id="c9"><label for="c9" class="item-text">NOC Collector & Local Authority</label></div>
+            <div class="item-row"><input type="checkbox" id="c10"><label for="c10" class="item-text">Agreement with Oil Company (date)</label></div>
+            <div class="item-row"><input type="checkbox" id="c11"><label for="c11" class="item-text">Recommendation letter – Oil Co.</label></div>
+            <div class="item-row"><input type="checkbox" id="c12"><label for="c12" class="item-text">Power supply details (last bill)</label></div>
+            <div class="item-row"><input type="checkbox" id="c13"><label for="c13" class="item-text">Police Station & Block in forms</label></div>
+            <div class="item-row"><input type="checkbox" id="c14"><label for="c14" class="item-text">Appointment Letter (pump)</label></div>
+            <div class="item-row"><input type="checkbox" id="c15"><label for="c15" class="item-text">PESO storage licence (validity)</label></div>
+            <div class="item-row"><input type="checkbox" id="c16"><label for="c16" class="item-text">Fire equipment expiry date</label></div>
+            <div class="item-row"><input type="checkbox" id="c17"><label for="c17" class="item-text">GSTIN / PAN (self attested)</label></div>
+            <div class="item-row"><input type="checkbox" id="c18"><label for="c18" class="item-text">Legal Metrology can & pump</label></div>
+            <div class="item-row"><input type="checkbox" id="c19"><label for="c19" class="item-text">Water testing (if applicable)</label></div>
+            <div class="item-row"><input type="checkbox" id="c20"><label for="c20" class="item-text">NOC pollution board (if req.)</label></div>
+        </div>
+
+        <!-- facilities -->
+        <div class="facility-group">
+            <div style="font-weight: 700; color:#1a3e5c; margin-bottom: 5px; font-size:0.9rem;">🧷 ON‑SITE FACILITIES (mandatory)</div>
+            <div class="facility-grid">
+                <div class="facility-item"><span>📋 Complaint Register</span> <span class="yes-badge">YES</span></div>
+                <div class="facility-item"><span>🧪 Filter paper (quality check)</span> <span class="yes-badge">available</span></div>
+                <div class="facility-item"><span>🩹 First Aid Kit (no expiry)</span> <span class="yes-badge">✓ in date</span></div>
+                <div class="facility-item"><span>🚰 Free portable water / sanitation</span> <span class="yes-badge">working</span></div>
+                <div class="facility-item"><span>🚻 Free toilet (sanitation)</span> <span class="yes-badge">proper</span></div>
+                <div class="facility-item"><span>🛞 Free air for vehicles</span> <span class="yes-badge">working</span></div>
+                <div class="facility-item"><span>💧 No. of Sump (adequate water)</span> <span class="yes-badge">2 sumps</span></div>
+                <div class="facility-item"><span>🧯 Sand Buckets (sufficient sand)</span> <span class="yes-badge">4 buckets</span></div>
+            </div>
+            <div style="font-size:0.72rem; color:#2f4d73; margin-top: 4px;">✔ tick if ok</div>
+        </div>
+
+        <!-- foot strip -->
+        <div class="foot-strip">
+            <span>🔏 Inspector: _________________________</span>
+            <span class="stamp-line">STAMP / DATE</span>
+        </div>
+        <hr>
+        <div class="tiny">HSD renewal – reduced bottom gap · only print button</div>
+    </div>
+
+    <script>
+        // Simple print functionality
+        document.getElementById('printPDF').addEventListener('click', function() {
+            window.print();
+        });
+    </script>
+   <!-- FOOTER -->
+  <div id="site-footer"></div>
+  <!-- Go to Top -->
+  <script src="/assets/Scripts/gototop.js"></script>
+
+</body>
+</html>
