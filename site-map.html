@@ -15,459 +15,444 @@ link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <!-- Font Awesome 6 (free icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* ----- CSS variables (modern dark/light hybrid with glassmorphism) ----- */
+   <style>
+        /* Modern Reset & Variables */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-light: #475569;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            --radius-sm: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+        }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(145deg, #f6f9fc 0%, #edf2f9 100%);
-            min-height: 100vh;
-            color: #1e293b;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--background);
+            color: var(--text);
             line-height: 1.5;
-            padding: 2rem 1.5rem;
         }
 
-        /* main container with max-width */
-        .sitemap {
-            max-width: 1300px;
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Modern gradient header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path d="M0 0 L100 100 M100 0 L0 100" stroke="white" stroke-width="2"/><circle cx="50" cy="50" r="20" fill="none" stroke="white" stroke-width="2"/></svg>');
+            background-size: 60px 60px;
+            animation: move 20s linear infinite;
+        }
+
+        @keyframes move {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(30px, 30px) rotate(10deg); }
+        }
+
+        .header-content {
+            max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
-        /* ----- header section with modern gradient & glass ----- */
-        .sitemap-header {
+        .header h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.9);
+            max-width: 600px;
+            font-weight: 400;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Modern Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: -3rem;
             margin-bottom: 3rem;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: flex-end;
-            gap: 2rem;
+            position: relative;
+            z-index: 10;
         }
 
-        .header-title h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #0f2b3d, #1b4a6b);
+        .stat-card {
+            background: var(--surface);
+            padding: 1.75rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.1;
+            line-height: 1.2;
         }
 
-        .header-title p {
-            font-size: 1.1rem;
-            color: #475569;
-            margin-top: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .header-title p i {
-            color: #3b82f6;
-        }
-
-        .header-stats {
-            display: flex;
-            gap: 1.5rem;
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            border-radius: 60px;
-            box-shadow: 0 10px 30px -10px rgba(0,20,40,0.2);
-            border: 1px solid rgba(255,255,255,0.6);
-        }
-
-        .stat-chip {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
+        .stat-label {
+            color: var(--text-light);
             font-weight: 500;
-        }
-
-        .stat-chip i {
-            font-size: 1.2rem;
-            color: #2563eb;
-            background: white;
-            padding: 0.4rem;
-            border-radius: 50%;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        }
-
-        .stat-chip span {
-            font-weight: 700;
-            color: #0f2b3d;
-        }
-
-        /* ----- quick jump (modern pill navigation) ----- */
-        .quick-nav {
-            background: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            margin-bottom: 3rem;
-            display: inline-flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 0.8rem 1.5rem;
-            box-shadow: 0 10px 25px -8px rgba(0,0,0,0.1);
-            border: 1px solid rgba(0,0,0,0.02);
-        }
-
-        .quick-nav-label {
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-size: 0.95rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #64748b;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
+            letter-spacing: 0.05em;
         }
 
-        .quick-nav-links {
+        /* Quick Jump - Modern Pills */
+        .quick-jump {
+            margin-bottom: 3rem;
+        }
+
+        .quick-jump h3 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .jump-pills {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
 
-        .quick-link {
-            padding: 0.4rem 1.2rem;
-            border-radius: 40px;
-            background: #f1f5f9;
-            color: #1e293b;
+        .pill {
+            padding: 0.6rem 1.2rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--text);
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 500;
             transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            border: 1px solid transparent;
+            box-shadow: var(--shadow-sm);
         }
 
-        .quick-link i {
-            font-size: 0.8rem;
-            opacity: 0.6;
-        }
-
-        .quick-link:hover {
-            background: #2563eb;
+        .pill:hover {
+            background: var(--primary);
             color: white;
-            transform: translateY(-2px);
-            border-color: #2563eb;
-            box-shadow: 0 6px 15px rgba(37,99,235,0.3);
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
         }
 
-        .quick-link:hover i {
-            opacity: 1;
-        }
-
-        /* ----- main grid : modern cards ----- */
+        /* Modern Category Grid */
         .sitemap-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.8rem;
-            margin: 3rem 0 4rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
         }
 
-        /* category card — glassmorphism + micro-interactions */
         .category-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 32px;
-            padding: 1.5rem 1.3rem 1.8rem 1.3rem;
-            box-shadow: 0 20px 35px -12px rgba(0,30,60,0.15),
-                        inset 0 1px 2px rgba(255,255,255,0.8);
-            border: 1px solid rgba(255,255,255,0.7);
-            transition: all 0.25s ease;
-            display: flex;
-            flex-direction: column;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
         }
 
         .category-card:hover {
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 28px 40px -16px rgba(0,60,120,0.25);
-            transform: scale(1.01) translateY(-4px);
-            border-color: rgba(59,130,246,0.3);
+            box-shadow: var(--shadow-xl);
+            transform: translateY(-2px);
+            border-color: var(--primary);
         }
 
-        .card-header {
+        .category-header {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid rgba(0,0,0,0.05);
-            padding-bottom: 0.8rem;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
         }
 
-        .card-header i {
-            font-size: 2rem;
-            background: linear-gradient(140deg, #2563eb, #1e40af);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .category-icon {
+            font-size: 1.8rem;
+            line-height: 1;
+            filter: drop-shadow(0 4px 6px rgba(59,130,246,0.2));
         }
 
-        .card-header h2 {
-            font-size: 1.3rem;
+        .category-title {
+            font-size: 1.2rem;
             font-weight: 600;
-            letter-spacing: -0.02em;
-            color: #0b2b44;
+            color: var(--text);
         }
 
-        .card-header .badge {
-            background: #dbeafe;
-            color: #1e40af;
+        .category-count {
+            margin-left: auto;
+            background: var(--background);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Modern Link List */
+        .link-list {
+            list-style: none;
+        }
+
+        .link-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .link-list a {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .link-list a:hover {
+            background: var(--background);
+            color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .link-icon {
+            font-size: 1.1rem;
+            opacity: 0.7;
+        }
+
+        .new-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
             font-size: 0.7rem;
             font-weight: 600;
             padding: 0.2rem 0.6rem;
             border-radius: 100px;
             margin-left: auto;
-        }
-
-        /* link list */
-        .page-list {
-            list-style: none;
-            flex: 1;
-        }
-
-        .page-list li {
-            margin-bottom: 0.6rem;
-            border-radius: 14px;
-            transition: background 0.1s ease;
-        }
-
-        .page-list li:hover {
-            background: #f8fbff;
-        }
-
-        .page-link {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem 0.5rem 0.5rem 0.3rem;
-            text-decoration: none;
-            color: #1e293b;
-            font-weight: 450;
-            font-size: 0.95rem;
-            border-radius: 12px;
-            transition: all 0.15s;
-        }
-
-        .page-link i {
-            font-size: 1rem;
-            width: 1.6rem;
-            height: 1.6rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            border-radius: 10px;
-            color: #2563eb;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-        }
-
-        .page-link:hover {
-            color: #2563eb;
-            transform: translateX(6px);
-        }
-
-        .page-link:hover i {
-            background: #2563eb;
-            color: white;
-        }
-
-        .new-badge {
-            background: #22c55e;
-            color: white;
-            font-size: 0.6rem;
-            font-weight: 600;
-            padding: 0.2rem 0.5rem;
-            border-radius: 40px;
-            margin-left: 0.5rem;
-            letter-spacing: 0.3px;
             text-transform: uppercase;
+            letter-spacing: 0.03em;
         }
 
-        .external-icon {
-            opacity: 0.5;
-            font-size: 0.7rem;
-            margin-left: auto;
+        /* Update Timeline */
+        .updates-section {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
         }
 
-        /* ----- info panels (modern flex stats) ----- */
-        .sitemap-footer-panels {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.8rem;
-            margin-top: 2.5rem;
-        }
-
-        .update-panel {
-            flex: 2;
-            min-width: 280px;
-            background: white;
-            border-radius: 28px;
-            padding: 1.8rem 2rem;
-            box-shadow: 0 15px 30px -15px rgba(0,0,0,0.15);
-            border: 1px solid rgba(255,255,255,0.5);
-        }
-
-        .update-panel h3 {
+        .updates-title {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-weight: 600;
             font-size: 1.2rem;
-            margin-bottom: 1.2rem;
-            color: #0b2b44;
+            margin-bottom: 1.5rem;
+            color: var(--text);
         }
 
-        .update-timeline {
-            list-style: none;
-        }
-
-        .update-timeline li {
-            display: flex;
-            gap: 1rem;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-        }
-
-        .update-date {
-            background: #eef2ff;
-            color: #2563eb;
-            font-weight: 600;
-            padding: 0.2rem 0.8rem;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            white-space: nowrap;
-        }
-
-        .update-text {
-            color: #334155;
-        }
-
-        .action-panel {
-            flex: 1;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            border-radius: 28px;
-            padding: 1.8rem 2rem;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 1.5rem;
-            box-shadow: 0 20px 30px -10px #0f172a80;
-        }
-
-        .action-item {
-            display: flex;
-            align-items: center;
+        .timeline {
+            display: grid;
             gap: 1rem;
         }
 
-        .action-item i {
-            font-size: 1.5rem;
-            width: 2.5rem;
-            height: 2.5rem;
-            background: rgba(255,255,255,0.1);
-            border-radius: 18px;
+        .timeline-item {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: var(--background);
+            border-radius: var(--radius-md);
+            border-left: 4px solid;
+            border-image: linear-gradient(to bottom, var(--primary), var(--secondary));
+            border-image-slice: 1;
         }
 
-        .action-item .action-text {
-            font-weight: 500;
-        }
-
-        .action-item small {
-            opacity: 0.7;
-            font-size: 0.8rem;
-            display: block;
-        }
-
-        .print-btn {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 0.9rem;
-            border-radius: 40px;
+        .timeline-date {
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
-            cursor: pointer;
-            transition: background 0.2s;
-            backdrop-filter: blur(5px);
-            font-size: 1rem;
-            width: 100%;
-            border: none;
-            margin-top: 0.5rem;
+            color: var(--primary);
+            min-width: 100px;
         }
 
-        .print-btn:hover {
-            background: rgba(255,255,255,0.3);
+        .timeline-desc {
+            color: var(--text);
         }
 
-        /* bottom breadcrumb */
-        .bottom-links {
-            margin-top: 2.5rem;
+        /* Modern Footer */
+        .footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(0,0,0,0.05);
-            font-size: 0.9rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .bottom-nav a {
-            color: #475569;
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
             text-decoration: none;
-            margin-right: 1.8rem;
+            font-size: 0.95rem;
             transition: color 0.2s;
         }
 
-        .bottom-nav a:hover {
-            color: #2563eb;
+        .footer-links a:hover {
+            color: var(--primary);
         }
 
-        .last-updated {
-            color: #64748b;
+        .print-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 100px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-md);
             display: flex;
             align-items: center;
-            gap: 0.3rem;
+            gap: 0.5rem;
         }
 
-        /* responsive tweaks */
-        @media (max-width: 700px) {
-            body { padding: 1rem; }
-            .sitemap-header { flex-direction: column; align-items: flex-start; }
-            .header-stats { width: 100%; justify-content: space-around; }
-            .quick-nav { border-radius: 30px; width: 100%; justify-content: center; }
-            .bottom-links { flex-direction: column; gap: 1rem; align-items: start; }
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
-        @media (max-width: 480px) {
-            .category-card { padding: 1.2rem; }
-            .header-stats { flex-wrap: wrap; }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .stats-grid {
+                margin-top: -2rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-links {
+                justify-content: center;
+            }
+            
+            .timeline-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
         }
 
-        /* custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #e9eef3; }
-        ::-webkit-scrollbar-thumb { background: #a0b8cc; border-radius: 10px; }
+        /* Loading Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-card {
+            animation: fadeIn 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .category-card:nth-child(1) { animation-delay: 0.1s; }
+        .category-card:nth-child(2) { animation-delay: 0.2s; }
+        .category-card:nth-child(3) { animation-delay: 0.3s; }
+        .category-card:nth-child(4) { animation-delay: 0.4s; }
+        .category-card:nth-child(5) { animation-delay: 0.5s; }
+        .category-card:nth-child(6) { animation-delay: 0.6s; }
     </style>
 </head>
 
@@ -478,165 +463,181 @@ link rel="preconnect" href="https://fonts.googleapis.com">
 
 
 <!-- CONTENT -->
-<div class="sitemap">
-        <!-- header with stats chips -->
-        <div class="sitemap-header">
-            <div class="header-title">
-                <h1>Site map · 3D index</h1>
-                <p><i class="fas fa-compass"></i> Everything at a glance — 22 pages & growing</p>
+<header class="header">
+        <div class="header-content">
+            <h1>Site Map</h1>
+            <p>Complete visual index of all pages and resources • Updated March 2026</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">22</div>
+                <div class="stat-label">Total Pages</div>
             </div>
-            <div class="header-stats">
-                <div class="stat-chip"><i class="fas fa-layers"></i> <span>22</span> total</div>
-                <div class="stat-chip"><i class="fas fa-calculator"></i> <span>8</span> tools</div>
-                <div class="stat-chip"><i class="fas fa-gavel"></i> <span>7</span> legal</div>
+            <div class="stat-card">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Interactive Tools</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">7</div>
+                <div class="stat-label">Legal Docs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Resources</div>
             </div>
         </div>
 
-        <!-- quick anchor jump -->
-        <div class="quick-nav">
-            <span class="quick-nav-label"><i class="fas fa-bolt"></i> jump to</span>
-            <div class="quick-nav-links">
-                <a href="#main" class="quick-link"><i class="fas fa-home"></i> main</a>
-                <a href="#tools" class="quick-link"><i class="fas fa-cog"></i> tools</a>
-                <a href="#legal" class="quick-link"><i class="fas fa-scale-balanced"></i> legal</a>
-                <a href="#resources" class="quick-link"><i class="fas fa-book"></i> resources</a>
-                <a href="#external" class="quick-link"><i class="fas fa-globe"></i> external</a>
-                <a href="#info" class="quick-link"><i class="fas fa-info-circle"></i> site info</a>
+        <!-- Quick Jump Pills -->
+        <div class="quick-jump">
+            <h3>Jump to section</h3>
+            <div class="jump-pills">
+                <a href="#main" class="pill">🏠 Main</a>
+                <a href="#tools" class="pill">🧮 Tools</a>
+                <a href="#legal" class="pill">⚖️ Legal</a>
+                <a href="#resources" class="pill">📚 Resources</a>
+                <a href="#external" class="pill">🔗 External</a>
+                <a href="#info" class="pill">ℹ️ Site Info</a>
             </div>
         </div>
 
-        <!-- main grid of cards (all custom classes) -->
+        <!-- Main Grid -->
         <div class="sitemap-grid">
-            <!-- MAIN PAGES card -->
+            <!-- Main Pages -->
             <div class="category-card" id="main">
-                <div class="card-header">
-                    <i class="fas fa-flag"></i>
-                    <h2>Main pages</h2>
-                    <span class="badge">9 entries</span>
+                <div class="category-header">
+                    <span class="category-icon">🏠</span>
+                    <span class="category-title">Main Pages</span>
+                    <span class="category-count">9</span>
                 </div>
-                <ul class="page-list">
-                    <li><a href="/index.html" class="page-link"><i class="fas fa-door-open"></i> Welcome / Home</a></li>
-                    <li><a href="/about.html" class="page-link"><i class="fas fa-user-astronaut"></i> About me</a></li>
-                    <li><a href="/guard-file.html" class="page-link"><i class="fas fa-shield-halved"></i> Guard file</a></li>
-                    <li><a href="/policy.html" class="page-link"><i class="fas fa-file-contract"></i> Website policy</a></li>
-                    <li><a href="/weblinks.html" class="page-link"><i class="fas fa-link"></i> Weblinks</a></li>
-                    <li><a href="/contact.html" class="page-link"><i class="fas fa-envelope"></i> Contact me</a></li>
-                    <li><a href="/fonts.html" class="page-link"><i class="fas fa-font"></i> List of fonts</a></li>
-                    <li><a href="/page-index.html" class="page-link"><i class="fas fa-list-ul"></i> Page index</a></li>
-                    <li><a href="/locations.html" class="page-link"><i class="fas fa-location-dot"></i> Work locations</a></li>
+                <ul class="link-list">
+                    <li><a href="/index.html"><span class="link-icon">📄</span> Welcome / Home</a></li>
+                    <li><a href="/about.html"><span class="link-icon">👤</span> About Me</a></li>
+                    <li><a href="/guard-file.html"><span class="link-icon">🛡️</span> Guard File</a></li>
+                    <li><a href="/policy.html"><span class="link-icon">📋</span> Policy</a></li>
+                    <li><a href="/weblinks.html"><span class="link-icon">🔗</span> Weblinks</a></li>
+                    <li><a href="/contact.html"><span class="link-icon">📧</span> Contact Me</a></li>
+                    <li><a href="/fonts.html"><span class="link-icon">🔤</span> List of Fonts</a></li>
+                    <li><a href="/page-index.html"><span class="link-icon">🗂️</span> Page Index</a></li>
+                    <li><a href="/locations.html"><span class="link-icon">📍</span> Work Locations</a></li>
                 </ul>
             </div>
 
-            <!-- TOOLS & CALCULATORS card -->
+            <!-- Tools & Calculators -->
             <div class="category-card" id="tools">
-                <div class="card-header">
-                    <i class="fas fa-calculator"></i>
-                    <h2>Tools</h2>
-                    <span class="badge">8 items</span>
+                <div class="category-header">
+                    <span class="category-icon">🧮</span>
+                    <span class="category-title">Tools & Calculators</span>
+                    <span class="category-count">8</span>
                 </div>
-                <ul class="page-list">
-                    <li><a href="/electricity-bill.html" class="page-link"><i class="fas fa-bolt"></i> Electricity bill</a></li>
-                    <li><a href="/density-converter.html" class="page-link"><i class="fas fa-weight-scale"></i> Density converter</a></li>
-                    <li><a href="/age-calculator.html" class="page-link"><i class="fas fa-cake-candles"></i> Age calculator</a></li>
-                    <li><a href="/currency-converter.html" class="page-link"><i class="fas fa-coins"></i> Currency converter</a></li>
-                    <li><a href="/password-generator.html" class="page-link"><i class="fas fa-key"></i> Password generator</a></li>
-                    <li><a href="/emi-calculator.html" class="page-link"><i class="fas fa-house-chimney"></i> EMI calculator <span class="new-badge">new</span></a></li>
-                    <li><a href="/bmi-calculator.html" class="page-link"><i class="fas fa-heart-pulse"></i> BMI calculator <span class="new-badge">new</span></a></li>
-                    <li><a href="/fuel-calculator.html" class="page-link"><i class="fas fa-gas-pump"></i> Fuel cost <span class="new-badge">new</span></a></li>
+                <ul class="link-list">
+                    <li><a href="/electricity-bill.html"><span class="link-icon">⚡</span> Electricity Bill</a></li>
+                    <li><a href="/density-converter.html"><span class="link-icon">📊</span> Density Converter</a></li>
+                    <li><a href="/age-calculator.html"><span class="link-icon">🎂</span> Age Calculator</a></li>
+                    <li><a href="/currency-converter.html"><span class="link-icon">💱</span> Currency Converter</a></li>
+                    <li><a href="/password-generator.html"><span class="link-icon">🔐</span> Password Generator</a></li>
+                    <li><a href="/emi-calculator.html"><span class="link-icon">💰</span> EMI Calculator <span class="new-badge">New</span></a></li>
+                    <li><a href="/bmi-calculator.html"><span class="link-icon">❤️</span> BMI Calculator <span class="new-badge">New</span></a></li>
+                    <li><a href="/fuel-calculator.html"><span class="link-icon">⛽</span> Fuel Cost Calculator <span class="new-badge">New</span></a></li>
                 </ul>
             </div>
 
-            <!-- LEGAL & REGULATORY card -->
+            <!-- Legal & Regulatory -->
             <div class="category-card" id="legal">
-                <div class="card-header">
-                    <i class="fas fa-gavel"></i>
-                    <h2>Legal & regulatory</h2>
-                    <span class="badge">7 docs</span>
+                <div class="category-header">
+                    <span class="category-icon">⚖️</span>
+                    <span class="category-title">Legal & Regulatory</span>
+                    <span class="category-count">7</span>
                 </div>
-                <ul class="page-list">
-                    <li><a href="/ec-act-1955.html" class="page-link"><i class="fas fa-file-lines"></i> EC Act 1955</a></li>
-                    <li><a href="/petroleum-act-1934.html" class="page-link"><i class="fas fa-oil-well"></i> Petroleum Act 1934</a></li>
-                    <li><a href="/petroleum-rules-2002.html" class="page-link"><i class="fas fa-ruler"></i> Petroleum Rules 2002</a></li>
-                    <li><a href="/hsd-license-1979.html" class="page-link"><i class="fas fa-id-card"></i> HSD License 1979</a></li>
-                    <li><a href="/explosives-rules-2008.html" class="page-link"><i class="fas fa-bomb"></i> Explosives Rules 2008 <span class="new-badge">new</span></a></li>
-                    <li><a href="/gas-cylinder-rules-2016.html" class="page-link"><i class="fas fa-circle-radiation"></i> Gas Cylinder Rules 2016 <span class="new-badge">new</span></a></li>
-                    <li><a href="/factory-act-1948.html" class="page-link"><i class="fas fa-industry"></i> Factory Act 1948 <span class="new-badge">new</span></a></li>
+                <ul class="link-list">
+                    <li><a href="/ec-act-1955.html"><span class="link-icon">📜</span> EC Act 1955</a></li>
+                    <li><a href="/petroleum-act-1934.html"><span class="link-icon">🛢️</span> Petroleum Act 1934</a></li>
+                    <li><a href="/petroleum-rules-2002.html"><span class="link-icon">📑</span> Petroleum Rules 2002</a></li>
+                    <li><a href="/hsd-license-1979.html"><span class="link-icon">📄</span> HSD License 1979</a></li>
+                    <li><a href="/explosives-rules-2008.html"><span class="link-icon">💥</span> Explosives Rules 2008 <span class="new-badge">New</span></a></li>
+                    <li><a href="/gas-cylinder-rules-2016.html"><span class="link-icon">🫧</span> Gas Cylinder Rules 2016 <span class="new-badge">New</span></a></li>
+                    <li><a href="/factory-act-1948.html"><span class="link-icon">🏭</span> Factory Act 1948 <span class="new-badge">New</span></a></li>
                 </ul>
             </div>
 
-            <!-- RESOURCES card -->
+            <!-- Resources -->
             <div class="category-card" id="resources">
-                <div class="card-header">
-                    <i class="fas fa-book-open"></i>
-                    <h2>Resources</h2>
-                    <span class="badge">5 pages</span>
+                <div class="category-header">
+                    <span class="category-icon">📚</span>
+                    <span class="category-title">Resources</span>
+                    <span class="category-count">5</span>
                 </div>
-                <ul class="page-list">
-                    <li><a href="/faq.html" class="page-link"><i class="fas fa-question"></i> FAQ</a></li>
-                    <li><a href="/glossary.html" class="page-link"><i class="fas fa-spell-check"></i> Technical glossary</a></li>
-                    <li><a href="/downloads.html" class="page-link"><i class="fas fa-download"></i> Downloads & forms</a></li>
-                    <li><a href="/checklists.html" class="page-link"><i class="fas fa-list-check"></i> Safety checklists</a></li>
-                    <li><a href="/templates.html" class="page-link"><i class="fas fa-copy"></i> Document templates</a></li>
+                <ul class="link-list">
+                    <li><a href="/faq.html"><span class="link-icon">❓</span> FAQ</a></li>
+                    <li><a href="/glossary.html"><span class="link-icon">📖</span> Technical Glossary</a></li>
+                    <li><a href="/downloads.html"><span class="link-icon">⬇️</span> Downloads & Forms</a></li>
+                    <li><a href="/checklists.html"><span class="link-icon">✅</span> Safety Checklists</a></li>
+                    <li><a href="/templates.html"><span class="link-icon">📝</span> Document Templates</a></li>
                 </ul>
             </div>
 
-            <!-- EXTERNAL & WEBLINKS card -->
+            <!-- External & Industry -->
             <div class="category-card" id="external">
-                <div class="card-header">
-                    <i class="fas fa-globe"></i>
-                    <h2>External / weblinks</h2>
-                    <span class="badge">5 links</span>
+                <div class="category-header">
+                    <span class="category-icon">🔗</span>
+                    <span class="category-title">External & Industry</span>
+                    <span class="category-count">5</span>
                 </div>
-                <ul class="page-list">
-                    <li><a href="https://www.pngb.gov.in/" target="_blank" class="page-link"><i class="fas fa-up-right-from-square"></i> PNG Bureau <i class="fas fa-external-link-alt external-icon"></i></a></li>
-                    <li><a href="https://www.ppac.gov.in/" target="_blank" class="page-link"><i class="fas fa-up-right-from-square"></i> PPAC <i class="fas fa-external-link-alt external-icon"></i></a></li>
-                    <li><a href="https://www.pngrb.gov.in/" target="_blank" class="page-link"><i class="fas fa-up-right-from-square"></i> PNGRB <i class="fas fa-external-link-alt external-icon"></i></a></li>
-                    <li><a href="https://www.mopng.gov.in/" target="_blank" class="page-link"><i class="fas fa-building"></i> Ministry of Petroleum <i class="fas fa-external-link-alt external-icon"></i></a></li>
-                    <li><a href="/industry-news.html" class="page-link"><i class="fas fa-newspaper"></i> Industry news</a></li>
+                <ul class="link-list">
+                    <li><a href="https://www.pngb.gov.in/" target="_blank"><span class="link-icon">🌐</span> PNG Bureau</a></li>
+                    <li><a href="https://www.ppac.gov.in/" target="_blank"><span class="link-icon">🌐</span> PPAC</a></li>
+                    <li><a href="https://www.pngrb.gov.in/" target="_blank"><span class="link-icon">🌐</span> PNGRB</a></li>
+                    <li><a href="https://www.mopng.gov.in/" target="_blank"><span class="link-icon">🌐</span> Ministry of Petroleum</a></li>
+                    <li><a href="/industry-news.html"><span class="link-icon">📰</span> Industry News</a></li>
                 </ul>
             </div>
 
-            <!-- SITE INFORMATION card (hidden pages etc) -->
+            <!-- Site Information -->
             <div class="category-card" id="info">
-                <div class="card-header">
-                    <i class="fas fa-gear"></i>
-                    <h2>Site information</h2>
-                    <span class="badge">5 items</span>
+                <div class="category-header">
+                    <span class="category-icon">ℹ️</span>
+                    <span class="category-title">Site Information</span>
+                    <span class="category-count">5</span>
                 </div>
-                <ul class="page-list">
-                    <li><a href="/sitemap.xml" class="page-link"><i class="fas fa-code"></i> XML sitemap</a></li>
-                    <li><a href="/robots.txt" class="page-link"><i class="fas fa-robot"></i> robots.txt</a></li>
-                    <li><a href="/privacy-policy.html" class="page-link"><i class="fas fa-lock"></i> Privacy policy</a></li>
-                    <li><a href="/terms-of-use.html" class="page-link"><i class="fas fa-file-signature"></i> Terms of use</a></li>
-                    <li><a href="/disclaimer.html" class="page-link"><i class="fas fa-triangle-exclamation"></i> Disclaimer</a></li>
+                <ul class="link-list">
+                    <li><a href="/sitemap.xml"><span class="link-icon">🗺️</span> XML Sitemap</a></li>
+                    <li><a href="/robots.txt"><span class="link-icon">🤖</span> robots.txt</a></li>
+                    <li><a href="/privacy-policy.html"><span class="link-icon">🔒</span> Privacy Policy</a></li>
+                    <li><a href="/terms-of-use.html"><span class="link-icon">📜</span> Terms of Use</a></li>
+                    <li><a href="/disclaimer.html"><span class="link-icon">⚠️</span> Disclaimer</a></li>
                 </ul>
             </div>
         </div>
 
-        <!-- bottom panels (update timeline + print / actions) -->
-        <div class="sitemap-footer-panels">
-            <div class="update-panel">
-                <h3><i class="fas fa-clock-rotate-left" style="color:#2563eb"></i> Latest updates</h3>
-                <ul class="update-timeline">
-                    <li><span class="update-date">Mar 2026</span> <span class="update-text">New calculators (EMI, BMI, Fuel) + Explosives Rules 2008</span></li>
-                    <li><span class="update-date">Feb 2026</span> <span class="update-text">Resources section: FAQ, glossary, downloads</span></li>
-                    <li><span class="update-date">Jan 2026</span> <span class="update-text">Initial sitemap structure with 16 pages</span></li>
-                </ul>
+        <!-- Updates Timeline -->
+        <div class="updates-section">
+            <div class="updates-title">
+                <span>📅</span>
+                <h3>Recent Updates</h3>
             </div>
-            <div class="action-panel">
-                <div class="action-item">
-                    <i class="fas fa-print"></i>
-                    <div class="action-text">Printable version <small>Ctrl+P or click below</small></div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <span class="timeline-date">Mar 2026</span>
+                    <span class="timeline-desc">Added EMI, BMI, and Fuel Cost Calculators</span>
                 </div>
-                <div class="action-item">
-                    <i class="fas fa-mobile-screen"></i>
-                    <div class="action-text">Fully responsive <small>works on any device</small></div>
+                <div class="timeline-item">
+                    <span class="timeline-date">Mar 2026</span>
+                    <span class="timeline-desc">Added Explosives Rules & Gas Cylinder Rules</span>
                 </div>
-                <button class="print-btn" onclick="window.print()"><i class="fas fa-print"></i> Print / save PDF</button>
+                <div class="timeline-item">
+                    <span class="timeline-date">Feb 2026</span>
+                    <span class="timeline-desc">Launched Resources section (FAQ, Glossary, Downloads)</span>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-date">Jan 2026</span>
+                    <span class="timeline-desc">Initial site structure launched</span>
+                </div>
             </div>
         </div>
-
-        
+    </div>
 
   <!-- FOOTER -->
 <div id="site-footer"></div>
