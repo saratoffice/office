@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Site Map · Auto-Discovery | Sarat Office</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+ <!-- Common CSS (menu, footer, global styles) -->
+  <link rel="stylesheet" href="style.css">
+  <!-- ✅ IMPORTANT: site components for header/footer etc. -->
+  <script src="assets/Scripts/site-components.js" defer></script>
+ <style>
+        /* ===== ISOLATED SITE MAP STYLES ===== */
+        /* All classes prefixed with 'sm-' to avoid conflicts */
+        
+        /* Modern Reset (scoped) */
+        .sm-sitemap-page * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .sm-sitemap-page {
+            --sm-primary: #3b82f6;
+            --sm-primary-dark: #2563eb;
+            --sm-secondary: #8b5cf6;
+            --sm-accent: #ec4899;
+            --sm-background: #f8fafc;
+            --sm-surface: #ffffff;
+            --sm-text: #0f172a;
+            --sm-text-light: #475569;
+            --sm-border: #e2e8f0;
+            --sm-shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            --sm-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --sm-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --sm-shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            --sm-radius-sm: 0.5rem;
+            --sm-radius-md: 0.75rem;
+            --sm-radius-lg: 1rem;
+            --sm-radius-xl: 1.5rem;
+            
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--sm-background);
+            color: var(--sm-text);
+            line-height: 1.5;
+        }
+
+        /* Container */
+        .sm-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Modern gradient header (scoped) */
+        .sm-header {
+            background: linear-gradient(135deg, var(--sm-primary) 0%, var(--sm-secondary) 50%, var(--sm-accent) 100%);
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sm-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path d="M0 0 L100 100 M100 0 L0 100" stroke="white" stroke-width="2"/><circle cx="50" cy="50" r="20" fill="none" stroke="white" stroke-width="2"/></svg>');
+            background-size: 60px 60px;
+            animation: sm-move 20s linear infinite;
+        }
+
+        @keyframes sm-move {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(30px, 30px) rotate(10deg); }
+        }
+
+        .sm-header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sm-header h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .sm-header p {
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.9);
+            max-width: 600px;
+            font-weight: 400;
+        }
+
+        /* Modern Stats Cards */
+        .sm-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: -3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .sm-stat-card {
+            background: var(--sm-surface);
+            padding: 1.75rem;
+            border-radius: var(--sm-radius-lg);
+            box-shadow: var(--sm-shadow-lg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sm-stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--sm-primary), var(--sm-secondary), var(--sm-accent));
+        }
+
+        .sm-stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--sm-shadow-xl);
+        }
+
+        .sm-stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--sm-primary), var(--sm-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .sm-stat-label {
+            color: var(--sm-text-light);
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Loading Indicator */
+        .sm-loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            background: var(--sm-surface);
+            border-radius: var(--sm-radius-lg);
+            margin: 2rem 0;
+            gap: 1rem;
+            color: var(--sm-text-light);
+        }
+
+        .sm-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--sm-border);
+            border-top-color: var(--sm-primary);
+            border-radius: 50%;
+            animation: sm-spin 1s linear infinite;
+        }
+
+        @keyframes sm-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Quick Jump - Modern Pills */
+        .sm-quick-jump {
+            margin-bottom: 3rem;
+        }
+
+        .sm-quick-jump h3 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--sm-text-light);
+            margin-bottom: 1rem;
+        }
+
+        .sm-jump-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .sm-pill {
+            padding: 0.6rem 1.2rem;
+            background: var(--sm-surface);
+            border: 1px solid var(--sm-border);
+            border-radius: 100px;
+            color: var(--sm-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: var(--sm-shadow-sm);
+            cursor: pointer;
+        }
+
+        .sm-pill:hover {
+            background: var(--sm-primary);
+            color: white;
+            border-color: var(--sm-primary);
+            transform: scale(1.05);
+            box-shadow: var(--sm-shadow-md);
+        }
+
+        /* Modern Category Grid */
+        .sm-sitemap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .sm-category-card {
+            background: var(--sm-surface);
+            border-radius: var(--sm-radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--sm-shadow-md);
+            transition: all 0.3s ease;
+            border: 1px solid var(--sm-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .sm-category-card:hover {
+            box-shadow: var(--sm-shadow-xl);
+            transform: translateY(-2px);
+            border-color: var(--sm-primary);
+        }
+
+        .sm-category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--sm-border);
+        }
+
+        .sm-category-icon {
+            font-size: 1.8rem;
+            line-height: 1;
+            filter: drop-shadow(0 4px 6px rgba(59,130,246,0.2));
+        }
+
+        .sm-category-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--sm-text);
+        }
+
+        .sm-category-count {
+            margin-left: auto;
+            background: var(--sm-background);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--sm-text-light);
+            font-weight: 500;
+        }
+
+        /* Modern Link List */
+        .sm-link-list {
+            list-style: none;
+            max-height: 300px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--sm-primary) var(--sm-border);
+        }
+
+        .sm-link-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sm-link-list::-webkit-scrollbar-track {
+            background: var(--sm-border);
+            border-radius: 10px;
+        }
+
+        .sm-link-list::-webkit-scrollbar-thumb {
+            background: var(--sm-primary);
+            border-radius: 10px;
+        }
+
+        .sm-link-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sm-link-list a {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            color: var(--sm-text-light);
+            text-decoration: none;
+            border-radius: var(--sm-radius-md);
+            transition: all 0.2s ease;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .sm-link-list a:hover {
+            background: var(--sm-background);
+            color: var(--sm-primary);
+            transform: translateX(4px);
+        }
+
+        .sm-link-icon {
+            font-size: 1.1rem;
+            opacity: 0.7;
+        }
+
+        .sm-new-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 100px;
+            margin-left: auto;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .sm-auto-detected {
+            border-left: 3px solid var(--sm-primary);
+            padding-left: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Update Timeline */
+        .sm-updates-section {
+            background: var(--sm-surface);
+            border-radius: var(--sm-radius-lg);
+            padding: 2rem;
+            box-shadow: var(--sm-shadow-md);
+            border: 1px solid var(--sm-border);
+            margin-bottom: 2rem;
+        }
+
+        .sm-updates-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--sm-text);
+        }
+
+        .sm-timeline {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .sm-timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: var(--sm-background);
+            border-radius: var(--sm-radius-md);
+            border-left: 4px solid;
+            border-image: linear-gradient(to bottom, var(--sm-primary), var(--sm-secondary));
+            border-image-slice: 1;
+        }
+
+        .sm-timeline-date {
+            font-weight: 600;
+            color: var(--sm-primary);
+            min-width: 100px;
+        }
+
+        .sm-timeline-desc {
+            color: var(--sm-text);
+        }
+
+        /* Modern Footer */
+        .sm-footer {
+            background: var(--sm-surface);
+            border-top: 1px solid var(--sm-border);
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        .sm-footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .sm-footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .sm-footer-links a {
+            color: var(--sm-text-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .sm-footer-links a:hover {
+            color: var(--sm-primary);
+        }
+
+        .sm-print-btn {
+            background: linear-gradient(135deg, var(--sm-primary), var(--sm-secondary));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 100px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--sm-shadow-md);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sm-print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--sm-shadow-lg);
+        }
+
+        /* Animation */
+        .sm-fade-in {
+            animation: sm-fadeIn 0.5s ease-in;
+        }
+
+        @keyframes sm-fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sm-category-card {
+            animation: sm-fadeIn 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sm-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .sm-stats-grid {
+                margin-top: -2rem;
+            }
+            
+            .sm-footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .sm-footer-links {
+                justify-content: center;
+            }
+            
+            .sm-timeline-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style> 
+</head>
+
+<body>
+  
+
+<div id="site-header"></div>
+
+
+<!-- CONTENT -->
+<!-- Wrap entire sitemap content in isolated class -->
+    <div class="sm-sitemap-page">
+        <header class="sm-header">
+            <div class="sm-header-content">
+                <h1>🗺️ Site Map</h1>
+                <p>Auto-discovering pages · Updated <span class="sm-auto-date"></span></p>
+            </div>
+        </header>
+
+        <div class="sm-container">
+            <!-- Stats Cards (will be updated by JS) -->
+            <div class="sm-stats-grid" id="sm-stats-container">
+                <div class="sm-stat-card">
+                    <div class="sm-stat-number" id="sm-total-pages">0</div>
+                    <div class="sm-stat-label">Total Pages</div>
+                </div>
+                <div class="sm-stat-card">
+                    <div class="sm-stat-number" id="sm-main-pages">0</div>
+                    <div class="sm-stat-label">Main Pages</div>
+                </div>
+                <div class="sm-stat-card">
+                    <div class="sm-stat-number" id="sm-tool-pages">0</div>
+                    <div class="sm-stat-label">Tools</div>
+                </div>
+                <div class="sm-stat-card">
+                    <div class="sm-stat-number" id="sm-legal-pages">0</div>
+                    <div class="sm-stat-label">Legal</div>
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div class="sm-loading" id="sm-loading">
+                <div class="sm-spinner"></div>
+                <span>Scanning for pages...</span>
+            </div>
+
+            <!-- Quick Jump Pills (hidden until loaded) -->
+            <div class="sm-quick-jump" id="sm-quick-jump" style="display: none;">
+                <h3>Jump to section</h3>
+                <div class="sm-jump-pills" id="sm-jump-container"></div>
+            </div>
+
+            <!-- Main Grid (hidden until loaded) -->
+            <div class="sm-sitemap-grid" id="sm-sitemap-grid" style="display: none;"></div>
+
+            <!-- Updates Section -->
+            <div class="sm-updates-section">
+                <div class="sm-updates-title">
+                    <span>📅</span>
+                    <h3>Auto-Discovery Log</h3>
+                </div>
+                <div class="sm-timeline" id="sm-discovery-log">
+                    <div class="sm-timeline-item">
+                        <span class="sm-timeline-date">Ready</span>
+                        <span class="sm-timeline-desc">Scanning for pages...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+      <script>
+        (function() {
+            // ===== AUTO-DISCOVERY SCRIPT =====
+            // Fully isolated - no conflicts with existing JS
+            
+            const SitemapDiscover = {
+                // Known pages organized by category
+                knownPages: {
+                    main: [
+                        '/index.html', '/about.html', '/guard-file.html', 
+                        '/policy.html', '/weblinks.html', '/contact.html',
+                        '/fonts.html', '/page-index.html', '/locations.html'
+                    ],
+                    tools: [
+                        '/electricity-bill.html', '/density-converter.html',
+                        '/age-calculator.html', '/currency-converter.html',
+                        '/password-generator.html', '/emi-calculator.html',
+                        '/bmi-calculator.html', '/fuel-calculator.html'
+                    ],
+                    legal: [
+                        '/ec-act-1955.html', '/petroleum-act-1934.html',
+                        '/petroleum-rules-2002.html', '/hsd-license-1979.html',
+                        '/explosives-rules-2008.html', '/gas-cylinder-rules-2016.html',
+                        '/factory-act-1948.html'
+                    ],
+                    resources: [
+                        '/faq.html', '/glossary.html', '/downloads.html',
+                        '/checklists.html', '/templates.html', '/industry-news.html'
+                    ],
+                    info: [
+                        '/sitemap.xml', '/robots.txt', '/privacy-policy.html',
+                        '/terms-of-use.html', '/disclaimer.html'
+                    ]
+                },
+
+                // Category icons and display names
+                categories: [
+                    { id: 'main', name: 'Main Pages', icon: '🏠' },
+                    { id: 'tools', name: 'Tools & Calculators', icon: '🧮' },
+                    { id: 'legal', name: 'Legal & Regulatory', icon: '⚖️' },
+                    { id: 'resources', name: 'Resources', icon: '📚' },
+                    { id: 'info', name: 'Site Information', icon: 'ℹ️' }
+                ],
+
+                // Discovered pages storage
+                discovered: {
+                    main: [],
+                    tools: [],
+                    legal: [],
+                    resources: [],
+                    info: [],
+                    external: []
+                },
+
+                // Initialize discovery
+                async init() {
+                    this.updateDate();
+                    await this.scanPages();
+                    this.render();
+                    this.hideLoader();
+                },
+
+                // Update auto date
+                updateDate() {
+                    const now = new Date();
+                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    const dateStr = `${months[now.getMonth()]} ${now.getFullYear()}`;
+                    
+                    document.querySelectorAll('.sm-auto-date').forEach(el => {
+                        el.textContent = dateStr;
+                    });
+                },
+
+                // Scan for pages
+                async scanPages() {
+                    const log = document.getElementById('sm-discovery-log');
+                    const totalPages = [];
+                    
+                    // Clear old log
+                    log.innerHTML = '';
+
+                    // Scan each known page
+                    for (const [category, pages] of Object.entries(this.knownPages)) {
+                        this.addToLog(`Scanning ${category}...`, 'info');
+                        
+                        for (const page of pages) {
+                            try {
+                                const response = await fetch(page, { method: 'HEAD', cache: 'no-cache' });
+                                if (response.ok) {
+                                    this.discovered[category].push({
+                                        url: page,
+                                        name: this.formatPageName(page),
+                                        exists: true,
+                                        autoDetected: true
+                                    });
+                                    totalPages.push(page);
+                                    this.addToLog(`✓ Found: ${page}`, 'success');
+                                } else {
+                                    this.discovered[category].push({
+                                        url: page,
+                                        name: this.formatPageName(page),
+                                        exists: false,
+                                        autoDetected: false
+                                    });
+                                }
+                            } catch (e) {
+                                console.log(`Could not verify ${page}`);
+                            }
+                            
+                            // Small delay to avoid overwhelming server
+                            await new Promise(r => setTimeout(r, 50));
+                        }
+                    }
+
+                    // Update stats
+                    document.getElementById('sm-total-pages').textContent = totalPages.length;
+                    document.getElementById('sm-main-pages').textContent = this.discovered.main.filter(p => p.exists).length;
+                    document.getElementById('sm-tool-pages').textContent = this.discovered.tools.filter(p => p.exists).length;
+                    document.getElementById('sm-legal-pages').textContent = this.discovered.legal.filter(p => p.exists).length;
+
+                    this.addToLog(`✅ Scan complete! Found ${totalPages.length} pages`, 'success');
+                },
+
+                // Format page name from URL
+                formatPageName(url) {
+                    return url.replace(/\//g, '')
+                              .replace(/-/g, ' ')
+                              .replace('.html', '')
+                              .split(' ')
+                              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                              .join(' ');
+                },
+
+                // Add to discovery log
+                addToLog(message, type = 'info') {
+                    const log = document.getElementById('sm-discovery-log');
+                    const item = document.createElement('div');
+                    item.className = 'sm-timeline-item';
+                    
+                    const date = new Date();
+                    const timeStr = `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+                    
+                    item.innerHTML = `
+                        <span class="sm-timeline-date">${timeStr}</span>
+                        <span class="sm-timeline-desc">${message}</span>
+                    `;
+                    
+                    log.insertBefore(item, log.firstChild);
+                    
+                    // Keep only last 5 items
+                    while (log.children.length > 5) {
+                        log.removeChild(log.lastChild);
+                    }
+                },
+
+                // Render the sitemap
+                render() {
+                    const grid = document.getElementById('sm-sitemap-grid');
+                    const jumpContainer = document.getElementById('sm-jump-container');
+                    
+                    grid.innerHTML = '';
+                    grid.style.display = 'grid';
+                    
+                    // Create category cards
+                    this.categories.forEach(cat => {
+                        const pages = this.discovered[cat.id].filter(p => p.exists);
+                        if (pages.length === 0) return;
+                        
+                        const card = document.createElement('div');
+                        card.className = 'sm-category-card';
+                        card.id = `cat-${cat.id}`;
+                        
+                        card.innerHTML = `
+                            <div class="sm-category-header">
+                                <span class="sm-category-icon">${cat.icon}</span>
+                                <span class="sm-category-title">${cat.name}</span>
+                                <span class="sm-category-count">${pages.length}</span>
+                            </div>
+                            <ul class="sm-link-list">
+                                ${pages.map(page => `
+                                    <li>
+                                        <a href="${page.url}">
+                                            <span class="sm-link-icon">📄</span>
+                                            ${page.name}
+                                            ${page.autoDetected ? '<span class="sm-new-badge">Auto</span>' : ''}
+                                        </a>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        `;
+                        
+                        grid.appendChild(card);
+                        
+                        // Add to quick jump
+                        const pill = document.createElement('a');
+                        pill.href = `#cat-${cat.id}`;
+                        pill.className = 'sm-pill';
+                        pill.textContent = `${cat.icon} ${cat.name}`;
+                        jumpContainer.appendChild(pill);
+                    });
+
+                    // Show quick jump
+                    document.getElementById('sm-quick-jump').style.display = 'block';
+                },
+
+                // Hide loader
+                hideLoader() {
+                    document.getElementById('sm-loading').style.display = 'none';
+                }
+            };
+
+            // Start discovery when page loads
+            document.addEventListener('DOMContentLoaded', () => {
+                SitemapDiscover.init();
+            });
+        })();
+    </script>
+  <!-- FOOTER -->
+<div id="site-footer"></div>
+  <!-- Go to Top -->
+  <script src="/assets/Scripts/gototop.js"></script>
+
+</body>
+</html>
