@@ -3,36 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HSD renewal – isolated card (no conflict)</title>
+    <title>HSD renewal – fully isolated (no header/footer shift)</title>
     <!-- Common CSS (menu, footer, global styles) – may contain generic rules -->
     <link rel="stylesheet" href="/style.css">
     <!-- ✅ IMPORTANT: site components for header/footer etc. -->
     <script src="/assets/Scripts/site-components.js" defer></script>
     
-    <!-- 🛡️ CUSTOM SCOPE: all styles are prefixed with .hsd-renewal-card 
-         to avoid collisions with site header/footer /style.css -->
+    <!-- 🛡️ RADICAL ISOLATION: card uses "all: initial" + scoped reset 
+         to prevent any influence on header/footer dimensions or layout -->
     <style>
-        /* reset only inside the card – minimal, no leak */
-        .hsd-renewal-card * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* body background etc stays global – we just style the card wrapper */
+        /* global body – keep original site background, but use flex column 
+           to naturally accommodate header + card + footer without stretching */
         body {
-            background: #eef1f5;
+            background: #eef1f5;   /* fallback, might be overridden by style.css */
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             min-height: 100vh;
-            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            margin: 0;
             padding: 4px;
+            font-family: sans-serif;  /* inherited only if not overridden by style.css */
         }
 
-        /* isolated card container – all class names start with .hsd- */
+        /* the header and footer keep their original styles from style.css – 
+           we ensure they are not affected by any accidental rule from our card */
+        #site-header,
+        #site-footer,
+        .gototop {
+            width: 100%;          /* let them take full width as designed */
+            flex-shrink: 0;       /* prevent squeezing */
+        }
+
+        /* 🧱 card wrapper – provides a clean block that does NOT leak CSS outside */
         .hsd-renewal-card {
+            /* completely reset all properties to initial (browser defaults) 
+               inside the card, then apply only our specific styles */
+            all: initial;          /* kills inheritance from body / style.css */
+            display: block;        /* re-assert block display */
             max-width: 900px;           
             width: 100%;
             background: white;
@@ -40,10 +47,20 @@
             box-shadow: 0 10px 20px rgba(0,20,30,0.15);
             padding: 1.1rem 1.2rem 0.3rem 1.2rem;
             border: 1px solid #bdc9db;
-            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; /* restore our font */
+            line-height: normal;
+            color: initial;
+            margin: 1rem auto;     /* center card, no margin on sides */
+            box-sizing: border-box;
         }
 
-        /* header */
+        /* now all descendants start from a clean slate – we define every detail */
+        .hsd-renewal-card * {
+            all: revert;           /* revert to browser defaults, then we override */
+            box-sizing: border-box;
+        }
+
+        /* ----- our custom classed elements (prefix hsd-) ----- */
         .hsd-renewal-card .hsd-top-row {
             display: flex;
             justify-content: space-between;
@@ -61,7 +78,8 @@
             color: #1a3e5c;
             letter-spacing: -0.5px;
             line-height: 1.2;
-            margin: 0;          /* override global */
+            margin: 0;
+            background: transparent;
         }
 
         .hsd-renewal-card .hsd-top-row h1 small {
@@ -93,7 +111,6 @@
 
         .hsd-renewal-card .hsd-print-btn:hover { background: #0f2d44; }
 
-        /* particulars */
         .hsd-renewal-card .hsd-particulars {
             background: #f2f6fb;
             padding: 0.8rem 1.2rem;
@@ -252,39 +269,32 @@
             margin-top: 0.1rem;
         }
 
-        /* PRINT – same as before, but scoped inside card */
+        /* print – scoped inside card */
         @media print {
-            body { background: white; padding: 0; margin: 0; }
+            body { background: white; }
             .hsd-renewal-card { 
                 box-shadow: none; 
                 border-radius: 0; 
                 padding: 1.1rem 1.2rem 0.3rem 1.2rem !important; 
                 max-width: 100%; 
                 border: none; 
-                margin: 0;
+                margin: 0 auto;
             }
             .hsd-renewal-card .hsd-print-btn { display: none; }
-        }
-
-        /* additional safety: remove any global interference with header/footer */
-        #site-header, #site-footer, .gototop {
-            /* ensure they keep original styling – no extra reset needed */
         }
     </style>
 </head>
 <body>
-  <!-- header (global, unaffected) -->
+  <!-- global header – width untouched, no side effect from card -->
   <div id="site-header"></div>
 
-  <!-- 🧩 isolated card – every style class is prefixed with hsd- -->
+  <!-- 🛡️ fully isolated card – thanks to "all: initial" + scoped classes -->
   <div class="hsd-renewal-card" id="checklistPDF">
-        <!-- header with only PRINT button -->
         <div class="hsd-top-row">
             <h1>⛽ HSD RENEWAL <small>checklist+facilities</small></h1>
             <button class="hsd-print-btn" id="printPDF">📋 PRINT</button>
         </div>
 
-        <!-- particulars block -->
         <div class="hsd-particulars">
             <div class="hsd-part-item"><span class="hsd-tag">WhatsApp/Mobile :</span><span class="hsd-dash">_________________</span></div>
             <div class="hsd-part-item"><span class="hsd-tag">Email ID :</span><span class="hsd-dash">_________________</span></div>
@@ -293,12 +303,10 @@
             <div class="hsd-part-item"><span class="hsd-tag">Year of estab. :</span><span class="hsd-dash">______________</span></div>
         </div>
 
-        <!-- photocopy banner -->
         <div class="hsd-photo-badge">
             <span>📸 PHOTOCOPY REQUIRED</span> self‑attested copies for every marked document
         </div>
 
-        <!-- document checklist (20) two columns -->
         <div style="font-weight: 700; color:#1a3e5c; margin:0 0 0.2rem 0; font-size:0.92rem;">📋 DOCUMENTS TO BE ATTACHED</div>
         <div class="hsd-check-two">
             <div class="hsd-item-row"><input type="checkbox" id="c1"><label for="c1" class="hsd-item-text">License – HSD (certificate copy)</label></div>
@@ -323,7 +331,6 @@
             <div class="hsd-item-row"><input type="checkbox" id="c20"><label for="c20" class="hsd-item-text">NOC pollution board (if req.)</label></div>
         </div>
 
-        <!-- facilities -->
         <div class="hsd-facility-group">
             <div style="font-weight: 700; color:#1a3e5c; margin-bottom: 5px; font-size:0.9rem;">🧷 ON‑SITE FACILITIES (mandatory)</div>
             <div class="hsd-facility-grid">
@@ -339,23 +346,22 @@
             <div style="font-size:0.72rem; color:#2f4d73; margin-top: 4px;">✔ tick if ok</div>
         </div>
 
-        <!-- foot strip -->
         <div class="hsd-foot-strip">
             <span>🔏 Inspector: _________________________</span>
             <span class="hsd-stamp-line">STAMP / DATE</span>
         </div>
         <hr>
-        <div class="hsd-tiny">HSD renewal – reduced bottom gap · only print button</div>
+        <div class="hsd-tiny">HSD renewal – fully isolated, header/footer width preserved</div>
     </div>
 
-    <!-- simple print script (scoped to card button) -->
+    <!-- simple print script -->
     <script>
         document.getElementById('printPDF')?.addEventListener('click', function() {
             window.print();
         });
     </script>
 
-   <!-- FOOTER (global, unaffected) -->
+   <!-- global footer – width untouched, no side effect -->
   <div id="site-footer"></div>
   <!-- Go to Top -->
   <script src="/assets/Scripts/gototop.js"></script>
