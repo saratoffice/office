@@ -466,9 +466,8 @@
       border-bottom: 1px solid #ddd;
     }
 
-    #saraCsvTableV2 td[data-label="Download"],
-    #saraCsvTableV2 td[data-label="File Size"] {
-      text-align: right;
+    #saraCsvTableV2 td[data-label="Download"] {
+      text-align: center;
       vertical-align: middle;
     }
 
@@ -577,9 +576,7 @@
 
     /* Force nowrap on these columns */
     #saraCsvTableV2 td[data-label="Date"],
-    #saraCsvTableV2 td[data-label="Download"],
-    #saraCsvTableV2 td[data-label="Letter No."],
-    #saraCsvTableV2 td[data-label="File Size"] {
+    #saraCsvTableV2 td[data-label="Letter No."] {
       white-space: nowrap;
     }
 
@@ -793,7 +790,7 @@
           // Filter out empty rows
           masterData = results.data.filter(row => {
             // Check if row has any meaningful data
-            return row["S.N"] || row["Subject"] || row["Letter No."];
+            return row["S.No."] || row["S.N."] || row["Subject"] || row["Letter No."];
           });
           
           if (masterData.length === 0) {
@@ -802,8 +799,9 @@
           
           console.log(`Loaded ${masterData.length} records`); // Debug
           
-          // Process dates for all data
+          // Process data for all rows
           masterData = masterData.map(row => {
+            // Handle date formatting
             const rawDate = (row["Date"] || "").trim();
             const parts = rawDate.split("/");
             if (parts.length === 3) {
@@ -820,14 +818,20 @@
               row["SortDate"] = null;
             }
             
-            // Clean subject
-            row["Subject"] = (row["Subject"] || "").replace(/_/g, " ").replace(/\.pdf$/i, "").trim();
+            // Clean subject (remove underscores and .pdf)
+            if (row["Subject"]) {
+              row["Subject"] = row["Subject"].replace(/_/g, " ").replace(/\.pdf$/i, "").trim();
+            }
+            
+            // Handle S.No. column - some CSVs use S.No., some use S.N.
+            if (!row["S.No."] && row["S.N."]) {
+              row["S.No."] = row["S.N."];
+            }
             
             return row;
           });
           
           // Populate all category tabs (filtered from master data)
-          // Check if the active tab is not AllFiles, then populate it
           const activeTab = document.querySelector('.tab-item.active');
           const activeCategory = activeTab ? activeTab.getAttribute('data-category') : 'AllFiles';
           
@@ -881,10 +885,38 @@
 
     // ---------- BUILD FILTERED TABLE HTML FOR CATEGORY TABS ----------
     function buildTableHTML(category) {
-      // Filter by Category column (exact match)
-      const filtered = masterData.filter(row => 
-        row["Category"] && row["Category"].trim().toLowerCase() === category.toLowerCase()
-      );
+      // Try to find the category column - common names
+      let categoryColumn = null;
+      const possibleCategoryColumns = ["Act/Rule/Order", "Category", "Type", "Document Type", "Section"];
+      
+      // Find which column contains the category data
+      if (masterData.length > 0) {
+        const firstRow = masterData[0];
+        for (let colName of possibleCategoryColumns) {
+          if (firstRow.hasOwnProperty(colName)) {
+            categoryColumn = colName;
+            break;
+          }
+        }
+      }
+      
+      // If no category column found, try to infer from data
+      let filtered = [];
+      if (categoryColumn) {
+        filtered = masterData.filter(row => 
+          row[categoryColumn] && row[categoryColumn].toString().trim() === category
+        );
+      } else {
+        // If can't find category column, search in all columns for the category name
+        filtered = masterData.filter(row => {
+          for (let key in row) {
+            if (row[key] && row[key].toString().includes(category)) {
+              return true;
+            }
+          }
+          return false;
+        });
+      }
       
       if (filtered.length === 0) {
         return `<table class="csv-table"><thead><tr><th>S.No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center; padding:40px;">📁 No documents for ${category}</td></tr></tbody></table>`;
@@ -893,25 +925,41 @@
       const rowsHtml = filtered.map((row, idx) => {
         let subject = row["Subject"] || "Untitled";
         
-        // Use Custom-Link for download - this is the direct Google Drive link that triggers download
-        let downloadLink = row["Custom-Link"] || row["Drive-File-Link"] || "#";
+        // Use the Button column directly as it contains the complete button HTML
+        let buttonHtml = row["Button"] || "";
         
-        // If Custom-Link is empty, try Drive-File-Link as fallback
-        if (!downloadLink || downloadLink === "#") {
-          downloadLink = row["Drive-File-Link"] || "#";
+        // If Button column is empty, create a default button
+        if (!buttonHtml) {
+          // Try to find a link in other columns
+          let link = "#";
+          const possibleLinkColumns = ["Link", "URL", "Download Link", "File URL"];
+          for (let colName of possibleLinkColumns) {
+            if (row[colName] && row[colName].toString().startsWith("http")) {
+              link = row[colName];
+              break;
+            }
+          }
+          
+          if (link !== "#") {
+            buttonHtml = `<a href="${link}" target="_blank" rel="noopener noreferrer"><button class="download-btn">Download</button></a>`;
+          } else {
+            buttonHtml = '<span style="color:#999;">No link</span>';
+          }
         }
         
-        // Ensure the link is valid
-        const safeLink = (downloadLink.startsWith("http")) ? downloadLink : "#";
-        
-        // For share button, we still use the Custom-Link or Drive-File-Link
-        const shareLink = safeLink !== "#" ? safeLink : "#";
+        // Create share button with subject and link
+        let shareLink = "#";
+        // Try to extract link from button HTML for sharing
+        const linkMatch = buttonHtml.match(/href="([^"]+)"/);
+        if (linkMatch) {
+          shareLink = linkMatch[1];
+        }
         const encodedSubject = encodeURIComponent("📄 " + subject + "\n🔗 " + shareLink);
         
         return `<tr>
           <td>${idx + 1}</td>
           <td>${subject}</td>
-          <td><a href="${safeLink}" target="_blank" rel="noopener noreferrer"><button class="download-btn">Download</button></a></td>
+          <td>${buttonHtml}</td>
           <td><a href="https://wa.me/?text=${encodedSubject}" target="_blank" rel="noopener noreferrer"><button class="share-btn">Share</button></a></td>
         </tr>`;
       }).join("");
@@ -1028,27 +1076,38 @@
 
       // Add sequential S.N.
       dataForAll.forEach((row, index) => {
-        row["S.N."] = index + 1;
+        row["S.No."] = index + 1;
       });
 
       const tbody = $('#saraCsvTableV2 tbody');
       tbody.empty();
 
       dataForAll.forEach(row => {
-        // Generate download button using Custom-Link (primary) or Drive-File-Link (fallback)
-        let downloadLink = row["Custom-Link"] || row["Drive-File-Link"] || "#";
+        // Use the Button column directly as it contains the complete button HTML
+        let downloadButton = row["Button"] || "";
         
-        // Create download button with the Custom-Link
-        let downloadButton = "";
-        if (downloadLink && downloadLink !== "#" && downloadLink.startsWith("http")) {
-          downloadButton = `<a href="${downloadLink}" target="_blank" rel="noopener noreferrer"><button class="sara-download-btn">Download</button></a>`;
-        } else {
-          downloadButton = '<span style="color:#999;">No link</span>';
+        // If Button column is empty, create a default button
+        if (!downloadButton) {
+          // Try to find a link in other columns
+          let link = "#";
+          const possibleLinkColumns = ["Link", "URL", "Download Link", "File URL"];
+          for (let colName of possibleLinkColumns) {
+            if (row[colName] && row[colName].toString().startsWith("http")) {
+              link = row[colName];
+              break;
+            }
+          }
+          
+          if (link !== "#") {
+            downloadButton = `<a href="${link}" target="_blank" rel="noopener noreferrer"><button class="sara-download-btn">Download</button></a>`;
+          } else {
+            downloadButton = '<span style="color:#999;">No link</span>';
+          }
         }
         
         const tableRow = `
           <tr>
-            <td data-label="S.N.">${row["S.N."]}</td>
+            <td data-label="S.N.">${row["S.No."] || row["S.N."] || ""}</td>
             <td data-label="Letter No.">${row["Letter No."] || ""}</td>
             <td data-label="Date" data-sort="${row["SortDate"] || ''}">${row["Date"] || ""}</td>
             <td data-label="Subject">${row["Subject"] || ""}</td>
