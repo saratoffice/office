@@ -767,219 +767,428 @@
 </div>
 
 <script>
-  // ------- CONFIGURATION --------
-// Use only ONE CSV file for all tabs
-const MASTER_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTagonyub0K84Tg9xZVxeLhQ8rfb417bTqKwSP3xzhkQ5mbnZY6mOFFdB6kK8Hl0EZtYY7t3e8qd-kO/pub?gid=51131841&single=true&output=csv";
+  (function() {
+    "use strict";
 
-let masterData = []; // Store all parsed data
-
-// ---------- LOAD MASTER CSV DATA ----------
-function loadMasterData() {
-  // Show loading state for all tabs
-  updateAllPlaceholders('⏳ Loading documents from master file...');
-  
-  Papa.parse(MASTER_CSV_URL, {
-    download: true,
-    header: true, // Important: Treat first row as headers
-    skipEmptyLines: true,
-    complete: function(results) {
-      masterData = results.data.filter(row => 
-        row["S.N."] || row["Subject"] // Filter out truly empty rows
-      );
-      
-      if (masterData.length === 0) {
-        throw new Error('No data found in CSV');
-      }
-      
-      console.log(`Loaded ${masterData.length} records`); // Debug
-      
-      // Populate all category tabs (filtered from master data)
-      populateTableForCategory('Act');
-      populateTableForCategory('Rules');
-      populateTableForCategory('Order');
-      populateTableForCategory('MSP');
-      populateTableForCategory('Procurement');
-      populateTableForCategory('Food');
-      populateTableForCategory('Misc');
-    },
-    error: function(err) {
-      console.error("Master CSV Load Error:", err);
-      showErrorMessage("Failed to load master data: " + err.message);
-    }
-  });
-}
-
-// ---------- BUILD FILTERED TABLE HTML ----------
-function buildTableHTML(category) {
-  // Filter masterData based on the category column
-  // ⚠️ IMPORTANT: Replace 'Category' with the actual column name from your CSV
-  const filtered = masterData.filter(row => 
-    row["Category"] && row["Category"].trim() === category
-  );
-  
-  if (filtered.length === 0) {
-    return `<table class="csv-table"><thead><tr><th>S.No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center; padding:40px;">📁 No documents for ${category}</td></tr></tbody></table>`;
-  }
-
-  const rowsHtml = filtered.map((row, idx) => {
-    // ⚠️ Adjust these column names to match your actual CSV headers
-    let subject = (row["Subject"] || "").replace(/_/g, " ").replace(/\.pdf$/i, "").trim() || "Untitled";
-    // Try to get the link - common column names might be 'Link', 'URL', 'Download Link', etc.
-    const link = row["Link"] || row["URL"] || row["Download Link"] || "#";
-    const safeLink = (link.startsWith("http") || link.startsWith("/")) ? link : "#";
-    const encodedSubject = encodeURIComponent("📄 " + subject + "\n🔗 " + safeLink);
+    // ------- CONFIGURATION --------
+    // SINGLE CSV FILE FOR ALL TABS
+    const MASTER_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTagonyub0K84Tg9xZVxeLhQ8rfb417bTqKwSP3xzhkQ5mbnZY6mOFFdB6kK8Hl0EZtYY7t3e8qd-kO/pub?gid=51131841&single=true&output=csv";
+    const GOVT_CALENDARS_URL = "https://raw.githubusercontent.com/saratoffice/office/main/calendars.html";
     
-    return `<tr>
-      <td>${idx + 1}</td>
-      <td>${subject}</td>
-      <td><a href="${safeLink}" target="_blank" rel="noopener noreferrer"><button class="download-btn">Download</button></a></td>
-      <td><a href="https://wa.me/?text=${encodedSubject}" target="_blank" rel="noopener noreferrer"><button class="share-btn">Share</button></a></td>
-    </tr>`;
-  }).join("");
+    let masterData = []; // Store all parsed data from the single CSV
+    let allFilesDataTable = null;
 
-  return `<table class="csv-table">
-    <thead><tr><th>S.No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead>
-    <tbody>${rowsHtml}</tbody>
-  </table>`;
-}
-
-// ---------- MODIFIED ALL FILES TAB (using same master data) ----------
-function loadAllFilesTab() {
-  const container = document.getElementById('tab-AllFiles');
-  if (!container) return;
-  
-  const placeholder = container.querySelector('.csv-table-placeholder');
-  if (!placeholder) return;
-
-  if (masterData.length === 0) {
-    placeholder.innerHTML = '<div style="text-align: center; padding: 40px;">⏳ Loading All Files...</div>';
-    return;
-  }
-
-  // Destroy existing DataTable if it exists
-  if (allFilesDataTable) {
-    allFilesDataTable.destroy();
-    allFilesDataTable = null;
-  }
-
-  // Create the table structure for All Files (using your detailed format)
-  const tableContainer = document.createElement('div');
-  tableContainer.className = 'sara-table-container-v2';
-  tableContainer.innerHTML = `
-    <table id="saraCsvTableV2" class="display nowrap">
-      <thead>
-        <tr>
-          <th>Index</th>
-          <th>Letter No.</th>
-          <th>Date</th>
-          <th>Subject</th>
-          <th>Download</th>
-          <th>Size</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  `;
-  
-  placeholder.innerHTML = '';
-  placeholder.appendChild(tableContainer);
-
-  // Process data for All Files tab (similar to before, but using masterData)
-  let dataForAll = masterData.map(row => {
-    // Deep clone to avoid modifying original masterData
-    return { ...row };
-  });
-
-  // Process dates (if present)
-  dataForAll = dataForAll.map(row => {
-    const rawDate = (row["Date"] || "").trim();
-    const parts = rawDate.split("/");
-    if (parts.length === 3) {
-      let [dd, mm, yyyy] = parts;
-      dd = dd.padStart(2, '0');
-      mm = mm.padStart(2, '0');
-      if (yyyy.length === 4) {
-        row["SortDate"] = `${yyyy}-${mm}-${dd}`;
-        row["Date"] = `${dd}-${mm}-${yyyy}`;
-      } else {
-        row["SortDate"] = null;
-      }
-    } else {
-      row["SortDate"] = null;
-    }
-    return row;
-  });
-
-  // Sort by date (if SortDate exists)
-  dataForAll.sort((a, b) => {
-    if (!a.SortDate && !b.SortDate) return 0;
-    if (!a.SortDate) return 1;
-    if (!b.SortDate) return -1;
-    return new Date(b.SortDate) - new Date(a.SortDate);
-  });
-
-  // Add sequential S.N.
-  dataForAll.forEach((row, index) => {
-    row["S.N."] = index + 1;
-  });
-
-  const tbody = $('#saraCsvTableV2 tbody');
-  tbody.empty();
-
-  dataForAll.forEach(row => {
-    // Generate download button - try different possible column names
-    let downloadButton = row["Button"] || "";
-    if (!downloadButton) {
-      const link = row["Link"] || row["URL"] || row["Download Link"] || "#";
-      if (link && link !== "#") {
-        downloadButton = `<a href="${link}" target="_blank" rel="noopener noreferrer"><button class="sara-download-btn">Download</button></a>`;
-      } else {
-        downloadButton = '<span style="color:#999;">No link</span>';
-      }
-    }
-    
-    const tableRow = `
-      <tr>
-        <td data-label="S.N.">${row["S.N."]}</td>
-        <td data-label="Letter No.">${row["Letter No."] || ""}</td>
-        <td data-label="Date" data-sort="${row["SortDate"] || ''}">${row["Date"] || ""}</td>
-        <td data-label="Subject">${row["Subject"] || ""}</td>
-        <td data-label="Download">${downloadButton}</td>
-        <td data-label="File Size">${row["File Size (MB)"] || row["Size"] || "—"}</td>
-      </tr>`;
-    tbody.append(tableRow);
-  });
-
-  // Initialize DataTable
-  allFilesDataTable = $('#saraCsvTableV2').DataTable({
-    responsive: true,
-    pageLength: 10,
-    lengthMenu: [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]],
-    autoWidth: false,
-    order: [[2, 'desc']],
-    columnDefs: [{ targets: 0, orderable: false }],
-    language: {
-      search: "Search:",
-      lengthMenu: "Show _MENU_ entries",
-      info: "Showing _START_ to _END_ of _TOTAL_ entries",
-      infoEmpty: "No records available",
-      infoFiltered: "(filtered from _MAX_ total entries)",
-      paginate: { first: "First", last: "Last", next: "Next", previous: "Previous" }
-    },
-    drawCallback: function(settings) {
-      const api = this.api();
-      api.column(0, {page: 'current'}).nodes().each(function(cell, i) {
-        cell.innerHTML = i + 1 + (api.page() * api.page.len());
+    // ---------- LOAD MASTER CSV DATA ----------
+    function loadMasterData() {
+      // Show loading state for all tabs
+      updateAllPlaceholders('⏳ Loading documents from master file...');
+      
+      Papa.parse(MASTER_CSV_URL, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          console.log("CSV Headers:", results.meta.fields); // Debug: see column names
+          
+          // Filter out empty rows
+          masterData = results.data.filter(row => {
+            // Check if row has any meaningful data
+            return row["S.N."] || row["Subject"] || row["Letter No."];
+          });
+          
+          if (masterData.length === 0) {
+            throw new Error('No data found in CSV');
+          }
+          
+          console.log(`Loaded ${masterData.length} records`); // Debug
+          
+          // Process dates for all data
+          masterData = masterData.map(row => {
+            const rawDate = (row["Date"] || "").trim();
+            const parts = rawDate.split("/");
+            if (parts.length === 3) {
+              let [dd, mm, yyyy] = parts;
+              dd = dd.padStart(2, '0');
+              mm = mm.padStart(2, '0');
+              if (yyyy.length === 4) {
+                row["SortDate"] = `${yyyy}-${mm}-${dd}`;
+                row["Date"] = `${dd}-${mm}-${yyyy}`;
+              } else {
+                row["SortDate"] = null;
+              }
+            } else {
+              row["SortDate"] = null;
+            }
+            
+            // Clean subject
+            row["Subject"] = (row["Subject"] || "").replace(/_/g, " ").replace(/\.pdf$/i, "").trim();
+            
+            return row;
+          });
+          
+          // Populate all category tabs (filtered from master data)
+          // Check if the active tab is not AllFiles, then populate it
+          const activeTab = document.querySelector('.tab-item.active');
+          const activeCategory = activeTab ? activeTab.getAttribute('data-category') : 'AllFiles';
+          
+          if (activeCategory !== 'AllFiles' && activeCategory !== 'Govt Calendars') {
+            populateTableForCategory(activeCategory);
+          }
+          
+          // Pre-load AllFiles tab if it's active
+          if (activeCategory === 'AllFiles') {
+            loadAllFilesTab();
+          }
+        },
+        error: function(err) {
+          console.error("Master CSV Load Error:", err);
+          showErrorMessage("Failed to load master data: " + err.message);
+        }
       });
     }
-  });
-}
+    
+    function updateAllPlaceholders(message) {
+      const categories = ['Act', 'Rules', 'Order', 'MSP', 'Procurement', 'Food', 'Misc', 'AllFiles'];
+      categories.forEach(cat => {
+        const tabDiv = document.getElementById(`tab-${cat}`);
+        if (tabDiv) {
+          const placeholder = tabDiv.querySelector('.csv-table-placeholder');
+          if (placeholder && placeholder.innerHTML.includes('Loading')) {
+            placeholder.innerHTML = message;
+          }
+        }
+      });
+    }
+    
+    function showErrorMessage(errorText) {
+      const categories = ['Act', 'Rules', 'Order', 'MSP', 'Procurement', 'Food', 'Misc', 'AllFiles'];
+      categories.forEach(cat => {
+        const tabDiv = document.getElementById(`tab-${cat}`);
+        if (tabDiv) {
+          const placeholder = tabDiv.querySelector('.csv-table-placeholder');
+          if (placeholder) {
+            placeholder.innerHTML = `
+              <div style="text-align: center; padding: 40px; background: #fff3f3; border-radius: 8px;">
+                <h3 style="color: #d32f2f; margin-bottom: 15px;">⚠️ Error Loading Documents</h3>
+                <p style="color: #666;">${errorText}</p>
+                <p style="color: #999; margin-top: 20px;">Please try refreshing the page or contact support.</p>
+              </div>
+            `;
+          }
+        }
+      });
+    }
 
-// ---------- UPDATE INITIALIZATION ----------
-document.addEventListener('DOMContentLoaded', function() {
-  initTabs();
-  loadMasterData(); // Load the single master CSV
-});
+    // ---------- BUILD FILTERED TABLE HTML FOR CATEGORY TABS ----------
+    function buildTableHTML(category) {
+      // Try multiple possible column names for category
+      const possibleCategoryColumns = ["Category", "Type", "Document Type", "Section", "Act/Rule/Order"];
+      
+      let filtered = [];
+      
+      // Try each possible column name until we find matches
+      for (let colName of possibleCategoryColumns) {
+        const tempFiltered = masterData.filter(row => 
+          row[colName] && row[colName].trim().toLowerCase() === category.toLowerCase()
+        );
+        if (tempFiltered.length > 0) {
+          filtered = tempFiltered;
+          console.log(`Filtering by column "${colName}" for category "${category}" found ${filtered.length} items`);
+          break;
+        }
+      }
+      
+      // If still no matches, try partial matching
+      if (filtered.length === 0) {
+        filtered = masterData.filter(row => {
+          // Check all columns for category match
+          for (let key in row) {
+            if (row[key] && row[key].toString().toLowerCase().includes(category.toLowerCase())) {
+              return true;
+            }
+          }
+          return false;
+        });
+      }
+      
+      if (filtered.length === 0) {
+        return `<table class="csv-table"><thead><tr><th>S.No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center; padding:40px;">📁 No documents for ${category}</td></tr></tbody></table>`;
+      }
+
+      const rowsHtml = filtered.map((row, idx) => {
+        let subject = row["Subject"] || "Untitled";
+        
+        // Try to find the link in various possible column names
+        let link = "#";
+        const possibleLinkColumns = ["Link", "URL", "Download Link", "File URL", "Button Link", "PDF Link"];
+        for (let colName of possibleLinkColumns) {
+          if (row[colName] && row[colName].toString().startsWith("http")) {
+            link = row[colName];
+            break;
+          }
+        }
+        
+        // If still no link, try to extract from Button column
+        if (link === "#" && row["Button"]) {
+          const buttonHtml = row["Button"];
+          const match = buttonHtml.match(/href="([^"]+)"/);
+          if (match) {
+            link = match[1];
+          }
+        }
+        
+        const safeLink = (link.startsWith("http") || link.startsWith("/")) ? link : "#";
+        const encodedSubject = encodeURIComponent("📄 " + subject + "\n🔗 " + safeLink);
+        
+        return `<tr>
+          <td>${idx + 1}</td>
+          <td>${subject}</td>
+          <td><a href="${safeLink}" target="_blank" rel="noopener noreferrer"><button class="download-btn">Download</button></a></td>
+          <td><a href="https://wa.me/?text=${encodedSubject}" target="_blank" rel="noopener noreferrer"><button class="share-btn">Share</button></a></td>
+        </tr>`;
+      }).join("");
+
+      return `<table class="csv-table">
+        <thead><tr><th>S.No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>`;
+    }
+
+    function populateTableForCategory(category) {
+      const tabDiv = document.getElementById(`tab-${category}`);
+      if (!tabDiv) return;
+      const placeholder = tabDiv.querySelector('.csv-table-placeholder');
+      if (!placeholder) return;
+      
+      if (masterData.length === 0) {
+        placeholder.innerHTML = '⏳ Loading...';
+        return;
+      }
+      
+      placeholder.innerHTML = buildTableHTML(category);
+    }
+
+    // ---------- LOAD GOVT. CALENDARS ----------
+    function loadGovtCalendars() {
+      const calendarContainer = document.getElementById('tab-Govt Calendars');
+      if (!calendarContainer) return;
+      
+      const placeholder = calendarContainer.querySelector('.csv-table-placeholder');
+      if (!placeholder) return;
+      
+      placeholder.innerHTML = '<div style="text-align: center; padding: 40px;">📅 Loading Government Calendars...</div>';
+      
+      fetch(GOVT_CALENDARS_URL)
+        .then(response => {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.text();
+        })
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const calendarSection = doc.querySelector('.govt-calendars-section');
+          
+          if (calendarSection) {
+            placeholder.innerHTML = calendarSection.outerHTML;
+          } else {
+            placeholder.innerHTML = html;
+          }
+        })
+        .catch(error => {
+          console.error('Error loading Govt. Calendars:', error);
+          placeholder.innerHTML = `
+            <div style="text-align: center; padding: 50px; background: white; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+              <h2 style="color: #0083ed; font-size: 28pt; margin-bottom: 20px;">GOVT. CALENDARS</h2>
+              <p style="color: #666; font-size: 18px;">⚠️ Unable to load calendars. Please try again later.</p>
+              <p style="color: #999; margin-top: 20px;">Error: ${error.message}</p>
+            </div>
+          `;
+        });
+    }
+
+    // ---------- LOAD ALL FILES TAB (using same master data) ----------
+    function loadAllFilesTab() {
+      const container = document.getElementById('tab-AllFiles');
+      if (!container) return;
+      
+      const placeholder = container.querySelector('.csv-table-placeholder');
+      if (!placeholder) return;
+
+      if (masterData.length === 0) {
+        placeholder.innerHTML = '<div style="text-align: center; padding: 40px;">⏳ Loading All Files...</div>';
+        return;
+      }
+
+      // Destroy existing DataTable if it exists
+      if (allFilesDataTable) {
+        allFilesDataTable.destroy();
+        allFilesDataTable = null;
+      }
+
+      // Create the table structure for All Files
+      const tableContainer = document.createElement('div');
+      tableContainer.className = 'sara-table-container-v2';
+      tableContainer.innerHTML = `
+        <table id="saraCsvTableV2" class="display nowrap">
+          <thead>
+            <tr>
+              <th>Index</th>
+              <th>Letter No.</th>
+              <th>Date</th>
+              <th>Subject</th>
+              <th>Download</th>
+              <th>Size</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      `;
+      
+      placeholder.innerHTML = '';
+      placeholder.appendChild(tableContainer);
+
+      // Use masterData for All Files tab
+      let dataForAll = masterData.map(row => ({ ...row })); // Clone to avoid modifying original
+
+      // Sort by date (if SortDate exists)
+      dataForAll.sort((a, b) => {
+        if (!a.SortDate && !b.SortDate) return 0;
+        if (!a.SortDate) return 1;
+        if (!b.SortDate) return -1;
+        return new Date(b.SortDate) - new Date(a.SortDate);
+      });
+
+      // Add sequential S.N.
+      dataForAll.forEach((row, index) => {
+        row["S.N."] = index + 1;
+      });
+
+      const tbody = $('#saraCsvTableV2 tbody');
+      tbody.empty();
+
+      dataForAll.forEach(row => {
+        // Generate download button
+        let downloadButton = "";
+        
+        // Try to find link in various columns
+        let link = "#";
+        const possibleLinkColumns = ["Link", "URL", "Download Link", "File URL", "PDF Link"];
+        for (let colName of possibleLinkColumns) {
+          if (row[colName] && row[colName].toString().startsWith("http")) {
+            link = row[colName];
+            break;
+          }
+        }
+        
+        // If link found, create button
+        if (link !== "#") {
+          downloadButton = `<a href="${link}" target="_blank" rel="noopener noreferrer"><button class="sara-download-btn">Download</button></a>`;
+        } else if (row["Button"]) {
+          // If Button column exists with HTML, use it directly
+          downloadButton = row["Button"];
+        } else {
+          downloadButton = '<span style="color:#999;">No link</span>';
+        }
+        
+        const tableRow = `
+          <tr>
+            <td data-label="S.N.">${row["S.N."]}</td>
+            <td data-label="Letter No.">${row["Letter No."] || ""}</td>
+            <td data-label="Date" data-sort="${row["SortDate"] || ''}">${row["Date"] || ""}</td>
+            <td data-label="Subject">${row["Subject"] || ""}</td>
+            <td data-label="Download">${downloadButton}</td>
+            <td data-label="File Size">${row["File Size (MB)"] || row["Size"] || "—"}</td>
+          </tr>`;
+        tbody.append(tableRow);
+      });
+
+      // Initialize DataTable
+      allFilesDataTable = $('#saraCsvTableV2').DataTable({
+        responsive: true,
+        pageLength: 10,
+        lengthMenu: [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]],
+        autoWidth: false,
+        order: [[2, 'desc']],
+        columnDefs: [{ targets: 0, orderable: false }],
+        language: {
+          search: "Search:",
+          lengthMenu: "Show _MENU_ entries",
+          info: "Showing _START_ to _END_ of _TOTAL_ entries",
+          infoEmpty: "No records available",
+          infoFiltered: "(filtered from _MAX_ total entries)",
+          paginate: { first: "First", last: "Last", next: "Next", previous: "Previous" }
+        },
+        drawCallback: function(settings) {
+          const api = this.api();
+          api.column(0, {page: 'current'}).nodes().each(function(cell, i) {
+            cell.innerHTML = i + 1 + (api.page() * api.page.len());
+          });
+        }
+      });
+    }
+
+    // ---------- TAB CLICK HANDLER ----------
+    function initTabs() {
+      const tabStrip = document.querySelector('.sarat-docs .tab-strip');
+      if (!tabStrip) return;
+      const tabButtons = tabStrip.querySelectorAll('.tab-item');
+      
+      const containers = {
+        AllFiles: document.getElementById('tab-AllFiles'),
+        Act: document.getElementById('tab-Act'),
+        Rules: document.getElementById('tab-Rules'),
+        Order: document.getElementById('tab-Order'),
+        MSP: document.getElementById('tab-MSP'),
+        Procurement: document.getElementById('tab-Procurement'),
+        Food: document.getElementById('tab-Food'),
+        Misc: document.getElementById('tab-Misc'),
+        'Govt Calendars': document.getElementById('tab-Govt Calendars')
+      };
+
+      function activateTab(category) {
+        // Update active class
+        tabButtons.forEach(btn => {
+          const btnCat = btn.getAttribute('data-category');
+          btn.classList.toggle('active', btnCat === category);
+        });
+
+        // Show/hide containers
+        Object.keys(containers).forEach(key => {
+          if (containers[key]) {
+            containers[key].style.display = key === category ? 'block' : 'none';
+          }
+        });
+
+        // Load data if needed
+        if (category === 'AllFiles') {
+          loadAllFilesTab();
+        } else if (category === 'Govt Calendars') {
+          loadGovtCalendars();
+        } else if (masterData.length > 0) {
+          // For category tabs, populate from master data
+          populateTableForCategory(category);
+        }
+      }
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const category = this.getAttribute('data-category');
+          activateTab(category);
+        });
+      });
+
+      // Initial active tab: AllFiles
+      activateTab('AllFiles');
+    }
+
+    // ---------- INITIALIZE EVERYTHING ----------
+    document.addEventListener('DOMContentLoaded', function() {
+      initTabs();
+      loadMasterData(); // Load the single master CSV for all tabs
+    });
+
+  })();
 </script>
 
 <script src="/assets/Scripts/gototop.js"></script>
