@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checklist · live from Google Sheets</title>
+    <title>Checklist · separate sheets</title>
     <style>
         * {
             margin: 0;
@@ -396,7 +396,7 @@
 <body>
 <div id="site-header">
     <div class="header-content">
-        <div class="logo"><h1>📋 SARAT OFFICE <small>live from sheets</small></h1></div>
+        <div class="logo"><h1>📋 SARAT OFFICE <small>separate sheets</small></h1></div>
         <div class="header-links"><a href="#">Dashboard</a><a href="#">All</a><a href="#">Reports</a></div>
     </div>
 </div>
@@ -405,12 +405,12 @@
     <div class="checklist-nav">
         <label for="checklist-type">📋 Select Checklist:</label>
         <select id="checklist-type">
-            <option value="hsd-renewal">⛽ HSD Renewal (hsd_data)</option>
-            <option value="fps-checklist">🛒 FPS (fps_data)</option>
-            <option value="ppc-checklist">🏭 PPC (ppc_data)</option>
-            <option value="rice-mill">🌾 Rice Mill (rice_mill_data)</option>
-            <option value="kerosene">🛢️ Kerosene Dealer</option>
-            <option value="lpg">🔥 LPG Distributor</option>
+    <option value="hsd">⛽ HSD Renewal (hsd_data sheet)</option>
+    <option value="fps">🛒 FPS (fps_data sheet)</option>
+    <option value="ppc">🏭 PPC (ppc_data sheet)</option>
+    <option value="rice">🌾 Rice Mill (rice_mill_data sheet)</option>
+    <option value="kerosene">🛢️ Kerosene Dealer</option>
+    <option value="lpg">🔥 LPG Distributor</option>
         </select>
         <span class="checklist-badge" id="checklist-type-badge">HSD Renewal</span>
     </div>
@@ -419,31 +419,29 @@
 </main>
 
 <div id="site-footer">
-    <div class="footer-content"><span>© 2025 Sarat Office · Data from Google Sheets</span><span>Version 4.1 · fixed CSV fetch</span></div>
+    <div class="footer-content"><span>© 2025 Sarat Office · Data from separate sheets</span><span>Version 4.0 · per-sheet loading</span></div>
 </div>
 <a href="#" class="go-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'}); return false;">↑</a>
 
 <script>
     // ==========================================================================
-    // CONFIGURATION - Using your working CSV link
+    // CONFIGURATION - REPLACE WITH YOUR GOOGLE SHEET IDs and SHEET NAMES
     // ==========================================================================
     const SHEET_CONFIG = {
-        // Your spreadsheet ID extracted from the working link
-        SPREADSHEET_ID: '2PACX-1vS7ik39OFKwscZJiFMgl2CNzRltAxK2sG6fIn-WniMGJ2rvQX1mFnzoerLz0lZOAsUMGeyFtyp0II4o',
-        
-        // Map dropdown values to sheet names
-        sheets: {
-            'hsd-renewal': 'hsd_data',
-            'fps-checklist': 'fps_data',
-            'ppc-checklist': 'ppc_data',
-            'rice-mill': 'rice_mill_data',
-            'kerosene': 'kerosene_data',
-            'lpg': 'lpg_data'
-        }
-    };
+    SPREADSHEET_ID: '2PACX-1vS7ik39OFKwscZJiFMgl2CNzRltAxK2sG6fIn-WniMGJ2rvQX1mFnzoerLz0lZOAsUMGeyFtyp0II4o',
+    
+    sheets: {
+        hsd: 'hsd_data',
+        fps: 'fps_data',
+        ppc: 'ppc_data',
+        rice: 'rice_mill_data',
+        kerosene: 'kerosene_data',
+        lpg: 'lpg_data'
+    }
+};
 
     // ==========================================================================
-    // Helper: Parse CSV into array of objects
+    // Helper: parse CSV into array of objects
     // ==========================================================================
     function csvToObjects(csvText) {
         const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== '');
@@ -485,25 +483,6 @@
         result.push(currentValue); // push last value
         
         return result.map(val => val.trim());
-    }
-
-    // ==========================================================================
-    // Fetch data from specific sheet using the EXACT format that works
-    // ==========================================================================
-    async function fetchSheetData(sheetName) {
-        const spreadsheetId = SHEET_CONFIG.SPREADSHEET_ID;
-        
-        // Use the exact URL format that you confirmed works in browser
-        const url = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?output=csv&sheet=${encodeURIComponent(sheetName)}`;
-        
-        console.log('Fetching URL:', url);
-        
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Failed to load sheet: ${sheetName} (Status: ${response.status})`);
-        }
-        const csvText = await response.text();
-        return csvToObjects(csvText);
     }
 
     // ==========================================================================
@@ -549,15 +528,8 @@
 
         // Set fallback title if missing
         if (!output.metadata.title) {
-            const names = { 
-                'hsd-renewal': 'HSD Renewal', 
-                'fps-checklist': 'FPS Inspection', 
-                'ppc-checklist': 'PPC Compliance', 
-                'rice-mill': 'Rice Mill', 
-                'kerosene': 'Kerosene Dealer', 
-                'lpg': 'LPG Distributor' 
-            };
-            const type = document.getElementById('checklist-type')?.value || 'hsd-renewal';
+            const names = { hsd: 'HSD Renewal', fps: 'FPS Inspection', ppc: 'PPC Compliance', rice: 'Rice Mill', kerosene: 'Kerosene Dealer', lpg: 'LPG Distributor' };
+            const type = document.getElementById('checklist-type')?.value || 'hsd';
             output.metadata.title = names[type] || 'Checklist';
         }
 
@@ -569,7 +541,7 @@
     // ==========================================================================
     class ChecklistRenderer {
         constructor() { 
-            this.currentType = 'hsd-renewal'; 
+            this.currentType = 'hsd'; 
             this.data = null; 
         }
 
@@ -579,14 +551,7 @@
             
             const container = document.getElementById('checklist-container');
             const badge = document.getElementById('checklist-type-badge');
-            const names = { 
-                'hsd-renewal': 'HSD Renewal', 
-                'fps-checklist': 'FPS', 
-                'ppc-checklist': 'PPC', 
-                'rice-mill': 'Rice Mill', 
-                'kerosene': 'Kerosene', 
-                'lpg': 'LPG' 
-            };
+            const names = { hsd: 'HSD Renewal', fps: 'FPS', ppc: 'PPC', rice: 'Rice Mill', kerosene: 'Kerosene', lpg: 'LPG' };
             if (badge) badge.textContent = names[type] || type;
 
             if (!this.data) {
@@ -715,6 +680,27 @@
     }
 
     // ==========================================================================
+    // Fetch data from specific sheet
+    // ==========================================================================
+    async function fetchSheetData(sheetName) {
+        const spreadsheetId = SHEET_CONFIG.SPREADSHEET_ID;
+        
+        if (spreadsheetId === 'YOUR_SPREADSHEET_ID_HERE') {
+            throw new Error('Please replace YOUR_SPREADSHEET_ID_HERE with your actual Google Sheet ID');
+        }
+        
+        // Using the CSV export URL format
+        const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to load sheet: ${sheetName}`);
+        }
+        const csvText = await response.text();
+        return csvToObjects(csvText);
+    }
+
+    // ==========================================================================
     // MAIN: Initialize
     // ==========================================================================
     document.addEventListener('DOMContentLoaded', () => {
@@ -732,7 +718,6 @@
                 }
                 
                 const rows = await fetchSheetData(sheetName);
-                console.log(`Loaded ${rows.length} rows from ${sheetName}`);
                 renderer.loadChecklist(type, rows);
                 
                 // Update URL
@@ -748,7 +733,7 @@
 
         // Get type from URL or default
         const urlParams = new URLSearchParams(window.location.search);
-        const initialType = urlParams.get('type') || 'hsd-renewal';
+        const initialType = urlParams.get('type') || 'hsd';
         if (select) select.value = initialType;
 
         // Load initial checklist
@@ -768,5 +753,7 @@
         });
     });
 </script>
+
+
 </body>
 </html>
