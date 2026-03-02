@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checklist Management System - Google Sheets Backend</title>
+    <title>Checklist Management System - HSD / FPS / PPC / Rice Mill</title>
     
     <style>
-        /* ========== GLOBAL RESET ========== */
+        /* ========== GLOBAL  RESET ========== */
         * {
             margin: 0;
             padding: 0;
@@ -53,29 +53,17 @@
             margin-left: 0.5rem;
         }
 
-        .sync-status {
-            background: rgba(255,255,255,0.15);
-            padding: 0.5rem 1.2rem;
+        .header-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
             border-radius: 30px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.2s;
         }
 
-        .sync-status .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #4caf50;
-            display: inline-block;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        .header-links a:hover {
+            background: rgba(255,255,255,0.2);
         }
 
         #site-footer {
@@ -142,29 +130,18 @@
             min-width: 280px;
         }
 
-        .refresh-btn {
+        .checklist-nav select:hover {
+            background-color: #f5f9ff;
+        }
+
+        .checklist-badge {
             background: #e9eff7;
-            border: 1px solid #1a3e5c;
             color: #1a3e5c;
-            padding: 0.5rem 1.5rem;
+            padding: 0.4rem 1.2rem;
             border-radius: 30px;
-            cursor: pointer;
+            font-size: 0.9rem;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
             margin-left: auto;
-        }
-
-        .refresh-btn:hover {
-            background: #d4e2f5;
-            transform: scale(1.02);
-        }
-
-        .refresh-btn.loading {
-            opacity: 0.7;
-            cursor: wait;
         }
 
         /* ========== MAIN CARD ========== */
@@ -268,6 +245,11 @@
             border-radius: 40px;
             font-weight: 500;
             letter-spacing: 0.3px;
+        }
+
+        .section-title .badge.orange {
+            background: #d19c2a;
+            color: #1e2b38;
         }
 
         /* ========== GRID LAYOUTS ========== */
@@ -392,6 +374,25 @@
             text-transform: uppercase;
         }
 
+        .facility-status.available {
+            background: #1e7e34;
+        }
+
+        /* ========== RECORDS GRID ========== */
+        .records-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem 1.5rem;
+        }
+
+        .record-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.4rem 0;
+            border-bottom: 1px dotted #8aa3c0;
+        }
+
         /* ========== RECOMMENDATION BOX ========== */
         .recommendation-box {
             background: linear-gradient(145deg, #e4edf7, #d2e2f2);
@@ -471,7 +472,8 @@
             color: #1a3e5c;
         }
 
-        .loading-state .spinner {
+        .loading-state::after {
+            content: '';
             display: inline-block;
             width: 1rem;
             height: 1rem;
@@ -502,8 +504,8 @@
             #site-footer,
             .checklist-nav,
             .print-btn,
-            .refresh-btn,
-            .sync-status {
+            .header-links,
+            .checklist-badge {
                 display: none !important;
             }
 
@@ -514,62 +516,45 @@
                 margin: 0;
                 border-radius: 0;
             }
+
+            .facility-status {
+                background: #1a3e5c !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .data-table th {
+                background: #1a3e5c !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
         }
 
-        /* ========== GOOGLE SHEETS CONFIG PANEL ========== */
-        .config-panel {
-            background: white;
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 2px solid #1a3e5c;
-        }
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .documents-grid,
+            .facilities-grid,
+            .records-grid {
+                grid-template-columns: 1fr;
+            }
 
-        .config-panel h3 {
-            color: #1a3e5c;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
 
-        .config-input {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
+            .header-title h1 {
+                font-size: 1.8rem;
+            }
 
-        .config-input input {
-            flex: 1;
-            min-width: 300px;
-            padding: 0.8rem 1.2rem;
-            border: 2px solid #d0dfef;
-            border-radius: 30px;
-            font-size: 1rem;
-        }
+            .checklist-nav select {
+                min-width: 100%;
+            }
 
-        .config-input button {
-            background: #1a3e5c;
-            color: white;
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .config-input button:hover {
-            background: #0f2d44;
-        }
-
-        .config-note {
-            font-size: 0.85rem;
-            color: #666;
-            margin-top: 0.8rem;
-            background: #f5f5f5;
-            padding: 0.8rem;
-            border-radius: 8px;
+            .officer-section {
+                flex-direction: column;
+                align-items: center;
+                padding: 1rem;
+            }
         }
     </style>
 </head>
@@ -579,421 +564,979 @@
 <div id="site-header">
     <div class="header-content">
         <div class="logo">
-            <h1>⛽ SARAT OFFICE <small>Google Sheets Backend</small></h1>
+            <h1>⛽ SARAT OFFICE <small>Checklist Management System</small></h1>
         </div>
-        <div class="sync-status" id="sync-status">
-            <span class="dot"></span>
-            <span id="sync-text">Connected to Google Sheets</span>
+        <div class="header-links">
+            <a href="#">Dashboard</a>
+            <a href="#">All Checklists</a>
+            <a href="#">Reports</a>
         </div>
     </div>
 </div>
 
 <!-- ========== MAIN CONTENT ========== -->
 <main>
-    <!-- Google Sheets Configuration Panel (Collapsible) -->
-    <div class="config-panel" id="config-panel">
-        <h3>🔧 Google Sheets Configuration</h3>
-        <div class="config-input">
-            <input type="text" id="sheet-id" placeholder="Enter Google Sheet ID (e.g., 1abc123...)" value="1YOUR_SHEET_ID_HERE">
-            <button onclick="saveSheetConfig()">Save & Load</button>
-        </div>
-        <div class="config-note">
-            <strong>How to get Sheet ID:</strong> Open your Google Sheet → Look in URL: 
-            https://docs.google.com/spreadsheets/d/ <strong style="color:#1a3e5c;">THIS_PART</strong> /edit
-        </div>
-    </div>
-
     <!-- Checklist Navigation -->
     <div class="checklist-nav">
         <label for="checklist-type">📋 Select Checklist:</label>
         <select id="checklist-type">
-            <option value="hsd-renewal">⛽ HSD Renewal</option>
-            <option value="fps-checklist">🛒 FPS Checklist</option>
-            <option value="ppc-checklist">🏭 PPC Checklist</option>
-            <option value="rice-mill">🌾 Rice Mill</option>
-            <option value="kerosene">🛢️ Kerosene Dealer</option>
-            <option value="lpg">🔥 LPG Distributor</option>
+            <option value="hsd-renewal">⛽ HSD Renewal (Tejaswini Filling Station)</option>
+            <option value="fps-checklist">🛒 FPS (Fair Price Shop) Checklist</option>
+            <option value="ppc-checklist">🏭 PPC (Petrol Pump Compliance) Checklist</option>
+            <option value="rice-mill">🌾 Rice Mill Inspection Checklist</option>
+            <option value="kerosene">🛢️ Kerosene Dealer Checklist</option>
+            <option value="lpg">🔥 LPG Distributor Checklist</option>
         </select>
-        <button class="refresh-btn" id="refresh-btn" onclick="refreshData()">
-            🔄 Refresh from Google Sheets
-        </button>
+        <span class="checklist-badge" id="checklist-type-badge">HSD Renewal</span>
     </div>
 
     <!-- Checklist Container (Dynamic Content) -->
     <div id="checklist-container">
-        <div class="loading-state">
-            Loading data from Google Sheets...
-            <span class="spinner"></span>
-        </div>
+        <div class="loading-state">Loading checklist data...</div>
     </div>
 </main>
 
 <!-- ========== SITE FOOTER ========== -->
 <div id="site-footer">
     <div class="footer-content">
-        <span>© 2025 Sarat Office - Data synced with Google Sheets</span>
-        <span>Last updated: <span id="last-updated">Just now</span></span>
+        <span>© 2025 Sarat Office - Civil Supplies Department</span>
+        <span>Version 2.0 | All checklists A4 optimized</span>
     </div>
 </div>
 
-<!-- ========== GOOGLE SHEETS INTEGRATION SCRIPT ========== -->
+<!-- ========== EMBEDDED JSON DATA ========== -->
 <script>
-    // ==================== CONFIGURATION ====================
-    let SHEET_ID = localStorage.getItem('google_sheet_id') || '2PACX-1vS0T881uTPp6BKlzYefoy6CtLHis-lo0Y8p6LEEuZKPx0F7BvZPyu60m-_0IfAdgcKmCcNOr65aumXn';
-    let CHECKLIST_DATA = {};
-    let CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
+    // ==================== MASTER CHECKLIST DATA ====================
+    const CHECKLIST_DATA = {
+        // ----- HSD RENEWAL (based on your Excel) -----
+        "hsd-renewal": {
+            "metadata": {
+                "title": "HSD / LUBRICANT LICENSE RENEWAL",
+                "subtitle": "Under HSD Order 1979 & Lubricants Order 1987",
+                "stationName": "Tejaswini Filling Station, Naikensira, Deogaon Block",
+                "verificationDate": "21/02/2025",
+                "verificationTime": "11:30 AM",
+                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
+            },
+            "particulars": {
+                "proprietor": {
+                    "name": "Debaraj Meher (Proprietorship)",
+                    "address": "At: Naikensira, Po/PS/Block: Deogaon, Pin: 767029"
+                },
+                "contact": {
+                    "email": "tejaswini.fuelstn@gmail.com",
+                    "mobile": "8895965811",
+                    "aadhaar": "205842503291",
+                    "pan": "AOAPM5635D (Proprietor)",
+                    "gst": "21AOAPM5635D3ZF"
+                },
+                "location": {
+                    "plotNo": "831/1476",
+                    "khataNo": "129/232",
+                    "mouza": "Naikensira",
+                    "policeStation": "Deogaon",
+                    "block": "Deogaon",
+                    "tahasil": "Deogaon",
+                    "pin": "767029",
+                    "kisama": "Gharabadi"
+                },
+                "establishmentYear": "2020",
+                "oilCompany": "BPCL",
+                "recommendation": {
+                    "letterNo": "SBP.TER.BOL-25",
+                    "date": "23/01/2020"
+                },
+                "agreementDate": "23/12/2020",
+                "noc": {
+                    "number": "2793/Judl",
+                    "date": "20.11.2020",
+                    "authority": "Collector, Balangir"
+                },
+                "powerSupply": "TPWODL: Consumer No. 911001140277"
+            },
+            "tanks": [
+                { "product": "Class A (MS)", "number": 1, "capacity": 15 },
+                { "product": "Class B (HSD)", "number": 1, "capacity": 20 }
+            ],
+            "dispensingUnits": [
+                { "model": "TIQ2442SSPN", "serial": "M2037155", "hsdNozzles": 2, "msNozzles": 2 },
+                { "model": "TIQ2442SHPN", "serial": "M2050126", "hsdNozzles": 2, "msNozzles": 2 }
+            ],
+            "licenses": [
+                { "type": "HSD License", "number": "06/2020-21", "validity": "31/03/2025" },
+                { "type": "Lubricant License", "number": "06/2020-21", "validity": "31/03/2025" },
+                { "type": "Explosive License (PESO)", "number": "P/EC/OR/14/1977 (P313459)", "validity": "31/12/2026" },
+                { "type": "Fire Safety Certificate", "number": "FIRCER1306180092023002500", "validity": "21/03/2025" },
+                { "type": "Weights & Measure - 5 Ltr Conical", "number": "NOT PRODUCED", "validity": null },
+                { "type": "Weights & Measure - Pump 1", "number": "BGR25A2073", "validity": "17/02/2026" },
+                { "type": "Weights & Measure - Pump 2", "number": "BGR25A2074", "validity": "17/02/2026" }
+            ],
+            "documents": [
+                "License – HSD (certificate copy)",
+                "License – Lubricants (certificate)",
+                "R.O.R. (record of rights) Plot/Khata",
+                "Fire Safety Certificate",
+                "Firefighting equip. bill (expiry)",
+                "Explosive Licence (PESO) class A/B",
+                "Aadhar, PAN & GSTIN copy",
+                "Legal Metrology (pumps + can)",
+                "NOC Collector & Local Authority",
+                "Agreement with Oil Company (date)",
+                "Recommendation letter – Oil Co.",
+                "Power supply details (last bill)",
+                "Police Station & Block in forms",
+                "Appointment Letter (pump)",
+                "PESO storage licence (validity)",
+                "Fire equipment expiry date",
+                "GSTIN / PAN (self attested)",
+                "Legal Metrology can & pump"
+            ],
+            "facilities": [
+                { "name": "First Aid Box", "status": "Available" },
+                { "name": "Generator set", "status": "Available" },
+                { "name": "Stock & Price Declaration board", "status": "Available" },
+                { "name": "Density Board", "status": "Available" },
+                { "name": "Citizen Charter", "status": "Available" },
+                { "name": "Clean toilet", "status": "Available" },
+                { "name": "Free Air", "status": "Available" },
+                { "name": "Clean Drinking Water", "status": "Available" },
+                { "name": "Filter Paper", "status": "Available" },
+                { "name": "5 litre calibrated measuring jar", "status": "Available" },
+                { "name": "Calibrated Hydrometer", "status": "Available" },
+                { "name": "Calibrated Thermometer", "status": "Available" },
+                { "name": "Dip Rod", "status": "Available" },
+                { "name": "ASTM Conversion Chart", "status": "Available" },
+                { "name": "Measuring glass cylinder", "status": "Available" },
+                { "name": "Water finding paste", "status": "Available" },
+                { "name": "Fuel dip paste", "status": "Available" },
+                { "name": "Consumer Complaint Register", "status": "Available" },
+                { "name": "Adequate lighting", "status": "Available" }
+            ],
+            "fireFighting": {
+                "extinguishers": [
+                    { "type": "ABC type 10 kg", "number": 4, "validity": "22/02/2026" },
+                    { "type": "CO₂ 4.5 kg", "number": 1, "validity": "22/02/2026" }
+                ],
+                "sandBuckets": 6,
+                "sump": 0
+            },
+            "records": [
+                { "name": "Stock register of MS, HSD and Lubricants", "status": "Yes", "remarks": "Satisfactory" },
+                { "name": "Density Register", "status": "Yes", "remarks": "Satisfactory" },
+                { "name": "Cash Memo", "status": "Yes", "remarks": "Satisfactory" },
+                { "name": "Daily Sales Register (DSR)", "status": "Yes", "remarks": "Satisfactory" },
+                { "name": "Inspection Register", "status": "Yes", "remarks": "Satisfactory" },
+                { "name": "Any other register", "status": "Yes", "remarks": "Satisfactory" }
+            ],
+            "stockVerification": [
+                { "product": "HSD", "bookBalance": 7834, "physicalStock": 7856, "discrepancy": 22 },
+                { "product": "MS", "bookBalance": 5967, "physicalStock": 5983, "discrepancy": 16 },
+                { "product": "Lubricants", "bookBalance": 422, "physicalStock": 422, "discrepancy": 0 }
+            ],
+            "densityVerification": [
+                { "product": "HSD", "reference": "810 to 845", "observed": 832.4, "difference": "In Range" },
+                { "product": "MS", "reference": "720 to 775", "observed": 752.4, "difference": "In Range" }
+            ],
+            "recommendation": {
+                "complaints": "No",
+                "performance": "Satisfactory",
+                "renewal": "Recommended"
+            },
+            "officers": {
+                "inspector": "Inspector of Supplies, Deogaon",
+                "acso": "Assistant Civil Supplies Officer"
+            }
+        },
 
-    // ==================== GOOGLE SHEETS API ====================
-    async function fetchSheetData(sheetName = 'HSD_Renewal') {
-        if (!SHEET_ID || SHEET_ID === '1YOUR_SHEET_ID_HERE') {
-            throw new Error('Please configure your Google Sheet ID first');
-        }
-
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
-        
-        try {
-            const response = await fetch(url, {
-                cache: 'no-cache',
-                headers: {
-                    'Cache-Control': 'no-cache'
+        // ----- FPS (Fair Price Shop) CHECKLIST -----
+        "fps-checklist": {
+            "metadata": {
+                "title": "FAIR PRICE SHOP INSPECTION",
+                "subtitle": "Under NFSA / TPDS",
+                "stationName": "Maa Tarini FPS, Bhatli",
+                "verificationDate": "15/03/2025",
+                "verificationTime": "10:00 AM",
+                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
+            },
+            "particulars": {
+                "proprietor": {
+                    "name": "Pramila Sahu",
+                    "address": "At: Bhatli Bazar, Po: Bhatli, Dist: Bargarh"
+                },
+                "contact": {
+                    "mobile": "9437155822",
+                    "aadhaar": "452178963214",
+                    "pan": "CEWPS1254D"
+                },
+                "location": {
+                    "shopNo": "FPS/BGL/125",
+                    "panchayat": "Bhatli",
+                    "block": "Bhatli",
+                    "district": "Bargarh"
                 }
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            },
+            "documents": [
+                "FPS License (validity)",
+                "Ration Card Register",
+                "Stock Register",
+                "Sale Register",
+                "ePoS Machine Receipts",
+                "Aadhaar Seeding Certificate",
+                "Weighing Scale Calibration",
+                "Display Board with Rates",
+                "Grievance Register",
+                "Past 3 Months Allocation Order"
+            ],
+            "facilities": [
+                { "name": "Weighing Scale (working)", "status": "Available" },
+                { "name": "ePoS Machine", "status": "Functional" },
+                { "name": "Display Board with Rates", "status": "Displayed" },
+                { "name": "Stock Display", "status": "Updated" },
+                { "name": "Clean Premises", "status": "Satisfactory" },
+                { "name": "Sitting Arrangement", "status": "Available" },
+                { "name": "Drinking Water", "status": "Available" }
+            ],
+            "stockVerification": [
+                { "commodity": "Wheat", "allotted": 1250, "distributed": 1120, "balance": 130, "status": "OK" },
+                { "commodity": "Rice", "allotted": 1850, "distributed": 1700, "balance": 150, "status": "OK" },
+                { "commodity": "Sugar", "allotted": 250, "distributed": 210, "balance": 40, "status": "OK" }
+            ],
+            "recommendation": {
+                "complaints": "None",
+                "performance": "Satisfactory",
+                "renewal": "Recommended"
+            },
+            "officers": {
+                "inspector": "Inspector of Supplies",
+                "acso": "ACSO, Bargarh"
             }
-            
-            const csvText = await response.text();
-            return parseCSV(csvText);
-        } catch (error) {
-            console.error('Error fetching sheet:', error);
-            throw error;
-        }
-    }
+        },
 
-    // ==================== CSV PARSER ====================
-    function parseCSV(csvText) {
-        const lines = csvText.split('\n').filter(line => line.trim());
-        const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
-        
-        const data = [];
-        for (let i = 1; i < lines.length; i++) {
-            const values = lines[i].split(',').map(v => v.replace(/"/g, '').trim());
-            const row = {};
-            headers.forEach((header, index) => {
-                row[header] = values[index] || '';
-            });
-            data.push(row);
-        }
-        
-        return data;
-    }
-
-    // ==================== CONVERT SHEET DATA TO CHECKLIST FORMAT ====================
-    function convertSheetToChecklist(sheetData, checklistType) {
-        const checklist = {
-            "metadata": {},
-            "particulars": { proprietor: {}, contact: {}, location: {} },
-            "documents": [],
-            "facilities": [],
-            "licenses": [],
-            "tanks": [],
-            "dispensingUnits": [],
-            "records": [],
-            "stockVerification": [],
-            "recommendation": {},
-            "officers": {}
-        };
-
-        sheetData.forEach(row => {
-            const section = row.section || '';
-            const key = row.key || '';
-            const value = row.value || '';
-            const type = row.type || 'text';
-
-            // Handle different sections
-            if (section.startsWith('metadata')) {
-                checklist.metadata[key] = value;
-            }
-            else if (section.startsWith('particulars')) {
-                const parts = section.split('.');
-                if (parts.length === 2) {
-                    if (!checklist.particulars[parts[1]]) {
-                        checklist.particulars[parts[1]] = {};
-                    }
-                    checklist.particulars[parts[1]][key] = value;
+        // ----- PPC (Petrol Pump Compliance) CHECKLIST -----
+        "ppc-checklist": {
+            "metadata": {
+                "title": "PETROL PUMP COMPLIANCE CHECKLIST",
+                "subtitle": "Safety & Operational Audit",
+                "stationName": "Jagannath Auto Service, Sambalpur",
+                "verificationDate": "10/03/2025",
+                "verificationTime": "2:30 PM",
+                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
+            },
+            "particulars": {
+                "proprietor": {
+                    "name": "Jagannath Sahu",
+                    "address": "Ainthapali, Sambalpur"
+                },
+                "contact": {
+                    "mobile": "9861122334",
+                    "email": "jagannath.auto@gmail.com",
+                    "gst": "21ABCDE1234F1Z5"
+                },
+                "location": {
+                    "plotNo": "125/2",
+                    "khataNo": "45/3",
+                    "policeStation": "Ainthapali",
+                    "block": "Sambalpur"
                 }
+            },
+            "licenses": [
+                { "type": "HSD License", "number": "08/2022-23", "validity": "31/03/2026" },
+                { "type": "PESO License", "number": "P/EC/OR/22/2022", "validity": "31/12/2027" },
+                { "type": "Fire NOC", "number": "FIRE/SBP/2025", "validity": "20/05/2025" },
+                { "type": "Legal Metrology", "number": "LM/07/2024", "validity": "15/06/2025" }
+            ],
+            "safetyItems": [
+                { "name": "Fire Extinguishers (ABC)", "status": "4 Nos, Valid" },
+                { "name": "Sand Buckets", "status": "6 with sand" },
+                { "name": "First Aid Kit", "status": "Available" },
+                { "name": "Warning Signs", "status": "Displayed" },
+                { "name": "No Smoking Sign", "status": "Prominent" },
+                { "name": "Emergency Contact", "status": "Displayed" },
+                { "name": "Static Earthing", "status": "Working" },
+                { "name": "Flame Arrestors", "status": "Installed" }
+            ],
+            "facilities": [
+                { "name": "Filter Paper", "status": "Available" },
+                { "name": "Hydrometer", "status": "Calibrated" },
+                { "name": "Thermometer", "status": "Available" },
+                { "name": "Dip Rod", "status": "Available" },
+                { "name": "Measuring Jar (5L)", "status": "Available" },
+                { "name": "Complaint Register", "status": "Maintained" },
+                { "name": "Free Air", "status": "Working" },
+                { "name": "Toilet", "status": "Clean" }
+            ],
+            "recommendation": {
+                "complaints": "Nil",
+                "performance": "Good",
+                "renewal": "Recommended"
             }
-            else if (section === 'documents' && key === 'list') {
-                checklist.documents.push(value);
-            }
-            else if (section === 'facilities') {
-                checklist.facilities.push({
-                    name: value,
-                    status: row.option1 || 'Available'
-                });
-            }
-            else if (section === 'licenses') {
-                checklist.licenses.push({
-                    type: value,
-                    number: row.option1 || '',
-                    validity: row.option2 || ''
-                });
-            }
-            else if (section === 'tanks') {
-                checklist.tanks.push({
-                    product: value,
-                    number: row.option1 || '1',
-                    capacity: row.option2 || ''
-                });
-            }
-            else if (section === 'records') {
-                checklist.records.push({
-                    name: value,
-                    status: row.option1 || 'Yes',
-                    remarks: row.option2 || ''
-                });
-            }
-            else if (section === 'recommendation') {
-                checklist.recommendation[key] = value;
-            }
-        });
+        },
 
-        return checklist;
-    }
-
-    // ==================== LOAD ALL CHECKLISTS FROM SHEETS ====================
-    async function loadAllChecklists() {
-        const sheets = [
-            'HSD_Renewal',
-            'FPS_Checklist',
-            'PPC_Checklist',
-            'Rice_Mill',
-            'Kerosene',
-            'LPG'
-        ];
-
-        updateSyncStatus('loading', 'Syncing with Google Sheets...');
-
-        try {
-            for (const sheet of sheets) {
-                try {
-                    const sheetData = await fetchSheetData(sheet);
-                    const checklistType = sheet.toLowerCase().replace('_', '-');
-                    CHECKLIST_DATA[checklistType] = convertSheetToChecklist(sheetData, checklistType);
-                } catch (error) {
-                    console.warn(`Could not load sheet: ${sheet}`, error);
+        // ----- RICE MILL CHECKLIST -----
+        "rice-mill": {
+            "metadata": {
+                "title": "RICE MILL INSPECTION CHECKLIST",
+                "subtitle": "Under Rice Milling Industry Act",
+                "stationName": "Laxmi Rice Mill, Bargarh",
+                "verificationDate": "05/03/2025",
+                "verificationTime": "11:45 AM",
+                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
+            },
+            "particulars": {
+                "proprietor": {
+                    "name": "Laxmi Narayan Agrawal",
+                    "address": "Ghereipada, Bargarh"
+                },
+                "contact": {
+                    "mobile": "8895221345",
+                    "email": "laxmiricemill@gmail.com",
+                    "gst": "21BGHPS1234D1Z6"
+                },
+                "location": {
+                    "plotNo": "452",
+                    "khataNo": "78",
+                    "mouza": "Ghereipada",
+                    "policeStation": "Bargarh Sadar"
                 }
+            },
+            "licenses": [
+                { "type": "Rice Mill License", "number": "RM/09/2022", "validity": "31/12/2025" },
+                { "type": "Factory License", "number": "FACT/123/2023", "validity": "31/12/2025" },
+                { "type": "Pollution NOC", "number": "PCB/2024/789", "validity": "15/08/2025" },
+                { "type": "Fire NOC", "number": "FIRE/BGL/2024", "validity": "10/10/2025" }
+            ],
+            "machinery": [
+                { "name": "Sheller", "status": "Working", "capacity": "2 MT/hr" },
+                { "name": "Polisher", "status": "Working", "capacity": "1.5 MT/hr" },
+                { "name": "Grader", "status": "Working", "capacity": "2 MT/hr" },
+                { "name": "Weighbridge", "status": "Calibrated", "capacity": "50 MT" }
+            ],
+            "stockDetails": [
+                { "commodity": "Paddy", "stock": "1250 Quintals", "condition": "Good" },
+                { "commodity": "Rice (Raw)", "stock": "450 Quintals", "condition": "Good" },
+                { "commodity": "Rice (Parboiled)", "stock": "320 Quintals", "condition": "Good" },
+                { "commodity": "Broken Rice", "stock": "85 Quintals", "condition": "Good" },
+                { "commodity": "Rice Bran", "stock": "210 Quintals", "condition": "Good" }
+            ],
+            "safety": [
+                { "name": "Fire Extinguishers", "status": "8 Nos, Valid" },
+                { "name": "First Aid", "status": "Available" },
+                { "name": "Safety Guards on Machines", "status": "Installed" },
+                { "name": "Electrical Wiring", "status": "Safe" },
+                { "name": "Ventilation", "status": "Adequate" }
+            ],
+            "recommendation": {
+                "complaints": "None",
+                "performance": "Satisfactory",
+                "renewal": "Recommended"
+            }
+        },
+
+        // ----- KEROSENE DEALER CHECKLIST -----
+        "kerosene": {
+            "metadata": {
+                "title": "KEROSENE DEALER INSPECTION",
+                "subtitle": "Under Kerosene Control Order",
+                "stationName": "Bharat Kerosene Depot, Attabira",
+                "verificationDate": "18/03/2025",
+                "verificationTime": "3:00 PM",
+                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
+            },
+            "documents": [
+                "Kerosene License",
+                "Stock Register",
+                "Sale Register",
+                "Allocation Order",
+                "Transport Permit",
+                "Weights & Measure Cert",
+                "Display Board with Rates"
+            ],
+            "facilities": [
+                { "name": "Storage Tanks (Capacity)", "status": "5000 Ltrs" },
+                { "name": "Measuring Unit", "status": "Calibrated" },
+                { "name": "Fire Extinguisher", "status": "Available" },
+                { "name": "Sand Buckets", "status": "4 Nos" }
+            ],
+            "stockVerification": [
+                { "product": "SKO", "allotted": 2000, "sold": 1850, "balance": 150, "status": "OK" }
+            ],
+            "recommendation": {
+                "renewal": "Recommended"
+            }
+        },
+
+        // ----- LPG DISTRIBUTOR CHECKLIST -----
+        "lpg": {
+            "metadata": {
+                "title": "LPG DISTRIBUTOR INSPECTION",
+                "subtitle": "Under LPG Control Order",
+                "stationName": "Sai Gas Agency, Burla",
+                "verificationDate": "22/03/2025",
+                "verificationTime": "12:15 PM",
+                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
+            },
+            "documents": [
+                "LPG Distributorship License",
+                "PESO License",
+                "Stock Register",
+                "Connection Register",
+                "Safety Inspection Records",
+                "Staff Training Records"
+            ],
+            "safety": [
+                { "name": "Fire Extinguishers", "status": "10 Kg ABC - 4 Nos" },
+                { "name": "Water Hose", "status": "Available" },
+                { "name": "Sand Buckets", "status": "8 Nos" },
+                { "name": "Warning Signs", "status": "Displayed" },
+                { "name": "No Smoking", "status": "Prominent" }
+            ],
+            "facilities": [
+                { "name": "Godown Ventilation", "status": "Adequate" },
+                { "name": "Cylinder Storage", "status": "Proper" },
+                { "name": "First Aid", "status": "Available" },
+                { "name": "Staff Uniform", "status": "Yes" }
+            ],
+            "recommendation": {
+                "renewal": "Recommended"
+            }
+        }
+    };
+</script>
+
+<!-- ========== CHECKLIST LOADER SCRIPT ========== -->
+<script>
+    // ==================== CHECKLIST RENDERER ====================
+    class ChecklistRenderer {
+        constructor() {
+            this.currentType = 'hsd-renewal';
+            this.data = null;
+        }
+
+        // Load and render checklist
+        loadChecklist(type) {
+            this.currentType = type;
+            this.data = CHECKLIST_DATA[type];
+            
+            if (!this.data) {
+                document.getElementById('checklist-container').innerHTML = 
+                    '<div style="color: red; text-align: center; padding: 3rem;">❌ Checklist data not found!</div>';
+                return;
             }
 
-            // Cache the data
-            localStorage.setItem('cached_checklists', JSON.stringify({
-                timestamp: Date.now(),
-                data: CHECKLIST_DATA
-            }));
-
-            updateSyncStatus('connected', 'Data synced successfully');
-            document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
-            
-            // Reload current checklist
-            const currentType = document.getElementById('checklist-type').value;
-            renderChecklist(currentType);
-            
-        } catch (error) {
-            console.error('Error loading checklists:', error);
-            updateSyncStatus('error', 'Sync failed - using cached data');
-            
-            // Try to load from cache
-            loadFromCache();
-        }
-    }
-
-    // ==================== LOAD FROM CACHE ====================
-    function loadFromCache() {
-        const cached = localStorage.getItem('cached_checklists');
-        if (cached) {
-            try {
-                const { timestamp, data } = JSON.parse(cached);
-                CHECKLIST_DATA = data;
-                updateSyncStatus('warning', `Using cached data from ${new Date(timestamp).toLocaleTimeString()}`);
-                
-                const currentType = document.getElementById('checklist-type').value;
-                renderChecklist(currentType);
-            } catch (e) {
-                console.error('Cache error:', e);
+            // Update badge
+            const badge = document.getElementById('checklist-type-badge');
+            if (badge) {
+                const names = {
+                    'hsd-renewal': 'HSD Renewal',
+                    'fps-checklist': 'FPS Checklist',
+                    'ppc-checklist': 'PPC Compliance',
+                    'rice-mill': 'Rice Mill',
+                    'kerosene': 'Kerosene Dealer',
+                    'lpg': 'LPG Distributor'
+                };
+                badge.textContent = names[type] || type;
             }
+
+            // Render
+            this.render();
+            
+            // Update URL
+            history.pushState({type: type}, '', `?type=${type}`);
+            
+            // Restore checkbox states
+            setTimeout(() => this.restoreCheckboxStates(), 100);
         }
-    }
 
-    // ==================== UPDATE SYNC STATUS ====================
-    function updateSyncStatus(status, message) {
-        const syncEl = document.getElementById('sync-status');
-        const dot = syncEl.querySelector('.dot');
-        const text = document.getElementById('sync-text');
-        
-        text.textContent = message;
-        
-        dot.className = 'dot';
-        if (status === 'connected') {
-            dot.style.background = '#4caf50';
-        } else if (status === 'loading') {
-            dot.style.background = '#ff9800';
-            dot.style.animation = 'pulse 1s infinite';
-        } else if (status === 'error') {
-            dot.style.background = '#f44336';
-        } else if (status === 'warning') {
-            dot.style.background = '#ff9800';
-        }
-    }
+        // Main render function
+        render() {
+            const container = document.getElementById('checklist-container');
+            if (!this.data) return;
 
-    // ==================== SAVE SHEET CONFIG ====================
-    function saveSheetConfig() {
-        const newSheetId = document.getElementById('sheet-id').value.trim();
-        if (newSheetId) {
-            SHEET_ID = newSheetId;
-            localStorage.setItem('google_sheet_id', SHEET_ID);
-            loadAllChecklists();
-        }
-    }
-
-    // ==================== REFRESH DATA ====================
-    function refreshData() {
-        const btn = document.getElementById('refresh-btn');
-        btn.classList.add('loading');
-        btn.disabled = true;
-        
-        loadAllChecklists().finally(() => {
-            btn.classList.remove('loading');
-            btn.disabled = false;
-        });
-    }
-
-    // ==================== RENDER CHECKLIST ====================
-    function renderChecklist(type) {
-        const container = document.getElementById('checklist-container');
-        const data = CHECKLIST_DATA[type];
-        
-        if (!data) {
-            container.innerHTML = `
-                <div class="loading-state">
-                    ⚠️ No data found for ${type}. 
-                    <button onclick="refreshData()" style="margin-left:1rem; padding:0.5rem 1rem;">Retry</button>
+            const html = `
+                <div class="checklist-card">
+                    ${this.renderHeader()}
+                    ${this.renderParticulars()}
+                    ${this.renderDocuments()}
+                    ${this.renderTanksAndPumps()}
+                    ${this.renderLicenses()}
+                    ${this.renderSafetyItems()}
+                    ${this.renderFacilities()}
+                    ${this.renderFireFighting()}
+                    ${this.renderMachinery()}
+                    ${this.renderRecords()}
+                    ${this.renderStockVerification()}
+                    ${this.renderDensityVerification()}
+                    ${this.renderRecommendation()}
+                    ${this.renderOfficers()}
                 </div>
             `;
-            return;
+            
+            container.innerHTML = html;
+            this.attachPrintButton();
         }
 
-        // Use the same rendering functions from previous version
-        // (I'll include the renderHeader, renderParticulars, etc. here)
-        // For brevity, I'm including the core rendering logic
-        
-        container.innerHTML = generateChecklistHTML(data);
-    }
-
-    // ==================== GENERATE HTML ====================
-    function generateChecklistHTML(data) {
-        // This would contain all the render functions from previous version
-        // I'm including a simplified version here
-        
-        return `
-            <div class="checklist-card">
+        renderHeader() {
+            const m = this.data.metadata;
+            return `
                 <div class="card-header">
                     <div class="header-title">
-                        <h1>⛽ ${data.metadata?.title || 'Checklist'}</h1>
-                        <div class="station-name">${data.metadata?.stationName || ''}</div>
+                        <h1>⛽ ${m.title}</h1>
+                        <div class="station-name">${m.stationName || ''}</div>
                         <div class="verification-info">
-                            <span>📅 ${data.metadata?.verificationDate || ''}</span>
-                            <span>⏰ ${data.metadata?.verificationTime || ''}</span>
-                            <span>👤 ${data.metadata?.verifyingOfficer || ''}</span>
+                            <span>📅 ${m.verificationDate || ''}</span>
+                            <span>⏰ ${m.verificationTime || ''}</span>
+                            <span>👤 ${m.verifyingOfficer || ''}</span>
                         </div>
                     </div>
-                    <button class="print-btn" onclick="window.print()">📋 PRINT</button>
+                    <button class="print-btn" id="print-checklist-btn">📋 PRINT CHECKLIST</button>
                 </div>
+            `;
+        }
 
-                <!-- Documents Section -->
-                ${data.documents?.length ? `
+        renderParticulars() {
+            if (!this.data.particulars) return '';
+            
+            const p = this.data.particulars;
+            const items = [];
+            
+            if (p.proprietor) {
+                items.push(
+                    `<div class="info-item"><span class="info-label">Proprietor:</span><span class="info-value">${p.proprietor.name || ''}</span></div>`,
+                    `<div class="info-item"><span class="info-label">Address:</span><span class="info-value">${p.proprietor.address || ''}</span></div>`
+                );
+            }
+            
+            if (p.contact) {
+                if (p.contact.email) items.push(`<div class="info-item"><span class="info-label">Email:</span><span class="info-value">${p.contact.email}</span></div>`);
+                if (p.contact.mobile) items.push(`<div class="info-item"><span class="info-label">Mobile:</span><span class="info-value">${p.contact.mobile}</span></div>`);
+                if (p.contact.aadhaar) items.push(`<div class="info-item"><span class="info-label">Aadhaar:</span><span class="info-value">${p.contact.aadhaar}</span></div>`);
+                if (p.contact.pan) items.push(`<div class="info-item"><span class="info-label">PAN:</span><span class="info-value">${p.contact.pan}</span></div>`);
+                if (p.contact.gst) items.push(`<div class="info-item"><span class="info-label">GST:</span><span class="info-value">${p.contact.gst}</span></div>`);
+            }
+            
+            if (p.location) {
+                if (p.location.plotNo) items.push(`<div class="info-item"><span class="info-label">Plot No.:</span><span class="info-value">${p.location.plotNo}</span></div>`);
+                if (p.location.khataNo) items.push(`<div class="info-item"><span class="info-label">Khata No.:</span><span class="info-value">${p.location.khataNo}</span></div>`);
+                if (p.location.mouza) items.push(`<div class="info-item"><span class="info-label">Mouza:</span><span class="info-value">${p.location.mouza}</span></div>`);
+                if (p.location.policeStation) items.push(`<div class="info-item"><span class="info-label">PS:</span><span class="info-value">${p.location.policeStation}</span></div>`);
+                if (p.location.block) items.push(`<div class="info-item"><span class="info-label">Block:</span><span class="info-value">${p.location.block}</span></div>`);
+            }
+            
+            if (p.oilCompany) items.push(`<div class="info-item"><span class="info-label">Oil Company:</span><span class="info-value">${p.oilCompany}</span></div>`);
+            if (p.agreementDate) items.push(`<div class="info-item"><span class="info-label">Agreement:</span><span class="info-value">${p.agreementDate}</span></div>`);
+            if (p.powerSupply) items.push(`<div class="info-item"><span class="info-label">Power Supply:</span><span class="info-value">${p.powerSupply}</span></div>`);
+
+            return `
                 <div class="checklist-section">
-                    <div class="section-title">📸 DOCUMENTS REQUIRED</div>
+                    <div class="section-title">📋 STATION PARTICULARS</div>
+                    <div class="info-grid">
+                        ${items.join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        renderDocuments() {
+            if (!this.data.documents || !this.data.documents.length) return '';
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">📸 DOCUMENTS REQUIRED <span class="badge">verify & check</span></div>
                     <div class="documents-grid">
-                        ${data.documents.map((doc, i) => `
+                        ${this.data.documents.map((doc, index) => `
                             <div class="checkbox-item">
-                                <input type="checkbox" id="doc-${i}">
-                                <label for="doc-${i}">${doc}</label>
+                                <input type="checkbox" id="doc-${this.currentType}-${index}" class="doc-checkbox">
+                                <label for="doc-${this.currentType}-${index}">${doc}</label>
                             </div>
                         `).join('')}
                     </div>
                 </div>
-                ` : ''}
+            `;
+        }
 
-                <!-- Facilities Section -->
-                ${data.facilities?.length ? `
+        renderTanksAndPumps() {
+            if (!this.data.tanks && !this.data.dispensingUnits) return '';
+            
+            return `
                 <div class="checklist-section">
-                    <div class="section-title">🧷 ON-SITE FACILITIES</div>
+                    <div class="section-title">⛽ TANKS & DISPENSING UNITS</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tanks (Product)</th>
+                                <th>No.</th>
+                                <th>Capacity (KL)</th>
+                                <th>Pump Model</th>
+                                <th>HSD Nozzles</th>
+                                <th>MS Nozzles</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.renderTankPumpRows()}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        renderTankPumpRows() {
+            const tanks = this.data.tanks || [];
+            const pumps = this.data.dispensingUnits || [];
+            const rows = [];
+            const maxRows = Math.max(tanks.length, pumps.length);
+            
+            for (let i = 0; i < maxRows; i++) {
+                const tank = tanks[i] || {product: '', number: '', capacity: ''};
+                const pump = pumps[i] || {model: '', hsdNozzles: '', msNozzles: ''};
+                
+                rows.push(`
+                    <tr>
+                        <td>${tank.product || '-'}</td>
+                        <td>${tank.number || '-'}</td>
+                        <td>${tank.capacity || '-'}</td>
+                        <td>${pump.model || '-'}</td>
+                        <td>${pump.hsdNozzles || '-'}</td>
+                        <td>${pump.msNozzles || '-'}</td>
+                    </tr>
+                `);
+            }
+            
+            return rows.join('');
+        }
+
+        renderLicenses() {
+            if (!this.data.licenses) return '';
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">📜 LICENSE DETAILS</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>License Type</th>
+                                <th>Number</th>
+                                <th>Validity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.data.licenses.map(license => `
+                                <tr>
+                                    <td>${license.type}</td>
+                                    <td>${license.number}</td>
+                                    <td>${license.validity || 'N/A'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        renderSafetyItems() {
+            if (!this.data.safety && !this.data.safetyItems) return '';
+            
+            const items = this.data.safety || this.data.safetyItems || [];
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">🛡️ SAFETY PROVISIONS</div>
                     <div class="facilities-grid">
-                        ${data.facilities.map(f => `
+                        ${items.map(item => `
                             <div class="facility-item">
-                                <span>${f.name}</span>
-                                <span class="facility-status">${f.status}</span>
+                                <span>${item.name}</span>
+                                <span class="facility-status">${item.status}</span>
                             </div>
                         `).join('')}
                     </div>
                 </div>
-                ` : ''}
+            `;
+        }
 
-                <!-- Recommendation -->
-                ${data.recommendation ? `
+        renderFacilities() {
+            if (!this.data.facilities) return '';
+            
+            return `
                 <div class="checklist-section">
-                    <div class="section-title">✅ RECOMMENDATION</div>
+                    <div class="section-title">🧷 ON-SITE FACILITIES <span class="badge">mandatory</span></div>
+                    <div class="facilities-grid">
+                        ${this.data.facilities.map(facility => `
+                            <div class="facility-item">
+                                <span>${facility.name}</span>
+                                <span class="facility-status ${facility.status === 'Available' ? 'available' : ''}">${facility.status}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        renderFireFighting() {
+            if (!this.data.fireFighting) return '';
+            
+            const ff = this.data.fireFighting;
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">🧯 FIRE FIGHTING PROVISIONS</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Number</th>
+                                <th>Validity/Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${ff.extinguishers ? ff.extinguishers.map(ex => `
+                                <tr>
+                                    <td>${ex.type}</td>
+                                    <td>${ex.number}</td>
+                                    <td>${ex.validity}</td>
+                                </tr>
+                            `).join('') : ''}
+                            ${ff.sandBuckets ? `
+                                <tr>
+                                    <td>Sand Buckets</td>
+                                    <td>${ff.sandBuckets}</td>
+                                    <td>with sand</td>
+                                </tr>
+                            ` : ''}
+                            ${ff.sump !== undefined ? `
+                                <tr>
+                                    <td>Sump</td>
+                                    <td>${ff.sump}</td>
+                                    <td>${ff.sump ? 'adequate' : 'not adequate'}</td>
+                                </tr>
+                            ` : ''}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        renderMachinery() {
+            if (!this.data.machinery) return '';
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">⚙️ MACHINERY & EQUIPMENT</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Equipment</th>
+                                <th>Status</th>
+                                <th>Capacity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.data.machinery.map(item => `
+                                <tr>
+                                    <td>${item.name}</td>
+                                    <td>${item.status}</td>
+                                    <td>${item.capacity || '-'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        renderRecords() {
+            if (!this.data.records) return '';
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">📋 MAINTENANCE OF RECORDS</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Record Type</th>
+                                <th>Status</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.data.records.map(record => `
+                                <tr>
+                                    <td>${record.name}</td>
+                                    <td>${record.status}</td>
+                                    <td>${record.remarks || ''}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        renderStockVerification() {
+            if (!this.data.stockVerification) return '';
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">📊 STOCK VERIFICATION</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Book Balance</th>
+                                <th>Physical Stock</th>
+                                <th>Discrepancy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.data.stockVerification.map(item => `
+                                <tr>
+                                    <td>${item.product || item.commodity}</td>
+                                    <td>${item.bookBalance || item.allotted || '-'}</td>
+                                    <td>${item.physicalStock || item.distributed || '-'}</td>
+                                    <td>${item.discrepancy || '0'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        renderDensityVerification() {
+            if (!this.data.densityVerification) return '';
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">🌡️ DENSITY VERIFICATION</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Reference</th>
+                                <th>Observed</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.data.densityVerification.map(item => `
+                                <tr>
+                                    <td>${item.product}</td>
+                                    <td>${item.reference}</td>
+                                    <td>${item.observed}</td>
+                                    <td>${item.difference}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        renderRecommendation() {
+            if (!this.data.recommendation) return '';
+            
+            const r = this.data.recommendation;
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">✅ INSPECTION RECOMMENDATION</div>
                     <div class="recommendation-box">
+                        ${r.complaints !== undefined ? `
+                            <div class="recommendation-item">
+                                <div class="recommendation-label">Complaints</div>
+                                <div class="recommendation-value">${r.complaints}</div>
+                            </div>
+                        ` : ''}
+                        ${r.performance !== undefined ? `
+                            <div class="recommendation-item">
+                                <div class="recommendation-label">Performance</div>
+                                <div class="recommendation-value">${r.performance}</div>
+                            </div>
+                        ` : ''}
                         <div class="recommendation-item">
                             <div class="recommendation-label">Renewal</div>
-                            <div class="recommendation-value">${data.recommendation.renewal || 'Pending'}</div>
+                            <div class="recommendation-value">${r.renewal}</div>
                         </div>
                     </div>
                 </div>
-                ` : ''}
+            `;
+        }
 
-                <!-- Officers -->
+        renderOfficers() {
+            if (!this.data.officers) return '';
+            
+            const o = this.data.officers;
+            
+            return `
                 <div class="officer-section">
                     <div class="officer-signature">
-                        <div class="officer-title">${data.officers?.inspector || 'Inspecting Officer'}</div>
+                        <div class="officer-title">${o.inspector || 'Inspecting Officer'}</div>
                         <div class="officer-line"></div>
-                        <small>Signature</small>
+                        <small>Signature with Date</small>
                     </div>
                     <div class="officer-signature">
-                        <div class="officer-title">${data.officers?.acso || 'ACSO'}</div>
+                        <div class="officer-title">${o.acso || 'ACSO'}</div>
                         <div class="officer-line"></div>
-                        <small>Signature</small>
+                        <small>Signature with Date</small>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
+        }
+
+        attachPrintButton() {
+            const btn = document.getElementById('print-checklist-btn');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    window.print();
+                });
+            }
+        }
+
+        restoreCheckboxStates() {
+            const checkboxes = document.querySelectorAll('.doc-checkbox');
+            checkboxes.forEach(cb => {
+                const id = cb.id;
+                const saved = localStorage.getItem(id);
+                if (saved !== null) {
+                    cb.checked = saved === 'true';
+                }
+                
+                cb.addEventListener('change', () => {
+                    localStorage.setItem(cb.id, cb.checked);
+                });
+            });
+        }
     }
 
     // ==================== INITIALIZATION ====================
     document.addEventListener('DOMContentLoaded', () => {
-        // Load sheet ID from localStorage
-        const savedSheetId = localStorage.getItem('google_sheet_id');
-        if (savedSheetId) {
-            document.getElementById('sheet-id').value = savedSheetId;
-            SHEET_ID = savedSheetId;
+        const renderer = new ChecklistRenderer();
+        
+        // Get type from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type') || 'hsd-renewal';
+        
+        // Set select value
+        const select = document.getElementById('checklist-type');
+        if (select) {
+            select.value = type;
+            select.addEventListener('change', (e) => {
+                renderer.loadChecklist(e.target.value);
+            });
         }
-
-        // Setup checklist selector
-        const selector = document.getElementById('checklist-type');
-        selector.addEventListener('change', (e) => {
-            renderChecklist(e.target.value);
+        
+        // Load initial checklist
+        renderer.loadChecklist(type);
+        
+        // Handle browser back/forward
+        window.addEventListener('popstate', (e) => {
+            if (e.state && e.state.type) {
+                renderer.loadChecklist(e.state.type);
+                if (select) select.value = e.state.type;
+            }
         });
-
-        // Load data
-        loadAllChecklists();
-
-        // Auto-refresh every 5 minutes
-        setInterval(refreshData, 5 * 60 * 1000);
     });
 </script>
 
-<!-- Go to Top Button -->
+<!-- Go to Top Button (optional) -->
 <style>
     .go-to-top {
         position: fixed;
