@@ -1,164 +1,399 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>License Renewal Report</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background: #fff;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .report-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            border: 1px solid #ddd;
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
             padding: 20px;
         }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
         .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
             text-align: center;
-            margin-bottom: 30px;
         }
+        
         .header h1 {
-            color: #333;
-            font-size: 18px;
-            margin: 5px 0;
+            color: #1a73e8;
+            font-size: 24px;
+            margin-bottom: 10px;
         }
-        .header h2 {
-            color: #666;
-            font-size: 16px;
-            margin: 5px 0;
+        
+        .header p {
+            color: #5f6368;
+            font-size: 14px;
         }
-        .section {
-            margin: 20px 0;
-            border: 1px solid #ccc;
+        
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
         }
-        .section-title {
-            background: #f0f0f0;
+        
+        .refresh-btn {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .refresh-btn:hover {
+            background: #1557b0;
+        }
+        
+        .refresh-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .search-box {
+            flex: 1;
             padding: 10px;
-            font-weight: bold;
-            border-bottom: 1px solid #ccc;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            min-width: 200px;
         }
-        .section-content {
-            padding: 10px;
+        
+        .export-btn {
+            background: #34a853;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
         }
+        
+        .export-btn:hover {
+            background: #2d8745;
+        }
+        
+        .stats {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 14px;
+            color: #5f6368;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow-x: auto;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 14px;
         }
-        table td, table th {
-            border: 1px solid #ddd;
-            padding: 8px;
-            vertical-align: top;
+        
+        th {
+            background: #f8f9fa;
+            color: #1a73e8;
+            font-weight: 600;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            background: #f8f9fa;
+            z-index: 10;
         }
-        .label {
-            font-weight: bold;
-            width: 30%;
+        
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #202124;
         }
-        .value {
-            width: 70%;
+        
+        tr:hover {
+            background: #f5f5f5;
         }
-        .signature {
-            margin-top: 50px;
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #5f6368;
+        }
+        
+        .error {
+            background: #fce8e8;
+            color: #c5221f;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .last-update {
+            color: #5f6368;
+            font-size: 12px;
+            margin-top: 10px;
             text-align: right;
         }
-        .discrepancy-error {
-            color: red;
-            font-weight: bold;
+        
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #5f6368;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
-    <div class="report-container" id="report">
-        <!-- Dynamic content will be inserted here -->
+    <div class="container">
+        <div class="header">
+            <h1>📊 HSD/Lubricant License Renewal Report</h1>
+            <p>Dynamic data from Google Sheets via JSON API</p>
+        </div>
+        
+        <div class="controls">
+            <input type="text" class="search-box" id="searchInput" 
+                   placeholder="🔍 Search in table... (min 3 characters)" onkeyup="filterTable()">
+            <button class="refresh-btn" onclick="loadData()" id="refreshBtn">
+                🔄 Refresh Data
+            </button>
+            <button class="export-btn" onclick="exportToCSV()">
+                📥 Export to CSV
+            </button>
+        </div>
+        
+        <div class="stats" id="stats">
+            Loading data...
+        </div>
+        
+        <div class="table-container">
+            <table id="data-table">
+                <thead id="table-header">
+                    <tr>
+                        <th>Loading...</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <tr>
+                        <td colspan="10" class="loading">Fetching data from API...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="last-update" id="lastUpdate"></div>
+        <div class="footer">
+            Powered by Google Apps Script JSON API | Auto-updates every 5 minutes
+        </div>
     </div>
 
     <script>
-        // Your published Google Sheet CSV URL
-        const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS7ik39OFKwscZJiFMgl2CNzRltAxK2sG6fIn-WniMGJ2rvQX1mFnzoerLz0lZOAsUMGeyFtyp0II4o/pub?gid=0&single=true&output=csv';
+        // CONFIGURATION - REPLACE WITH YOUR WEB APP URL
+        const API_URL = 'YOUR_WEB_APP_URL_HERE'; // ← PASTE YOUR URL HERE
         
-        fetch(sheetURL)
-            .then(response => response.text())
-            .then(csvData => {
-                const data = parseCSV(csvData);
-                const formattedData = formatData(data);
-                renderReport(formattedData);
-            })
-            .catch(error => console.error('Error loading data:', error));
-
-        function parseCSV(csv) {
-            const lines = csv.split('\n');
-            const headers = lines[0].split(',');
-            const data = {};
+        let allData = []; // Store all data for filtering
+        let headers = []; // Store headers
+        
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadData);
+        
+        // Auto-refresh every 5 minutes (300000 ms)
+        setInterval(loadData, 300000);
+        
+        // Main function to fetch and display data
+        async function loadData() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            const tableBody = document.getElementById('table-body');
+            const stats = document.getElementById('stats');
             
-            for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].split(',');
-                if (values.length >= 3) {
-                    const section = values[0].replace(/"/g, '');
-                    const key = values[1].replace(/"/g, '');
-                    const value = values[2] ? values[2].replace(/"/g, '') : '';
-                    data[`${section}.${key}`] = value;
+            try {
+                // Show loading state
+                refreshBtn.disabled = true;
+                refreshBtn.innerHTML = '⏳ Loading...';
+                tableBody.innerHTML = '<tr><td colspan="10" class="loading">Fetching data from API...</td></tr>';
+                
+                // Fetch data from API [citation:3][citation:6]
+                const response = await fetch(API_URL, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                    mode: 'cors'
+                });
+                
+                // Check if response is OK [citation:6]
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
+                
+                // Parse JSON response
+                const data = await response.json();
+                
+                // Check for API error response
+                if (data.error) {
+                    throw new Error(data.message || data.error);
+                }
+                
+                // Store data globally
+                allData = data;
+                
+                // Generate table
+                if (data.length > 0) {
+                    // Extract headers from first object
+                    headers = Object.keys(data[0]);
+                    generateTable(data);
+                    
+                    // Update stats
+                    stats.innerHTML = `📈 Showing ${data.length} rows | ${headers.length} columns | Last updated: ${new Date().toLocaleString()}`;
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="10" class="loading">No data available</td></tr>';
+                    stats.innerHTML = 'ℹ️ No data found';
+                }
+                
+                // Update last update time
+                document.getElementById('lastUpdate').innerHTML = `Last update: ${new Date().toLocaleString()}`;
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                tableBody.innerHTML = `<tr><td colspan="10" class="error">❌ Error: ${error.message}</td></tr>`;
+                stats.innerHTML = '❌ Failed to load data';
+            } finally {
+                // Reset button state
+                refreshBtn.disabled = false;
+                refreshBtn.innerHTML = '🔄 Refresh Data';
             }
-            return data;
         }
-
-        function formatData(rawData) {
-            return {
-                proprietor: {
-                    name: rawData['particulars.Proprietor Name'] || 'Debaraj Meher (Proprietorship)',
-                    address: rawData['particulars.Proprietor Address'] || 'At: Naikensira, Po/PS/Block: Deogaon, Pin: 767029',
-                    email: rawData['particulars.Email'] || 'tejaswini.fuelstn@gmail.com',
-                    mobile: rawData['particulars.Mobile'] || '8895965811',
-                    aadhaar: rawData['particulars.Aadhaar'] || '205842503291',
-                    pan: rawData['particulars.PAN'] || 'AOAPM5635D',
-                    gst: rawData['particulars.GST'] || '21AOAPM5635D3ZF'
-                },
-                verification: {
-                    officer: 'Sarat Kumar Rout, ACSO',
-                    date: '21/02/2025',
-                    time: '11.30 AM'
-                },
-                // Add more formatted sections...
-            };
-        }
-
-        function renderReport(data) {
-            const reportHTML = `
-                <div class="header">
-                    <h1>RECOMMENDATION FOR RENEWAL OF HSD /LUBRICANT LICENSE</h1>
-                    <h2>Tejaswini Filling Station, Naikensira, Deogaon Block</h2>
-                </div>
-
-                <table>
-                    <tr>
-                        <td class="label">1. Name and designation of Verifying Officer:</td>
-                        <td class="value">Sri ${data.verification.officer}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">2. Date and time of verification</td>
-                        <td class="value">Dt. ${data.verification.date} At ${data.verification.time}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">3. Name and style of Petrol Pump</td>
-                        <td class="value">Tejaswini Filling Station, Naikensira, Deogaon Block</td>
-                    </tr>
-                    <tr>
-                        <td class="label">4. Name & address of the Proprietor</td>
-                        <td class="value">${data.proprietor.name}<br>${data.proprietor.address}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">5. EMail ID</td>
-                        <td class="value">${data.proprietor.email}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">6. Mobile Number</td>
-                        <td class="value">${data.proprietor.mobile}</td>
-                    </tr>
-                    <!-- Continue with all other fields -->
-                </table>
-            `;
+        
+        // Generate HTML table from data
+        function generateTable(data) {
+            const tableHeader = document.getElementById('table-header');
+            const tableBody = document.getElementById('table-body');
             
-            document.getElementById('report').innerHTML = reportHTML;
+            // Generate headers [citation:3]
+            let headerHtml = '<tr>';
+            headers.forEach(header => {
+                // Format header for display
+                const displayHeader = header
+                    .replace(/([A-Z])/g, ' $1')
+                    .replace(/^./, str => str.toUpperCase());
+                headerHtml += `<th>${displayHeader}</th>`;
+            });
+            headerHtml += '</tr>';
+            tableHeader.innerHTML = headerHtml;
+            
+            // Generate body rows [citation:6]
+            let bodyHtml = '';
+            data.forEach(row => {
+                bodyHtml += '<tr>';
+                headers.forEach(header => {
+                    let value = row[header] || '';
+                    // Format value if needed
+                    if (typeof value === 'string' && value.includes('://')) {
+                        value = `<a href="${value}" target="_blank">🔗 Link</a>`;
+                    }
+                    bodyHtml += `<td>${value}</td>`;
+                });
+                bodyHtml += '</tr>';
+            });
+            
+            tableBody.innerHTML = bodyHtml;
+        }
+        
+        // Filter table based on search input [citation:3]
+        function filterTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (searchTerm.length < 3) {
+                generateTable(allData); // Show all if less than 3 chars
+                return;
+            }
+            
+            const filteredData = allData.filter(row => {
+                // Search in all fields
+                return headers.some(header => {
+                    const value = String(row[header] || '').toLowerCase();
+                    return value.includes(searchTerm);
+                });
+            });
+            
+            generateTable(filteredData);
+            
+            // Update stats
+            document.getElementById('stats').innerHTML = 
+                `🔍 Found ${filteredData.length} matches (showing ${filteredData.length} of ${allData.length} rows)`;
+        }
+        
+        // Export to CSV
+        function exportToCSV() {
+            if (allData.length === 0) {
+                alert('No data to export');
+                return;
+            }
+            
+            // Create CSV content
+            let csvContent = headers.join(',') + '\n';
+            
+            allData.forEach(row => {
+                const rowData = headers.map(header => {
+                    const value = row[header] || '';
+                    // Escape commas and quotes
+                    return `"${String(value).replace(/"/g, '""')}"`;
+                });
+                csvContent += rowData.join(',') + '\n';
+            });
+            
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `license_report_${new Date().toISOString().slice(0,10)}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Optional: Sort table by column
+        function sortTable(columnIndex) {
+            const sortedData = [...allData].sort((a, b) => {
+                const aVal = String(a[headers[columnIndex]] || '').toLowerCase();
+                const bVal = String(b[headers[columnIndex]] || '').toLowerCase();
+                return aVal.localeCompare(bVal);
+            });
+            
+            generateTable(sortedData);
         }
     </script>
 </body>
