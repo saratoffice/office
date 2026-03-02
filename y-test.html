@@ -1,1200 +1,445 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Acts, Rules, Orders | Sarat Office</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Papaparse for CSV parsing -->
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <!-- DataTables & jQuery -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  
-  <!-- Common CSS (menu, footer, global styles) -->
-  <link rel="stylesheet" href="style.css">
-  <!-- ✅ IMPORTANT: site components for header/footer etc. -->
-  <script src="assets/Scripts/site-components.js" defer></script>
-  
-  <style>
-    /* ================================
-   GUARD FILE – HERO SECTION
-   ================================ */
-
-.guard-hero {
-  /* Gradient background */
-  background: linear-gradient(
-    135deg,
-    #243b55 0%,
-    #29485a 50%,
-    #1f3a4a 100%
-  );
-  padding: 50px 20px;
-  text-align: center;
-  color: #ffffff;
-  overflow: hidden;
-}
-
-.guard-hero-inner {
-  max-width: 1100px;
-  margin: auto;
-}
-
-/* Title */
-.guard-title {
-  font-size: 56px;
-  font-weight: 800;
-  letter-spacing: 3px;
-  color: #fff176;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-}
-
-/* Subtitle */
-.guard-subtitle {
-  font-size: 26px;
-  color: #9adfff;
-  margin-bottom: 40px;
-  font-weight: 500;
-}
-
-/* Buttons */
-.guard-actions {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.guard-btn {
-  padding: 14px 34px;
-  border-radius: 10px;
-  font-size: 18px;
-  font-weight: 600;
-  text-decoration: none;
-  color: #ffffff;
-  background: transparent;
-  border: 2px solid #ffffff;
-  transition: all 0.3s ease;
-}
-
-.guard-btn:hover {
-  background: #ffffff;
-  color: #1f3a4a;
-  transform: translateY(-3px);
-}
-
-/* Secondary button */
-.guard-btn.outline {
-  border-color: #9adfff;
-  color: #9adfff;
-}
-
-.guard-btn.outline:hover {
-  background: #9adfff;
-  color: #1f2937;
-}
-
-/* ================================
-   SCROLL ANIMATION
-   ================================ */
-
-.animate-on-scroll {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.9s ease, transform 0.9s ease;
-}
-
-.animate-on-scroll.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ================================
-   RESPONSIVE
-   ================================ */
-
-@media (max-width: 768px) {
-  .guard-title {
-    font-size: 38px;
-  }
-
-  .guard-subtitle {
-    font-size: 20px;
-  }
-
-  .guard-btn {
-    font-size: 16px;
-    padding: 12px 26px;
-  }
-}
-
-    /* ----- GLOBAL RESET ----- */
-    body {
-      margin: 0;
-      background: #f5f9ff;
-      font-family: 'Segoe UI', Roboto, sans-serif;
-    }
-
-    /* ----- NAMESPACED WRAPPER – all custom CSS is scoped inside .sarat-docs ----- */
-    .sarat-docs {
-      display: block;
-      width: 100%;
-      max-width: 1800px;
-      margin: 0 auto;
-      padding: 20px 80px;
-      box-sizing: border-box;
-    }
-
-    /* ---- HORIZONTAL TABS – RECTANGULAR 3D STYLE (EXACTLY AS IMAGE) ---- */
-    .sarat-docs .tab-strip {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      background: transparent;
-      padding: 25px 0;
-      margin: 20px 0 40px 0;
-      border-bottom: none;
-    }
-
-    .sarat-docs .tab-item {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px 36px;
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      color: #1e3a5f;
-      background: #ffffff;
-      border: none;
-      border-radius: 0;
-      box-shadow: 
-        0 8px 0 #a0a0a0,
-        0 10px 15px rgba(0,0,0,0.2),
-        inset 0 -2px 0 rgba(0,0,0,0.05);
-      transition: all 0.15s ease;
-      cursor: pointer;
-      text-decoration: none;
-      text-transform: uppercase;
-      border: 1px solid #c0c0c0;
-      border-bottom: none;
-      min-width: 160px;
-    }
-
-    .sarat-docs .tab-item:hover {
-      transform: translateY(-4px);
-      box-shadow: 
-        0 10px 0 #7a7a7a,
-        0 15px 25px rgba(0,0,0,0.25),
-        inset 0 -2px 0 rgba(0,0,0,0.05);
-      background: #f0f7ff;
-      color: #003366;
-    }
-
-    .sarat-docs .tab-item.active {
-      background: #0066b3;
-      color: white !important;
-      box-shadow: 
-        0 8px 0 #00407a,
-        0 12px 20px rgba(0,102,179,0.35),
-        inset 0 -2px 0 rgba(0,0,0,0.15);
-      border-color: #005095;
-      border-bottom: none;
-      transform: translateY(0);
-    }
-
-    .sarat-docs .tab-item.active:hover {
-      background: #005095;
-      box-shadow: 
-        0 10px 0 #00355c,
-        0 18px 28px rgba(0,80,150,0.4);
-      transform: translateY(-3px);
-      color: white;
-    }
-
-    .sarat-docs .tab-divider {
-      display: none !important;
-    }
-
-    /* ----- CSV TABLE STYLES - 80% WIDTH AS REQUESTED ----- */
-    .sarat-docs .csv-tab-container {
-      overflow-x: auto;
-      padding: 20px 0 40px 0;
-      background: transparent;
-      margin-top: 10px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .sarat-docs .csv-table {
-      width: 80%;
-      border-collapse: separate;
-      border-spacing: 0;
-      font-family: 'Segoe UI', sans-serif;
-      font-size: 16px;
-      min-width: 600px;
-      border-radius: 8px;
-      overflow: hidden;
-      background: #ffffff;
-      box-shadow:
-        0 0 0 4px #e8f0fe,
-        0 8px 20px rgba(0, 80, 150, 0.2),
-        inset 0 0 6px rgba(0, 120, 210, 0.1);
-      margin: 0 auto;
-    }
-
-    .sarat-docs .csv-table thead {
-      background: linear-gradient(135deg, #0a1e3c, #13294b);
-    }
-
-    .sarat-docs .csv-table thead th {
-      color: #fff !important;
-      font-weight: 700;
-      text-align: center;
-      padding: 20px 18px;
-      letter-spacing: 0.8px;
-      font-size: 16px;
-      text-transform: uppercase;
-    }
-
-    .sarat-docs .csv-table td {
-      padding: 18px 20px;
-      border-bottom: 1px solid #d4e3f0;
-      vertical-align: middle;
-      background-color: white;
-      font-size: 15px;
-    }
-
-    .sarat-docs .csv-table td:nth-child(1) {
-      text-align: center;
-      font-weight: 600;
-      color: #0a2e4a;
-      width: 80px;
-    }
-
-    .sarat-docs .csv-table td:nth-child(2) {
-      text-align: left;
-      font-weight: 500;
-      color: #1e3a5f;
-    }
-
-    .sarat-docs .csv-table td:nth-child(3),
-    .sarat-docs .csv-table td:nth-child(4) {
-      text-align: center;
-      width: 140px;
-    }
-
-    .sarat-docs .csv-table tbody tr:hover {
-      background-color: #f0f9ff;
-      transition: background-color 0.15s;
-    }
-
-    .sarat-docs .download-btn,
-    .sarat-docs .share-btn {
-      min-width: 120px;
-      padding: 12px 20px;
-      font-size: 14px;
-      font-weight: 700;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      color: white;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-      box-shadow:
-        inset 0 -3px 0 rgba(0,0,0,0.15),
-        0 5px 12px rgba(0,0,0,0.12);
-      transform: translateY(0);
-      transition: all 0.2s ease;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-    }
-
-    .sarat-docs .download-btn {
-      background: linear-gradient(to bottom, #2e7d32, #1b5e20);
-    }
-
-    .sarat-docs .download-btn:hover {
-      background: linear-gradient(to bottom, #1b5e20, #0e4212);
-      transform: translateY(-2px);
-      box-shadow:
-        inset 0 -3px 0 rgba(0,0,0,0.2),
-        0 8px 18px rgba(46,125,50,0.4);
-    }
-
-    .sarat-docs .share-btn {
-      background: linear-gradient(to bottom, #1976d2, #0d47a1);
-    }
-
-    .sarat-docs .share-btn:hover {
-      background: linear-gradient(to bottom, #0d47a1, #062a5c);
-      transform: translateY(-2px);
-      box-shadow:
-        inset 0 -3px 0 rgba(0,0,0,0.2),
-        0 8px 18px rgba(25,118,210,0.4);
-    }
-    
-    /* ----- GOVT. CALENDARS TABLE - FIX COLUMN WIDTHS (AS IN IMAGE) ----- */
-    .sarat-docs #tab-Govt\ Calendars .csv-table {
-      width: 80%;
-      table-layout: fixed;
-    }
-
-    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(1),
-    .sarat-docs #tab-Govt\ Calendars .csv-table td:nth-child(1) {
-      width: 35% !important;
-      min-width: 220px !important;
-      text-align: left !important;
-      padding-left: 30px !important;
-    }
-
-    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(2),
-    .sarat-docs #tab-Govt\ Calendars .csv-table td:nth-child(2) {
-      width: 32.5% !important;
-      text-align: center !important;
-    }
-
-    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(3),
-    .sarat-docs #tab-Govt\ Calendars .csv-table td:nth-child(3) {
-      width: 32.5% !important;
-      text-align: center !important;
-    }
-
-    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(1) {
-      text-align: left !important;
-      padding-left: 30px !important;
-    }
-
-    .sarat-docs #tab-Govt\ Calendars .csv-table {
-      table-layout: fixed !important;
-    }
-    
-    /* fallback header/footer */
-    .fallback-header {
-      background: #0c1f33;
-      color: white;
-      padding: 18px 30px;
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .fallback-footer {
-      background: #0a1929;
-      color: #bbd6ff;
-      padding: 20px 30px;
-      text-align: center;
-    }
-
-    @media (max-width: 1200px) {
-      .sarat-docs {
-        padding: 20px 50px;
-      }
-      .sarat-docs .tab-item {
-        padding: 14px 28px;
-        min-width: 140px;
-        font-size: 1.1rem;
-      }
-      .sarat-docs .csv-table {
-        width: 90%;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .sarat-docs {
-        padding: 15px 20px;
-      }
-      .sarat-docs .tab-strip {
-        gap: 15px;
-      }
-      .sarat-docs .tab-item {
-        padding: 12px 20px;
-        min-width: 120px;
-        font-size: 1rem;
-      }
-      .sarat-docs .csv-table {
-        width: 95%;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .sarat-docs .csv-table {
-        width: 100%;
-      }
-    }
-
-    /* ================================
-       ALL FILES TAB STYLES (from provided code)
-    ================================ */
-    
-    /* Table Container */
-    .sara-table-container-v2 {
-      width: 100%;
-      max-width: 95vw;
-      overflow-x: auto;
-      background: #fefefe;
-      padding: 20px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      margin: 20px auto;
-      box-sizing: border-box;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
-                  0 10px 20px rgba(0, 0, 0, 0.15),
-                  0 20px 40px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Main Table Styling */
-    #saraCsvTableV2 {
-      width: 100% !important;
-      background: white;
-      color: black;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 14px;
-      border-collapse: collapse !important;
-      margin: 0 auto;
-      table-layout: auto;
-    }
-
-    #saraCsvTableV2 th,
-    #saraCsvTableV2 td {
-      padding: 12px 15px;
-      vertical-align: top;
-      text-align: left;
-      word-break: break-word;
-      white-space: normal;
-      border-bottom: 1px solid #ddd;
-    }
-
-    #saraCsvTableV2 td[data-label="Download"],
-    #saraCsvTableV2 td[data-label="File Size"] {
-      text-align: right;
-      vertical-align: middle;
-    }
-
-    #saraCsvTableV2 thead tr th {
-      background-color: #101535 !important;
-      color: #ffffff !important;
-      font-weight: bold;
-      border-bottom: 2px solid #b20bb3 !important;
-      position: relative;
-      text-align: center;
-      vertical-align: middle;
-    }
-
-    #saraCsvTableV2 thead th.sorting:after,
-    #saraCsvTableV2 thead th.sorting_asc:after,
-    #saraCsvTableV2 thead th.sorting_desc:after {
-      content: "";
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: "Font Awesome 5 Free";
-      font-weight: 900;
-    }
-
-    #saraCsvTableV2 thead th.sorting:after {
-      content: "↕";
-      opacity: 0.5;
-    }
-
-    #saraCsvTableV2 thead th.sorting_asc:after {
-      content: "↑";
-    }
-
-    #saraCsvTableV2 thead th.sorting_desc:after {
-      content: "↓";
-    }
-
-    #saraCsvTableV2 tbody tr:hover td {
-      background-color: #707070 !important;
-      color: white;
-      transition: background 0.2s ease-in-out;
-    }
-
-    .sara-download-btn,
-    #saraCsvTableV2 td a button {
-      padding: 8px 16px;
-      background-color: #007bff;
-      color: #ffffff !important;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      transition: background 0.3s ease, transform 0.3s ease;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .sara-download-btn:hover,
-    #saraCsvTableV2 td a button:hover {
-      background-color: #e615ed !important;
-      transform: translateY(-2px);
-      box-shadow: 0 3px 10px rgba(230, 21, 237, 0.4);
-    }
-
-    /* DataTables Wrapper Styles */
-    .dataTables_wrapper {
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    .dataTables_wrapper .dataTables_filter {
-      float: right;
-      margin-bottom: 15px;
-    }
-
-    .dataTables_wrapper .dataTables_filter input {
-      width: 300px !important;
-      padding: 8px 15px !important;
-      border: 1px solid #ccc !important;
-      border-radius: 6px !important;
-      margin-left: 10px;
-      font-size: 14px;
-    }
-
-    .dataTables_wrapper .dataTables_length {
-      float: left;
-      margin-bottom: 15px;
-    }
-
-    /* Subject column dynamic max-width with percentage */
-    #saraCsvTableV2 td[data-label="Subject"] {
-      max-width: 60%;
-      white-space: normal !important;
-      word-wrap: break-word !important;
-      overflow-wrap: break-word !important;
-      hyphens: auto;
-    }
-
-    /* S.N. column no wrap */
-    #saraCsvTableV2 td[data-label="S.N."],
-    #saraCsvTableV2 th:nth-child(1) {
-      white-space: nowrap !important;
-      max-width: 50px;
-    }
-
-    /* Force nowrap on these columns */
-    #saraCsvTableV2 td[data-label="Date"],
-    #saraCsvTableV2 td[data-label="Download"],
-    #saraCsvTableV2 td[data-label="Letter No."],
-    #saraCsvTableV2 td[data-label="File Size"] {
-      white-space: nowrap;
-    }
-
-    .dataTables_wrapper .dataTables_length select {
-      padding: 8px 15px !important;
-      border-radius: 6px !important;
-      border: 1px solid #ccc !important;
-      font-size: 14px;
-    }
-
-    .dataTables_wrapper .dataTables_info {
-      float: left;
-      margin-top: 15px;
-      font-size: 14px;
-    }
-
-    .dataTables_wrapper .dataTables_paginate {
-      float: right;
-      margin-top: 15px;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
-      padding: 8px 12px !important;
-      border: 1px solid #ddd !important;
-      margin: 0 2px !important;
-      border-radius: 4px !important;
-      transition: all 0.2s ease;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-      background: #00bbff !important;
-      color: white !important;
-      border-color: #00bbff !important;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-      background: #b20bb3 !important;
-      color: white !important;
-      border-color: #b20bb3 !important;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    @media only screen and (max-width: 768px) {
-      .sara-table-container-v2 {
-        padding: 10px;
-      }
-
-      #saraCsvTableV2,
-      #saraCsvTableV2 thead,
-      #saraCsvTableV2 tbody,
-      #saraCsvTableV2 th,
-      #saraCsvTableV2 td,
-      #saraCsvTableV2 tr {
-        display: block;
-        width: 100%;
-      }
-
-      #saraCsvTableV2 thead {
-        display: none;
-      }
-
-      #saraCsvTableV2 tr {
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        padding: 10px;
-        background: #fff;
-      }
-
-      #saraCsvTableV2 td {
-        display: flex;
-        justify-content: space-between;
-        padding: 8px 10px;
-        font-size: 13px;
-        text-align: left !important;
-        border-bottom: none;
-      }
-
-      #saraCsvTableV2 td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        color: #555;
-        flex: 1;
-        margin-right: 10px;
-      }
-
-      .dataTables_wrapper .dataTables_length,
-      .dataTables_wrapper .dataTables_filter,
-      .dataTables_wrapper .dataTables_info,
-      .dataTables_wrapper .dataTables_paginate {
-        float: none !important;
-        text-align: center !important;
-        width: 100% !important;
-        margin: 10px 0 !important;
-      }
-
-      .dataTables_wrapper .dataTables_filter input {
-        width: 100% !important;
-        margin: 10px 0 !important;
-      }
-
-      .dataTables_wrapper .dataTables_length select {
-        width: 100% !important;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSD/Lubricant License Renewal Recommendation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border: 1px solid #000;
+        }
+        
+        .header {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-bottom: 2px solid #000;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            line-height: 1.4;
+        }
+        
+        .header h2 {
+            font-size: 16px;
+            font-weight: normal;
+            margin-top: 5px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .main-table {
+            border: 1px solid #000;
+        }
+        
+        .main-table td, .main-table th {
+            border: 1px solid #000;
+            padding: 8px 10px;
+            vertical-align: top;
+            font-size: 14px;
+        }
+        
+        .main-table th {
+            background-color: #e6e6e6;
+            font-weight: bold;
+            width: 30%;
+        }
+        
+        .main-table td {
+            width: 70%;
+        }
+        
+        .sub-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: -8px -10px;
+        }
+        
+        .sub-table td {
+            border: none;
+            padding: 3px 5px;
+            width: auto;
+        }
+        
+        .sub-table tr td:first-child {
+            font-weight: normal;
+            width: 40%;
+        }
+        
+        .sub-table tr td:last-child {
+            width: 60%;
+        }
+        
+        .section-header {
+            background-color: #d9d9d9;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .label {
+            font-weight: bold;
+            background-color: #f2f2f2;
+        }
+        
+        .available {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .not-available {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .signature-area {
+            margin-top: 30px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .signature-line {
+            border-top: 1px solid #000;
+            width: 250px;
+            text-align: center;
+            padding-top: 5px;
+        }
+        
+        .recommendation-box {
+            background-color: #e6f7ff;
+            border: 2px solid #000;
+            padding: 15px;
+            margin: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .footer-note {
+            font-size: 12px;
+            text-align: right;
+            padding: 10px;
+            font-style: italic;
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>RECOMMENDATION FOR RENEWAL OF HSD /LUBRICANT LICENSE UNDER ORISSA HIGH SPEED DIESEL (DEALERS' LICENSING) ORDER, 1979/LUBRICATING OILS AND GREASES (PROCESSING SUPPLY AND DISTRIBUTION REGULATION) ORDER, 1987</h1>
+            <h2>Tejaswini Filling Station, Naikensira, Deogaon Block</h2>
+        </div>
 
-<!-- HEADER -->
-<div id="site-header"></div>
-
-<!-- MAIN DOCS COMPONENT -->
-<section class="guard-hero">
-  <div class="guard-hero-inner animate-on-scroll">
-    <h1 class="guard-title">GUARD FILE</h1>
-    <p class="guard-subtitle">
-      Government Letters and Guidelines Archive
-    </p>
-    <div class="guard-actions">
-      <a href="guard-file.html" class="guard-btn">Guard File</a>
-    </div>
-  </div>
-</section>
-<script src="assets/Scripts/Guardfile-animations.js"></script>
-  
-<div class="sarat-docs">
-
-  <!-- Horizontal tab strip -->
-  <div class="tab-strip" id="horizontalTabStrip">
-    <!-- All Files tab (active by default) -->
-    <button class="tab-item active" data-category="AllFiles">ALL FILES</button>
-    <button class="tab-item" data-category="Act">ACTS</button>
-    <button class="tab-item" data-category="Rules">RULES</button>
-    <button class="tab-item" data-category="Order">ORDERS</button>
-    <button class="tab-item" data-category="MSP">PADDY MSP</button>
-    <button class="tab-item" data-category="Procurement">PROC GUIDELINES</button>
-    <button class="tab-item" data-category="Food">FOOD POLICY</button>
-    <button class="tab-item" data-category="Misc">MISCELLANEOUS</button>
-    <button class="tab-item" data-category="Govt Calendars">GOVT. CALENDARS</button>
-  </div>
-
-  <!-- Dynamic table area -->
-  <div id="dynamicTableArea">
-    <!-- All Files tab container -->
-    <div class="csv-tab-container" id="tab-AllFiles" style="display: block;">
-      <div class="csv-table-placeholder">
-        <!-- All Files table will be loaded here -->
-      </div>
-    </div>
-
-    <!-- Other tab containers -->
-    <div class="csv-tab-container" id="tab-Act" style="display: none;">
-      <div class="csv-table-placeholder">Loading Acts...</div>
-    </div>
-    <div class="csv-tab-container" id="tab-Rules" style="display: none;">
-      <div class="csv-table-placeholder">Loading Rules...</div>
-    </div>
-    <div class="csv-tab-container" id="tab-Order" style="display: none;">
-      <div class="csv-table-placeholder">Loading Orders...</div>
-    </div>
-    <div class="csv-tab-container" id="tab-MSP" style="display: none;">
-      <div class="csv-table-placeholder">Loading Paddy MSP...</div>
-    </div>
-    <div class="csv-tab-container" id="tab-Procurement" style="display: none;">
-      <div class="csv-table-placeholder">Loading Proc Guidelines...</div>
-    </div>
-    <div class="csv-tab-container" id="tab-Food" style="display: none;">
-      <div class="csv-table-placeholder">Loading Food Policy...</div>
-    </div>
-    <div class="csv-tab-container" id="tab-Misc" style="display: none;">
-      <div class="csv-table-placeholder">Loading Miscellaneous...</div>
-    </div>
-    
-    <!-- GOVT. CALENDARS TAB -->
-    <div class="csv-tab-container" id="tab-Govt Calendars" style="display: none;">
-      <div class="csv-table-placeholder">Loading Govt. Calendars...</div>
-    </div>
-  </div>
-
-</div>
-
-<script>
-  (function() {
-    "use strict";
-
-    // ------- CONFIGURATION --------
-    // SINGLE CSV FILE FOR ALL TABS
-    const MASTER_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTagonyub0K84Tg9xZVxeLhQ8rfb417bTqKwSP3xzhkQ5mbnZY6mOFFdB6kK8Hl0EZtYY7t3e8qd-kO/pub?gid=51131841&single=true&output=csv";
-    const GOVT_CALENDARS_URL = "https://raw.githubusercontent.com/saratoffice/office/main/calendars.html";
-    
-    let masterData = []; // Store all parsed data from the single CSV
-    let allFilesDataTable = null;
-
-    // ---------- LOAD MASTER CSV DATA ----------
-    function loadMasterData() {
-      // Show loading state for all tabs
-      updateAllPlaceholders('⏳ Loading documents from master file...');
-      
-      Papa.parse(MASTER_CSV_URL, {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-          console.log("CSV Headers:", results.meta.fields); // Debug: see column names
-          
-          // Filter out empty rows
-          masterData = results.data.filter(row => {
-            // Check if row has any meaningful data
-            return row["S.N."] || row["Subject"] || row["Letter No."];
-          });
-          
-          if (masterData.length === 0) {
-            throw new Error('No data found in CSV');
-          }
-          
-          console.log(`Loaded ${masterData.length} records`); // Debug
-          
-          // Process dates for all data
-          masterData = masterData.map(row => {
-            const rawDate = (row["Date"] || "").trim();
-            const parts = rawDate.split("/");
-            if (parts.length === 3) {
-              let [dd, mm, yyyy] = parts;
-              dd = dd.padStart(2, '0');
-              mm = mm.padStart(2, '0');
-              if (yyyy.length === 4) {
-                row["SortDate"] = `${yyyy}-${mm}-${dd}`;
-                row["Date"] = `${dd}-${mm}-${yyyy}`;
-              } else {
-                row["SortDate"] = null;
-              }
-            } else {
-              row["SortDate"] = null;
-            }
-            
-            // Clean subject
-            row["Subject"] = (row["Subject"] || "").replace(/_/g, " ").replace(/\.pdf$/i, "").trim();
-            
-            return row;
-          });
-          
-          // Populate all category tabs (filtered from master data)
-          // Check if the active tab is not AllFiles, then populate it
-          const activeTab = document.querySelector('.tab-item.active');
-          const activeCategory = activeTab ? activeTab.getAttribute('data-category') : 'AllFiles';
-          
-          if (activeCategory !== 'AllFiles' && activeCategory !== 'Govt Calendars') {
-            populateTableForCategory(activeCategory);
-          }
-          
-          // Pre-load AllFiles tab if it's active
-          if (activeCategory === 'AllFiles') {
-            loadAllFilesTab();
-          }
-        },
-        error: function(err) {
-          console.error("Master CSV Load Error:", err);
-          showErrorMessage("Failed to load master data: " + err.message);
-        }
-      });
-    }
-    
-    function updateAllPlaceholders(message) {
-      const categories = ['Act', 'Rules', 'Order', 'MSP', 'Procurement', 'Food', 'Misc', 'AllFiles'];
-      categories.forEach(cat => {
-        const tabDiv = document.getElementById(`tab-${cat}`);
-        if (tabDiv) {
-          const placeholder = tabDiv.querySelector('.csv-table-placeholder');
-          if (placeholder && placeholder.innerHTML.includes('Loading')) {
-            placeholder.innerHTML = message;
-          }
-        }
-      });
-    }
-    
-    function showErrorMessage(errorText) {
-      const categories = ['Act', 'Rules', 'Order', 'MSP', 'Procurement', 'Food', 'Misc', 'AllFiles'];
-      categories.forEach(cat => {
-        const tabDiv = document.getElementById(`tab-${cat}`);
-        if (tabDiv) {
-          const placeholder = tabDiv.querySelector('.csv-table-placeholder');
-          if (placeholder) {
-            placeholder.innerHTML = `
-              <div style="text-align: center; padding: 40px; background: #fff3f3; border-radius: 8px;">
-                <h3 style="color: #d32f2f; margin-bottom: 15px;">⚠️ Error Loading Documents</h3>
-                <p style="color: #666;">${errorText}</p>
-                <p style="color: #999; margin-top: 20px;">Please try refreshing the page or contact support.</p>
-              </div>
-            `;
-          }
-        }
-      });
-    }
-
-    // ---------- BUILD FILTERED TABLE HTML FOR CATEGORY TABS ----------
-    function buildTableHTML(category) {
-      // Try multiple possible column names for category
-      const possibleCategoryColumns = ["Category", "Type", "Document Type", "Section", "Act/Rule/Order"];
-      
-      let filtered = [];
-      
-      // Try each possible column name until we find matches
-      for (let colName of possibleCategoryColumns) {
-        const tempFiltered = masterData.filter(row => 
-          row[colName] && row[colName].trim().toLowerCase() === category.toLowerCase()
-        );
-        if (tempFiltered.length > 0) {
-          filtered = tempFiltered;
-          console.log(`Filtering by column "${colName}" for category "${category}" found ${filtered.length} items`);
-          break;
-        }
-      }
-      
-      // If still no matches, try partial matching
-      if (filtered.length === 0) {
-        filtered = masterData.filter(row => {
-          // Check all columns for category match
-          for (let key in row) {
-            if (row[key] && row[key].toString().toLowerCase().includes(category.toLowerCase())) {
-              return true;
-            }
-          }
-          return false;
-        });
-      }
-      
-      if (filtered.length === 0) {
-        return `<table class="csv-table"><thead><tr><th>S.No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center; padding:40px;">📁 No documents for ${category}</td></tr></tbody></table>`;
-      }
-
-      const rowsHtml = filtered.map((row, idx) => {
-        let subject = row["Subject"] || "Untitled";
-        
-        // Try to find the link in various possible column names
-        let link = "#";
-        const possibleLinkColumns = ["Link", "URL", "Download Link", "File URL", "Button Link", "PDF Link"];
-        for (let colName of possibleLinkColumns) {
-          if (row[colName] && row[colName].toString().startsWith("http")) {
-            link = row[colName];
-            break;
-          }
-        }
-        
-        // If still no link, try to extract from Button column
-        if (link === "#" && row["Button"]) {
-          const buttonHtml = row["Button"];
-          const match = buttonHtml.match(/href="([^"]+)"/);
-          if (match) {
-            link = match[1];
-          }
-        }
-        
-        const safeLink = (link.startsWith("http") || link.startsWith("/")) ? link : "#";
-        const encodedSubject = encodeURIComponent("📄 " + subject + "\n🔗 " + safeLink);
-        
-        return `<tr>
-          <td>${idx + 1}</td>
-          <td>${subject}</td>
-          <td><a href="${safeLink}" target="_blank" rel="noopener noreferrer"><button class="download-btn">Download</button></a></td>
-          <td><a href="https://wa.me/?text=${encodedSubject}" target="_blank" rel="noopener noreferrer"><button class="share-btn">Share</button></a></td>
-        </tr>`;
-      }).join("");
-
-      return `<table class="csv-table">
-        <thead><tr><th>S.No.</th><th>Subject</th><th>Download</th><th>Share</th></tr></thead>
-        <tbody>${rowsHtml}</tbody>
-      </table>`;
-    }
-
-    function populateTableForCategory(category) {
-      const tabDiv = document.getElementById(`tab-${category}`);
-      if (!tabDiv) return;
-      const placeholder = tabDiv.querySelector('.csv-table-placeholder');
-      if (!placeholder) return;
-      
-      if (masterData.length === 0) {
-        placeholder.innerHTML = '⏳ Loading...';
-        return;
-      }
-      
-      placeholder.innerHTML = buildTableHTML(category);
-    }
-
-    // ---------- LOAD GOVT. CALENDARS ----------
-    function loadGovtCalendars() {
-      const calendarContainer = document.getElementById('tab-Govt Calendars');
-      if (!calendarContainer) return;
-      
-      const placeholder = calendarContainer.querySelector('.csv-table-placeholder');
-      if (!placeholder) return;
-      
-      placeholder.innerHTML = '<div style="text-align: center; padding: 40px;">📅 Loading Government Calendars...</div>';
-      
-      fetch(GOVT_CALENDARS_URL)
-        .then(response => {
-          if (!response.ok) throw new Error('Network response was not ok');
-          return response.text();
-        })
-        .then(html => {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-          const calendarSection = doc.querySelector('.govt-calendars-section');
-          
-          if (calendarSection) {
-            placeholder.innerHTML = calendarSection.outerHTML;
-          } else {
-            placeholder.innerHTML = html;
-          }
-        })
-        .catch(error => {
-          console.error('Error loading Govt. Calendars:', error);
-          placeholder.innerHTML = `
-            <div style="text-align: center; padding: 50px; background: white; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
-              <h2 style="color: #0083ed; font-size: 28pt; margin-bottom: 20px;">GOVT. CALENDARS</h2>
-              <p style="color: #666; font-size: 18px;">⚠️ Unable to load calendars. Please try again later.</p>
-              <p style="color: #999; margin-top: 20px;">Error: ${error.message}</p>
-            </div>
-          `;
-        });
-    }
-
-    // ---------- LOAD ALL FILES TAB (using same master data) ----------
-    function loadAllFilesTab() {
-      const container = document.getElementById('tab-AllFiles');
-      if (!container) return;
-      
-      const placeholder = container.querySelector('.csv-table-placeholder');
-      if (!placeholder) return;
-
-      if (masterData.length === 0) {
-        placeholder.innerHTML = '<div style="text-align: center; padding: 40px;">⏳ Loading All Files...</div>';
-        return;
-      }
-
-      // Destroy existing DataTable if it exists
-      if (allFilesDataTable) {
-        allFilesDataTable.destroy();
-        allFilesDataTable = null;
-      }
-
-      // Create the table structure for All Files
-      const tableContainer = document.createElement('div');
-      tableContainer.className = 'sara-table-container-v2';
-      tableContainer.innerHTML = `
-        <table id="saraCsvTableV2" class="display nowrap">
-          <thead>
+        <table class="main-table">
+            <!-- Row 1-2: Verifying Officer -->
             <tr>
-              <th>Index</th>
-              <th>Letter No.</th>
-              <th>Date</th>
-              <th>Subject</th>
-              <th>Download</th>
-              <th>Size</th>
+                <th>1. Name and designation of Verifying Officer:</th>
+                <td>Sri Sarat Kumar Rout, ACSO</td>
             </tr>
-          </thead>
-          <tbody></tbody>
+            <tr>
+                <th>2. Date and time of verification</th>
+                <td>Dt. 21/02/2025 At 11.30 AM</td>
+            </tr>
+            
+            <!-- Row 3: Name of Petrol Pump -->
+            <tr>
+                <th>3. Name and style of Petrol Pump</th>
+                <td>Tejaswini Filling Station, Naikensira, Deogaon Block</td>
+            </tr>
+            
+            <!-- Row 4: Proprietor details -->
+            <tr>
+                <th>4. Name & address of the Proprietor/MP/MD</th>
+                <td>"Debaraj Meher (Proprietorship)<br>At: Naikensira, Po/PS/Block: Deogaon<br>Pin: 767029"</td>
+            </tr>
+            
+            <!-- Row 5: Email -->
+            <tr>
+                <th>5. EMail ID</th>
+                <td>tejaswini.fuelstn@gmail.com</td>
+            </tr>
+            
+            <!-- Row 6: Mobile -->
+            <tr>
+                <th>6. Whatsapp/Mobile Number</th>
+                <td>8895 965 811</td>
+            </tr>
+            
+            <!-- Row 7: Aadhaar -->
+            <tr>
+                <th>7. Aadhaar Number</th>
+                <td>2058 4250 3291</td>
+            </tr>
+            
+            <!-- Row 8: PAN -->
+            <tr>
+                <th>8. PAN Number</th>
+                <td>AOAPM5635D (Proprietor)</td>
+            </tr>
+            
+            <!-- Row 9: GST -->
+            <tr>
+                <th>9. GST Number</th>
+                <td>21AOAPM5635D3ZF</td>
+            </tr>
+            
+            <!-- Row 10: Power Attorney -->
+            <tr>
+                <th>10. Name of Power Attorney Holder if runs business through PoA</th>
+                <td>No</td>
+            </tr>
+            
+            <!-- Row 11: Location -->
+            <tr>
+                <th>11. Location (Plot No./Khata No/Mauza/Tahasil/Block/PS/PIN)</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><td>Plot No.</td><td>831/1476</td><td>Kisama</td><td>Gharabadi</td></tr>
+                        <tr><td>Khata No.</td><td>129/232</td><td>Tahasil</td><td>Deogaon</td></tr>
+                        <tr><td>Mouza</td><td>Naikensira</td><td>Fasad</td><td></td></tr>
+                        <tr><td>Police Station:</td><td>Deogaon</td><td>Balangir</td><td></td></tr>
+                        <tr><td>PIN:</td><td>767029</td><td></td><td></td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 12: Year of establishment -->
+            <tr>
+                <th>12. Year of establishment of Petrol Pump</th>
+                <td>2020</td>
+            </tr>
+            
+            <!-- Row 13: Oil Company -->
+            <tr>
+                <th>13. Name of the Oil Company</th>
+                <td>BPCL</td>
+            </tr>
+            
+            <!-- Row 14: Recommendation -->
+            <tr>
+                <th>14. Recommendation of Oil Company (with Letter No. / date)</th>
+                <td>SBP.TER.BOL-25 Dt. 23/01/2020</td>
+            </tr>
+            
+            <!-- Row 15: Agreement date -->
+            <tr>
+                <th>15. Date of agreement with Oil Company</th>
+                <td>23-12-2020</td>
+            </tr>
+            
+            <!-- Row 16: NOC -->
+            <tr>
+                <th>16. NOC (No. and date of Authority)</th>
+                <td>2793/Judl Dtd. 20.11.2020, Collector, Balangir</td>
+            </tr>
+            
+            <!-- Row 17: Underground tanks -->
+            <tr>
+                <th>17. No. of underground tanks with capacity (in KL)</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><th>Product</th><th>Number</th><th>Capacity</th></tr>
+                        <tr><td>Class A</td><td>1</td><td>15 KL</td></tr>
+                        <tr><td>Class B</td><td>1</td><td>20 KL</td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 18: Dispensing Units -->
+            <tr>
+                <th>18. No. of Dispensing Units (HSD & MS) with No. of Nozzles per DU</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><th>Product</th><th colspan="2">Nozzles</th></tr>
+                        <tr><td></td><td>HSD</td><td>MS</td></tr>
+                        <tr><td>Pump Model No. TIQ2442SSPN Sl. No. M2037155</td><td>2</td><td>2</td></tr>
+                        <tr><td>Pump Model No. TIQ2442SHPN Sl. No. M2050126</td><td>2</td><td>2</td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 19: Power Supply -->
+            <tr>
+                <th>19. Power Supply details</th>
+                <td>TPWODL: Consumer No. 911001140277</td>
+            </tr>
+            
+            <!-- Row 20: License details -->
+            <tr>
+                <th>20. License details</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><th>Particulars</th><th>Number</th><th>Validity Till</th></tr>
+                        <tr><td>HSD</td><td>06/2020-21</td><td>31-03-2025</td></tr>
+                        <tr><td>Lubricant</td><td>06/2020-21</td><td>31-03-2025</td></tr>
+                        <tr><td>Explosive</td><td>P/EC/OR/14/1977 (P313459)</td><td>31-12-2026</td></tr>
+                        <tr><td>Fire Safety</td><td>FIRCER1306180092023002500</td><td>21-03-2025</td></tr>
+                        <tr><td colspan="3"><strong>Weights & Measure Certificate</strong></td></tr>
+                        <tr><td>5 Lts Conical</td><td colspan="2">NOT PRODUCED</td></tr>
+                        <tr><td>Dispensing Pump</td><td>BGR25A2073</td><td>17-02-2026</td></tr>
+                        <tr><td>Dispensing Pump</td><td>BGR25A2074</td><td>17-02-2026</td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 21: Customer Services -->
+            <tr>
+                <th>21. Display of Information/provision of Customer services</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><th>Name of the Customer services/Information</th><th>Available /Not</th><th>Remarks</th></tr>
+                        <tr><td>First Aid Box</td><td>Available</td><td></td></tr>
+                        <tr><td>Generator set</td><td>Available</td><td></td></tr>
+                        <tr><td>Stock & Price Declaration board of HSD/MS/Lubricants</td><td>Available</td><td></td></tr>
+                        <tr><td>Density Board</td><td>Available</td><td></td></tr>
+                        <tr><td>Citizen Charter</td><td>Available</td><td></td></tr>
+                        <tr><td>Clean toilet</td><td>Available</td><td></td></tr>
+                        <tr><td>Free Air</td><td>Available</td><td></td></tr>
+                        <tr><td>Clean Drinking Water</td><td>Available</td><td></td></tr>
+                        <tr><td>Filter Paper</td><td>Available</td><td></td></tr>
+                        <tr><td>5 ltre calibrated measuring jar</td><td>Available</td><td></td></tr>
+                        <tr><td>Calibrated Hydrometer</td><td>Available</td><td></td></tr>
+                        <tr><td>Calibrated Thermometer</td><td>Available</td><td></td></tr>
+                        <tr><td>Dip Rod</td><td>Available</td><td></td></tr>
+                        <tr><td>ASTM Conversion Chart</td><td>Available</td><td></td></tr>
+                        <tr><td>Measuring glass cylinder</td><td>Available</td><td></td></tr>
+                        <tr><td>Water finding paste & Fuel dip paste</td><td>Available</td><td></td></tr>
+                        <tr><td>Consumer Complaint Register</td><td>Available</td><td></td></tr>
+                        <tr><td>Adequate lighting</td><td>Available</td><td></td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 22: Fire Fighting -->
+            <tr>
+                <th>22. Fire Fighting provisions</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><td>(i) Fire Extinguishers:</td><td>Type</td><td>Number</td><td>Validity</td></tr>
+                        <tr><td></td><td>ABC type 10 kg</td><td>4</td><td>22-02-2026</td></tr>
+                        <tr><td></td><td>CO₂ 4.5 kg</td><td>1</td><td>22-02-2026</td></tr>
+                        <tr><td>(ii) Sand Buckets with sufficient sand</td><td colspan="3">6</td></tr>
+                        <tr><td>(iii)Sump with adequate water</td><td colspan="3">0</td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 23: Books of accounts -->
+            <tr>
+                <th>23. Maintenance of Books of accounts</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><th>Name of Books of accounts</th><th>Status of maintenance</th><th>Remarks</th></tr>
+                        <tr><td>Stock register of MS, HSD and Lubricants</td><td>Yes</td><td>Satisfacctory</td></tr>
+                        <tr><td>Density Register</td><td>Yes</td><td>Satisfacctory</td></tr>
+                        <tr><td>Cash Memo</td><td>Yes</td><td>Satisfacctory</td></tr>
+                        <tr><td>Daily Sales Register (DSR)</td><td>Yes</td><td>Satisfacctory</td></tr>
+                        <tr><td>Inspection Register</td><td>Yes</td><td>Satisfacctory</td></tr>
+                        <tr><td>Any other register</td><td>Yes</td><td>Satisfacctory</td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 24: Returns -->
+            <tr>
+                <th>24. Status of submission of monthly/weekly/fortnightly return to proper quarter</th>
+                <td>Submitted</td>
+            </tr>
+            
+            <!-- Row 25: Stock Verification -->
+            <tr>
+                <th>25. Stock Verification details (All figures in Ltrs.)</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><th>Product</th><th>Book balance</th><th>Physical stock</th><th>Discrepancy</th><th>Remarks</th></tr>
+                        <tr><td>HSD</td><td>7834</td><td>7856</td><td>22</td><td></td></tr>
+                        <tr><td>MS</td><td>5967</td><td>5983</td><td>16</td><td></td></tr>
+                        <tr><td>Lubricants</td><td>422</td><td>422</td><td>0</td><td></td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 26: Density verification -->
+            <tr>
+                <th>26. Density verification details (Unit in kg/m³)</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><th>Particulars</th><th>Reference density</th><th>Observed density</th><th>Difference</th><th>Remarks</th></tr>
+                        <tr><td>HSD</td><td>810 to 845</td><td>832.40</td><td>In Range</td><td></td></tr>
+                        <tr><td>MS</td><td>720 to 775</td><td>752.40</td><td>In Range</td><td></td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 27: Complaints -->
+            <tr>
+                <th>27. Complains against the Petrol Pump</th>
+                <td>No</td>
+            </tr>
+            
+            <!-- Row 28: Performance -->
+            <tr>
+                <th>28. Performance (satisfactory/not satisfactory)</th>
+                <td>Satisfactory</td>
+            </tr>
+            
+            <!-- Row 29: Recommendation -->
+            <tr>
+                <th>29. Renewal of license (Recommended/not recommended)</th>
+                <td><strong>Recommended</strong></td>
+            </tr>
         </table>
-      `;
-      
-      placeholder.innerHTML = '';
-      placeholder.appendChild(tableContainer);
 
-      // Use masterData for All Files tab
-      let dataForAll = masterData.map(row => ({ ...row })); // Clone to avoid modifying original
+        <div class="recommendation-box">
+            ✅ RENEWAL OF LICENSE IS HEREBY RECOMMENDED
+        </div>
 
-      // Sort by date (if SortDate exists)
-      dataForAll.sort((a, b) => {
-        if (!a.SortDate && !b.SortDate) return 0;
-        if (!a.SortDate) return 1;
-        if (!b.SortDate) return -1;
-        return new Date(b.SortDate) - new Date(a.SortDate);
-      });
-
-      // Add sequential S.N.
-      dataForAll.forEach((row, index) => {
-        row["S.N."] = index + 1;
-      });
-
-      const tbody = $('#saraCsvTableV2 tbody');
-      tbody.empty();
-
-      dataForAll.forEach(row => {
-        // Generate download button
-        let downloadButton = "";
+        <div class="signature-area">
+            <div>
+                <p>Date: 21/02/2025</p>
+                <p>Place: Naikensira</p>
+            </div>
+            <div class="signature-line">
+                Signature of Verifying Officer
+                <br>Sri Sarat Kumar Rout, ACSO
+            </div>
+        </div>
         
-        // Try to find link in various columns
-        let link = "#";
-        const possibleLinkColumns = ["Link", "URL", "Download Link", "File URL", "PDF Link"];
-        for (let colName of possibleLinkColumns) {
-          if (row[colName] && row[colName].toString().startsWith("http")) {
-            link = row[colName];
-            break;
-          }
-        }
-        
-        // If link found, create button
-        if (link !== "#") {
-          downloadButton = `<a href="${link}" target="_blank" rel="noopener noreferrer"><button class="sara-download-btn">Download</button></a>`;
-        } else if (row["Button"]) {
-          // If Button column exists with HTML, use it directly
-          downloadButton = row["Button"];
-        } else {
-          downloadButton = '<span style="color:#999;">No link</span>';
-        }
-        
-        const tableRow = `
-          <tr>
-            <td data-label="S.N.">${row["S.N."]}</td>
-            <td data-label="Letter No.">${row["Letter No."] || ""}</td>
-            <td data-label="Date" data-sort="${row["SortDate"] || ''}">${row["Date"] || ""}</td>
-            <td data-label="Subject">${row["Subject"] || ""}</td>
-            <td data-label="Download">${downloadButton}</td>
-            <td data-label="File Size">${row["File Size (MB)"] || row["Size"] || "—"}</td>
-          </tr>`;
-        tbody.append(tableRow);
-      });
-
-      // Initialize DataTable
-      allFilesDataTable = $('#saraCsvTableV2').DataTable({
-        responsive: true,
-        pageLength: 10,
-        lengthMenu: [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]],
-        autoWidth: false,
-        order: [[2, 'desc']],
-        columnDefs: [{ targets: 0, orderable: false }],
-        language: {
-          search: "Search:",
-          lengthMenu: "Show _MENU_ entries",
-          info: "Showing _START_ to _END_ of _TOTAL_ entries",
-          infoEmpty: "No records available",
-          infoFiltered: "(filtered from _MAX_ total entries)",
-          paginate: { first: "First", last: "Last", next: "Next", previous: "Previous" }
-        },
-        drawCallback: function(settings) {
-          const api = this.api();
-          api.column(0, {page: 'current'}).nodes().each(function(cell, i) {
-            cell.innerHTML = i + 1 + (api.page() * api.page.len());
-          });
-        }
-      });
-    }
-
-    // ---------- TAB CLICK HANDLER ----------
-    function initTabs() {
-      const tabStrip = document.querySelector('.sarat-docs .tab-strip');
-      if (!tabStrip) return;
-      const tabButtons = tabStrip.querySelectorAll('.tab-item');
-      
-      const containers = {
-        AllFiles: document.getElementById('tab-AllFiles'),
-        Act: document.getElementById('tab-Act'),
-        Rules: document.getElementById('tab-Rules'),
-        Order: document.getElementById('tab-Order'),
-        MSP: document.getElementById('tab-MSP'),
-        Procurement: document.getElementById('tab-Procurement'),
-        Food: document.getElementById('tab-Food'),
-        Misc: document.getElementById('tab-Misc'),
-        'Govt Calendars': document.getElementById('tab-Govt Calendars')
-      };
-
-      function activateTab(category) {
-        // Update active class
-        tabButtons.forEach(btn => {
-          const btnCat = btn.getAttribute('data-category');
-          btn.classList.toggle('active', btnCat === category);
-        });
-
-        // Show/hide containers
-        Object.keys(containers).forEach(key => {
-          if (containers[key]) {
-            containers[key].style.display = key === category ? 'block' : 'none';
-          }
-        });
-
-        // Load data if needed
-        if (category === 'AllFiles') {
-          loadAllFilesTab();
-        } else if (category === 'Govt Calendars') {
-          loadGovtCalendars();
-        } else if (masterData.length > 0) {
-          // For category tabs, populate from master data
-          populateTableForCategory(category);
-        }
-      }
-
-      tabButtons.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          e.preventDefault();
-          const category = this.getAttribute('data-category');
-          activateTab(category);
-        });
-      });
-
-      // Initial active tab: AllFiles
-      activateTab('AllFiles');
-    }
-
-    // ---------- INITIALIZE EVERYTHING ----------
-    document.addEventListener('DOMContentLoaded', function() {
-      initTabs();
-      loadMasterData(); // Load the single master CSV for all tabs
-    });
-
-  })();
-</script>
-
-<script src="/assets/Scripts/gototop.js"></script>
-
-<!-- FOOTER -->
-<div id="site-footer"></div>
-
+        <div class="footer-note">
+            *This is a computer generated recommendation - valid with official signature
+        </div>
+    </div>
 </body>
 </html>
