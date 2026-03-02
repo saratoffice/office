@@ -1,739 +1,165 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checklist · live from Google Sheets</title>
+    <title>License Renewal Report</title>
     <style>
-        /* ALL STYLES ARE NAMESPACED UNDER .checklist-wrapper TO PREVENT CONFLICTS */
-        .checklist-wrapper {
-            --cl-primary: #1a3e5c;
-            --cl-primary-dark: #0f2d44;
-            --cl-secondary: #2c4b6e;
-            --cl-light: #f0f5fa;
-            --cl-border: #c5d5e8;
-            --cl-success: #1e7e34;
-            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-            line-height: 1.5;
-            color: #1d3f5e;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #fff;
         }
-
-        /* navigation */
-        .checklist-wrapper .checklist-nav {
-            background: white;
-            padding: 1.2rem 2rem;
-            border-radius: 50px;
-            margin-bottom: 2rem;
-            box-shadow: 0 8px 20px rgba(0,20,30,0.08);
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            flex-wrap: wrap;
-            border: 1px solid var(--cl-border);
+        .report-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 20px;
         }
-
-        .checklist-wrapper .checklist-nav label {
-            font-weight: 600;
-            color: var(--cl-primary);
-            font-size: 1.1rem;
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
         }
-
-        .checklist-wrapper .checklist-nav select {
-            padding: 0.7rem 3rem 0.7rem 1.5rem;
-            border: 2px solid var(--cl-primary);
-            border-radius: 40px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--cl-primary);
-            background: white;
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a3e5c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 1.2rem center;
-            background-size: 1.2rem;
-            min-width: 280px;
+        .header h1 {
+            color: #333;
+            font-size: 18px;
+            margin: 5px 0;
         }
-
-        .checklist-wrapper .checklist-badge {
-            background: #e9eff7;
-            color: var(--cl-primary);
-            padding: 0.4rem 1.2rem;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-left: auto;
+        .header h2 {
+            color: #666;
+            font-size: 16px;
+            margin: 5px 0;
         }
-
-        /* main card */
-        .checklist-wrapper .checklist-card {
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 20px 40px rgba(0,30,50,0.15);
-            padding: 2rem;
-            border: 1px solid var(--cl-border);
-            margin-bottom: 2rem;
+        .section {
+            margin: 20px 0;
+            border: 1px solid #ccc;
         }
-
-        .checklist-wrapper .card-header {
-            border-bottom: 4px solid var(--cl-primary);
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 1.5rem;
+        .section-title {
+            background: #f0f0f0;
+            padding: 10px;
+            font-weight: bold;
+            border-bottom: 1px solid #ccc;
         }
-
-        .checklist-wrapper .header-title h1 {
-            font-size: 2.4rem;
-            font-weight: 700;
-            color: var(--cl-primary);
-            line-height: 1.2;
-            margin-bottom: 0.5rem;
+        .section-content {
+            padding: 10px;
         }
-
-        .checklist-wrapper .station-name {
-            font-size: 1.3rem;
-            color: var(--cl-secondary);
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .checklist-wrapper .verification-info {
-            display: flex;
-            gap: 2rem;
-            color: #3e5f7e;
-            font-size: 1rem;
-            background: #eef4fa;
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
-            display: inline-flex;
-        }
-
-        .checklist-wrapper .print-btn {
-            background: var(--cl-primary);
-            border: none;
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-            padding: 0.8rem 2.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 6px 12px rgba(26,62,92,0.3);
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid rgba(255,255,255,0.2);
-            
-        }
-        .checklist-wrapper .print-btn:hover {
-            background: var(--cl-primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(26,62,92,0.4);
-        }
-
-        /* sections */
-        .checklist-wrapper .checklist-section {
-            background: #f9fcff;
-            border-radius: 24px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid #d6e4f0;
-        }
-
-        .checklist-wrapper .section-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--cl-primary);
-            margin-bottom: 1.2rem;
-            padding-bottom: 0.6rem;
-            border-bottom: 3px solid #b8cee8;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .checklist-wrapper .section-title .badge {
-            background: var(--cl-primary);
-            color: white;
-            font-size: 0.8rem;
-            padding: 0.2rem 1.2rem;
-            border-radius: 40px;
-            font-weight: 500;
-        }
-
-        /* MULTI‑COLUMN LAYOUTS – paper saving */
-        .checklist-wrapper .grid-2col {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem 2rem;
-        }
-        .checklist-wrapper .grid-3col {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.8rem 2rem;
-        }
-        .checklist-wrapper .grid-4col {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.8rem 1.5rem;
-        }
-
-        /* items - MODIFIED to show blank values */
-        .checklist-wrapper .info-item {
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            padding: 0.4rem 0;
-            border-bottom: 1px dotted #b8cee8;
-        }
-        .checklist-wrapper .info-label {
-            font-weight: 600;
-            color: var(--cl-primary);
-            min-width: 120px;
-            font-size: 0.95rem;
-        }
-        .checklist-wrapper .info-value {
-            color: #1d3f5e;
-            font-size: 0.95rem;
-            word-break: break-word;
-            min-height: 1.2em; /* Ensures visibility even when empty */
-        }
-        /* Style for empty values */
-        .checklist-wrapper .info-value:empty::before {
-            content: "—";
-            color: #9aaec5;
-            font-style: italic;
-        }
-        .checklist-wrapper .info-value:blank::before {
-            content: "—";
-            color: #9aaec5;
-            font-style: italic;
-        }
-
-        .checklist-wrapper .facility-item, 
-        .checklist-wrapper .safety-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0.4rem 0;
-            border-bottom: 1px dotted #a0b6ce;
-        }
-        .checklist-wrapper .facility-item span:first-child, 
-        .checklist-wrapper .safety-item span:first-child {
-            font-size: 0.95rem;
-            color: #152b3b;
-            flex: 1;
-        }
-        .checklist-wrapper .facility-status {
-            background: var(--cl-primary);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 0.2rem 0.8rem;
-            border-radius: 40px;
-            white-space: nowrap;
-            text-transform: uppercase;
-        }
-        .checklist-wrapper .facility-status.available { background: var(--cl-success); }
-        /* Style for empty status */
-        .checklist-wrapper .facility-status:empty::before {
-            content: "—";
-            color: #9aaec5;
-        }
-
-        /* tables */
-        .checklist-wrapper .data-table {
+        table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.95rem;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-        .checklist-wrapper .data-table th {
-            background: var(--cl-primary);
-            color: white;
-            padding: 0.8rem 1rem;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.9rem;
+        table td, table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            vertical-align: top;
         }
-        .checklist-wrapper .data-table td {
-            padding: 0.7rem 1rem;
-            border-bottom: 1px solid #dde6f0;
-            background: white;
+        .label {
+            font-weight: bold;
+            width: 30%;
         }
-
-        /* recommendation */
-        .checklist-wrapper .recommendation-box {
-            background: linear-gradient(145deg, #e4edf7, #d2e2f2);
-            border-radius: 24px;
-            padding: 1.5rem;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 2rem;
-            border-left: 10px solid var(--cl-primary);
+        .value {
+            width: 70%;
         }
-        .checklist-wrapper .recommendation-item {
-            text-align: center;
-            min-width: 140px;
+        .signature {
+            margin-top: 50px;
+            text-align: right;
         }
-        .checklist-wrapper .recommendation-label {
-            font-size: 0.8rem;
-            color: var(--cl-secondary);
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-        .checklist-wrapper .recommendation-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--cl-primary);
-        }
-
-        /* officer signatures */
-        .checklist-wrapper .officer-section {
-            margin-top: 2rem;
-            display: flex;
-            justify-content: space-between;
-            padding: 1.5rem 3rem;
-            border-top: 3px dashed #a0bada;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
-        .checklist-wrapper .officer-signature {
-            text-align: center;
-            min-width: 250px;
-        }
-        .checklist-wrapper .officer-title {
-            font-weight: 700;
-            color: var(--cl-primary);
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
-        }
-        .checklist-wrapper .officer-line {
-            width: 250px;
-            height: 2px;
-            border-bottom: 3px dotted var(--cl-primary);
-            margin: 0.8rem auto;
-        }
-        .checklist-wrapper .officer-signature small { color: #3e5f7e; }
-
-        /* loading / print */
-        .checklist-wrapper .loading-state { 
-            text-align: center; 
-            padding: 4rem; 
-            color: var(--cl-primary); 
-        }
-        
-        @media print {
-            .checklist-wrapper .checklist-nav, 
-            .checklist-wrapper .print-btn, 
-            .checklist-wrapper .checklist-badge {
-                display: none !important;
-            }
-            .checklist-wrapper .checklist-card { 
-                box-shadow: none; 
-                border: none; 
-                padding: 0; 
-            }
-            .checklist-wrapper .facility-status, 
-            .checklist-wrapper .data-table th { 
-                -webkit-print-color-adjust: exact; 
-                print-color-adjust: exact; 
-            }
-        }
-        
-        @media (max-width: 700px) {
-            .checklist-wrapper .grid-2col,
-            .checklist-wrapper .grid-3col,
-            .checklist-wrapper .grid-4col { 
-                grid-template-columns: 1fr; 
-            }
+        .discrepancy-error {
+            color: red;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-<!-- Your existing header/footer can stay outside the wrapper -->
-<div id="site-header" style="background: #1a3e5c; color: white; padding: 1rem;">
-    <!-- your existing header content -->
-</div>
-
-<main>
-    <!-- ALL CHECKLIST CONTENT IS WRAPPED IN .checklist-wrapper -->
-    <div class="checklist-wrapper">
-        <div class="checklist-nav">
-            <label for="checklist-type">📋 Select Checklist:</label>
-            <select id="checklist-type">
-                <option value="hsd-renewal">⛽ HSD Renewal (hsd_data)</option>
-                <option value="fps-checklist">🛒 FPS (fps_data)</option>
-                <option value="ppc-checklist">🏭 PPC (ppc_data)</option>
-                <option value="rice-mill">🌾 Rice Mill (rice_mill_data)</option>
-                <option value="kerosene">🛢️ Kerosene Dealer</option>
-                <option value="lpg">🔥 LPG Distributor</option>
-            </select>
-            <span class="checklist-badge" id="checklist-type-badge">HSD Renewal</span>
-        </div>
-
-        <div id="checklist-container"><div class="loading-state">⏳ Loading data from Google Sheet …</div></div>
+    <div class="report-container" id="report">
+        <!-- Dynamic content will be inserted here -->
     </div>
-</main>
 
-<div id="site-footer" style="background: #1e3a5f; color: #ccddee; padding: 1.5rem; margin-top: 2rem;">
-    <!-- your existing footer content -->
-</div>
+    <script>
+        // Your published Google Sheet CSV URL
+        const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS7ik39OFKwscZJiFMgl2CNzRltAxK2sG6fIn-WniMGJ2rvQX1mFnzoerLz0lZOAsUMGeyFtyp0II4o/pub?gid=0&single=true&output=csv';
+        
+        fetch(sheetURL)
+            .then(response => response.text())
+            .then(csvData => {
+                const data = parseCSV(csvData);
+                const formattedData = formatData(data);
+                renderReport(formattedData);
+            })
+            .catch(error => console.error('Error loading data:', error));
 
-<script>
-    // ==========================================================================
-    // CONFIGURATION - Using your working CSV link
-    // ==========================================================================
-    const SHEET_CONFIG = {
-        // Your spreadsheet ID extracted from the working link
-        SPREADSHEET_ID: '2PACX-1vS7ik39OFKwscZJiFMgl2CNzRltAxK2sG6fIn-WniMGJ2rvQX1mFnzoerLz0lZOAsUMGeyFtyp0II4o',
-        
-        // Map dropdown values to sheet names
-        sheets: {
-            'hsd-renewal': 'hsd_data',
-            'fps-checklist': 'fps_data',
-            'ppc-checklist': 'ppc_data',
-            'rice-mill': 'rice_mill_data',
-            'kerosene': 'kerosene_data',
-            'lpg': 'lpg_data'
-        }
-    };
-
-    // ==========================================================================
-    // Helper: Parse CSV into array of objects
-    // ==========================================================================
-    function csvToObjects(csvText) {
-        const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== '');
-        if (lines.length === 0) return [];
-        
-        // Parse headers (first line)
-        const headers = parseCSVLine(lines[0]);
-        
-        const rows = [];
-        for (let i = 1; i < lines.length; i++) {
-            const values = parseCSVLine(lines[i]);
-            const obj = {};
-            headers.forEach((h, idx) => {
-                obj[h] = values[idx] || '';
-            });
-            rows.push(obj);
-        }
-        return rows;
-    }
-
-    // Simple CSV line parser (handles quotes)
-    function parseCSVLine(line) {
-        const result = [];
-        let inQuote = false;
-        let currentValue = '';
-        
-        for (let i = 0; i < line.length; i++) {
-            const char = line[i];
+        function parseCSV(csv) {
+            const lines = csv.split('\n');
+            const headers = lines[0].split(',');
+            const data = {};
             
-            if (char === '"') {
-                inQuote = !inQuote;
-            } else if (char === ',' && !inQuote) {
-                result.push(currentValue);
-                currentValue = '';
-            } else {
-                currentValue += char;
-            }
-        }
-        result.push(currentValue); // push last value
-        
-        return result.map(val => val.trim());
-    }
-
-    // ==========================================================================
-    // Fetch data from specific sheet using the EXACT format that works
-    // ==========================================================================
-    async function fetchSheetData(sheetName) {
-        const spreadsheetId = SHEET_CONFIG.SPREADSHEET_ID;
-        
-        // Use the exact URL format that you confirmed works in browser
-        const url = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?output=csv&sheet=${encodeURIComponent(sheetName)}`;
-        
-        console.log('Fetching URL:', url);
-        
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Failed to load sheet: ${sheetName} (Status: ${response.status})`);
-        }
-        const csvText = await response.text();
-        return csvToObjects(csvText);
-    }
-
-    // ==========================================================================
-    // Build checklist object from sheet rows
-    // MODIFIED: Always include key even if value is empty
-    // ==========================================================================
-    function buildChecklistFromRows(rows) {
-        if (!rows || rows.length === 0) return null;
-
-        const output = {
-            metadata: {},
-            particulars: {},
-            facilities: [],
-            safetyItems: [],
-            licenses: [],
-            recommendation: {},
-            officers: {}
-        };
-
-        rows.forEach(row => {
-            const section = (row.section || '').trim().toLowerCase();
-            const key = (row.key || '').trim();
-            const value = (row.value || '').trim(); // Keep empty string if no value
-            const validity = (row.validity || '').trim();
-            
-            if (!section || !key) return;
-
-            if (section === 'metadata') {
-                output.metadata[key] = value;
-            } else if (section === 'particulars') {
-                output.particulars[key] = value; // Will be empty string if no value
-            } else if (section === 'facilities') {
-                output.facilities.push({ name: key, status: value });
-            } else if (section === 'safety') {
-                output.safetyItems.push({ name: key, status: value });
-            } else if (section === 'licenses') {
-                output.licenses.push({ type: key, number: value, validity: validity });
-            } else if (section === 'recommendation') {
-                output.recommendation[key] = value;
-            } else if (section === 'officers') {
-                output.officers[key] = value;
-            }
-        });
-
-        // Set fallback title if missing
-        if (!output.metadata.title) {
-            const names = { 
-                'hsd-renewal': 'HSD Renewal', 
-                'fps-checklist': 'FPS Inspection', 
-                'ppc-checklist': 'PPC Compliance', 
-                'rice-mill': 'Rice Mill', 
-                'kerosene': 'Kerosene Dealer', 
-                'lpg': 'LPG Distributor' 
-            };
-            const type = document.getElementById('checklist-type')?.value || 'hsd-renewal';
-            output.metadata.title = names[type] || 'Checklist';
-        }
-
-        return output;
-    }
-
-    // ==========================================================================
-    // Renderer class
-    // ==========================================================================
-    class ChecklistRenderer {
-        constructor() { 
-            this.currentType = 'hsd-renewal'; 
-            this.data = null; 
-        }
-
-        loadChecklist(type, rows) {
-            this.currentType = type;
-            this.data = buildChecklistFromRows(rows);
-            
-            const container = document.getElementById('checklist-container');
-            const badge = document.getElementById('checklist-type-badge');
-            const names = { 
-                'hsd-renewal': 'HSD Renewal', 
-                'fps-checklist': 'FPS', 
-                'ppc-checklist': 'PPC', 
-                'rice-mill': 'Rice Mill', 
-                'kerosene': 'Kerosene', 
-                'lpg': 'LPG' 
-            };
-            if (badge) badge.textContent = names[type] || type;
-
-            if (!this.data) {
-                container.innerHTML = `<div style="background:#ffeeee; padding:3rem; border-radius:32px; color:#a00; text-align:center;">
-                    ⚠️ No data found for "${type}" in sheet <strong>${SHEET_CONFIG.sheets[type]}</strong>.<br>
-                    Make sure the sheet has the required columns (section, key, value) and data.
-                </div>`;
-                return;
-            }
-            this.render();
-        }
-
-        render() {
-            const container = document.getElementById('checklist-container');
-            const html = `
-                <div class="checklist-card">
-                    ${this.renderHeader()}
-                    ${this.renderParticularsGrid()}
-                    ${this.renderLicensesGrid()}
-                    ${this.renderSafetyGrid()}
-                    ${this.renderFacilitiesGrid()}
-                    ${this.renderRecommendation()}
-                    ${this.renderOfficers()}
-                </div>
-            `;
-            container.innerHTML = html;
-            document.getElementById('print-checklist-btn')?.addEventListener('click', ()=>window.print());
-        }
-
-        renderHeader() {
-            const m = this.data.metadata || {};
-            return `
-                <div class="card-header">
-                    <div class="header-title">
-                        <h1>⛽ ${m.title || 'Checklist'}</h1>
-                        <div class="station-name">${m.stationName || ''}</div>
-                        <div class="verification-info">
-                            <span>📅 ${m.verificationDate || ''}</span>
-                            <span>⏰ ${m.verificationTime || ''}</span>
-                            <span>👤 ${m.verifyingOfficer || ''}</span>
-                        </div>
-                    </div>
-                    <button class="print-btn" id="print-checklist-btn">📋 PRINT</button>
-                </div>
-            `;
-        }
-
-        renderParticularsGrid() {
-            const p = this.data.particulars || {};
-            const items = [];
-            for (let [key, val] of Object.entries(p)) {
-                // Always show the item, even if val is empty string
-                items.push(`<div class="info-item"><span class="info-label">${key}</span><span class="info-value">${val}</span></div>`);
-            }
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">📋 STATION PARTICULARS</div>
-                    <div class="grid-2col">${items.join('')}</div>
-                </div>
-            `;
-        }
-
-        renderLicensesGrid() {
-            const lic = this.data.licenses || [];
-            if (lic.length === 0) return '';
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">📜 LICENSE DETAILS</div>
-                    <div class="grid-2col">
-                        ${lic.map(l => `<div class="info-item"><span class="info-label">${l.type}</span><span class="info-value">${l.number} ${l.validity ? '(valid: ' + l.validity + ')' : ''}</span></div>`).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        renderSafetyGrid() {
-            const items = this.data.safetyItems || [];
-            if (items.length === 0) return '';
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">🛡️ SAFETY PROVISIONS</div>
-                    <div class="grid-3col">
-                        ${items.map(s => `<div class="facility-item"><span>${s.name}</span><span class="facility-status ${s.status?.toLowerCase().includes('avail') ? 'available' : ''}">${s.status}</span></div>`).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        renderFacilitiesGrid() {
-            const fac = this.data.facilities || [];
-            if (fac.length === 0) return '';
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">🧷 ON‑SITE FACILITIES</div>
-                    <div class="grid-2col">
-                        ${fac.map(f => `<div class="facility-item"><span>${f.name}</span><span class="facility-status ${f.status === 'Available' ? 'available' : ''}">${f.status}</span></div>`).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        renderRecommendation() {
-            const r = this.data.recommendation || {};
-            if (Object.keys(r).length === 0) return '';
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">✅ INSPECTION RECOMMENDATION</div>
-                    <div class="recommendation-box">
-                        ${r.complaints !== undefined ? `<div class="recommendation-item"><div class="recommendation-label">Complaints</div><div class="recommendation-value">${r.complaints}</div></div>` : ''}
-                        ${r.performance ? `<div class="recommendation-item"><div class="recommendation-label">Performance</div><div class="recommendation-value">${r.performance}</div></div>` : ''}
-                        <div class="recommendation-item"><div class="recommendation-label">Renewal</div><div class="recommendation-value">${r.renewal || '—'}</div></div>
-                    </div>
-                </div>
-            `;
-        }
-
-        renderOfficers() {
-            const o = this.data.officers || {};
-            if (Object.keys(o).length === 0) return '';
-            return `
-                <div class="officer-section">
-                    <div class="officer-signature"><div class="officer-title">${o.inspector || 'Inspector'}</div><div class="officer-line"></div><small>signature</small></div>
-                    <div class="officer-signature"><div class="officer-title">${o.acso || 'ACSO'}</div><div class="officer-line"></div><small>signature</small></div>
-                </div>
-            `;
-        }
-    }
-
-    // ==========================================================================
-    // MAIN: Initialize
-    // ==========================================================================
-    document.addEventListener('DOMContentLoaded', () => {
-        const select = document.getElementById('checklist-type');
-        const renderer = new ChecklistRenderer();
-
-        async function loadChecklistForType(type) {
-            const container = document.getElementById('checklist-container');
-            container.innerHTML = '<div class="loading-state">⏳ Loading data from sheet...</div>';
-            
-            try {
-                const sheetName = SHEET_CONFIG.sheets[type];
-                if (!sheetName) {
-                    throw new Error(`No sheet configured for type: ${type}`);
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                if (values.length >= 3) {
+                    const section = values[0].replace(/"/g, '');
+                    const key = values[1].replace(/"/g, '');
+                    const value = values[2] ? values[2].replace(/"/g, '') : '';
+                    data[`${section}.${key}`] = value;
                 }
-                
-                const rows = await fetchSheetData(sheetName);
-                console.log(`Loaded ${rows.length} rows from ${sheetName}`);
-                renderer.loadChecklist(type, rows);
-                
-                // Update URL
-                history.pushState({ type }, '', `?type=${type}`);
-            } catch (error) {
-                console.error(error);
-                container.innerHTML = `<div style="background:#fff0f0; padding:2rem; border-radius:32px; color:#b33; text-align:center;">
-                    ❌ Error loading sheet: ${error.message}<br>
-                    <small>Make sure your sheet is published and accessible</small>
-                </div>`;
             }
+            return data;
         }
 
-        // Get type from URL or default
-        const urlParams = new URLSearchParams(window.location.search);
-        const initialType = urlParams.get('type') || 'hsd-renewal';
-        if (select) select.value = initialType;
+        function formatData(rawData) {
+            return {
+                proprietor: {
+                    name: rawData['particulars.Proprietor Name'] || 'Debaraj Meher (Proprietorship)',
+                    address: rawData['particulars.Proprietor Address'] || 'At: Naikensira, Po/PS/Block: Deogaon, Pin: 767029',
+                    email: rawData['particulars.Email'] || 'tejaswini.fuelstn@gmail.com',
+                    mobile: rawData['particulars.Mobile'] || '8895965811',
+                    aadhaar: rawData['particulars.Aadhaar'] || '205842503291',
+                    pan: rawData['particulars.PAN'] || 'AOAPM5635D',
+                    gst: rawData['particulars.GST'] || '21AOAPM5635D3ZF'
+                },
+                verification: {
+                    officer: 'Sarat Kumar Rout, ACSO',
+                    date: '21/02/2025',
+                    time: '11.30 AM'
+                },
+                // Add more formatted sections...
+            };
+        }
 
-        // Load initial checklist
-        loadChecklistForType(initialType);
+        function renderReport(data) {
+            const reportHTML = `
+                <div class="header">
+                    <h1>RECOMMENDATION FOR RENEWAL OF HSD /LUBRICANT LICENSE</h1>
+                    <h2>Tejaswini Filling Station, Naikensira, Deogaon Block</h2>
+                </div>
 
-        // Handle selection change
-        select.addEventListener('change', (e) => {
-            loadChecklistForType(e.target.value);
-        });
-
-        // Handle browser back/forward
-        window.addEventListener('popstate', (e) => {
-            if (e.state?.type) {
-                if (select) select.value = e.state.type;
-                loadChecklistForType(e.state.type);
-            }
-        });
-    });
-</script>
+                <table>
+                    <tr>
+                        <td class="label">1. Name and designation of Verifying Officer:</td>
+                        <td class="value">Sri ${data.verification.officer}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">2. Date and time of verification</td>
+                        <td class="value">Dt. ${data.verification.date} At ${data.verification.time}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">3. Name and style of Petrol Pump</td>
+                        <td class="value">Tejaswini Filling Station, Naikensira, Deogaon Block</td>
+                    </tr>
+                    <tr>
+                        <td class="label">4. Name & address of the Proprietor</td>
+                        <td class="value">${data.proprietor.name}<br>${data.proprietor.address}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">5. EMail ID</td>
+                        <td class="value">${data.proprietor.email}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">6. Mobile Number</td>
+                        <td class="value">${data.proprietor.mobile}</td>
+                    </tr>
+                    <!-- Continue with all other fields -->
+                </table>
+            `;
+            
+            document.getElementById('report').innerHTML = reportHTML;
+        }
+    </script>
 </body>
 </html>
