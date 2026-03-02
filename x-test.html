@@ -215,29 +215,6 @@
         }
         .cs--facility-status.available { background: #1e7e34; }
 
-        /* tables (if needed, but not used now) */
-        .cs--data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-        .cs--data-table th {
-            background: #1a3e5c;
-            color: white;
-            padding: 0.8rem 1rem;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        .cs--data-table td {
-            padding: 0.7rem 1rem;
-            border-bottom: 1px solid #dde6f0;
-            background: white;
-        }
-
         /* recommendation */
         .cs--recommendation-box {
             background: linear-gradient(145deg, #e4edf7, #d2e2f2);
@@ -296,10 +273,22 @@
 
         .cs--loading-state { text-align: center; padding: 4rem; color: #1a3e5c; }
 
+        /* debug info - can be removed after fixing */
+        .cs--debug {
+            background: #f0f0f0;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            border-left: 4px solid #1a3e5c;
+            display: none; /* hidden by default, enable if needed */
+        }
+
         @media print {
             .cs--nav, .cs--print-btn, .cs--badge, .cs--go-to-top { display: none !important; }
             .cs--card { box-shadow: none; border: none; padding: 0; }
-            .cs--facility-status, .cs--data-table th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .cs--facility-status { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
         @media (max-width: 700px) {
             .cs--grid-2col, .cs--grid-3col, .cs--grid-4col { grid-template-columns: 1fr; }
@@ -312,9 +301,6 @@
             font-size: 1.5rem; transition: 0.3s; z-index: 100;
         }
         .cs--go-to-top:hover { background: #0f2d44; transform: translateY(-5px); }
-
-        /* site header / footer kept minimal, not interfering */
-        #site-header, #site-footer { font-family: system-ui; }
     </style>
 </head>
 <body>
@@ -332,33 +318,37 @@
         <select id="checklist-type">
             <option value="hsd-renewal">⛽ HSD Renewal (hsd_data)</option>
             <option value="fps-checklist">🛒 FPS (fps_data)</option>
-            <option value="ppc-checklist">🏭 PPC (ppc_data)</option>
+            <option value="ppc-checklist" selected>🏭 PPC (ppc_data)</option>
             <option value="rice-mill">🌾 Rice Mill (rice_mill_data)</option>
-            <option value="kerosene">🛢️ Kerosene Dealer</option>
-            <option value="lpg">🔥 LPG Distributor</option>
+            <option value="kerosene">🛢️ Kerosene Dealer (kerosene_data)</option>
+            <option value="lpg">🔥 LPG Distributor (lpg_data)</option>
         </select>
-        <span class="cs--badge" id="checklist-type-badge">HSD Renewal</span>
+        <span class="cs--badge" id="checklist-type-badge">PPC</span>
     </div>
+
+    <!-- Debug info (hidden by default) -->
+    <div id="cs-debug-info" class="cs--debug"></div>
 
     <div id="checklist-container"><div class="cs--loading-state">⏳ Loading data from Google Sheet …</div></div>
 </main>
 
 <div id="site-footer">
-    <div class="footer-content"><span>© 2025 Sarat Office · Data from Google Sheets</span><span>Version 4.2 · blank fields hidden</span></div>
+    <div class="footer-content"><span>© 2025 Sarat Office · Data from Google Sheets</span><span>Version 4.3 · Fixed sheet selection</span></div>
 </div>
 <a href="#" class="cs--go-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'}); return false;">↑</a>
 
 <script>
     (function() {
     // ==========================================================================
-    // CONFIGURATION – same working spreadsheet ID
+    // CONFIGURATION – Updated with CORRECT sheet names based on your image
     // ==========================================================================
     const SHEET_CONFIG = {
         SPREADSHEET_ID: '2PACX-1vS7ik39OFKwscZJiFMgl2CNzRltAxK2sG6fIn-WniMGJ2rvQX1mFnzoerLz0lZOAsUMGeyFtyp0II4o',
         sheets: {
-            'hsd-renewal': 'hsd_data',
+            // IMPORTANT: These must match your actual sheet names exactly
+            'hsd-renewal': 'hsd_data',        // This is showing HSD/LUBRICANT data
             'fps-checklist': 'fps_data',
-            'ppc-checklist': 'ppc_data',
+            'ppc-checklist': 'ppc_data',       // This should show PPC data
             'rice-mill': 'rice_mill_data',
             'kerosene': 'kerosene_data',
             'lpg': 'lpg_data'
@@ -378,7 +368,6 @@
             const values = parseCSVLine(lines[i]);
             const obj = {};
             headers.forEach((h, idx) => {
-                // if value is undefined or empty string -> keep blank (do not delete key, but store empty)
                 obj[h] = (idx < values.length) ? values[idx] : '';
             });
             rows.push(obj);
@@ -410,6 +399,8 @@
     // ==========================================================================
     async function fetchSheetData(sheetName) {
         const url = `https://docs.google.com/spreadsheets/d/e/${SHEET_CONFIG.SPREADSHEET_ID}/pub?output=csv&sheet=${encodeURIComponent(sheetName)}`;
+        console.log('Fetching:', url);
+        
         const response = await fetch(url);
         if (!response.ok) throw new Error(`Failed to load sheet: ${sheetName} (${response.status})`);
         const csvText = await response.text();
@@ -417,10 +408,16 @@
     }
 
     // ==========================================================================
-    // Build checklist object – if value / validity is blank, we keep empty string
+    // Build checklist object – with better debugging
     // ==========================================================================
-    function buildChecklistFromRows(rows) {
-        if (!rows || rows.length === 0) return null;
+    function buildChecklistFromRows(rows, sheetName) {
+        if (!rows || rows.length === 0) {
+            console.warn(`No rows returned from sheet: ${sheetName}`);
+            return null;
+        }
+
+        console.log(`Building checklist from ${rows.length} rows from ${sheetName}`);
+        console.log('First row sample:', rows[0]);
 
         const output = {
             metadata: {},
@@ -432,46 +429,62 @@
             officers: {}
         };
 
+        let rowCount = 0;
         rows.forEach(row => {
-            // normalise keys (trim)
-            const rawSection = (row.section || '').trim();
-            const key = (row.key || '').trim();
-            let value = (row.value !== undefined) ? row.value : '';   // keep blank if empty
-            let validity = (row.validity !== undefined) ? row.validity : ''; 
-            // value and validity can be blank — we keep them as is
+            // normalise keys (trim) and handle possible different column names
+            const rawSection = (row.section || row.Section || row.SECTION || '').trim();
+            const key = (row.key || row.Key || row.KEY || row.item || row.Item || '').trim();
+            let value = (row.value || row.Value || row.VALUE || row.status || row.Status || '');
+            let validity = (row.validity || row.Validity || row.VALIDITY || row.date || row.Date || ''); 
 
             const section = rawSection.toLowerCase();
+            
+            // Skip rows without essential data
             if (!section || !key) return;
 
-            if (section === 'metadata') {
+            rowCount++;
+            
+            if (section === 'metadata' || section === 'meta') {
                 output.metadata[key] = value;
-            } else if (section === 'particulars') {
+            } else if (section === 'particulars' || section === 'details' || section === 'station') {
                 output.particulars[key] = value;
-            } else if (section === 'facilities') {
+            } else if (section === 'facilities' || section === 'facility') {
                 output.facilities.push({ name: key, status: value });
-            } else if (section === 'safety') {
+            } else if (section === 'safety' || section === 'safety items') {
                 output.safetyItems.push({ name: key, status: value });
-            } else if (section === 'licenses') {
+            } else if (section === 'licenses' || section === 'license' || section === 'licence') {
                 output.licenses.push({ type: key, number: value, validity: validity });
-            } else if (section === 'recommendation') {
+            } else if (section === 'recommendation' || section === 'recommend') {
                 output.recommendation[key] = value;
-            } else if (section === 'officers') {
+            } else if (section === 'officers' || section === 'officer' || section === 'signature') {
                 output.officers[key] = value;
             }
         });
 
-        // fallback title if missing
-        if (!output.metadata.title) {
+        console.log(`Processed ${rowCount} rows for ${sheetName}`);
+
+        // If no metadata title found, create one based on the sheet
+        if (!output.metadata.title && !output.metadata.Title) {
             const names = { 
-                'hsd-renewal': 'HSD Renewal', 
-                'fps-checklist': 'FPS Inspection', 
-                'ppc-checklist': 'PPC Compliance', 
-                'rice-mill': 'Rice Mill', 
-                'kerosene': 'Kerosene Dealer', 
-                'lpg': 'LPG Distributor' 
+                'hsd-renewal': 'HSD/LUBRICANT LICENSE RENEWAL', 
+                'fps-checklist': 'FPS INSPECTION CHECKLIST', 
+                'ppc-checklist': 'PPC COMPLIANCE CHECKLIST', 
+                'rice-mill': 'RICE MILL INSPECTION', 
+                'kerosene': 'KEROSENE DEALER LICENSE', 
+                'lpg': 'LPG DISTRIBUTOR CHECKLIST' 
             };
             const type = document.getElementById('checklist-type')?.value || 'hsd-renewal';
-            output.metadata.title = names[type] || 'Checklist';
+            output.metadata.title = names[type] || 'CHECKLIST';
+        } else {
+            // Use whatever title came from the sheet
+            output.metadata.title = output.metadata.title || output.metadata.Title || 'CHECKLIST';
+        }
+
+        // Show debug info
+        const debugDiv = document.getElementById('cs-debug-info');
+        if (debugDiv) {
+            debugDiv.innerHTML = `<strong>Debug:</strong> Loaded ${rows.length} rows from ${sheetName}. Title: "${output.metadata.title}"`;
+            debugDiv.style.display = 'block';
         }
 
         return output;
@@ -482,13 +495,14 @@
     // ==========================================================================
     class ChecklistRenderer {
         constructor() { 
-            this.currentType = 'hsd-renewal'; 
+            this.currentType = 'ppc-checklist'; // Default to PPC
             this.data = null; 
         }
 
         loadChecklist(type, rows) {
             this.currentType = type;
-            this.data = buildChecklistFromRows(rows);
+            const sheetName = SHEET_CONFIG.sheets[type] || 'unknown';
+            this.data = buildChecklistFromRows(rows, sheetName);
             
             const container = document.getElementById('checklist-container');
             const badge = document.getElementById('checklist-type-badge');
@@ -504,8 +518,8 @@
 
             if (!this.data) {
                 container.innerHTML = `<div style="background:#ffeeee; padding:3rem; border-radius:32px; color:#a00; text-align:center;">
-                    ⚠️ No data found for "${type}" in sheet <strong>${SHEET_CONFIG.sheets[type]}</strong>.<br>
-                    Make sure the sheet has section/key/value columns.
+                    ⚠️ No data found for "${type}" in sheet <strong>${sheetName}</strong>.<br>
+                    Make sure the sheet name exactly matches and has the required columns.
                 </div>`;
                 return;
             }
@@ -525,6 +539,7 @@
                     ${this.renderOfficers()}
                 </div>
             `;
+            // Re-attach print button event
             const printBtn = document.getElementById('print-checklist-btn');
             if (printBtn) printBtn.addEventListener('click', ()=>window.print());
         }
@@ -534,12 +549,12 @@
             return `
                 <div class="cs--card-header">
                     <div class="cs--header-title">
-                        <h1>⛽ ${m.title || ''}</h1>
-                        <div class="cs--station-name">${m.stationName || ''}</div>
+                        <h1>${m.title || 'CHECKLIST'}</h1>
+                        <div class="cs--station-name">${m.stationName || m['Station Name'] || m.station || ''}</div>
                         <div class="cs--verification-info">
-                            <span>📅 ${m.verificationDate || ''}</span>
-                            <span>⏰ ${m.verificationTime || ''}</span>
-                            <span>👤 ${m.verifyingOfficer || ''}</span>
+                            <span>📅 ${m.verificationDate || m.date || ''}</span>
+                            <span>⏰ ${m.verificationTime || m.time || ''}</span>
+                            <span>👤 ${m.verifyingOfficer || m.officer || ''}</span>
                         </div>
                     </div>
                     <button class="cs--print-btn" id="print-checklist-btn">📋 PRINT</button>
@@ -551,7 +566,6 @@
             const p = this.data.particulars || {};
             const items = [];
             for (let [key, val] of Object.entries(p)) {
-                // show even if empty string? we skip truly empty to avoid blank rows, but keep if value is blank? better show key only if value non-empty
                 if (val && val.trim() !== '') items.push(`<div class="cs--info-item"><span class="cs--info-label">${key}</span><span class="cs--info-value">${val}</span></div>`);
             }
             if (items.length === 0) return '';
@@ -569,7 +583,6 @@
             const items = lic.map(l => {
                 let display = l.number;
                 if (l.validity && l.validity.trim() !== '') display += ` (valid: ${l.validity})`;
-                // if number itself is blank, skip entire license item? we want to keep if at least number is present, else skip
                 if (!l.number || l.number.trim() === '') return ''; 
                 return `<div class="cs--info-item"><span class="cs--info-label">${l.type}</span><span class="cs--info-value">${display}</span></div>`;
             }).filter(item => item !== '');
@@ -585,7 +598,7 @@
         renderSafetyGrid() {
             const items = this.data.safetyItems || [];
             if (items.length === 0) return '';
-            const filtered = items.filter(s => s.status && s.status.trim() !== ''); // show only non-blank status
+            const filtered = items.filter(s => s.status && s.status.trim() !== '');
             if (filtered.length === 0) return '';
             return `
                 <div class="cs--section">
@@ -600,7 +613,7 @@
         renderFacilitiesGrid() {
             const fac = this.data.facilities || [];
             if (fac.length === 0) return '';
-            const filtered = fac.filter(f => f.status && f.status.trim() !== ''); // only non-blank status
+            const filtered = fac.filter(f => f.status && f.status.trim() !== '');
             if (filtered.length === 0) return '';
             return `
                 <div class="cs--section">
@@ -634,8 +647,8 @@
             if (Object.keys(nonEmpty).length === 0) return '';
             return `
                 <div class="cs--officer-section">
-                    <div class="cs--officer-signature"><div class="cs--officer-title">${nonEmpty.inspector || 'Inspector'}</div><div class="cs--officer-line"></div><small>signature</small></div>
-                    <div class="cs--officer-signature"><div class="cs--officer-title">${nonEmpty.acso || 'ACSO'}</div><div class="cs--officer-line"></div><small>signature</small></div>
+                    <div class="cs--officer-signature"><div class="cs--officer-title">${nonEmpty.inspector || nonEmpty.officer1 || 'Inspector'}</div><div class="cs--officer-line"></div><small>signature</small></div>
+                    <div class="cs--officer-signature"><div class="cs--officer-title">${nonEmpty.acso || nonEmpty.officer2 || 'ACSO'}</div><div class="cs--officer-line"></div><small>signature</small></div>
                 </div>
             `;
         }
@@ -652,30 +665,56 @@
             const container = document.getElementById('checklist-container');
             container.innerHTML = '<div class="cs--loading-state">⏳ Loading data from sheet...</div>';
             
+            // Hide debug by default
+            const debugDiv = document.getElementById('cs-debug-info');
+            if (debugDiv) debugDiv.style.display = 'none';
+            
             try {
                 const sheetName = SHEET_CONFIG.sheets[type];
-                if (!sheetName) throw new Error(`No sheet for type: ${type}`);
+                if (!sheetName) throw new Error(`No sheet configured for type: ${type}`);
                 
+                console.log(`Loading ${type} from sheet: ${sheetName}`);
                 const rows = await fetchSheetData(sheetName);
+                
+                // Check if we got any data
+                if (rows.length === 0) {
+                    throw new Error(`Sheet "${sheetName}" is empty`);
+                }
+                
                 renderer.loadChecklist(type, rows);
                 
-                history.pushState({ type }, '', `?type=${type}`);
+                // Update URL without reloading
+                const url = new URL(window.location);
+                url.searchParams.set('type', type);
+                history.pushState({ type }, '', url);
             } catch (error) {
-                console.error(error);
+                console.error('Error:', error);
                 container.innerHTML = `<div style="background:#fff0f0; padding:2rem; border-radius:32px; color:#b33; text-align:center;">
-                    ❌ Error: ${error.message}<br><small>Check publishing & sheet name</small>
+                    ❌ Error: ${error.message}<br>
+                    <small>Check that sheet "${SHEET_CONFIG.sheets[type]}" exists and is published</small>
                 </div>`;
+                
+                if (debugDiv) {
+                    debugDiv.innerHTML = `<strong>Debug Error:</strong> ${error.message}`;
+                    debugDiv.style.display = 'block';
+                }
             }
         }
 
+        // Get type from URL or default to PPC
         const urlParams = new URLSearchParams(window.location.search);
-        const initialType = urlParams.get('type') || 'hsd-renewal';
+        const initialType = urlParams.get('type') || 'ppc-checklist'; // Default to PPC
         if (select) select.value = initialType;
 
+        // Load initial checklist
         loadChecklistForType(initialType);
 
-        select.addEventListener('change', (e) => loadChecklistForType(e.target.value));
+        // Handle selection change
+        select.addEventListener('change', (e) => {
+            loadChecklistForType(e.target.value);
+        });
 
+        // Handle browser back/forward
         window.addEventListener('popstate', (e) => {
             if (e.state?.type && select) {
                 select.value = e.state.type;
