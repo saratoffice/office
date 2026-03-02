@@ -248,8 +248,13 @@
             margin-top: 0.1rem;
         }
 
-        /* 🖨️ PRINT RULES – hide header, footer, and page debris, keep only card */
+        /* 🖨️ PRINT RULES – OPTIMIZED FOR A4 FULL PAGE */
         @media print {
+            @page {
+                size: A4;
+                margin: 0.4in 0.4in 0.4in 0.4in; /* Balanced margins for full coverage */
+            }
+            
             /* hide everything outside the card */
             body > :not(.hsd-renewal-card):not(script) {
                 display: none !important;
@@ -260,22 +265,75 @@
                 background: white !important;
                 padding: 0 !important;
                 margin: 0 !important;
-                display: block !important;
-                min-height: auto !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                min-height: 100vh !important;
+                width: 100% !important;
             }
 
-            /* card becomes the only visible element – remove shadows, borders */
+            /* card becomes the only visible element – optimized for A4 */
             .hsd-renewal-card {
                 box-shadow: none !important;
                 border-radius: 0 !important;
                 border: none !important;
-                padding: 1.1rem 1.2rem 0.3rem 1.2rem !important;
+                padding: 0 !important;
                 max-width: 100% !important;
+                width: 100% !important;
                 margin: 0 auto !important;
                 background: white !important;
                 display: block !important;
                 page-break-after: avoid;
                 page-break-inside: avoid;
+                font-size: 11pt !important; /* Slightly reduced for better fit */
+                line-height: 1.2 !important;
+            }
+
+            /* Adjust spacing for compact A4 fit */
+            .hsd-renewal-card .hsd-top-row {
+                margin-bottom: 0.3rem !important;
+                padding-bottom: 0.2rem !important;
+            }
+            
+            .hsd-renewal-card .hsd-top-row h1 {
+                font-size: 1.6rem !important;
+            }
+            
+            .hsd-renewal-card .hsd-particulars {
+                padding: 0.5rem 0.8rem !important;
+                margin-bottom: 0.4rem !important;
+                gap: 0.3rem 1rem !important;
+            }
+            
+            .hsd-renewal-card .hsd-photo-badge {
+                padding: 0.3rem 0.8rem !important;
+                margin-bottom: 0.4rem !important;
+            }
+            
+            .hsd-renewal-card .hsd-check-two {
+                gap: 0.1rem 1rem !important;
+            }
+            
+            .hsd-renewal-card .hsd-item-row {
+                padding: 0.1rem 0 !important;
+            }
+            
+            .hsd-renewal-card .hsd-item-text {
+                font-size: 0.82rem !important;
+            }
+            
+            .hsd-renewal-card .hsd-facility-group {
+                padding: 0.4rem 0.8rem 0.5rem !important;
+                margin-top: 0.3rem !important;
+            }
+            
+            .hsd-renewal-card .hsd-facility-grid {
+                gap: 0.1rem 0.8rem !important;
+            }
+            
+            .hsd-renewal-card .hsd-facility-item {
+                font-size: 0.8rem !important;
+                padding: 0.1rem 0 !important;
             }
 
             /* hide the print button inside the card */
@@ -283,9 +341,31 @@
                 display: none !important;
             }
 
-            /* ensure no extra page breaks */
-            h1, h2, div, p {
-                page-break-inside: avoid;
+            /* Ensure proper box sizing */
+            * {
+                box-sizing: border-box !important;
+            }
+            
+            /* Fix any overflow issues */
+            .hsd-renewal-card .hsd-check-two,
+            .hsd-renewal-card .hsd-facility-grid {
+                overflow: visible !important;
+            }
+            
+            /* Ensure all text remains visible */
+            .hsd-renewal-card .hsd-yes-badge {
+                white-space: nowrap !important;
+            }
+        }
+        
+        /* Small screen optimization */
+        @media screen and (max-width: 600px) {
+            .hsd-renewal-card .hsd-check-two {
+                grid-template-columns: 1fr;
+            }
+            
+            .hsd-renewal-card .hsd-facility-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -361,7 +441,7 @@
                 <div class="hsd-facility-item"><span>🚫 Fuel Shall Not Be Sold in Plastic Bottles (Strictly Prohibited)</span> <span class="hsd-yes-badge">complied</span></div>
                 <div class="hsd-facility-item"><span>💧 No. of Sump (adequate water)</span> <span class="hsd-yes-badge">2 sumps</span></div>
                 <div class="hsd-facility-item"><span>🧯 Sand Buckets (sufficient sand)</span> <span class="hsd-yes-badge">4 buckets</span></div>
-                <div class="hsd-facility-item"><span>⚡ Generator Set</span> <span class="hsd-yes-badge">available</span></div
+                <div class="hsd-facility-item"><span>⚡ Generator Set</span> <span class="hsd-yes-badge">available</span></div>
                 <div class="hsd-facility-item"><span>💡 Adequate Lighting</span> <span class="hsd-yes-badge">working</span></div>
             </div>
            </div>
