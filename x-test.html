@@ -134,7 +134,7 @@
             box-shadow: 0 10px 20px rgba(26,62,92,0.4);
         }
 
-        /* sections */
+        /* sections - DYNAMIC section titles will come from data */
         .checklist-wrapper .checklist-section {
             background: #f9fcff;
             border-radius: 24px;
@@ -181,7 +181,7 @@
             gap: 0.8rem 1.5rem;
         }
 
-        /* items - MODIFIED to show blank values */
+        /* items */
         .checklist-wrapper .info-item {
             display: flex;
             align-items: baseline;
@@ -199,15 +199,9 @@
             color: #1d3f5e;
             font-size: 0.95rem;
             word-break: break-word;
-            min-height: 1.2em; /* Ensures visibility even when empty */
+            min-height: 1.2em;
         }
-        /* Style for empty values */
         .checklist-wrapper .info-value:empty::before {
-            content: "—";
-            color: #9aaec5;
-            font-style: italic;
-        }
-        .checklist-wrapper .info-value:blank::before {
             content: "—";
             color: #9aaec5;
             font-style: italic;
@@ -238,7 +232,6 @@
             text-transform: uppercase;
         }
         .checklist-wrapper .facility-status.available { background: var(--cl-success); }
-        /* Style for empty status */
         .checklist-wrapper .facility-status:empty::before {
             content: "—";
             color: #9aaec5;
@@ -403,6 +396,16 @@
             'rice-mill': 'rice_mill_data',
             'kerosene': 'kerosene_data',
             'lpg': 'lpg_data'
+        },
+        
+        // Section display names (can be customized per checklist type if needed)
+        sectionTitles: {
+            'particulars': 'STATION PARTICULARS',
+            'licenses': 'LICENSE DETAILS',
+            'safety': 'SAFETY PROVISIONS',
+            'facilities': 'ON‑SITE FACILITIES',
+            'recommendation': 'INSPECTION RECOMMENDATION',
+            'officers': 'VERIFYING OFFICERS'
         }
     };
 
@@ -446,18 +449,17 @@
                 currentValue += char;
             }
         }
-        result.push(currentValue); // push last value
+        result.push(currentValue);
         
         return result.map(val => val.trim());
     }
 
     // ==========================================================================
-    // Fetch data from specific sheet using the EXACT format that works
+    // Fetch data from specific sheet
     // ==========================================================================
     async function fetchSheetData(sheetName) {
         const spreadsheetId = SHEET_CONFIG.SPREADSHEET_ID;
         
-        // Use the exact URL format that you confirmed works in browser
         const url = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?output=csv&sheet=${encodeURIComponent(sheetName)}`;
         
         console.log('Fetching URL:', url);
@@ -471,44 +473,95 @@
     }
 
     // ==========================================================================
-    // Build checklist object from sheet rows
-    // MODIFIED: Always include key even if value is empty
+    // Build checklist object from sheet rows - FULLY DYNAMIC
     // ==========================================================================
-    function buildChecklistFromRows(rows) {
-        if (!rows || rows.length === 0) return null;
+    function buildChecklistFromRows(rows, checklistType) {
+        if (!rows || rows.length === 0) {
+            console.log(`No rows found for ${checklistType}`);
+            return null;
+        }
 
+        // Dynamic structure - will contain any sections found in the data
         const output = {
             metadata: {},
-            particulars: {},
-            facilities: [],
-            safetyItems: [],
-            licenses: [],
-            recommendation: {},
-            officers: {}
+            sections: {} // This will hold all dynamic sections
         };
 
+        // First, identify all unique sections
+        const sections = new Set();
+        rows.forEach(row => {
+            if (row.section) {
+                sections.add(row.section.trim().toLowerCase());
+            }
+        });
+
+        console.log(`Found sections for ${checklistType}:`, Array.from(sections));
+
+        // Initialize each section
+        sections.forEach(section => {
+            if (section === 'metadata') {
+                // Metadata is special - store as key-value
+                output.metadata = {};
+            } else {
+                // For other sections, decide format based on content
+                output.sections[section] = {
+                    type: 'items', // default
+                    items: []
+                };
+            }
+        });
+
+        // Process each row
         rows.forEach(row => {
             const section = (row.section || '').trim().toLowerCase();
             const key = (row.key || '').trim();
-            const value = (row.value || '').trim(); // Keep empty string if no value
+            const value = (row.value || '').trim();
             const validity = (row.validity || '').trim();
             
             if (!section || !key) return;
 
             if (section === 'metadata') {
                 output.metadata[key] = value;
-            } else if (section === 'particulars') {
-                output.particulars[key] = value; // Will be empty string if no value
-            } else if (section === 'facilities') {
-                output.facilities.push({ name: key, status: value });
-            } else if (section === 'safety') {
-                output.safetyItems.push({ name: key, status: value });
-            } else if (section === 'licenses') {
-                output.licenses.push({ type: key, number: value, validity: validity });
-            } else if (section === 'recommendation') {
-                output.recommendation[key] = value;
-            } else if (section === 'officers') {
-                output.officers[key] = value;
+            } else {
+                // Check if this looks like a facility/safety item (has status-like values)
+                const isStatusItem = value.toLowerCase().includes('available') || 
+                                    value.toLowerCase().includes('yes') || 
+                                    value.toLowerCase().includes('no') ||
+                                    value.match(/^\d+/); // starts with number
+                
+                if (!output.sections[section]) {
+                    output.sections[section] = {
+                        type: 'items',
+                        items: []
+                    };
+                }
+                
+                output.sections[section].items.push({
+                    key: key,
+                    value: value,
+                    validity: validity,
+                    hasStatus: isStatusItem
+                });
+            }
+        });
+
+        // Determine section types based on content
+        Object.keys(output.sections).forEach(section => {
+            const items = output.sections[section].items;
+            
+            // Check if this section looks like licenses (has validity dates)
+            const hasValidity = items.some(item => item.validity);
+            
+            // Check if most items have status-like values
+            const statusCount = items.filter(item => item.hasStatus).length;
+            const isStatusSection = statusCount > items.length / 2;
+            
+            if (hasValidity) {
+                output.sections[section].type = 'licenses';
+            } else if (isStatusSection) {
+                output.sections[section].type = 'status';
+            } else {
+                output.sections[section].type = 'particulars';
             }
         });
 
@@ -522,15 +575,14 @@
                 'kerosene': 'Kerosene Dealer', 
                 'lpg': 'LPG Distributor' 
             };
-            const type = document.getElementById('checklist-type')?.value || 'hsd-renewal';
-            output.metadata.title = names[type] || 'Checklist';
+            output.metadata.title = names[checklistType] || 'Checklist';
         }
 
         return output;
     }
 
     // ==========================================================================
-    // Renderer class
+    // Renderer class - FULLY DYNAMIC
     // ==========================================================================
     class ChecklistRenderer {
         constructor() { 
@@ -540,7 +592,7 @@
 
         loadChecklist(type, rows) {
             this.currentType = type;
-            this.data = buildChecklistFromRows(rows);
+            this.data = buildChecklistFromRows(rows, type);
             
             const container = document.getElementById('checklist-container');
             const badge = document.getElementById('checklist-type-badge');
@@ -557,7 +609,7 @@
             if (!this.data) {
                 container.innerHTML = `<div style="background:#ffeeee; padding:3rem; border-radius:32px; color:#a00; text-align:center;">
                     ⚠️ No data found for "${type}" in sheet <strong>${SHEET_CONFIG.sheets[type]}</strong>.<br>
-                    Make sure the sheet has the required columns (section, key, value) and data.
+                    Make sure the sheet exists and has the required columns (section, key, value).
                 </div>`;
                 return;
             }
@@ -566,17 +618,41 @@
 
         render() {
             const container = document.getElementById('checklist-container');
+            
+            // Build sections dynamically
+            let sectionsHtml = '';
+            
+            // First render metadata in header
+            const headerHtml = this.renderHeader();
+            
+            // Then render all other sections in order
+            if (this.data.sections) {
+                // Define preferred order if you want
+                const preferredOrder = ['particulars', 'licenses', 'safety', 'facilities', 'recommendation', 'officers'];
+                
+                // Sort sections
+                const sortedSections = Object.keys(this.data.sections).sort((a, b) => {
+                    const indexA = preferredOrder.indexOf(a);
+                    const indexB = preferredOrder.indexOf(b);
+                    if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+                    if (indexA === -1) return 1;
+                    if (indexB === -1) return -1;
+                    return indexA - indexB;
+                });
+                
+                sortedSections.forEach(section => {
+                    const sectionData = this.data.sections[section];
+                    sectionsHtml += this.renderDynamicSection(section, sectionData);
+                });
+            }
+            
             const html = `
                 <div class="checklist-card">
-                    ${this.renderHeader()}
-                    ${this.renderParticularsGrid()}
-                    ${this.renderLicensesGrid()}
-                    ${this.renderSafetyGrid()}
-                    ${this.renderFacilitiesGrid()}
-                    ${this.renderRecommendation()}
-                    ${this.renderOfficers()}
+                    ${headerHtml}
+                    ${sectionsHtml}
                 </div>
             `;
+            
             container.innerHTML = html;
             document.getElementById('print-checklist-btn')?.addEventListener('click', ()=>window.print());
         }
@@ -599,89 +675,60 @@
             `;
         }
 
-        renderParticularsGrid() {
-            const p = this.data.particulars || {};
-            const items = [];
-            for (let [key, val] of Object.entries(p)) {
-                // Always show the item, even if val is empty string
-                items.push(`<div class="info-item"><span class="info-label">${key}</span><span class="info-value">${val}</span></div>`);
+        renderDynamicSection(sectionName, sectionData) {
+            if (!sectionData.items || sectionData.items.length === 0) return '';
+            
+            // Get display title - capitalize first letters
+            const displayTitle = sectionName.split(/[-_\s]+/)
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+            
+            // Choose grid columns based on item count and type
+            let gridClass = 'grid-2col';
+            if (sectionData.items.length > 8) {
+                gridClass = 'grid-3col';
             }
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">📋 STATION PARTICULARS</div>
-                    <div class="grid-2col">${items.join('')}</div>
-                </div>
-            `;
-        }
-
-        renderLicensesGrid() {
-            const lic = this.data.licenses || [];
-            if (lic.length === 0) return '';
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">📜 LICENSE DETAILS</div>
-                    <div class="grid-2col">
-                        ${lic.map(l => `<div class="info-item"><span class="info-label">${l.type}</span><span class="info-value">${l.number} ${l.validity ? '(valid: ' + l.validity + ')' : ''}</span></div>`).join('')}
+            if (sectionData.items.length > 15) {
+                gridClass = 'grid-4col';
+            }
+            
+            // Render items based on type
+            let itemsHtml = '';
+            
+            if (sectionData.type === 'licenses') {
+                itemsHtml = sectionData.items.map(item => `
+                    <div class="info-item">
+                        <span class="info-label">${item.key}</span>
+                        <span class="info-value">${item.value} ${item.validity ? '(valid: ' + item.validity + ')' : ''}</span>
                     </div>
-                </div>
-            `;
-        }
-
-        renderSafetyGrid() {
-            const items = this.data.safetyItems || [];
-            if (items.length === 0) return '';
+                `).join('');
+            } else if (sectionData.type === 'status') {
+                itemsHtml = sectionData.items.map(item => `
+                    <div class="facility-item">
+                        <span>${item.key}</span>
+                        <span class="facility-status ${item.value.toLowerCase().includes('avail') ? 'available' : ''}">${item.value}</span>
+                    </div>
+                `).join('');
+            } else {
+                itemsHtml = sectionData.items.map(item => `
+                    <div class="info-item">
+                        <span class="info-label">${item.key}</span>
+                        <span class="info-value">${item.value}</span>
+                    </div>
+                `).join('');
+            }
+            
             return `
                 <div class="checklist-section">
-                    <div class="section-title">🛡️ SAFETY PROVISIONS</div>
-                    <div class="grid-3col">
-                        ${items.map(s => `<div class="facility-item"><span>${s.name}</span><span class="facility-status ${s.status?.toLowerCase().includes('avail') ? 'available' : ''}">${s.status}</span></div>`).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        renderFacilitiesGrid() {
-            const fac = this.data.facilities || [];
-            if (fac.length === 0) return '';
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">🧷 ON‑SITE FACILITIES</div>
-                    <div class="grid-2col">
-                        ${fac.map(f => `<div class="facility-item"><span>${f.name}</span><span class="facility-status ${f.status === 'Available' ? 'available' : ''}">${f.status}</span></div>`).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        renderRecommendation() {
-            const r = this.data.recommendation || {};
-            if (Object.keys(r).length === 0) return '';
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">✅ INSPECTION RECOMMENDATION</div>
-                    <div class="recommendation-box">
-                        ${r.complaints !== undefined ? `<div class="recommendation-item"><div class="recommendation-label">Complaints</div><div class="recommendation-value">${r.complaints}</div></div>` : ''}
-                        ${r.performance ? `<div class="recommendation-item"><div class="recommendation-label">Performance</div><div class="recommendation-value">${r.performance}</div></div>` : ''}
-                        <div class="recommendation-item"><div class="recommendation-label">Renewal</div><div class="recommendation-value">${r.renewal || '—'}</div></div>
-                    </div>
-                </div>
-            `;
-        }
-
-        renderOfficers() {
-            const o = this.data.officers || {};
-            if (Object.keys(o).length === 0) return '';
-            return `
-                <div class="officer-section">
-                    <div class="officer-signature"><div class="officer-title">${o.inspector || 'Inspector'}</div><div class="officer-line"></div><small>signature</small></div>
-                    <div class="officer-signature"><div class="officer-title">${o.acso || 'ACSO'}</div><div class="officer-line"></div><small>signature</small></div>
+                    <div class="section-title">📋 ${displayTitle}</div>
+                    <div class="${gridClass}">${itemsHtml}</div>
                 </div>
             `;
         }
     }
 
     // ==========================================================================
-    // MAIN: Initialize
+    // MAIN: Initialize with debugging
     // ==========================================================================
     document.addEventListener('DOMContentLoaded', () => {
         const select = document.getElementById('checklist-type');
@@ -697,8 +744,17 @@
                     throw new Error(`No sheet configured for type: ${type}`);
                 }
                 
+                console.log(`Attempting to load sheet: ${sheetName} for type: ${type}`);
                 const rows = await fetchSheetData(sheetName);
                 console.log(`Loaded ${rows.length} rows from ${sheetName}`);
+                
+                if (rows.length === 0) {
+                    container.innerHTML = `<div style="background:#fff3e0; padding:2rem; border-radius:32px; color:#a00; text-align:center;">
+                        ⚠️ Sheet <strong>${sheetName}</strong> is empty. Please add data with columns: section, key, value, validity
+                    </div>`;
+                    return;
+                }
+                
                 renderer.loadChecklist(type, rows);
                 
                 // Update URL
@@ -707,7 +763,7 @@
                 console.error(error);
                 container.innerHTML = `<div style="background:#fff0f0; padding:2rem; border-radius:32px; color:#b33; text-align:center;">
                     ❌ Error loading sheet: ${error.message}<br>
-                    <small>Make sure your sheet is published and accessible</small>
+                    <small>Make sure the sheet <strong>${SHEET_CONFIG.sheets[type]}</strong> exists and is published</small>
                 </div>`;
             }
         }
