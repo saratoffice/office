@@ -3,358 +3,443 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HSD Data - Google Sheets View</title>
+    <title>HSD/Lubricant License Renewal Recommendation</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f5;
-            padding: 10px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .container { max-width: 100%; margin: 0 auto; }
-        .header {
-            background: #4CAF50; color: white; padding: 10px 15px;
-            border-radius: 4px 4px 0 0; display: flex; justify-content: space-between;
-        }
-        .controls {
-            background: #fff; padding: 10px 15px; display: flex; gap: 10px;
-            flex-wrap: wrap; align-items: center; border-bottom: 1px solid #ddd;
-        }
-        .search-box {
-            flex: 1; min-width: 200px; padding: 8px 12px;
-            border: 1px solid #ddd; border-radius: 4px; font-size: 14px;
-        }
-        .btn {
-            padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px;
-            font-size: 14px; cursor: pointer; background: #f8f8f8;
-            display: inline-flex; align-items: center; gap: 5px;
-        }
-        .btn-primary { background: #4CAF50; color: white; border-color: #4CAF50; }
-        .btn-primary:hover { background: #45a049; }
-        .stats {
-            background: #fff; padding: 8px 15px; font-size: 13px;
-            color: #666; border-bottom: 1px solid #ddd;
-            display: flex; justify-content: space-between;
-        }
-        .gsheet-container {
-            background: white; overflow: visible;
-            border: 1px solid #ddd; min-height: 200px;
-        }
-        table {
-            width: 100%; border-collapse: collapse;
-            table-layout: auto; font-size: 13px;
-        }
-        th {
-            background: #f8f9fa; color: #333; font-weight: 600;
-            padding: 10px; text-align: left; border-bottom: 2px solid #ddd;
-            border-right: 1px solid #ddd; position: sticky; top: 0;
-        }
-        td {
-            padding: 8px 10px; border-bottom: 1px solid #ddd;
-            border-right: 1px solid #eee; color: #333;
-        }
-        tbody tr:nth-child(even) { background-color: #f9f9f9; }
-        tbody tr:hover { background-color: #f0f9ff; }
         
-        /* Debug panel */
-        .debug-panel {
-            background: #1e1e1e; color: #00ff00; padding: 15px;
-            font-family: monospace; font-size: 12px; margin-top: 10px;
-            border-radius: 4px; max-height: 200px; overflow: auto;
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
         }
-        .error-box {
-            background: #ffebee; color: #c62828; padding: 20px;
-            border: 1px solid #ffcdd2; border-radius: 4px; margin: 10px 0;
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border: 1px solid #000;
         }
-        .loading {
-            text-align: center; padding: 40px; color: #666;
+        
+        .header {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-bottom: 2px solid #000;
+            text-align: center;
         }
-        .footer {
-            text-align: center; margin-top: 10px; color: #666;
-            font-size: 11px; padding: 5px;
+        
+        .header h1 {
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            line-height: 1.4;
+        }
+        
+        .header h2 {
+            font-size: 16px;
+            font-weight: normal;
+            margin-top: 5px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .main-table {
+            border: 1px solid #000;
+        }
+        
+        .main-table td, .main-table th {
+            border: 1px solid #000;
+            padding: 8px 10px;
+            vertical-align: top;
+            font-size: 14px;
+        }
+        
+        .main-table th {
+            background-color: #e6e6e6;
+            font-weight: bold;
+            width: 30%;
+        }
+        
+        .main-table td {
+            width: 70%;
+        }
+        
+        .sub-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: -8px -10px;
+        }
+        
+        .sub-table td {
+            border: none;
+            padding: 3px 5px;
+            width: auto;
+        }
+        
+        .sub-table tr td:first-child {
+            font-weight: normal;
+            width: 40%;
+        }
+        
+        .sub-table tr td:last-child {
+            width: 60%;
+        }
+        
+        .section-header {
+            background-color: #d9d9d9;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .label {
+            font-weight: bold;
+            background-color: #f2f2f2;
+        }
+        
+        .available {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .not-available {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .signature-area {
+            margin-top: 30px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .signature-line {
+            border-top: 1px solid #000;
+            width: 250px;
+            text-align: center;
+            padding-top: 5px;
+        }
+        
+        .recommendation-box {
+            background-color: #e6f7ff;
+            border: 2px solid #000;
+            padding: 15px;
+            margin: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .footer-note {
+            font-size: 12px;
+            text-align: right;
+            padding: 10px;
+            font-style: italic;
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📊 hsd_data - Google Sheets View</h1>
+            <h1>RECOMMENDATION FOR RENEWAL OF HSD /LUBRICANT LICENSE UNDER ORISSA HIGH SPEED DIESEL (DEALERS' LICENSING) ORDER, 1979/LUBRICATING OILS AND GREASES (PROCESSING SUPPLY AND DISTRIBUTION REGULATION) ORDER, 1987</h1>
+            <h2>Tejaswini Filling Station, Naikensira, Deogaon Block</h2>
+        </div>
+
+        <table class="main-table">
+            <!-- Row 1-2: Verifying Officer -->
+            <tr>
+                <th>1. Name and designation of Verifying Officer:</th>
+                <td>Sri Sarat Kumar Rout, ACSO</td>
+            </tr>
+            <tr>
+                <th>2. Date and time of verification</th>
+                <td>Dt. 21/02/2025 At 11.30 AM</td>
+            </tr>
+            
+            <!-- Row 3: Name of Petrol Pump -->
+            <tr>
+                <th>3. Name and style of Petrol Pump</th>
+                <td>Tejaswini Filling Station, Naikensira, Deogaon Block</td>
+            </tr>
+            
+            <!-- Row 4: Proprietor details -->
+            <tr>
+                <th>4. Name & address of the Proprietor/MP/MD</th>
+                <td>"Debaraj Meher (Proprietorship)<br>At: Naikensira, Po/PS/Block: Deogaon<br>Pin: 767029"</td>
+            </tr>
+            
+            <!-- Row 5: Email -->
+            <tr>
+                <th>5. EMail ID</th>
+                <td>tejaswini.fuelstn@gmail.com</td>
+            </tr>
+            
+            <!-- Row 6: Mobile -->
+            <tr>
+                <th>6. Whatsapp/Mobile Number</th>
+                <td>8895 965 811</td>
+            </tr>
+            
+            <!-- Row 7: Aadhaar -->
+            <tr>
+                <th>7. Aadhaar Number</th>
+                <td>2058 4250 3291</td>
+            </tr>
+            
+            <!-- Row 8: PAN -->
+            <tr>
+                <th>8. PAN Number</th>
+                <td>AOAPM5635D (Proprietor)</td>
+            </tr>
+            
+            <!-- Row 9: GST -->
+            <tr>
+                <th>9. GST Number</th>
+                <td>21AOAPM5635D3ZF</td>
+            </tr>
+            
+            <!-- Row 10: Power Attorney -->
+            <tr>
+                <th>10. Name of Power Attorney Holder if runs business through PoA</th>
+                <td>No</td>
+            </tr>
+            
+            <!-- Row 11: Location -->
+            <tr>
+                <th>11. Location (Plot No./Khata No/Mauza/Tahasil/Block/PS/PIN)</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><td>Plot No.</td><td>831/1476</td><td>Kisama</td><td>Gharabadi</td></tr>
+                        <tr><td>Khata No.</td><td>129/232</td><td>Tahasil</td><td>Deogaon</td></tr>
+                        <tr><td>Mouza</td><td>Naikensira</td><td>Fasad</td><td></td></tr>
+                        <tr><td>Police Station:</td><td>Deogaon</td><td>Balangir</td><td></td></tr>
+                        <tr><td>PIN:</td><td>767029</td><td></td><td></td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 12: Year of establishment -->
+            <tr>
+                <th>12. Year of establishment of Petrol Pump</th>
+                <td>2020</td>
+            </tr>
+            
+            <!-- Row 13: Oil Company -->
+            <tr>
+                <th>13. Name of the Oil Company</th>
+                <td>BPCL</td>
+            </tr>
+            
+            <!-- Row 14: Recommendation -->
+            <tr>
+                <th>14. Recommendation of Oil Company (with Letter No. / date)</th>
+                <td>SBP.TER.BOL-25 Dt. 23/01/2020</td>
+            </tr>
+            
+            <!-- Row 15: Agreement date -->
+            <tr>
+                <th>15. Date of agreement with Oil Company</th>
+                <td>23-12-2020</td>
+            </tr>
+            
+            <!-- Row 16: NOC -->
+            <tr>
+                <th>16. NOC (No. and date of Authority)</th>
+                <td>2793/Judl Dtd. 20.11.2020, Collector, Balangir</td>
+            </tr>
+            
+            <!-- Row 17: Underground tanks -->
+            <tr>
+                <th>17. No. of underground tanks with capacity (in KL)</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><th>Product</th><th>Number</th><th>Capacity</th></tr>
+                        <tr><td>Class A</td><td>1</td><td>15 KL</td></tr>
+                        <tr><td>Class B</td><td>1</td><td>20 KL</td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 18: Dispensing Units -->
+            <tr>
+                <th>18. No. of Dispensing Units (HSD & MS) with No. of Nozzles per DU</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><th>Product</th><th colspan="2">Nozzles</th></tr>
+                        <tr><td></td><td>HSD</td><td>MS</td></tr>
+                        <tr><td>Pump Model No. TIQ2442SSPN Sl. No. M2037155</td><td>2</td><td>2</td></tr>
+                        <tr><td>Pump Model No. TIQ2442SHPN Sl. No. M2050126</td><td>2</td><td>2</td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 19: Power Supply -->
+            <tr>
+                <th>19. Power Supply details</th>
+                <td>TPWODL: Consumer No. 911001140277</td>
+            </tr>
+            
+            <!-- Row 20: License details -->
+            <tr>
+                <th>20. License details</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><th>Particulars</th><th>Number</th><th>Validity Till</th></tr>
+                        <tr><td>HSD</td><td>06/2020-21</td><td>31-03-2025</td></tr>
+                        <tr><td>Lubricant</td><td>06/2020-21</td><td>31-03-2025</td></tr>
+                        <tr><td>Explosive</td><td>P/EC/OR/14/1977 (P313459)</td><td>31-12-2026</td></tr>
+                        <tr><td>Fire Safety</td><td>FIRCER1306180092023002500</td><td>21-03-2025</td></tr>
+                        <tr><td colspan="3"><strong>Weights & Measure Certificate</strong></td></tr>
+                        <tr><td>5 Lts Conical</td><td colspan="2">NOT PRODUCED</td></tr>
+                        <tr><td>Dispensing Pump</td><td>BGR25A2073</td><td>17-02-2026</td></tr>
+                        <tr><td>Dispensing Pump</td><td>BGR25A2074</td><td>17-02-2026</td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 21: Customer Services -->
+            <tr>
+                <th>21. Display of Information/provision of Customer services</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><th>Name of the Customer services/Information</th><th>Available /Not</th><th>Remarks</th></tr>
+                        <tr><td>First Aid Box</td><td>Available</td><td></td></tr>
+                        <tr><td>Generator set</td><td>Available</td><td></td></tr>
+                        <tr><td>Stock & Price Declaration board of HSD/MS/Lubricants</td><td>Available</td><td></td></tr>
+                        <tr><td>Density Board</td><td>Available</td><td></td></tr>
+                        <tr><td>Citizen Charter</td><td>Available</td><td></td></tr>
+                        <tr><td>Clean toilet</td><td>Available</td><td></td></tr>
+                        <tr><td>Free Air</td><td>Available</td><td></td></tr>
+                        <tr><td>Clean Drinking Water</td><td>Available</td><td></td></tr>
+                        <tr><td>Filter Paper</td><td>Available</td><td></td></tr>
+                        <tr><td>5 ltre calibrated measuring jar</td><td>Available</td><td></td></tr>
+                        <tr><td>Calibrated Hydrometer</td><td>Available</td><td></td></tr>
+                        <tr><td>Calibrated Thermometer</td><td>Available</td><td></td></tr>
+                        <tr><td>Dip Rod</td><td>Available</td><td></td></tr>
+                        <tr><td>ASTM Conversion Chart</td><td>Available</td><td></td></tr>
+                        <tr><td>Measuring glass cylinder</td><td>Available</td><td></td></tr>
+                        <tr><td>Water finding paste & Fuel dip paste</td><td>Available</td><td></td></tr>
+                        <tr><td>Consumer Complaint Register</td><td>Available</td><td></td></tr>
+                        <tr><td>Adequate lighting</td><td>Available</td><td></td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 22: Fire Fighting -->
+            <tr>
+                <th>22. Fire Fighting provisions</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><td>(i) Fire Extinguishers:</td><td>Type</td><td>Number</td><td>Validity</td></tr>
+                        <tr><td></td><td>ABC type 10 kg</td><td>4</td><td>22-02-2026</td></tr>
+                        <tr><td></td><td>CO₂ 4.5 kg</td><td>1</td><td>22-02-2026</td></tr>
+                        <tr><td>(ii) Sand Buckets with sufficient sand</td><td colspan="3">6</td></tr>
+                        <tr><td>(iii)Sump with adequate water</td><td colspan="3">0</td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 23: Books of accounts -->
+            <tr>
+                <th>23. Maintenance of Books of accounts</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><th>Name of Books of accounts</th><th>Status of maintenance</th><th>Remarks</th></tr>
+                        <tr><td>Stock register of MS, HSD and Lubricants</td><td>Yes</td><td>Satisfacctory</td></tr>
+                        <tr><td>Density Register</td><td>Yes</td><td>Satisfacctory</td></tr>
+                        <tr><td>Cash Memo</td><td>Yes</td><td>Satisfacctory</td></tr>
+                        <tr><td>Daily Sales Register (DSR)</td><td>Yes</td><td>Satisfacctory</td></tr>
+                        <tr><td>Inspection Register</td><td>Yes</td><td>Satisfacctory</td></tr>
+                        <tr><td>Any other register</td><td>Yes</td><td>Satisfacctory</td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 24: Returns -->
+            <tr>
+                <th>24. Status of submission of monthly/weekly/fortnightly return to proper quarter</th>
+                <td>Submitted</td>
+            </tr>
+            
+            <!-- Row 25: Stock Verification -->
+            <tr>
+                <th>25. Stock Verification details (All figures in Ltrs.)</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><th>Product</th><th>Book balance</th><th>Physical stock</th><th>Discrepancy</th><th>Remarks</th></tr>
+                        <tr><td>HSD</td><td>7834</td><td>7856</td><td>22</td><td></td></tr>
+                        <tr><td>MS</td><td>5967</td><td>5983</td><td>16</td><td></td></tr>
+                        <tr><td>Lubricants</td><td>422</td><td>422</td><td>0</td><td></td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 26: Density verification -->
+            <tr>
+                <th>26. Density verification details (Unit in kg/m³)</th>
+                <td>
+                    <table class="sub-table">
+                        <tr><th>Particulars</th><th>Reference density</th><th>Observed density</th><th>Difference</th><th>Remarks</th></tr>
+                        <tr><td>HSD</td><td>810 to 845</td><td>832.40</td><td>In Range</td><td></td></tr>
+                        <tr><td>MS</td><td>720 to 775</td><td>752.40</td><td>In Range</td><td></td></tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- Row 27: Complaints -->
+            <tr>
+                <th>27. Complains against the Petrol Pump</th>
+                <td>No</td>
+            </tr>
+            
+            <!-- Row 28: Performance -->
+            <tr>
+                <th>28. Performance (satisfactory/not satisfactory)</th>
+                <td>Satisfactory</td>
+            </tr>
+            
+            <!-- Row 29: Recommendation -->
+            <tr>
+                <th>29. Renewal of license (Recommended/not recommended)</th>
+                <td><strong>Recommended</strong></td>
+            </tr>
+        </table>
+
+        <div class="recommendation-box">
+            ✅ RENEWAL OF LICENSE IS HEREBY RECOMMENDED
+        </div>
+
+        <div class="signature-area">
             <div>
-                <span id="connectionStatus" style="font-size: 12px; margin-right: 10px;">⚪ Checking...</span>
-                <button class="btn" style="background: rgba(255,255,255,0.2);" onclick="window.print()">🖨️</button>
+                <p>Date: 21/02/2025</p>
+                <p>Place: Naikensira</p>
+            </div>
+            <div class="signature-line">
+                Signature of Verifying Officer
+                <br>Sri Sarat Kumar Rout, ACSO
             </div>
         </div>
-
-        <div class="controls">
-            <input type="text" class="search-box" id="searchInput" 
-                   placeholder="🔍 Search in sheet..." disabled>
-            <button class="btn btn-primary" onclick="loadData()" id="refreshBtn" disabled>
-                🔄 Refresh
-            </button>
-            <button class="btn" onclick="exportToCSV()" id="exportBtn" disabled>
-                📥 Download
-            </button>
-            <button class="btn" onclick="testConnection()" id="testBtn">
-                🔌 Test Connection
-            </button>
-        </div>
-
-        <div class="stats">
-            <span id="statsInfo">Initializing...</span>
-            <span id="lastUpdate"></span>
-        </div>
-
-        <div class="gsheet-container" id="gsheetContainer">
-            <div id="errorDisplay"></div>
-            <table id="data-table" style="display: none;">
-                <thead id="table-header"></thead>
-                <tbody id="table-body"></tbody>
-            </table>
-        </div>
-
-        <!-- Debug Panel -->
-        <div class="debug-panel" id="debugPanel">
-            [Debug Console] Ready. Click "Test Connection" to start...
-        </div>
-
-        <div class="footer">
-            Showing full sheet - no scroll | Data from hsd_data
+        
+        <div class="footer-note">
+            *This is a computer generated recommendation - valid with official signature
         </div>
     </div>
-
-    <script>
-        // IMPORTANT: Replace with your NEW deployment URL
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxp6oV50zBNNc97TrUC1-NtU66UhahQ06CqmT_Z4E__8P0Be-THOkUgOSrYl-4nqJQ1/exec';
-        
-        let allData = [];
-        let headers = [];
-        
-        function log(message) {
-            const panel = document.getElementById('debugPanel');
-            panel.innerHTML += `\n[${new Date().toLocaleTimeString()}] ${message}`;
-            panel.scrollTop = panel.scrollHeight;
-            console.log(message);
-        }
-
-        function updateConnectionStatus(status, color) {
-            document.getElementById('connectionStatus').innerHTML = status;
-            document.getElementById('connectionStatus').style.color = color;
-        }
-
-        async function testConnection() {
-            log('🧪 Testing connection to API...');
-            updateConnectionStatus('⏳ Testing...', 'orange');
-            
-            try {
-                // Test 1: Can we reach the URL?
-                log('📍 Attempting to fetch: ' + API_URL);
-                
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-                
-                const response = await fetch(API_URL, {
-                    method: 'GET',
-                    mode: 'cors',
-                    signal: controller.signal
-                });
-                
-                clearTimeout(timeoutId);
-                
-                log('✅ Response received! Status: ' + response.status);
-                updateConnectionStatus('✅ Connected', '#4CAF50');
-                
-                // Test 2: Can we parse the response?
-                const text = await response.text();
-                log('📦 Response length: ' + text.length + ' characters');
-                log('📄 First 100 chars: ' + text.substring(0, 100));
-                
-                try {
-                    const data = JSON.parse(text);
-                    log('✅ JSON parsed successfully');
-                    
-                    if (data.error) {
-                        log('❌ API returned error: ' + data.message);
-                        showError('API Error: ' + data.message);
-                    } else {
-                        log('✅ API is working! Ready to load data.');
-                        enableControls();
-                        loadData();
-                    }
-                    
-                } catch (e) {
-                    log('❌ Failed to parse JSON: ' + e.message);
-                    showError('Invalid JSON response. Check API deployment.');
-                }
-                
-            } catch (error) {
-                log('❌ Connection failed: ' + error.message);
-                updateConnectionStatus('❌ Failed', '#f44336');
-                
-                if (error.name === 'AbortError') {
-                    showError('Connection timeout - API not responding');
-                } else {
-                    showError('Failed to connect: ' + error.message);
-                }
-            }
-        }
-
-        function enableControls() {
-            document.getElementById('searchInput').disabled = false;
-            document.getElementById('refreshBtn').disabled = false;
-            document.getElementById('exportBtn').disabled = false;
-        }
-
-        function showError(message) {
-            document.getElementById('errorDisplay').innerHTML = `
-                <div class="error-box">
-                    <strong>❌ ${message}</strong><br><br>
-                    <button class="btn" onclick="testConnection()">Try Test Connection Again</button>
-                    <button class="btn" onclick="window.open('${API_URL}')">Open API in New Tab</button>
-                </div>
-            `;
-            document.getElementById('data-table').style.display = 'none';
-        }
-
-        async function loadData() {
-            log('📊 Loading data from API...');
-            
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'GET',
-                    mode: 'cors'
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const result = await response.json();
-                log('✅ Data loaded successfully');
-                
-                if (result.error) {
-                    throw new Error(result.message || result.error);
-                }
-                
-                // Handle response format
-                let data = result.data || result;
-                
-                if (!Array.isArray(data)) {
-                    throw new Error('Data is not an array');
-                }
-                
-                allData = data;
-                
-                if (data.length > 0) {
-                    headers = Object.keys(data[0]);
-                    log(`📋 Found ${headers.length} columns, ${data.length} rows`);
-                    document.getElementById('statsInfo').innerHTML = 
-                        `📊 hsd_data: ${data.length} rows × ${headers.length} columns`;
-                    
-                    document.getElementById('errorDisplay').innerHTML = '';
-                    document.getElementById('data-table').style.display = 'table';
-                    generateSheetTable(data);
-                } else {
-                    log('⚠️ No data in sheet');
-                    document.getElementById('statsInfo').innerHTML = '📊 No data found';
-                }
-                
-                document.getElementById('lastUpdate').innerHTML = 
-                    `Updated: ${new Date().toLocaleTimeString()}`;
-                
-            } catch (error) {
-                log('❌ Load failed: ' + error.message);
-                showError(error.message);
-            }
-        }
-
-        function generateSheetTable(data) {
-            const tableHeader = document.getElementById('table-header');
-            const tableBody = document.getElementById('table-body');
-            
-            if (data.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="10" style="padding: 30px; text-align: center;">No data</td></tr>';
-                return;
-            }
-            
-            // Headers
-            let headerHtml = '<tr>';
-            headers.forEach(header => {
-                const displayHeader = header.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                headerHtml += `<th>${displayHeader}</th>`;
-            });
-            headerHtml += '</tr>';
-            tableHeader.innerHTML = headerHtml;
-            
-            // Body
-            let bodyHtml = '';
-            data.forEach(row => {
-                bodyHtml += '<tr>';
-                headers.forEach(header => {
-                    let value = row[header] !== undefined && row[header] !== null ? row[header] : '';
-                    bodyHtml += `<td>${value}</td>`;
-                });
-                bodyHtml += '</tr>';
-            });
-            
-            tableBody.innerHTML = bodyHtml;
-        }
-
-        function exportToCSV() {
-            if (allData.length === 0) {
-                alert('No data to export');
-                return;
-            }
-            
-            let csvContent = headers.join(',') + '\n';
-            
-            allData.forEach(row => {
-                const rowData = headers.map(header => {
-                    let value = row[header] || '';
-                    value = String(value).replace(/"/g, '""');
-                    return `"${value}"`;
-                });
-                csvContent += rowData.join(',') + '\n';
-            });
-            
-            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            
-            link.setAttribute('href', url);
-            link.setAttribute('download', `hsd_data_${new Date().toISOString().slice(0,10)}.csv`);
-            link.style.visibility = 'hidden';
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
-
-        function filterTable() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            
-            if (searchTerm.length < 2 || allData.length === 0) {
-                generateSheetTable(allData);
-                return;
-            }
-            
-            const filteredData = allData.filter(row => {
-                return headers.some(header => {
-                    const value = String(row[header] || '').toLowerCase();
-                    return value.includes(searchTerm);
-                });
-            });
-            
-            generateSheetTable(filteredData);
-            document.getElementById('statsInfo').innerHTML = 
-                `🔍 Found ${filteredData.length} matches (from ${allData.length} total)`;
-        }
-
-        // Auto-run test on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            log('🔌 Page loaded, testing connection...');
-            testConnection();
-        });
-    </script>
 </body>
 </html>
