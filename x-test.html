@@ -65,6 +65,39 @@
             margin-left: auto;
         }
 
+        /* diagnostic panel */
+        .checklist-wrapper .diagnostic-panel {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #856404;
+        }
+        .checklist-wrapper .diagnostic-panel h4 {
+            margin: 0 0 0.5rem 0;
+            color: #856404;
+        }
+        .checklist-wrapper .diagnostic-panel pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .checklist-wrapper .diagnostic-panel .success {
+            color: #155724;
+            background: #d4edda;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+        .checklist-wrapper .diagnostic-panel .error {
+            color: #721c24;
+            background: #f8d7da;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
         /* main card */
         .checklist-wrapper .checklist-card {
             background: white;
@@ -303,7 +336,8 @@
         @media print {
             .checklist-wrapper .checklist-nav, 
             .checklist-wrapper .print-btn, 
-            .checklist-wrapper .checklist-badge {
+            .checklist-wrapper .checklist-badge,
+            .checklist-wrapper .diagnostic-panel {
                 display: none !important;
             }
             .checklist-wrapper .checklist-card { 
@@ -330,7 +364,7 @@
 <body>
 <!-- Your existing header -->
 <div id="site-header" style="background: #1a3e5c; color: white; padding: 1rem;">
-    <!-- your existing header content -->
+    <h2>Your Header Here</h2>
 </div>
 
 <main>
@@ -348,12 +382,18 @@
             <span class="checklist-badge" id="checklist-type-badge">HSD Renewal</span>
         </div>
 
+        <!-- DIAGNOSTIC PANEL - Shows what's happening -->
+        <div class="diagnostic-panel" id="diagnostic-panel">
+            <h4>🔍 Diagnostic Information</h4>
+            <div id="diagnostic-content">Waiting for selection...</div>
+        </div>
+
         <div id="checklist-container"><div class="loading-state">⏳ Loading data from Google Sheet …</div></div>
     </div>
 </main>
 
 <div id="site-footer" style="background: #1e3a5f; color: #ccddee; padding: 1.5rem; margin-top: 2rem;">
-    <!-- your existing footer content -->
+    Your Footer Here
 </div>
 
 <script>
@@ -372,6 +412,22 @@
             'lpg': 'lpg_data'
         }
     };
+
+    // ==========================================================================
+    // Diagnostic logging
+    // ==========================================================================
+    function updateDiagnostic(message, isError = false, data = null) {
+        const diagnosticDiv = document.getElementById('diagnostic-content');
+        if (!diagnosticDiv) return;
+        
+        let html = `<div class="${isError ? 'error' : 'success'}">${message}</div>`;
+        
+        if (data) {
+            html += '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        }
+        
+        diagnosticDiv.innerHTML = html;
+    }
 
     // ==========================================================================
     // Helper: Parse CSV
@@ -417,7 +473,7 @@
     }
 
     // ==========================================================================
-    // Fetch data from specific sheet - WITH ERROR HANDLING
+    // Fetch data from specific sheet - WITH FULL DIAGNOSTICS
     // ==========================================================================
     async function fetchSheetData(sheetName) {
         const spreadsheetId = SHEET_CONFIG.SPREADSHEET_ID;
@@ -426,10 +482,12 @@
         const cacheBuster = new Date().getTime();
         const url = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?output=csv&sheet=${encodeURIComponent(sheetName)}&cb=${cacheBuster}`;
         
-        console.log(`🔍 Fetching ${sheetName} from:`, url);
+        updateDiagnostic(`🔍 Fetching: ${sheetName}...`, false, { url });
         
         try {
             const response = await fetch(url);
+            
+            updateDiagnostic(`📡 Response status: ${response.status} ${response.statusText}`, response.ok ? false : true);
             
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -439,20 +497,30 @@
             
             // Check if we got HTML instead of CSV
             if (csvText.trim().startsWith('<!DOCTYPE') || csvText.trim().startsWith('<html')) {
+                updateDiagnostic(`❌ Got HTML instead of CSV - sheet not published correctly`, true);
                 throw new Error(`Sheet "${sheetName}" not found or not published as CSV`);
             }
             
-            // Check if CSV has content beyond headers
+            // Show preview of what we received
+            const preview = csvText.substring(0, 200) + '...';
+            updateDiagnostic(`✅ Received CSV data (${csvText.length} bytes)`, false, { preview });
+            
             const rows = csvToObjects(csvText);
+            
             if (rows.length === 0) {
-                console.warn(`⚠️ Sheet "${sheetName}" is empty`);
+                updateDiagnostic(`⚠️ Sheet "${sheetName}" is empty (no data rows)`, true);
+            } else {
+                updateDiagnostic(`✅ Parsed ${rows.length} rows from ${sheetName}`, false, { 
+                    firstRow: rows[0],
+                    sections: [...new Set(rows.map(r => r.section))] 
+                });
             }
             
             return rows;
             
         } catch (error) {
-            console.error(`❌ Error fetching ${sheetName}:`, error);
-            throw error; // Re-throw to be handled by caller
+            updateDiagnostic(`❌ Error: ${error.message}`, true);
+            throw error;
         }
     }
 
@@ -508,10 +576,9 @@
         }
 
         loadChecklist(type, rows) {
-            // Create new data object (completely separate from previous)
+            // Create new data object
             const newData = buildChecklistFromRows(rows, type);
             
-            // Update properties
             this.currentType = type;
             this.data = newData;
             
@@ -584,21 +651,14 @@
         renderSection(sectionName, sectionData) {
             if (!sectionData.items || sectionData.items.length === 0) return '';
             
-            // Format section title
             const displayTitle = sectionName.split(/[-_\s]+/)
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                 .join(' ');
             
-            // Choose grid columns
             let gridClass = 'grid-2col';
-            if (sectionData.items.length > 8) {
-                gridClass = 'grid-3col';
-            }
-            if (sectionData.items.length > 15) {
-                gridClass = 'grid-4col';
-            }
+            if (sectionData.items.length > 8) gridClass = 'grid-3col';
+            if (sectionData.items.length > 15) gridClass = 'grid-4col';
             
-            // Check if this looks like a status section
             const hasStatusItems = sectionData.items.some(item => 
                 item.value.toLowerCase().includes('available') || 
                 item.value.toLowerCase().includes('yes') ||
@@ -632,30 +692,27 @@
     }
 
     // ==========================================================================
-    // MAIN: Initialize with proper state management
+    // MAIN: Initialize with diagnostic panel
     // ==========================================================================
     document.addEventListener('DOMContentLoaded', () => {
         const select = document.getElementById('checklist-type');
         const container = document.getElementById('checklist-container');
-        let renderer = null;
 
         async function loadChecklistForType(type) {
-            // CRITICAL: Create a NEW renderer instance each time
-            // This completely breaks any reference to old data
-            renderer = new ChecklistRenderer();
-            
-            // Show loading state
+            // Clear everything
             container.innerHTML = '<div class="loading-state">⏳ Loading data from sheet...</div>';
             
+            // Show what we're trying to load
+            const sheetName = SHEET_CONFIG.sheets[type];
+            updateDiagnostic(`🔄 Attempting to load: ${sheetName} for ${type}...`);
+            
             try {
-                const sheetName = SHEET_CONFIG.sheets[type];
                 if (!sheetName) {
                     throw new Error(`No sheet configured for type: ${type}`);
                 }
                 
-                console.log(`🔄 Loading ${sheetName} for ${type}...`);
+                // Test if the sheet exists by trying to fetch it
                 const rows = await fetchSheetData(sheetName);
-                console.log(`✅ Loaded ${rows.length} rows from ${sheetName}`);
                 
                 if (rows.length === 0) {
                     container.innerHTML = `<div style="background:#fff3e0; padding:2rem; border-radius:32px; color:#a00; text-align:center;">
@@ -665,7 +722,8 @@
                     return;
                 }
                 
-                // Load the data into the NEW renderer
+                // Create new renderer for this data
+                const renderer = new ChecklistRenderer();
                 renderer.loadChecklist(type, rows);
                 
                 // Update URL
@@ -674,18 +732,27 @@
             } catch (error) {
                 console.error(`❌ Error loading ${type}:`, error);
                 
-                // Show specific error message based on error type
+                // Show detailed error
                 let errorMessage = error.message;
+                let helpText = '';
+                
                 if (error.message.includes('Failed to fetch')) {
                     errorMessage = 'Network error - please check your internet connection';
+                    helpText = 'Make sure you are online and the URL is accessible';
                 } else if (error.message.includes('404')) {
-                    errorMessage = `Sheet "${SHEET_CONFIG.sheets[type]}" not found. Please create this sheet.`;
+                    errorMessage = `Sheet "${sheetName}" not found`;
+                    helpText = 'Create a sheet with this exact name in your Google Spreadsheet';
+                } else if (error.message.includes('HTML instead of CSV')) {
+                    errorMessage = `Sheet "${sheetName}" exists but is not published as CSV`;
+                    helpText = 'Go to File → Share → Publish to web and publish again';
                 }
                 
                 container.innerHTML = `<div style="background:#fff0f0; padding:2rem; border-radius:32px; color:#b33; text-align:center;">
-                    ❌ Error loading <strong>${SHEET_CONFIG.sheets[type]}</strong><br>
-                    ${errorMessage}<br>
-                    <small>Make sure the sheet exists and is published (File → Share → Publish to web)</small>
+                    <h3>❌ Error Loading ${sheetName}</h3>
+                    <p><strong>${errorMessage}</strong></p>
+                    <p>${helpText}</p>
+                    <hr style="margin: 1rem auto; width: 50%; border: 1px dashed #b33;">
+                    <p style="font-size: 0.9rem;">Check the diagnostic panel above for technical details.</p>
                 </div>`;
             }
         }
@@ -698,17 +765,16 @@
         // Load initial checklist
         loadChecklistForType(initialType);
 
-        // Handle selection change - ALWAYS create new instance
+        // Handle selection change
         select.addEventListener('change', (e) => {
             const newType = e.target.value;
-            console.log(`🔄 Selection changed to: ${newType}`);
+            updateDiagnostic(`🔄 Selection changed to: ${newType}`);
             loadChecklistForType(newType);
         });
 
         // Handle browser back/forward
         window.addEventListener('popstate', (e) => {
             if (e.state?.type) {
-                console.log(`🔄 Popstate to: ${e.state.type}`);
                 if (select) select.value = e.state.type;
                 loadChecklistForType(e.state.type);
             }
