@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checklist · live from Google Sheets</title>
-    <!-- sheet.js (parser) + XLSX (optional fallback) but we use sheetdb style query -->
+    <title>Checklist · separate sheets</title>
     <style>
         * {
             margin: 0;
@@ -397,7 +396,7 @@
 <body>
 <div id="site-header">
     <div class="header-content">
-        <div class="logo"><h1>📋 SARAT OFFICE <small>live from sheets</small></h1></div>
+        <div class="logo"><h1>📋 SARAT OFFICE <small>separate sheets</small></h1></div>
         <div class="header-links"><a href="#">Dashboard</a><a href="#">All</a><a href="#">Reports</a></div>
     </div>
 </div>
@@ -406,10 +405,10 @@
     <div class="checklist-nav">
         <label for="checklist-type">📋 Select Checklist:</label>
         <select id="checklist-type">
-            <option value="hsd">⛽ HSD Renewal (Tejaswini Filling Station)</option>
-            <option value="fps">🛒 FPS (Fair Price Shop)</option>
-            <option value="ppc">🏭 PPC (Petrol Pump Compliance)</option>
-            <option value="rice">🌾 Rice Mill Inspection</option>
+            <option value="hsd">⛽ HSD Renewal (hsd_data sheet)</option>
+            <option value="fps">🛒 FPS (fps_data sheet)</option>
+            <option value="ppc">🏭 PPC (ppc_data sheet)</option>
+            <option value="rice">🌾 Rice Mill (rice_mill_data sheet)</option>
             <option value="kerosene">🛢️ Kerosene Dealer</option>
             <option value="lpg">🔥 LPG Distributor</option>
         </select>
@@ -420,315 +419,403 @@
 </main>
 
 <div id="site-footer">
-    <div class="footer-content"><span>© 2025 Sarat Office · Data from Google Sheets</span><span>Version 4.0 · column view · sheet‑driven</span></div>
+    <div class="footer-content"><span>© 2025 Sarat Office · Data from separate sheets</span><span>Version 4.0 · per-sheet loading</span></div>
 </div>
 <a href="#" class="go-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'}); return false;">↑</a>
 
 <script>
-  // ==========================================================================
-  // CONFIGURATION — REPLACE WITH YOUR GOOGLE SHEET PUBLISHED CSV URL
-  // ==========================================================================
-  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQw7yjkmzyR4jgEFXhst53kQf2b_O8E8WNE_WSE0bYJY5V7WgA1cJlyd5gN5xGm1A/pub?output=csv'; // <-- Replace with your sheet's "publish as CSV" link
-
-  // The sheet must have columns: checklistType,section,key,value (or we map later)
-  // We'll treat each row as an atomic piece of data. 
-  // For flexibility we also support inline JSON if needed, but we keep it simple.
-
-  // --------------------------------------------------------------------------
-  // Helper: parse CSV into array of objects (first row = headers)
-  // --------------------------------------------------------------------------
-  function csvToObjects(csvText) {
-    const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== '');
-    if (lines.length === 0) return [];
-    const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
-    const rows = [];
-    for (let i = 1; i < lines.length; i++) {
-      // naive CSV parse (handles quotes, but we assume simple)
-      let line = lines[i];
-      const values = [];
-      let inQuote = false, val = '';
-      for (let c of line) {
-        if (c === '"') inQuote = !inQuote;
-        else if (c === ',' && !inQuote) {
-          values.push(val.replace(/^"|"$/g, ''));
-          val = '';
-        } else val += c;
-      }
-      values.push(val.replace(/^"|"$/g, '')); // last
-      const obj = {};
-      headers.forEach((h, idx) => obj[h] = values[idx] || '');
-      rows.push(obj);
-    }
-    return rows;
-  }
-
-  // --------------------------------------------------------------------------
-  // Build checklist object from sheet rows for a given type
-  // --------------------------------------------------------------------------
-  function buildChecklistFromRows(rows, checklistType) {
-    // filter rows matching checklistType (case-insensitive)
-    const filtered = rows.filter(r => r.checklistType && r.checklistType.trim().toLowerCase() === checklistType.toLowerCase());
-    if (filtered.length === 0) return null;
-
-    // Structure we need:
-    // metadata {}, particulars {}, facilities[], safetyItems[], licenses[], recommendation {}, officers {}
-    // We use row.section, row.key, row.value
-
-    const output = {
-      metadata: {},
-      particulars: {},
-      facilities: [],
-      safetyItems: [],
-      licenses: [],
-      recommendation: {},
-      officers: {}
+    // ==========================================================================
+    // CONFIGURATION - REPLACE WITH YOUR GOOGLE SHEET IDs and SHEET NAMES
+    // ==========================================================================
+    const SHEET_CONFIG = {
+        // Base URL pattern: https://docs.google.com/spreadsheets/d/SPREADSHEET_ID/gviz/tq?tqx=out:csv&sheet=SHEET_NAME
+        SPREADSHEET_ID: 'YOUR_SPREADSHEET_ID_HERE', // Replace with your actual spreadsheet ID
+        
+        // Sheet names for each checklist type
+        sheets: {
+            hsd: 'hsd_data',
+            fps: 'fps_data',
+            ppc: 'ppc_data',
+            rice: 'rice_mill_data',
+            kerosene: 'kerosene_data',  // you'll need to create these sheets
+            lpg: 'lpg_data'              // you'll need to create these sheets
+        }
     };
 
-    filtered.forEach(row => {
-      const section = (row.section || '').trim().toLowerCase();
-      const key = (row.key || '').trim();
-      const value = (row.value || '').trim();
-      if (!section || !key) return;
-
-      if (section === 'metadata') {
-        output.metadata[key] = value;
-      } else if (section === 'particulars') {
-        // allow nested props like proprietor.name – we flatten for display
-        output.particulars[key] = value;
-      } else if (section === 'facilities') {
-        output.facilities.push({ name: key, status: value });
-      } else if (section === 'safety') {
-        output.safetyItems.push({ name: key, status: value });
-      } else if (section === 'licenses') {
-        output.licenses.push({ type: key, number: value, validity: row.validity || '' }); // extra col validity
-      } else if (section === 'recommendation') {
-        output.recommendation[key] = value;
-      } else if (section === 'officers') {
-        output.officers[key] = value;
-      } else {
-        // fallback: maybe put in particulars?
-        output.particulars[`${section}.${key}`] = value;
-      }
-    });
-
-    // set fallback title
-    if (!output.metadata.title) {
-      const names = { hsd: 'HSD Renewal', fps: 'FPS Inspection', ppc: 'PPC Compliance', rice: 'Rice Mill', kerosene: 'Kerosene Dealer', lpg: 'LPG Distributor' };
-      output.metadata.title = names[checklistType] || 'Checklist';
-    }
-    return output;
-  }
-
-  // --------------------------------------------------------------------------
-  // Renderer (adapted from previous, but uses external data)
-  // --------------------------------------------------------------------------
-  class ChecklistRenderer {
-    constructor() { this.currentType = 'hsd'; this.data = null; }
-
-    loadChecklist(type, rows) {
-      this.currentType = type;
-      this.data = buildChecklistFromRows(rows, type);
-      const container = document.getElementById('checklist-container');
-      const badge = document.getElementById('checklist-type-badge');
-      const names = { hsd: 'HSD Renewal', fps: 'FPS', ppc: 'PPC', rice: 'Rice Mill', kerosene: 'Kerosene', lpg: 'LPG' };
-      if (badge) badge.textContent = names[type] || type;
-
-      if (!this.data) {
-        container.innerHTML = `<div style="background:#ffeeee; padding:3rem; border-radius:32px; color:#a00; text-align:center;">⚠️ No data found for "${type}" in sheet. Check checklistType column.</div>`;
-        return;
-      }
-      this.render();
+    // ==========================================================================
+    // Helper: parse CSV into array of objects
+    // ==========================================================================
+    function csvToObjects(csvText) {
+        const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== '');
+        if (lines.length === 0) return [];
+        
+        // Parse headers (first line)
+        const headers = parseCSVLine(lines[0]);
+        
+        const rows = [];
+        for (let i = 1; i < lines.length; i++) {
+            const values = parseCSVLine(lines[i]);
+            const obj = {};
+            headers.forEach((h, idx) => {
+                obj[h] = values[idx] || '';
+            });
+            rows.push(obj);
+        }
+        return rows;
     }
 
-    render() {
-      const container = document.getElementById('checklist-container');
-      const html = `
-        <div class="checklist-card">
-          ${this.renderHeader()}
-          ${this.renderParticularsGrid()}
-          ${this.renderLicensesGrid()}
-          ${this.renderSafetyGrid()}
-          ${this.renderFacilitiesGrid()}
-          ${this.renderRecommendation()}
-          ${this.renderOfficers()}
-        </div>
-      `;
-      container.innerHTML = html;
-      document.getElementById('print-checklist-btn')?.addEventListener('click', ()=>window.print());
+    // Simple CSV line parser (handles quotes)
+    function parseCSVLine(line) {
+        const result = [];
+        let inQuote = false;
+        let currentValue = '';
+        
+        for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            
+            if (char === '"') {
+                inQuote = !inQuote;
+            } else if (char === ',' && !inQuote) {
+                result.push(currentValue);
+                currentValue = '';
+            } else {
+                currentValue += char;
+            }
+        }
+        result.push(currentValue); // push last value
+        
+        return result.map(val => val.trim());
     }
 
-    renderHeader() {
-      const m = this.data.metadata || {};
-      return `
-        <div class="card-header">
-          <div class="header-title">
-            <h1>⛽ ${m.title || 'Checklist'}</h1>
-            <div class="station-name">${m.stationName || ''}</div>
-            <div class="verification-info">
-              <span>📅 ${m.verificationDate || ''}</span>
-              <span>⏰ ${m.verificationTime || ''}</span>
-              <span>👤 ${m.verifyingOfficer || ''}</span>
-            </div>
-          </div>
-          <button class="print-btn" id="print-checklist-btn">📋 PRINT</button>
-        </div>
-      `;
+    // ==========================================================================
+    // Build checklist object from sheet rows
+    // ==========================================================================
+    function buildChecklistFromRows(rows) {
+        if (!rows || rows.length === 0) return null;
+
+        const output = {
+            metadata: {},
+            particulars: {},
+            facilities: [],
+            safetyItems: [],
+            licenses: [],
+            recommendation: {},
+            officers: {}
+        };
+
+        rows.forEach(row => {
+            const section = (row.section || '').trim().toLowerCase();
+            const key = (row.key || '').trim();
+            const value = (row.value || '').trim();
+            const validity = (row.validity || '').trim();
+            
+            if (!section || !key) return;
+
+            if (section === 'metadata') {
+                output.metadata[key] = value;
+            } else if (section === 'particulars') {
+                output.particulars[key] = value;
+            } else if (section === 'facilities') {
+                output.facilities.push({ name: key, status: value });
+            } else if (section === 'safety') {
+                output.safetyItems.push({ name: key, status: value });
+            } else if (section === 'licenses') {
+                output.licenses.push({ type: key, number: value, validity: validity });
+            } else if (section === 'recommendation') {
+                output.recommendation[key] = value;
+            } else if (section === 'officers') {
+                output.officers[key] = value;
+            }
+        });
+
+        // Set fallback title if missing
+        if (!output.metadata.title) {
+            const names = { hsd: 'HSD Renewal', fps: 'FPS Inspection', ppc: 'PPC Compliance', rice: 'Rice Mill', kerosene: 'Kerosene Dealer', lpg: 'LPG Distributor' };
+            const type = document.getElementById('checklist-type')?.value || 'hsd';
+            output.metadata.title = names[type] || 'Checklist';
+        }
+
+        return output;
     }
 
-    renderParticularsGrid() {
-      const p = this.data.particulars || {};
-      const items = [];
-      for (let [key, val] of Object.entries(p)) {
-        if (val) items.push(`<div class="info-item"><span class="info-label">${key}</span><span class="info-value">${val}</span></div>`);
-      }
-      return `
-        <div class="checklist-section">
-          <div class="section-title">📋 STATION PARTICULARS</div>
-          <div class="grid-2col">${items.join('')}</div>
-        </div>
-      `;
+    // ==========================================================================
+    // Renderer class
+    // ==========================================================================
+    class ChecklistRenderer {
+        constructor() { 
+            this.currentType = 'hsd'; 
+            this.data = null; 
+        }
+
+        loadChecklist(type, rows) {
+            this.currentType = type;
+            this.data = buildChecklistFromRows(rows);
+            
+            const container = document.getElementById('checklist-container');
+            const badge = document.getElementById('checklist-type-badge');
+            const names = { hsd: 'HSD Renewal', fps: 'FPS', ppc: 'PPC', rice: 'Rice Mill', kerosene: 'Kerosene', lpg: 'LPG' };
+            if (badge) badge.textContent = names[type] || type;
+
+            if (!this.data) {
+                container.innerHTML = `<div style="background:#ffeeee; padding:3rem; border-radius:32px; color:#a00; text-align:center;">
+                    ⚠️ No data found for "${type}" in sheet <strong>${SHEET_CONFIG.sheets[type]}</strong>.<br>
+                    Make sure the sheet has the required columns (section, key, value) and data.
+                </div>`;
+                return;
+            }
+            this.render();
+        }
+
+        render() {
+            const container = document.getElementById('checklist-container');
+            const html = `
+                <div class="checklist-card">
+                    ${this.renderHeader()}
+                    ${this.renderParticularsGrid()}
+                    ${this.renderLicensesGrid()}
+                    ${this.renderSafetyGrid()}
+                    ${this.renderFacilitiesGrid()}
+                    ${this.renderRecommendation()}
+                    ${this.renderOfficers()}
+                </div>
+            `;
+            container.innerHTML = html;
+            document.getElementById('print-checklist-btn')?.addEventListener('click', ()=>window.print());
+        }
+
+        renderHeader() {
+            const m = this.data.metadata || {};
+            return `
+                <div class="card-header">
+                    <div class="header-title">
+                        <h1>⛽ ${m.title || 'Checklist'}</h1>
+                        <div class="station-name">${m.stationName || ''}</div>
+                        <div class="verification-info">
+                            <span>📅 ${m.verificationDate || ''}</span>
+                            <span>⏰ ${m.verificationTime || ''}</span>
+                            <span>👤 ${m.verifyingOfficer || ''}</span>
+                        </div>
+                    </div>
+                    <button class="print-btn" id="print-checklist-btn">📋 PRINT</button>
+                </div>
+            `;
+        }
+
+        renderParticularsGrid() {
+            const p = this.data.particulars || {};
+            const items = [];
+            for (let [key, val] of Object.entries(p)) {
+                if (val) items.push(`<div class="info-item"><span class="info-label">${key}</span><span class="info-value">${val}</span></div>`);
+            }
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">📋 STATION PARTICULARS</div>
+                    <div class="grid-2col">${items.join('')}</div>
+                </div>
+            `;
+        }
+
+        renderLicensesGrid() {
+            const lic = this.data.licenses || [];
+            if (lic.length === 0) return '';
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">📜 LICENSE DETAILS</div>
+                    <div class="grid-2col">
+                        ${lic.map(l => `<div class="info-item"><span class="info-label">${l.type}</span><span class="info-value">${l.number} ${l.validity ? '(valid: ' + l.validity + ')' : ''}</span></div>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        renderSafetyGrid() {
+            const items = this.data.safetyItems || [];
+            if (items.length === 0) return '';
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">🛡️ SAFETY PROVISIONS</div>
+                    <div class="grid-3col">
+                        ${items.map(s => `<div class="facility-item"><span>${s.name}</span><span class="facility-status ${s.status?.toLowerCase().includes('avail') ? 'available' : ''}">${s.status}</span></div>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        renderFacilitiesGrid() {
+            const fac = this.data.facilities || [];
+            if (fac.length === 0) return '';
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">🧷 ON‑SITE FACILITIES</div>
+                    <div class="grid-2col">
+                        ${fac.map(f => `<div class="facility-item"><span>${f.name}</span><span class="facility-status ${f.status === 'Available' ? 'available' : ''}">${f.status}</span></div>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        renderRecommendation() {
+            const r = this.data.recommendation || {};
+            if (Object.keys(r).length === 0) return '';
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">✅ INSPECTION RECOMMENDATION</div>
+                    <div class="recommendation-box">
+                        ${r.complaints !== undefined ? `<div class="recommendation-item"><div class="recommendation-label">Complaints</div><div class="recommendation-value">${r.complaints}</div></div>` : ''}
+                        ${r.performance ? `<div class="recommendation-item"><div class="recommendation-label">Performance</div><div class="recommendation-value">${r.performance}</div></div>` : ''}
+                        <div class="recommendation-item"><div class="recommendation-label">Renewal</div><div class="recommendation-value">${r.renewal || '—'}</div></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        renderOfficers() {
+            const o = this.data.officers || {};
+            if (Object.keys(o).length === 0) return '';
+            return `
+                <div class="officer-section">
+                    <div class="officer-signature"><div class="officer-title">${o.inspector || 'Inspector'}</div><div class="officer-line"></div><small>signature</small></div>
+                    <div class="officer-signature"><div class="officer-title">${o.acso || 'ACSO'}</div><div class="officer-line"></div><small>signature</small></div>
+                </div>
+            `;
+        }
     }
 
-    renderLicensesGrid() {
-      const lic = this.data.licenses || [];
-      if (lic.length === 0) return '';
-      return `
-        <div class="checklist-section">
-          <div class="section-title">📜 LICENSE DETAILS</div>
-          <div class="grid-2col">
-            ${lic.map(l => `<div class="info-item"><span class="info-label">${l.type}</span><span class="info-value">${l.number} (valid: ${l.validity || 'N/A'})</span></div>`).join('')}
-          </div>
-        </div>
-      `;
+    // ==========================================================================
+    // Fetch data from specific sheet
+    // ==========================================================================
+    async function fetchSheetData(sheetName) {
+        const spreadsheetId = SHEET_CONFIG.SPREADSHEET_ID;
+        
+        if (spreadsheetId === 'YOUR_SPREADSHEET_ID_HERE') {
+            throw new Error('Please replace YOUR_SPREADSHEET_ID_HERE with your actual Google Sheet ID');
+        }
+        
+        // Using the CSV export URL format
+        const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to load sheet: ${sheetName}`);
+        }
+        const csvText = await response.text();
+        return csvToObjects(csvText);
     }
 
-    renderSafetyGrid() {
-      const items = this.data.safetyItems || [];
-      if (items.length === 0) return '';
-      return `
-        <div class="checklist-section">
-          <div class="section-title">🛡️ SAFETY PROVISIONS</div>
-          <div class="grid-3col">
-            ${items.map(s => `<div class="facility-item"><span>${s.name}</span><span class="facility-status ${s.status?.toLowerCase().includes('avail') ? 'available' : ''}">${s.status}</span></div>`).join('')}
-          </div>
-        </div>
-      `;
-    }
+    // ==========================================================================
+    // MAIN: Initialize
+    // ==========================================================================
+    document.addEventListener('DOMContentLoaded', () => {
+        const select = document.getElementById('checklist-type');
+        const renderer = new ChecklistRenderer();
 
-    renderFacilitiesGrid() {
-      const fac = this.data.facilities || [];
-      if (fac.length === 0) return '';
-      return `
-        <div class="checklist-section">
-          <div class="section-title">🧷 ON‑SITE FACILITIES</div>
-          <div class="grid-2col">
-            ${fac.map(f => `<div class="facility-item"><span>${f.name}</span><span class="facility-status ${f.status === 'Available' ? 'available' : ''}">${f.status}</span></div>`).join('')}
-          </div>
-        </div>
-      `;
-    }
+        async function loadChecklistForType(type) {
+            const container = document.getElementById('checklist-container');
+            container.innerHTML = '<div class="loading-state">⏳ Loading data from sheet...</div>';
+            
+            try {
+                const sheetName = SHEET_CONFIG.sheets[type];
+                if (!sheetName) {
+                    throw new Error(`No sheet configured for type: ${type}`);
+                }
+                
+                const rows = await fetchSheetData(sheetName);
+                renderer.loadChecklist(type, rows);
+                
+                // Update URL
+                history.pushState({ type }, '', `?type=${type}`);
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = `<div style="background:#fff0f0; padding:2rem; border-radius:32px; color:#b33; text-align:center;">
+                    ❌ Error loading sheet: ${error.message}<br>
+                    <small>Make sure your sheet is published and accessible</small>
+                </div>`;
+            }
+        }
 
-    renderRecommendation() {
-      const r = this.data.recommendation || {};
-      if (Object.keys(r).length === 0) return '';
-      return `
-        <div class="checklist-section">
-          <div class="section-title">✅ INSPECTION RECOMMENDATION</div>
-          <div class="recommendation-box">
-            ${r.complaints !== undefined ? `<div class="recommendation-item"><div class="recommendation-label">Complaints</div><div class="recommendation-value">${r.complaints}</div></div>` : ''}
-            ${r.performance ? `<div class="recommendation-item"><div class="recommendation-label">Performance</div><div class="recommendation-value">${r.performance}</div></div>` : ''}
-            <div class="recommendation-item"><div class="recommendation-label">Renewal</div><div class="recommendation-value">${r.renewal || '—'}</div></div>
-          </div>
-        </div>
-      `;
-    }
-
-    renderOfficers() {
-      const o = this.data.officers || {};
-      if (Object.keys(o).length === 0) return '';
-      return `
-        <div class="officer-section">
-          <div class="officer-signature"><div class="officer-title">${o.inspector || 'Inspector'}</div><div class="officer-line"></div><small>signature</small></div>
-          <div class="officer-signature"><div class="officer-title">${o.acso || 'ACSO'}</div><div class="officer-line"></div><small>signature</small></div>
-        </div>
-      `;
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  // MAIN: fetch CSV and initialise
-  // --------------------------------------------------------------------------
-  document.addEventListener('DOMContentLoaded', () => {
-    const select = document.getElementById('checklist-type');
-    const renderer = new ChecklistRenderer();
-    let allRows = [];
-
-    // fetch sheet data
-    fetch(SHEET_CSV_URL)
-      .then(res => res.text())
-      .then(csv => {
-        allRows = csvToObjects(csv);
-        console.log('loaded rows:', allRows.length);
-
-        // get type from URL or default
+        // Get type from URL or default
         const urlParams = new URLSearchParams(window.location.search);
         const initialType = urlParams.get('type') || 'hsd';
         if (select) select.value = initialType;
 
-        renderer.loadChecklist(initialType, allRows);
+        // Load initial checklist
+        loadChecklistForType(initialType);
 
+        // Handle selection change
         select.addEventListener('change', (e) => {
-          renderer.loadChecklist(e.target.value, allRows);
-          history.pushState({ type: e.target.value }, '', `?type=${e.target.value}`);
+            loadChecklistForType(e.target.value);
         });
 
+        // Handle browser back/forward
         window.addEventListener('popstate', (e) => {
-          if (e.state?.type) {
-            if (select) select.value = e.state.type;
-            renderer.loadChecklist(e.state.type, allRows);
-          }
+            if (e.state?.type) {
+                if (select) select.value = e.state.type;
+                loadChecklistForType(e.state.type);
+            }
         });
-      })
-      .catch(err => {
-        console.error(err);
-        document.getElementById('checklist-container').innerHTML = `<div style="background:#fff0f0; padding:2rem; border-radius:32px; color:#b33;">❌ Failed to load Google Sheet. Make sure it's published to CSV and CORS allows.<br>${err.message}</div>`;
-      });
-  });
+    });
 </script>
 
-<!-- INSTRUCTIONS FOR GOOGLE SHEET PREPARATION (visible as comment, not rendered) -->
-<!--
-    ====================   GOOGLE SHEET SETUP  ====================
-    Create a sheet named "checklist_data" with these columns (first row headers):
-    checklistType | section | key | value | validity (optional)
+<!-- 
+==========================================================================
+INSTRUCTIONS FOR SETTING UP SEPARATE SHEETS
+==========================================================================
 
-    Then publish: File → Share → Publish to web → CSV link.
+1. Create a Google Spreadsheet
 
-    Example rows:
+2. Create these sheets (tabs):
+   - hsd_data
+   - fps_data
+   - ppc_data
+   - rice_mill_data
+   - kerosene_data (optional)
+   - lpg_data (optional)
 
-    checklistType | section      | key                  | value
-    --------------|--------------|----------------------|-------------------
-    hsd           | metadata     | title                | HSD Renewal
-    hsd           | metadata     | stationName          | Tejaswini Filling Station
-    hsd           | metadata     | verificationDate     | 21/02/2025
-    hsd           | metadata     | verificationTime     | 11:30 AM
-    hsd           | metadata     | verifyingOfficer     | Sri Sarat Kumar Rout
-    hsd           | particulars  | Proprietor           | Debaraj Meher
-    hsd           | particulars  | Mobile               | 8895965811
-    hsd           | particulars  | Plot No              | 831/1476
-    hsd           | facilities   | First Aid Box        | Available
-    hsd           | facilities   | Generator set        | Available
-    hsd           | safety       | ABC 10kg extinguisher| 4 Nos valid
-    hsd           | licenses     | HSD License          | 06/2020-21
-    (validity column used if present: "31/03/2025")
-    hsd           | recommendation | complaints        | No
-    hsd           | recommendation | performance        | Satisfactory
-    hsd           | recommendation | renewal            | Recommended
-    hsd           | officers       | inspector          | Inspector of Supplies, Deogaon
-    hsd           | officers       | acso               | Assistant Civil Supplies Officer
+3. For EACH sheet, add these columns in Row 1:
+   | section | key | value | validity |
 
-    Repeat for fps, ppc, rice, kerosene, lpg with same structure.
-    =================================================================
+4. For fps_data sheet, add these rows starting from Row 2:
+
+   section     | key                  | value                          | validity
+   ------------|----------------------|--------------------------------|-----------
+   metadata    | title                | FAIR PRICE SHOP INSPECTION     |
+   metadata    | stationName          | Maa Tarini FPS, Bhatli         |
+   metadata    | verificationDate     | 15/03/2025                     |
+   metadata    | verificationTime     | 10:00 AM                       |
+   metadata    | verifyingOfficer     | Sri Sarat Kumar Rout           |
+   particulars | Proprietor Name      | Pramila Sahu                   |
+   particulars | Address              | Bhatli Bazar, Bargarh          |
+   particulars | Mobile               | 9437155822                     |
+   particulars | Aadhaar              | 452178963214                   |
+   particulars | PAN                  | CEWPS1254D                     |
+   particulars | Shop No              | FPS/BGL/125                    |
+   particulars | Panchayat            | Bhatli                         |
+   particulars | Block                | Bhatli                         |
+   particulars | District             | Bargarh                        |
+   facilities  | Weighing Scale       | Available                      |
+   facilities  | ePoS Machine         | Functional                     |
+   facilities  | Display Board        | Displayed                      |
+   facilities  | Stock Display        | Updated                        |
+   facilities  | Clean Premises       | Satisfactory                   |
+   facilities  | Drinking Water       | Available                      |
+   safety      | Fire extinguisher    | 2kg ABC                        |
+   licenses    | FPS License          | FPS/2024/123                   | 31/12/2026
+   recommendation | complaints      | None                           |
+   recommendation | performance      | Satisfactory                   |
+   recommendation | renewal          | Recommended                    |
+   officers    | inspector            | Inspector of Supplies          |
+   officers    | acso                 | ACSO, Bargarh                  |
+
+5. Publish your spreadsheet:
+   - File → Share → Publish to web
+   - Choose "Entire Document" or specific sheets
+   - Click "Publish"
+   - Copy your spreadsheet ID from the URL:
+     https://docs.google.com/spreadsheets/d/SPREADSHEET_ID_HERE/edit
+
+6. Replace 'YOUR_SPREADSHEET_ID_HERE' in the code with your actual spreadsheet ID
+
+==========================================================================
 -->
 </body>
 </html>
