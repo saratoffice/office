@@ -417,29 +417,43 @@
     }
 
     // ==========================================================================
-    // Fetch data from specific sheet - WITH CACHE BUSTING
+    // Fetch data from specific sheet - WITH ERROR HANDLING
     // ==========================================================================
     async function fetchSheetData(sheetName) {
         const spreadsheetId = SHEET_CONFIG.SPREADSHEET_ID;
         
-        // Add cache buster to prevent cached responses
+        // Add cache buster
         const cacheBuster = new Date().getTime();
         const url = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?output=csv&sheet=${encodeURIComponent(sheetName)}&cb=${cacheBuster}`;
         
-        console.log(`Fetching ${sheetName} from:`, url);
+        console.log(`🔍 Fetching ${sheetName} from:`, url);
         
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Failed to load sheet: ${sheetName} (Status: ${response.status})`);
+        try {
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const csvText = await response.text();
+            
+            // Check if we got HTML instead of CSV
+            if (csvText.trim().startsWith('<!DOCTYPE') || csvText.trim().startsWith('<html')) {
+                throw new Error(`Sheet "${sheetName}" not found or not published as CSV`);
+            }
+            
+            // Check if CSV has content beyond headers
+            const rows = csvToObjects(csvText);
+            if (rows.length === 0) {
+                console.warn(`⚠️ Sheet "${sheetName}" is empty`);
+            }
+            
+            return rows;
+            
+        } catch (error) {
+            console.error(`❌ Error fetching ${sheetName}:`, error);
+            throw error; // Re-throw to be handled by caller
         }
-        const csvText = await response.text();
-        
-        // Check if we got a valid CSV (not an HTML error page)
-        if (csvText.trim().startsWith('<!DOCTYPE') || csvText.trim().startsWith('<html')) {
-            throw new Error(`Sheet "${sheetName}" returned HTML instead of CSV. It may not exist or is not published.`);
-        }
-        
-        return csvToObjects(csvText);
     }
 
     // ==========================================================================
@@ -481,19 +495,6 @@
             }
         });
 
-        // Set fallback title if missing
-        if (!output.metadata.title) {
-            const names = { 
-                'hsd-renewal': 'HSD Renewal', 
-                'fps-checklist': 'FPS Inspection', 
-                'ppc-checklist': 'PPC Compliance', 
-                'rice-mill': 'Rice Mill', 
-                'kerosene': 'Kerosene Dealer', 
-                'lpg': 'LPG Distributor' 
-            };
-            output.metadata.title = names[checklistType] || 'Checklist';
-        }
-
         return output;
     }
 
@@ -507,9 +508,12 @@
         }
 
         loadChecklist(type, rows) {
-            // Clear previous data first
+            // Create new data object (completely separate from previous)
+            const newData = buildChecklistFromRows(rows, type);
+            
+            // Update properties
             this.currentType = type;
-            this.data = buildChecklistFromRows(rows, type);
+            this.data = newData;
             
             const container = document.getElementById('checklist-container');
             const badge = document.getElementById('checklist-type-badge');
@@ -632,15 +636,15 @@
     // ==========================================================================
     document.addEventListener('DOMContentLoaded', () => {
         const select = document.getElementById('checklist-type');
-        const renderer = new ChecklistRenderer();
-
-        // Clear any cached data
-        sessionStorage.removeItem('lastSheetData');
+        const container = document.getElementById('checklist-container');
+        let renderer = null;
 
         async function loadChecklistForType(type) {
-            const container = document.getElementById('checklist-container');
+            // CRITICAL: Create a NEW renderer instance each time
+            // This completely breaks any reference to old data
+            renderer = new ChecklistRenderer();
             
-            // Clear container immediately to prevent showing old data
+            // Show loading state
             container.innerHTML = '<div class="loading-state">⏳ Loading data from sheet...</div>';
             
             try {
@@ -649,9 +653,9 @@
                     throw new Error(`No sheet configured for type: ${type}`);
                 }
                 
-                console.log(`Loading ${sheetName} for ${type}...`);
+                console.log(`🔄 Loading ${sheetName} for ${type}...`);
                 const rows = await fetchSheetData(sheetName);
-                console.log(`Loaded ${rows.length} rows from ${sheetName}`);
+                console.log(`✅ Loaded ${rows.length} rows from ${sheetName}`);
                 
                 if (rows.length === 0) {
                     container.innerHTML = `<div style="background:#fff3e0; padding:2rem; border-radius:32px; color:#a00; text-align:center;">
@@ -661,17 +665,27 @@
                     return;
                 }
                 
-                // Load the data into renderer (this overwrites previous data)
+                // Load the data into the NEW renderer
                 renderer.loadChecklist(type, rows);
                 
                 // Update URL
-                history.pushState({ type }, '', `?type=${type}`);
+                history.pushState({ type, timestamp: Date.now() }, '', `?type=${type}`);
+                
             } catch (error) {
-                console.error(`Error loading ${type}:`, error);
+                console.error(`❌ Error loading ${type}:`, error);
+                
+                // Show specific error message based on error type
+                let errorMessage = error.message;
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Network error - please check your internet connection';
+                } else if (error.message.includes('404')) {
+                    errorMessage = `Sheet "${SHEET_CONFIG.sheets[type]}" not found. Please create this sheet.`;
+                }
+                
                 container.innerHTML = `<div style="background:#fff0f0; padding:2rem; border-radius:32px; color:#b33; text-align:center;">
-                    ❌ Error loading sheet <strong>${SHEET_CONFIG.sheets[type]}</strong><br>
-                    ${error.message}<br>
-                    <small>Make sure the sheet exists and is published</small>
+                    ❌ Error loading <strong>${SHEET_CONFIG.sheets[type]}</strong><br>
+                    ${errorMessage}<br>
+                    <small>Make sure the sheet exists and is published (File → Share → Publish to web)</small>
                 </div>`;
             }
         }
@@ -684,16 +698,17 @@
         // Load initial checklist
         loadChecklistForType(initialType);
 
-        // Handle selection change - THIS IS KEY: always load new data
+        // Handle selection change - ALWAYS create new instance
         select.addEventListener('change', (e) => {
             const newType = e.target.value;
-            console.log(`Selection changed to: ${newType}`);
+            console.log(`🔄 Selection changed to: ${newType}`);
             loadChecklistForType(newType);
         });
 
         // Handle browser back/forward
         window.addEventListener('popstate', (e) => {
             if (e.state?.type) {
+                console.log(`🔄 Popstate to: ${e.state.type}`);
                 if (select) select.value = e.state.type;
                 loadChecklistForType(e.state.type);
             }
