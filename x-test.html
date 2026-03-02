@@ -134,7 +134,7 @@
             box-shadow: 0 10px 20px rgba(26,62,92,0.4);
         }
 
-        /* sections - DYNAMIC section titles will come from data */
+        /* sections */
         .checklist-wrapper .checklist-section {
             background: #f9fcff;
             border-radius: 24px;
@@ -164,7 +164,7 @@
             font-weight: 500;
         }
 
-        /* MULTI‑COLUMN LAYOUTS – paper saving */
+        /* MULTI‑COLUMN LAYOUTS */
         .checklist-wrapper .grid-2col {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -235,29 +235,6 @@
         .checklist-wrapper .facility-status:empty::before {
             content: "—";
             color: #9aaec5;
-        }
-
-        /* tables */
-        .checklist-wrapper .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-        .checklist-wrapper .data-table th {
-            background: var(--cl-primary);
-            color: white;
-            padding: 0.8rem 1rem;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        .checklist-wrapper .data-table td {
-            padding: 0.7rem 1rem;
-            border-bottom: 1px solid #dde6f0;
-            background: white;
         }
 
         /* recommendation */
@@ -351,13 +328,12 @@
     </style>
 </head>
 <body>
-<!-- Your existing header/footer can stay outside the wrapper -->
+<!-- Your existing header -->
 <div id="site-header" style="background: #1a3e5c; color: white; padding: 1rem;">
     <!-- your existing header content -->
 </div>
 
 <main>
-    <!-- ALL CHECKLIST CONTENT IS WRAPPED IN .checklist-wrapper -->
     <div class="checklist-wrapper">
         <div class="checklist-nav">
             <label for="checklist-type">📋 Select Checklist:</label>
@@ -382,13 +358,11 @@
 
 <script>
     // ==========================================================================
-    // CONFIGURATION - Using your working CSV link
+    // CONFIGURATION
     // ==========================================================================
     const SHEET_CONFIG = {
-        // Your spreadsheet ID extracted from the working link
         SPREADSHEET_ID: '2PACX-1vS7ik39OFKwscZJiFMgl2CNzRltAxK2sG6fIn-WniMGJ2rvQX1mFnzoerLz0lZOAsUMGeyFtyp0II4o',
         
-        // Map dropdown values to sheet names
         sheets: {
             'hsd-renewal': 'hsd_data',
             'fps-checklist': 'fps_data',
@@ -396,27 +370,16 @@
             'rice-mill': 'rice_mill_data',
             'kerosene': 'kerosene_data',
             'lpg': 'lpg_data'
-        },
-        
-        // Section display names (can be customized per checklist type if needed)
-        sectionTitles: {
-            'particulars': 'STATION PARTICULARS',
-            'licenses': 'LICENSE DETAILS',
-            'safety': 'SAFETY PROVISIONS',
-            'facilities': 'ON‑SITE FACILITIES',
-            'recommendation': 'INSPECTION RECOMMENDATION',
-            'officers': 'VERIFYING OFFICERS'
         }
     };
 
     // ==========================================================================
-    // Helper: Parse CSV into array of objects
+    // Helper: Parse CSV
     // ==========================================================================
     function csvToObjects(csvText) {
         const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== '');
         if (lines.length === 0) return [];
         
-        // Parse headers (first line)
         const headers = parseCSVLine(lines[0]);
         
         const rows = [];
@@ -431,7 +394,6 @@
         return rows;
     }
 
-    // Simple CSV line parser (handles quotes)
     function parseCSVLine(line) {
         const result = [];
         let inQuote = false;
@@ -455,61 +417,43 @@
     }
 
     // ==========================================================================
-    // Fetch data from specific sheet
+    // Fetch data from specific sheet - WITH CACHE BUSTING
     // ==========================================================================
     async function fetchSheetData(sheetName) {
         const spreadsheetId = SHEET_CONFIG.SPREADSHEET_ID;
         
-        const url = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?output=csv&sheet=${encodeURIComponent(sheetName)}`;
+        // Add cache buster to prevent cached responses
+        const cacheBuster = new Date().getTime();
+        const url = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?output=csv&sheet=${encodeURIComponent(sheetName)}&cb=${cacheBuster}`;
         
-        console.log('Fetching URL:', url);
+        console.log(`Fetching ${sheetName} from:`, url);
         
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`Failed to load sheet: ${sheetName} (Status: ${response.status})`);
         }
         const csvText = await response.text();
+        
+        // Check if we got a valid CSV (not an HTML error page)
+        if (csvText.trim().startsWith('<!DOCTYPE') || csvText.trim().startsWith('<html')) {
+            throw new Error(`Sheet "${sheetName}" returned HTML instead of CSV. It may not exist or is not published.`);
+        }
+        
         return csvToObjects(csvText);
     }
 
     // ==========================================================================
-    // Build checklist object from sheet rows - FULLY DYNAMIC
+    // Build checklist object from sheet rows
     // ==========================================================================
     function buildChecklistFromRows(rows, checklistType) {
         if (!rows || rows.length === 0) {
-            console.log(`No rows found for ${checklistType}`);
             return null;
         }
 
-        // Dynamic structure - will contain any sections found in the data
         const output = {
             metadata: {},
-            sections: {} // This will hold all dynamic sections
+            sections: {}
         };
-
-        // First, identify all unique sections
-        const sections = new Set();
-        rows.forEach(row => {
-            if (row.section) {
-                sections.add(row.section.trim().toLowerCase());
-            }
-        });
-
-        console.log(`Found sections for ${checklistType}:`, Array.from(sections));
-
-        // Initialize each section
-        sections.forEach(section => {
-            if (section === 'metadata') {
-                // Metadata is special - store as key-value
-                output.metadata = {};
-            } else {
-                // For other sections, decide format based on content
-                output.sections[section] = {
-                    type: 'items', // default
-                    items: []
-                };
-            }
-        });
 
         // Process each row
         rows.forEach(row => {
@@ -523,15 +467,8 @@
             if (section === 'metadata') {
                 output.metadata[key] = value;
             } else {
-                // Check if this looks like a facility/safety item (has status-like values)
-                const isStatusItem = value.toLowerCase().includes('available') || 
-                                    value.toLowerCase().includes('yes') || 
-                                    value.toLowerCase().includes('no') ||
-                                    value.match(/^\d+/); // starts with number
-                
                 if (!output.sections[section]) {
                     output.sections[section] = {
-                        type: 'items',
                         items: []
                     };
                 }
@@ -539,29 +476,8 @@
                 output.sections[section].items.push({
                     key: key,
                     value: value,
-                    validity: validity,
-                    hasStatus: isStatusItem
+                    validity: validity
                 });
-            }
-        });
-
-        // Determine section types based on content
-        Object.keys(output.sections).forEach(section => {
-            const items = output.sections[section].items;
-            
-            // Check if this section looks like licenses (has validity dates)
-            const hasValidity = items.some(item => item.validity);
-            
-            // Check if most items have status-like values
-            const statusCount = items.filter(item => item.hasStatus).length;
-            const isStatusSection = statusCount > items.length / 2;
-            
-            if (hasValidity) {
-                output.sections[section].type = 'licenses';
-            } else if (isStatusSection) {
-                output.sections[section].type = 'status';
-            } else {
-                output.sections[section].type = 'particulars';
             }
         });
 
@@ -582,15 +498,16 @@
     }
 
     // ==========================================================================
-    // Renderer class - FULLY DYNAMIC
+    // Renderer class
     // ==========================================================================
     class ChecklistRenderer {
         constructor() { 
-            this.currentType = 'hsd-renewal'; 
+            this.currentType = null; 
             this.data = null; 
         }
 
         loadChecklist(type, rows) {
+            // Clear previous data first
             this.currentType = type;
             this.data = buildChecklistFromRows(rows, type);
             
@@ -608,41 +525,26 @@
 
             if (!this.data) {
                 container.innerHTML = `<div style="background:#ffeeee; padding:3rem; border-radius:32px; color:#a00; text-align:center;">
-                    ⚠️ No data found for "${type}" in sheet <strong>${SHEET_CONFIG.sheets[type]}</strong>.<br>
-                    Make sure the sheet exists and has the required columns (section, key, value).
+                    ⚠️ No data found in sheet <strong>${SHEET_CONFIG.sheets[type]}</strong>.<br>
+                    Please add data with columns: section, key, value, validity
                 </div>`;
                 return;
             }
+            
             this.render();
         }
 
         render() {
             const container = document.getElementById('checklist-container');
             
-            // Build sections dynamically
-            let sectionsHtml = '';
-            
-            // First render metadata in header
+            // Build header
             const headerHtml = this.renderHeader();
             
-            // Then render all other sections in order
+            // Build sections
+            let sectionsHtml = '';
             if (this.data.sections) {
-                // Define preferred order if you want
-                const preferredOrder = ['particulars', 'licenses', 'safety', 'facilities', 'recommendation', 'officers'];
-                
-                // Sort sections
-                const sortedSections = Object.keys(this.data.sections).sort((a, b) => {
-                    const indexA = preferredOrder.indexOf(a);
-                    const indexB = preferredOrder.indexOf(b);
-                    if (indexA === -1 && indexB === -1) return a.localeCompare(b);
-                    if (indexA === -1) return 1;
-                    if (indexB === -1) return -1;
-                    return indexA - indexB;
-                });
-                
-                sortedSections.forEach(section => {
-                    const sectionData = this.data.sections[section];
-                    sectionsHtml += this.renderDynamicSection(section, sectionData);
+                Object.keys(this.data.sections).forEach(section => {
+                    sectionsHtml += this.renderSection(section, this.data.sections[section]);
                 });
             }
             
@@ -675,15 +577,15 @@
             `;
         }
 
-        renderDynamicSection(sectionName, sectionData) {
+        renderSection(sectionName, sectionData) {
             if (!sectionData.items || sectionData.items.length === 0) return '';
             
-            // Get display title - capitalize first letters
+            // Format section title
             const displayTitle = sectionName.split(/[-_\s]+/)
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                 .join(' ');
             
-            // Choose grid columns based on item count and type
+            // Choose grid columns
             let gridClass = 'grid-2col';
             if (sectionData.items.length > 8) {
                 gridClass = 'grid-3col';
@@ -692,28 +594,26 @@
                 gridClass = 'grid-4col';
             }
             
-            // Render items based on type
-            let itemsHtml = '';
+            // Check if this looks like a status section
+            const hasStatusItems = sectionData.items.some(item => 
+                item.value.toLowerCase().includes('available') || 
+                item.value.toLowerCase().includes('yes') ||
+                item.value.match(/^\d+/)
+            );
             
-            if (sectionData.type === 'licenses') {
-                itemsHtml = sectionData.items.map(item => `
-                    <div class="info-item">
-                        <span class="info-label">${item.key}</span>
-                        <span class="info-value">${item.value} ${item.validity ? '(valid: ' + item.validity + ')' : ''}</span>
-                    </div>
-                `).join('');
-            } else if (sectionData.type === 'status') {
+            let itemsHtml = '';
+            if (hasStatusItems) {
                 itemsHtml = sectionData.items.map(item => `
                     <div class="facility-item">
                         <span>${item.key}</span>
-                        <span class="facility-status ${item.value.toLowerCase().includes('avail') ? 'available' : ''}">${item.value}</span>
+                        <span class="facility-status ${item.value.toLowerCase().includes('avail') ? 'available' : ''}">${item.value || '—'}</span>
                     </div>
                 `).join('');
             } else {
                 itemsHtml = sectionData.items.map(item => `
                     <div class="info-item">
                         <span class="info-label">${item.key}</span>
-                        <span class="info-value">${item.value}</span>
+                        <span class="info-value">${item.value || ''}${item.validity ? ' (valid: ' + item.validity + ')' : ''}</span>
                     </div>
                 `).join('');
             }
@@ -728,14 +628,19 @@
     }
 
     // ==========================================================================
-    // MAIN: Initialize with debugging
+    // MAIN: Initialize with proper state management
     // ==========================================================================
     document.addEventListener('DOMContentLoaded', () => {
         const select = document.getElementById('checklist-type');
         const renderer = new ChecklistRenderer();
 
+        // Clear any cached data
+        sessionStorage.removeItem('lastSheetData');
+
         async function loadChecklistForType(type) {
             const container = document.getElementById('checklist-container');
+            
+            // Clear container immediately to prevent showing old data
             container.innerHTML = '<div class="loading-state">⏳ Loading data from sheet...</div>';
             
             try {
@@ -744,26 +649,29 @@
                     throw new Error(`No sheet configured for type: ${type}`);
                 }
                 
-                console.log(`Attempting to load sheet: ${sheetName} for type: ${type}`);
+                console.log(`Loading ${sheetName} for ${type}...`);
                 const rows = await fetchSheetData(sheetName);
                 console.log(`Loaded ${rows.length} rows from ${sheetName}`);
                 
                 if (rows.length === 0) {
                     container.innerHTML = `<div style="background:#fff3e0; padding:2rem; border-radius:32px; color:#a00; text-align:center;">
-                        ⚠️ Sheet <strong>${sheetName}</strong> is empty. Please add data with columns: section, key, value, validity
+                        ⚠️ Sheet <strong>${sheetName}</strong> is empty.<br>
+                        Please add data with columns: section, key, value, validity
                     </div>`;
                     return;
                 }
                 
+                // Load the data into renderer (this overwrites previous data)
                 renderer.loadChecklist(type, rows);
                 
                 // Update URL
                 history.pushState({ type }, '', `?type=${type}`);
             } catch (error) {
-                console.error(error);
+                console.error(`Error loading ${type}:`, error);
                 container.innerHTML = `<div style="background:#fff0f0; padding:2rem; border-radius:32px; color:#b33; text-align:center;">
-                    ❌ Error loading sheet: ${error.message}<br>
-                    <small>Make sure the sheet <strong>${SHEET_CONFIG.sheets[type]}</strong> exists and is published</small>
+                    ❌ Error loading sheet <strong>${SHEET_CONFIG.sheets[type]}</strong><br>
+                    ${error.message}<br>
+                    <small>Make sure the sheet exists and is published</small>
                 </div>`;
             }
         }
@@ -776,9 +684,11 @@
         // Load initial checklist
         loadChecklistForType(initialType);
 
-        // Handle selection change
+        // Handle selection change - THIS IS KEY: always load new data
         select.addEventListener('change', (e) => {
-            loadChecklistForType(e.target.value);
+            const newType = e.target.value;
+            console.log(`Selection changed to: ${newType}`);
+            loadChecklistForType(newType);
         });
 
         // Handle browser back/forward
