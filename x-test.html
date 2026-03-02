@@ -5,89 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checklist · live from Google Sheets</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #f0f5fa;
+        /* ALL STYLES ARE NAMESPACED UNDER .checklist-wrapper TO PREVENT CONFLICTS */
+        .checklist-wrapper {
+            --cl-primary: #1a3e5c;
+            --cl-primary-dark: #0f2d44;
+            --cl-secondary: #2c4b6e;
+            --cl-light: #f0f5fa;
+            --cl-border: #c5d5e8;
+            --cl-success: #1e7e34;
             font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
             line-height: 1.5;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            
-        }
-
-        #site-header {
-            background: linear-gradient(135deg, #1a3e5c 0%, #0f2d44 100%);
-            color: white;
-            padding: 1rem 2rem;
-            box-shadow: 0 4px 12px rgba(0,20,30,0.2);
-        }
-
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .logo h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-
-        .logo small {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-left: 0.5rem;
-        }
-
-        .header-links a {
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            background: rgba(255,255,255,0.1);
-            transition: 0.2s;
-        }
-        .header-links a:hover { background: rgba(255,255,255,0.2); }
-
-        #site-footer {
-            background: #1e3a5f;
-            color: #ccddee;
-            padding: 1.5rem;
-            text-align: center;
-            margin-top: 2rem;
-            border-top: 3px solid #2c4b6e;
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        main {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-            flex: 1;
-            width: 100%;
+            color: #1d3f5e;
         }
 
         /* navigation */
-        .checklist-nav {
+        .checklist-wrapper .checklist-nav {
             background: white;
             padding: 1.2rem 2rem;
             border-radius: 50px;
@@ -97,22 +29,22 @@
             gap: 2rem;
             align-items: center;
             flex-wrap: wrap;
-            border: 1px solid #d0dfef;
+            border: 1px solid var(--cl-border);
         }
 
-        .checklist-nav label {
+        .checklist-wrapper .checklist-nav label {
             font-weight: 600;
-            color: #1a3e5c;
+            color: var(--cl-primary);
             font-size: 1.1rem;
         }
 
-        .checklist-nav select {
+        .checklist-wrapper .checklist-nav select {
             padding: 0.7rem 3rem 0.7rem 1.5rem;
-            border: 2px solid #1a3e5c;
+            border: 2px solid var(--cl-primary);
             border-radius: 40px;
             font-size: 1rem;
             font-weight: 500;
-            color: #1a3e5c;
+            color: var(--cl-primary);
             background: white;
             cursor: pointer;
             appearance: none;
@@ -123,9 +55,9 @@
             min-width: 280px;
         }
 
-        .checklist-badge {
+        .checklist-wrapper .checklist-badge {
             background: #e9eff7;
-            color: #1a3e5c;
+            color: var(--cl-primary);
             padding: 0.4rem 1.2rem;
             border-radius: 30px;
             font-size: 0.9rem;
@@ -134,17 +66,17 @@
         }
 
         /* main card */
-        .checklist-card {
+        .checklist-wrapper .checklist-card {
             background: white;
             border-radius: 32px;
             box-shadow: 0 20px 40px rgba(0,30,50,0.15);
             padding: 2rem;
-            border: 1px solid #c5d5e8;
+            border: 1px solid var(--cl-border);
             margin-bottom: 2rem;
         }
 
-        .card-header {
-            border-bottom: 4px solid #1a3e5c;
+        .checklist-wrapper .card-header {
+            border-bottom: 4px solid var(--cl-primary);
             padding-bottom: 1.5rem;
             margin-bottom: 2rem;
             display: flex;
@@ -154,22 +86,22 @@
             gap: 1.5rem;
         }
 
-        .header-title h1 {
+        .checklist-wrapper .header-title h1 {
             font-size: 2.4rem;
             font-weight: 700;
-            color: #1a3e5c;
+            color: var(--cl-primary);
             line-height: 1.2;
             margin-bottom: 0.5rem;
         }
 
-        .station-name {
+        .checklist-wrapper .station-name {
             font-size: 1.3rem;
-            color: #2c4b6e;
+            color: var(--cl-secondary);
             font-weight: 500;
             margin-bottom: 0.5rem;
         }
 
-        .verification-info {
+        .checklist-wrapper .verification-info {
             display: flex;
             gap: 2rem;
             color: #3e5f7e;
@@ -180,8 +112,8 @@
             display: inline-flex;
         }
 
-        .print-btn {
-            background: #1a3e5c;
+        .checklist-wrapper .print-btn {
+            background: var(--cl-primary);
             border: none;
             color: white;
             font-weight: 600;
@@ -196,14 +128,14 @@
             gap: 10px;
             border: 1px solid rgba(255,255,255,0.2);
         }
-        .print-btn:hover {
-            background: #0f2d44;
+        .checklist-wrapper .print-btn:hover {
+            background: var(--cl-primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(26,62,92,0.4);
         }
 
         /* sections */
-        .checklist-section {
+        .checklist-wrapper .checklist-section {
             background: #f9fcff;
             border-radius: 24px;
             padding: 1.5rem;
@@ -211,10 +143,10 @@
             border: 1px solid #d6e4f0;
         }
 
-        .section-title {
+        .checklist-wrapper .section-title {
             font-size: 1.4rem;
             font-weight: 700;
-            color: #1a3e5c;
+            color: var(--cl-primary);
             margin-bottom: 1.2rem;
             padding-bottom: 0.6rem;
             border-bottom: 3px solid #b8cee8;
@@ -223,8 +155,8 @@
             gap: 12px;
             flex-wrap: wrap;
         }
-        .section-title .badge {
-            background: #1a3e5c;
+        .checklist-wrapper .section-title .badge {
+            background: var(--cl-primary);
             color: white;
             font-size: 0.8rem;
             padding: 0.2rem 1.2rem;
@@ -233,56 +165,70 @@
         }
 
         /* MULTI‑COLUMN LAYOUTS – paper saving */
-        .grid-2col {
+        .checklist-wrapper .grid-2col {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 0.8rem 2rem;
         }
-        .grid-3col {
+        .checklist-wrapper .grid-3col {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 0.8rem 2rem;
         }
-        .grid-4col {
+        .checklist-wrapper .grid-4col {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 0.8rem 1.5rem;
         }
 
-        /* items */
-        .info-item {
+        /* items - MODIFIED to show blank values */
+        .checklist-wrapper .info-item {
             display: flex;
             align-items: baseline;
             gap: 10px;
             padding: 0.4rem 0;
             border-bottom: 1px dotted #b8cee8;
         }
-        .info-label {
+        .checklist-wrapper .info-label {
             font-weight: 600;
-            color: #1a3e5c;
+            color: var(--cl-primary);
             min-width: 120px;
             font-size: 0.95rem;
         }
-        .info-value {
+        .checklist-wrapper .info-value {
             color: #1d3f5e;
             font-size: 0.95rem;
             word-break: break-word;
+            min-height: 1.2em; /* Ensures visibility even when empty */
+        }
+        /* Style for empty values */
+        .checklist-wrapper .info-value:empty::before {
+            content: "—";
+            color: #9aaec5;
+            font-style: italic;
+        }
+        .checklist-wrapper .info-value:blank::before {
+            content: "—";
+            color: #9aaec5;
+            font-style: italic;
         }
 
-        .facility-item, .safety-item {
+        .checklist-wrapper .facility-item, 
+        .checklist-wrapper .safety-item {
             display: flex;
             align-items: center;
             gap: 8px;
             padding: 0.4rem 0;
             border-bottom: 1px dotted #a0b6ce;
         }
-        .facility-item span:first-child, .safety-item span:first-child {
+        .checklist-wrapper .facility-item span:first-child, 
+        .checklist-wrapper .safety-item span:first-child {
             font-size: 0.95rem;
             color: #152b3b;
             flex: 1;
         }
-        .facility-status {
-            background: #1a3e5c;
+        .checklist-wrapper .facility-status {
+            background: var(--cl-primary);
             color: white;
             font-size: 0.7rem;
             font-weight: 700;
@@ -291,10 +237,15 @@
             white-space: nowrap;
             text-transform: uppercase;
         }
-        .facility-status.available { background: #1e7e34; }
+        .checklist-wrapper .facility-status.available { background: var(--cl-success); }
+        /* Style for empty status */
+        .checklist-wrapper .facility-status:empty::before {
+            content: "—";
+            color: #9aaec5;
+        }
 
-        /* tables (used only when needed) */
-        .data-table {
+        /* tables */
+        .checklist-wrapper .data-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.95rem;
@@ -302,22 +253,22 @@
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-        .data-table th {
-            background: #1a3e5c;
+        .checklist-wrapper .data-table th {
+            background: var(--cl-primary);
             color: white;
             padding: 0.8rem 1rem;
             text-align: left;
             font-weight: 600;
             font-size: 0.9rem;
         }
-        .data-table td {
+        .checklist-wrapper .data-table td {
             padding: 0.7rem 1rem;
             border-bottom: 1px solid #dde6f0;
             background: white;
         }
 
         /* recommendation */
-        .recommendation-box {
+        .checklist-wrapper .recommendation-box {
             background: linear-gradient(145deg, #e4edf7, #d2e2f2);
             border-radius: 24px;
             padding: 1.5rem;
@@ -326,26 +277,26 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 2rem;
-            border-left: 10px solid #1a3e5c;
+            border-left: 10px solid var(--cl-primary);
         }
-        .recommendation-item {
+        .checklist-wrapper .recommendation-item {
             text-align: center;
             min-width: 140px;
         }
-        .recommendation-label {
+        .checklist-wrapper .recommendation-label {
             font-size: 0.8rem;
-            color: #2c4b6e;
+            color: var(--cl-secondary);
             text-transform: uppercase;
             font-weight: 600;
         }
-        .recommendation-value {
+        .checklist-wrapper .recommendation-value {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #1a3e5c;
+            color: var(--cl-primary);
         }
 
         /* officer signatures */
-        .officer-section {
+        .checklist-wrapper .officer-section {
             margin-top: 2rem;
             display: flex;
             justify-content: space-between;
@@ -354,75 +305,87 @@
             flex-wrap: wrap;
             gap: 2rem;
         }
-        .officer-signature {
+        .checklist-wrapper .officer-signature {
             text-align: center;
             min-width: 250px;
         }
-        .officer-title {
+        .checklist-wrapper .officer-title {
             font-weight: 700;
-            color: #1a3e5c;
+            color: var(--cl-primary);
             margin-bottom: 0.8rem;
             font-size: 1.1rem;
         }
-        .officer-line {
+        .checklist-wrapper .officer-line {
             width: 250px;
             height: 2px;
-            border-bottom: 3px dotted #1a3e5c;
+            border-bottom: 3px dotted var(--cl-primary);
             margin: 0.8rem auto;
         }
-        .officer-signature small { color: #3e5f7e; }
+        .checklist-wrapper .officer-signature small { color: #3e5f7e; }
 
         /* loading / print */
-        .loading-state { text-align: center; padding: 4rem; color: #1a3e5c; }
+        .checklist-wrapper .loading-state { 
+            text-align: center; 
+            padding: 4rem; 
+            color: var(--cl-primary); 
+        }
+        
         @media print {
-            #site-header, #site-footer, .checklist-nav, .print-btn, .header-links, .checklist-badge, .go-to-top {
+            .checklist-wrapper .checklist-nav, 
+            .checklist-wrapper .print-btn, 
+            .checklist-wrapper .checklist-badge {
                 display: none !important;
             }
-            .checklist-card { box-shadow: none; border: none; padding: 0; }
-            .facility-status, .data-table th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .checklist-wrapper .checklist-card { 
+                box-shadow: none; 
+                border: none; 
+                padding: 0; 
+            }
+            .checklist-wrapper .facility-status, 
+            .checklist-wrapper .data-table th { 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+            }
         }
+        
         @media (max-width: 700px) {
-            .grid-2col, .grid-3col, .grid-4col { grid-template-columns: 1fr; }
+            .checklist-wrapper .grid-2col,
+            .checklist-wrapper .grid-3col,
+            .checklist-wrapper .grid-4col { 
+                grid-template-columns: 1fr; 
+            }
         }
-
-        .go-to-top {
-            position: fixed; bottom: 30px; right: 30px; background: #1a3e5c; color: white;
-            width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            font-size: 1.5rem; transition: 0.3s; z-index: 100;
-        }
-        .go-to-top:hover { background: #0f2d44; transform: translateY(-5px); }
     </style>
 </head>
 <body>
-<div id="site-header">
-    <div class="header-content">
-        <div class="logo"><h1>📋 SARAT OFFICE <small>live from sheets</small></h1></div>
-        <div class="header-links"><a href="#">Dashboard</a><a href="#">All</a><a href="#">Reports</a></div>
-    </div>
+<!-- Your existing header/footer can stay outside the wrapper -->
+<div id="site-header" style="background: #1a3e5c; color: white; padding: 1rem;">
+    <!-- your existing header content -->
 </div>
 
 <main>
-    <div class="checklist-nav">
-        <label for="checklist-type">📋 Select Checklist:</label>
-        <select id="checklist-type">
-            <option value="hsd-renewal">⛽ HSD Renewal (hsd_data)</option>
-            <option value="fps-checklist">🛒 FPS (fps_data)</option>
-            <option value="ppc-checklist">🏭 PPC (ppc_data)</option>
-            <option value="rice-mill">🌾 Rice Mill (rice_mill_data)</option>
-            <option value="kerosene">🛢️ Kerosene Dealer</option>
-            <option value="lpg">🔥 LPG Distributor</option>
-        </select>
-        <span class="checklist-badge" id="checklist-type-badge">HSD Renewal</span>
-    </div>
+    <!-- ALL CHECKLIST CONTENT IS WRAPPED IN .checklist-wrapper -->
+    <div class="checklist-wrapper">
+        <div class="checklist-nav">
+            <label for="checklist-type">📋 Select Checklist:</label>
+            <select id="checklist-type">
+                <option value="hsd-renewal">⛽ HSD Renewal (hsd_data)</option>
+                <option value="fps-checklist">🛒 FPS (fps_data)</option>
+                <option value="ppc-checklist">🏭 PPC (ppc_data)</option>
+                <option value="rice-mill">🌾 Rice Mill (rice_mill_data)</option>
+                <option value="kerosene">🛢️ Kerosene Dealer</option>
+                <option value="lpg">🔥 LPG Distributor</option>
+            </select>
+            <span class="checklist-badge" id="checklist-type-badge">HSD Renewal</span>
+        </div>
 
-    <div id="checklist-container"><div class="loading-state">⏳ Loading data from Google Sheet …</div></div>
+        <div id="checklist-container"><div class="loading-state">⏳ Loading data from Google Sheet …</div></div>
+    </div>
 </main>
 
-<div id="site-footer">
-    <div class="footer-content"><span>© 2025 Sarat Office · Data from Google Sheets</span><span>Version 4.1 · fixed CSV fetch</span></div>
+<div id="site-footer" style="background: #1e3a5f; color: #ccddee; padding: 1.5rem; margin-top: 2rem;">
+    <!-- your existing footer content -->
 </div>
-<a href="#" class="go-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'}); return false;">↑</a>
 
 <script>
     // ==========================================================================
@@ -509,6 +472,7 @@
 
     // ==========================================================================
     // Build checklist object from sheet rows
+    // MODIFIED: Always include key even if value is empty
     // ==========================================================================
     function buildChecklistFromRows(rows) {
         if (!rows || rows.length === 0) return null;
@@ -526,7 +490,7 @@
         rows.forEach(row => {
             const section = (row.section || '').trim().toLowerCase();
             const key = (row.key || '').trim();
-            const value = (row.value || '').trim();
+            const value = (row.value || '').trim(); // Keep empty string if no value
             const validity = (row.validity || '').trim();
             
             if (!section || !key) return;
@@ -534,7 +498,7 @@
             if (section === 'metadata') {
                 output.metadata[key] = value;
             } else if (section === 'particulars') {
-                output.particulars[key] = value;
+                output.particulars[key] = value; // Will be empty string if no value
             } else if (section === 'facilities') {
                 output.facilities.push({ name: key, status: value });
             } else if (section === 'safety') {
@@ -639,7 +603,8 @@
             const p = this.data.particulars || {};
             const items = [];
             for (let [key, val] of Object.entries(p)) {
-                if (val) items.push(`<div class="info-item"><span class="info-label">${key}</span><span class="info-value">${val}</span></div>`);
+                // Always show the item, even if val is empty string
+                items.push(`<div class="info-item"><span class="info-label">${key}</span><span class="info-value">${val}</span></div>`);
             }
             return `
                 <div class="checklist-section">
