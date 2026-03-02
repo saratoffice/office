@@ -3,204 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HSD/Lubricant License Renewal Report</title>
+    <title>HSD Data - Google Sheets View</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f5f5f5;
             padding: 10px;
         }
-
-        .container {
-            max-width: 100%;
-            margin: 0 auto;
-        }
-
+        .container { max-width: 100%; margin: 0 auto; }
         .header {
-            background: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 4px 4px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: #4CAF50; color: white; padding: 10px 15px;
+            border-radius: 4px 4px 0 0; display: flex; justify-content: space-between;
         }
-
-        .header h1 {
-            font-size: 18px;
-            font-weight: 500;
-        }
-
         .controls {
-            background: #fff;
-            padding: 10px 15px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
+            background: #fff; padding: 10px 15px; display: flex; gap: 10px;
+            flex-wrap: wrap; align-items: center; border-bottom: 1px solid #ddd;
         }
-
         .search-box {
-            flex: 1;
-            min-width: 200px;
-            padding: 6px 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 13px;
+            flex: 1; min-width: 200px; padding: 8px 12px;
+            border: 1px solid #ddd; border-radius: 4px; font-size: 14px;
         }
-
-        .search-box:focus {
-            outline: none;
-            border-color: #4CAF50;
-        }
-
         .btn {
-            padding: 6px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 13px;
-            cursor: pointer;
-            background: #f8f8f8;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+            padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px;
+            font-size: 14px; cursor: pointer; background: #f8f8f8;
+            display: inline-flex; align-items: center; gap: 5px;
         }
-
-        .btn:hover {
-            background: #e8e8e8;
-        }
-
-        .btn-primary {
-            background: #4CAF50;
-            color: white;
-            border-color: #4CAF50;
-        }
-
-        .btn-primary:hover {
-            background: #45a049;
-        }
-
+        .btn-primary { background: #4CAF50; color: white; border-color: #4CAF50; }
+        .btn-primary:hover { background: #45a049; }
         .stats {
-            background: #fff;
-            padding: 8px 15px;
-            font-size: 12px;
-            color: #666;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            justify-content: space-between;
+            background: #fff; padding: 8px 15px; font-size: 13px;
+            color: #666; border-bottom: 1px solid #ddd;
+            display: flex; justify-content: space-between;
         }
-
-        /* Google Sheets like table - NO SCROLLBAR, FULL VISIBILITY */
         .gsheet-container {
-            background: white;
-            overflow: visible; /* Remove scrollbars */
-            border: 1px solid #ddd;
+            background: white; overflow: visible;
+            border: 1px solid #ddd; min-height: 200px;
         }
-
         table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: auto; /* Auto column width like Google Sheets */
-            font-size: 13px;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            width: 100%; border-collapse: collapse;
+            table-layout: auto; font-size: 13px;
         }
-
         th {
-            background: #f8f9fa;
-            color: #333;
-            font-weight: 600;
-            padding: 8px 10px;
-            text-align: left;
-            border-bottom: 2px solid #ddd;
-            border-right: 1px solid #ddd;
-            white-space: nowrap;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            background: #f8f9fa; color: #333; font-weight: 600;
+            padding: 10px; text-align: left; border-bottom: 2px solid #ddd;
+            border-right: 1px solid #ddd; position: sticky; top: 0;
         }
-
         td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #ddd;
-            border-right: 1px solid #eee;
-            color: #333;
-            white-space: normal; /* Allow text wrapping if needed */
-            word-break: break-word;
+            padding: 8px 10px; border-bottom: 1px solid #ddd;
+            border-right: 1px solid #eee; color: #333;
         }
-
-        /* Column width adjustments - like Google Sheets auto-width */
-        th:first-child, td:first-child {
-            padding-left: 12px;
+        tbody tr:nth-child(even) { background-color: #f9f9f9; }
+        tbody tr:hover { background-color: #f0f9ff; }
+        
+        /* Debug panel */
+        .debug-panel {
+            background: #1e1e1e; color: #00ff00; padding: 15px;
+            font-family: monospace; font-size: 12px; margin-top: 10px;
+            border-radius: 4px; max-height: 200px; overflow: auto;
         }
-
-        /* Row striping like Google Sheets */
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .error-box {
+            background: #ffebee; color: #c62828; padding: 20px;
+            border: 1px solid #ffcdd2; border-radius: 4px; margin: 10px 0;
         }
-
-        tbody tr:hover {
-            background-color: #f0f9ff;
-        }
-
-        /* Google Sheets column headers style */
-        th::after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: 1px;
-            background: #ddd;
-        }
-
-        th:last-child::after {
-            display: none;
-        }
-
-        /* Loading and error states */
         .loading {
-            text-align: center;
-            padding: 30px;
-            color: #666;
-            background: white;
-            border: 1px solid #ddd;
+            text-align: center; padding: 40px; color: #666;
         }
-
-        .error {
-            background: #ffebee;
-            color: #c62828;
-            padding: 15px;
-            border: 1px solid #ffcdd2;
-            margin: 10px 0;
-        }
-
         .footer {
-            text-align: center;
-            margin-top: 10px;
-            color: #666;
-            font-size: 11px;
-            padding: 5px;
-        }
-
-        .badge {
-            background: #e3f2fd;
-            color: #1976d2;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 11px;
-        }
-
-        /* Responsive adjustments */
-        @media print {
-            body { background: white; }
-            .controls, .footer { display: none; }
+            text-align: center; margin-top: 10px; color: #666;
+            font-size: 11px; padding: 5px;
         }
     </style>
 </head>
@@ -208,146 +79,191 @@
     <div class="container">
         <div class="header">
             <h1>📊 hsd_data - Google Sheets View</h1>
-            <div class="btn" onclick="window.print()">🖨️ Print</div>
+            <div>
+                <span id="connectionStatus" style="font-size: 12px; margin-right: 10px;">⚪ Checking...</span>
+                <button class="btn" style="background: rgba(255,255,255,0.2);" onclick="window.print()">🖨️</button>
+            </div>
         </div>
 
         <div class="controls">
             <input type="text" class="search-box" id="searchInput" 
-                   placeholder="🔍 Search in sheet... (min 2 characters)" 
-                   onkeyup="filterTable()">
-            <button class="btn btn-primary" onclick="loadData()" id="refreshBtn">
+                   placeholder="🔍 Search in sheet..." disabled>
+            <button class="btn btn-primary" onclick="loadData()" id="refreshBtn" disabled>
                 🔄 Refresh
             </button>
-            <button class="btn" onclick="exportToCSV()" id="exportBtn">
-                📥 Download CSV
+            <button class="btn" onclick="exportToCSV()" id="exportBtn" disabled>
+                📥 Download
             </button>
-            <button class="btn" onclick="copyToClipboard()" id="copyBtn">
-                                📋 Copy
+            <button class="btn" onclick="testConnection()" id="testBtn">
+                🔌 Test Connection
             </button>
         </div>
 
         <div class="stats">
-            <span id="statsInfo">Loading sheet data...</span>
+            <span id="statsInfo">Initializing...</span>
             <span id="lastUpdate"></span>
         </div>
 
-        <!-- Google Sheets like container - NO SCROLLBAR -->
         <div class="gsheet-container" id="gsheetContainer">
-            <table id="data-table">
-                <thead id="table-header">
-                    <tr>
-                        <th>Loading...</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                    <tr>
-                        <td colspan="10">
-                            <div class="loading">
-                                <div>⏳ Loading data from Google Sheets...</div>
-                                <small>Please wait</small>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
+            <div id="errorDisplay"></div>
+            <table id="data-table" style="display: none;">
+                <thead id="table-header"></thead>
+                <tbody id="table-body"></tbody>
             </table>
         </div>
 
+        <!-- Debug Panel -->
+        <div class="debug-panel" id="debugPanel">
+            [Debug Console] Ready. Click "Test Connection" to start...
+        </div>
+
         <div class="footer">
-            ⚡ Showing full sheet - no scroll | Data from hsd_data | Auto-refresh every 5 min
+            Showing full sheet - no scroll | Data from hsd_data
         </div>
     </div>
 
     <script>
-        // Replace with your web app URL
-        const API_URL = 'https://script.google.com/macros/s/AKfycbw8ddl3jN_pf4rRsvyBv4MLguF-KlQ4qEjMTXd0Fq5PR8uV53KsLobre00YiluF-ama/exec';
+        // IMPORTANT: Replace with your NEW deployment URL
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxp6oV50zBNNc97TrUC1-NtU66UhahQ06CqmT_Z4E__8P0Be-THOkUgOSrYl-4nqJQ1/exec';
         
         let allData = [];
         let headers = [];
         
-        // Load data when page loads
-        document.addEventListener('DOMContentLoaded', loadData);
-        
-        // Auto-refresh every 5 minutes
-        setInterval(loadData, 300000);
+        function log(message) {
+            const panel = document.getElementById('debugPanel');
+            panel.innerHTML += `\n[${new Date().toLocaleTimeString()}] ${message}`;
+            panel.scrollTop = panel.scrollHeight;
+            console.log(message);
+        }
 
-        async function loadData() {
-            const refreshBtn = document.getElementById('refreshBtn');
-            const tableBody = document.getElementById('table-body');
-            const statsInfo = document.getElementById('statsInfo');
+        function updateConnectionStatus(status, color) {
+            document.getElementById('connectionStatus').innerHTML = status;
+            document.getElementById('connectionStatus').style.color = color;
+        }
+
+        async function testConnection() {
+            log('🧪 Testing connection to API...');
+            updateConnectionStatus('⏳ Testing...', 'orange');
             
             try {
-                refreshBtn.disabled = true;
-                refreshBtn.innerHTML = '⏳ Loading...';
+                // Test 1: Can we reach the URL?
+                log('📍 Attempting to fetch: ' + API_URL);
                 
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="10" style="padding: 30px; text-align: center; background: #f9f9f9;">
-                            <div>⏳ Loading data from Google Sheets...</div>
-                            <small style="color: #666;">Fetching ${API_URL}</small>
-                        </td>
-                    </tr>
-                `;
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
                 
-                const response = await fetch(API_URL);
+                const response = await fetch(API_URL, {
+                    method: 'GET',
+                    mode: 'cors',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                log('✅ Response received! Status: ' + response.status);
+                updateConnectionStatus('✅ Connected', '#4CAF50');
+                
+                // Test 2: Can we parse the response?
+                const text = await response.text();
+                log('📦 Response length: ' + text.length + ' characters');
+                log('📄 First 100 chars: ' + text.substring(0, 100));
+                
+                try {
+                    const data = JSON.parse(text);
+                    log('✅ JSON parsed successfully');
+                    
+                    if (data.error) {
+                        log('❌ API returned error: ' + data.message);
+                        showError('API Error: ' + data.message);
+                    } else {
+                        log('✅ API is working! Ready to load data.');
+                        enableControls();
+                        loadData();
+                    }
+                    
+                } catch (e) {
+                    log('❌ Failed to parse JSON: ' + e.message);
+                    showError('Invalid JSON response. Check API deployment.');
+                }
+                
+            } catch (error) {
+                log('❌ Connection failed: ' + error.message);
+                updateConnectionStatus('❌ Failed', '#f44336');
+                
+                if (error.name === 'AbortError') {
+                    showError('Connection timeout - API not responding');
+                } else {
+                    showError('Failed to connect: ' + error.message);
+                }
+            }
+        }
+
+        function enableControls() {
+            document.getElementById('searchInput').disabled = false;
+            document.getElementById('refreshBtn').disabled = false;
+            document.getElementById('exportBtn').disabled = false;
+        }
+
+        function showError(message) {
+            document.getElementById('errorDisplay').innerHTML = `
+                <div class="error-box">
+                    <strong>❌ ${message}</strong><br><br>
+                    <button class="btn" onclick="testConnection()">Try Test Connection Again</button>
+                    <button class="btn" onclick="window.open('${API_URL}')">Open API in New Tab</button>
+                </div>
+            `;
+            document.getElementById('data-table').style.display = 'none';
+        }
+
+        async function loadData() {
+            log('📊 Loading data from API...');
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
                 const result = await response.json();
+                log('✅ Data loaded successfully');
                 
                 if (result.error) {
                     throw new Error(result.message || result.error);
                 }
                 
-                // Handle both response formats
-                let data;
-                let metadata = {};
-                
-                if (result.data) {
-                    data = result.data;
-                    metadata = result.metadata || {};
-                } else {
-                    data = result;
-                }
+                // Handle response format
+                let data = result.data || result;
                 
                 if (!Array.isArray(data)) {
-                    throw new Error('Invalid data format');
+                    throw new Error('Data is not an array');
                 }
                 
                 allData = data;
                 
-                // Update stats
                 if (data.length > 0) {
                     headers = Object.keys(data[0]);
-                    statsInfo.innerHTML = `📊 hsd_data: ${data.length} rows × ${headers.length} columns`;
+                    log(`📋 Found ${headers.length} columns, ${data.length} rows`);
+                    document.getElementById('statsInfo').innerHTML = 
+                        `📊 hsd_data: ${data.length} rows × ${headers.length} columns`;
                     
-                    if (metadata.totalRows) {
-                        statsInfo.innerHTML += ` (${metadata.totalRows-1} data rows)`;
-                    }
+                    document.getElementById('errorDisplay').innerHTML = '';
+                    document.getElementById('data-table').style.display = 'table';
+                    generateSheetTable(data);
                 } else {
-                    statsInfo.innerHTML = '📊 hsd_data: Empty sheet';
+                    log('⚠️ No data in sheet');
+                    document.getElementById('statsInfo').innerHTML = '📊 No data found';
                 }
                 
                 document.getElementById('lastUpdate').innerHTML = 
                     `Updated: ${new Date().toLocaleTimeString()}`;
                 
-                // Generate the Google Sheets style table
-                generateSheetTable(data);
-                
             } catch (error) {
-                console.error('Error:', error);
-                
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="10" style="padding: 20px;">
-                            <div class="error">
-                                ❌ Error: ${error.message}<br><br>
-                                <button class="btn btn-primary" onclick="loadData()">Try Again</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                
-                statsInfo.innerHTML = '❌ Failed to load';
-            } finally {
-                refreshBtn.disabled = false;
-                refreshBtn.innerHTML = '🔄 Refresh';
+                log('❌ Load failed: ' + error.message);
+                showError(error.message);
             }
         }
 
@@ -356,80 +272,69 @@
             const tableBody = document.getElementById('table-body');
             
             if (data.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="10" style="padding: 30px; text-align: center;">No data in sheet</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="10" style="padding: 30px; text-align: center;">No data</td></tr>';
                 return;
             }
             
-            // Generate headers exactly as they appear in Google Sheets
+            // Headers
             let headerHtml = '<tr>';
             headers.forEach(header => {
-                // Keep original header format (don't transform)
                 const displayHeader = header.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                headerHtml += `<th title="${displayHeader}">${displayHeader}</th>`;
+                headerHtml += `<th>${displayHeader}</th>`;
             });
             headerHtml += '</tr>';
             tableHeader.innerHTML = headerHtml;
             
-            // Generate rows
+            // Body
             let bodyHtml = '';
-            data.forEach((row, index) => {
+            data.forEach(row => {
                 bodyHtml += '<tr>';
                 headers.forEach(header => {
                     let value = row[header] !== undefined && row[header] !== null ? row[header] : '';
-                    
-                    // Format based on content type (keep original formatting)
-                    if (typeof value === 'boolean') {
-                        value = value ? '✓' : '✗';
-                    } else if (value instanceof Date) {
-                        value = value.toLocaleDateString();
-                    } else if (typeof value === 'number') {
-                        // Keep number formatting
-                        if (Number.isInteger(value)) {
-                            value = value.toString();
-                        } else {
-                            value = value.toFixed(2);
-                        }
-                    } else if (typeof value === 'string') {
-                        // Check for dates in string format
-                        if (value.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                            value = value;
-                        }
-                        // Check for emails
-                        else if (value.includes('@') && value.includes('.')) {
-                            value = `<a href="mailto:${value}" style="color: #1a73e8; text-decoration: none;">${value}</a>`;
-                        }
-                        // Check for URLs
-                        else if (value.startsWith('http')) {
-                            value = `<a href="${value}" target="_blank" style="color: #1a73e8; text-decoration: none;">${value}</a>`;
-                        }
-                    }
-                    
-                    bodyHtml += `<td title="${value.toString().replace(/"/g, '&quot;')}">${value}</td>`;
+                    bodyHtml += `<td>${value}</td>`;
                 });
                 bodyHtml += '</tr>';
             });
             
             tableBody.innerHTML = bodyHtml;
-            
-            // Auto-adjust column widths (like Google Sheets)
-            adjustColumnWidths();
         }
 
-        function adjustColumnWidths() {
-            const table = document.getElementById('data-table');
-            if (!table) return;
+        function exportToCSV() {
+            if (allData.length === 0) {
+                alert('No data to export');
+                return;
+            }
             
-            // Let the browser handle column widths automatically
-            // This is similar to how Google Sheets auto-sizes columns
+            let csvContent = headers.join(',') + '\n';
+            
+            allData.forEach(row => {
+                const rowData = headers.map(header => {
+                    let value = row[header] || '';
+                    value = String(value).replace(/"/g, '""');
+                    return `"${value}"`;
+                });
+                csvContent += rowData.join(',') + '\n';
+            });
+            
+            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `hsd_data_${new Date().toISOString().slice(0,10)}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         }
 
         function filterTable() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             
-            if (searchTerm.length < 2) {
+            if (searchTerm.length < 2 || allData.length === 0) {
                 generateSheetTable(allData);
-                document.getElementById('statsInfo').innerHTML = 
-                    `📊 Showing all ${allData.length} rows`;
                 return;
             }
             
@@ -442,69 +347,14 @@
             
             generateSheetTable(filteredData);
             document.getElementById('statsInfo').innerHTML = 
-                `🔍 Found ${filteredData.length} matches (from ${allData.length} total rows)`;
+                `🔍 Found ${filteredData.length} matches (from ${allData.length} total)`;
         }
 
-        function exportToCSV() {
-            if (allData.length === 0) {
-                alert('No data to export');
-                return;
-            }
-            
-            try {
-                let csvContent = headers.join(',') + '\n';
-                
-                allData.forEach(row => {
-                    const rowData = headers.map(header => {
-                        let value = row[header] || '';
-                        value = String(value).replace(/"/g, '""');
-                        return `"${value}"`;
-                    });
-                    csvContent += rowData.join(',') + '\n';
-                });
-                
-                const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
-                const link = document.createElement('a');
-                const url = URL.createObjectURL(blob);
-                
-                link.setAttribute('href', url);
-                link.setAttribute('download', `hsd_data_${new Date().toISOString().slice(0,10)}.csv`);
-                link.style.visibility = 'hidden';
-                
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-                
-            } catch (error) {
-                alert('Export failed: ' + error.message);
-            }
-        }
-
-        function copyToClipboard() {
-            if (allData.length === 0) {
-                alert('No data to copy');
-                return;
-            }
-            
-            try {
-                let textContent = headers.join('\t') + '\n';
-                
-                allData.forEach(row => {
-                    const rowData = headers.map(header => row[header] || '');
-                    textContent += rowData.join('\t') + '\n';
-                });
-                
-                navigator.clipboard.writeText(textContent).then(() => {
-                    alert('✅ Copied to clipboard!');
-                }).catch(() => {
-                    alert('❌ Copy failed');
-                });
-                
-            } catch (error) {
-                alert('Copy failed: ' + error.message);
-            }
-        }
+        // Auto-run test on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🔌 Page loaded, testing connection...');
+            testConnection();
+        });
     </script>
 </body>
 </html>
