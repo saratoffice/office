@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HSD · licence inspector (structured view)</title>
+    <title>HSD · licence inspector (live sheet)</title>
     <!-- Font Awesome 6 (free) for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -101,6 +101,19 @@
         .print-btn:hover {
             background: #0f3b5e;
             box-shadow: 0 6px 14px rgba(0,55,100,0.3);
+        }
+
+        .loading-indicator {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 40px;
+            color: #1f4e7a;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
 
         /* info panel – dynamic cards */
@@ -206,7 +219,7 @@
         /* print styles: minimal margin, no extra header/footer */
         @media print {
             body { background: white; padding: 0.3in; }
-            .selector-wrap, .print-btn { display: none; }
+            .selector-wrap, .print-btn, .loading-indicator { display: none; }
             .section-card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; page-break-inside: avoid; }
             .kv-item { background: #f5f5f5; border: 1px solid #aaa; }
             @page { margin: 0.4in; }   /* minimal top/bottom margin */
@@ -235,125 +248,17 @@
     </div>
 
     <!-- dynamic data will be injected here -->
-    <div id="dataDisplay" class="section-grid"></div>
+    <div id="dataDisplay" class="section-grid">
+        <div class="loading-indicator">
+            <i class="fas fa-spinner fa-pulse"></i> Loading data from Google Sheets...
+        </div>
+    </div>
 </div>
 
 <script>
     (function() {
-        // ----- raw embedded CSV data (exactly from file, trimmed) -----
-        const csvData = `section,key,value,validity
-metadata,title,HSD/LUBRICANT LICENSE RENEWAL,
-metadata,stationName,ghuiyiugbhjvhjvhj,
-metadata,verificationDate,,
-metadata,verificationTime,etreyty,
-metadata,verifyingOfficer,tuyuyt,
-particulars,Proprietor Name,,
-particulars,Proprietor Address,,
-particulars,Email,,
-particulars,Mobile,8895965811,
-particulars,Aadhaar,205842503291,
-particulars,PAN,AOAPM5635D,
-particulars,GST,21AOAPM5635D3ZF,
-particulars,Power of Attorney,No,
-particulars,Plot No,831/1476,
-particulars,Khata No,129/232,
-particulars,Mouza,Naikensira,
-particulars,Police Station,Deogaon,
-particulars,Tahasil,Deogaon,
-particulars,Block,Deogaon,
-particulars,PIN,767029,
-particulars,Establishment Year,2020,
-particulars,Oil Company,BPCL,
-particulars,Oil Co Recommendation Letter,SBP.TER.BOL-25 Dt. 23/01/2020,
-particulars,Agreement Date,23/12/2020,
-particulars,NOC Details,"2793/Judl Dtd. 20.11.2020, Collector, Balangir",
-particulars,Power Supply,TPWODL: Consumer No. 911001140277,
-facilities,First Aid Box,Available,
-facilities,Generator set,Available,
-facilities,Stock & Price Board,Available,
-facilities,Density Board,Available,
-facilities,Citizen Charter,Available,
-facilities,Clean toilet,Available,
-facilities,Free Air,Available,
-facilities,Clean Drinking Water,Available,
-facilities,Filter Paper,Available,
-facilities,5 litre measuring jar,Available,
-facilities,Hydrometer,Available,
-facilities,Thermometer,Available,
-facilities,Dip Rod,Available,
-facilities,ASTM Conversion Chart,Available,
-facilities,Measuring glass cylinder,Available,
-facilities,Water finding paste,Available,
-facilities,Consumer Complaint Register,Available,
-facilities,Adequate lighting,Available,
-safety,ABC extinguisher 10kg,4 Nos,2026-02-22
-safety,CO₂ extinguisher 4.5kg,1 No,2026-02-22
-safety,Sand buckets,6 with sand,
-safety,Sump with water,0,
-licenses,HSD License,06/2020-21,2025-03-31
-licenses,Lubricant License,06/2020-21,2025-03-31
-licenses,Explosive License,P/EC/OR/14/1977 (P313459),2026-12-31
-licenses,Fire Safety,FIRCER1306180092023002500,2025-03-21
-licenses,Weights & Measure (Pump 1),BGR25A2073,2026-02-17
-licenses,Weights & Measure (Pump 2),BGR25A2074,2026-02-17
-licenses,5 Ltr Conical,NOT PRODUCED,
-accounts,Stock Register,Satisfactory,
-accounts,Density Register,Satisfactory,
-accounts,Cash Memo,Satisfactory,
-accounts,Daily Sales Register,Satisfactory,
-accounts,Inspection Register,Satisfactory,
-stock,HSD Book Balance,7834 Ltrs,
-stock,HSD Physical Stock,7856 Ltrs,
-stock,HSD Discrepancy,#ERROR!,
-stock,MS Book Balance,5967 Ltrs,
-stock,MS Physical Stock,5983 Ltrs,
-stock,MS Discrepancy,#ERROR!,
-stock,Lubricants Stock,422 Ltrs,
-density,HSD Reference Range,810-845 kg/m³,
-density,HSD Observed,832.4 kg/m³,
-density,MS Reference Range,720-775 kg/m³,
-density,MS Observed,752.4 kg/m³,
-recommendation,complaints,No,
-recommendation,performance,Satisfactory,
-recommendation,renewal,Recommended,
-officers,inspector,"Inspector of Supplies, Deogaon",
-officers,acso,Assistant Civil Supplies Officer,`;
-
-        // ----- parse CSV (keeping section,key,value,validity) -----
-        function parseCSVtoRows(str) {
-            const lines = str.split(/\r?\n/).filter(line => line.trim() !== '');
-            const headers = lines[0].split(',');
-            const rows = [];
-            for (let i = 1; i < lines.length; i++) {
-                // naive parser (no escaped commas inside quotes – but we have one quoted value: NOC Details)
-                let line = lines[i];
-                const fields = [];
-                let inQuote = false;
-                let current = '';
-                for (let ch of line) {
-                    if (ch === '"' && !inQuote) { inQuote = true; }
-                    else if (ch === '"' && inQuote) { inQuote = false; }
-                    else if (ch === ',' && !inQuote) {
-                        fields.push(current);
-                        current = '';
-                    } else {
-                        current += ch;
-                    }
-                }
-                fields.push(current); // last field
-                if (fields.length >= 4) {
-                    rows.push({
-                        section: fields[0].trim(),
-                        key: fields[1].trim(),
-                        value: fields[2].trim(),
-                        validity: fields[3] ? fields[3].trim() : ''
-                    });
-                }
-            }
-            return rows;
-        }
-
-        const records = parseCSVtoRows(csvData);
+        // ----- Google Sheet published CSV URL (from the link) -----
+        const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS7ik39OFKwscZJiFMgl2CNzRltAxK2sG6fIn-WniMGJ2rvQX1mFnzoerLz0lZOAsUMGeyFtyp0II4o/pub?output=csv";
 
         // ----- icon mapping based on key words (expressive) -----
         function getIconForKey(key, section) {
@@ -393,13 +298,6 @@ officers,acso,Assistant Civil Supplies Officer,`;
             return 'fa-circle-check';  // fallback
         }
 
-        // group records by section
-        const grouped = records.reduce((acc, rec) => {
-            if (!acc[rec.section]) acc[rec.section] = [];
-            acc[rec.section].push(rec);
-            return acc;
-        }, {});
-
         // ordered sections for display
         const sectionOrder = ['metadata', 'particulars', 'facilities', 'safety', 'licenses', 'accounts', 'stock', 'density', 'recommendation', 'officers'];
 
@@ -407,12 +305,61 @@ officers,acso,Assistant Civil Supplies Officer,`;
         const sectionTitles = {
             metadata: '📋 METADATA', particulars: '📌 PROPRIETOR & DETAILS', facilities: '🧰 FACILITIES / EQUIPMENT',
             safety: '🛡️ SAFETY INSTALLATIONS', licenses: '📜 LICENSES (with validity)', accounts: '📊 ACCOUNTS & REGISTERS',
-            stock: '⛽ STOCK POSITION', density: '⚖️ DENSITY CHECKS', recommendation: '✅ RECOMMENDATION', officers: '👮 OFFICERS'
+            stock: '⛽ STOCK POSITION', density: '⚖️ DENSITY CHECKS', recommendation: '✅ RECOMMENDATION', officers: '👮 INSPECTING OFFICERS'
         };
 
-        // render function based on selected section
-        function render(selected = 'all') {
+        // ----- parse CSV text (handles quoted fields) -----
+        function parseCSVtoRows(csv) {
+            const lines = csv.split(/\r?\n/).filter(line => line.trim() !== '');
+            if (lines.length === 0) return [];
+            const headers = lines[0].split(',').map(h => h.trim());
+            const rows = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                let line = lines[i];
+                const fields = [];
+                let inQuote = false;
+                let current = '';
+                
+                for (let j = 0; j < line.length; j++) {
+                    const ch = line[j];
+                    if (ch === '"' && !inQuote) {
+                        inQuote = true;
+                    } else if (ch === '"' && inQuote) {
+                        inQuote = false;
+                    } else if (ch === ',' && !inQuote) {
+                        fields.push(current);
+                        current = '';
+                    } else {
+                        current += ch;
+                    }
+                }
+                fields.push(current); // last field
+
+                // trim fields and map to headers (we know order: section,key,value,validity)
+                if (fields.length >= 4) {
+                    rows.push({
+                        section: fields[0] ? fields[0].trim() : '',
+                        key: fields[1] ? fields[1].trim() : '',
+                        value: fields[2] ? fields[2].trim() : '',
+                        validity: fields[3] ? fields[3].trim() : ''
+                    });
+                }
+            }
+            return rows;
+        }
+
+        // render function based on selected section and records
+        function render(records, selected = 'all') {
             const container = document.getElementById('dataDisplay');
+            
+            // group records by section
+            const grouped = records.reduce((acc, rec) => {
+                if (!acc[rec.section]) acc[rec.section] = [];
+                acc[rec.section].push(rec);
+                return acc;
+            }, {});
+
             let html = '';
 
             const sectionsToRender = selected === 'all' ? sectionOrder : [selected];
@@ -422,7 +369,20 @@ officers,acso,Assistant Civil Supplies Officer,`;
                 if (items.length === 0) continue;
 
                 html += `<div class="section-card">`;
-                html += `<div class="section-title"><i class="fas ${sec === 'metadata' ? 'fa-diagram-project' : (sec==='particulars'?'fa-address-card':sec==='facilities'?'fa-toolbox':sec==='safety'?'fa-helmet-safety':sec==='licenses'?'fa-scroll':sec==='accounts'?'fa-calculator':sec==='stock'?'fa-oil-can':sec==='density'?'fa-weight-hanging':sec==='recommendation'?'fa-star':sec==='officers'?'fa-users': 'fa-folder-open')}"></i> ${sectionTitles[sec] || sec.toUpperCase()}</div>`;
+                // dynamic icon for section title
+                let titleIcon = 'fa-folder-open';
+                if (sec === 'metadata') titleIcon = 'fa-diagram-project';
+                else if (sec === 'particulars') titleIcon = 'fa-address-card';
+                else if (sec === 'facilities') titleIcon = 'fa-toolbox';
+                else if (sec === 'safety') titleIcon = 'fa-helmet-safety';
+                else if (sec === 'licenses') titleIcon = 'fa-scroll';
+                else if (sec === 'accounts') titleIcon = 'fa-calculator';
+                else if (sec === 'stock') titleIcon = 'fa-oil-can';
+                else if (sec === 'density') titleIcon = 'fa-weight-hanging';
+                else if (sec === 'recommendation') titleIcon = 'fa-star';
+                else if (sec === 'officers') titleIcon = 'fa-users';
+                
+                html += `<div class="section-title"><i class="fas ${titleIcon}"></i> ${sectionTitles[sec] || sec.toUpperCase()}</div>`;
 
                 html += `<div class="key-value-row">`;
 
@@ -431,7 +391,6 @@ officers,acso,Assistant Civil Supplies Officer,`;
                     let value = item.value || '';
                     const validity = item.validity;
 
-                    // if value empty string → show blank / placeholder
                     const isEmpty = value === '';
                     const iconClass = getIconForKey(key, sec);
 
@@ -460,13 +419,42 @@ officers,acso,Assistant Civil Supplies Officer,`;
             container.innerHTML = html;
         }
 
-        // initial render (all)
-        render('all');
+        // ----- fetch live data from Google Sheets -----
+        async function loadSheetData() {
+            const container = document.getElementById('dataDisplay');
+            try {
+                const response = await fetch(SHEET_CSV_URL);
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                const csvText = await response.text();
+                
+                const records = parseCSVtoRows(csvText);
+                if (records.length === 0) throw new Error('No records parsed');
+                
+                // store globally for later filtering (avoid re-fetch)
+                window.__hsdRecords = records;
+                
+                // initial render (all)
+                render(records, 'all');
+                
+                // attach dropdown listener now that we have data
+                document.getElementById('sectionSelect').addEventListener('change', (e) => {
+                    if (window.__hsdRecords) {
+                        render(window.__hsdRecords, e.target.value);
+                    }
+                });
 
-        // dropdown listener
-        document.getElementById('sectionSelect').addEventListener('change', (e) => {
-            render(e.target.value);
-        });
+            } catch (err) {
+                console.error('Fetch error:', err);
+                container.innerHTML = `<div class="section-card" style="text-align:center;padding:3rem;color:#b33;">
+                    <i class="fas fa-exclamation-triangle" style="font-size:3rem;"></i>
+                    <p style="margin-top:1rem;">Failed to load data from Google Sheet.<br>Please check the published link or try again later.</p>
+                    <p style="font-size:0.9rem; color:#777;">${err.message}</p>
+                </div>`;
+            }
+        }
+
+        // initial fetch
+        loadSheetData();
 
         // print button: simply triggers browser print (our media query handles margins)
         document.getElementById('printBtn').addEventListener('click', () => {
