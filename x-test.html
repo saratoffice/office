@@ -3,30 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inspection Checklist · compact columns · HSD / FPS / PPC / Rice Mill</title>
+    <title>Inspection Checklist + Google Sheets exporter</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #f0f5fa;
-            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             line-height: 1.5;
-            min-height: 100vh;
             display: flex;
             flex-direction: column;
+            min-height: 100vh;
         }
-
         #site-header {
             background: linear-gradient(135deg, #1a3e5c 0%, #0f2d44 100%);
             color: white;
             padding: 1rem 2rem;
             box-shadow: 0 4px 12px rgba(0,20,30,0.2);
         }
-
         .header-content {
             max-width: 1400px;
             margin: 0 auto;
@@ -36,354 +29,113 @@
             flex-wrap: wrap;
             gap: 1rem;
         }
-
-        .logo h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-
-        .logo small {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-left: 0.5rem;
-        }
-
+        .logo h1 { font-size: 1.8rem; font-weight: 600; }
+        .logo small { font-size: 0.9rem; opacity: 0.9; margin-left: 0.5rem; }
         .header-links a {
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            background: rgba(255,255,255,0.1);
-            transition: 0.2s;
+            color: white; text-decoration: none; padding: 0.5rem 1rem;
+            border-radius: 30px; background: rgba(255,255,255,0.1); transition: 0.2s;
         }
         .header-links a:hover { background: rgba(255,255,255,0.2); }
-
         #site-footer {
-            background: #1e3a5f;
-            color: #ccddee;
-            padding: 1.5rem;
-            text-align: center;
-            margin-top: 2rem;
-            border-top: 3px solid #2c4b6e;
+            background: #1e3a5f; color: #ccddee; padding: 1.5rem; text-align: center;
+            margin-top: 2rem; border-top: 3px solid #2c4b6e;
         }
-
         .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
+            max-width: 1400px; margin: 0 auto; display: flex;
+            justify-content: space-between; flex-wrap: wrap; gap: 1rem;
         }
-
         main {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-            flex: 1;
-            width: 100%;
+            max-width: 1400px; margin: 2rem auto; padding: 0 1.5rem;
+            flex: 1; width: 100%;
         }
-
         /* navigation */
         .checklist-nav {
-            background: white;
-            padding: 1.2rem 2rem;
-            border-radius: 50px;
-            margin-bottom: 2rem;
-            box-shadow: 0 8px 20px rgba(0,20,30,0.08);
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            flex-wrap: wrap;
+            background: white; padding: 1.2rem 2rem; border-radius: 50px;
+            margin-bottom: 2rem; box-shadow: 0 8px 20px rgba(0,20,30,0.08);
+            display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;
             border: 1px solid #d0dfef;
         }
-
-        .checklist-nav label {
-            font-weight: 600;
-            color: #1a3e5c;
-            font-size: 1.1rem;
-        }
-
+        .checklist-nav label { font-weight: 600; color: #1a3e5c; font-size: 1.1rem; }
         .checklist-nav select {
-            padding: 0.7rem 3rem 0.7rem 1.5rem;
-            border: 2px solid #1a3e5c;
-            border-radius: 40px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: #1a3e5c;
-            background: white;
-            cursor: pointer;
-            appearance: none;
+            padding: 0.7rem 3rem 0.7rem 1.5rem; border: 2px solid #1a3e5c;
+            border-radius: 40px; font-size: 1rem; font-weight: 500; color: #1a3e5c;
+            background: white; cursor: pointer; appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a3e5c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 1.2rem center;
-            background-size: 1.2rem;
-            min-width: 280px;
+            background-repeat: no-repeat; background-position: right 1.2rem center;
+            background-size: 1.2rem; min-width: 280px;
         }
-
         .checklist-badge {
-            background: #e9eff7;
-            color: #1a3e5c;
-            padding: 0.4rem 1.2rem;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-left: auto;
+            background: #e9eff7; color: #1a3e5c; padding: 0.4rem 1.2rem;
+            border-radius: 30px; font-size: 0.9rem; font-weight: 600; margin-left: auto;
         }
-
         /* main card */
         .checklist-card {
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 20px 40px rgba(0,30,50,0.15);
-            padding: 2rem;
-            border: 1px solid #c5d5e8;
-            margin-bottom: 2rem;
+            background: white; border-radius: 32px; box-shadow: 0 20px 40px rgba(0,30,50,0.15);
+            padding: 2rem; border: 1px solid #c5d5e8; margin-bottom: 2rem;
         }
-
         .card-header {
-            border-bottom: 4px solid #1a3e5c;
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
+            border-bottom: 4px solid #1a3e5c; padding-bottom: 1.5rem; margin-bottom: 2rem;
+            display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;
             gap: 1.5rem;
         }
-
-        .header-title h1 {
-            font-size: 2.4rem;
-            font-weight: 700;
-            color: #1a3e5c;
-            line-height: 1.2;
-            margin-bottom: 0.5rem;
-        }
-
-        .station-name {
-            font-size: 1.3rem;
-            color: #2c4b6e;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
+        .header-title h1 { font-size: 2.4rem; font-weight: 700; color: #1a3e5c; margin-bottom: 0.5rem; }
+        .station-name { font-size: 1.3rem; color: #2c4b6e; font-weight: 500; margin-bottom: 0.5rem; }
         .verification-info {
-            display: flex;
-            gap: 2rem;
-            color: #3e5f7e;
-            font-size: 1rem;
-            background: #eef4fa;
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
-            display: inline-flex;
+            display: flex; gap: 2rem; color: #3e5f7e; font-size: 1rem;
+            background: #eef4fa; padding: 0.5rem 1.2rem; border-radius: 40px; display: inline-flex;
         }
-
         .print-btn {
-            background: #1a3e5c;
-            border: none;
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-            padding: 0.8rem 2.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 6px 12px rgba(26,62,92,0.3);
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+            background: #1a3e5c; border: none; color: white; font-weight: 600; font-size: 1.1rem;
+            padding: 0.8rem 2.5rem; border-radius: 50px; cursor: pointer;
+            box-shadow: 0 6px 12px rgba(26,62,92,0.3); transition: 0.2s;
+            display: inline-flex; align-items: center; gap: 10px;
             border: 1px solid rgba(255,255,255,0.2);
         }
-        .print-btn:hover {
-            background: #0f2d44;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(26,62,92,0.4);
+        .print-btn:hover { background: #0f2d44; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(26,62,92,0.4); }
+        .copy-sheet-btn {
+            background: #1d7e3c; border: none; color: white; font-weight: 600; font-size: 1.1rem;
+            padding: 0.8rem 2.5rem; border-radius: 50px; cursor: pointer;
+            box-shadow: 0 6px 12px rgba(26,92,26,0.3); transition: 0.2s;
+            display: inline-flex; align-items: center; gap: 10px;
         }
+        .copy-sheet-btn:hover { background: #12632b; transform: translateY(-2px); }
+        .button-group { display: flex; gap: 1rem; flex-wrap: wrap; }
 
         /* sections */
         .checklist-section {
-            background: #f9fcff;
-            border-radius: 24px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid #d6e4f0;
+            background: #f9fcff; border-radius: 24px; padding: 1.5rem;
+            margin-bottom: 2rem; border: 1px solid #d6e4f0;
         }
-
         .section-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #1a3e5c;
-            margin-bottom: 1.2rem;
-            padding-bottom: 0.6rem;
-            border-bottom: 3px solid #b8cee8;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
+            font-size: 1.4rem; font-weight: 700; color: #1a3e5c; margin-bottom: 1.2rem;
+            padding-bottom: 0.6rem; border-bottom: 3px solid #b8cee8;
+            display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
         }
-        .section-title .badge {
-            background: #1a3e5c;
-            color: white;
-            font-size: 0.8rem;
-            padding: 0.2rem 1.2rem;
-            border-radius: 40px;
-            font-weight: 500;
-        }
-
-        /* MULTI‑COLUMN LAYOUTS – paper saving */
-        .grid-2col {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem 2rem;
-        }
-        .grid-3col {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.8rem 2rem;
-        }
-        .grid-4col {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.8rem 1.5rem;
-        }
-
-        /* items */
-        .info-item {
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            padding: 0.4rem 0;
-            border-bottom: 1px dotted #b8cee8;
-        }
-        .info-label {
-            font-weight: 600;
-            color: #1a3e5c;
-            min-width: 120px;
-            font-size: 0.95rem;
-        }
-        .info-value {
-            color: #1d3f5e;
-            font-size: 0.95rem;
-            word-break: break-word;
-        }
-
-        .facility-item, .safety-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0.4rem 0;
-            border-bottom: 1px dotted #a0b6ce;
-        }
-        .facility-item span:first-child, .safety-item span:first-child {
-            font-size: 0.95rem;
-            color: #152b3b;
-            flex: 1;
-        }
-        .facility-status {
-            background: #1a3e5c;
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 0.2rem 0.8rem;
-            border-radius: 40px;
-            white-space: nowrap;
-            text-transform: uppercase;
-        }
+        .grid-2col { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.8rem 2rem; }
+        .grid-3col { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.8rem 2rem; }
+        .info-item { display: flex; align-items: baseline; gap: 10px; padding: 0.4rem 0; border-bottom: 1px dotted #b8cee8; }
+        .info-label { font-weight: 600; color: #1a3e5c; min-width: 120px; font-size: 0.95rem; }
+        .info-value { color: #1d3f5e; font-size: 0.95rem; word-break: break-word; }
+        .facility-item, .safety-item { display: flex; align-items: center; gap: 8px; padding: 0.4rem 0; border-bottom: 1px dotted #a0b6ce; }
+        .facility-item span:first-child, .safety-item span:first-child { font-size: 0.95rem; color: #152b3b; flex: 1; }
+        .facility-status { background: #1a3e5c; color: white; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.8rem; border-radius: 40px; white-space: nowrap; text-transform: uppercase; }
         .facility-status.available { background: #1e7e34; }
-
-        /* tables (used only when needed) */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-        .data-table th {
-            background: #1a3e5c;
-            color: white;
-            padding: 0.8rem 1rem;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        .data-table td {
-            padding: 0.7rem 1rem;
-            border-bottom: 1px solid #dde6f0;
-            background: white;
-        }
-
-        /* recommendation */
         .recommendation-box {
-            background: linear-gradient(145deg, #e4edf7, #d2e2f2);
-            border-radius: 24px;
-            padding: 1.5rem;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 2rem;
-            border-left: 10px solid #1a3e5c;
+            background: linear-gradient(145deg,#e4edf7,#d2e2f2); border-radius: 24px; padding: 1.5rem;
+            display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;
+            gap: 2rem; border-left: 10px solid #1a3e5c;
         }
-        .recommendation-item {
-            text-align: center;
-            min-width: 140px;
-        }
-        .recommendation-label {
-            font-size: 0.8rem;
-            color: #2c4b6e;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-        .recommendation-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1a3e5c;
-        }
-
-        /* officer signatures */
+        .recommendation-item { text-align: center; min-width: 140px; }
+        .recommendation-label { font-size: 0.8rem; color: #2c4b6e; text-transform: uppercase; font-weight: 600; }
+        .recommendation-value { font-size: 1.5rem; font-weight: 700; color: #1a3e5c; }
         .officer-section {
-            margin-top: 2rem;
-            display: flex;
-            justify-content: space-between;
-            padding: 1.5rem 3rem;
-            border-top: 3px dashed #a0bada;
-            flex-wrap: wrap;
-            gap: 2rem;
+            margin-top: 2rem; display: flex; justify-content: space-between;
+            padding: 1.5rem 3rem; border-top: 3px dashed #a0bada; flex-wrap: wrap; gap: 2rem;
         }
-        .officer-signature {
-            text-align: center;
-            min-width: 250px;
-        }
-        .officer-title {
-            font-weight: 700;
-            color: #1a3e5c;
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
-        }
-        .officer-line {
-            width: 250px;
-            height: 2px;
-            border-bottom: 3px dotted #1a3e5c;
-            margin: 0.8rem auto;
-        }
+        .officer-signature { text-align: center; min-width: 250px; }
+        .officer-title { font-weight: 700; color: #1a3e5c; margin-bottom: 0.8rem; font-size: 1.1rem; }
+        .officer-line { width: 250px; height: 2px; border-bottom: 3px dotted #1a3e5c; margin: 0.8rem auto; }
         .officer-signature small { color: #3e5f7e; }
-
-        /* loading / print */
-        .loading-state { text-align: center; padding: 4rem; color: #1a3e5c; }
-        @media print {
-            #site-header, #site-footer, .checklist-nav, .print-btn, .header-links, .checklist-badge, .go-to-top {
-                display: none !important;
-            }
-            .checklist-card { box-shadow: none; border: none; padding: 0; }
-            .facility-status, .data-table th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        }
-        @media (max-width: 700px) {
-            .grid-2col, .grid-3col, .grid-4col { grid-template-columns: 1fr; }
-        }
-
         .go-to-top {
             position: fixed; bottom: 30px; right: 30px; background: #1a3e5c; color: white;
             width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center;
@@ -391,13 +143,23 @@
             font-size: 1.5rem; transition: 0.3s; z-index: 100;
         }
         .go-to-top:hover { background: #0f2d44; transform: translateY(-5px); }
+        .loading-state { text-align: center; padding: 4rem; color: #1a3e5c; }
+        @media print { #site-header, #site-footer, .checklist-nav, .print-btn, .copy-sheet-btn, .header-links, .checklist-badge, .go-to-top, .button-group { display: none !important; } .checklist-card { box-shadow: none; border: none; } }
+        @media (max-width:700px) { .grid-2col, .grid-3col { grid-template-columns:1fr; } }
+
+        /* floating sheet table preview */
+        .sheet-preview { background: #f4f9ff; padding: 1.2rem; border-radius: 20px; border: 2px solid #1a3e5c; margin-bottom: 1.5rem; font-family: monospace; white-space: pre-wrap; font-size: 0.85rem; display: none; }
+        .sheet-preview.show { display: block; }
+        .preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .preview-header h3 { color: #1a3e5c; font-size: 1.2rem; }
+        .copy-raw-btn { background: #0f2d44; color: white; border: none; padding: 0.3rem 1.5rem; border-radius: 40px; cursor: pointer; }
     </style>
 </head>
 <body>
 <div id="site-header">
     <div class="header-content">
-        <div class="logo"><h1>⛽ SARAT OFFICE <small>Inspection Checklist</small></h1></div>
-        <div class="header-links"><a href="#">Dashboard</a><a href="#">All</a><a href="#">Reports</a></div>
+        <div class="logo"><h1>📋 SARAT OFFICE <small>Inspection + Sheet</small></h1></div>
+        <div class="header-links"><a href="#">Dashboard</a><a href="#">All</a></div>
     </div>
 </div>
 
@@ -415,136 +177,31 @@
         <span class="checklist-badge" id="checklist-type-badge">HSD Renewal</span>
     </div>
 
+    <!-- Google Sheet preview + copy button -->
+    <div class="sheet-preview" id="sheetPreview">
+        <div class="preview-header">
+            <h3>📊 Google Sheets tab · ready to paste (TSV)</h3>
+            <button class="copy-raw-btn" id="copySheetBtn">📋 Copy table</button>
+        </div>
+        <pre id="sheetDataPre">(select checklist)</pre>
+    </div>
+
     <div id="checklist-container"><div class="loading-state">Loading checklist...</div></div>
 </main>
 
 <div id="site-footer">
-    <div class="footer-content"><span>© 2025 Sarat Office - Civil Supplies</span><span>Version 3.0 · column view</span></div>
+    <div class="footer-content"><span>© 2025 Sarat Office - Civil Supplies</span><span>Sheet export v1</span></div>
 </div>
 <a href="#" class="go-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'}); return false;">↑</a>
 
 <script>
-    const CHECKLIST_DATA = {
-        "hsd-renewal": {
-            "metadata": { "title": "HSD / LUBRICANT LICENSE RENEWAL", "subtitle": "HSD Order 1979", "stationName": "Tejaswini Filling Station, Naikensira", "verificationDate": "21/02/2025", "verificationTime": "11:30 AM", "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO" },
-            "particulars": {
-                "proprietor": { "name": "Debaraj Meher (Proprietorship)", "address": "At: Naikensira, Po: Deogaon, Pin: 767029" },
-                "contact": { "mobile": "8895965811", "aadhaar": "205842503291", "pan": "AOAPM5635D", "gst": "21AOAPM5635D3ZF" },
-                "location": { "plotNo": "831/1476", "khataNo": "129/232", "mouza": "Naikensira", "policeStation": "Deogaon", "block": "Deogaon", "tahasil": "Deogaon", "pin": "767029" },
-                "oilCompany": "BPCL", "agreementDate": "23/12/2020", "powerSupply": "TPWODL: 911001140277"
-            },
-            "facilities": [
-                { "name": "First Aid Box", "status": "Available" }, { "name": "Generator set", "status": "Available" },
-                { "name": "Stock & Price Board", "status": "Available" }, { "name": "Density Board", "status": "Available" },
-                { "name": "Citizen Charter", "status": "Available" }, { "name": "Clean toilet", "status": "Available" },
-                { "name": "Free Air", "status": "Available" }, { "name": "Clean Drinking Water", "status": "Available" },
-                { "name": "Filter Paper", "status": "Available" }, { "name": "5 litre measuring jar", "status": "Available" },
-                { "name": "Hydrometer", "status": "Available" }, { "name": "Thermometer", "status": "Available" },
-                { "name": "Dip Rod", "status": "Available" }, { "name": "Water finding paste", "status": "Available" }
-            ],
-            "safetyItems": [
-                { "name": "ABC 10kg extinguisher", "status": "4 Nos valid" }, { "name": "CO₂ 4.5kg", "status": "1 No" },
-                { "name": "Sand buckets", "status": "6 with sand" }, { "name": "Static earthing", "status": "OK" },
-                { "name": "No smoking sign", "status": "Displayed" }
-            ],
-            "licenses": [
-                { "type": "HSD License", "number": "06/2020-21", "validity": "31/03/2025" },
-                { "type": "Lubricant License", "number": "06/2020-21", "validity": "31/03/2025" },
-                { "type": "PESO explosive", "number": "P/EC/OR/14/1977", "validity": "31/12/2026" }
-            ],
-            "recommendation": { "complaints": "No", "performance": "Satisfactory", "renewal": "Recommended" },
-            "officers": { "inspector": "Inspector of Supplies, Deogaon", "acso": "Assistant Civil Supplies Officer" }
-        },
-        "fps-checklist": {
-            "metadata": { "title": "FAIR PRICE SHOP INSPECTION", "stationName": "Maa Tarini FPS, Bhatli", "verificationDate": "15/03/2025", "verificationTime": "10:00 AM", "verifyingOfficer": "Sri Sarat Kumar Rout" },
-            "particulars": {
-                "proprietor": { "name": "Pramila Sahu", "address": "Bhatli Bazar, Bargarh" },
-                "contact": { "mobile": "9437155822", "aadhaar": "452178963214", "pan": "CEWPS1254D" },
-                "location": { "shopNo": "FPS/BGL/125", "panchayat": "Bhatli", "block": "Bhatli", "district": "Bargarh" }
-            },
-            "facilities": [
-                { "name": "Weighing Scale", "status": "Available" }, { "name": "ePoS Machine", "status": "Functional" },
-                { "name": "Display Board", "status": "Displayed" }, { "name": "Stock Display", "status": "Updated" },
-                { "name": "Clean Premises", "status": "Satisfactory" }, { "name": "Drinking Water", "status": "Available" }
-            ],
-            "safetyItems": [ { "name": "Fire extinguisher", "status": "2kg ABC" } ],
-            "licenses": [ { "type": "FPS License", "number": "FPS/2024/123", "validity": "31/12/2026" } ],
-            "recommendation": { "complaints": "None", "performance": "Satisfactory", "renewal": "Recommended" },
-            "officers": { "inspector": "Inspector of Supplies", "acso": "ACSO, Bargarh" }
-        },
-        "ppc-checklist": {
-            "metadata": { "title": "PETROL PUMP COMPLIANCE", "stationName": "Jagannath Auto Service, Sambalpur", "verificationDate": "10/03/2025", "verifyingOfficer": "Sri Sarat Kumar Rout" },
-            "particulars": {
-                "proprietor": { "name": "Jagannath Sahu", "address": "Ainthapali, Sambalpur" },
-                "contact": { "mobile": "9861122334", "gst": "21ABCDE1234F1Z5" },
-                "location": { "plotNo": "125/2", "khataNo": "45/3", "policeStation": "Ainthapali" }
-            },
-            "facilities": [
-                { "name": "Filter Paper", "status": "Available" }, { "name": "Hydrometer", "status": "Calibrated" },
-                { "name": "Thermometer", "status": "Available" }, { "name": "Measuring Jar (5L)", "status": "Available" },
-                { "name": "Complaint Register", "status": "Maintained" }, { "name": "Free Air", "status": "Working" }
-            ],
-            "safetyItems": [
-                { "name": "Fire Extinguishers", "status": "4 ABC" }, { "name": "Sand Buckets", "status": "6" },
-                { "name": "First Aid Kit", "status": "Available" }, { "name": "Static Earthing", "status": "Working" }
-            ],
-            "licenses": [
-                { "type": "HSD License", "number": "08/2022-23", "validity": "31/03/2026" },
-                { "type": "PESO", "number": "P/EC/OR/22/2022", "validity": "31/12/2027" }
-            ],
-            "recommendation": { "complaints": "Nil", "performance": "Good", "renewal": "Recommended" },
-            "officers": { "inspector": "ISO", "acso": "ACSO Sambalpur" }
-        },
-        "rice-mill": {
-            "metadata": { "title": "RICE MILL INSPECTION", "stationName": "Laxmi Rice Mill, Bargarh", "verificationDate": "05/03/2025", "verifyingOfficer": "Sri Sarat Kumar Rout" },
-            "particulars": {
-                "proprietor": { "name": "Laxmi Narayan Agrawal", "address": "Ghereipada, Bargarh" },
-                "contact": { "mobile": "8895221345", "gst": "21BGHPS1234D1Z6" },
-                "location": { "plotNo": "452", "khataNo": "78", "policeStation": "Bargarh Sadar" }
-            },
-            "facilities": [
-                { "name": "Weighbridge", "status": "Calibrated" }, { "name": "First Aid", "status": "Available" },
-                { "name": "Rest shed", "status": "Available" }, { "name": "Drinking water", "status": "Yes" }
-            ],
-            "safetyItems": [
-                { "name": "Fire Extinguishers", "status": "8 Nos valid" }, { "name": "Safety guards", "status": "Installed" },
-                { "name": "Electrical wiring", "status": "Safe" }, { "name": "Ventilation", "status": "Adequate" }
-            ],
-            "licenses": [
-                { "type": "Rice Mill License", "number": "RM/09/2022", "validity": "31/12/2025" },
-                { "type": "Factory License", "number": "FACT/123/2023", "validity": "31/12/2025" }
-            ],
-            "recommendation": { "complaints": "None", "performance": "Satisfactory", "renewal": "Recommended" },
-            "officers": { "inspector": "Dist. Food Officer", "acso": "ACSO Bargarh" }
-        },
-        "kerosene": {
-            "metadata": { "title": "KEROSENE DEALER INSPECTION", "stationName": "Bharat Kerosene Depot, Attabira", "verificationDate": "18/03/2025", "verifyingOfficer": "Sri Sarat Kumar Rout" },
-            "particulars": {
-                "proprietor": { "name": "Mahesh Agrawal", "address": "Attabira" },
-                "contact": { "mobile": "9865321470" },
-                "location": { "plotNo": "125", "policeStation": "Attabira" }
-            },
-            "facilities": [ { "name": "Storage tanks (capacity)", "status": "5000 Ltr" }, { "name": "Measuring unit", "status": "Calibrated" } ],
-            "safetyItems": [ { "name": "Fire Extinguisher", "status": "Available" }, { "name": "Sand buckets", "status": "4 Nos" } ],
-            "licenses": [ { "type": "Kerosene License", "number": "KER/2024/01", "validity": "31/03/2026" } ],
-            "recommendation": { "renewal": "Recommended" },
-            "officers": { "inspector": "Inspector", "acso": "ACSO" }
-        },
-        "lpg": {
-            "metadata": { "title": "LPG DISTRIBUTOR INSPECTION", "stationName": "Sai Gas Agency, Burla", "verificationDate": "22/03/2025", "verifyingOfficer": "Sri Sarat Kumar Rout" },
-            "particulars": {
-                "proprietor": { "name": "Sai Enterprises", "address": "Burla" },
-                "contact": { "mobile": "7008123456" }
-            },
-            "facilities": [ { "name": "Godown ventilation", "status": "Adequate" }, { "name": "First Aid", "status": "Available" } ],
-            "safetyItems": [
-                { "name": "Fire Extinguishers", "status": "10kg ABC - 4" }, { "name": "Water hose", "status": "Available" },
-                { "name": "Sand buckets", "status": "8 Nos" }, { "name": "No smoking", "status": "Prominent" }
-            ],
-            "licenses": [ { "type": "LPG License", "number": "LPG/234/2022", "validity": "31/12/2026" } ],
-            "recommendation": { "renewal": "Recommended" },
-            "officers": { "inspector": "SO", "acso": "ACSO" }
-        }
+    const CHECKLIST_DATA = { /* same data as before, complete */ 
+        "hsd-renewal": { "metadata": { "title": "HSD / LUBRICANT LICENSE RENEWAL", "subtitle": "HSD Order 1979", "stationName": "Tejaswini Filling Station, Naikensira", "verificationDate": "21/02/2025", "verificationTime": "11:30 AM", "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO" }, "particulars": { "proprietor": { "name": "Debaraj Meher (Proprietorship)", "address": "At: Naikensira, Po: Deogaon, Pin: 767029" }, "contact": { "mobile": "8895965811", "aadhaar": "205842503291", "pan": "AOAPM5635D", "gst": "21AOAPM5635D3ZF" }, "location": { "plotNo": "831/1476", "khataNo": "129/232", "mouza": "Naikensira", "policeStation": "Deogaon", "block": "Deogaon", "tahasil": "Deogaon", "pin": "767029" }, "oilCompany": "BPCL", "agreementDate": "23/12/2020", "powerSupply": "TPWODL: 911001140277" }, "facilities": [ { "name": "First Aid Box", "status": "Available" }, { "name": "Generator set", "status": "Available" }, { "name": "Stock & Price Board", "status": "Available" }, { "name": "Density Board", "status": "Available" }, { "name": "Citizen Charter", "status": "Available" }, { "name": "Clean toilet", "status": "Available" }, { "name": "Free Air", "status": "Available" }, { "name": "Clean Drinking Water", "status": "Available" }, { "name": "Filter Paper", "status": "Available" }, { "name": "5 litre measuring jar", "status": "Available" }, { "name": "Hydrometer", "status": "Available" }, { "name": "Thermometer", "status": "Available" }, { "name": "Dip Rod", "status": "Available" }, { "name": "Water finding paste", "status": "Available" } ], "safetyItems": [ { "name": "ABC 10kg extinguisher", "status": "4 Nos valid" }, { "name": "CO₂ 4.5kg", "status": "1 No" }, { "name": "Sand buckets", "status": "6 with sand" }, { "name": "Static earthing", "status": "OK" }, { "name": "No smoking sign", "status": "Displayed" } ], "licenses": [ { "type": "HSD License", "number": "06/2020-21", "validity": "31/03/2025" }, { "type": "Lubricant License", "number": "06/2020-21", "validity": "31/03/2025" }, { "type": "PESO explosive", "number": "P/EC/OR/14/1977", "validity": "31/12/2026" } ], "recommendation": { "complaints": "No", "performance": "Satisfactory", "renewal": "Recommended" }, "officers": { "inspector": "Inspector of Supplies, Deogaon", "acso": "Assistant Civil Supplies Officer" } },
+        "fps-checklist": { "metadata": { "title": "FAIR PRICE SHOP INSPECTION", "stationName": "Maa Tarini FPS, Bhatli", "verificationDate": "15/03/2025", "verificationTime": "10:00 AM", "verifyingOfficer": "Sri Sarat Kumar Rout" }, "particulars": { "proprietor": { "name": "Pramila Sahu", "address": "Bhatli Bazar, Bargarh" }, "contact": { "mobile": "9437155822", "aadhaar": "452178963214", "pan": "CEWPS1254D" }, "location": { "shopNo": "FPS/BGL/125", "panchayat": "Bhatli", "block": "Bhatli", "district": "Bargarh" } }, "facilities": [ { "name": "Weighing Scale", "status": "Available" }, { "name": "ePoS Machine", "status": "Functional" }, { "name": "Display Board", "status": "Displayed" }, { "name": "Stock Display", "status": "Updated" }, { "name": "Clean Premises", "status": "Satisfactory" }, { "name": "Drinking Water", "status": "Available" } ], "safetyItems": [ { "name": "Fire extinguisher", "status": "2kg ABC" } ], "licenses": [ { "type": "FPS License", "number": "FPS/2024/123", "validity": "31/12/2026" } ], "recommendation": { "complaints": "None", "performance": "Satisfactory", "renewal": "Recommended" }, "officers": { "inspector": "Inspector of Supplies", "acso": "ACSO, Bargarh" } },
+        "ppc-checklist": { "metadata": { "title": "PETROL PUMP COMPLIANCE", "stationName": "Jagannath Auto Service, Sambalpur", "verificationDate": "10/03/2025", "verifyingOfficer": "Sri Sarat Kumar Rout" }, "particulars": { "proprietor": { "name": "Jagannath Sahu", "address": "Ainthapali, Sambalpur" }, "contact": { "mobile": "9861122334", "gst": "21ABCDE1234F1Z5" }, "location": { "plotNo": "125/2", "khataNo": "45/3", "policeStation": "Ainthapali" } }, "facilities": [ { "name": "Filter Paper", "status": "Available" }, { "name": "Hydrometer", "status": "Calibrated" }, { "name": "Thermometer", "status": "Available" }, { "name": "Measuring Jar (5L)", "status": "Available" }, { "name": "Complaint Register", "status": "Maintained" }, { "name": "Free Air", "status": "Working" } ], "safetyItems": [ { "name": "Fire Extinguishers", "status": "4 ABC" }, { "name": "Sand Buckets", "status": "6" }, { "name": "First Aid Kit", "status": "Available" }, { "name": "Static Earthing", "status": "Working" } ], "licenses": [ { "type": "HSD License", "number": "08/2022-23", "validity": "31/03/2026" }, { "type": "PESO", "number": "P/EC/OR/22/2022", "validity": "31/12/2027" } ], "recommendation": { "complaints": "Nil", "performance": "Good", "renewal": "Recommended" }, "officers": { "inspector": "ISO", "acso": "ACSO Sambalpur" } },
+        "rice-mill": { "metadata": { "title": "RICE MILL INSPECTION", "stationName": "Laxmi Rice Mill, Bargarh", "verificationDate": "05/03/2025", "verifyingOfficer": "Sri Sarat Kumar Rout" }, "particulars": { "proprietor": { "name": "Laxmi Narayan Agrawal", "address": "Ghereipada, Bargarh" }, "contact": { "mobile": "8895221345", "gst": "21BGHPS1234D1Z6" }, "location": { "plotNo": "452", "khataNo": "78", "policeStation": "Bargarh Sadar" } }, "facilities": [ { "name": "Weighbridge", "status": "Calibrated" }, { "name": "First Aid", "status": "Available" }, { "name": "Rest shed", "status": "Available" }, { "name": "Drinking water", "status": "Yes" } ], "safetyItems": [ { "name": "Fire Extinguishers", "status": "8 Nos valid" }, { "name": "Safety guards", "status": "Installed" }, { "name": "Electrical wiring", "status": "Safe" }, { "name": "Ventilation", "status": "Adequate" } ], "licenses": [ { "type": "Rice Mill License", "number": "RM/09/2022", "validity": "31/12/2025" }, { "type": "Factory License", "number": "FACT/123/2023", "validity": "31/12/2025" } ], "recommendation": { "complaints": "None", "performance": "Satisfactory", "renewal": "Recommended" }, "officers": { "inspector": "Dist. Food Officer", "acso": "ACSO Bargarh" } },
+        "kerosene": { "metadata": { "title": "KEROSENE DEALER INSPECTION", "stationName": "Bharat Kerosene Depot, Attabira", "verificationDate": "18/03/2025", "verifyingOfficer": "Sri Sarat Kumar Rout" }, "particulars": { "proprietor": { "name": "Mahesh Agrawal", "address": "Attabira" }, "contact": { "mobile": "9865321470" }, "location": { "plotNo": "125", "policeStation": "Attabira" } }, "facilities": [ { "name": "Storage tanks (capacity)", "status": "5000 Ltr" }, { "name": "Measuring unit", "status": "Calibrated" } ], "safetyItems": [ { "name": "Fire Extinguisher", "status": "Available" }, { "name": "Sand buckets", "status": "4 Nos" } ], "licenses": [ { "type": "Kerosene License", "number": "KER/2024/01", "validity": "31/03/2026" } ], "recommendation": { "renewal": "Recommended" }, "officers": { "inspector": "Inspector", "acso": "ACSO" } },
+        "lpg": { "metadata": { "title": "LPG DISTRIBUTOR INSPECTION", "stationName": "Sai Gas Agency, Burla", "verificationDate": "22/03/2025", "verifyingOfficer": "Sri Sarat Kumar Rout" }, "particulars": { "proprietor": { "name": "Sai Enterprises", "address": "Burla" }, "contact": { "mobile": "7008123456" } }, "facilities": [ { "name": "Godown ventilation", "status": "Adequate" }, { "name": "First Aid", "status": "Available" } ], "safetyItems": [ { "name": "Fire Extinguishers", "status": "10kg ABC - 4" }, { "name": "Water hose", "status": "Available" }, { "name": "Sand buckets", "status": "8 Nos" }, { "name": "No smoking", "status": "Prominent" } ], "licenses": [ { "type": "LPG License", "number": "LPG/234/2022", "validity": "31/12/2026" } ], "recommendation": { "renewal": "Recommended" }, "officers": { "inspector": "SO", "acso": "ACSO" } }
     };
 
     class ChecklistRenderer {
@@ -553,56 +210,48 @@
         loadChecklist(type) {
             this.currentType = type;
             this.data = CHECKLIST_DATA[type];
-            if (!this.data) {
-                document.getElementById('checklist-container').innerHTML = '<div style="color:red;padding:3rem;">Data not found</div>';
-                return;
-            }
+            if (!this.data) return;
             const badge = document.getElementById('checklist-type-badge');
             const names = { 'hsd-renewal':'HSD Renewal','fps-checklist':'FPS','ppc-checklist':'PPC','rice-mill':'Rice Mill','kerosene':'Kerosene','lpg':'LPG' };
             if (badge) badge.textContent = names[type] || type;
-
             this.render();
+            this.updateSheetPreview();
             history.pushState({type}, '', `?type=${type}`);
         }
 
         render() {
             const container = document.getElementById('checklist-container');
-            const html = `
+            container.innerHTML = `
                 <div class="checklist-card">
-                    ${this.renderHeader()}
-                    ${this.renderParticularsGrid()}      <!-- STATION PARTICULARS in 2 columns -->
-                    ${this.renderLicensesGrid()}          <!-- LICENSES as 2 columns (compact) -->
-                    ${this.renderSafetyGrid()}            <!-- SAFETY PROVISIONS in 2/3 columns -->
-                    ${this.renderFacilitiesGrid()}        <!-- ON‑SITE FACILITIES 2 columns -->
+                    <div class="card-header">
+                        <div class="header-title">
+                            <h1>⛽ ${this.data.metadata.title}</h1>
+                            <div class="station-name">${this.data.metadata.stationName || ''}</div>
+                            <div class="verification-info">
+                                <span>📅 ${this.data.metadata.verificationDate || ''}</span>
+                                <span>⏰ ${this.data.metadata.verificationTime || ''}</span>
+                                <span>👤 ${this.data.metadata.verifyingOfficer || ''}</span>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button class="print-btn" id="print-checklist-btn">🖨️ PRINT</button>
+                            <button class="copy-sheet-btn" id="copySheetMainBtn">📊 Copy sheet table</button>
+                        </div>
+                    </div>
+                    ${this.renderParticularsGrid()}
+                    ${this.renderLicensesGrid()}
+                    ${this.renderSafetyGrid()}
+                    ${this.renderFacilitiesGrid()}
                     ${this.renderRecommendation()}
                     ${this.renderOfficers()}
                 </div>
             `;
-            container.innerHTML = html;
             document.getElementById('print-checklist-btn')?.addEventListener('click', ()=>window.print());
-        }
-
-        renderHeader() {
-            const m = this.data.metadata;
-            return `
-                <div class="card-header">
-                    <div class="header-title">
-                        <h1>⛽ ${m.title}</h1>
-                        <div class="station-name">${m.stationName || ''}</div>
-                        <div class="verification-info">
-                            <span>📅 ${m.verificationDate || ''}</span>
-                            <span>⏰ ${m.verificationTime || ''}</span>
-                            <span>👤 ${m.verifyingOfficer || ''}</span>
-                        </div>
-                    </div>
-                    <button class="print-btn" id="print-checklist-btn">📋 PRINT</button>
-                </div>
-            `;
+            document.getElementById('copySheetMainBtn')?.addEventListener('click', ()=> this.copySheetToClipboard());
         }
 
         renderParticularsGrid() {
-            const p = this.data.particulars || {};
-            const items = [];
+            const p = this.data.particulars || {}; const items = [];
             if (p.proprietor?.name) items.push(`<div class="info-item"><span class="info-label">Proprietor</span><span class="info-value">${p.proprietor.name}</span></div>`);
             if (p.proprietor?.address) items.push(`<div class="info-item"><span class="info-label">Address</span><span class="info-value">${p.proprietor.address}</span></div>`);
             if (p.contact?.mobile) items.push(`<div class="info-item"><span class="info-label">Mobile</span><span class="info-value">${p.contact.mobile}</span></div>`);
@@ -610,88 +259,77 @@
             if (p.contact?.pan) items.push(`<div class="info-item"><span class="info-label">PAN</span><span class="info-value">${p.contact.pan}</span></div>`);
             if (p.contact?.gst) items.push(`<div class="info-item"><span class="info-label">GST</span><span class="info-value">${p.contact.gst}</span></div>`);
             if (p.location?.plotNo) items.push(`<div class="info-item"><span class="info-label">Plot No</span><span class="info-value">${p.location.plotNo}</span></div>`);
-            if (p.location?.khataNo) items.push(`<div class="info-item"><span class="info-label">Khata No</span><span class="info-value">${p.location.khataNo}</span></div>`);
             if (p.location?.policeStation) items.push(`<div class="info-item"><span class="info-label">PS</span><span class="info-value">${p.location.policeStation}</span></div>`);
             if (p.location?.block) items.push(`<div class="info-item"><span class="info-label">Block</span><span class="info-value">${p.location.block}</span></div>`);
             if (p.oilCompany) items.push(`<div class="info-item"><span class="info-label">Oil Co.</span><span class="info-value">${p.oilCompany}</span></div>`);
             if (p.powerSupply) items.push(`<div class="info-item"><span class="info-label">Power</span><span class="info-value">${p.powerSupply}</span></div>`);
             if (p.agreementDate) items.push(`<div class="info-item"><span class="info-label">Agreement</span><span class="info-value">${p.agreementDate}</span></div>`);
-
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">📋 STATION PARTICULARS</div>
-                    <div class="grid-2col">${items.join('')}</div>
-                </div>
-            `;
+            return `<div class="checklist-section"><div class="section-title">📋 STATION PARTICULARS</div><div class="grid-2col">${items.join('')}</div></div>`;
         }
-
         renderLicensesGrid() {
             if (!this.data.licenses) return '';
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">📜 LICENSE DETAILS</div>
-                    <div class="grid-2col">
-                        ${this.data.licenses.map(l => `
-                            <div class="info-item"><span class="info-label">${l.type}</span><span class="info-value">${l.number} (valid: ${l.validity || 'N/A'})</span></div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
+            return `<div class="checklist-section"><div class="section-title">📜 LICENSE DETAILS</div><div class="grid-2col">${this.data.licenses.map(l => `<div class="info-item"><span class="info-label">${l.type}</span><span class="info-value">${l.number} (valid: ${l.validity || 'N/A'})</span></div>`).join('')}</div></div>`;
         }
-
         renderSafetyGrid() {
             const items = this.data.safetyItems || this.data.safety || [];
             if (!items.length) return '';
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">🛡️ SAFETY PROVISIONS</div>
-                    <div class="grid-3col">
-                        ${items.map(s => `
-                            <div class="facility-item"><span>${s.name}</span><span class="facility-status ${s.status?.toLowerCase().includes('avail')?'available':''}">${s.status}</span></div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
+            return `<div class="checklist-section"><div class="section-title">🛡️ SAFETY PROVISIONS</div><div class="grid-3col">${items.map(s => `<div class="facility-item"><span>${s.name}</span><span class="facility-status ${s.status?.toLowerCase().includes('avail')?'available':''}">${s.status}</span></div>`).join('')}</div></div>`;
         }
-
         renderFacilitiesGrid() {
             if (!this.data.facilities) return '';
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">🧷 ON‑SITE FACILITIES</div>
-                    <div class="grid-2col">
-                        ${this.data.facilities.map(f => `
-                            <div class="facility-item"><span>${f.name}</span><span class="facility-status ${f.status === 'Available' ? 'available' : ''}">${f.status}</span></div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
+            return `<div class="checklist-section"><div class="section-title">🧷 ON‑SITE FACILITIES</div><div class="grid-2col">${this.data.facilities.map(f => `<div class="facility-item"><span>${f.name}</span><span class="facility-status ${f.status === 'Available' ? 'available' : ''}">${f.status}</span></div>`).join('')}</div></div>`;
         }
-
         renderRecommendation() {
             if (!this.data.recommendation) return '';
             const r = this.data.recommendation;
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">✅ INSPECTION RECOMMENDATION</div>
-                    <div class="recommendation-box">
-                        ${r.complaints !== undefined ? `<div class="recommendation-item"><div class="recommendation-label">Complaints</div><div class="recommendation-value">${r.complaints}</div></div>` : ''}
-                        ${r.performance ? `<div class="recommendation-item"><div class="recommendation-label">Performance</div><div class="recommendation-value">${r.performance}</div></div>` : ''}
-                        <div class="recommendation-item"><div class="recommendation-label">Renewal</div><div class="recommendation-value">${r.renewal}</div></div>
-                    </div>
-                </div>
-            `;
+            return `<div class="checklist-section"><div class="section-title">✅ RECOMMENDATION</div><div class="recommendation-box">${r.complaints!==undefined?`<div class="recommendation-item"><div class="recommendation-label">Complaints</div><div class="recommendation-value">${r.complaints}</div></div>`:''}${r.performance?`<div class="recommendation-item"><div class="recommendation-label">Performance</div><div class="recommendation-value">${r.performance}</div></div>`:''}<div class="recommendation-item"><div class="recommendation-label">Renewal</div><div class="recommendation-value">${r.renewal}</div></div></div></div>`;
         }
-
         renderOfficers() {
             if (!this.data.officers) return '';
             const o = this.data.officers;
-            return `
-                <div class="officer-section">
-                    <div class="officer-signature"><div class="officer-title">${o.inspector || 'Inspector'}</div><div class="officer-line"></div><small>signature</small></div>
-                    <div class="officer-signature"><div class="officer-title">${o.acso || 'ACSO'}</div><div class="officer-line"></div><small>signature</small></div>
-                </div>
-            `;
+            return `<div class="officer-section"><div class="officer-signature"><div class="officer-title">${o.inspector || 'Inspector'}</div><div class="officer-line"></div><small>signature</small></div><div class="officer-signature"><div class="officer-title">${o.acso || 'ACSO'}</div><div class="officer-line"></div><small>signature</small></div></div>`;
+        }
+
+        // ---------- Google Sheet TSV generator ----------
+        generateSheetData() {
+            const d = this.data; if (!d) return '';
+            const rows = [];
+            rows.push(['Inspection Type', d.metadata.title]);
+            rows.push(['Station', d.metadata.stationName]);
+            rows.push(['Date', d.metadata.verificationDate, 'Time', d.metadata.verificationTime, 'Officer', d.metadata.verifyingOfficer]);
+            const p = d.particulars || {};
+            rows.push(['Proprietor', p.proprietor?.name || '', 'Mobile', p.contact?.mobile || '']);
+            if (p.contact?.aadhaar) rows.push(['Aadhaar', p.contact.aadhaar]);
+            if (p.contact?.gst) rows.push(['GST', p.contact.gst]);
+            if (p.location?.plotNo) rows.push(['Plot', p.location.plotNo, 'PS', p.location.policeStation || '']);
+            rows.push([' ']); // separator
+
+            // Licenses
+            (d.licenses || []).forEach(l => rows.push(['License', l.type, l.number, 'Valid', l.validity]));
+            rows.push(['--- SAFETY ---']);
+            (d.safetyItems || []).forEach(s => rows.push(['Safety', s.name, s.status]));
+            rows.push(['--- FACILITIES ---']);
+            (d.facilities || []).forEach(f => rows.push(['Facility', f.name, f.status]));
+            if (d.recommendation) {
+                rows.push(['Recommendation', `Complaints: ${d.recommendation.complaints}`, `Performance: ${d.recommendation.performance}`, `Renewal: ${d.recommendation.renewal}`]);
+            }
+            rows.push(['Inspector', d.officers?.inspector || '', 'ACSO', d.officers?.acso || '']);
+            return rows.map(r => r.join('\t')).join('\n'); // TSV
+        }
+
+        updateSheetPreview() {
+            const previewDiv = document.getElementById('sheetPreview');
+            const pre = document.getElementById('sheetDataPre');
+            const dataStr = this.generateSheetData();
+            pre.textContent = dataStr;
+            previewDiv.classList.add('show');
+        }
+
+        copySheetToClipboard() {
+            const dataStr = this.generateSheetData();
+            navigator.clipboard.writeText(dataStr).then(() => {
+                alert('✅ Table copied! Paste directly into Google Sheets (tab separated).');
+            }).catch(() => alert('❌ Copy failed, select text manually.'));
         }
     }
 
@@ -708,6 +346,7 @@
         window.addEventListener('popstate', (e) => {
             if (e.state?.type) { renderer.loadChecklist(e.state.type); if (select) select.value = e.state.type; }
         });
+        document.getElementById('copySheetBtn')?.addEventListener('click', () => renderer.copySheetToClipboard());
     });
 </script>
 </body>
