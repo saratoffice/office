@@ -4,81 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checklist · live from Google Sheets</title>
+    <!-- base reset / minimal system style (kept very light) -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #f0f5fa;
-            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-            line-height: 1.5;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            
-        }
-
-        #site-header {
-            background: linear-gradient(135deg, #1a3e5c 0%, #0f2d44 100%);
-            color: white;
-            padding: 1rem 2rem;
-            box-shadow: 0 4px 12px rgba(0,20,30,0.2);
-        }
-
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .logo h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-
-        .logo small {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-left: 0.5rem;
-        }
-
-        .header-links a {
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            background: rgba(255,255,255,0.1);
-            transition: 0.2s;
-        }
-        .header-links a:hover { background: rgba(255,255,255,0.2); }
-
-        #site-footer {
-            background: #1e3a5f;
-            color: #ccddee;
-            padding: 1.5rem;
-            text-align: center;
-            margin-top: 2rem;
-            border-top: 3px solid #2c4b6e;
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        main {
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f0f5fa; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; }
+    </style>
+    <!-- ========== CUSTOM CHECKLIST STYLE (isolated via unique class prefix) ========== -->
+    <style>
+        /* all styles are scoped under .cs--container or component classes – no external leak */
+        .cs--container {
             max-width: 1400px;
             margin: 2rem auto;
             padding: 0 1.5rem;
@@ -87,7 +21,7 @@
         }
 
         /* navigation */
-        .checklist-nav {
+        .cs--nav {
             background: white;
             padding: 1.2rem 2rem;
             border-radius: 50px;
@@ -100,13 +34,13 @@
             border: 1px solid #d0dfef;
         }
 
-        .checklist-nav label {
+        .cs--nav label {
             font-weight: 600;
             color: #1a3e5c;
             font-size: 1.1rem;
         }
 
-        .checklist-nav select {
+        .cs--nav select {
             padding: 0.7rem 3rem 0.7rem 1.5rem;
             border: 2px solid #1a3e5c;
             border-radius: 40px;
@@ -123,7 +57,7 @@
             min-width: 280px;
         }
 
-        .checklist-badge {
+        .cs--badge {
             background: #e9eff7;
             color: #1a3e5c;
             padding: 0.4rem 1.2rem;
@@ -134,7 +68,7 @@
         }
 
         /* main card */
-        .checklist-card {
+        .cs--card {
             background: white;
             border-radius: 32px;
             box-shadow: 0 20px 40px rgba(0,30,50,0.15);
@@ -143,7 +77,7 @@
             margin-bottom: 2rem;
         }
 
-        .card-header {
+        .cs--card-header {
             border-bottom: 4px solid #1a3e5c;
             padding-bottom: 1.5rem;
             margin-bottom: 2rem;
@@ -154,7 +88,7 @@
             gap: 1.5rem;
         }
 
-        .header-title h1 {
+        .cs--header-title h1 {
             font-size: 2.4rem;
             font-weight: 700;
             color: #1a3e5c;
@@ -162,14 +96,14 @@
             margin-bottom: 0.5rem;
         }
 
-        .station-name {
+        .cs--station-name {
             font-size: 1.3rem;
             color: #2c4b6e;
             font-weight: 500;
             margin-bottom: 0.5rem;
         }
 
-        .verification-info {
+        .cs--verification-info {
             display: flex;
             gap: 2rem;
             color: #3e5f7e;
@@ -180,7 +114,7 @@
             display: inline-flex;
         }
 
-        .print-btn {
+        .cs--print-btn {
             background: #1a3e5c;
             border: none;
             color: white;
@@ -196,14 +130,14 @@
             gap: 10px;
             border: 1px solid rgba(255,255,255,0.2);
         }
-        .print-btn:hover {
+        .cs--print-btn:hover {
             background: #0f2d44;
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(26,62,92,0.4);
         }
 
         /* sections */
-        .checklist-section {
+        .cs--section {
             background: #f9fcff;
             border-radius: 24px;
             padding: 1.5rem;
@@ -211,7 +145,7 @@
             border: 1px solid #d6e4f0;
         }
 
-        .section-title {
+        .cs--section-title {
             font-size: 1.4rem;
             font-weight: 700;
             color: #1a3e5c;
@@ -223,7 +157,7 @@
             gap: 12px;
             flex-wrap: wrap;
         }
-        .section-title .badge {
+        .cs--section-title .badge {
             background: #1a3e5c;
             color: white;
             font-size: 0.8rem;
@@ -232,56 +166,44 @@
             font-weight: 500;
         }
 
-        /* MULTI‑COLUMN LAYOUTS – paper saving */
-        .grid-2col {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem 2rem;
-        }
-        .grid-3col {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.8rem 2rem;
-        }
-        .grid-4col {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.8rem 1.5rem;
-        }
+        /* multi‑column layouts */
+        .cs--grid-2col { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem 2rem; }
+        .cs--grid-3col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem 2rem; }
+        .cs--grid-4col { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem 1.5rem; }
 
         /* items */
-        .info-item {
+        .cs--info-item {
             display: flex;
             align-items: baseline;
             gap: 10px;
             padding: 0.4rem 0;
             border-bottom: 1px dotted #b8cee8;
         }
-        .info-label {
+        .cs--info-label {
             font-weight: 600;
             color: #1a3e5c;
             min-width: 120px;
             font-size: 0.95rem;
         }
-        .info-value {
+        .cs--info-value {
             color: #1d3f5e;
             font-size: 0.95rem;
             word-break: break-word;
         }
 
-        .facility-item, .safety-item {
+        .cs--facility-item, .cs--safety-item {
             display: flex;
             align-items: center;
             gap: 8px;
             padding: 0.4rem 0;
             border-bottom: 1px dotted #a0b6ce;
         }
-        .facility-item span:first-child, .safety-item span:first-child {
+        .cs--facility-item span:first-child, .cs--safety-item span:first-child {
             font-size: 0.95rem;
             color: #152b3b;
             flex: 1;
         }
-        .facility-status {
+        .cs--facility-status {
             background: #1a3e5c;
             color: white;
             font-size: 0.7rem;
@@ -291,10 +213,10 @@
             white-space: nowrap;
             text-transform: uppercase;
         }
-        .facility-status.available { background: #1e7e34; }
+        .cs--facility-status.available { background: #1e7e34; }
 
-        /* tables (used only when needed) */
-        .data-table {
+        /* tables (if needed, but not used now) */
+        .cs--data-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.95rem;
@@ -302,7 +224,7 @@
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-        .data-table th {
+        .cs--data-table th {
             background: #1a3e5c;
             color: white;
             padding: 0.8rem 1rem;
@@ -310,14 +232,14 @@
             font-weight: 600;
             font-size: 0.9rem;
         }
-        .data-table td {
+        .cs--data-table td {
             padding: 0.7rem 1rem;
             border-bottom: 1px solid #dde6f0;
             background: white;
         }
 
         /* recommendation */
-        .recommendation-box {
+        .cs--recommendation-box {
             background: linear-gradient(145deg, #e4edf7, #d2e2f2);
             border-radius: 24px;
             padding: 1.5rem;
@@ -328,24 +250,24 @@
             gap: 2rem;
             border-left: 10px solid #1a3e5c;
         }
-        .recommendation-item {
+        .cs--recommendation-item {
             text-align: center;
             min-width: 140px;
         }
-        .recommendation-label {
+        .cs--recommendation-label {
             font-size: 0.8rem;
             color: #2c4b6e;
             text-transform: uppercase;
             font-weight: 600;
         }
-        .recommendation-value {
+        .cs--recommendation-value {
             font-size: 1.5rem;
             font-weight: 700;
             color: #1a3e5c;
         }
 
         /* officer signatures */
-        .officer-section {
+        .cs--officer-section {
             margin-top: 2rem;
             display: flex;
             justify-content: space-between;
@@ -354,44 +276,45 @@
             flex-wrap: wrap;
             gap: 2rem;
         }
-        .officer-signature {
+        .cs--officer-signature {
             text-align: center;
             min-width: 250px;
         }
-        .officer-title {
+        .cs--officer-title {
             font-weight: 700;
             color: #1a3e5c;
             margin-bottom: 0.8rem;
             font-size: 1.1rem;
         }
-        .officer-line {
+        .cs--officer-line {
             width: 250px;
             height: 2px;
             border-bottom: 3px dotted #1a3e5c;
             margin: 0.8rem auto;
         }
-        .officer-signature small { color: #3e5f7e; }
+        .cs--officer-signature small { color: #3e5f7e; }
 
-        /* loading / print */
-        .loading-state { text-align: center; padding: 4rem; color: #1a3e5c; }
+        .cs--loading-state { text-align: center; padding: 4rem; color: #1a3e5c; }
+
         @media print {
-            #site-header, #site-footer, .checklist-nav, .print-btn, .header-links, .checklist-badge, .go-to-top {
-                display: none !important;
-            }
-            .checklist-card { box-shadow: none; border: none; padding: 0; }
-            .facility-status, .data-table th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .cs--nav, .cs--print-btn, .cs--badge, .cs--go-to-top { display: none !important; }
+            .cs--card { box-shadow: none; border: none; padding: 0; }
+            .cs--facility-status, .cs--data-table th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
         @media (max-width: 700px) {
-            .grid-2col, .grid-3col, .grid-4col { grid-template-columns: 1fr; }
+            .cs--grid-2col, .cs--grid-3col, .cs--grid-4col { grid-template-columns: 1fr; }
         }
 
-        .go-to-top {
+        .cs--go-to-top {
             position: fixed; bottom: 30px; right: 30px; background: #1a3e5c; color: white;
             width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center;
             justify-content: center; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             font-size: 1.5rem; transition: 0.3s; z-index: 100;
         }
-        .go-to-top:hover { background: #0f2d44; transform: translateY(-5px); }
+        .cs--go-to-top:hover { background: #0f2d44; transform: translateY(-5px); }
+
+        /* site header / footer kept minimal, not interfering */
+        #site-header, #site-footer { font-family: system-ui; }
     </style>
 </head>
 <body>
@@ -402,8 +325,9 @@
     </div>
 </div>
 
-<main>
-    <div class="checklist-nav">
+<!-- Main container uses the cs-- prefixed class -->
+<main class="cs--container">
+    <div class="cs--nav">
         <label for="checklist-type">📋 Select Checklist:</label>
         <select id="checklist-type">
             <option value="hsd-renewal">⛽ HSD Renewal (hsd_data)</option>
@@ -413,26 +337,24 @@
             <option value="kerosene">🛢️ Kerosene Dealer</option>
             <option value="lpg">🔥 LPG Distributor</option>
         </select>
-        <span class="checklist-badge" id="checklist-type-badge">HSD Renewal</span>
+        <span class="cs--badge" id="checklist-type-badge">HSD Renewal</span>
     </div>
 
-    <div id="checklist-container"><div class="loading-state">⏳ Loading data from Google Sheet …</div></div>
+    <div id="checklist-container"><div class="cs--loading-state">⏳ Loading data from Google Sheet …</div></div>
 </main>
 
 <div id="site-footer">
-    <div class="footer-content"><span>© 2025 Sarat Office · Data from Google Sheets</span><span>Version 4.1 · fixed CSV fetch</span></div>
+    <div class="footer-content"><span>© 2025 Sarat Office · Data from Google Sheets</span><span>Version 4.2 · blank fields hidden</span></div>
 </div>
-<a href="#" class="go-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'}); return false;">↑</a>
+<a href="#" class="cs--go-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'}); return false;">↑</a>
 
 <script>
+    (function() {
     // ==========================================================================
-    // CONFIGURATION - Using your working CSV link
+    // CONFIGURATION – same working spreadsheet ID
     // ==========================================================================
     const SHEET_CONFIG = {
-        // Your spreadsheet ID extracted from the working link
         SPREADSHEET_ID: '2PACX-1vS7ik39OFKwscZJiFMgl2CNzRltAxK2sG6fIn-WniMGJ2rvQX1mFnzoerLz0lZOAsUMGeyFtyp0II4o',
-        
-        // Map dropdown values to sheet names
         sheets: {
             'hsd-renewal': 'hsd_data',
             'fps-checklist': 'fps_data',
@@ -444,71 +366,58 @@
     };
 
     // ==========================================================================
-    // Helper: Parse CSV into array of objects
+    // Helper: Parse CSV (handles quotes, empty fields)
     // ==========================================================================
     function csvToObjects(csvText) {
         const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== '');
         if (lines.length === 0) return [];
         
-        // Parse headers (first line)
         const headers = parseCSVLine(lines[0]);
-        
         const rows = [];
         for (let i = 1; i < lines.length; i++) {
             const values = parseCSVLine(lines[i]);
             const obj = {};
             headers.forEach((h, idx) => {
-                obj[h] = values[idx] || '';
+                // if value is undefined or empty string -> keep blank (do not delete key, but store empty)
+                obj[h] = (idx < values.length) ? values[idx] : '';
             });
             rows.push(obj);
         }
         return rows;
     }
 
-    // Simple CSV line parser (handles quotes)
     function parseCSVLine(line) {
         const result = [];
         let inQuote = false;
-        let currentValue = '';
-        
+        let current = '';
         for (let i = 0; i < line.length; i++) {
-            const char = line[i];
-            
-            if (char === '"') {
+            const ch = line[i];
+            if (ch === '"') {
                 inQuote = !inQuote;
-            } else if (char === ',' && !inQuote) {
-                result.push(currentValue);
-                currentValue = '';
+            } else if (ch === ',' && !inQuote) {
+                result.push(current);
+                current = '';
             } else {
-                currentValue += char;
+                current += ch;
             }
         }
-        result.push(currentValue); // push last value
-        
+        result.push(current);
         return result.map(val => val.trim());
     }
 
     // ==========================================================================
-    // Fetch data from specific sheet using the EXACT format that works
+    // Fetch data using public CSV export
     // ==========================================================================
     async function fetchSheetData(sheetName) {
-        const spreadsheetId = SHEET_CONFIG.SPREADSHEET_ID;
-        
-        // Use the exact URL format that you confirmed works in browser
-        const url = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?output=csv&sheet=${encodeURIComponent(sheetName)}`;
-        
-        console.log('Fetching URL:', url);
-        
+        const url = `https://docs.google.com/spreadsheets/d/e/${SHEET_CONFIG.SPREADSHEET_ID}/pub?output=csv&sheet=${encodeURIComponent(sheetName)}`;
         const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Failed to load sheet: ${sheetName} (Status: ${response.status})`);
-        }
+        if (!response.ok) throw new Error(`Failed to load sheet: ${sheetName} (${response.status})`);
         const csvText = await response.text();
         return csvToObjects(csvText);
     }
 
     // ==========================================================================
-    // Build checklist object from sheet rows
+    // Build checklist object – if value / validity is blank, we keep empty string
     // ==========================================================================
     function buildChecklistFromRows(rows) {
         if (!rows || rows.length === 0) return null;
@@ -524,11 +433,14 @@
         };
 
         rows.forEach(row => {
-            const section = (row.section || '').trim().toLowerCase();
+            // normalise keys (trim)
+            const rawSection = (row.section || '').trim();
             const key = (row.key || '').trim();
-            const value = (row.value || '').trim();
-            const validity = (row.validity || '').trim();
-            
+            let value = (row.value !== undefined) ? row.value : '';   // keep blank if empty
+            let validity = (row.validity !== undefined) ? row.validity : ''; 
+            // value and validity can be blank — we keep them as is
+
+            const section = rawSection.toLowerCase();
             if (!section || !key) return;
 
             if (section === 'metadata') {
@@ -548,7 +460,7 @@
             }
         });
 
-        // Set fallback title if missing
+        // fallback title if missing
         if (!output.metadata.title) {
             const names = { 
                 'hsd-renewal': 'HSD Renewal', 
@@ -566,7 +478,7 @@
     }
 
     // ==========================================================================
-    // Renderer class
+    // Renderer – all css classes prefixed with cs--
     // ==========================================================================
     class ChecklistRenderer {
         constructor() { 
@@ -593,7 +505,7 @@
             if (!this.data) {
                 container.innerHTML = `<div style="background:#ffeeee; padding:3rem; border-radius:32px; color:#a00; text-align:center;">
                     ⚠️ No data found for "${type}" in sheet <strong>${SHEET_CONFIG.sheets[type]}</strong>.<br>
-                    Make sure the sheet has the required columns (section, key, value) and data.
+                    Make sure the sheet has section/key/value columns.
                 </div>`;
                 return;
             }
@@ -602,8 +514,8 @@
 
         render() {
             const container = document.getElementById('checklist-container');
-            const html = `
-                <div class="checklist-card">
+            container.innerHTML = `
+                <div class="cs--card">
                     ${this.renderHeader()}
                     ${this.renderParticularsGrid()}
                     ${this.renderLicensesGrid()}
@@ -613,24 +525,24 @@
                     ${this.renderOfficers()}
                 </div>
             `;
-            container.innerHTML = html;
-            document.getElementById('print-checklist-btn')?.addEventListener('click', ()=>window.print());
+            const printBtn = document.getElementById('print-checklist-btn');
+            if (printBtn) printBtn.addEventListener('click', ()=>window.print());
         }
 
         renderHeader() {
             const m = this.data.metadata || {};
             return `
-                <div class="card-header">
-                    <div class="header-title">
-                        <h1>⛽ ${m.title || 'Checklist'}</h1>
-                        <div class="station-name">${m.stationName || ''}</div>
-                        <div class="verification-info">
+                <div class="cs--card-header">
+                    <div class="cs--header-title">
+                        <h1>⛽ ${m.title || ''}</h1>
+                        <div class="cs--station-name">${m.stationName || ''}</div>
+                        <div class="cs--verification-info">
                             <span>📅 ${m.verificationDate || ''}</span>
                             <span>⏰ ${m.verificationTime || ''}</span>
                             <span>👤 ${m.verifyingOfficer || ''}</span>
                         </div>
                     </div>
-                    <button class="print-btn" id="print-checklist-btn">📋 PRINT</button>
+                    <button class="cs--print-btn" id="print-checklist-btn">📋 PRINT</button>
                 </div>
             `;
         }
@@ -639,12 +551,14 @@
             const p = this.data.particulars || {};
             const items = [];
             for (let [key, val] of Object.entries(p)) {
-                if (val) items.push(`<div class="info-item"><span class="info-label">${key}</span><span class="info-value">${val}</span></div>`);
+                // show even if empty string? we skip truly empty to avoid blank rows, but keep if value is blank? better show key only if value non-empty
+                if (val && val.trim() !== '') items.push(`<div class="cs--info-item"><span class="cs--info-label">${key}</span><span class="cs--info-value">${val}</span></div>`);
             }
+            if (items.length === 0) return '';
             return `
-                <div class="checklist-section">
-                    <div class="section-title">📋 STATION PARTICULARS</div>
-                    <div class="grid-2col">${items.join('')}</div>
+                <div class="cs--section">
+                    <div class="cs--section-title">📋 STATION PARTICULARS</div>
+                    <div class="cs--grid-2col">${items.join('')}</div>
                 </div>
             `;
         }
@@ -652,12 +566,18 @@
         renderLicensesGrid() {
             const lic = this.data.licenses || [];
             if (lic.length === 0) return '';
+            const items = lic.map(l => {
+                let display = l.number;
+                if (l.validity && l.validity.trim() !== '') display += ` (valid: ${l.validity})`;
+                // if number itself is blank, skip entire license item? we want to keep if at least number is present, else skip
+                if (!l.number || l.number.trim() === '') return ''; 
+                return `<div class="cs--info-item"><span class="cs--info-label">${l.type}</span><span class="cs--info-value">${display}</span></div>`;
+            }).filter(item => item !== '');
+            if (items.length === 0) return '';
             return `
-                <div class="checklist-section">
-                    <div class="section-title">📜 LICENSE DETAILS</div>
-                    <div class="grid-2col">
-                        ${lic.map(l => `<div class="info-item"><span class="info-label">${l.type}</span><span class="info-value">${l.number} ${l.validity ? '(valid: ' + l.validity + ')' : ''}</span></div>`).join('')}
-                    </div>
+                <div class="cs--section">
+                    <div class="cs--section-title">📜 LICENSE DETAILS</div>
+                    <div class="cs--grid-2col">${items.join('')}</div>
                 </div>
             `;
         }
@@ -665,11 +585,13 @@
         renderSafetyGrid() {
             const items = this.data.safetyItems || [];
             if (items.length === 0) return '';
+            const filtered = items.filter(s => s.status && s.status.trim() !== ''); // show only non-blank status
+            if (filtered.length === 0) return '';
             return `
-                <div class="checklist-section">
-                    <div class="section-title">🛡️ SAFETY PROVISIONS</div>
-                    <div class="grid-3col">
-                        ${items.map(s => `<div class="facility-item"><span>${s.name}</span><span class="facility-status ${s.status?.toLowerCase().includes('avail') ? 'available' : ''}">${s.status}</span></div>`).join('')}
+                <div class="cs--section">
+                    <div class="cs--section-title">🛡️ SAFETY PROVISIONS</div>
+                    <div class="cs--grid-3col">
+                        ${filtered.map(s => `<div class="cs--facility-item"><span>${s.name}</span><span class="cs--facility-status ${s.status?.toLowerCase().includes('avail') ? 'available' : ''}">${s.status}</span></div>`).join('')}
                     </div>
                 </div>
             `;
@@ -678,11 +600,13 @@
         renderFacilitiesGrid() {
             const fac = this.data.facilities || [];
             if (fac.length === 0) return '';
+            const filtered = fac.filter(f => f.status && f.status.trim() !== ''); // only non-blank status
+            if (filtered.length === 0) return '';
             return `
-                <div class="checklist-section">
-                    <div class="section-title">🧷 ON‑SITE FACILITIES</div>
-                    <div class="grid-2col">
-                        ${fac.map(f => `<div class="facility-item"><span>${f.name}</span><span class="facility-status ${f.status === 'Available' ? 'available' : ''}">${f.status}</span></div>`).join('')}
+                <div class="cs--section">
+                    <div class="cs--section-title">🧷 ON‑SITE FACILITIES</div>
+                    <div class="cs--grid-2col">
+                        ${filtered.map(f => `<div class="cs--facility-item"><span>${f.name}</span><span class="cs--facility-status ${f.status === 'Available' ? 'available' : ''}">${f.status}</span></div>`).join('')}
                     </div>
                 </div>
             `;
@@ -690,14 +614,15 @@
 
         renderRecommendation() {
             const r = this.data.recommendation || {};
-            if (Object.keys(r).length === 0) return '';
+            const nonEmpty = Object.fromEntries(Object.entries(r).filter(([_, v]) => v && v.toString().trim() !== ''));
+            if (Object.keys(nonEmpty).length === 0) return '';
             return `
-                <div class="checklist-section">
-                    <div class="section-title">✅ INSPECTION RECOMMENDATION</div>
-                    <div class="recommendation-box">
-                        ${r.complaints !== undefined ? `<div class="recommendation-item"><div class="recommendation-label">Complaints</div><div class="recommendation-value">${r.complaints}</div></div>` : ''}
-                        ${r.performance ? `<div class="recommendation-item"><div class="recommendation-label">Performance</div><div class="recommendation-value">${r.performance}</div></div>` : ''}
-                        <div class="recommendation-item"><div class="recommendation-label">Renewal</div><div class="recommendation-value">${r.renewal || '—'}</div></div>
+                <div class="cs--section">
+                    <div class="cs--section-title">✅ INSPECTION RECOMMENDATION</div>
+                    <div class="cs--recommendation-box">
+                        ${nonEmpty.complaints !== undefined ? `<div class="cs--recommendation-item"><div class="cs--recommendation-label">Complaints</div><div class="cs--recommendation-value">${nonEmpty.complaints}</div></div>` : ''}
+                        ${nonEmpty.performance ? `<div class="cs--recommendation-item"><div class="cs--recommendation-label">Performance</div><div class="cs--recommendation-value">${nonEmpty.performance}</div></div>` : ''}
+                        ${nonEmpty.renewal ? `<div class="cs--recommendation-item"><div class="cs--recommendation-label">Renewal</div><div class="cs--recommendation-value">${nonEmpty.renewal}</div></div>` : ''}
                     </div>
                 </div>
             `;
@@ -705,18 +630,19 @@
 
         renderOfficers() {
             const o = this.data.officers || {};
-            if (Object.keys(o).length === 0) return '';
+            const nonEmpty = Object.fromEntries(Object.entries(o).filter(([_, v]) => v && v.toString().trim() !== ''));
+            if (Object.keys(nonEmpty).length === 0) return '';
             return `
-                <div class="officer-section">
-                    <div class="officer-signature"><div class="officer-title">${o.inspector || 'Inspector'}</div><div class="officer-line"></div><small>signature</small></div>
-                    <div class="officer-signature"><div class="officer-title">${o.acso || 'ACSO'}</div><div class="officer-line"></div><small>signature</small></div>
+                <div class="cs--officer-section">
+                    <div class="cs--officer-signature"><div class="cs--officer-title">${nonEmpty.inspector || 'Inspector'}</div><div class="cs--officer-line"></div><small>signature</small></div>
+                    <div class="cs--officer-signature"><div class="cs--officer-title">${nonEmpty.acso || 'ACSO'}</div><div class="cs--officer-line"></div><small>signature</small></div>
                 </div>
             `;
         }
     }
 
     // ==========================================================================
-    // MAIN: Initialize
+    // MAIN
     // ==========================================================================
     document.addEventListener('DOMContentLoaded', () => {
         const select = document.getElementById('checklist-type');
@@ -724,50 +650,41 @@
 
         async function loadChecklistForType(type) {
             const container = document.getElementById('checklist-container');
-            container.innerHTML = '<div class="loading-state">⏳ Loading data from sheet...</div>';
+            container.innerHTML = '<div class="cs--loading-state">⏳ Loading data from sheet...</div>';
             
             try {
                 const sheetName = SHEET_CONFIG.sheets[type];
-                if (!sheetName) {
-                    throw new Error(`No sheet configured for type: ${type}`);
-                }
+                if (!sheetName) throw new Error(`No sheet for type: ${type}`);
                 
                 const rows = await fetchSheetData(sheetName);
-                console.log(`Loaded ${rows.length} rows from ${sheetName}`);
                 renderer.loadChecklist(type, rows);
                 
-                // Update URL
                 history.pushState({ type }, '', `?type=${type}`);
             } catch (error) {
                 console.error(error);
                 container.innerHTML = `<div style="background:#fff0f0; padding:2rem; border-radius:32px; color:#b33; text-align:center;">
-                    ❌ Error loading sheet: ${error.message}<br>
-                    <small>Make sure your sheet is published and accessible</small>
+                    ❌ Error: ${error.message}<br><small>Check publishing & sheet name</small>
                 </div>`;
             }
         }
 
-        // Get type from URL or default
         const urlParams = new URLSearchParams(window.location.search);
         const initialType = urlParams.get('type') || 'hsd-renewal';
         if (select) select.value = initialType;
 
-        // Load initial checklist
         loadChecklistForType(initialType);
 
-        // Handle selection change
-        select.addEventListener('change', (e) => {
-            loadChecklistForType(e.target.value);
-        });
+        select.addEventListener('change', (e) => loadChecklistForType(e.target.value));
 
-        // Handle browser back/forward
         window.addEventListener('popstate', (e) => {
-            if (e.state?.type) {
-                if (select) select.value = e.state.type;
+            if (e.state?.type && select) {
+                select.value = e.state.type;
                 loadChecklistForType(e.state.type);
             }
         });
     });
+
+    })();
 </script>
 </body>
 </html>
