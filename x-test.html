@@ -3,1031 +3,1567 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery · Office & Field Operations</title>
-    <!-- Font Awesome 6 for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts for modern typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Checklist Management System - HSD / FPS / PPC / Rice Mill</title>
+    
     <style>
-        /* ----- GALLERY MODULE (custom classes only) ----- */
-        .gallery-module {
-            max-width: 1440px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem 4rem;
-            font-family: 'Inter', -apple-system, sans-serif;
-            color: #111827;
-            background: #f8fafd;
+        /* ========== GLOBAL RESET ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* IMPROVED GALLERY HEADING - more modern and impactful */
-        .gallery-heading {
-            margin-bottom: 3rem;
-            position: relative;
-        }
-
-        .gallery-heading::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            width: 120px;
-            height: 120px;
-            background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, rgba(37,99,235,0) 70%);
-            border-radius: 50%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .gallery-heading::after {
-            content: '';
-            position: absolute;
-            bottom: -20px;
-            right: -20px;
-            width: 180px;
-            height: 180px;
-            background: radial-gradient(circle, rgba(245,158,11,0.06) 0%, rgba(245,158,11,0) 70%);
-            border-radius: 50%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .heading-content {
-            position: relative;
-            z-index: 1;
+        body {
+            background: #f0f5fa;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            line-height: 1.5;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
         }
 
-        .heading-top {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-
-        .heading-title-group {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .heading-icon {
-            background: linear-gradient(145deg, #1e3c5c, #2b5b8b);
-            width: 70px;
-            height: 70px;
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* ========== HEADER & FOOTER ========== */
+        #site-header {
+            background: linear-gradient(135deg, #1a3e5c 0%, #0f2d44 100%);
             color: white;
-            font-size: 2rem;
-            box-shadow: 0 15px 30px -10px rgba(30,60,92,0.4);
-            transform: rotate(3deg);
-            transition: transform 0.2s ease;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 12px rgba(0,20,30,0.2);
         }
 
-        .heading-icon:hover {
-            transform: rotate(0deg) scale(1.05);
-        }
-
-        .heading-text h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(2.5rem, 7vw, 4rem);
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            line-height: 1.1;
-            margin: 0 0 0.25rem;
-            background: linear-gradient(135deg, #1e293b, #1e3c5c, #2563eb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .heading-text .subtitle {
-            font-size: 1.2rem;
-            color: #475569;
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.75rem;
             flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .subtitle-separator {
-            width: 6px;
-            height: 6px;
-            background: #94a3b8;
-            border-radius: 50%;
-        }
-
-        .live-indicator {
-            background: #dcfce7;
-            color: #166534;
-            padding: 0.25rem 1rem;
-            border-radius: 60px;
-            font-size: 0.8rem;
+        .logo h1 {
+            font-size: 1.8rem;
             font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
+            letter-spacing: -0.5px;
         }
 
-        .live-indicator i {
-            font-size: 0.6rem;
-            color: #22c55e;
-        }
-
-        .stats-pills {
-            display: flex;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-        }
-
-        .stat-pill {
-            background: white;
-            border: 1px solid #e2e8f0;
-            padding: 0.5rem 1.2rem;
-            border-radius: 60px;
+        .logo small {
             font-size: 0.9rem;
-            font-weight: 500;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            transition: all 0.2s;
-            box-shadow: 0 4px 10px -5px rgba(0,0,0,0.05);
-        }
-
-        .stat-pill i {
-            color: #2563eb;
-        }
-
-        .stat-pill:hover {
-            background: #f8fafc;
-            border-color: #94a3b8;
-            transform: translateY(-2px);
-        }
-
-        .heading-bottom {
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.8);
-            border-radius: 60px;
-            padding: 0.75rem 1.5rem;
-            display: inline-flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 2rem;
-            box-shadow: 0 10px 30px -15px rgba(0,0,0,0.1);
-            max-width: 100%;
-        }
-
-        .location-marker {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #1e293b;
-            font-weight: 500;
-        }
-
-        .location-marker i {
-            color: #ef4444;
-        }
-
-        .location-marker span {
-            background: #fee2e2;
-            color: #b91c1c;
-            padding: 0.2rem 0.6rem;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 600;
+            opacity: 0.9;
+            font-weight: 400;
             margin-left: 0.5rem;
         }
 
-        .heading-tags {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
+        .header-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.2s;
         }
 
-        .heading-tag {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            color: #475569;
-            font-size: 0.9rem;
+        .header-links a:hover {
+            background: rgba(255,255,255,0.2);
         }
 
-        .heading-tag i {
-            color: #2563eb;
+        #site-footer {
+            background: #1e3a5f;
+            color: #ccddee;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+            border-top: 3px solid #2c4b6e;
         }
 
-        /* filter bar */
-        .gallery-filterbar {
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
-            align-items: center;
-            gap: 1.5rem;
-            margin: 2rem 0 2rem;
-            background: white;
-            padding: 1rem 1.5rem;
-            border-radius: 80px;
-            box-shadow: 0 10px 30px -15px rgba(0,0,0,0.1);
-            border: 1px solid #edf2f7;
-        }
-
-        .filter-tabs {
-            display: flex;
             flex-wrap: wrap;
-            gap: 0.6rem;
+            gap: 1rem;
         }
 
-        .filter-btn {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            color: #475569;
-            font-weight: 500;
-            font-size: 0.9rem;
-            padding: 0.6rem 1.4rem;
+        /* ========== MAIN CONTAINER ========== */
+        main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* ========== CHECKLIST NAVIGATION ========== */
+        .checklist-nav {
+            background: white;
+            padding: 1.2rem 2rem;
+            border-radius: 50px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0,20,30,0.08);
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+            border: 1px solid #d0dfef;
+        }
+
+        .checklist-nav label {
+            font-weight: 600;
+            color: #1a3e5c;
+            font-size: 1.1rem;
+        }
+
+        .checklist-nav select {
+            padding: 0.7rem 3rem 0.7rem 1.5rem;
+            border: 2px solid #1a3e5c;
             border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1a3e5c;
+            background: white;
             cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a3e5c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1.2rem center;
+            background-size: 1.2rem;
+            min-width: 280px;
+        }
+
+        .checklist-nav select:hover {
+            background-color: #f5f9ff;
+        }
+
+        .checklist-badge {
+            background: #e9eff7;
+            color: #1a3e5c;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        /* ========== MAIN CARD ========== */
+        .checklist-card {
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0,30,50,0.15);
+            padding: 2rem;
+            border: 1px solid #c5d5e8;
+            margin-bottom: 2rem;
+        }
+
+        /* ========== HEADER SECTION ========== */
+        .card-header {
+            border-bottom: 4px solid #1a3e5c;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .header-title h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #1a3e5c;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-title .station-name {
+            font-size: 1.3rem;
+            color: #2c4b6e;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-title .verification-info {
+            display: flex;
+            gap: 2rem;
+            color: #3e5f7e;
+            font-size: 1rem;
+            background: #eef4fa;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            display: inline-flex;
+        }
+
+        .print-btn {
+            background: #1a3e5c;
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.8rem 2.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(26,62,92,0.3);
             transition: all 0.2s;
             display: inline-flex;
             align-items: center;
-            gap: 0.6rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            gap: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
-        .filter-btn i {
-            color: #64748b;
-            font-size: 0.9rem;
+        .print-btn:hover {
+            background: #0f2d44;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(26,62,92,0.4);
         }
 
-        .filter-btn.active {
-            background: #1e3c5c;
-            border-color: #1e3c5c;
-            color: white;
-            box-shadow: 0 8px 16px -6px rgba(30,60,92,0.25);
+        /* ========== SECTION STYLES ========== */
+        .checklist-section {
+            background: #f9fcff;
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #d6e4f0;
         }
 
-        .filter-btn.active i {
-            color: white;
-        }
-
-        .filter-btn:hover:not(.active) {
-            background: #f1f7fd;
-            border-color: #9bb5d4;
-        }
-
-        .view-options {
-            display: flex;
-            gap: 0.4rem;
-            background: #f8fafc;
-            padding: 0.3rem;
-            border-radius: 48px;
-            border: 1px solid #e6edf6;
-        }
-
-        .view-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 40px;
-            border: none;
-            background: transparent;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.15s;
-            font-size: 1rem;
-        }
-
-        .view-btn.active {
-            background: #2563eb;
-            color: white;
-        }
-
-        /* gallery grid - IMPROVED MASONRY HEIGHTS */
-        .gallery-grid {
-            display: grid;
-            gap: 1.8rem;
-            transition: all 0.3s ease;
-            margin-bottom: 3rem;
-        }
-
-        /* ENHANCED MASONRY - increased row height for better image display */
-        .gallery-grid.masonry-view {
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            grid-auto-rows: 400px; /* INCREASED from 20px to 30px for taller images */
-        }
-
-        .gallery-grid.grid-view {
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-        }
-
-        .gallery-grid.list-view {
-            grid-template-columns: 1fr;
-        }
-
-        /* media card - with better image heights */
-        .media-card {
-            background: white;
-            border-radius: 28px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px -12px rgba(0,30,60,0.15);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255,255,255,0.6);
-            cursor: pointer;
-            break-inside: avoid;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .media-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 28px 45px -14px rgba(20,60,120,0.3);
-            border-color: rgba(37,99,235,0.3);
-        }
-
-        .card-media {
-            position: relative;
-            overflow: hidden;
-            background: #eef3f9;
-            flex-shrink: 0;
-        }
-
-        /* Masonry specific - different heights for variety */
-        .gallery-grid.masonry-view .card-media {
-            height: 100%; /* Fill the grid row span */
-        }
-
-        .gallery-grid.masonry-view .media-card:nth-child(3n+1) .card-media {
-            min-height: 220px; /* Taller for some cards */
-        }
-
-        .gallery-grid.masonry-view .media-card:nth-child(3n+2) .card-media {
-            min-height: 260px; /* Extra tall */
-        }
-
-        .gallery-grid.masonry-view .media-card:nth-child(3n+3) .card-media {
-            min-height: 200px; /* Medium */
-        }
-
-        .gallery-grid.grid-view .card-media {
-            aspect-ratio: 4/3;
-        }
-
-        .gallery-grid.list-view .card-media {
-            aspect-ratio: 4/3;
-            max-width: 220px;
-        }
-
-        .gallery-grid.list-view .media-card {
-            flex-direction: row;
-            max-height: 180px;
-        }
-
-        .card-media img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .media-card:hover .card-media img {
-            transform: scale(1.05);
-        }
-
-        .media-badge {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(4px);
-            color: white;
-            padding: 0.4rem 1rem;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 600;
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1a3e5c;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 3px solid #b8cee8;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            z-index: 2;
-            border: 1px solid rgba(255,255,255,0.2);
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .section-title .badge {
+            background: #1a3e5c;
+            color: white;
+            font-size: 0.8rem;
+            padding: 0.2rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
             letter-spacing: 0.3px;
         }
 
-        .media-badge i {
-            font-size: 0.7rem;
-            color: #fcd34d;
+        .section-title .badge.orange {
+            background: #d19c2a;
+            color: #1e2b38;
         }
 
-        .card-content {
-            padding: 1.4rem 1.4rem 1.4rem;
-            background: white;
-            flex: 1;
+        /* ========== GRID LAYOUTS ========== */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 0.8rem 2rem;
         }
 
-        .card-title {
-            font-weight: 700;
-            font-size: 1.15rem;
-            margin-bottom: 0.4rem;
+        .info-item {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: #0f2b40;
-            letter-spacing: -0.02em;
+            align-items: baseline;
+            gap: 10px;
+            padding: 0.4rem 0;
+            border-bottom: 1px dotted #b8cee8;
         }
 
-        .card-title .date-tag {
-            background: #e3edf7;
-            padding: 0.2rem 0.9rem;
-            border-radius: 40px;
-            font-size: 0.7rem;
+        .info-label {
             font-weight: 600;
-            color: #1e4a76;
-        }
-
-        .card-location {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-            color: #5f6b7a;
-            margin-bottom: 0.6rem;
-        }
-
-        .card-location i {
-            color: #3b82f6;
-            font-size: 0.8rem;
-        }
-
-        .card-desc {
-            color: #36454F;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 1rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .card-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .tag {
-            background: #f0f4fa;
-            padding: 0.25rem 1rem;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: #365277;
-            transition: background 0.1s;
-        }
-
-        .media-card:hover .tag {
-            background: #e6edf8;
-        }
-
-        /* bottom section */
-        .gallery-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 2px solid #dee8f2;
-        }
-
-        .stats-group {
-            display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .stat {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            color: #2c3e50;
-            font-weight: 600;
+            color: #1a3e5c;
+            min-width: 140px;
             font-size: 0.95rem;
         }
 
-        .stat i {
-            color: #2563eb;
-            background: #e5eefc;
-            padding: 0.5rem;
-            border-radius: 50%;
+        .info-value {
+            color: #1d3f5e;
+            font-size: 0.95rem;
+            word-break: break-word;
+        }
+
+        /* ========== DOCUMENTS GRID ========== */
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem 2rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.4rem 0;
+            border-bottom: 1px dotted #cbd2dd;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #1a3e5c;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            font-size: 0.95rem;
+            color: #152b3b;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* ========== TABLES ========== */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .data-table th {
+            background: #1a3e5c;
+            color: white;
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-weight: 600;
             font-size: 0.9rem;
         }
 
-        .load-btn {
-            background: linear-gradient(135deg, #1e3c5c, #2563eb);
-            border: none;
-            color: white;
-            padding: 0.9rem 2.5rem;
-            border-radius: 60px;
-            font-weight: 600;
+        .data-table td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid #dde6f0;
+            background: white;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:nth-child(even) td {
+            background: #f5faff;
+        }
+
+        /* ========== FACILITIES GRID ========== */
+        .facilities-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem 1.5rem;
+        }
+
+        .facility-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 10px 20px -8px #1e3c5c;
-            border: 1px solid rgba(255,255,255,0.2);
+            gap: 8px;
+            padding: 0.4rem 0;
+            border-bottom: 1px dotted #a0b6ce;
         }
 
-        .load-btn:hover {
-            background: linear-gradient(135deg, #2563eb, #1e3c5c);
-            transform: translateY(-2px);
-            box-shadow: 0 18px 25px -10px #1e3c5c;
+        .facility-item span:first-child {
+            font-size: 0.95rem;
+            color: #152b3b;
         }
 
-        @media (max-width: 640px) {
-            .gallery-filterbar {
-                border-radius: 30px;
-                padding: 1rem;
+        .facility-status {
+            background: #1a3e5c;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            margin-left: auto;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+
+        .facility-status.available {
+            background: #1e7e34;
+        }
+
+        /* ========== RECORDS GRID ========== */
+        .records-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem 1.5rem;
+        }
+
+        .record-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.4rem 0;
+            border-bottom: 1px dotted #8aa3c0;
+        }
+
+        /* ========== RECOMMENDATION BOX ========== */
+        .recommendation-box {
+            background: linear-gradient(145deg, #e4edf7, #d2e2f2);
+            border-radius: 24px;
+            padding: 1.8rem;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            border-left: 10px solid #1a3e5c;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.8), 0 6px 12px rgba(0,20,30,0.1);
+        }
+
+        .recommendation-item {
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .recommendation-label {
+            font-size: 0.8rem;
+            color: #2c4b6e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .recommendation-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1a3e5c;
+            margin-top: 0.3rem;
+        }
+
+        /* ========== OFFICER SECTION ========== */
+        .officer-section {
+            margin-top: 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem 3rem;
+            border-top: 3px dashed #a0bada;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .officer-signature {
+            text-align: center;
+            min-width: 250px;
+        }
+
+        .officer-title {
+            font-weight: 700;
+            color: #1a3e5c;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .officer-line {
+            width: 250px;
+            height: 2px;
+            border-bottom: 3px dotted #1a3e5c;
+            margin: 0.8rem auto;
+        }
+
+        .officer-signature small {
+            color: #3e5f7e;
+            font-style: italic;
+        }
+
+        /* ========== LOADING STATE ========== */
+        .loading-state {
+            text-align: center;
+            padding: 4rem;
+            background: white;
+            border-radius: 32px;
+            font-size: 1.2rem;
+            color: #1a3e5c;
+        }
+
+        .loading-state::after {
+            content: '';
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 3px solid #1a3e5c;
+            border-top-color: transparent;
+            border-radius: 50%;
+            margin-left: 0.8rem;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ========== PRINT STYLES ========== */
+        @media print {
+            @page {
+                size: A4;
+                margin: 0.4in;
             }
-            .gallery-grid.list-view .media-card {
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            #site-header,
+            #site-footer,
+            .checklist-nav,
+            .print-btn,
+            .header-links,
+            .checklist-badge {
+                display: none !important;
+            }
+
+            .checklist-card {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .facility-status {
+                background: #1a3e5c !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .data-table th {
+                background: #1a3e5c !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .documents-grid,
+            .facilities-grid,
+            .records-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-title h1 {
+                font-size: 1.8rem;
+            }
+
+            .checklist-nav select {
+                min-width: 100%;
+            }
+
+            .officer-section {
                 flex-direction: column;
-                max-height: none;
-            }
-            .gallery-grid.list-view .card-media {
-                max-width: 100%;
-            }
-            .stats-group {
-                gap: 1rem;
-            }
-            .heading-bottom {
-                border-radius: 30px;
+                align-items: center;
                 padding: 1rem;
-            }
-            .heading-title-group {
-                gap: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- your existing header here -->
-    
-    <div class="gallery-module">
-        <!-- IMPROVED GALLERY HEADING - more modern and impactful -->
-        <div class="gallery-heading">
-            <div class="heading-content">
-                <div class="heading-top">
-                    <div class="heading-title-group">
-                        <div class="heading-icon">
-                            <i class="fas fa-camera-retro"></i>
-                        </div>
-                        <div class="heading-text">
-                            <h1>Visual Archive</h1>
-                            <div class="subtitle">
-                                <span>Field documentation</span>
-                                <span class="subtitle-separator"></span>
-                                <span>2024–2026</span>
-                                <span class="live-indicator"><i class="fas fa-circle"></i> LIVE</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="stats-pills">
-                        <div class="stat-pill"><i class="fas fa-camera"></i> 342 photos</div>
-                        <div class="stat-pill"><i class="fas fa-video"></i> 28 videos</div>
-                        <div class="stat-pill"><i class="fas fa-location-dot"></i> 12 locations</div>
-                    </div>
-                </div>
-                <div class="heading-bottom">
-                    <div class="location-marker">
-                        <i class="fas fa-map-pin"></i>
-                        Active deployments
-                        <span>HQ + 4 depots</span>
-                    </div>
-                    <div class="heading-tags">
-                        <span class="heading-tag"><i class="fas fa-hard-hat"></i> Inspections</span>
-                        <span class="heading-tag"><i class="fas fa-users"></i> Meetings</span>
-                        <span class="heading-tag"><i class="fas fa-chalkboard"></i> Training</span>
-                        <span class="heading-tag"><i class="fas fa-oil-well"></i> Field ops</span>
-                    </div>
-                </div>
-            </div>
+
+<!-- ========== SITE HEADER ========== -->
+<div id="site-header">
+    <div class="header-content">
+        <div class="logo">
+            <h1>⛽ SARAT OFFICE <small>Checklist Management System</small></h1>
         </div>
-
-        <!-- filter controls -->
-        <div class="gallery-filterbar">
-            <div class="filter-tabs">
-                <button class="filter-btn active" data-filter="all"><i class="fas fa-th-large"></i> All media</button>
-                <button class="filter-btn" data-filter="meeting"><i class="fas fa-users"></i> Meetings</button>
-                <button class="filter-btn" data-filter="inspection"><i class="fas fa-clipboard-check"></i> Inspections</button>
-                <button class="filter-btn" data-filter="office"><i class="fas fa-building"></i> Office</button>
-                <button class="filter-btn" data-filter="field"><i class="fas fa-hard-hat"></i> Field ops</button>
-                <button class="filter-btn" data-filter="training"><i class="fas fa-chalkboard-user"></i> Training</button>
-            </div>
-            <div class="view-options">
-                <button class="view-btn active" data-view="masonry"><i class="fas fa-th"></i></button>
-                <button class="view-btn" data-view="grid"><i class="fas fa-th-large"></i></button>
-                <button class="view-btn" data-view="list"><i class="fas fa-list"></i></button>
-            </div>
-        </div>
-
-        <!-- gallery grid - with improved masonry heights -->
-        <div class="gallery-grid masonry-view" id="galleryGrid">
-            
-            <!-- MEETINGS CATEGORY (5 items) - with better image seeds -->
-            <div class="media-card" data-category="meeting">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Monthly review meeting">
-                    <div class="media-badge"><i class="fas fa-video"></i> MEETING</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Monthly Ops Review <span class="date-tag">Mar 2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Head Office · Conference Room A</div>
-                    <div class="card-desc">Quarterly performance review with regional managers. Safety metrics and KPI discussion.</div>
-                    <div class="card-tags"><span class="tag">Meeting</span><span class="tag">Management</span><span class="tag">Q1</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="meeting">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Safety committee meeting">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Safety Committee <span class="date-tag">Feb 2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Training Center · Hall B</div>
-                    <div class="card-desc">Monthly safety meeting - reviewing incident reports and preventive measures.</div>
-                    <div class="card-tags"><span class="tag">Meeting</span><span class="tag">Safety</span><span class="tag">Committee</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="meeting">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/7691740/pexels-photo-7691740.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Client consultation">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Client Meeting · HSD License <span class="date-tag">Jan 2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Client Office · Andheri East</div>
-                    <div class="card-desc">Consultation on new HSD license requirements and documentation.</div>
-                    <div class="card-tags"><span class="tag">Meeting</span><span class="tag">Client</span><span class="tag">License</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="meeting">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/7529032/pexels-photo-7529032.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Town hall">
-                    <div class="media-badge"><i class="fas fa-video"></i> VIDEO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">All-Hands Town Hall <span class="date-tag">Dec 2025</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Auditorium · HO</div>
-                    <div class="card-desc">Year-end address by CEO and annual awards ceremony.</div>
-                    <div class="card-tags"><span class="tag">Meeting</span><span class="tag">Townhall</span><span class="tag">Awards</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="meeting">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/7688460/pexels-photo-7688460.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Project kickoff">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Pipeline Project Kickoff <span class="date-tag">Nov 2025</span></div>
-                    <div class="card-location"><i class="fas fa-map-pin"></i> Site Office · Vadodara</div>
-                    <div class="card-desc">Initial meeting for new cross-country pipeline project.</div>
-                    <div class="card-tags"><span class="tag">Meeting</span><span class="tag">Project</span><span class="tag">Pipeline</span></div>
-                </div>
-            </div>
-
-            <!-- INSPECTIONS CATEGORY (6 items) -->
-            <div class="media-card" data-category="inspection">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/236380/pexels-photo-236380.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Depot inspection">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">HSD Depot Inspection <span class="date-tag">Mar 2026</span></div>
-                    <div class="card-location"><i class="fas fa-map-pin"></i> Whitefield · Bangalore</div>
-                    <div class="card-desc">Routine inspection of storage tanks and dispensing units.</div>
-                    <div class="card-tags"><span class="tag">Inspection</span><span class="tag">Depot</span><span class="tag">HSD</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="inspection">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/257775/pexels-photo-257775.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Pipeline inspection">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Pipeline ROW Inspection <span class="date-tag">Feb 2026</span></div>
-                    <div class="card-location"><i class="fas fa-map-pin"></i> Rural · Panipat</div>
-                    <div class="card-desc">Right-of-way inspection and cathodic protection testing.</div>
-                    <div class="card-tags"><span class="tag">Inspection</span><span class="tag">Pipeline</span><span class="tag">ROW</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="inspection">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/6963944/pexels-photo-6963944.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Safety audit">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Safety Audit <span class="date-tag">Jan 2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Terminal · Chennai</div>
-                    <div class="card-desc">Annual safety audit with external auditors.</div>
-                    <div class="card-tags"><span class="tag">Inspection</span><span class="tag">Safety</span><span class="tag">Audit</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="inspection">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/5980766/pexels-photo-5980766.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Equipment calibration">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Flow Meter Calibration <span class="date-tag">Dec 2025</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Metrology Lab · Mumbai</div>
-                    <div class="card-desc">Annual calibration of custody transfer meters.</div>
-                    <div class="card-tags"><span class="tag">Inspection</span><span class="tag">Equipment</span><span class="tag">Calibration</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="inspection">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/7362/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=600" alt="Fire safety check">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Fire System Inspection <span class="date-tag">Nov 2025</span></div>
-                    <div class="card-location"><i class="fas fa-map-pin"></i> LPG Plant · Vizag</div>
-                    <div class="card-desc">Checking fire suppression systems and hydrants.</div>
-                    <div class="card-tags"><span class="tag">Inspection</span><span class="tag">Fire Safety</span><span class="tag">LPG</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="inspection">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/1486785/pexels-photo-1486785.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Environmental inspection">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Environmental Compliance <span class="date-tag">Oct 2025</span></div>
-                    <div class="card-location"><i class="fas fa-map-pin"></i> Refinery · Mathura</div>
-                    <div class="card-desc">Effluent treatment plant inspection.</div>
-                    <div class="card-tags"><span class="tag">Inspection</span><span class="tag">Environment</span><span class="tag">ETP</span></div>
-                </div>
-            </div>
-
-            <!-- OFFICE CATEGORY (4 items) -->
-            <div class="media-card" data-category="office">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/380768/pexels-photo-380768.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Office workspace">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Admin Office <span class="date-tag">2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Head Office · Delhi</div>
-                    <div class="card-desc">Documentation and licensing department.</div>
-                    <div class="card-tags"><span class="tag">Office</span><span class="tag">Admin</span><span class="tag">Licensing</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="office">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/325229/pexels-photo-325229.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Control room">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Pipeline Control Room <span class="date-tag">2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Operations Center</div>
-                    <div class="card-desc">24/7 monitoring of pipeline network.</div>
-                    <div class="card-tags"><span class="tag">Office</span><span class="tag">Control Room</span><span class="tag">Ops</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="office">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/2566581/pexels-photo-2566581.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Regional office">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Regional Office <span class="date-tag">2025</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Kolkata · Salt Lake</div>
-                    <div class="card-desc">Eastern region headquarters.</div>
-                    <div class="card-tags"><span class="tag">Office</span><span class="tag">Regional</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="office">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/567350/pexels-photo-567350.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Reception">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Corporate Reception <span class="date-tag">2025</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Mumbai HO</div>
-                    <div class="card-desc">Main reception and visitor area.</div>
-                    <div class="card-tags"><span class="tag">Office</span><span class="tag">Reception</span></div>
-                </div>
-            </div>
-
-            <!-- FIELD OPS CATEGORY (5 items) -->
-            <div class="media-card" data-category="field">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/2563197/pexels-photo-2563197.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Tanker loading">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Tanker Loading Bay <span class="date-tag">Mar 2026</span></div>
-                    <div class="card-location"><i class="fas fa-map-pin"></i> Depot · Pune</div>
-                    <div class="card-desc">Bottom loading operation for HSD tankers.</div>
-                    <div class="card-tags"><span class="tag">Field</span><span class="tag">Tanker</span><span class="tag">Loading</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="field">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/7529032/pexels-photo-7529032.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Site survey">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Site Survey <span class="date-tag">Feb 2026</span></div>
-                    <div class="card-location"><i class="fas fa-map-pin"></i> New Location · Nagpur</div>
-                    <div class="card-desc">Topographical survey for new depot.</div>
-                    <div class="card-tags"><span class="tag">Field</span><span class="tag">Survey</span><span class="tag">Site</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="field">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/236598/pexels-photo-236598.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Pipeline welding">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Pipeline Welding <span class="date-tag">Jan 2026</span></div>
-                    <div class="card-location"><i class="fas fa-map-pin"></i> Right-of-Way · Gujarat</div>
-                    <div class="card-desc">Welding inspection during pipeline construction.</div>
-                    <div class="card-tags"><span class="tag">Field</span><span class="tag">Pipeline</span><span class="tag">Welding</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="field">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/257775/pexels-photo-257775.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Wellhead">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Wellhead Operations <span class="date-tag">Dec 2025</span></div>
-                    <div class="card-location"><i class="fas fa-map-pin"></i> Oil Field · Assam</div>
-                    <div class="card-desc">Routine wellhead maintenance.</div>
-                    <div class="card-tags"><span class="tag">Field</span><span class="tag">Wellhead</span><span class="tag">Production</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="field">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/8111880/pexels-photo-8111880.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Emergency response">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Mock Drill <span class="date-tag">Nov 2025</span></div>
-                    <div class="card-location"><i class="fas fa-map-pin"></i> Terminal · Kochi</div>
-                    <div class="card-desc">Emergency response team exercise.</div>
-                    <div class="card-tags"><span class="tag">Field</span><span class="tag">Drill</span><span class="tag">ERT</span></div>
-                </div>
-            </div>
-
-            <!-- TRAINING CATEGORY (4 items) -->
-            <div class="media-card" data-category="training">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/7529040/pexels-photo-7529040.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Safety training">
-                    <div class="media-badge"><i class="fas fa-video"></i> VIDEO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Fire Fighting Training <span class="date-tag">Feb 2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Training Academy</div>
-                    <div class="card-desc">Hands-on fire extinguisher training.</div>
-                    <div class="card-tags"><span class="tag">Training</span><span class="tag">Fire Safety</span><span class="tag">Hands-on</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="training">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/7529036/pexels-photo-7529036.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Classroom training">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Petroleum Rules Workshop <span class="date-tag">Jan 2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Training Hall · Delhi</div>
-                    <div class="card-desc">Session on Petroleum Rules 2002 amendments.</div>
-                    <div class="card-tags"><span class="tag">Training</span><span class="tag">Classroom</span><span class="tag">Legal</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="training">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/7365345/pexels-photo-7365345.jpeg?auto=compress&cs=tinysrgb&w=600" alt="PPE training">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">PPE Demonstration <span class="date-tag">Dec 2025</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Site · Haldia</div>
-                    <div class="card-desc">Proper use of personal protective equipment.</div>
-                    <div class="card-tags"><span class="tag">Training</span><span class="tag">PPE</span><span class="tag">Safety</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="training">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/7529020/pexels-photo-7529020.jpeg?auto=compress&cs=tinysrgb&w=600" alt="New employee orientation">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">New Hire Orientation <span class="date-tag">Nov 2025</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> HR Training Room</div>
-                    <div class="card-desc">Induction program for new engineers.</div>
-                    <div class="card-tags"><span class="tag">Training</span><span class="tag">Induction</span><span class="tag">HR</span></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- gallery footer with stats and load more -->
-        <div class="gallery-footer">
-            <div class="stats-group">
-                <div class="stat"><i class="fas fa-users"></i> 5 Meetings</div>
-                <div class="stat"><i class="fas fa-clipboard-check"></i> 6 Inspections</div>
-                <div class="stat"><i class="fas fa-building"></i> 4 Office</div>
-                <div class="stat"><i class="fas fa-hard-hat"></i> 5 Field Ops</div>
-                <div class="stat"><i class="fas fa-chalkboard"></i> 4 Training</div>
-            </div>
-            <div class="load-btn" id="loadMoreBtn">
-                <i class="fas fa-plus"></i> Load more from archive
-            </div>
+        <div class="header-links">
+            <a href="#">Dashboard</a>
+            <a href="#">All Checklists</a>
+            <a href="#">Reports</a>
         </div>
     </div>
+</div>
 
-    <!-- your existing footer here -->
+<!-- ========== MAIN CONTENT ========== -->
+<main>
+    <!-- Checklist Navigation -->
+    <div class="checklist-nav">
+        <label for="checklist-type">📋 Select Checklist:</label>
+        <select id="checklist-type">
+            <option value="hsd-renewal">⛽ HSD Renewal (Tejaswini Filling Station)</option>
+            <option value="fps-checklist">🛒 FPS (Fair Price Shop) Checklist</option>
+            <option value="ppc-checklist">🏭 PPC (Petrol Pump Compliance) Checklist</option>
+            <option value="rice-mill">🌾 Rice Mill Inspection Checklist</option>
+            <option value="kerosene">🛢️ Kerosene Dealer Checklist</option>
+            <option value="lpg">🔥 LPG Distributor Checklist</option>
+        </select>
+        <span class="checklist-badge" id="checklist-type-badge">HSD Renewal</span>
+    </div>
 
-    <script>
-        (function() {
-            // Filter functionality
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            const viewBtns = document.querySelectorAll('.view-btn');
-            const gallery = document.getElementById('galleryGrid');
-            const cards = document.querySelectorAll('.media-card');
-            const loadMore = document.getElementById('loadMoreBtn');
+    <!-- Checklist Container (Dynamic Content) -->
+    <div id="checklist-container">
+        <div class="loading-state">Loading checklist data...</div>
+    </div>
+</main>
 
-            // Filtering
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    const filter = this.dataset.filter;
-                    
-                    cards.forEach(card => {
-                        if(filter === 'all' || card.dataset.category === filter) {
-                            card.style.display = 'flex';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
+<!-- ========== SITE FOOTER ========== -->
+<div id="site-footer">
+    <div class="footer-content">
+        <span>© 2025 Sarat Office - Civil Supplies Department</span>
+        <span>Version 2.0 | All checklists A4 optimized</span>
+    </div>
+</div>
 
-                    // Update visible count
-                    const visibleCount = Array.from(cards).filter(c => 
-                        filter === 'all' || c.dataset.category === filter
-                    ).length;
-                });
-            });
+<!-- ========== EMBEDDED JSON DATA ========== -->
+<script>
+    // ==================== MASTER CHECKLIST DATA ====================
+    const CHECKLIST_DATA = {
+        // ----- HSD RENEWAL (based on your Excel) -----
+        "hsd-renewal": {
+            "metadata": {
+                "title": "HSD / LUBRICANT LICENSE RENEWAL",
+                "subtitle": "Under HSD Order 1979 & Lubricants Order 1987",
+                "stationName": "Tejaswini Filling Station, Naikensira, Deogaon Block",
+                "verificationDate": "21/02/2025",
+                "verificationTime": "11:30 AM",
+                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
+            },
+            "particulars": {
+                "proprietor": {
+                    "name": "Debaraj Meher (Proprietorship)",
+                    "address": "At: Naikensira, Po/PS/Block: Deogaon, Pin: 767029"
+                },
+                "contact": {
+                    "email": "tejaswini.fuelstn@gmail.com",
+                    "mobile": "8895965811",
+                    "aadhaar": "205842503291",
+                    "pan": "AOAPM5635D (Proprietor)",
+                    "gst": "21AOAPM5635D3ZF"
+                },
+                "location": {
+                    "plotNo": "831/1476",
+                    "khataNo": "129/232",
+                    "mouza": "Naikensira",
+                    "policeStation": "Deogaon",
+                    "block": "Deogaon",
+                    "tahasil": "Deogaon",
+                    "pin": "767029",
+                    "kisama": "Gharabadi"
+                },
+                "establishmentYear": "2020",
+                "oilCompany": "BPCL",
+                "recommendation": {
+                    "letterNo": "SBP.TER.BOL-25",
+                    "date": "23/01/2020"
+                },
+                "agreementDate": "23/12/2020",
+                "noc": {
+                    "number": "2793/Judl",
+                    "date": "20.11.2020",
+                    "authority": "Collector, Balangir"
+                },
+                "powerSupply": "TPWODL: Consumer No. 911001140277"
+            },
+            "tanks": [
+                { "product": "Class A (MS)", "number": 1, "capacity": 15 },
+                { "product": "Class B (HSD)", "number": 1, "capacity": 20 }
+            ],
+            "dispensingUnits": [
+                { "model": "TIQ2442SSPN", "serial": "M2037155", "hsdNozzles": 2, "msNozzles": 2 },
+                { "model": "TIQ2442SHPN", "serial": "M2050126", "hsdNozzles": 2, "msNozzles": 2 }
+            ],
+            "licenses": [
+                { "type": "HSD License", "number": "06/2020-21", "validity": "31/03/2025" },
+                { "type": "Lubricant License", "number": "06/2020-21", "validity": "31/03/2025" },
+                { "type": "Explosive License (PESO)", "number": "P/EC/OR/14/1977 (P313459)", "validity": "31/12/2026" },
+                { "type": "Fire Safety Certificate", "number": "FIRCER1306180092023002500", "validity": "21/03/2025" },
+                { "type": "Weights & Measure - 5 Ltr Conical", "number": "NOT PRODUCED", "validity": null },
+                { "type": "Weights & Measure - Pump 1", "number": "BGR25A2073", "validity": "17/02/2026" },
+                { "type": "Weights & Measure - Pump 2", "number": "BGR25A2074", "validity": "17/02/2026" }
+            ],
+            "documents": [
+                "License – HSD (certificate copy)",
+                "License – Lubricants (certificate)",
+                "R.O.R. (record of rights) Plot/Khata",
+                "Fire Safety Certificate",
+                "Firefighting equip. bill (expiry)",
+                "Explosive Licence (PESO) class A/B",
+                "Aadhar, PAN & GSTIN copy",
+                "Legal Metrology (pumps + can)",
+                "NOC Collector & Local Authority",
+                "Agreement with Oil Company (date)",
+                "Recommendation letter – Oil Co.",
+                "Power supply details (last bill)",
+                "Police Station & Block in forms",
+                "Appointment Letter (pump)",
+                "PESO storage licence (validity)",
+                "Fire equipment expiry date",
+                "GSTIN / PAN (self attested)",
+                "Legal Metrology can & pump"
+            ],
+            "facilities": [
+                { "name": "First Aid Box", "status": "Available" },
+                { "name": "Generator set", "status": "Available" },
+                { "name": "Stock & Price Declaration board", "status": "Available" },
+                { "name": "Density Board", "status": "Available" },
+                { "name": "Citizen Charter", "status": "Available" },
+                { "name": "Clean toilet", "status": "Available" },
+                { "name": "Free Air", "status": "Available" },
+                { "name": "Clean Drinking Water", "status": "Available" },
+                { "name": "Filter Paper", "status": "Available" },
+                { "name": "5 litre calibrated measuring jar", "status": "Available" },
+                { "name": "Calibrated Hydrometer", "status": "Available" },
+                { "name": "Calibrated Thermometer", "status": "Available" },
+                { "name": "Dip Rod", "status": "Available" },
+                { "name": "ASTM Conversion Chart", "status": "Available" },
+                { "name": "Measuring glass cylinder", "status": "Available" },
+                { "name": "Water finding paste", "status": "Available" },
+                { "name": "Fuel dip paste", "status": "Available" },
+                { "name": "Consumer Complaint Register", "status": "Available" },
+                { "name": "Adequate lighting", "status": "Available" }
+            ],
+            "fireFighting": {
+                "extinguishers": [
+                    { "type": "ABC type 10 kg", "number": 4, "validity": "22/02/2026" },
+                    { "type": "CO₂ 4.5 kg", "number": 1, "validity": "22/02/2026" }
+                ],
+                "sandBuckets": 6,
+                "sump": 0
+            },
+            "records": [
+                { "name": "Stock register of MS, HSD and Lubricants", "status": "Yes", "remarks": "Satisfactory" },
+                { "name": "Density Register", "status": "Yes", "remarks": "Satisfactory" },
+                { "name": "Cash Memo", "status": "Yes", "remarks": "Satisfactory" },
+                { "name": "Daily Sales Register (DSR)", "status": "Yes", "remarks": "Satisfactory" },
+                { "name": "Inspection Register", "status": "Yes", "remarks": "Satisfactory" },
+                { "name": "Any other register", "status": "Yes", "remarks": "Satisfactory" }
+            ],
+            "stockVerification": [
+                { "product": "HSD", "bookBalance": 7834, "physicalStock": 7856, "discrepancy": 22 },
+                { "product": "MS", "bookBalance": 5967, "physicalStock": 5983, "discrepancy": 16 },
+                { "product": "Lubricants", "bookBalance": 422, "physicalStock": 422, "discrepancy": 0 }
+            ],
+            "densityVerification": [
+                { "product": "HSD", "reference": "810 to 845", "observed": 832.4, "difference": "In Range" },
+                { "product": "MS", "reference": "720 to 775", "observed": 752.4, "difference": "In Range" }
+            ],
+            "recommendation": {
+                "complaints": "No",
+                "performance": "Satisfactory",
+                "renewal": "Recommended"
+            },
+            "officers": {
+                "inspector": "Inspector of Supplies, Deogaon",
+                "acso": "Assistant Civil Supplies Officer"
+            }
+        },
 
-            // View toggle
-            viewBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    viewBtns.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    const view = this.dataset.view;
-                    gallery.classList.remove('masonry-view', 'grid-view', 'list-view');
-                    gallery.classList.add(`${view}-view`);
-                });
-            });
+        // ----- FPS (Fair Price Shop) CHECKLIST -----
+        "fps-checklist": {
+            "metadata": {
+                "title": "FAIR PRICE SHOP INSPECTION",
+                "subtitle": "Under NFSA / TPDS",
+                "stationName": "Maa Tarini FPS, Bhatli",
+                "verificationDate": "15/03/2025",
+                "verificationTime": "10:00 AM",
+                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
+            },
+            "particulars": {
+                "proprietor": {
+                    "name": "Pramila Sahu",
+                    "address": "At: Bhatli Bazar, Po: Bhatli, Dist: Bargarh"
+                },
+                "contact": {
+                    "mobile": "9437155822",
+                    "aadhaar": "452178963214",
+                    "pan": "CEWPS1254D"
+                },
+                "location": {
+                    "shopNo": "FPS/BGL/125",
+                    "panchayat": "Bhatli",
+                    "block": "Bhatli",
+                    "district": "Bargarh"
+                }
+            },
+            "documents": [
+                "FPS License (validity)",
+                "Ration Card Register",
+                "Stock Register",
+                "Sale Register",
+                "ePoS Machine Receipts",
+                "Aadhaar Seeding Certificate",
+                "Weighing Scale Calibration",
+                "Display Board with Rates",
+                "Grievance Register",
+                "Past 3 Months Allocation Order"
+            ],
+            "facilities": [
+                { "name": "Weighing Scale (working)", "status": "Available" },
+                { "name": "ePoS Machine", "status": "Functional" },
+                { "name": "Display Board with Rates", "status": "Displayed" },
+                { "name": "Stock Display", "status": "Updated" },
+                { "name": "Clean Premises", "status": "Satisfactory" },
+                { "name": "Sitting Arrangement", "status": "Available" },
+                { "name": "Drinking Water", "status": "Available" }
+            ],
+            "stockVerification": [
+                { "commodity": "Wheat", "allotted": 1250, "distributed": 1120, "balance": 130, "status": "OK" },
+                { "commodity": "Rice", "allotted": 1850, "distributed": 1700, "balance": 150, "status": "OK" },
+                { "commodity": "Sugar", "allotted": 250, "distributed": 210, "balance": 40, "status": "OK" }
+            ],
+            "recommendation": {
+                "complaints": "None",
+                "performance": "Satisfactory",
+                "renewal": "Recommended"
+            },
+            "officers": {
+                "inspector": "Inspector of Supplies",
+                "acso": "ACSO, Bargarh"
+            }
+        },
 
-            // Load more simulation
-            if(loadMore) {
-                loadMore.addEventListener('click', function() {
-                    alert('📸 Loading additional images from Pexels archive... This would fetch 12 more photos.');
+        // ----- PPC (Petrol Pump Compliance) CHECKLIST -----
+        "ppc-checklist": {
+            "metadata": {
+                "title": "PETROL PUMP COMPLIANCE CHECKLIST",
+                "subtitle": "Safety & Operational Audit",
+                "stationName": "Jagannath Auto Service, Sambalpur",
+                "verificationDate": "10/03/2025",
+                "verificationTime": "2:30 PM",
+                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
+            },
+            "particulars": {
+                "proprietor": {
+                    "name": "Jagannath Sahu",
+                    "address": "Ainthapali, Sambalpur"
+                },
+                "contact": {
+                    "mobile": "9861122334",
+                    "email": "jagannath.auto@gmail.com",
+                    "gst": "21ABCDE1234F1Z5"
+                },
+                "location": {
+                    "plotNo": "125/2",
+                    "khataNo": "45/3",
+                    "policeStation": "Ainthapali",
+                    "block": "Sambalpur"
+                }
+            },
+            "licenses": [
+                { "type": "HSD License", "number": "08/2022-23", "validity": "31/03/2026" },
+                { "type": "PESO License", "number": "P/EC/OR/22/2022", "validity": "31/12/2027" },
+                { "type": "Fire NOC", "number": "FIRE/SBP/2025", "validity": "20/05/2025" },
+                { "type": "Legal Metrology", "number": "LM/07/2024", "validity": "15/06/2025" }
+            ],
+            "safetyItems": [
+                { "name": "Fire Extinguishers (ABC)", "status": "4 Nos, Valid" },
+                { "name": "Sand Buckets", "status": "6 with sand" },
+                { "name": "First Aid Kit", "status": "Available" },
+                { "name": "Warning Signs", "status": "Displayed" },
+                { "name": "No Smoking Sign", "status": "Prominent" },
+                { "name": "Emergency Contact", "status": "Displayed" },
+                { "name": "Static Earthing", "status": "Working" },
+                { "name": "Flame Arrestors", "status": "Installed" }
+            ],
+            "facilities": [
+                { "name": "Filter Paper", "status": "Available" },
+                { "name": "Hydrometer", "status": "Calibrated" },
+                { "name": "Thermometer", "status": "Available" },
+                { "name": "Dip Rod", "status": "Available" },
+                { "name": "Measuring Jar (5L)", "status": "Available" },
+                { "name": "Complaint Register", "status": "Maintained" },
+                { "name": "Free Air", "status": "Working" },
+                { "name": "Toilet", "status": "Clean" }
+            ],
+            "recommendation": {
+                "complaints": "Nil",
+                "performance": "Good",
+                "renewal": "Recommended"
+            }
+        },
+
+        // ----- RICE MILL CHECKLIST -----
+        "rice-mill": {
+            "metadata": {
+                "title": "RICE MILL INSPECTION CHECKLIST",
+                "subtitle": "Under Rice Milling Industry Act",
+                "stationName": "Laxmi Rice Mill, Bargarh",
+                "verificationDate": "05/03/2025",
+                "verificationTime": "11:45 AM",
+                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
+            },
+            "particulars": {
+                "proprietor": {
+                    "name": "Laxmi Narayan Agrawal",
+                    "address": "Ghereipada, Bargarh"
+                },
+                "contact": {
+                    "mobile": "8895221345",
+                    "email": "laxmiricemill@gmail.com",
+                    "gst": "21BGHPS1234D1Z6"
+                },
+                "location": {
+                    "plotNo": "452",
+                    "khataNo": "78",
+                    "mouza": "Ghereipada",
+                    "policeStation": "Bargarh Sadar"
+                }
+            },
+            "licenses": [
+                { "type": "Rice Mill License", "number": "RM/09/2022", "validity": "31/12/2025" },
+                { "type": "Factory License", "number": "FACT/123/2023", "validity": "31/12/2025" },
+                { "type": "Pollution NOC", "number": "PCB/2024/789", "validity": "15/08/2025" },
+                { "type": "Fire NOC", "number": "FIRE/BGL/2024", "validity": "10/10/2025" }
+            ],
+            "machinery": [
+                { "name": "Sheller", "status": "Working", "capacity": "2 MT/hr" },
+                { "name": "Polisher", "status": "Working", "capacity": "1.5 MT/hr" },
+                { "name": "Grader", "status": "Working", "capacity": "2 MT/hr" },
+                { "name": "Weighbridge", "status": "Calibrated", "capacity": "50 MT" }
+            ],
+            "stockDetails": [
+                { "commodity": "Paddy", "stock": "1250 Quintals", "condition": "Good" },
+                { "commodity": "Rice (Raw)", "stock": "450 Quintals", "condition": "Good" },
+                { "commodity": "Rice (Parboiled)", "stock": "320 Quintals", "condition": "Good" },
+                { "commodity": "Broken Rice", "stock": "85 Quintals", "condition": "Good" },
+                { "commodity": "Rice Bran", "stock": "210 Quintals", "condition": "Good" }
+            ],
+            "safety": [
+                { "name": "Fire Extinguishers", "status": "8 Nos, Valid" },
+                { "name": "First Aid", "status": "Available" },
+                { "name": "Safety Guards on Machines", "status": "Installed" },
+                { "name": "Electrical Wiring", "status": "Safe" },
+                { "name": "Ventilation", "status": "Adequate" }
+            ],
+            "recommendation": {
+                "complaints": "None",
+                "performance": "Satisfactory",
+                "renewal": "Recommended"
+            }
+        },
+
+        // ----- KEROSENE DEALER CHECKLIST -----
+        "kerosene": {
+            "metadata": {
+                "title": "KEROSENE DEALER INSPECTION",
+                "subtitle": "Under Kerosene Control Order",
+                "stationName": "Bharat Kerosene Depot, Attabira",
+                "verificationDate": "18/03/2025",
+                "verificationTime": "3:00 PM",
+                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
+            },
+            "documents": [
+                "Kerosene License",
+                "Stock Register",
+                "Sale Register",
+                "Allocation Order",
+                "Transport Permit",
+                "Weights & Measure Cert",
+                "Display Board with Rates"
+            ],
+            "facilities": [
+                { "name": "Storage Tanks (Capacity)", "status": "5000 Ltrs" },
+                { "name": "Measuring Unit", "status": "Calibrated" },
+                { "name": "Fire Extinguisher", "status": "Available" },
+                { "name": "Sand Buckets", "status": "4 Nos" }
+            ],
+            "stockVerification": [
+                { "product": "SKO", "allotted": 2000, "sold": 1850, "balance": 150, "status": "OK" }
+            ],
+            "recommendation": {
+                "renewal": "Recommended"
+            }
+        },
+
+        // ----- LPG DISTRIBUTOR CHECKLIST -----
+        "lpg": {
+            "metadata": {
+                "title": "LPG DISTRIBUTOR INSPECTION",
+                "subtitle": "Under LPG Control Order",
+                "stationName": "Sai Gas Agency, Burla",
+                "verificationDate": "22/03/2025",
+                "verificationTime": "12:15 PM",
+                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
+            },
+            "documents": [
+                "LPG Distributorship License",
+                "PESO License",
+                "Stock Register",
+                "Connection Register",
+                "Safety Inspection Records",
+                "Staff Training Records"
+            ],
+            "safety": [
+                { "name": "Fire Extinguishers", "status": "10 Kg ABC - 4 Nos" },
+                { "name": "Water Hose", "status": "Available" },
+                { "name": "Sand Buckets", "status": "8 Nos" },
+                { "name": "Warning Signs", "status": "Displayed" },
+                { "name": "No Smoking", "status": "Prominent" }
+            ],
+            "facilities": [
+                { "name": "Godown Ventilation", "status": "Adequate" },
+                { "name": "Cylinder Storage", "status": "Proper" },
+                { "name": "First Aid", "status": "Available" },
+                { "name": "Staff Uniform", "status": "Yes" }
+            ],
+            "recommendation": {
+                "renewal": "Recommended"
+            }
+        }
+    };
+</script>
+
+<!-- ========== CHECKLIST LOADER SCRIPT ========== -->
+<script>
+    // ==================== CHECKLIST RENDERER ====================
+    class ChecklistRenderer {
+        constructor() {
+            this.currentType = 'hsd-renewal';
+            this.data = null;
+        }
+
+        // Load and render checklist
+        loadChecklist(type) {
+            this.currentType = type;
+            this.data = CHECKLIST_DATA[type];
+            
+            if (!this.data) {
+                document.getElementById('checklist-container').innerHTML = 
+                    '<div style="color: red; text-align: center; padding: 3rem;">❌ Checklist data not found!</div>';
+                return;
+            }
+
+            // Update badge
+            const badge = document.getElementById('checklist-type-badge');
+            if (badge) {
+                const names = {
+                    'hsd-renewal': 'HSD Renewal',
+                    'fps-checklist': 'FPS Checklist',
+                    'ppc-checklist': 'PPC Compliance',
+                    'rice-mill': 'Rice Mill',
+                    'kerosene': 'Kerosene Dealer',
+                    'lpg': 'LPG Distributor'
+                };
+                badge.textContent = names[type] || type;
+            }
+
+            // Render
+            this.render();
+            
+            // Update URL
+            history.pushState({type: type}, '', `?type=${type}`);
+            
+            // Restore checkbox states
+            setTimeout(() => this.restoreCheckboxStates(), 100);
+        }
+
+        // Main render function
+        render() {
+            const container = document.getElementById('checklist-container');
+            if (!this.data) return;
+
+            const html = `
+                <div class="checklist-card">
+                    ${this.renderHeader()}
+                    ${this.renderParticulars()}
+                    ${this.renderDocuments()}
+                    ${this.renderTanksAndPumps()}
+                    ${this.renderLicenses()}
+                    ${this.renderSafetyItems()}
+                    ${this.renderFacilities()}
+                    ${this.renderFireFighting()}
+                    ${this.renderMachinery()}
+                    ${this.renderRecords()}
+                    ${this.renderStockVerification()}
+                    ${this.renderDensityVerification()}
+                    ${this.renderRecommendation()}
+                    ${this.renderOfficers()}
+                </div>
+            `;
+            
+            container.innerHTML = html;
+            this.attachPrintButton();
+        }
+
+        renderHeader() {
+            const m = this.data.metadata;
+            return `
+                <div class="card-header">
+                    <div class="header-title">
+                        <h1>⛽ ${m.title}</h1>
+                        <div class="station-name">${m.stationName || ''}</div>
+                        <div class="verification-info">
+                            <span>📅 ${m.verificationDate || ''}</span>
+                            <span>⏰ ${m.verificationTime || ''}</span>
+                            <span>👤 ${m.verifyingOfficer || ''}</span>
+                        </div>
+                    </div>
+                    <button class="print-btn" id="print-checklist-btn">📋 PRINT CHECKLIST</button>
+                </div>
+            `;
+        }
+
+        renderParticulars() {
+            if (!this.data.particulars) return '';
+            
+            const p = this.data.particulars;
+            const items = [];
+            
+            if (p.proprietor) {
+                items.push(
+                    `<div class="info-item"><span class="info-label">Proprietor:</span><span class="info-value">${p.proprietor.name || ''}</span></div>`,
+                    `<div class="info-item"><span class="info-label">Address:</span><span class="info-value">${p.proprietor.address || ''}</span></div>`
+                );
+            }
+            
+            if (p.contact) {
+                if (p.contact.email) items.push(`<div class="info-item"><span class="info-label">Email:</span><span class="info-value">${p.contact.email}</span></div>`);
+                if (p.contact.mobile) items.push(`<div class="info-item"><span class="info-label">Mobile:</span><span class="info-value">${p.contact.mobile}</span></div>`);
+                if (p.contact.aadhaar) items.push(`<div class="info-item"><span class="info-label">Aadhaar:</span><span class="info-value">${p.contact.aadhaar}</span></div>`);
+                if (p.contact.pan) items.push(`<div class="info-item"><span class="info-label">PAN:</span><span class="info-value">${p.contact.pan}</span></div>`);
+                if (p.contact.gst) items.push(`<div class="info-item"><span class="info-label">GST:</span><span class="info-value">${p.contact.gst}</span></div>`);
+            }
+            
+            if (p.location) {
+                if (p.location.plotNo) items.push(`<div class="info-item"><span class="info-label">Plot No.:</span><span class="info-value">${p.location.plotNo}</span></div>`);
+                if (p.location.khataNo) items.push(`<div class="info-item"><span class="info-label">Khata No.:</span><span class="info-value">${p.location.khataNo}</span></div>`);
+                if (p.location.mouza) items.push(`<div class="info-item"><span class="info-label">Mouza:</span><span class="info-value">${p.location.mouza}</span></div>`);
+                if (p.location.policeStation) items.push(`<div class="info-item"><span class="info-label">PS:</span><span class="info-value">${p.location.policeStation}</span></div>`);
+                if (p.location.block) items.push(`<div class="info-item"><span class="info-label">Block:</span><span class="info-value">${p.location.block}</span></div>`);
+            }
+            
+            if (p.oilCompany) items.push(`<div class="info-item"><span class="info-label">Oil Company:</span><span class="info-value">${p.oilCompany}</span></div>`);
+            if (p.agreementDate) items.push(`<div class="info-item"><span class="info-label">Agreement:</span><span class="info-value">${p.agreementDate}</span></div>`);
+            if (p.powerSupply) items.push(`<div class="info-item"><span class="info-label">Power Supply:</span><span class="info-value">${p.powerSupply}</span></div>`);
+
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">📋 STATION PARTICULARS</div>
+                    <div class="info-grid">
+                        ${items.join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        renderDocuments() {
+            if (!this.data.documents || !this.data.documents.length) return '';
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">📸 DOCUMENTS REQUIRED <span class="badge">verify & check</span></div>
+                    <div class="documents-grid">
+                        ${this.data.documents.map((doc, index) => `
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="doc-${this.currentType}-${index}" class="doc-checkbox">
+                                <label for="doc-${this.currentType}-${index}">${doc}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        renderTanksAndPumps() {
+            if (!this.data.tanks && !this.data.dispensingUnits) return '';
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">⛽ TANKS & DISPENSING UNITS</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tanks (Product)</th>
+                                <th>No.</th>
+                                <th>Capacity (KL)</th>
+                                <th>Pump Model</th>
+                                <th>HSD Nozzles</th>
+                                <th>MS Nozzles</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.renderTankPumpRows()}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        renderTankPumpRows() {
+            const tanks = this.data.tanks || [];
+            const pumps = this.data.dispensingUnits || [];
+            const rows = [];
+            const maxRows = Math.max(tanks.length, pumps.length);
+            
+            for (let i = 0; i < maxRows; i++) {
+                const tank = tanks[i] || {product: '', number: '', capacity: ''};
+                const pump = pumps[i] || {model: '', hsdNozzles: '', msNozzles: ''};
+                
+                rows.push(`
+                    <tr>
+                        <td>${tank.product || '-'}</td>
+                        <td>${tank.number || '-'}</td>
+                        <td>${tank.capacity || '-'}</td>
+                        <td>${pump.model || '-'}</td>
+                        <td>${pump.hsdNozzles || '-'}</td>
+                        <td>${pump.msNozzles || '-'}</td>
+                    </tr>
+                `);
+            }
+            
+            return rows.join('');
+        }
+
+        renderLicenses() {
+            if (!this.data.licenses) return '';
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">📜 LICENSE DETAILS</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>License Type</th>
+                                <th>Number</th>
+                                <th>Validity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.data.licenses.map(license => `
+                                <tr>
+                                    <td>${license.type}</td>
+                                    <td>${license.number}</td>
+                                    <td>${license.validity || 'N/A'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        renderSafetyItems() {
+            if (!this.data.safety && !this.data.safetyItems) return '';
+            
+            const items = this.data.safety || this.data.safetyItems || [];
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">🛡️ SAFETY PROVISIONS</div>
+                    <div class="facilities-grid">
+                        ${items.map(item => `
+                            <div class="facility-item">
+                                <span>${item.name}</span>
+                                <span class="facility-status">${item.status}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        renderFacilities() {
+            if (!this.data.facilities) return '';
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">🧷 ON-SITE FACILITIES <span class="badge">mandatory</span></div>
+                    <div class="facilities-grid">
+                        ${this.data.facilities.map(facility => `
+                            <div class="facility-item">
+                                <span>${facility.name}</span>
+                                <span class="facility-status ${facility.status === 'Available' ? 'available' : ''}">${facility.status}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        renderFireFighting() {
+            if (!this.data.fireFighting) return '';
+            
+            const ff = this.data.fireFighting;
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">🧯 FIRE FIGHTING PROVISIONS</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Number</th>
+                                <th>Validity/Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${ff.extinguishers ? ff.extinguishers.map(ex => `
+                                <tr>
+                                    <td>${ex.type}</td>
+                                    <td>${ex.number}</td>
+                                    <td>${ex.validity}</td>
+                                </tr>
+                            `).join('') : ''}
+                            ${ff.sandBuckets ? `
+                                <tr>
+                                    <td>Sand Buckets</td>
+                                    <td>${ff.sandBuckets}</td>
+                                    <td>with sand</td>
+                                </tr>
+                            ` : ''}
+                            ${ff.sump !== undefined ? `
+                                <tr>
+                                    <td>Sump</td>
+                                    <td>${ff.sump}</td>
+                                    <td>${ff.sump ? 'adequate' : 'not adequate'}</td>
+                                </tr>
+                            ` : ''}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        renderMachinery() {
+            if (!this.data.machinery) return '';
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">⚙️ MACHINERY & EQUIPMENT</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Equipment</th>
+                                <th>Status</th>
+                                <th>Capacity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.data.machinery.map(item => `
+                                <tr>
+                                    <td>${item.name}</td>
+                                    <td>${item.status}</td>
+                                    <td>${item.capacity || '-'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        renderRecords() {
+            if (!this.data.records) return '';
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">📋 MAINTENANCE OF RECORDS</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Record Type</th>
+                                <th>Status</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.data.records.map(record => `
+                                <tr>
+                                    <td>${record.name}</td>
+                                    <td>${record.status}</td>
+                                    <td>${record.remarks || ''}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        renderStockVerification() {
+            if (!this.data.stockVerification) return '';
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">📊 STOCK VERIFICATION</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Book Balance</th>
+                                <th>Physical Stock</th>
+                                <th>Discrepancy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.data.stockVerification.map(item => `
+                                <tr>
+                                    <td>${item.product || item.commodity}</td>
+                                    <td>${item.bookBalance || item.allotted || '-'}</td>
+                                    <td>${item.physicalStock || item.distributed || '-'}</td>
+                                    <td>${item.discrepancy || '0'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        renderDensityVerification() {
+            if (!this.data.densityVerification) return '';
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">🌡️ DENSITY VERIFICATION</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Reference</th>
+                                <th>Observed</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.data.densityVerification.map(item => `
+                                <tr>
+                                    <td>${item.product}</td>
+                                    <td>${item.reference}</td>
+                                    <td>${item.observed}</td>
+                                    <td>${item.difference}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        renderRecommendation() {
+            if (!this.data.recommendation) return '';
+            
+            const r = this.data.recommendation;
+            
+            return `
+                <div class="checklist-section">
+                    <div class="section-title">✅ INSPECTION RECOMMENDATION</div>
+                    <div class="recommendation-box">
+                        ${r.complaints !== undefined ? `
+                            <div class="recommendation-item">
+                                <div class="recommendation-label">Complaints</div>
+                                <div class="recommendation-value">${r.complaints}</div>
+                            </div>
+                        ` : ''}
+                        ${r.performance !== undefined ? `
+                            <div class="recommendation-item">
+                                <div class="recommendation-label">Performance</div>
+                                <div class="recommendation-value">${r.performance}</div>
+                            </div>
+                        ` : ''}
+                        <div class="recommendation-item">
+                            <div class="recommendation-label">Renewal</div>
+                            <div class="recommendation-value">${r.renewal}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        renderOfficers() {
+            if (!this.data.officers) return '';
+            
+            const o = this.data.officers;
+            
+            return `
+                <div class="officer-section">
+                    <div class="officer-signature">
+                        <div class="officer-title">${o.inspector || 'Inspecting Officer'}</div>
+                        <div class="officer-line"></div>
+                        <small>Signature with Date</small>
+                    </div>
+                    <div class="officer-signature">
+                        <div class="officer-title">${o.acso || 'ACSO'}</div>
+                        <div class="officer-line"></div>
+                        <small>Signature with Date</small>
+                    </div>
+                </div>
+            `;
+        }
+
+        attachPrintButton() {
+            const btn = document.getElementById('print-checklist-btn');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    window.print();
                 });
             }
-        })();
-    </script>
+        }
+
+        restoreCheckboxStates() {
+            const checkboxes = document.querySelectorAll('.doc-checkbox');
+            checkboxes.forEach(cb => {
+                const id = cb.id;
+                const saved = localStorage.getItem(id);
+                if (saved !== null) {
+                    cb.checked = saved === 'true';
+                }
+                
+                cb.addEventListener('change', () => {
+                    localStorage.setItem(cb.id, cb.checked);
+                });
+            });
+        }
+    }
+
+    // ==================== INITIALIZATION ====================
+    document.addEventListener('DOMContentLoaded', () => {
+        const renderer = new ChecklistRenderer();
+        
+        // Get type from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type') || 'hsd-renewal';
+        
+        // Set select value
+        const select = document.getElementById('checklist-type');
+        if (select) {
+            select.value = type;
+            select.addEventListener('change', (e) => {
+                renderer.loadChecklist(e.target.value);
+            });
+        }
+        
+        // Load initial checklist
+        renderer.loadChecklist(type);
+        
+        // Handle browser back/forward
+        window.addEventListener('popstate', (e) => {
+            if (e.state && e.state.type) {
+                renderer.loadChecklist(e.state.type);
+                if (select) select.value = e.state.type;
+            }
+        });
+    });
+</script>
+
+<!-- Go to Top Button (optional) -->
+<style>
+    .go-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: #1a3e5c;
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        transition: all 0.3s;
+        z-index: 100;
+        font-size: 1.5rem;
+    }
+    
+    .go-to-top:hover {
+        background: #0f2d44;
+        transform: translateY(-5px);
+    }
+</style>
+
+<a href="#" class="go-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'}); return false;">↑</a>
+
 </body>
 </html>
