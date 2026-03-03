@@ -2,550 +2,493 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sarat Office</title>
+  <title>Petrol Pump · HSD Renewal Checklist</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <!-- Common CSS (menu, footer, global styles) -->
+  <!-- Common CSS (global styles) – but we use isolated prefix -->
   <link rel="stylesheet" href="/style.css">
-  <!-- ✅ IMPORTANT: site components for header/footer etc. -->
+  <!-- site components for header/footer etc. -->
   <script src="/assets/Scripts/site-components.js" defer></script>  
-    <style>
-        /* ---------- global layout – header + card + footer ---------- */
-         /* ----- GLOBAL RESET ----- */
+
+  <style>
+    /* ----- global reset & background ----- */
     body {
       margin: 0;
       background: #f5f9ff;
       font-family: 'Segoe UI', Roboto, sans-serif;
     }
 
-        /* 🧱 isolated card – reset to avoid leaks, but this time we also handle print */
-        .hsd-renewal-card {
-            all: initial;                /* kill inheritance from body/style.css */
-            display: block;
-            max-width: 1000px;          
-            width: 100%;
-            background: white;
-            border-radius: 16px;        
-            box-shadow: 0 10px 20px rgba(0,20,30,0.15);
-            padding: 1.1rem 1.2rem 0.3rem 1.2rem;
-            border: 1px solid #bdc9db;
-            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
-            line-height: normal;
-            color: initial;
-            margin: 1rem auto;
-            box-sizing: border-box;
-        }
+    /* 🧱 isolated card – prefix "pp-" (petrol pump) to avoid conflicts, using original styles */
+    .pp-renewal-card {
+      all: initial;
+      display: block;
+      max-width: 1000px;          
+      width: 100%;
+      background: white;
+      border-radius: 20px;        
+      box-shadow: 0 12px 28px rgba(0,20,30,0.15);
+      padding: 1.2rem 1.3rem 0.5rem 1.3rem;
+      border: 1px solid #bdc9db;
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+      line-height: normal;
+      color: initial;
+      margin: 1rem auto;
+      box-sizing: border-box;
+    }
 
-        .hsd-renewal-card * {
-            all: revert;
-            box-sizing: border-box;
-        }
+    .pp-renewal-card * {
+      all: revert;
+      box-sizing: border-box;
+    }
 
-        /* all component styles (identical to before) */
-        .hsd-renewal-card .hsd-top-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #1a3e5c;
-            padding-bottom: 0.4rem;
-            margin-bottom: 0.7rem;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
+    /* header */
+    .pp-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid #1a3e5c;
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.7rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
 
-        .hsd-renewal-card .hsd-top-row h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #1a3e5c;
-            letter-spacing: -0.5px;
-            line-height: 1.2;
-            margin: 0;
-        }
+    .pp-top-row h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: #1a3e5c;
+      letter-spacing: -0.5px;
+      margin: 0;
+    }
 
-        .hsd-renewal-card .hsd-top-row h1 small {
-            font-size: 0.85rem;
-            font-weight: 400;
-            background: #e2eaf3;
-            color: #1d3f5e;
-            padding: 0.2rem 0.7rem;
-            border-radius: 40px;
-            margin-left: 8px;
-        }
+    .pp-top-row h1 small {
+      font-size: 0.85rem;
+      font-weight: 400;
+      background: #e2eaf3;
+      color: #1d3f5e;
+      padding: 0.2rem 0.9rem;
+      border-radius: 40px;
+      margin-left: 8px;
+    }
 
-        .hsd-renewal-card .hsd-print-btn {
-            background: #1a3e5c;
-            border: none;
-            color: white;
-            font-weight: 600;
-            font-size: 0.9rem;
-            padding: 0.4rem 1.5rem;
-            border-radius: 40px;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,35,60,0.2);
-            transition: background 0.15s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid rgba(0,0,0,0.1);
-        }
+    .pp-print-btn {
+      background: #1a3e5c;
+      border: none;
+      color: white;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.45rem 1.8rem;
+      border-radius: 40px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,35,60,0.2);
+      transition: 0.1s;
+      border: 1px solid #0f2d44;
+    }
+    .pp-print-btn:hover { background: #0f2d44; }
 
-        .hsd-renewal-card .hsd-print-btn:hover { background: #0f2d44; }
+    /* particulars grid */
+    .pp-particulars {
+      background: #f2f6fb;
+      padding: 0.8rem 1.2rem;
+      border-radius: 24px;
+      margin-bottom: 0.8rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem 1.5rem;
+      border: 1px solid #cbd6e4;
+    }
 
-        .hsd-renewal-card .hsd-particulars {
-            background: #f2f6fb;
-            padding: 0.8rem 1.2rem;
-            border-radius: 20px;
-            margin-bottom: 0.8rem;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.6rem 1.5rem;
-            border: 1px solid #cbd6e4;
-        }
+    .pp-part-item {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-size: 0.92rem;
+    }
 
-        .hsd-renewal-card .hsd-part-item {
-            display: flex;
-            align-items: baseline;
-            gap: 6px;
-            font-size: 0.92rem;
-        }
+    .pp-part-item .pp-tag {
+      font-weight: 600;
+      color: #1a3e5c;
+      min-width: 110px;
+      font-size: 0.88rem;
+    }
 
-        .hsd-renewal-card .hsd-part-item .hsd-tag {
-            font-weight: 600;
-            color: #1a3e5c;
-            min-width: 105px;
-            font-size: 0.88rem;
-        }
+    .pp-part-item .pp-dash {
+      color: #3d5a78;
+      background: white;
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      border: 1px dashed #6f8da8;
+      width: 100%;
+      max-width: 220px;
+      font-size: 0.88rem;
+    }
 
-        .hsd-renewal-card .hsd-part-item .hsd-dash {
-            color: #3d5a78;
-            background: white;
-            padding: 0.2rem 0.7rem;
-            border-radius: 30px;
-            border: 1px dashed #6f8da8;
-            width: 100%;
-            max-width: 220px;
-            font-size: 0.88rem;
-            line-height: 1.4;
-        }
+    /* photo badge */
+    .pp-photo-badge {
+      background: #fef3e0;
+      border-left: 6px solid #d19c2a;
+      padding: 0.6rem 1rem;
+      border-radius: 20px;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-weight: 500;
+      font-size: 0.92rem;
+    }
 
-        .hsd-renewal-card .hsd-photo-badge {
-            background: #fef3e0;
-            border-left: 6px solid #d19c2a;
-            padding: 0.6rem 1rem;
-            border-radius: 18px;
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            font-weight: 500;
-            font-size: 0.92rem;
-        }
+    .pp-photo-badge span {
+      background: #d19c2a;
+      color: #1e2b38;
+      padding: 4px 18px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
 
-        .hsd-renewal-card .hsd-photo-badge span {
-            background: #d19c2a;
-            color: #1e2b38;
-            padding: 4px 16px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.88rem;
-        }
+    /* two‑column checklist */
+    .pp-check-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.3rem 1.5rem;
+    }
 
-        .hsd-renewal-card .hsd-check-two {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.3rem 1.5rem;
-        }
+    .pp-item-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      padding: 0.2rem 0;
+      border-bottom: 1px dotted #cbd2dd;
+    }
 
-        .hsd-renewal-card .hsd-item-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 6px;
-            padding: 0.2rem 0;
-            border-bottom: 1px dotted #cbd2dd;
-        }
+    .pp-item-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #1a3e5c;
+      flex-shrink: 0;
+    }
 
-        .hsd-renewal-card .hsd-item-row input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            margin-top: 2px;
-            accent-color: #1a3e5c;
-            flex-shrink: 0;
-        }
+    .pp-item-text {
+      font-size: 0.88rem;
+      color: #152b3b;
+      line-height: 1.3;
+    }
 
-        .hsd-renewal-card .hsd-item-text {
-            font-size: 0.88rem;
-            color: #152b3b;
-            line-height: 1.3;
-        }
+    /* records group */
+    .pp-records-group {
+      background: #e8f0f9;
+      border-radius: 20px;
+      padding: 0.7rem 1rem 0.9rem;
+      margin-top: 0.7rem;
+      border: 1px solid #9bb5d1;
+      border-left: 6px solid #1a3e5c;
+    }
 
-        .hsd-renewal-card .hsd-facility-group {
-            background: #f5f8fe;
-            border-radius: 20px;
-            padding: 0.7rem 1rem 0.9rem;
-            margin-top: 0.7rem;
-            border: 1px solid #c9d7ea;
-        }
+    .pp-records-title {
+      font-weight: 700;
+      color: #1a3e5c;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        .hsd-renewal-card .hsd-facility-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.2rem 1rem;
-        }
+    .pp-records-title span {
+      background: #1a3e5c;
+      color: white;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+    }
 
-        .hsd-renewal-card .hsd-facility-item {
-            display: flex;
-            align-items: baseline;
-            gap: 6px;
-            font-size: 0.88rem;
-            border-bottom: 1px dotted #a0b6ce;
-            padding: 0.2rem 0;
-        }
+    .pp-records-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.3rem 1rem;
+    }
 
-        .hsd-renewal-card .hsd-facility-item .hsd-yes-badge {
-            background: #1a3e5c;
-            color: white;
-            font-size: 0.68rem;
-            font-weight: 600;
-            padding: 0.15rem 0.5rem;
-            border-radius: 30px;
-            margin-left: auto;
-            white-space: nowrap;
-        }
+    .pp-record-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      padding: 0.2rem 0;
+      border-bottom: 1px dotted #8aa3c0;
+    }
 
-        /* NEW: Maintenance of Records Section */
-        .hsd-renewal-card .hsd-records-group {
-            background: #e8f0f9;
-            border-radius: 20px;
-            padding: 0.7rem 1rem 0.9rem;
-            margin-top: 0.7rem;
-            border: 1px solid #9bb5d1;
-            border-left: 6px solid #1a3e5c;
-        }
+    .pp-record-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #1a3e5c;
+    }
 
-        .hsd-renewal-card .hsd-records-title {
-            font-weight: 700;
-            color: #1a3e5c;
-            margin-bottom: 8px;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+    /* facilities group */
+    .pp-facility-group {
+      background: #f5f8fe;
+      border-radius: 20px;
+      padding: 0.7rem 1rem 0.9rem;
+      margin-top: 0.7rem;
+      border: 1px solid #c9d7ea;
+    }
 
-        .hsd-renewal-card .hsd-records-title span {
-            background: #1a3e5c;
-            color: white;
-            padding: 0.2rem 1rem;
-            border-radius: 30px;
-            font-size: 0.8rem;
-        }
+    .pp-facility-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.2rem 1rem;
+    }
 
-        .hsd-renewal-card .hsd-records-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.3rem 1rem;
-        }
+    .pp-facility-item {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-size: 0.88rem;
+      border-bottom: 1px dotted #a0b6ce;
+      padding: 0.2rem 0;
+    }
 
-        .hsd-renewal-card .hsd-record-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.88rem;
-            padding: 0.2rem 0;
-            border-bottom: 1px dotted #8aa3c0;
-        }
+    .pp-facility-item .pp-yes-badge {
+      background: #1a3e5c;
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.15rem 0.6rem;
+      border-radius: 30px;
+      margin-left: auto;
+      white-space: nowrap;
+    }
 
-        .hsd-renewal-card .hsd-record-item input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: #1a3e5c;
-            flex-shrink: 0;
-        }
+    /* foot strip */
+    .pp-foot-strip {
+      margin-top: 0.8rem;
+      background: #eef2f6;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 0.88rem;
+      color: #1a3e5c;
+    }
 
-        .hsd-renewal-card .hsd-foot-strip {
-            margin-top: 0.8rem;
-            background: #eef2f6;
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            font-size: 0.88rem;
-            color: #1a3e5c;
-        }
+    .pp-stamp-line {
+      border: 2px dotted #1a3e5c;
+      padding: 0.2rem 1.4rem;
+      border-radius: 30px;
+      background: white;
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+    }
 
-        .hsd-renewal-card .hsd-stamp-line {
-            border: 2px dotted #1a3e5c;
-            padding: 0.2rem 1.4rem;
-            border-radius: 30px;
-            background: white;
-            font-weight: 600;
-            font-family: 'Courier New', monospace;
-            font-size: 0.8rem;
-        }
+    hr { border-top: 2px dotted #aebccf; margin: 0.5rem 0 0.1rem; }
+    .pp-tiny { font-size: 0.68rem; color: #3e6280; text-align: right; }
 
-        .hsd-renewal-card hr {
-            border: none;
-            border-top: 2px dotted #aebccf;
-            margin: 0.5rem 0 0.1rem;
-        }
+    /* navigation links (exactly like other updated formats) */
+    .pp-nav-links {
+      margin: 0 auto 0.5rem;
+      max-width: 1000px;
+      padding: 0 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+    .pp-nav-item {
+      background: #dbeafe;
+      border-radius: 40px;
+      padding: 0.35rem 1.3rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: 1px solid #7ca2c9;
+      color: #1a3c5e;
+      transition: 0.1s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .pp-nav-item:hover {
+      background: #bed9ff;
+      border-color: #2b5880;
+    }
+    .pp-nav-item.active {
+      background: #1a3e5c;
+      border-color: #0f2d44;
+      color: white;
+    }
 
-        .hsd-renewal-card .hsd-tiny {
-            font-size: 0.68rem;
-            color: #3e6280;
-            text-align: right;
-            margin-top: 0.1rem;
-        }
+    /* 🖨️ PRINT RULES – exactly like other formats */
+    @media print {
+      @page {
+        size: A4;
+        margin: 0.3in;
+      }
+      body > :not(.pp-renewal-card):not(script) {
+        display: none !important;
+      }
+      body {
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .pp-renewal-card {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        border: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        background: white !important;
+        font-size: 10.5pt !important;
+      }
+      .pp-print-btn {
+        display: none !important;
+      }
+      .pp-nav-links {
+        display: none !important;
+      }
+      #site-header, #site-footer, .gototop {
+        display: none !important;
+      }
+      .pp-particulars,
+      .pp-photo-badge,
+      .pp-check-two,
+      .pp-facility-group,
+      .pp-records-group,
+      .pp-foot-strip {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+    }
 
-        /* 🖨️ PRINT RULES – OPTIMIZED FOR A4 FULL PAGE */
-        @media print {
-            @page {
-                size: A4;
-                margin: 0.3in 0.3in 0.3in 0.3in; /* Slightly reduced margins for max width */
-            }
-            
-            /* hide everything outside the card */
-            body > :not(.hsd-renewal-card):not(script) {
-                display: none !important;
-            }
-
-            /* reset body background and padding for print */
-            body {
-                background: white !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                display: block !important;
-                min-height: auto !important;
-                width: 100% !important;
-            }
-
-            /* card becomes the only visible element – FULL WIDTH UTILIZATION */
-            .hsd-renewal-card {
-                box-shadow: none !important;
-                border-radius: 0 !important;
-                border: none !important;
-                padding: 0 !important; /* Zero padding for max width */
-                max-width: 100% !important;
-                width: 100% !important;
-                margin: 0 !important; /* Zero margin for max width */
-                background: white !important;
-                display: block !important;
-                page-break-after: avoid;
-                page-break-inside: avoid;
-                font-size: 10.5pt !important; /* Slightly smaller for dense content */
-                line-height: 1.2 !important;
-            }
-
-            /* Full width for all inner containers */
-            .hsd-renewal-card .hsd-particulars,
-            .hsd-renewal-card .hsd-photo-badge,
-            .hsd-renewal-card .hsd-check-two,
-            .hsd-renewal-card .hsd-facility-group,
-            .hsd-renewal-card .hsd-records-group,
-            .hsd-renewal-card .hsd-foot-strip {
-                width: 100% !important;
-                max-width: 100% !important;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-            }
-
-            /* Adjust spacing for compact A4 fit */
-            .hsd-renewal-card .hsd-top-row {
-                margin-bottom: 0.2rem !important;
-                padding-bottom: 0.1rem !important;
-            }
-            
-            .hsd-renewal-card .hsd-top-row h1 {
-                font-size: 1.5rem !important;
-            }
-            
-            .hsd-renewal-card .hsd-particulars {
-                padding: 0.4rem 0.6rem !important;
-                margin-bottom: 0.3rem !important;
-                gap: 0.2rem 0.8rem !important;
-            }
-            
-            .hsd-renewal-card .hsd-photo-badge {
-                padding: 0.2rem 0.6rem !important;
-                margin-bottom: 0.3rem !important;
-            }
-            
-            .hsd-renewal-card .hsd-check-two {
-                gap: 0.1rem 0.8rem !important;
-            }
-            
-            .hsd-renewal-card .hsd-item-row {
-                padding: 0.1rem 0 !important;
-            }
-            
-            .hsd-renewal-card .hsd-item-text {
-                font-size: 0.8rem !important;
-            }
-            
-            .hsd-renewal-card .hsd-facility-group,
-            .hsd-renewal-card .hsd-records-group {
-                padding: 0.3rem 0.6rem 0.4rem !important;
-                margin-top: 0.2rem !important;
-            }
-            
-            .hsd-renewal-card .hsd-facility-grid {
-                gap: 0.1rem 0.6rem !important;
-            }
-            
-            .hsd-renewal-card .hsd-facility-item {
-                font-size: 0.78rem !important;
-                padding: 0.1rem 0 !important;
-            }
-            
-            .hsd-renewal-card .hsd-records-grid {
-                gap: 0.1rem 0.6rem !important;
-            }
-            
-            .hsd-renewal-card .hsd-record-item {
-                font-size: 0.8rem !important;
-                padding: 0.1rem 0 !important;
-            }
-
-            /* hide the print button inside the card */
-            .hsd-renewal-card .hsd-print-btn {
-                display: none !important;
-            }
-
-            /* Ensure proper box sizing */
-            * {
-                box-sizing: border-box !important;
-            }
-            
-            /* Fix any overflow issues */
-            .hsd-renewal-card .hsd-check-two,
-            .hsd-renewal-card .hsd-facility-grid,
-            .hsd-renewal-card .hsd-records-grid {
-                overflow: visible !important;
-            }
-            
-            /* Ensure all text remains visible */
-            .hsd-renewal-card .hsd-yes-badge {
-                white-space: nowrap !important;
-            }
-        }
-        
-        /* Small screen optimization */
-        @media screen and (max-width: 600px) {
-            .hsd-renewal-card .hsd-check-two,
-            .hsd-renewal-card .hsd-facility-grid,
-            .hsd-renewal-card .hsd-records-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    /* mobile */
+    @media screen and (max-width: 600px) {
+      .pp-particulars { grid-template-columns: 1fr; }
+      .pp-check-two, .pp-facility-grid, .pp-records-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-  
 
 <div id="site-header"></div>
 
+<!-- ========== NAVIGATION TABS (other formats) ========== -->
+<div class="pp-nav-links">
+  <a href="/formats/petrolpumpchecklist.html" class="pp-nav-item active">⛽ Petrol pump (current)</a>
+  <a href="/formats/lpgchecklist.html" class="pp-nav-item">🔥 LPG checklist</a>
+  <a href="/formats/fpschecklist.html" class="pp-nav-item">🍚 FPS checklist</a>
+  <a href="/formats/ppcchecklist.html" class="pp-nav-item">🌾 PPC verification</a>
+</div>
 
-<!-- CONTENT -->
-<!-- isolated card – the only element printed -->
-  <div class="hsd-renewal-card" id="checklistPDF">
-        <div class="hsd-top-row">
-            <h1>⛽ HSD RENEWAL <small>checklist+facilities</small></h1>
-            <h3>⛽ Date of Inspection:</h3>
-            <button class="hsd-print-btn" id="printPDF">📋 PRINT</button>
-        </div>
+<!-- MAIN CARD – HSD RENEWAL CHECKLIST (updated with new prefix and consistent style) -->
+<div class="pp-renewal-card" id="petrolPumpCard">
+  <div class="pp-top-row">
+    <h1>⛽ HSD RENEWAL <small>checklist + facilities</small></h1>
+    <h3 style="font-weight:500; color:#1a3e5c;">Date of Inspection: ________</h3>
+    <button class="pp-print-btn" id="printPetrolPump">📋 PRINT</button>
+  </div>
 
-        <div class="hsd-particulars">
-            <div class="hsd-part-item"><span class="hsd-tag">WhatsApp/Mobile No.:</span><span class="hsd-dash">_________________</span></div>
-            <div class="hsd-part-item"><span class="hsd-tag">Email ID :</span><span class="hsd-dash">_________________</span></div>
-            <div class="hsd-part-item"><span class="hsd-tag">Police Station :</span><span class="hsd-dash">_________________</span></div>
-            <div class="hsd-part-item"><span class="hsd-tag">Block :</span><span class="hsd-dash">_________________</span></div>
-            
-        </div>
+  <!-- particulars (exactly as original) -->
+  <div class="pp-particulars">
+    <div class="pp-part-item"><span class="pp-tag">WhatsApp/Mobile No.:</span><span class="pp-dash">_________________</span></div>
+    <div class="pp-part-item"><span class="pp-tag">Email ID :</span><span class="pp-dash">_________________</span></div>
+    <div class="pp-part-item"><span class="pp-tag">Police Station :</span><span class="pp-dash">_________________</span></div>
+    <div class="pp-part-item"><span class="pp-tag">Block :</span><span class="pp-dash">_________________</span></div>
+  </div>
 
-        <div class="hsd-photo-badge">
-            <span>📸 PHOTOCOPY OF FOLLOWING DOCUMENT REQUIRED</span> 
-        </div>
-        <div class="hsd-check-two">
-            <div class="hsd-item-row"><input type="checkbox" id="c1"><label for="c1" class="hsd-item-text">License – HSD (certificate copy)</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c2"><label for="c2" class="hsd-item-text">License – Lubricants (certificate)</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c3"><label for="c3" class="hsd-item-text">R.O.R. (record of rights) Plot/Khata</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c4"><label for="c4" class="hsd-item-text">Fire Safety Certificate</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c5"><label for="c5" class="hsd-item-text">Firefighting equip. bill (expiry)</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c6"><label for="c6" class="hsd-item-text">Explosive Licence (PESO) class A/B</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c7"><label for="c7" class="hsd-item-text">Aadhar, PAN & GSTIN copy</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c8"><label for="c8" class="hsd-item-text">Legal Metrology (pumps + can)</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c9"><label for="c9" class="hsd-item-text">NOC Collector & Local Authority</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c10"><label for="c10" class="hsd-item-text">Agreement with Oil Company (date)</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c11"><label for="c11" class="hsd-item-text">Recommendation letter – Oil Co.</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c12"><label for="c12" class="hsd-item-text">Power supply details (last bill)</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c13"><label for="c13" class="hsd-item-text">Police Station & Block in forms</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c14"><label for="c14" class="hsd-item-text">Appointment Letter (pump)</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c15"><label for="c15" class="hsd-item-text">PESO storage licence (validity)</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c16"><label for="c16" class="hsd-item-text">Fire equipment expiry date</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c17"><label for="c17" class="hsd-item-text">GSTIN / PAN (self attested)</label></div>
-            <div class="hsd-item-row"><input type="checkbox" id="c18"><label for="c18" class="hsd-item-text">Legal Metrology can & pump</label></div>
-        </div>
+  <div class="pp-photo-badge">
+    <span>📸 PHOTOCOPY OF FOLLOWING DOCUMENT REQUIRED</span> 
+  </div>
 
-        <!-- NEW: Maintenance of Records Section -->
-        <div class="hsd-records-group">
-            <div class="hsd-records-title">
-                📋 MAINTENANCE OF RECORDS <span>mandatory</span>
-            </div>
-            <div class="hsd-records-grid">
-                <div class="hsd-record-item"><input type="checkbox" id="r1"><label for="r1">Stock Register (MS, HSD, Lubricants)</label></div>
-                <div class="hsd-record-item"><input type="checkbox" id="r2"><label for="r2">Density Register</label></div>
-                <div class="hsd-record-item"><input type="checkbox" id="r3"><label for="r3">Daily Sales Register (DSR)</label></div>
-                <div class="hsd-record-item"><input type="checkbox" id="r4"><label for="r4">Cash Memo</label></div>
-                <div class="hsd-record-item"><input type="checkbox" id="r5"><label for="r5">Inspection Register</label></div>
-                <div class="hsd-record-item"><input type="checkbox" id="r6"><label for="r6">Other Registers</label></div>
-            </div>
-        </div>
+  <!-- document checklist (two columns) -->
+  <div class="pp-check-two">
+    <div class="pp-item-row"><input type="checkbox" id="c1"><label for="c1" class="pp-item-text">License – HSD (certificate copy)</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c2"><label for="c2" class="pp-item-text">License – Lubricants (certificate)</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c3"><label for="c3" class="pp-item-text">R.O.R. (record of rights) Plot/Khata</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c4"><label for="c4" class="pp-item-text">Fire Safety Certificate</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c5"><label for="c5" class="pp-item-text">Firefighting equip. bill (expiry)</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c6"><label for="c6" class="pp-item-text">Explosive Licence (PESO) class A/B</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c7"><label for="c7" class="pp-item-text">Aadhar, PAN & GSTIN copy</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c8"><label for="c8" class="pp-item-text">Legal Metrology (pumps + can)</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c9"><label for="c9" class="pp-item-text">NOC Collector & Local Authority</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c10"><label for="c10" class="pp-item-text">Agreement with Oil Company (date)</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c11"><label for="c11" class="pp-item-text">Recommendation letter – Oil Co.</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c12"><label for="c12" class="pp-item-text">Power supply details (last bill)</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c13"><label for="c13" class="pp-item-text">Police Station & Block in forms</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c14"><label for="c14" class="pp-item-text">Appointment Letter (pump)</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c15"><label for="c15" class="pp-item-text">PESO storage licence (validity)</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c16"><label for="c16" class="pp-item-text">Fire equipment expiry date</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c17"><label for="c17" class="pp-item-text">GSTIN / PAN (self attested)</label></div>
+    <div class="pp-item-row"><input type="checkbox" id="c18"><label for="c18" class="pp-item-text">Legal Metrology can & pump</label></div>
+  </div>
 
-        <div class="hsd-facility-group">
-            <div style="font-weight: 700; color:#1a3e5c; margin-bottom: 5px; font-size:0.9rem;">🧷 ON‑SITE FACILITIES (mandatory)</div>
-            <div class="hsd-facility-grid">
-                <div class="hsd-facility-item"><span>📋 Complaint Register</span> <span class="hsd-yes-badge">YES</span></div>
-                <div class="hsd-facility-item"><span>🧪 Filter paper (quality check)</span> <span class="hsd-yes-badge">available</span></div>
-                <div class="hsd-facility-item"><span>🩹 First Aid Kit (no expiry)</span> <span class="hsd-yes-badge">✓ in date</span></div>
-                <div class="hsd-facility-item"><span>📢 Stock & Price Declaration Board</span> <span class="hsd-yes-badge">displayed</span></div> 
-                <div class="hsd-facility-item"><span>🧮 Density Board</span> <span class="hsd-yes-badge">displayed</span></div>
-                <div class="hsd-facility-item"><span>📜 Citizen Charter</span> <span class="hsd-yes-badge">displayed</span></div>
-                <div class="hsd-facility-item"><span>🧴 5 Litre Calibrated Measuring Jar</span> <span class="hsd-yes-badge">available</span></div>
-                <div class="hsd-facility-item"><span>🌡️ Calibrated Hydrometer</span> <span class="hsd-yes-badge">available</span></div> 
-                <div class="hsd-facility-item"><span>🌡️ Calibrated Thermometer</span> <span class="hsd-yes-badge">available</span></div>
-                <div class="hsd-facility-item"><span>📏 Dip Rod</span> <span class="hsd-yes-badge">available</span></div>
-                <div class="hsd-facility-item"><span>📊 ASTM Conversion Chart</span> <span class="hsd-yes-badge">available</span></div>
-                <div class="hsd-facility-item"><span>🧪 Measuring Glass Cylinder</span> <span class="hsd-yes-badge">available</span></div>
-                <div class="hsd-facility-item"><span>🧴 Water Finding & Fuel Dip Paste</span> <span class="hsd-yes-badge">available</span></div>
-                <div class="hsd-facility-item"><span>🚰 Free portable water / sanitation</span> <span class="hsd-yes-badge">working</span></div>
-                <div class="hsd-facility-item"><span>🚻 Free toilet (sanitation)</span> <span class="hsd-yes-badge">proper</span></div>
-                <div class="hsd-facility-item"><span>🛞 Free air for vehicles</span> <span class="hsd-yes-badge">working</span></div>
-                <div class="hsd-facility-item"><span>💰 Price Board Displayed (Signage)</span> <span class="hsd-yes-badge">displayed</span></div>
-                <div class="hsd-facility-item"><span>🚫 Fuel Shall Not Be Sold in Plastic Bottles (Strictly Prohibited)</span> <span class="hsd-yes-badge">complied</span></div>
-                <div class="hsd-facility-item"><span>💧 No. of Sump (adequate water)</span> <span class="hsd-yes-badge">2 sumps</span></div>
-                <div class="hsd-facility-item"><span>🧯 Sand Buckets (sufficient sand)</span> <span class="hsd-yes-badge">4 buckets</span></div>
-                <div class="hsd-facility-item"><span>⚡ Generator Set</span> <span class="hsd-yes-badge">available</span></div>
-                <div class="hsd-facility-item"><span>💡 Adequate Lighting</span> <span class="hsd-yes-badge">working</span></div>
-            </div>
-        </div>
-
-        <div class="hsd-foot-strip">
-            <span>✅ Verified by (Inspector): _________________</span>
-            <span class="hsd-stamp-line">📅 Date: ___________</span>
-        </div>
-        <div class="hsd-tiny">*This is a system generated checklist – valid with official stamp</div>
+  <!-- Maintenance of Records -->
+  <div class="pp-records-group">
+    <div class="pp-records-title">📋 MAINTENANCE OF RECORDS <span>mandatory</span></div>
+    <div class="pp-records-grid">
+      <div class="pp-record-item"><input type="checkbox" id="r1"><label for="r1">Stock Register (MS, HSD, Lubricants)</label></div>
+      <div class="pp-record-item"><input type="checkbox" id="r2"><label for="r2">Density Register</label></div>
+      <div class="pp-record-item"><input type="checkbox" id="r3"><label for="r3">Daily Sales Register (DSR)</label></div>
+      <div class="pp-record-item"><input type="checkbox" id="r4"><label for="r4">Cash Memo</label></div>
+      <div class="pp-record-item"><input type="checkbox" id="r5"><label for="r5">Inspection Register</label></div>
+      <div class="pp-record-item"><input type="checkbox" id="r6"><label for="r6">Other Registers</label></div>
     </div>
-    <!-- simple print script (just triggers print) -->
-    <script>
-        document.getElementById('printPDF')?.addEventListener('click', function() {
-            window.print();
-        });
-    </script>
-  <!-- FOOTER -->
+  </div>
+
+  <!-- On‑site facilities -->
+  <div class="pp-facility-group">
+    <div style="font-weight:700; color:#1a3e5c; margin-bottom:5px; font-size:0.9rem;">🧷 ON‑SITE FACILITIES (mandatory)</div>
+    <div class="pp-facility-grid">
+      <div class="pp-facility-item"><span>📋 Complaint Register</span> <span class="pp-yes-badge">YES</span></div>
+      <div class="pp-facility-item"><span>🧪 Filter paper (quality check)</span> <span class="pp-yes-badge">available</span></div>
+      <div class="pp-facility-item"><span>🩹 First Aid Kit (no expiry)</span> <span class="pp-yes-badge">✓ in date</span></div>
+      <div class="pp-facility-item"><span>📢 Stock & Price Declaration Board</span> <span class="pp-yes-badge">displayed</span></div>
+      <div class="pp-facility-item"><span>🧮 Density Board</span> <span class="pp-yes-badge">displayed</span></div>
+      <div class="pp-facility-item"><span>📜 Citizen Charter</span> <span class="pp-yes-badge">displayed</span></div>
+      <div class="pp-facility-item"><span>🧴 5 Litre Calibrated Measuring Jar</span> <span class="pp-yes-badge">available</span></div>
+      <div class="pp-facility-item"><span>🌡️ Calibrated Hydrometer</span> <span class="pp-yes-badge">available</span></div>
+      <div class="pp-facility-item"><span>🌡️ Calibrated Thermometer</span> <span class="pp-yes-badge">available</span></div>
+      <div class="pp-facility-item"><span>📏 Dip Rod</span> <span class="pp-yes-badge">available</span></div>
+      <div class="pp-facility-item"><span>📊 ASTM Conversion Chart</span> <span class="pp-yes-badge">available</span></div>
+      <div class="pp-facility-item"><span>🧪 Measuring Glass Cylinder</span> <span class="pp-yes-badge">available</span></div>
+      <div class="pp-facility-item"><span>🧴 Water Finding & Fuel Dip Paste</span> <span class="pp-yes-badge">available</span></div>
+      <div class="pp-facility-item"><span>🚰 Free portable water / sanitation</span> <span class="pp-yes-badge">working</span></div>
+      <div class="pp-facility-item"><span>🚻 Free toilet (sanitation)</span> <span class="pp-yes-badge">proper</span></div>
+      <div class="pp-facility-item"><span>🛞 Free air for vehicles</span> <span class="pp-yes-badge">working</span></div>
+      <div class="pp-facility-item"><span>💰 Price Board Displayed (Signage)</span> <span class="pp-yes-badge">displayed</span></div>
+      <div class="pp-facility-item"><span>🚫 Fuel Shall Not Be Sold in Plastic Bottles</span> <span class="pp-yes-badge">complied</span></div>
+      <div class="pp-facility-item"><span>💧 No. of Sump (adequate water)</span> <span class="pp-yes-badge">2 sumps</span></div>
+      <div class="pp-facility-item"><span>🧯 Sand Buckets (sufficient sand)</span> <span class="pp-yes-badge">4 buckets</span></div>
+      <div class="pp-facility-item"><span>⚡ Generator Set</span> <span class="pp-yes-badge">available</span></div>
+      <div class="pp-facility-item"><span>💡 Adequate Lighting</span> <span class="pp-yes-badge">working</span></div>
+    </div>
+  </div>
+
+  <div class="pp-foot-strip">
+    <span>✅ Verified by (Inspector): _________________</span>
+    <span class="pp-stamp-line">📅 Date: ___________</span>
+  </div>
+  <div class="pp-tiny">*System generated checklist – valid with official stamp</div>
+</div>
+
+<!-- simple footer (outside card, hidden in print) -->
+<div style="max-width:1000px; margin:0 auto 20px; text-align:center; background:#dde5f0; border-radius:40px; padding:6px; color:#1a3e5c;">
+  ✅ Petrol pump format – navigation links not printed
+</div>
+
+<!-- print script -->
+<script>
+  document.getElementById('printPetrolPump')?.addEventListener('click', function() {
+    window.print();
+  });
+</script>
+
+<!-- FOOTER placeholder -->
 <div id="site-footer"></div>
-  <!-- Go to Top -->
-  <script src="/assets/Scripts/gototop.js"></script>
+<!-- Go to Top -->
+<script src="/assets/Scripts/gototop.js"></script>
 
 </body>
 </html>
