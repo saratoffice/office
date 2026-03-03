@@ -384,7 +384,8 @@ body {
   display: none;
   position: absolute;
   top: 0;
-  left: calc(100% - 2px);
+  left: 100%;  /* Changed from calc(100% - 2px) to 100% for zero gap */
+  margin: 0;   /* Added zero margin */
   background: #ffffff;
   min-width: 220px;
   border-radius: 8px;
@@ -414,71 +415,82 @@ body {
   right: auto;
   left: 10px;
 }
+
 /* ========== SUB-DROPDOWN STYLES (MOBILE) ========== */
-.sub-dropdown {
-  width: 100%;
-  position: relative;
+@media (max-width: 900px) {
+  .sub-dropdown {
+    width: 100%;
+    position: relative;
+  }
+
+  .sub-dropdown > a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 30px;
+  }
+
+  .sub-dropdown > a::after {
+    content: "▼";
+    font-size: 12px;
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+    color: var(--primary);
+  }
+
+  .sub-dropdown.open > a::after {
+    transform: rotate(180deg);
+  }
+
+  .sub-menu {
+    display: none;
+    position: relative;  /* Changed from absolute to relative */
+    top: auto;           /* Reset top */
+    left: auto;          /* Reset left */
+    right: auto;         /* Reset right */
+    width: 100%;         /* Full width */
+    margin: 5px 0 5px 0; /* Removed left margin */
+    background: #f0f2f5;
+    border-radius: 8px;
+    list-style: none;
+    padding: 5px 0;
+    border-left: 3px solid var(--primary);
+    box-shadow: none;    /* Remove shadow on mobile */
+  }
+
+  .sub-dropdown.open > .sub-menu {
+    display: block;
+  }
+
+  .sub-menu a {
+    padding: 10px 20px;
+    font-size: 0.9em;
+    color: #555;
+  }
+
+  .sub-menu a:hover {
+    background: var(--primary);
+    color: #ffffff;
+  }
+
+  /* Nested sub-menu for deeper levels */
+  .sub-menu .sub-dropdown > a::after {
+    content: "▼";
+    font-size: 12px;
+    margin-left: 8px;
+    color: var(--primary);
+  }
+
+  .sub-menu .sub-menu {
+    margin-left: 0;      /* Reset margin */
+    border-left-color: #999;
+    width: 100%;         /* Full width */
+  }
 }
 
-.sub-dropdown > a {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-right: 30px;
-}
-
-.sub-dropdown > a::after {
-  content: "▼";
-  font-size: 12px;
-  margin-left: 8px;
-  transition: transform 0.3s ease;
-  color: var(--primary);
-}
-
-.sub-dropdown.open > a::after {
-  transform: rotate(180deg);
-}
-
-.sub-menu {
-  display: none;
-  background: #f0f2f5;
-  margin: 5px 0 5px 20px;
-  border-radius: 8px;
-  list-style: none;
-  padding: 5px 0;
-  border-left: 3px solid var(--primary);
-}
-
-.sub-dropdown.open > .sub-menu {
-  display: block;
-}
-
-.sub-menu a {
-  padding: 10px 20px;
-  font-size: 0.9em;
-  color: #555;
-}
-
-.sub-menu a:hover {
-  background: var(--primary);
-  color: #ffffff;
-}
-
-/* Nested sub-menu for deeper levels */
-.sub-menu .sub-dropdown > a::after {
-  content: "▼";
-  font-size: 12px;
-  margin-left: 8px;
-  color: var(--primary);
-}
-
-.sub-menu .sub-menu {
-  margin-left: 15px;
-  border-left-color: #999;
-}
 .dropdown-menu li {
   width: 100%;
-  position: relative;  /* I added this line */
+  position: relative;
 }
 /* =================================
    BUTTON
