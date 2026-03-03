@@ -2,16 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dip-to-Volume of fuel Calculation · Tank stock INDIA</title>
+  <title>Dip-to-Volume · Auto · Tank stock INDIA</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <!-- Common CSS (menu, footer, global styles) -->
+  <!-- Common CSS (menu, footer, global styles) -->
   <link rel="stylesheet" href="/style.css">
-  <!-- ✅ IMPORTANT: site components for header/footer etc. -->
+  <!-- site components for header/footer etc. -->
   <script src="/assets/Scripts/site-components.js" defer></script>
   
   <style>
-    
+    /* ensure body has subtle background to see the card */
+    body {
+      background: #eef3fc;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;  /* header sits on top, then card */
+      min-height: 100vh;
+    }
 
+    /* center container: horizontal + vertical spacing */
+    .page-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 1100px;
+      margin: 2.5rem auto;          /* top/bottom margin, auto horizontal */
+      padding: 0 1.2rem;
+      box-sizing: border-box;
+    }
+
+    /* main card – no change except maybe slight width refine */
     .tank-card {
       max-width: 860px;
       width: 100%;
@@ -142,44 +165,24 @@
       grid-column: span 2;
     }
 
-    .action-row {
+    /* action row: now only water indicator remains */
+    .info-row {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;  /* push indicator to the right */
       gap: 20px;
       margin: 28px 0 18px;
-    }
-
-    .calculate-btn {
-      background: #003057;
-      border: none;
-      color: white;
-      font-weight: 700;
-      font-size: 1.3rem;
-      padding: 16px 48px;
-      border-radius: 60px;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 16px 24px -10px #0f2f54;
-      cursor: pointer;
-      transition: 0.2s;
-      border: 1px solid #26518b;
-    }
-
-    .calculate-btn:hover {
-      background: #001f3f;
-      transform: scale(1.01);
-      box-shadow: 0 20px 28px -10px #06203e;
     }
 
     .water-indicator {
       background: #deeafc;
       border-radius: 60px;
-      padding: 6px 30px;
+      padding: 12px 36px;
       font-weight: 600;
       color: #003471;
+      font-size: 1.1rem;
+      box-shadow: 0 2px 6px rgba(0,20,50,0.1);
     }
 
     .result-panel {
@@ -241,266 +244,255 @@
       margin: 1.2rem 0 1rem;
     }
 
+    /* removed calculate button entirely */
+    .calculate-btn {
+      display: none;
+    }
+
     @media (max-width: 700px) {
       .tank-card { padding: 1.5rem; }
       .fuel-grid { grid-template-columns: 1fr; }
       .full-row { grid-column: span 1; }
       .stock-values { flex-direction: column; }
-      .calculate-btn { width: 100%; justify-content: center; }
+      .info-row { justify-content: center; }
     }
   </style>
 </head>
 <body>
-  <!-- COMMON HEADER -->
-    <div id="site-header"></div>
-<div class="tank-card">
-  <h2>
-    ⛽ Dip-to-Volume of fuel Calculation
-    <span>INDIA</span>
-  </h2>
-  <div class="meta-note">
-    <span>🏭 All India tank types · MS/HSD · Horizontal cylinder</span>
-    <span class="badge">IS 10987 / OISD 225</span>
-  </div>
+  <!-- COMMON HEADER (site-components loads it) -->
+  <div id="site-header"></div>
 
-  <!-- main form -->
-  <div class="fuel-grid">
-    <div class="input-field">
-      <label><i>⛽</i> Commodity</label>
-      <select id="commodity">
-        <option value="MS" selected>Motor Spirit (MS) · Petrol</option>
-        <option value="HSD">High Speed Diesel (HSD)</option>
-      </select>
-    </div>
-
-    <div class="input-field">
-      <label><i>🏗️</i> Tank capacity (kL)</label>
-      <select id="tankCap">
-        <!-- Standard tanks used by Indian OMCs (IOCL/BPCL/HPCL) -->
-        <option value="5">5 kL (Small retail)</option>
-        <option value="10">10 kL (Rural outlet)</option>
-        <option value="15">15 kL (Common)</option>
-        <option value="18">18 kL (IOCL type)</option>
-        <option value="20" selected>20 kL (Standard)</option>
-        <option value="22">22 kL (BPCL spec)</option>
-        <option value="25">25 kL (HPCL)</option>
-        <option value="28">28 kL (OISD 118)</option>
-        <option value="30">30 kL (Depot)</option>
-        <option value="35">35 kL (Terminal)</option>
-        <option value="40">40 kL (Large)</option>
-        <option value="45">45 kL (Bulk)</option>
-        <option value="50">50 kL (Storage)</option>
-        <option value="60">60 kL (Major depot)</option>
-      </select>
-    </div>
-
-    <div class="input-field">
-      <label><i>📏</i> Fuel dip (mm)</label>
-      <input type="number" id="dip" placeholder="e.g., 1540 mm" value="1200" step="any" min="0">
-    </div>
-
-    <div class="input-field">
-      <label><i>💧</i> Water dip (mm)</label>
-      <input type="number" id="waterDip" placeholder="0 if none" value="0" step="any" min="0">
-    </div>
-
-    <div class="input-field full-row">
-      <label><i>📐</i> Tank dimensions (diameter × length) — auto as per OMC data</label>
-      <input type="text" id="diameterDisplay" readonly value="2.30 m dia × 4.82 m L (20 kL)" style="background:#f0f5fd; font-weight:500;">
-    </div>
-  </div>
-
-  <div class="action-row">
-    <button class="calculate-btn" onclick="calculateStock()">
-      <span>🔢</span> COMPUTE STOCK
-    </button>
-    <div class="water-indicator" id="waterInfo">Water dip: 0 mm</div>
-  </div>
-
-  <!-- Result panel -->
-  <div class="result-panel" id="resultPanel">
-    <div class="stock-values">
-      <div class="stock-item">
-        <div class="label">GROSS VOLUME</div>
-        <div class="value" id="grossVal">—</div>
-        <span class="unit">litres</span>
+  <!-- main content area: centered with top/bottom margin -->
+  <div class="page-center">
+    <div class="tank-card">
+      <h2>
+        ⛽ Dip-to-Volume of fuel Calculation
+        <span>INDIA</span>
+      </h2>
+      <div class="meta-note">
+        <span>🏭 All India tank types · MS/HSD · Horizontal cylinder</span>
+        <span class="badge">IS 10987 / OISD 225</span>
       </div>
-      <div class="stock-item">
-        <div class="label">WATER VOLUME</div>
-        <div class="value" id="waterVal">—</div>
-        <span class="unit">litres</span>
+
+      <!-- form grid (no button inside) -->
+      <div class="fuel-grid">
+        <div class="input-field">
+          <label><i>⛽</i> Commodity</label>
+          <select id="commodity">
+            <option value="MS" selected>Motor Spirit (MS) · Petrol</option>
+            <option value="HSD">High Speed Diesel (HSD)</option>
+          </select>
+        </div>
+
+        <div class="input-field">
+          <label><i>🏗️</i> Tank capacity (kL)</label>
+          <select id="tankCap">
+            <option value="5">5 kL (Small retail)</option>
+            <option value="10">10 kL (Rural outlet)</option>
+            <option value="15">15 kL (Common)</option>
+            <option value="18">18 kL (IOCL type)</option>
+            <option value="20" selected>20 kL (Standard)</option>
+            <option value="22">22 kL (BPCL spec)</option>
+            <option value="25">25 kL (HPCL)</option>
+            <option value="28">28 kL (OISD 118)</option>
+            <option value="30">30 kL (Depot)</option>
+            <option value="35">35 kL (Terminal)</option>
+            <option value="40">40 kL (Large)</option>
+            <option value="45">45 kL (Bulk)</option>
+            <option value="50">50 kL (Storage)</option>
+            <option value="60">60 kL (Major depot)</option>
+          </select>
+        </div>
+
+        <div class="input-field">
+          <label><i>📏</i> Fuel dip (mm)</label>
+          <input type="number" id="dip" placeholder="e.g., 1540 mm" value="1200" step="any" min="0">
+        </div>
+
+        <div class="input-field">
+          <label><i>💧</i> Water dip (mm)</label>
+          <input type="number" id="waterDip" placeholder="0 if none" value="0" step="any" min="0">
+        </div>
+
+        <div class="input-field full-row">
+          <label><i>📐</i> Tank dimensions (diameter × length) — auto as per OMC data</label>
+          <input type="text" id="diameterDisplay" readonly value="2.30 m dia × 4.82 m L (20 kL)" style="background:#f0f5fd; font-weight:500;">
+        </div>
       </div>
-      <div class="stock-item">
-        <div class="label">NET STOCK</div>
-        <div class="value" id="netVal">—</div>
-        <span class="unit">litres</span>
+
+      <!-- only water indicator remains (no button) -->
+      <div class="info-row">
+        <div class="water-indicator" id="waterInfo">Water dip: 0 mm</div>
       </div>
-    </div>
-    <hr>
-    <div class="detail-line">
-      <span>⏱️ dip: <span id="displayDip">1200 mm</span></span>
-      <span>📦 tank: <span id="displayTank">20 kL</span></span>
-      <span>⛽ <span id="displayCommodity">MS</span></span>
-    </div>
-    <div style="font-size:0.85rem; color:#456f9c; text-align:right; margin-top:8px;">
-      *cylindrical horizontal tank · formula as per OISD-ST-118
+
+      <!-- Result panel -->
+      <div class="result-panel" id="resultPanel">
+        <div class="stock-values">
+          <div class="stock-item">
+            <div class="label">GROSS VOLUME</div>
+            <div class="value" id="grossVal">—</div>
+            <span class="unit">litres</span>
+          </div>
+          <div class="stock-item">
+            <div class="label">WATER VOLUME</div>
+            <div class="value" id="waterVal">—</div>
+            <span class="unit">litres</span>
+          </div>
+          <div class="stock-item">
+            <div class="label">NET STOCK</div>
+            <div class="value" id="netVal">—</div>
+            <span class="unit">litres</span>
+          </div>
+        </div>
+        <hr>
+        <div class="detail-line">
+          <span>⏱️ dip: <span id="displayDip">1200 mm</span></span>
+          <span>📦 tank: <span id="displayTank">20 kL</span></span>
+          <span>⛽ <span id="displayCommodity">MS</span></span>
+        </div>
+        <div style="font-size:0.85rem; color:#456f9c; text-align:right; margin-top:8px;">
+          *cylindrical horizontal tank · formula as per OISD-ST-118
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-(function() {
-  // ---------- TANK LIBRARY (extensive) ----------
-  // Based on typical Indian oil company specs (IOCL, BPCL, HPCL, OISD)
-  // Diameter and length in metres. Proportions vary slightly by capacity.
-  // All values are realistic for horizontal cylindrical tanks.
-  const tankLibrary = {
-    //  kL:   diam (m), length (m)
-    5:   { diam: 1.60, length: 2.50 },  //   5.03 m³
-    10:  { diam: 2.00, length: 3.20 },  //  10.05 m³
-    15:  { diam: 2.05, length: 4.55 },  //  15.02 m³
-    18:  { diam: 2.30, length: 4.35 },  //  18.07 m³ (IOCL type)
-    20:  { diam: 2.30, length: 4.82 },  //  20.02 m³
-    22:  { diam: 2.40, length: 4.86 },  //  22.00 m³
-    25:  { diam: 2.50, length: 5.10 },  //  25.04 m³
-    28:  { diam: 2.60, length: 5.28 },  //  28.03 m³
-    30:  { diam: 2.70, length: 5.25 },  //  30.07 m³
-    35:  { diam: 2.80, length: 5.70 },  //  35.09 m³
-    40:  { diam: 3.00, length: 5.66 },  //  40.01 m³
-    45:  { diam: 3.10, length: 5.96 },  //  44.98 m³
-    50:  { diam: 3.20, length: 6.22 },  //  50.03 m³
-    60:  { diam: 3.40, length: 6.62 }   //  60.11 m³
-  };
-
-  // DOM elements
-  const commoditySel = document.getElementById('commodity');
-  const tankCapSel = document.getElementById('tankCap');
-  const dipInput = document.getElementById('dip');
-  const waterInput = document.getElementById('waterDip');
-  const diamDisplay = document.getElementById('diameterDisplay');
-  const waterInfoSpan = document.getElementById('waterInfo');
-
-  const grossSpan = document.getElementById('grossVal');
-  const waterSpan = document.getElementById('waterVal');
-  const netSpan = document.getElementById('netVal');
-  const displayDip = document.getElementById('displayDip');
-  const displayTank = document.getElementById('displayTank');
-  const displayCommodity = document.getElementById('displayCommodity');
-
-  // ---- update diameter readout when tank changes ----
-  function updateDiameterDisplay() {
-    const capKey = tankCapSel.value;  // string "5","10"... "60"
-    const tank = tankLibrary[capKey];
-    if (tank) {
-      diamDisplay.value = `${tank.diam.toFixed(2)} m dia × ${tank.length.toFixed(2)} m L  (${capKey} kL)`;
-    } else {
-      diamDisplay.value = '— select tank —';
-    }
-    displayTank.innerText = capKey + ' kL';
-  }
-
-  // ---- core math: volume of liquid in horizontal cylinder ----
-  function horizontalCylinderVolume(diamM, lengthM, depthMm) {
-    const depthM = depthMm / 1000;            // convert mm to metres
-    if (depthM <= 0) return 0;
-    const radius = diamM / 2;
-    if (depthM >= diamM) return Math.PI * radius * radius * lengthM; // full tank
-
-    // clamp ratio to avoid numerical issues
-    const ratio = (radius - depthM) / radius;
-    const clampedRatio = Math.min(1, Math.max(-1, ratio));
-    const theta = 2 * Math.acos(clampedRatio);
-
-    // segment area = (r²/2) * (θ - sin θ)
-    const area = (radius * radius / 2) * (theta - Math.sin(theta));
-    return area * lengthM;                   // volume in m³ (= kilolitres)
-  }
-
-  // convert m³ → litres
-  function cumToLitres(cum) {
-    return cum * 1000;
-  }
-
-  // ---- main calculation ----
-  window.calculateStock = function() {
-    const commodity = commoditySel.value;       // 'MS' or 'HSD'
-    const capKey = tankCapSel.value;            // e.g., '15','20'...'60'
-    let dipMm = parseFloat(dipInput.value) || 0;
-    let waterMm = parseFloat(waterInput.value) || 0;
-
-    // Sanity: dip can't exceed tank diameter*1000 (but we don't hard limit, formula will treat as full)
-    // Water dip can't exceed total dip (if water > dip, adjust)
-    if (waterMm > dipMm) waterMm = dipMm;   // practical: water cannot be above fuel interface
-
-    waterInfoSpan.innerText = `💧 Water dip: ${waterMm} mm`;
-
-    // fetch tank dimensions
-    const tank = tankLibrary[capKey];
-    if (!tank) {
-      grossSpan.innerText = 'ERR';
-      waterSpan.innerText = 'ERR';
-      netSpan.innerText = 'ERR';
-      return;
-    }
-
-    const diam = tank.diam;
-    const length = tank.length;
-
-    // 1. gross fuel volume (total dip)
-    let grossM3 = horizontalCylinderVolume(diam, length, dipMm);
-    let grossLitres = cumToLitres(grossM3);
-
-    // 2. water volume (if any)
-    let waterLitres = 0;
-    if (waterMm > 0) {
-      const waterM3 = horizontalCylinderVolume(diam, length, waterMm);
-      waterLitres = cumToLitres(waterM3);
-    }
-
-    // 3. net stock = gross fuel - water (since water sits at bottom)
-    let netLitres = grossLitres - waterLitres;
-    if (netLitres < 0) netLitres = 0;   // safety
-
-    // round to 1 decimal
-    grossLitres = Math.round(grossLitres * 10) / 10;
-    waterLitres = Math.round(waterLitres * 10) / 10;
-    netLitres = Math.round(netLitres * 10) / 10;
-
-    // update result fields
-    grossSpan.innerText = grossLitres.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:1});
-    waterSpan.innerText = waterLitres.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:1});
-    netSpan.innerText = netLitres.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:1});
-
-    // display dip & commodity
-    displayDip.innerText = dipMm + ' mm';
-    displayCommodity.innerText = commodity;
-
-    // tank display already updated in onchange, but keep consistent
-    displayTank.innerText = capKey + ' kL';
-  };
-
-  // ---- event listeners to refresh diameter and recalc ----
-  tankCapSel.addEventListener('change', function() {
-    updateDiameterDisplay();
-    calculateStock();
-  });
-
-  commoditySel.addEventListener('change', function() {
-    displayCommodity.innerText = commoditySel.value;
-    calculateStock();   // optional recalc (no effect on volume but updates commodity label)
-  });
-
-  dipInput.addEventListener('input', calculateStock);
-  waterInput.addEventListener('input', calculateStock);
-
-  // initial update
-  updateDiameterDisplay();
-  calculateStock();
-})();
-</script>
-<!-- FOOTER -->
-<div id="site-footer"></div>
+  <!-- FOOTER -->
+  <div id="site-footer"></div>
   <!-- Go to Top -->
   <script src="/assets/Scripts/gototop.js"></script>
+
+  <script>
+    (function() {
+      // TANK LIBRARY (extensive) – same as original
+      const tankLibrary = {
+        5:   { diam: 1.60, length: 2.50 },
+        10:  { diam: 2.00, length: 3.20 },
+        15:  { diam: 2.05, length: 4.55 },
+        18:  { diam: 2.30, length: 4.35 },
+        20:  { diam: 2.30, length: 4.82 },
+        22:  { diam: 2.40, length: 4.86 },
+        25:  { diam: 2.50, length: 5.10 },
+        28:  { diam: 2.60, length: 5.28 },
+        30:  { diam: 2.70, length: 5.25 },
+        35:  { diam: 2.80, length: 5.70 },
+        40:  { diam: 3.00, length: 5.66 },
+        45:  { diam: 3.10, length: 5.96 },
+        50:  { diam: 3.20, length: 6.22 },
+        60:  { diam: 3.40, length: 6.62 }
+      };
+
+      // DOM elements
+      const commoditySel = document.getElementById('commodity');
+      const tankCapSel = document.getElementById('tankCap');
+      const dipInput = document.getElementById('dip');
+      const waterInput = document.getElementById('waterDip');
+      const diamDisplay = document.getElementById('diameterDisplay');
+      const waterInfoSpan = document.getElementById('waterInfo');
+
+      const grossSpan = document.getElementById('grossVal');
+      const waterSpan = document.getElementById('waterVal');
+      const netSpan = document.getElementById('netVal');
+      const displayDip = document.getElementById('displayDip');
+      const displayTank = document.getElementById('displayTank');
+      const displayCommodity = document.getElementById('displayCommodity');
+
+      function updateDiameterDisplay() {
+        const capKey = tankCapSel.value;
+        const tank = tankLibrary[capKey];
+        if (tank) {
+          diamDisplay.value = `${tank.diam.toFixed(2)} m dia × ${tank.length.toFixed(2)} m L  (${capKey} kL)`;
+        } else {
+          diamDisplay.value = '— select tank —';
+        }
+        displayTank.innerText = capKey + ' kL';
+      }
+
+      // horizontal cylinder volume (m³) from depth in mm
+      function horizontalCylinderVolume(diamM, lengthM, depthMm) {
+        const depthM = depthMm / 1000;
+        if (depthM <= 0) return 0;
+        const radius = diamM / 2;
+        if (depthM >= diamM) return Math.PI * radius * radius * lengthM;
+
+        const ratio = (radius - depthM) / radius;
+        const clampedRatio = Math.min(1, Math.max(-1, ratio));
+        const theta = 2 * Math.acos(clampedRatio);
+
+        const area = (radius * radius / 2) * (theta - Math.sin(theta));
+        return area * lengthM;
+      }
+
+      function cumToLitres(cum) {
+        return cum * 1000;
+      }
+
+      // main calculation (called on every input/change)
+      function calculateStock() {
+        const commodity = commoditySel.value;
+        const capKey = tankCapSel.value;
+        let dipMm = parseFloat(dipInput.value) || 0;
+        let waterMm = parseFloat(waterInput.value) || 0;
+
+        // water cannot exceed dip
+        if (waterMm > dipMm) waterMm = dipMm;
+
+        waterInfoSpan.innerText = `💧 Water dip: ${waterMm} mm`;
+
+        const tank = tankLibrary[capKey];
+        if (!tank) {
+          grossSpan.innerText = 'ERR';
+          waterSpan.innerText = 'ERR';
+          netSpan.innerText = 'ERR';
+          return;
+        }
+
+        const diam = tank.diam;
+        const length = tank.length;
+
+        let grossM3 = horizontalCylinderVolume(diam, length, dipMm);
+        let grossLitres = cumToLitres(grossM3);
+
+        let waterLitres = 0;
+        if (waterMm > 0) {
+          const waterM3 = horizontalCylinderVolume(diam, length, waterMm);
+          waterLitres = cumToLitres(waterM3);
+        }
+
+        let netLitres = grossLitres - waterLitres;
+        if (netLitres < 0) netLitres = 0;
+
+        grossLitres = Math.round(grossLitres * 10) / 10;
+        waterLitres = Math.round(waterLitres * 10) / 10;
+        netLitres = Math.round(netLitres * 10) / 10;
+
+        grossSpan.innerText = grossLitres.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:1});
+        waterSpan.innerText = waterLitres.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:1});
+        netSpan.innerText = netLitres.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:1});
+
+        displayDip.innerText = dipMm + ' mm';
+        displayCommodity.innerText = commodity;
+        displayTank.innerText = capKey + ' kL';
+      }
+
+      // Attach events: any change triggers update (no button)
+      tankCapSel.addEventListener('change', function() {
+        updateDiameterDisplay();
+        calculateStock();
+      });
+
+      commoditySel.addEventListener('change', function() {
+        displayCommodity.innerText = commoditySel.value;
+        calculateStock();   // updates commodity label & results (though volume unchanged)
+      });
+
+      dipInput.addEventListener('input', calculateStock);
+      waterInput.addEventListener('input', calculateStock);
+
+      // initialise
+      updateDiameterDisplay();
+      calculateStock();
+    })();
+  </script>
 </body>
 </html>
