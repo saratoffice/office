@@ -2,183 +2,479 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>FPS Inspection Report · NFSA 2013 / TPDS</title>
+  <title>⛽ Tank stock · MS/HSD · dip to volume</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-   /* ===== Main Container ===== */
-./* ===== Main Container ===== */
-.fuel-calculator {
-  max-width: 650px;
-  margin: 40px auto;
-  padding: 25px;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-  font-family: "Segoe UI", Roboto, sans-serif;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+    }
 
-/* ===== Heading ===== */
-.fuel-calculator h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #1f3c88;
-  font-weight: 600;
-}
+    body {
+      background: linear-gradient(145deg, #f0f3fa 0%, #e9eef5 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      padding: 16px;
+    }
 
-/* ===== Form Group ===== */
-.fuel-group {
-  margin-bottom: 18px;
-  display: flex;
-  flex-direction: column;
-}
+    .tank-card {
+      max-width: 760px;
+      width: 100%;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(4px);
+      background: #ffffff;
+      border-radius: 36px;
+      box-shadow: 0 20px 40px -12px rgba(0,20,50,0.25), 0 8px 24px -6px rgba(0,32,64,0.15);
+      padding: 2rem 2rem 2.2rem;
+      border: 1px solid rgba(255,255,255,0.5);
+      transition: all 0.2s;
+    }
 
-/* ===== Labels ===== */
-.fuel-group label {
-  margin-bottom: 6px;
-  font-weight: 500;
-  color: #333;
-}
+    .tank-card h2 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 1.9rem;
+      letter-spacing: -0.02em;
+      color: #13294b;
+      margin: 0 0 0.25rem 0;
+      border-bottom: 3px solid #d0dfed;
+      padding-bottom: 0.9rem;
+    }
 
-/* ===== Inputs & Select ===== */
-.fuel-group select,
-.fuel-group input {
-  padding: 10px 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
+    .tank-card h2 span {
+      background: #1f3c88;
+      color: white;
+      font-size: 1.2rem;
+      padding: 4px 16px;
+      border-radius: 60px;
+      margin-left: auto;
+      font-weight: 500;
+    }
 
-/* Focus Effect */
-.fuel-group select:focus,
-.fuel-group input:focus {
-  border-color: #1f3c88;
-  outline: none;
-  box-shadow: 0 0 5px rgba(31,60,136,0.3);
-}
+    .meta-note {
+      display: flex;
+      justify-content: space-between;
+      color: #2d4059;
+      background: #f1f6fd;
+      padding: 0.75rem 1.2rem;
+      border-radius: 60px;
+      margin: 1.2rem 0 1.8rem 0;
+      font-size: 0.95rem;
+      font-weight: 500;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.02);
+    }
 
-/* ===== Button ===== */
-.fuel-btn {
-  width: 100%;
-  padding: 12px;
-  background: #1f3c88;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
+    .meta-note i {
+      font-style: normal;
+      background: #b3cefa;
+      padding: 2px 12px;
+      border-radius: 40px;
+      color: #011b3c;
+    }
 
-.fuel-btn:hover {
-  background: #16306b;
-}
+    .fuel-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem 1.8rem;
+    }
 
-/* ===== Result Box ===== */
-.fuel-result {
-  margin-top: 20px;
-  padding: 15px;
-  background: #f4f7ff;
-  border-left: 5px solid #1f3c88;
-  border-radius: 6px;
-  font-weight: 500;
-  color: #1f3c88;
-}
+    .input-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
 
-/* ===== Responsive Design ===== */
-@media (max-width: 600px) {
-  .fuel-calculator {
-    margin: 20px;
-    padding: 18px;
-  }
-}
+    .input-field label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #1f3c88;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-field label i {
+      font-style: normal;
+      background: #dae3f2;
+      width: 26px;
+      height: 26px;
+      border-radius: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .input-field select,
+    .input-field input {
+      background: white;
+      border: 1.5px solid #dbe1ed;
+      border-radius: 24px;
+      padding: 14px 20px;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #091c3a;
+      transition: 0.2s;
+      outline: none;
+      width: 100%;
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%231f3c88" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 18px center;
+      background-size: 18px;
+    }
+
+    .input-field input {
+      background-image: none;
+    }
+
+    .input-field select:hover,
+    .input-field input:hover {
+      border-color: #839dc0;
+    }
+
+    .input-field select:focus,
+    .input-field input:focus {
+      border-color: #1f3c88;
+      box-shadow: 0 0 0 4px rgba(31,60,136,0.15);
+    }
+
+    .full-row {
+      grid-column: span 2;
+    }
+
+    .action-area {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 28px;
+    }
+
+    .calculate-btn {
+      background: #13294b;
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 1.25rem;
+      padding: 16px 42px;
+      border-radius: 60px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 12px 18px -8px rgba(11, 36, 92, 0.3);
+      cursor: pointer;
+      transition: 0.2s;
+      border: 1px solid #2b4794;
+      letter-spacing: 0.3px;
+    }
+
+    .calculate-btn:hover {
+      background: #0e1f3f;
+      transform: scale(1.01);
+      box-shadow: 0 18px 24px -8px #10234b;
+    }
+
+    .result-panel {
+      background: #eef3fc;
+      border-radius: 40px;
+      padding: 1.5rem 2rem;
+      margin-top: 28px;
+      border: 1px solid white;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.02), 0 10px 20px -18px #16306b;
+    }
+
+    .stock-values {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+      text-align: center;
+    }
+
+    .stock-item {
+      flex: 1;
+      background: white;
+      border-radius: 40px;
+      padding: 1rem 0.5rem;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    .stock-item .label {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      color: #4267a5;
+      letter-spacing: 0.4px;
+    }
+
+    .stock-item .value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #071a3b;
+      line-height: 1.2;
+    }
+
+    .stock-item .unit {
+      font-size: 0.9rem;
+      color: #5a6f91;
+      margin-left: 3px;
+    }
+
+    .water-badge {
+      font-size: 0.95rem;
+      background: #dde3ef;
+      padding: 5px 18px;
+      border-radius: 40px;
+      color: #1f3c88;
+    }
+
+    hr {
+      border: 1px solid #ced9e9;
+      margin: 1.2rem 0 0.8rem;
+    }
+
+    @media (max-width: 600px) {
+      .tank-card { padding: 1.5rem; }
+      .fuel-grid { grid-template-columns: 1fr; }
+      .full-row { grid-column: span 1; }
+      .stock-values { flex-direction: column; }
+      .calculate-btn { width: 100%; justify-content: center; }
+    }
   </style>
 </head>
 <body>
+<div class="tank-card">
+  <h2>
+    ⛽ FPS INSPECTION · NFSA
+    <span>TPDS</span>
+  </h2>
+  <div class="meta-note">
+    <span>📏 Cylindrical tank · dip to volume (ASTM formula based)</span>
+    <i>capacities 15–30 kL</i>
+  </div>
 
-<div>
-  <label>Commodity:</label>
-  <select id="commodity">
-    <option value="MS">Motor Spirit (MS)</option>
-    <option value="HSD">High Speed Diesel (HSD)</option>
-  </select>
+  <!-- main form -->
+  <div class="fuel-grid">
+    <div class="input-field">
+      <label><i>🛢️</i> Commodity</label>
+      <select id="commodity">
+        <option value="MS" selected>Motor Spirit (MS) · petrol</option>
+        <option value="HSD">High Speed Diesel (HSD)</option>
+      </select>
+    </div>
 
-  <label>Tank:</label>
-  <select id="tank">
-    <option value="tank1">Tank 1</option>
-    <option value="tank2">Tank 2</option>
-  </select>
+    <div class="input-field">
+      <label><i>📏</i> Tank capacity</label>
+      <select id="tankCap">
+        <option value="15">15 kL (15,000 L)</option>
+        <option value="20" selected>20 kL (20,000 L)</option>
+        <option value="25">25 kL (25,000 L)</option>
+        <option value="30">30 kL (30,000 L)</option>
+      </select>
+    </div>
 
-  <label>Fuel Dip (mm):</label>
-  <input type="number" id="dip">
+    <div class="input-field">
+      <label><i>⬇️</i> Fuel dip (mm)</label>
+      <input type="number" id="dip" placeholder="e.g., 1250 mm" value="1200" step="any" min="0">
+    </div>
 
-  <label>Water Dip (mm):</label>
-  <input type="number" id="waterDip" value="0">
+    <div class="input-field">
+      <label><i>💧</i> Water dip (mm)</label>
+      <input type="number" id="waterDip" placeholder="0 if none" value="0" step="any" min="0">
+    </div>
 
-  <button onclick="calculate()">Calculate</button>
+    <div class="input-field full-row" style="margin-top: 4px;">
+      <label><i>⚙️</i> Tank diameter (optional — auto for selected kL)</label>
+      <input type="text" id="diameterDisplay" readonly value="2.30 m (default for 20 kL)" style="background:#f4f7fc; font-weight:500;">
+    </div>
+  </div>
 
-  <h3 id="result"></h3>
+  <div class="action-area">
+    <button class="calculate-btn" onclick="calculateStock()">
+      <span>📊</span> CALCULATE STOCK
+    </button>
+    <div class="water-badge" id="waterInfo">Water dip: 0 mm</div>
+  </div>
+
+  <!-- Result panel -->
+  <div class="result-panel" id="resultPanel">
+    <div class="stock-values">
+      <div class="stock-item">
+        <div class="label">GROSS VOLUME</div>
+        <div class="value" id="grossVal">—</div>
+        <span class="unit">litres</span>
+      </div>
+      <div class="stock-item">
+        <div class="label">WATER VOLUME</div>
+        <div class="value" id="waterVal">—</div>
+        <span class="unit">litres</span>
+      </div>
+      <div class="stock-item">
+        <div class="label">NET STOCK</div>
+        <div class="value" id="netVal">—</div>
+        <span class="unit">litres</span>
+      </div>
+    </div>
+    <hr>
+    <div style="display: flex; justify-content: space-between; font-size:0.95rem; color:#2a4070; padding:0 6px;">
+      <span>⏲️ dip: <span id="displayDip">1200 mm</span></span>
+      <span>📦 tank: <span id="displayTank">20 kL</span></span>
+    </div>
+  </div>
 </div>
 
 <script>
-const dipCharts = {
-  MS: {
-    tank1: {100:1150,200:2320,300:3480,400:4650,500:5820,600:6990,700:8160,800:9330,900:10500,1000:11670},
-    tank2: {100:1200,200:2400,300:3600,400:4800,500:6000,600:7200,700:8400,800:9600,900:10800,1000:12000}
-  },
-  HSD: {
-    tank1: {100:1100,200:2200,300:3300,400:4400,500:5500,600:6600,700:7700,800:8800,900:9900,1000:11000},
-    tank2: {100:1300,200:2600,300:3900,400:5200,500:6500,600:7800,700:9100,800:10400,900:11700,1000:13000}
-  }
-};
+(function() {
+  // ----- physical tank data (cylindrical, horizontal) -----
+  // For each capacity (kL) we store diameter (m) and length (m) – typical proportions L/D ~ 2.5 to 3
+  // volumes: internal geometry. 15 kL, 20, 25, 30.
+  const tankLibrary = {
+    15: { diam: 2.05, length: 4.55 },  // ~15.0 m3
+    20: { diam: 2.30, length: 4.82 },  // 20.02 m³
+    25: { diam: 2.50, length: 5.10 },  // 25.04 m³
+    30: { diam: 2.70, length: 5.25 }   // 30.07 m³
+  };
 
-function interpolate(chart, dip) {
-  const keys = Object.keys(chart).map(Number).sort((a,b)=>a-b);
+  // DOM elements
+  const commoditySel = document.getElementById('commodity');
+  const tankCapSel = document.getElementById('tankCap');
+  const dipInput = document.getElementById('dip');
+  const waterInput = document.getElementById('waterDip');
+  const diamDisplay = document.getElementById('diameterDisplay');
+  const waterInfoSpan = document.getElementById('waterInfo');
 
-  let lower = keys[0];
-  let upper = keys[keys.length-1];
+  const grossSpan = document.getElementById('grossVal');
+  const waterSpan = document.getElementById('waterVal');
+  const netSpan = document.getElementById('netVal');
+  const displayDip = document.getElementById('displayDip');
+  const displayTank = document.getElementById('displayTank');
 
-  for(let i=0;i<keys.length;i++){
-    if(dip === keys[i]) return chart[dip];
-    if(dip > keys[i]) lower = keys[i];
-    if(dip < keys[i]) {
-      upper = keys[i];
-      break;
+  // ---- update diameter readout when tank changes ----
+  function updateDiameterDisplay() {
+    const capKey = tankCapSel.value;  // string "15", "20" etc
+    const tank = tankLibrary[capKey];
+    if (tank) {
+      diamDisplay.value = `${tank.diam.toFixed(2)} m diameter × ${tank.length.toFixed(2)} m length (approx)`;
+    } else {
+      diamDisplay.value = '—';
     }
+    // also update tank display under result
+    displayTank.innerText = capKey + ' kL';
   }
 
-  let V1 = chart[lower];
-  let V2 = chart[upper];
+  // ---- core math: volume of liquid in horizontal cylinder ----
+  function horizontalCylinderVolume(diamM, lengthM, depthMm) {
+    const depthM = depthMm / 1000;            // convert mm to metres
+    if (depthM <= 0) return 0;
+    const radius = diamM / 2;
+    if (depthM >= diamM) return Math.PI * radius * radius * lengthM; // full
 
-  return V1 + ((dip - lower) / (upper - lower)) * (V2 - V1);
-}
+    // central angle (radians) from depth:  θ = 2 * arccos((r - h)/r)
+    const ratio = (radius - depthM) / radius;
+    // clamp to avoid numerical issues
+    const clampedRatio = Math.min(1, Math.max(-1, ratio));
+    const theta = 2 * Math.acos(clampedRatio);
 
-function calculate(){
-  let commodity = document.getElementById("commodity").value;
-  let tank = document.getElementById("tank").value;
-  let dip = parseFloat(document.getElementById("dip").value);
-  let waterDip = parseFloat(document.getElementById("waterDip").value);
-
-  let chart = dipCharts[commodity][tank];
-
-  if(!chart){
-    document.getElementById("result").innerText = "Chart not found.";
-    return;
+    // segment area = (r²/2) * (θ - sin θ)
+    const area = (radius * radius / 2) * (theta - Math.sin(theta));
+    return area * lengthM;                   // volume in m³ (= kilolitres)
   }
 
-  let fuelVolume = interpolate(chart, dip);
-  let waterVolume = waterDip ? interpolate(chart, waterDip) : 0;
+  // convert m³ → litres
+  function cumToLitres(cum) {
+    return cum * 1000;
+  }
 
-  let netStock = fuelVolume - waterVolume;
+  // ---- main calculation ----
+  window.calculateStock = function() {
+    const commodity = commoditySel.value;       // 'MS' or 'HSD'
+    const capKey = tankCapSel.value;            // '15','20','25','30'
+    const dipMm = parseFloat(dipInput.value) || 0;
+    const waterMm = parseFloat(waterInput.value) || 0;
 
-  document.getElementById("result").innerText =
-    "Gross Volume: " + fuelVolume.toFixed(2) + " L | Water: " +
-    waterVolume.toFixed(2) + " L | Net Stock: " +
-    netStock.toFixed(2) + " L";
-}
+    // update water badge
+    waterInfoSpan.innerText = `💧 Water dip: ${waterMm} mm`;
+
+    // fetch tank dimensions
+    const tank = tankLibrary[capKey];
+    if (!tank) {
+      grossSpan.innerText = 'ERR';
+      waterSpan.innerText = 'ERR';
+      netSpan.innerText = 'ERR';
+      return;
+    }
+
+    const diam = tank.diam;
+    const length = tank.length;
+
+    // 1. gross fuel volume (total dip)
+    let grossM3 = horizontalCylinderVolume(diam, length, dipMm);
+    let grossLitres = cumToLitres(grossM3);
+
+    // 2. water volume (if any)
+    let waterLitres = 0;
+    if (waterMm > 0) {
+      const waterM3 = horizontalCylinderVolume(diam, length, waterMm);
+      waterLitres = cumToLitres(waterM3);
+    }
+
+    // 3. net stock = gross fuel - water
+    let netLitres = grossLitres - waterLitres;
+    if (netLitres < 0) netLitres = 0;   // sanity
+
+    // --- apply commodity factor? Actually MS/HSD stored in same tank, but we keep commodity for display.
+    // sometimes MS and HSD have slight density adjustment? but volume remains same. we keep commodity as info.
+    // we can adjust if any expansion factor needed, but normally not for dip.
+    // (just for completeness we can show slightly different if needed — but keep as is)
+
+    // round to 1 decimal
+    grossLitres = Math.round(grossLitres * 10) / 10;
+    waterLitres = Math.round(waterLitres * 10) / 10;
+    netLitres = Math.round(netLitres * 10) / 10;
+
+    // update result fields
+    grossSpan.innerText = grossLitres.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:1});
+    waterSpan.innerText = waterLitres.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:1});
+    netSpan.innerText = netLitres.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:1});
+
+    // display dip info
+    displayDip.innerText = dipMm + ' mm';
+
+    // optional: add commodity to result info (subtle)
+    const panel = document.getElementById('resultPanel');
+    // keep tank display updated
+    displayTank.innerText = capKey + ' kL (' + (commodity === 'MS' ? 'MS' : 'HSD') + ')';
+  };
+
+  // ---- event listeners to refresh diameter and recalc on change ----
+  tankCapSel.addEventListener('change', function() {
+    updateDiameterDisplay();
+    calculateStock();   // recalc with new tank size
+  });
+
+  commoditySel.addEventListener('change', function() {
+    calculateStock();   // update commodity label (optional)
+  });
+
+  dipInput.addEventListener('input', calculateStock);
+  waterInput.addEventListener('input', calculateStock);
+
+  // initial update
+  updateDiameterDisplay();
+  calculateStock();
+})();
 </script>
-<!-- stub for gototop (doesn't interfere) -->
+<!-- stub gototop (doesn't interfere) -->
 <script src="/assets/Scripts/gototop.js"></script>
 </body>
 </html>
