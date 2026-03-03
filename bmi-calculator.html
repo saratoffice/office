@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMI harmony calculator</title>
+  <!-- Font & icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Common CSS (menu, footer, global styles) -->
+  <link rel="stylesheet" href="/style.css">
+  <!-- ✅ IMPORTANT: site components for header/footer etc. -->
+  <script src="/assets/Scripts/site-components.js" defer></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f0f4fa 0%, #e9eef5 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      padding: 1.25rem;
+    }
+
+    .card {
+      max-width: 560px;
+      width: 100%;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 42px;
+      box-shadow: 
+        0 30px 60px -20px rgba(0,40,80,0.25),
+        inset 0 1px 2px rgba(255,255,255,0.8),
+        0 0 0 1px rgba(255,255,255,0.5);
+      padding: 2rem 2rem 2.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2.2rem;
+    }
+
+    .card-header i {
+      font-size: 2.1rem;
+      background: linear-gradient(135deg, #1d2b3f, #2c3f5c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 4px 6px rgba(0,20,40,0.15));
+    }
+
+    .card-header h2 {
+      font-weight: 620;
+      font-size: 1.9rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(145deg, #192b3f, #294155);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      border-left: 3px solid #3b5f8a;
+      padding-left: 1rem;
+    }
+
+    .bmi-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .input-group label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 560;
+      font-size: 0.95rem;
+      color: #1e3144;
+      letter-spacing: -0.2px;
+      margin-left: 6px;
+    }
+
+    .input-group label i {
+      font-size: 1rem;
+      color: #2f5175;
+      opacity: 0.8;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      padding-right: 4rem;
+      border: 1.8px solid rgba(55, 85, 120, 0.15);
+      border-radius: 36px;
+      font-size: 1.1rem;
+      font-weight: 480;
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(4px);
+      box-shadow: 
+        inset 0 2px 5px rgba(0,0,0,0.02),
+        0 3px 8px rgba(0,20,40,0.04);
+      transition: all 0.2s;
+      color: #152c3f;
+      font-family: 'Inter', monospace;
+    }
+
+    .input-wrapper input:focus {
+      outline: none;
+      border-color: #3e6b9c;
+      background: white;
+      box-shadow: 0 8px 20px -10px #1e3b5b40, 0 0 0 3px rgba(60, 110, 170, 0.15);
+    }
+
+    .input-wrapper .unit {
+      position: absolute;
+      right: 1.6rem;
+      font-size: 1rem;
+      font-weight: 530;
+      color: #446e96;
+      background: rgba(220, 235, 250, 0.5);
+      padding: 0.25rem 0.9rem;
+      border-radius: 40px;
+      letter-spacing: 0.3px;
+      backdrop-filter: blur(2px);
+      pointer-events: none;
+      border: 1px solid rgba(255,255,255,0.6);
+    }
+
+    .dual-row {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .dual-row .input-group {
+      flex: 1 1 160px;
+    }
+
+    .height-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+    }
+
+    .range-indicator {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.3rem;
+      padding: 0 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 480;
+      color: #4b5f77;
+    }
+
+    .range-indicator span {
+      background: rgba(165, 190, 220, 0.2);
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      backdrop-filter: blur(2px);
+    }
+
+    .cta-button {
+      background: linear-gradient(115deg, #203649, #1b334b);
+      border: none;
+      border-radius: 44px;
+      padding: 1.1rem 1.8rem;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.9rem;
+      cursor: pointer;
+      box-shadow: 0 15px 25px -8px rgba(20, 45, 70, 0.35), 0 4px 0 0 #0b1b2b inset, 0 -2px 10px rgba(255,255,255,0.3) inset;
+      transition: all 0.15s;
+      border: 1px solid rgba(255,255,255,0.3);
+      margin: 0.8rem 0 0.5rem;
+      letter-spacing: 0.3px;
+    }
+
+    .cta-button i {
+      font-size: 1.2rem;
+      filter: drop-shadow(0 2px 2px black);
+    }
+
+    .cta-button:hover {
+      background: linear-gradient(115deg, #254357, #203f5c);
+      transform: scale(1.01);
+      box-shadow: 0 18px 28px -8px #152d44, 0 3px 0 0 #10222f inset;
+    }
+
+    .cta-button:active {
+      transform: translateY(4px);
+      box-shadow: 0 7px 15px -5px #1f3a52, 0 2px 0 0 #0c1b28 inset;
+    }
+
+    .result-panel {
+      background: rgba(255,255,255,0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 40px;
+      padding: 1.8rem 1.8rem 1.5rem;
+      margin-top: 2.3rem;
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow: 0 8px 18px -10px #1a2f44, inset 0 1px 4px white;
+    }
+
+    .bmi-value {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      border-bottom: 2px dashed rgba(60, 95, 130, 0.2);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .bmi-value .number {
+      font-size: 3.2rem;
+      font-weight: 750;
+      line-height: 1;
+      background: linear-gradient(135deg, #1b3b57, #132433);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -2px;
+    }
+
+    .bmi-value .unit-label {
+      font-size: 1.2rem;
+      font-weight: 450;
+      color: #305273;
+      margin-left: 0.3rem;
+    }
+
+    .category {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #17334d;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .category i {
+      font-size: 1.7rem;
+      opacity: 0.8;
+    }
+
+    .health-tag {
+      margin-top: 1rem;
+      background: rgba(205, 225, 245, 0.5);
+      border-radius: 60px;
+      padding: 0.6rem 1.4rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-weight: 500;
+      color: #1f3f5c;
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(4px);
+      font-size: 0.95rem;
+    }
+
+    .health-tag i {
+      color: #1f5f8f;
+    }
+
+    .feedback {
+      min-height: 2.8rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .reset-icon {
+      background: rgba(190, 210, 235, 0.6);
+      border-radius: 50px;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: #213a53;
+      cursor: pointer;
+      border: 1px solid white;
+      transition: 0.15s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .reset-icon:hover {
+      background: rgb(175, 200, 235);
+      transform: rotate(20deg);
+    }
+
+    /* small hints */
+    .weight-hint, .height-hint {
+      font-size: 0.78rem;
+      color: #3a5b7c;
+      padding-left: 1rem;
+      opacity: 0.8;
+    }
+
+    /* error / validation */
+    .input-wrapper.error input {
+      border-color: #bc5f6a;
+      background: #fff6f7;
+    }
+
+    .input-wrapper .warning-icon {
+      display: none;
+    }
+
+    .input-wrapper.error .warning-icon {
+      display: block;
+      position: absolute;
+      right: 5rem;
+      color: #bf4d5a;
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 450px) {
+      .card { padding: 1.5rem; }
+      .bmi-value .number { font-size: 2.7rem; }
+    }
+  </style>
+</head>
+<body>
+   <!-- COMMON HEADER -->
+    <div id="site-header"></div>
+
+  <div class="card">
+    <div class="card-header">
+      <i class="fas fa-heart-pulse"></i>
+      <h2>BMI Calculator</h2>
+    </div>
+
+    <!-- main form -->
+    <div class="bmi-form" id="bmiForm">
+      <div class="dual-row">
+        <!-- height -->
+        <div class="input-group">
+          <label for="heightInput"><i class="fas fa-arrow-up"></i> Height</label>
+          <div class="input-wrapper" id="heightWrapper">
+            <input type="number" id="heightInput" placeholder="170" value="170" step="0.1" min="50" max="270" autocomplete="off">
+            <span class="unit">cm</span>
+            <i class="fas fa-exclamation-circle warning-icon"></i>
+          </div>
+          <div class="range-indicator">
+            <span>min 50cm</span>
+            <span>max 270cm</span>
+          </div>
+        </div>
+
+        <!-- weight -->
+        <div class="input-group">
+          <label for="weightInput"><i class="fas fa-weight-scale"></i> Weight</label>
+          <div class="input-wrapper" id="weightWrapper">
+            <input type="number" id="weightInput" placeholder="65" value="65" step="0.1" min="10" max="350" autocomplete="off">
+            <span class="unit">kg</span>
+            <i class="fas fa-exclamation-circle warning-icon"></i>
+          </div>
+          <div class="range-indicator">
+            <span>min 10kg</span>
+            <span>max 350kg</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- calculate button  -->
+      <button class="cta-button" id="calcBtn">
+        <i class="fas fa-calculator"></i> 
+        <span>calculate BMI</span>
+        <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+
+    <!-- result area with live design -->
+    <div class="result-panel" id="resultPanel">
+      <div class="bmi-value">
+        <span class="number" id="bmiNumber">21.2</span>
+        <span class="unit-label">kg/m²</span>
+      </div>
+      <div class="category" id="categoryText">
+        <i class="fas fa-leaf" id="categoryIcon"></i>
+        <span id="categoryName">Healthy weight</span>
+      </div>
+      <div class="feedback">
+        <div class="health-tag" id="healthSuggestion">
+          <i class="fas fa-circle-check"></i>
+          <span id="suggestionMsg">Great shape — keep it up</span>
+        </div>
+        <div class="reset-icon" id="resetBtn" title="reset to default">
+          <i class="fas fa-undo-alt"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // DOM elements
+      const heightInput = document.getElementById('heightInput');
+      const weightInput = document.getElementById('weightInput');
+      const heightWrapper = document.getElementById('heightWrapper');
+      const weightWrapper = document.getElementById('weightWrapper');
+      const bmiNumber = document.getElementById('bmiNumber');
+      const categoryName = document.getElementById('categoryName');
+      const categoryIcon = document.getElementById('categoryIcon');
+      const suggestionMsg = document.getElementById('suggestionMsg');
+      const calcBtn = document.getElementById('calcBtn');
+      const resetBtn = document.getElementById('resetBtn');
+
+      // default values
+      const DEFAULTS = { height: 170, weight: 65 };
+
+      // helper: remove error state
+      function removeErrors() {
+        heightWrapper.classList.remove('error');
+        weightWrapper.classList.remove('error');
+      }
+
+      // validation: check range & not empty
+      function validateInputs() {
+        let h = parseFloat(heightInput.value);
+        let w = parseFloat(weightInput.value);
+        let valid = true;
+
+        removeErrors();
+
+        // height validation
+        if (isNaN(h) || h < 50 || h > 270) {
+          heightWrapper.classList.add('error');
+          valid = false;
+        }
+        // weight validation
+        if (isNaN(w) || w < 10 || w > 350) {
+          weightWrapper.classList.add('error');
+          valid = false;
+        }
+
+        return valid;
+      }
+
+      // main BMI calculation & UI update
+      function calculateBMI() {
+        if (!validateInputs()) {
+          // set fallback friendly message
+          bmiNumber.textContent = '?.?';
+          categoryName.textContent = 'invalid input';
+          categoryIcon.className = 'fas fa-circle-exclamation';
+          suggestionMsg.textContent = 'check red fields ↺';
+          return;
+        }
+
+        const h_cm = parseFloat(heightInput.value);
+        const w_kg = parseFloat(weightInput.value);
+        const h_m = h_cm / 100;
+        let bmi = w_kg / (h_m * h_m);
+        bmi = Math.round(bmi * 10) / 10; // one decimal
+
+        // update big number
+        bmiNumber.textContent = bmi.toFixed(1);
+
+        // determine category, icon, advice
+        let catName = '';
+        let iconClass = '';
+        let suggestion = '';
+
+        if (bmi < 16.0) {
+          catName = 'Severe thinness';
+          iconClass = 'fas fa-exclamation-triangle';
+          suggestion = 'nutrition support recommended';
+        } else if (bmi >= 16.0 && bmi < 17.0) {
+          catName = 'Moderate thinness';
+          iconClass = 'fas fa-exclamation-circle';
+          suggestion = 'consider a health check';
+        } else if (bmi >= 17.0 && bmi < 18.5) {
+          catName = 'Mild thinness';
+          iconClass = 'fas fa-leaf';
+          suggestion = 'light underweight — eat well';
+        } else if (bmi >= 18.5 && bmi < 25.0) {
+          catName = 'Healthy weight';
+          iconClass = 'fas fa-leaf';
+          suggestion = 'Great shape — keep it up';
+        } else if (bmi >= 25.0 && bmi < 30.0) {
+          catName = 'Overweight';
+          iconClass = 'fas fa-circle-exclamation';
+          suggestion = 'moderate activity helps';
+        } else if (bmi >= 30.0 && bmi < 35.0) {
+          catName = 'Obese class I';
+          iconClass = 'fas fa-triangle-exclamation';
+          suggestion = 'small changes add up';
+        } else if (bmi >= 35.0 && bmi <= 40.0) {
+          catName = 'Obese class II';
+          iconClass = 'fas fa-triangle-exclamation';
+          suggestion = 'consult a specialist';
+        } else if (bmi > 40.0) {
+          catName = 'Obese class III';
+          iconClass = 'fas fa-skull-crosswalk';
+          suggestion = 'medical guidance advised';
+        }
+
+        categoryName.textContent = catName;
+        categoryIcon.className = iconClass;
+        suggestionMsg.textContent = suggestion;
+
+        // extra color nuance for icon in category (just for fun)
+        if (bmi >= 18.5 && bmi < 25) {
+          categoryIcon.style.color = '#2d804f';
+        } else if (bmi >= 30) {
+          categoryIcon.style.color = '#b6574a';
+        } else {
+          categoryIcon.style.color = '#d18f3c';
+        }
+      }
+
+      // reset to default 170/65
+      function resetToDefault() {
+        heightInput.value = DEFAULTS.height;
+        weightInput.value = DEFAULTS.weight;
+        removeErrors();
+        calculateBMI();
+      }
+
+      // also call when input changes and user might want instant? We'll keep manual via button, but add "enter" key support
+      function setupEnterKey() {
+        [heightInput, weightInput].forEach(input => {
+          input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              calcBtn.click();
+            }
+          });
+        });
+      }
+
+      // Initialization and event binding
+      function init() {
+        // set default display
+        resetToDefault(); // sets values and calculates
+
+        calcBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          calculateBMI();
+        });
+
+        resetBtn.addEventListener('click', () => {
+          resetToDefault();
+        });
+
+        // remove error when user starts typing (optional)
+        heightInput.addEventListener('input', () => {
+          heightWrapper.classList.remove('error');
+        });
+        weightInput.addEventListener('input', () => {
+          weightWrapper.classList.remove('error');
+        });
+
+        setupEnterKey();
+
+        // Extra safety: prevent scroll from changing value accidentally (optional)
+        heightInput.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
+        weightInput.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
+      }
+
+      init();
+    })();
+  </script>
+  <!-- FOOTER -->
+<div id="site-footer"></div>
+  <!-- Go to Top -->
+  <script src="/assets/Scripts/gototop.js"></script>
+</body>
+</html>
