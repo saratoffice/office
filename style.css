@@ -366,10 +366,12 @@ body {
   }
 }
 /* ========== SUB-DROPDOWN STYLES (DESKTOP) ========== */
+
 .sub-dropdown {
   position: relative;
 }
 
+/* Arrow only for parent dropdown items */
 .sub-dropdown > a::after {
   content: "▶";
   font-size: 12px;
@@ -380,7 +382,7 @@ body {
   color: #666;
 }
 
-/* Child links should NEVER have arrows - applies to all screens */
+/* Child links must NEVER have arrows */
 .sub-menu a::after {
   content: none !important;
 }
@@ -389,17 +391,18 @@ body {
   display: none;
   position: absolute;
   top: 0;
-  left: 100%;  /* Changed from calc(100% - 2px) to 100% for zero gap */
-  margin: 0;   /* Added zero margin */
+  left: 100%;
+  margin: 0;
   background: #ffffff;
   min-width: 220px;
   border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
   z-index: 10000;
   list-style: none;
   padding: 5px 0;
 }
 
+/* Show submenu on hover */
 .sub-dropdown:hover > .sub-menu {
   display: block;
 }
@@ -409,20 +412,18 @@ body {
   white-space: nowrap;
 }
 
-/* Adjust for rightmost dropdowns to prevent going off screen */
-.dropdown-menu li:last-child .sub-menu {
-  left: auto;
-  right: 100%;
+/* Fix width for dropdown items */
+.dropdown-menu li {
+  width: 100%;
+  position: relative;
 }
 
-.dropdown-menu li:last-child .sub-menu a::after {
-  content: "◀";
-  right: auto;
-  left: 10px;
-}
 
-/* ========== SUB-DROPDOWN STYLES (MOBILE) ========== */
+
+/* ========== SUB-DROPDOWN STYLES (MOBILE / TABLET) ========== */
+
 @media (max-width: 900px) {
+
   .sub-dropdown {
     width: 100%;
     position: relative;
@@ -435,27 +436,12 @@ body {
     padding-right: 30px;
   }
 
+  /* Arrow only for parent dropdown */
   .sub-dropdown > a::after {
     content: "▼";
     font-size: 12px;
     margin-left: 8px;
     transition: transform 0.3s ease;
-    color: var(--primary);
-    position: relative;  /* Changed from absolute */
-    right: auto;         /* Reset right */
-    top: auto;           /* Reset top */
-    transform: none;     /* Reset transform */
-  }
-
-  .sub-dropdown.open > a::after {
-    transform: rotate(180deg);
-  }
-
-  /* Only nested parent items should have arrows, not child links */
-  .sub-menu .sub-dropdown > a::after {
-    content: "▼";
-    font-size: 12px;
-    margin-left: 8px;
     color: var(--primary);
     position: relative;
     right: auto;
@@ -463,27 +449,33 @@ body {
     transform: none;
   }
 
-  /* But ensure regular child links NEVER have arrows */
+  /* Rotate arrow when open */
+  .sub-dropdown.open > a::after {
+    transform: rotate(180deg);
+  }
+
+  /* Remove arrows from child links */
   .sub-menu a::after {
     content: none !important;
   }
 
   .sub-menu {
     display: none;
-    position: relative;  /* Changed from absolute to relative */
-    top: auto;           /* Reset top */
-    left: auto;          /* Reset left */
-    right: auto;         /* Reset right */
-    width: 100%;         /* Full width */
-    margin: 5px 0 5px 0; /* Removed left margin */
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
+    margin: 5px 0;
     background: #f0f2f5;
     border-radius: 8px;
     list-style: none;
     padding: 5px 0;
     border-left: 3px solid var(--primary);
-    box-shadow: none;    /* Remove shadow on mobile */
+    box-shadow: none;
   }
 
+  /* Show submenu when opened */
   .sub-dropdown.open > .sub-menu {
     display: block;
   }
@@ -499,50 +491,13 @@ body {
     color: #ffffff;
   }
 
-  /* Nested sub-menu for deeper levels */
+  /* Nested submenu style */
   .sub-menu .sub-menu {
-    margin-left: 15px;   /* Added left margin for nested menus */
+    margin-left: 15px;
     border-left-color: #999;
-    width: calc(100% - 15px);  /* Adjust width with margin */
+    width: calc(100% - 15px);
   }
 
-  /* CRITICAL FIX: Override desktop last-child styles for mobile */
-  .dropdown-menu li:last-child .sub-menu {
-    left: auto !important;
-    right: auto !important;
-    position: relative !important;
-  }
-
-  .dropdown-menu li:last-child .sub-menu a::after {
-    content: "▼" !important;  /* Change back to down arrow for mobile */
-    right: auto !important;
-    left: auto !important;
-    position: relative !important;
-  }
-
-  /* Additional fix for all submenus to ensure they display correctly */
-  .sub-dropdown .sub-menu {
-    left: 0 !important;
-    right: auto !important;
-    position: relative !important;
-  }
-
-  /* Ensure the Gallery (third sub-dropdown) displays properly */
-  .dropdown-menu li:nth-child(3).sub-dropdown .sub-menu {
-    left: 0 !important;
-    right: auto !important;
-    position: relative !important;
-  }
-
-  /* Fix for any absolutely positioned elements that might interfere */
-  .sub-dropdown {
-    position: relative !important;
-  }
-}
-
-.dropdown-menu li {
-  width: 100%;
-  position: relative;
 }
 /* =================================
    BUTTON
