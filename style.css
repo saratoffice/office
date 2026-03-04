@@ -366,11 +366,12 @@ body {
   }
 }
 /* ========== SUB-DROPDOWN STYLES (DESKTOP) ========== */
+
 .sub-dropdown {
   position: relative;
 }
 
-/* Only parent sub-dropdown items get arrows */
+/* Arrow only for parent dropdown items */
 .sub-dropdown > a::after {
   content: "▶";
   font-size: 12px;
@@ -381,13 +382,8 @@ body {
   color: #666;
 }
 
-/* Child links should NEVER have arrows - applies to all screens */
+/* Child links must NEVER have arrows */
 .sub-menu a::after {
-  content: none !important;
-}
-
-/* Also ensure any direct children of sub-menu don't get arrows */
-.sub-menu > li > a::after {
   content: none !important;
 }
 
@@ -400,12 +396,13 @@ body {
   background: #ffffff;
   min-width: 220px;
   border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
   z-index: 10000;
   list-style: none;
   padding: 5px 0;
 }
 
+/* Show submenu on hover */
 .sub-dropdown:hover > .sub-menu {
   display: block;
 }
@@ -415,8 +412,18 @@ body {
   white-space: nowrap;
 }
 
-/* ========== SUB-DROPDOWN STYLES (MOBILE) ========== */
+/* Fix width for dropdown items */
+.dropdown-menu li {
+  width: 100%;
+  position: relative;
+}
+
+
+
+/* ========== SUB-DROPDOWN STYLES (MOBILE / TABLET) ========== */
+
 @media (max-width: 900px) {
+
   .sub-dropdown {
     width: 100%;
     position: relative;
@@ -429,7 +436,7 @@ body {
     padding-right: 30px;
   }
 
-  /* Mobile arrows for parent items only */
+  /* Arrow only for parent dropdown */
   .sub-dropdown > a::after {
     content: "▼";
     font-size: 12px;
@@ -442,33 +449,12 @@ body {
     transform: none;
   }
 
+  /* Rotate arrow when open */
   .sub-dropdown.open > a::after {
     transform: rotate(180deg);
   }
 
-  /* REMOVED THE PROBLEMATIC RULE - This was adding arrows to child links */
-  /* 
-  .sub-menu .sub-dropdown > a::after {
-    content: "▼";
-    font-size: 12px;
-    margin-left: 8px;
-    color: var(--primary);
-  }
-  */
-
-  /* Only add arrows to direct sub-dropdown children of sub-menu (for nested menus) */
-  .sub-menu > .sub-dropdown > a::after {
-    content: "▼";
-    font-size: 12px;
-    margin-left: 8px;
-    color: var(--primary);
-    position: relative;
-    right: auto;
-    top: auto;
-    transform: none;
-  }
-
-  /* But ensure that links inside sub-menu that are NOT sub-dropdown parents don't get arrows */
+  /* Remove arrows from child links */
   .sub-menu a::after {
     content: none !important;
   }
@@ -480,7 +466,7 @@ body {
     left: auto;
     right: auto;
     width: 100%;
-    margin: 5px 0 5px 0;
+    margin: 5px 0;
     background: #f0f2f5;
     border-radius: 8px;
     list-style: none;
@@ -489,6 +475,7 @@ body {
     box-shadow: none;
   }
 
+  /* Show submenu when opened */
   .sub-dropdown.open > .sub-menu {
     display: block;
   }
@@ -504,29 +491,13 @@ body {
     color: #ffffff;
   }
 
-  /* Nested sub-menu styling */
+  /* Nested submenu style */
   .sub-menu .sub-menu {
     margin-left: 15px;
     border-left-color: #999;
     width: calc(100% - 15px);
   }
-  
-  /* Ensure nested sub-dropdown parents have arrows */
-  .sub-menu .sub-dropdown > a::after {
-    content: "▼";
-    font-size: 12px;
-    margin-left: 8px;
-    color: var(--primary);
-    position: relative;
-    right: auto;
-    top: auto;
-    transform: none;
-  }
-}
 
-.dropdown-menu li {
-  width: 100%;
-  position: relative;
 }
 /* =================================
    BUTTON
