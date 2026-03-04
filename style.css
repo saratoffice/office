@@ -370,6 +370,7 @@ body {
   position: relative;
 }
 
+/* Only parent sub-dropdown items get arrows */
 .sub-dropdown > a::after {
   content: "▶";
   font-size: 12px;
@@ -380,11 +381,16 @@ body {
   color: #666;
 }
 
+/* Child links should NEVER have arrows */
+.sub-menu a::after {
+  content: none !important;
+}
+
 .sub-menu {
   display: none;
   position: absolute;
   top: 0;
-  left: 100%;  /* Default: open to the right */
+  left: 100%;
   margin: 0;
   background: #ffffff;
   min-width: 220px;
@@ -402,51 +408,12 @@ body {
 .sub-menu a {
   padding: 10px 15px;
   white-space: nowrap;
-  position: relative;  /* Added for arrow positioning */
 }
 
-/* FIX: Only apply rightmost positioning to top-level dropdowns, not nested ones */
-.dropdown > .dropdown-menu > li:last-child > .sub-menu {
-  left: auto;
-  right: 100%;
-}
+/* Remove the rightmost dropdown modification completely */
+/* This was causing the Gallery to open to the left */
 
-.dropdown > .dropdown-menu > li:last-child > .sub-menu a::after {
-  content: "◀";
-  right: auto;
-  left: 10px;
-}
-
-/* Ensure nested submenus (like Gallery's items) always open to the right */
-.sub-menu .sub-dropdown > .sub-menu {
-  left: 100% !important;
-  right: auto !important;
-}
-
-/* Remove arrows from submenu items (they should only be on parent items) */
-.sub-menu a::after {
-  content: none !important;  /* Remove arrows from all submenu links */
-}
-
-/* Keep arrow only on sub-dropdown parent items */
-.sub-dropdown > a::after {
-  content: "▶";  /* Right arrow for desktop */
-  font-size: 12px;
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #666;
-}
-
-/* Only change arrow direction for top-level last child */
-.dropdown > .dropdown-menu > li:last-child > a::after {
-  content: "◀";  /* Left arrow for last top-level item */
-  right: auto;
-  left: 10px;
-}
-
-/* ========== MOBILE STYLES ========== */
+/* ========== SUB-DROPDOWN STYLES (MOBILE) ========== */
 @media (max-width: 900px) {
   .sub-dropdown {
     width: 100%;
@@ -460,9 +427,8 @@ body {
     padding-right: 30px;
   }
 
-  /* Mobile arrows - down arrow for all */
-  .sub-dropdown > a::after,
-  .dropdown > .dropdown-menu > li:last-child > a::after {
+  /* Mobile arrows for parent items only */
+  .sub-dropdown > a::after {
     content: "▼";
     font-size: 12px;
     margin-left: 8px;
@@ -470,7 +436,6 @@ body {
     color: var(--primary);
     position: relative;
     right: auto;
-    left: auto;
     top: auto;
     transform: none;
   }
@@ -479,12 +444,17 @@ body {
     transform: rotate(180deg);
   }
 
+  /* Child links should NEVER have arrows on mobile either */
+  .sub-menu a::after {
+    content: none !important;
+  }
+
   .sub-menu {
     display: none;
     position: relative;
     top: auto;
-    left: 0 !important;  /* Force left position */
-    right: auto !important;
+    left: auto;
+    right: auto;
     width: 100%;
     margin: 5px 0 5px 0;
     background: #f0f2f5;
@@ -510,24 +480,22 @@ body {
     color: #ffffff;
   }
 
-  /* Nested sub-menu styling */
+  /* Nested sub-menu for deeper levels - only parent gets arrow */
+  .sub-menu .sub-dropdown > a::after {
+    content: "▼";
+    font-size: 12px;
+    margin-left: 8px;
+    color: var(--primary);
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+  }
+
   .sub-menu .sub-menu {
     margin-left: 15px;
     border-left-color: #999;
     width: calc(100% - 15px);
-  }
-
-  /* Remove all arrows from submenu items in mobile */
-  .sub-menu a::after {
-    content: none !important;
-  }
-
-  /* Override any desktop last-child rules */
-  .dropdown-menu li:last-child .sub-menu,
-  .sub-menu .sub-dropdown .sub-menu {
-    left: 0 !important;
-    right: auto !important;
-    position: relative !important;
   }
 }
 
