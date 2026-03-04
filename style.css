@@ -381,8 +381,13 @@ body {
   color: #666;
 }
 
-/* Child links should NEVER have arrows */
+/* Child links should NEVER have arrows - applies to all screens */
 .sub-menu a::after {
+  content: none !important;
+}
+
+/* Also ensure any direct children of sub-menu don't get arrows */
+.sub-menu > li > a::after {
   content: none !important;
 }
 
@@ -409,9 +414,6 @@ body {
   padding: 10px 15px;
   white-space: nowrap;
 }
-
-/* Remove the rightmost dropdown modification completely */
-/* This was causing the Gallery to open to the left */
 
 /* ========== SUB-DROPDOWN STYLES (MOBILE) ========== */
 @media (max-width: 900px) {
@@ -444,7 +446,29 @@ body {
     transform: rotate(180deg);
   }
 
-  /* Child links should NEVER have arrows on mobile either */
+  /* REMOVED THE PROBLEMATIC RULE - This was adding arrows to child links */
+  /* 
+  .sub-menu .sub-dropdown > a::after {
+    content: "▼";
+    font-size: 12px;
+    margin-left: 8px;
+    color: var(--primary);
+  }
+  */
+
+  /* Only add arrows to direct sub-dropdown children of sub-menu (for nested menus) */
+  .sub-menu > .sub-dropdown > a::after {
+    content: "▼";
+    font-size: 12px;
+    margin-left: 8px;
+    color: var(--primary);
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+  }
+
+  /* But ensure that links inside sub-menu that are NOT sub-dropdown parents don't get arrows */
   .sub-menu a::after {
     content: none !important;
   }
@@ -480,7 +504,14 @@ body {
     color: #ffffff;
   }
 
-  /* Nested sub-menu for deeper levels - only parent gets arrow */
+  /* Nested sub-menu styling */
+  .sub-menu .sub-menu {
+    margin-left: 15px;
+    border-left-color: #999;
+    width: calc(100% - 15px);
+  }
+  
+  /* Ensure nested sub-dropdown parents have arrows */
   .sub-menu .sub-dropdown > a::after {
     content: "▼";
     font-size: 12px;
@@ -490,12 +521,6 @@ body {
     right: auto;
     top: auto;
     transform: none;
-  }
-
-  .sub-menu .sub-menu {
-    margin-left: 15px;
-    border-left-color: #999;
-    width: calc(100% - 15px);
   }
 }
 
