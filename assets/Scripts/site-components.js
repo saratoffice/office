@@ -51,6 +51,12 @@ const SiteComponents = (function () {
         } else {
           menuToggle.innerHTML = '☰';
           menuToggle.setAttribute('aria-label', 'Open menu');
+          
+          // Close all dropdowns when closing the menu
+          const allDropdowns = document.querySelectorAll('.dropdown, .sub-dropdown');
+          allDropdowns.forEach(dropdown => {
+            dropdown.classList.remove('open');
+          });
         }
       });
 
@@ -66,18 +72,23 @@ const SiteComponents = (function () {
               e.preventDefault();
               e.stopPropagation();
               
-              // Close other dropdowns at same level
+              // FIX: Don't close parent dropdowns when clicking nested ones
+              // Only close siblings at the same level
               const parent = dropdown.parentElement;
-              const siblings = parent ? parent.children : [];
               
-              Array.from(siblings).forEach(sibling => {
-                if (sibling !== dropdown && 
-                    (sibling.classList.contains('dropdown') || sibling.classList.contains('sub-dropdown')) && 
-                    sibling.classList.contains('open')) {
-                  sibling.classList.remove('open');
-                }
-              });
+              if (parent) {
+                // Close siblings (same level dropdowns)
+                Array.from(parent.children).forEach(sibling => {
+                  if (sibling !== dropdown && 
+                      (sibling.classList.contains('dropdown') || 
+                       sibling.classList.contains('sub-dropdown')) && 
+                      sibling.classList.contains('open')) {
+                    sibling.classList.remove('open');
+                  }
+                });
+              }
               
+              // Toggle current dropdown
               dropdown.classList.toggle('open');
             }
           });
@@ -116,7 +127,64 @@ const SiteComponents = (function () {
         }, 250);
       });
 
+      // FIX: Apply mobile-specific CSS fixes
+      applyMobileFixes();
+
     }, 100);
+  }
+
+  // NEW: Function to apply CSS fixes for mobile
+  function applyMobileFixes() {
+    if (window.innerWidth <= 900) {
+      // Create a style element if it doesn't exist
+      let styleEl = document.getElementById('mobile-menu-fixes');
+      if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = 'mobile-menu-fixes';
+        document.head.appendChild(styleEl);
+      }
+      
+      // Add CSS fixes for submenus on mobile
+      styleEl.textContent = `
+        @media (max-width: 900px) {
+          /* Fix for Gallery and all submenus on mobile */
+          .dropdown-menu li:last-child .sub-menu,
+          .sub-dropdown .sub-menu {
+            left: 0 !important;
+            right: auto !important;
+            position: relative !important;
+          }
+          
+          /* Fix for submenu arrows */
+          .dropdown-menu li:last-child .sub-menu a::after,
+          .sub-dropdown > a::after {
+            content: "▼" !important;
+            transform: none !important;
+          }
+          
+          .sub-dropdown.open > a::after {
+            transform: rotate(180deg) !important;
+          }
+          
+          /* Ensure proper stacking */
+          .sub-dropdown .sub-menu {
+            display: none;
+            width: 100%;
+            margin-left: 0 !important;
+          }
+          
+          .sub-dropdown.open > .sub-menu {
+            display: block !important;
+          }
+          
+          /* Fix for nested submenus */
+          .sub-menu .sub-dropdown .sub-menu {
+            margin-left: 15px !important;
+            width: calc(100% - 15px) !important;
+          }
+        }
+      `;
+    }
   }
 
   function setActiveMenuItem() {
