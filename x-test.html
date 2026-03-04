@@ -2,590 +2,515 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Petrol Pump · HSD Renewal Checklist (updated)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BMI · harmony calculator</title>
-  <!-- Font & icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Common CSS (global styles) – but we use isolated prefix -->
+  <link rel="stylesheet" href="/style.css">
+  <!-- site components for header/footer etc. -->
+  <script src="/assets/Scripts/site-components.js" defer></script>  
+
   <style>
-    * {
+    /* ----- global reset & background ----- */
+    body {
       margin: 0;
-      padding: 0;
+      background: #f5f9ff;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* 🧱 isolated card – prefix "pp-" (petrol pump) to avoid conflicts, using original styles */
+    .pp-renewal-card {
+      all: initial;
+      display: block;
+      max-width: 1200px;          /* slightly wider for 3 columns */
+      width: 100%;
+      background: white;
+      border-radius: 20px;        
+      box-shadow: 0 12px 28px rgba(0,20,30,0.15);
+      padding: 1.2rem 1.3rem 0.5rem 1.3rem;
+      border: 1px solid #bdc9db;
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+      line-height: normal;
+      color: initial;
+      margin: 1rem auto;
       box-sizing: border-box;
     }
 
-    body {
-      background: linear-gradient(145deg, #f0f4fa 0%, #e9eef5 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      padding: 1.25rem;
+    .pp-renewal-card * {
+      all: revert;
+      box-sizing: border-box;
     }
 
-    .card {
-      max-width: 560px;
-      width: 100%;
-      background: rgba(255,255,255,0.75);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border-radius: 42px;
-      box-shadow: 
-        0 30px 60px -20px rgba(0,40,80,0.25),
-        inset 0 1px 2px rgba(255,255,255,0.8),
-        0 0 0 1px rgba(255,255,255,0.5);
-      padding: 2rem 2rem 2.5rem;
-      transition: all 0.2s ease;
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 2.2rem;
-    }
-
-    .card-header i {
-      font-size: 2.1rem;
-      background: linear-gradient(135deg, #1d2b3f, #2c3f5c);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      filter: drop-shadow(0 4px 6px rgba(0,20,40,0.15));
-    }
-
-    .card-header h2 {
-      font-weight: 620;
-      font-size: 1.9rem;
-      letter-spacing: -0.02em;
-      background: linear-gradient(145deg, #192b3f, #294155);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      border-left: 3px solid #3b5f8a;
-      padding-left: 1rem;
-    }
-
-    .bmi-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.75rem;
-    }
-
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.45rem;
-    }
-
-    .input-group label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 560;
-      font-size: 0.95rem;
-      color: #1e3144;
-      letter-spacing: -0.2px;
-      margin-left: 6px;
-    }
-
-    .input-group label i {
-      font-size: 1rem;
-      color: #2f5175;
-      opacity: 0.8;
-    }
-
-    .input-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .input-wrapper input {
-      width: 100%;
-      padding: 1rem 1.2rem;
-      padding-right: 4rem;
-      border: 1.8px solid rgba(55, 85, 120, 0.15);
-      border-radius: 36px;
-      font-size: 1.1rem;
-      font-weight: 480;
-      background: rgba(255,255,255,0.8);
-      backdrop-filter: blur(4px);
-      box-shadow: 
-        inset 0 2px 5px rgba(0,0,0,0.02),
-        0 3px 8px rgba(0,20,40,0.04);
-      transition: all 0.2s;
-      color: #152c3f;
-      font-family: 'Inter', monospace;
-    }
-
-    .input-wrapper input:focus {
-      outline: none;
-      border-color: #3e6b9c;
-      background: white;
-      box-shadow: 0 8px 20px -10px #1e3b5b40, 0 0 0 3px rgba(60, 110, 170, 0.15);
-    }
-
-    .input-wrapper .unit {
-      position: absolute;
-      right: 1.6rem;
-      font-size: 1rem;
-      font-weight: 530;
-      color: #446e96;
-      background: rgba(220, 235, 250, 0.5);
-      padding: 0.25rem 0.9rem;
-      border-radius: 40px;
-      letter-spacing: 0.3px;
-      backdrop-filter: blur(2px);
-      pointer-events: none;
-      border: 1px solid rgba(255,255,255,0.6);
-    }
-
-    .dual-row {
-      display: flex;
-      gap: 1.2rem;
-      flex-wrap: wrap;
-    }
-
-    .dual-row .input-group {
-      flex: 1 1 160px;
-    }
-
-    .height-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.3rem;
-    }
-
-    .range-indicator {
+    /* header */
+    .pp-top-row {
       display: flex;
       justify-content: space-between;
-      margin-top: 0.3rem;
-      padding: 0 0.8rem;
-      font-size: 0.8rem;
-      font-weight: 480;
-      color: #4b5f77;
+      align-items: center;
+      border-bottom: 3px solid #1a3e5c;
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.7rem;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    .range-indicator span {
-      background: rgba(165, 190, 220, 0.2);
-      padding: 0.2rem 0.7rem;
-      border-radius: 30px;
-      backdrop-filter: blur(2px);
+    .pp-top-row h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: #1a3e5c;
+      letter-spacing: -0.5px;
+      margin: 0;
     }
 
-    .cta-button {
-      background: linear-gradient(115deg, #203649, #1b334b);
+    .pp-top-row h1 small {
+      font-size: 0.85rem;
+      font-weight: 400;
+      background: #e2eaf3;
+      color: #1d3f5e;
+      padding: 0.2rem 0.9rem;
+      border-radius: 40px;
+      margin-left: 8px;
+    }
+
+    .pp-print-btn {
+      background: #1a3e5c;
       border: none;
-      border-radius: 44px;
-      padding: 1.1rem 1.8rem;
+      color: white;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.45rem 1.8rem;
+      border-radius: 40px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,35,60,0.2);
+      transition: 0.1s;
+      border: 1px solid #0f2d44;
+    }
+    .pp-print-btn:hover { background: #0f2d44; }
+
+    /* pump name line (added) */
+    .pp-pump-name {
+      background: #e9eff7;
+      border-radius: 40px;
+      padding: 0.5rem 1.5rem;
+      margin-bottom: 1rem;
       font-size: 1.3rem;
       font-weight: 600;
-      color: white;
+      color: #10324b;
+      border: 1px dashed #1f4970;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 0.9rem;
-      cursor: pointer;
-      box-shadow: 0 15px 25px -8px rgba(20, 45, 70, 0.35), 0 4px 0 0 #0b1b2b inset, 0 -2px 10px rgba(255,255,255,0.3) inset;
-      transition: all 0.15s;
-      border: 1px solid rgba(255,255,255,0.3);
-      margin: 0.8rem 0 0.5rem;
-      letter-spacing: 0.3px;
+      gap: 10px;
+    }
+    .pp-pump-name span { font-weight: 300; color: #2b4a6b; margin-right: 8px; }
+    .pp-pump-name u { font-weight: 700; margin-left: 6px; }
+
+    /* particulars grid */
+    .pp-particulars {
+      background: #f2f6fb;
+      padding: 0.8rem 1.2rem;
+      border-radius: 24px;
+      margin-bottom: 1rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem 1.5rem;
+      border: 1px solid #cbd6e4;
     }
 
-    .cta-button i {
-      font-size: 1.2rem;
-      filter: drop-shadow(0 2px 2px black);
-    }
-
-    .cta-button:hover {
-      background: linear-gradient(115deg, #254357, #203f5c);
-      transform: scale(1.01);
-      box-shadow: 0 18px 28px -8px #152d44, 0 3px 0 0 #10222f inset;
-    }
-
-    .cta-button:active {
-      transform: translateY(4px);
-      box-shadow: 0 7px 15px -5px #1f3a52, 0 2px 0 0 #0c1b28 inset;
-    }
-
-    .result-panel {
-      background: rgba(255,255,255,0.45);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border-radius: 40px;
-      padding: 1.8rem 1.8rem 1.5rem;
-      margin-top: 2.3rem;
-      border: 1px solid rgba(255,255,255,0.7);
-      box-shadow: 0 8px 18px -10px #1a2f44, inset 0 1px 4px white;
-    }
-
-    .bmi-value {
+    .pp-part-item {
       display: flex;
       align-items: baseline;
-      justify-content: space-between;
-      border-bottom: 2px dashed rgba(60, 95, 130, 0.2);
-      padding-bottom: 0.75rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 0.92rem;
     }
 
-    .bmi-value .number {
-      font-size: 3.2rem;
-      font-weight: 750;
-      line-height: 1;
-      background: linear-gradient(135deg, #1b3b57, #132433);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      letter-spacing: -2px;
-    }
-
-    .bmi-value .unit-label {
-      font-size: 1.2rem;
-      font-weight: 450;
-      color: #305273;
-      margin-left: 0.3rem;
-    }
-
-    .category {
-      font-size: 1.5rem;
+    .pp-part-item .pp-tag {
       font-weight: 600;
-      color: #17334d;
+      color: #1a3e5c;
+      min-width: 110px;
+      font-size: 0.88rem;
+    }
+
+    .pp-part-item .pp-dash {
+      color: #3d5a78;
+      background: white;
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      border: 1px dashed #6f8da8;
+      width: 100%;
+      max-width: 220px;
+      font-size: 0.88rem;
+    }
+
+    /* photo badge */
+    .pp-photo-badge {
+      background: #fef3e0;
+      border-left: 6px solid #d19c2a;
+      padding: 0.6rem 1rem;
+      border-radius: 20px;
+      margin-bottom: 1.2rem;
       display: flex;
       align-items: center;
-      gap: 0.7rem;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-weight: 500;
+      font-size: 0.92rem;
     }
 
-    .category i {
-      font-size: 1.7rem;
-      opacity: 0.8;
+    .pp-photo-badge span {
+      background: #d19c2a;
+      color: #1e2b38;
+      padding: 4px 18px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.88rem;
     }
 
-    .health-tag {
-      margin-top: 1rem;
-      background: rgba(205, 225, 245, 0.5);
-      border-radius: 60px;
-      padding: 0.6rem 1.4rem;
+    /* ---- three‑column sections for better density & line gaps (for print) ---- */
+    .pp-three-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem 1.5rem;
+      margin-bottom: 0.8rem;
+    }
+
+    /* each column card style */
+    .pp-col-card {
+      background: #f9fcff;
+      border-radius: 18px;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid #cbdae9;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+      break-inside: avoid; /* for print */
+    }
+
+    .pp-col-title {
+      font-weight: 700;
+      color: #1a3e5c;
+      border-bottom: 2px solid #9db9d6;
+      padding-bottom: 0.25rem;
+      margin-bottom: 0.7rem;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .pp-checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;               /* adequate line gap */
+    }
+
+    .pp-item-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      padding: 0.15rem 0;
+      border-bottom: 1px dotted #cbd2dd;
+    }
+
+    .pp-item-row input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      accent-color: #1a3e5c;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .pp-item-text {
+      font-size: 0.86rem;
+      color: #152b3b;
+      line-height: 1.3;
+    }
+
+    /* facilities without badges (no YES/available tags) */
+    .pp-facility-plain {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0 4px;
+    }
+    .pp-facility-plain .pp-item-text {
+      font-weight: 500;
+    }
+    /* remove any remaining badge spans */
+    .pp-facility-plain .pp-yes-badge, .pp-facility-item .pp-yes-badge {
+      display: none !important;
+    }
+
+    /* records group inside column? but we integrate into three‑col */
+    .pp-records-group, .pp-facility-group {
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+      border-left: none;
+    }
+
+    /* footer strip */
+    .pp-foot-strip {
+      margin-top: 1.2rem;
+      background: #eef2f6;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 0.88rem;
+      color: #1a3e5c;
+    }
+
+    .pp-stamp-line {
+      border: 2px dotted #1a3e5c;
+      padding: 0.2rem 1.4rem;
+      border-radius: 30px;
+      background: white;
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+    }
+
+    hr { border-top: 2px dotted #aebccf; margin: 0.5rem 0 0.1rem; }
+    .pp-tiny { font-size: 0.68rem; color: #3e6280; text-align: right; }
+
+    /* navigation links */
+    .pp-nav-links {
+      margin: 1.0rem auto 0.5rem;
+      max-width: 1000px;
+      padding: 0 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+    .pp-nav-item {
+      background: #dbeafe;
+      border-radius: 40px;
+      padding: 0.35rem 1.3rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: 1px solid #7ca2c9;
+      color: #1a3c5e;
+      transition: 0.1s;
+      text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 0.8rem;
-      font-weight: 500;
-      color: #1f3f5c;
-      border: 1px solid rgba(255,255,255,0.8);
-      backdrop-filter: blur(4px);
-      font-size: 0.95rem;
+    }
+    .pp-nav-item:hover {
+      background: #bed9ff;
+      border-color: #2b5880;
+    }
+    .pp-nav-item.active {
+      background: #1a3e5c;
+      border-color: #0f2d44;
+      color: white;
     }
 
-    .health-tag i {
-      color: #1f5f8f;
+    /* 🖨️ PRINT RULES – fit in one page A4 */
+    @media print {
+      @page {
+        size: A4;
+        margin: 0.2in;
+      }
+      body > :not(.pp-renewal-card):not(script) {
+        display: none !important;
+      }
+      body {
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .pp-renewal-card {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        border: none !important;
+        padding: 0.2rem 0.3rem !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        background: white !important;
+        font-size: 9.5pt !important;
+      }
+      .pp-print-btn, .pp-nav-links, #site-header, #site-footer, .gototop {
+        display: none !important;
+      }
+      .pp-three-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.4rem 0.6rem !important;
+      }
+      .pp-col-card {
+        padding: 0.3rem !important;
+        border: 1px solid #ccc !important;
+        break-inside: avoid;
+      }
+      .pp-item-row {
+        padding: 0.1rem 0 !important;
+      }
+      .pp-pump-name {
+        background: none;
+        border: 1px dashed #aaa;
+        padding: 0.2rem 1rem;
+        margin-bottom: 0.5rem;
+        font-size: 12pt;
+      }
+      .pp-foot-strip {
+        margin-top: 0.4rem;
+        padding: 0.2rem 0.8rem;
+      }
+      /* ensure all badges removed in print */
+      .pp-yes-badge { display: none !important; }
     }
 
-    .feedback {
-      min-height: 2.8rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-
-    .reset-icon {
-      background: rgba(190, 210, 235, 0.6);
-      border-radius: 50px;
-      width: 48px;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      color: #213a53;
-      cursor: pointer;
-      border: 1px solid white;
-      transition: 0.15s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-    }
-
-    .reset-icon:hover {
-      background: rgb(175, 200, 235);
-      transform: rotate(20deg);
-    }
-
-    /* small hints */
-    .weight-hint, .height-hint {
-      font-size: 0.78rem;
-      color: #3a5b7c;
-      padding-left: 1rem;
-      opacity: 0.8;
-    }
-
-    /* error / validation */
-    .input-wrapper.error input {
-      border-color: #bc5f6a;
-      background: #fff6f7;
-    }
-
-    .input-wrapper .warning-icon {
-      display: none;
-    }
-
-    .input-wrapper.error .warning-icon {
-      display: block;
-      position: absolute;
-      right: 5rem;
-      color: #bf4d5a;
-      font-size: 1.1rem;
-    }
-
-    @media (max-width: 450px) {
-      .card { padding: 1.5rem; }
-      .bmi-value .number { font-size: 2.7rem; }
+    /* mobile */
+    @media screen and (max-width: 700px) {
+      .pp-three-grid { grid-template-columns: 1fr; }
+      .pp-particulars { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="card-header">
-      <i class="fas fa-heart-pulse"></i>
-      <h2>BMI · wellForm</h2>
+
+<div id="site-header"></div>
+
+<!-- ========== NAVIGATION TABS (other formats) ========== -->
+<div class="pp-nav-links">
+  <a href="/formats/petrolpumpchecklist.html" class="pp-nav-item active">⛽ Petrol pump (current)</a>
+  <a href="/formats/lpgchecklist.html" class="pp-nav-item">🔥 LPG checklist</a>
+  <a href="/formats/fpschecklist.html" class="pp-nav-item">🍚 FPS checklist</a>
+  <a href="/formats/ppcchecklist.html" class="pp-nav-item">🌾 PPC verification</a>
+</div>
+
+<!-- MAIN CARD – HSD RENEWAL CHECKLIST (updated, three columns, new items, no badges) -->
+<div class="pp-renewal-card" id="petrolPumpCard">
+  <div class="pp-top-row">
+    <h1>⛽ HSD RENEWAL <small>checklist + facilities</small></h1>
+    <h3 style="font-weight:500; color:#1a3e5c;">Date: ________</h3>
+    <button class="pp-print-btn" id="printPetrolPump">📋 PRINT</button>
+  </div>
+
+  <!-- ********** NAME OF PETROL PUMP (new line) ********** -->
+  <div class="pp-pump-name">
+    <span>⛽ Name of petrol pump:</span> <u>_________________________</u>
+  </div>
+
+  <!-- particulars grid (unchanged) -->
+  <div class="pp-particulars">
+    <div class="pp-part-item"><span class="pp-tag">WhatsApp/Mobile No.:</span><span class="pp-dash">_________________</span></div>
+    <div class="pp-part-item"><span class="pp-tag">Email ID :</span><span class="pp-dash">_________________</span></div>
+    <div class="pp-part-item"><span class="pp-tag">Police Station :</span><span class="pp-dash">_________________</span></div>
+    <div class="pp-part-item"><span class="pp-tag">Block :</span><span class="pp-dash">_________________</span></div>
+  </div>
+
+  <div class="pp-photo-badge">
+    <span>📸 PHOTOCOPY OF FOLLOWING DOCUMENT REQUIRED</span> 
+  </div>
+
+  <!-- THREE COLUMN layout (documents, records, facilities + new items) -->
+  <div class="pp-three-grid">
+    <!-- COLUMN 1 : main documents (original list condensed) + ATG, lightning arrestor etc -->
+    <div class="pp-col-card">
+      <div class="pp-col-title">📋 1. DOCUMENTS & LICENSES</div>
+      <div class="pp-checklist">
+        <div class="pp-item-row"><input type="checkbox" id="c1"><label for="c1" class="pp-item-text">License – HSD (certificate copy)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c2"><label for="c2" class="pp-item-text">License – Lubricants (certificate)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c3"><label for="c3" class="pp-item-text">R.O.R. (record of rights) Plot/Khata</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c4"><label for="c4" class="pp-item-text">Fire Safety Certificate</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c5"><label for="c5" class="pp-item-text">Firefighting equip. bill (expiry)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c6"><label for="c6" class="pp-item-text">Explosive Licence (PESO) class A/B</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c7"><label for="c7" class="pp-item-text">Aadhar, PAN & GSTIN copy</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c8"><label for="c8" class="pp-item-text">Legal Metrology (pumps + can)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c9"><label for="c9" class="pp-item-text">NOC Collector & Local Authority</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c10"><label for="c10" class="pp-item-text">Agreement with Oil Company</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c11"><label for="c11" class="pp-item-text">Recommendation letter – Oil Co.</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c12"><label for="c12" class="pp-item-text">Power supply details (last bill)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c13"><label for="c13" class="pp-item-text">Police Station & Block in forms</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c14"><label for="c14" class="pp-item-text">Appointment Letter (pump)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c15"><label for="c15" class="pp-item-text">PESO storage licence (validity)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="c16"><label for="c16" class="pp-item-text">Insurance documents</label></div>
+      </div>
     </div>
 
-    <!-- main form -->
-    <div class="bmi-form" id="bmiForm">
-      <div class="dual-row">
-        <!-- height -->
-        <div class="input-group">
-          <label for="heightInput"><i class="fas fa-arrow-up"></i> Height</label>
-          <div class="input-wrapper" id="heightWrapper">
-            <input type="number" id="heightInput" placeholder="170" value="170" step="0.1" min="50" max="270" autocomplete="off">
-            <span class="unit">cm</span>
-            <i class="fas fa-exclamation-circle warning-icon"></i>
-          </div>
-          <div class="range-indicator">
-            <span>min 50cm</span>
-            <span>max 270cm</span>
-          </div>
-        </div>
-
-        <!-- weight -->
-        <div class="input-group">
-          <label for="weightInput"><i class="fas fa-weight-scale"></i> Weight</label>
-          <div class="input-wrapper" id="weightWrapper">
-            <input type="number" id="weightInput" placeholder="65" value="65" step="0.1" min="10" max="350" autocomplete="off">
-            <span class="unit">kg</span>
-            <i class="fas fa-exclamation-circle warning-icon"></i>
-          </div>
-          <div class="range-indicator">
-            <span>min 10kg</span>
-            <span>max 350kg</span>
-          </div>
-        </div>
+    <!-- COLUMN 2 : Records + some new ATG/electrical items -->
+    <div class="pp-col-card">
+      <div class="pp-col-title">📁 2. RECORDS & EQUIPMENT</div>
+      <div class="pp-checklist">
+        <div class="pp-item-row"><input type="checkbox" id="r1"><label for="r1" class="pp-item-text">Stock Register (MS, HSD, Lubricants)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="r2"><label for="r2" class="pp-item-text">Density Register</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="r3"><label for="r3" class="pp-item-text">Daily Sales Register (DSR)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="r4"><label for="r4" class="pp-item-text">Cash Memo / Invoice copies</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="r5"><label for="r5" class="pp-item-text">Inspection Register</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="r6"><label for="r6" class="pp-item-text">Other Registers (if any)</label></div>
+        <!-- NEW ITEMS (ATG, UPS, Lightning arrestor) -->
+        <div class="pp-item-row"><input type="checkbox" id="r7"><label for="r7" class="pp-item-text">⚡ Lightning arrestor installed</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="r8"><label for="r8" class="pp-item-text">📊 ATG (Automatic Tank Gauge) working</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="r9"><label for="r9" class="pp-item-text">🔌 UPS for automation system</label></div>
+        <!-- paste items -->
+        <div class="pp-item-row"><input type="checkbox" id="r10"><label for="r10" class="pp-item-text">💧 Water finding paste</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="r11"><label for="r11" class="pp-item-text">⛽ Fuel finding paste</label></div>
+        <!-- other technical from original list -->
+        <div class="pp-item-row"><input type="checkbox" id="r12"><label for="r12" class="pp-item-text">🌡️ Calibrated Hydrometer</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="r13"><label for="r13" class="pp-item-text">📏 Dip Rod / gauge</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="r14"><label for="r14" class="pp-item-text">📊 ASTM Conversion Chart</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="r15"><label for="r15" class="pp-item-text">🧪 Measuring Cylinder (glass)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="r16"><label for="r16" class="pp-item-text">🧴 5L Calibrated Jar</label></div>
       </div>
-
-      <!-- calculate button  -->
-      <button class="cta-button" id="calcBtn">
-        <i class="fas fa-calculator"></i> 
-        <span>calculate BMI</span>
-        <i class="fas fa-arrow-right"></i>
-      </button>
     </div>
 
-    <!-- result area with live design -->
-    <div class="result-panel" id="resultPanel">
-      <div class="bmi-value">
-        <span class="number" id="bmiNumber">21.2</span>
-        <span class="unit-label">kg/m²</span>
-      </div>
-      <div class="category" id="categoryText">
-        <i class="fas fa-leaf" id="categoryIcon"></i>
-        <span id="categoryName">Healthy weight</span>
-      </div>
-      <div class="feedback">
-        <div class="health-tag" id="healthSuggestion">
-          <i class="fas fa-circle-check"></i>
-          <span id="suggestionMsg">Great shape — keep it up</span>
-        </div>
-        <div class="reset-icon" id="resetBtn" title="reset to default">
-          <i class="fas fa-undo-alt"></i>
-        </div>
+    <!-- COLUMN 3 : On‑site facilities (no badges, just plain text) -->
+    <div class="pp-col-card">
+      <div class="pp-col-title">🧰 3. ON‑SITE FACILITIES</div>
+      <div class="pp-checklist">
+        <!-- all items without any badge, just plain name, checkbox left -->
+        <div class="pp-item-row"><input type="checkbox" id="f1"><label for="f1" class="pp-item-text">Complaint Register available</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f2"><label for="f2" class="pp-item-text">Citizen Charter displayed</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f3"><label for="f3" class="pp-item-text">Filter paper (quality check)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f4"><label for="f4" class="pp-item-text">First Aid Kit (in date)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f5"><label for="f5" class="pp-item-text">Dealer information board</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f6"><label for="f6" class="pp-item-text">Stock & Price Declaration Board</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f7"><label for="f7" class="pp-item-text">Density Board displayed</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f8"><label for="f8" class="pp-item-text">Free portable water / sanitation</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f9"><label for="f9" class="pp-item-text">Free toilet (clean / working)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f10"><label for="f10" class="pp-item-text">Free air for vehicles</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f11"><label for="f11" class="pp-item-text">Price Board displayed (signage)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f12"><label for="f12" class="pp-item-text">"No plastic bottles" board</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f13"><label for="f13" class="pp-item-text">No smoking boards displayed</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f14"><label for="f14" class="pp-item-text">Sump / adequate water (2 sumps)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f15"><label for="f15" class="pp-item-text">Sand buckets (sufficient)</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f16"><label for="f16" class="pp-item-text">Generator Set available</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f17"><label for="f17" class="pp-item-text">Adequate Lighting working</label></div>
+        <div class="pp-item-row"><input type="checkbox" id="f18"><label for="f18" class="pp-item-text">Tool‑free number displayed</label></div>
+        <!-- Duplicate entry "Citizen Charter" already above, but keep unique -->
       </div>
     </div>
   </div>
 
-  <script>
-    (function() {
-      // DOM elements
-      const heightInput = document.getElementById('heightInput');
-      const weightInput = document.getElementById('weightInput');
-      const heightWrapper = document.getElementById('heightWrapper');
-      const weightWrapper = document.getElementById('weightWrapper');
-      const bmiNumber = document.getElementById('bmiNumber');
-      const categoryName = document.getElementById('categoryName');
-      const categoryIcon = document.getElementById('categoryIcon');
-      const suggestionMsg = document.getElementById('suggestionMsg');
-      const calcBtn = document.getElementById('calcBtn');
-      const resetBtn = document.getElementById('resetBtn');
+  <!-- Additional row: We can also add extra items like ATG / lightning etc, but already placed in col2.
+       foot strip remains -->
+  <div class="pp-foot-strip">
+    <span>✅ Verified by (Inspector): _________________</span>
+    <span class="pp-stamp-line">📅 Date: ___________</span>
+  </div>
+  <div class="pp-tiny">*System generated checklist – valid with official stamp</div>
+</div>
 
-      // default values
-      const DEFAULTS = { height: 170, weight: 65 };
+<!-- ========== NAVIGATION TABS (other formats) ========== -->
+<div class="pp-nav-links">
+  <a href="/formats/petrolpumpchecklist.html" class="pp-nav-item active">⛽ Petrol pump (current)</a>
+  <a href="/formats/lpgchecklist.html" class="pp-nav-item">🔥 LPG checklist</a>
+  <a href="/formats/fpschecklist.html" class="pp-nav-item">🍚 FPS checklist</a>
+  <a href="/formats/ppcchecklist.html" class="pp-nav-item">🌾 PPC verification</a>
+</div>
 
-      // helper: remove error state
-      function removeErrors() {
-        heightWrapper.classList.remove('error');
-        weightWrapper.classList.remove('error');
-      }
+<!-- print script -->
+<script>
+  document.getElementById('printPetrolPump')?.addEventListener('click', function() {
+    window.print();
+  });
+</script>
 
-      // validation: check range & not empty
-      function validateInputs() {
-        let h = parseFloat(heightInput.value);
-        let w = parseFloat(weightInput.value);
-        let valid = true;
+<!-- FOOTER placeholder -->
+<div id="site-footer"></div>
+<!-- Go to Top -->
+<script src="/assets/Scripts/gototop.js"></script>
 
-        removeErrors();
-
-        // height validation
-        if (isNaN(h) || h < 50 || h > 270) {
-          heightWrapper.classList.add('error');
-          valid = false;
-        }
-        // weight validation
-        if (isNaN(w) || w < 10 || w > 350) {
-          weightWrapper.classList.add('error');
-          valid = false;
-        }
-
-        return valid;
-      }
-
-      // main BMI calculation & UI update
-      function calculateBMI() {
-        if (!validateInputs()) {
-          // set fallback friendly message
-          bmiNumber.textContent = '?.?';
-          categoryName.textContent = 'invalid input';
-          categoryIcon.className = 'fas fa-circle-exclamation';
-          suggestionMsg.textContent = 'check red fields ↺';
-          return;
-        }
-
-        const h_cm = parseFloat(heightInput.value);
-        const w_kg = parseFloat(weightInput.value);
-        const h_m = h_cm / 100;
-        let bmi = w_kg / (h_m * h_m);
-        bmi = Math.round(bmi * 10) / 10; // one decimal
-
-        // update big number
-        bmiNumber.textContent = bmi.toFixed(1);
-
-        // determine category, icon, advice
-        let catName = '';
-        let iconClass = '';
-        let suggestion = '';
-
-        if (bmi < 16.0) {
-          catName = 'Severe thinness';
-          iconClass = 'fas fa-exclamation-triangle';
-          suggestion = 'nutrition support recommended';
-        } else if (bmi >= 16.0 && bmi < 17.0) {
-          catName = 'Moderate thinness';
-          iconClass = 'fas fa-exclamation-circle';
-          suggestion = 'consider a health check';
-        } else if (bmi >= 17.0 && bmi < 18.5) {
-          catName = 'Mild thinness';
-          iconClass = 'fas fa-leaf';
-          suggestion = 'light underweight — eat well';
-        } else if (bmi >= 18.5 && bmi < 25.0) {
-          catName = 'Healthy weight';
-          iconClass = 'fas fa-leaf';
-          suggestion = 'Great shape — keep it up';
-        } else if (bmi >= 25.0 && bmi < 30.0) {
-          catName = 'Overweight';
-          iconClass = 'fas fa-circle-exclamation';
-          suggestion = 'moderate activity helps';
-        } else if (bmi >= 30.0 && bmi < 35.0) {
-          catName = 'Obese class I';
-          iconClass = 'fas fa-triangle-exclamation';
-          suggestion = 'small changes add up';
-        } else if (bmi >= 35.0 && bmi <= 40.0) {
-          catName = 'Obese class II';
-          iconClass = 'fas fa-triangle-exclamation';
-          suggestion = 'consult a specialist';
-        } else if (bmi > 40.0) {
-          catName = 'Obese class III';
-          iconClass = 'fas fa-skull-crosswalk';
-          suggestion = 'medical guidance advised';
-        }
-
-        categoryName.textContent = catName;
-        categoryIcon.className = iconClass;
-        suggestionMsg.textContent = suggestion;
-
-        // extra color nuance for icon in category (just for fun)
-        if (bmi >= 18.5 && bmi < 25) {
-          categoryIcon.style.color = '#2d804f';
-        } else if (bmi >= 30) {
-          categoryIcon.style.color = '#b6574a';
-        } else {
-          categoryIcon.style.color = '#d18f3c';
-        }
-      }
-
-      // reset to default 170/65
-      function resetToDefault() {
-        heightInput.value = DEFAULTS.height;
-        weightInput.value = DEFAULTS.weight;
-        removeErrors();
-        calculateBMI();
-      }
-
-      // also call when input changes and user might want instant? We'll keep manual via button, but add "enter" key support
-      function setupEnterKey() {
-        [heightInput, weightInput].forEach(input => {
-          input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              calcBtn.click();
-            }
-          });
-        });
-      }
-
-      // Initialization and event binding
-      function init() {
-        // set default display
-        resetToDefault(); // sets values and calculates
-
-        calcBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          calculateBMI();
-        });
-
-        resetBtn.addEventListener('click', () => {
-          resetToDefault();
-        });
-
-        // remove error when user starts typing (optional)
-        heightInput.addEventListener('input', () => {
-          heightWrapper.classList.remove('error');
-        });
-        weightInput.addEventListener('input', () => {
-          weightWrapper.classList.remove('error');
-        });
-
-        setupEnterKey();
-
-        // Extra safety: prevent scroll from changing value accidentally (optional)
-        heightInput.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
-        weightInput.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
-      }
-
-      init();
-    })();
-  </script>
 </body>
 </html>
