@@ -1,2058 +1,412 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checklist Management System - HSD / FPS / PPC / Rice Mill</title>
-    
-    <style>
-        /* ========== GLOBAL  RESET ========== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #f0f5fa;
-            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-            line-height: 1.5;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ========== HEADER & FOOTER ========== */
-        #site-header {
-            background: linear-gradient(135deg, #1a3e5c 0%, #0f2d44 100%);
-            color: white;
-            padding: 1rem 2rem;
-            box-shadow: 0 4px 12px rgba(0,20,30,0.2);
-        }
-
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .logo h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-
-        .logo small {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            font-weight: 400;
-            margin-left: 0.5rem;
-        }
-
-        .header-links a {
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            background: rgba(255,255,255,0.1);
-            transition: all 0.2s;
-        }
-
-        .header-links a:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        #site-footer {
-            background: #1e3a5f;
-            color: #ccddee;
-            padding: 1.5rem;
-            text-align: center;
-            margin-top: 2rem;
-            border-top: 3px solid #2c4b6e;
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        /* ========== MAIN CONTAINER ========== */
-        main {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-            flex: 1;
-            width: 100%;
-        }
-
-        /* ========== CHECKLIST NAVIGATION ========== */
-        .checklist-nav {
-            background: white;
-            padding: 1.2rem 2rem;
-            border-radius: 50px;
-            margin-bottom: 2rem;
-            box-shadow: 0 8px 20px rgba(0,20,30,0.08);
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            flex-wrap: wrap;
-            border: 1px solid #d0dfef;
-        }
-
-        .checklist-nav label {
-            font-weight: 600;
-            color: #1a3e5c;
-            font-size: 1.1rem;
-        }
-
-        .checklist-nav select {
-            padding: 0.7rem 3rem 0.7rem 1.5rem;
-            border: 2px solid #1a3e5c;
-            border-radius: 40px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: #1a3e5c;
-            background: white;
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a3e5c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 1.2rem center;
-            background-size: 1.2rem;
-            min-width: 280px;
-        }
-
-        .checklist-nav select:hover {
-            background-color: #f5f9ff;
-        }
-
-        .checklist-badge {
-            background: #e9eff7;
-            color: #1a3e5c;
-            padding: 0.4rem 1.2rem;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-left: auto;
-        }
-
-        /* ========== MAIN CARD ========== */
-        .checklist-card {
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 20px 40px rgba(0,30,50,0.15);
-            padding: 2rem;
-            border: 1px solid #c5d5e8;
-            margin-bottom: 2rem;
-        }
-
-        /* ========== HEADER SECTION ========== */
-        .card-header {
-            border-bottom: 4px solid #1a3e5c;
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-        }
-
-        .header-title h1 {
-            font-size: 2.4rem;
-            font-weight: 700;
-            color: #1a3e5c;
-            line-height: 1.2;
-            margin-bottom: 0.5rem;
-        }
-
-        .header-title .station-name {
-            font-size: 1.3rem;
-            color: #2c4b6e;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .header-title .verification-info {
-            display: flex;
-            gap: 2rem;
-            color: #3e5f7e;
-            font-size: 1rem;
-            background: #eef4fa;
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
-            display: inline-flex;
-        }
-
-        .print-btn {
-            background: #1a3e5c;
-            border: none;
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-            padding: 0.8rem 2.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 6px 12px rgba(26,62,92,0.3);
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .print-btn:hover {
-            background: #0f2d44;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(26,62,92,0.4);
-        }
-
-        /* ========== SECTION STYLES ========== */
-        .checklist-section {
-            background: #f9fcff;
-            border-radius: 24px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid #d6e4f0;
-        }
-
-        .section-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #1a3e5c;
-            margin-bottom: 1.2rem;
-            padding-bottom: 0.6rem;
-            border-bottom: 3px solid #b8cee8;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .section-title .badge {
-            background: #1a3e5c;
-            color: white;
-            font-size: 0.8rem;
-            padding: 0.2rem 1.2rem;
-            border-radius: 40px;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-        }
-
-        .section-title .badge.orange {
-            background: #d19c2a;
-            color: #1e2b38;
-        }
-
-        /* ========== GRID LAYOUTS ========== */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 0.8rem 2rem;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            padding: 0.4rem 0;
-            border-bottom: 1px dotted #b8cee8;
-        }
-
-        .info-label {
-            font-weight: 600;
-            color: #1a3e5c;
-            min-width: 140px;
-            font-size: 0.95rem;
-        }
-
-        .info-value {
-            color: #1d3f5e;
-            font-size: 0.95rem;
-            word-break: break-word;
-        }
-
-        /* ========== DOCUMENTS GRID ========== */
-        .documents-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem 2rem;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 0.4rem 0;
-            border-bottom: 1px dotted #cbd2dd;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #1a3e5c;
-            cursor: pointer;
-        }
-
-        .checkbox-item label {
-            font-size: 0.95rem;
-            color: #152b3b;
-            cursor: pointer;
-            flex: 1;
-        }
-
-        /* ========== TABLES ========== */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-
-        .data-table th {
-            background: #1a3e5c;
-            color: white;
-            padding: 0.8rem 1rem;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .data-table td {
-            padding: 0.7rem 1rem;
-            border-bottom: 1px solid #dde6f0;
-            background: white;
-        }
-
-        .data-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .data-table tr:nth-child(even) td {
-            background: #f5faff;
-        }
-
-        /* ========== FACILITIES GRID ========== */
-        .facilities-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem 1.5rem;
-        }
-
-        .facility-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0.4rem 0;
-            border-bottom: 1px dotted #a0b6ce;
-        }
-
-        .facility-item span:first-child {
-            font-size: 0.95rem;
-            color: #152b3b;
-        }
-
-        .facility-status {
-            background: #1a3e5c;
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 0.2rem 0.8rem;
-            border-radius: 40px;
-            margin-left: auto;
-            white-space: nowrap;
-            text-transform: uppercase;
-        }
-
-        .facility-status.available {
-            background: #1e7e34;
-        }
-
-        /* ========== RECORDS GRID ========== */
-        .records-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem 1.5rem;
-        }
-
-        .record-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 0.4rem 0;
-            border-bottom: 1px dotted #8aa3c0;
-        }
-
-        /* ========== RECOMMENDATION BOX ========== */
-        .recommendation-box {
-            background: linear-gradient(145deg, #e4edf7, #d2e2f2);
-            border-radius: 24px;
-            padding: 1.8rem;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 2rem;
-            border-left: 10px solid #1a3e5c;
-            box-shadow: inset 0 2px 4px rgba(255,255,255,0.8), 0 6px 12px rgba(0,20,30,0.1);
-        }
-
-        .recommendation-item {
-            text-align: center;
-            min-width: 150px;
-        }
-
-        .recommendation-label {
-            font-size: 0.8rem;
-            color: #2c4b6e;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-
-        .recommendation-value {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #1a3e5c;
-            margin-top: 0.3rem;
-        }
-
-        /* ========== OFFICER SECTION ========== */
-        .officer-section {
-            margin-top: 2.5rem;
-            display: flex;
-            justify-content: space-between;
-            padding: 1.5rem 3rem;
-            border-top: 3px dashed #a0bada;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
-
-        .officer-signature {
-            text-align: center;
-            min-width: 250px;
-        }
-
-        .officer-title {
-            font-weight: 700;
-            color: #1a3e5c;
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
-        }
-
-        .officer-line {
-            width: 250px;
-            height: 2px;
-            border-bottom: 3px dotted #1a3e5c;
-            margin: 0.8rem auto;
-        }
-
-        .officer-signature small {
-            color: #3e5f7e;
-            font-style: italic;
-        }
-
-        /* ========== LOADING STATE ========== */
-        .loading-state {
-            text-align: center;
-            padding: 4rem;
-            background: white;
-            border-radius: 32px;
-            font-size: 1.2rem;
-            color: #1a3e5c;
-        }
-
-        .loading-state::after {
-            content: '';
-            display: inline-block;
-            width: 1rem;
-            height: 1rem;
-            border: 3px solid #1a3e5c;
-            border-top-color: transparent;
-            border-radius: 50%;
-            margin-left: 0.8rem;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* ========== PRINT STYLES ========== */
-        @media print {
-            @page {
-                size: A4;
-                margin: 0.4in;
-            }
-
-            body {
-                background: white;
-                padding: 0;
-            }
-
-            #site-header,
-            #site-footer,
-            .checklist-nav,
-            .print-btn,
-            .header-links,
-            .checklist-badge,
-            .data-panel-toggle,
-            .data-panel {
-                display: none !important;
-            }
-
-            .checklist-card {
-                box-shadow: none;
-                border: none;
-                padding: 0;
-                margin: 0;
-                border-radius: 0;
-            }
-
-            .facility-status {
-                background: #1a3e5c !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            .data-table th {
-                background: #1a3e5c !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-        }
-
-        /* ========== RESPONSIVE ========== */
-        @media (max-width: 768px) {
-            .documents-grid,
-            .facilities-grid,
-            .records-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .header-title h1 {
-                font-size: 1.8rem;
-            }
-
-            .checklist-nav select {
-                min-width: 100%;
-            }
-
-            .officer-section {
-                flex-direction: column;
-                align-items: center;
-                padding: 1rem;
-            }
-        }
-
-        /* ========== DATA PANEL STYLES ========== */
-        .data-panel-toggle {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            background: #1a3e5c;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 1000;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: none;
-            font-size: 1rem;
-        }
-
-        .data-panel-toggle:hover {
-            background: #0f2d44;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-        }
-
-        .data-panel {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 900px;
-            max-height: 85vh;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 2px solid #1a3e5c;
-        }
-
-        .data-panel-header {
-            background: #1a3e5c;
-            color: white;
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .data-panel-header h3 {
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-
-        .data-panel-header button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.8rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background 0.2s;
-        }
-
-        .data-panel-header button:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .data-panel-content {
-            padding: 1.5rem;
-            overflow-y: auto;
-            background: #f8fafd;
-        }
-
-        .data-panel-section {
-            margin-bottom: 1.5rem;
-            background: white;
-            padding: 1.2rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .data-panel-section label {
-            display: block;
-            font-weight: 600;
-            color: #1a3e5c;
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
-        }
-
-        .data-panel-section select,
-        .data-panel-section textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 2px solid #d0dfef;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-family: 'Courier New', monospace;
-        }
-
-        .data-panel-section select {
-            background: white;
-            cursor: pointer;
-        }
-
-        .data-panel-section textarea {
-            resize: vertical;
-            min-height: 200px;
-            line-height: 1.4;
-        }
-
-        .data-panel-buttons {
-            display: flex;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-            margin-top: 1rem;
-        }
-
-        .data-panel-buttons button {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            flex: 1;
-            min-width: 120px;
-            font-size: 0.95rem;
-        }
-
-        .btn-save { 
-            background: #1a3e5c; 
-            color: white; 
-        }
-        .btn-save:hover { 
-            background: #0f2d44; 
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(26,62,92,0.3);
-        }
-
-        .btn-export { 
-            background: #2e7d32; 
-            color: white; 
-        }
-        .btn-export:hover { 
-            background: #1e5f22; 
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(46,125,50,0.3);
-        }
-
-        .btn-import { 
-            background: #ed6c02; 
-            color: white; 
-        }
-        .btn-import:hover { 
-            background: #c95c00; 
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(237,108,2,0.3);
-        }
-
-        .btn-reset { 
-            background: #b71c1c; 
-            color: white; 
-        }
-        .btn-reset:hover { 
-            background: #8f1414; 
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(183,28,28,0.3);
-        }
-
-        .btn-preview {
-            background: #6c5ce7;
-            color: white;
-        }
-        .btn-preview:hover {
-            background: #5649c0;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(108,92,231,0.3);
-        }
-
-        .status-message {
-            margin-top: 1rem;
-            padding: 0.8rem;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .status-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .status-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .excel-converter {
-            margin-top: 1rem;
-            background: white;
-            padding: 1.2rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .excel-converter h4 {
-            color: #1a3e5c;
-            margin-bottom: 1rem;
-        }
-
-        .btn-convert {
-            background: #6c5ce7;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            margin: 0.5rem 0;
-        }
-
-        .btn-convert:hover {
-            background: #5649c0;
-        }
-
-        .btn-copy {
-            background: #1a3e5c;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 0.5rem;
-        }
-
-        .converted-json {
-            margin-top: 1rem;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Sarat Office · modern hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- base style (light reset, common header/footer) – inline to keep one file -->
+  <style>
+    /* global reset / base (minimal) */
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f8fe;color:#17252e;line-height:1.5;scroll-behavior:smooth;}
+    .container{max-width:1400px;margin:0 auto;padding:0 24px;width:100%;}
+    /* simulated header/footer via simple divs (no external components) */
+    #site-header, #site-footer{background:#ffffff;box-shadow:0 4px 20px rgba(0,40,80,0.05);}
+    .header-placeholder, .footer-placeholder{display:flex;align-items:center;padding:1rem 2rem;max-width:1400px;margin:0 auto;}
+    .header-placeholder span{font-size:1.8rem;font-weight:700;background:linear-gradient(145deg,#0033cc,#7CFF00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .footer-placeholder{justify-content:center;color:#3a4a5e;font-size:1rem;border-top:1px solid rgba(0,51,204,0.1);}
+    /* general btn style (used across page) */
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:60px;font-weight:600;text-decoration:none;transition:.25s ease;border:none;cursor:pointer;font-size:1rem;}
+    .btn-primary{background:linear-gradient(135deg,#0033cc,#7CFF00);color:#fff;box-shadow:0 10px 20px -8px #0033cc80;}
+    .btn-primary:hover{transform:scale(1.04);box-shadow:0 18px 25px -8px #0b2d6e;}
+    .btn-outline{background:transparent;border:2px solid #0033cc;color:#0033cc;}
+    .btn-outline:hover{background:#0033cc;color:#fff;}
+    .btn-secondary{background:#8b5cf6;color:#fff;}
+    .btn-secondary:hover{background:#6d3cda;transform:translateY(-4px);}
+    /* stats numeric update — 10+, 20+, 50+ */
+    .stat-number{font-size:2.8rem;font-weight:800;background:linear-gradient(145deg,#0033cc,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2;}
+  </style>
+  <!-- page specific style (tight, modern, all updates included) -->
+  <style>
+    /* ===== scoped home-page style (adapted, fresh) ===== */
+    .hero-wrap{
+      background:linear-gradient(130deg,#f0f7ff 0%,#ffffff 80%);
+      padding:40px 0 20px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.2fr 1fr;
+      gap:50px;
+      align-items:center;
+    }
+    .hero h1{
+      font-size:3.5rem;
+      font-weight:800;
+      line-height:1.1;
+      background:linear-gradient(145deg,#0033cc,#7CFF00);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin:20px 0 20px;
+    }
+    .hero p{
+      font-size:1.2rem;
+      color:#2d4055;
+      margin-bottom:28px;
+      max-width:600px;
+    }
+    .stat-pill-group{
+      display:flex;
+      flex-wrap:wrap;
+      gap:18px;
+      margin:30px 0 20px;
+    }
+    .stat-pill{
+      background:white;
+      border-radius:80px;
+      padding:8px 32px 8px 28px;
+      box-shadow:0 8px 18px -6px rgba(0,51,204,0.12);
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid rgba(124,255,0,0.25);
+      transition:.2s;
+    }
+    .stat-pill:hover{
+      transform:translateY(-6px);
+      border-color:#0033cc;
+      box-shadow:0 18px 25px -12px #1f3d7a;
+    }
+    .stat-pill .stat-number{font-size:2.5rem;}
+    .stat-pill .stat-label{font-size:1.1rem;font-weight:500;color:#1e2f41;letter-spacing:0.3px;}
+    .hero-img img{
+      width:100%;
+      border-radius:40px 40px 40px 40px;
+      box-shadow:0 30px 40px -15px #001f4f;
+      border:8px solid white;
+      transition:.3s;
+    }
+    .hero-img img:hover{transform:rotate(1deg) scale(1.01);}
+    .btn-right{margin-top:30px;}
+
+    /* slider (main) */
+    .slider-section{
+      width:100%;
+      background:#0a1927;
+    }
+    .slider-container{position:relative;width:100%;overflow:hidden;}
+    .slider-track{display:flex;transition:.6s cubic-bezier(0.2,0.9,0.3,1);}
+    .slide{
+      flex:0 0 100%;height:70vh;min-height:480px;
+      background-size:cover;background-position:center;display:flex;
+      align-items:flex-end;justify-content:flex-end;position:relative;
+    }
+    .slide::after{
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(90deg,#00000030,#00000010);
+    }
+    .slide-1{background-image:url('https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=1400&auto=format');}
+    .slide-2{background-image:url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1400&auto=format');}
+    .slide-3{background-image:url('https://images.unsplash.com/photo-1527525443983-6e60c75fff46?w=1400&auto=format');}
+    .slide-btn{
+      position:relative;z-index:12;background:#f2f5ffdd;backdrop-filter:blur(10px);
+      border-radius:60px;padding:1rem 2.8rem;font-size:1.7rem;font-weight:500;
+      border:none;margin:0 2.5rem 2rem 0;box-shadow:0 15px 30px #00000040;
+      cursor:pointer;transition:.2s;display:flex;gap:0.8rem;align-items:center;
+    }
+    .slide-btn i{font-size:2.2rem;transition:.2s;}
+    .slide-btn:hover{background:white;transform:scale(1.05);}
+    .slide-btn:hover i{transform:translateY(5px);}
+    .nav-arrows{position:absolute;bottom:2rem;left:2rem;z-index:22;display:flex;gap:1.2rem;}
+    .arrow{
+      width:56px;height:56px;background:#172b39dd;backdrop-filter:blur(6px);
+      border-radius:40px;color:white;font-size:2.6rem;display:flex;align-items:center;
+      justify-content:center;cursor:pointer;transition:.15s;border:1px solid #fff6;
+    }
+    .arrow:hover{background:#1f3f5c;transform:scale(1.1);}
+
+    /* card sliders */
+    .card-nav{display:flex;justify-content:flex-end;gap:15px;margin:0 0 15px;}
+    .card-arrow{
+      width:48px;height:48px;border-radius:50%;background:white;box-shadow:0 10px 20px #dde3ed;
+      font-size:2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;
+      color:#0033cc;transition:.2s;border:2px solid transparent;
+    }
+    .card-arrow:hover{background:#0033cc;color:white;border-color:#7CFF00;transform:scale(1.1);}
+    .card-slider-container{width:100%;}
+    .card-slider-track{
+      display:flex;gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;
+      padding:10px 0 30px;scrollbar-width:thin;scrollbar-color:#0033cc #dbe4f0;
+    }
+    .card-slider-track::-webkit-scrollbar{height:8px;}
+    .card-slider-track::-webkit-scrollbar-track{background:#dbe4f0;border-radius:8px;}
+    .card-slider-track::-webkit-scrollbar-thumb{background:#0033cc;border-radius:8px;}
+    .card-slide{flex:0 0 330px;scroll-snap-align:start;}
+
+    /* tool card */
+    .tool-card-modern{
+      background:white;border-radius:24px;padding:30px 22px;box-shadow:0 15px 25px #ced9e9;
+      transition:.4s;height:100%;display:flex;flex-direction:column;border:1px solid #d2e2ff;
+    }
+    .tool-card-modern:hover{transform:translateY(-16px) scale(1.02);box-shadow:0 25px 40px #b0c6e0;}
+    .tool-icon{
+      width:70px;height:70px;background:linear-gradient(145deg,#7CFF0030,#0033cc20);
+      border-radius:20px;display:flex;align-items:center;justify-content:center;
+      font-size:2.2rem;color:#0033cc;margin-bottom:20px;transition:.3s;
+    }
+    .tool-card-modern:hover .tool-icon{
+      background:linear-gradient(145deg,#7CFF00,#0033cc);color:white;border-radius:50%;transform:rotate(360deg);
+    }
+    /* doc card */
+    .doc-card-modern{
+      background:white;border-radius:24px;overflow:hidden;box-shadow:0 15px 25px #d2dff0;
+      transition:.3s;height:100%;display:flex;flex-direction:column;
+    }
+    .doc-card-modern:hover{transform:translateY(-12px) scale(1.01);box-shadow:0 28px 40px #adc0db;}
+    .doc-header{
+      background:linear-gradient(145deg,#0033cc,#8b5cf6);color:white;padding:22px 20px;position:relative;
+    }
+    .doc-header h3{font-size:1.6rem;}
+    .doc-body{padding:24px 20px;flex:1;display:flex;flex-direction:column;}
+    .doc-meta{display:flex;justify-content:space-between;color:#526c8a;margin:15px 0;border-top:2px dashed #ccd9f0;padding-top:15px;}
+
+    /* resources section with video bg */
+    .resources-video-section{
+      position:relative;padding:50px 0;overflow:hidden;border-radius:48px;margin:30px auto;
+    }
+    .resources-video-background{
+      position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.2;z-index:0;pointer-events:none;
+    }
+    .resources-content{position:relative;z-index:3;}
+    .resources-grid-modern{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px;margin-top:40px;
+    }
+    .resource-card-modern{
+      background:rgba(255, 255, 255, 0.85);backdrop-filter:blur(8px);border-radius:28px;padding:32px 22px;
+      text-align:center;box-shadow:0 15px 30px #bacde0;transition:.3s;border:2px solid transparent;
+    }
+    .resource-card-modern:hover{border-color:#7CFF00;transform:translateY(-12px);background:white;}
+    .resource-icon{font-size:3rem;color:#0033cc;margin-bottom:20px;}
+
+    /* about highlight — new diagonal #FFA500 / #2a9d8f (orange & teal) */
+    .about-highlight{
+      background:linear-gradient(135deg, #FFA500 0%, #FFA500 45%, #2a9d8f 55%, #2a9d8f 100%);
+      width:100vw;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;
+      padding:60px 0;
+    }
+    .about-wrapper{
+      display:grid;grid-template-columns:1fr 1.3fr;gap:50px;align-items:center;
+    }
+    .about-photo img{
+      width:100%;max-width:420px;border-radius:50%;border:12px solid rgba(255,255,255,0.7);
+      box-shadow:0 35px 45px #00000040;transition:.3s;
+    }
+    .about-photo img:hover{transform:scale(1.06) rotate(3deg);}
+    .about-social{
+      display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:30px;
+    }
+    .about-social a{
+      width:44px;height:44px;border-radius:44px;background:#203a4c;color:white;
+      display:flex;align-items:center;justify-content:center;font-size:1.3rem;transition:.2s;
+    }
+    .about-social a:hover{transform:translateY(-7px);background:#FFA500;color:#1e2a3a;}
+    .about-text{
+      background:rgba(255,255,255,0.8);backdrop-filter:blur(4px);border-radius:50px 0 50px 0;
+      padding:40px;color:#1e2f41;
+    }
+    .about-text h2{color:#ffffff;text-shadow:0 2px 3px #1e3f4a;margin-bottom:25px;}
+    .about-text p{margin-bottom:20px;line-height:1.7;text-indent:1.5em;border-left:3px solid #FFA500;padding-left:20px;}
+
+    @media (max-width:1000px){
+      .hero-grid{grid-template-columns:1fr;}.hero h1{font-size:2.6rem;}
+      .about-wrapper{grid-template-columns:1fr;}
+    }
+    @media (max-width:600px){
+      .stat-pill-group{flex-direction:column;align-items:flex-start;}
+      .slide-btn{font-size:1.2rem;padding:0.6rem 1.6rem;}
+    }
+    /* header/footer inline simulation */
+    #site-header{background:white;margin-bottom:6px;}
+    #site-footer{margin-top:30px;}
+  </style>
 </head>
-<body>
+<body class="home-page">
 
-<!-- ========== SITE HEADER ========== -->
+<!-- header placeholder (instead of external component) -->
 <div id="site-header">
-    <div class="header-content">
-        <div class="logo">
-            <h1>⛽ SARAT OFFICE <small>Checklist Management System</small></h1>
-        </div>
-        <div class="header-links">
-            <a href="#">Dashboard</a>
-            <a href="#">All Checklists</a>
-            <a href="#">Reports</a>
-        </div>
-    </div>
+  <div class="header-placeholder container">
+    <span>Sarat Office</span>
+    <div style="flex:1"></div>
+    <i class="fas fa-bars" style="font-size:2rem; color:#0033cc;"></i>
+  </div>
 </div>
 
-<!-- ========== MAIN CONTENT ========== -->
 <main>
-    <!-- Checklist Navigation -->
-    <div class="checklist-nav">
-        <label for="checklist-type">📋 Select Checklist:</label>
-        <select id="checklist-type">
-            <option value="hsd-renewal">⛽ HSD Renewal (Tejaswini Filling Station)</option>
-            <option value="fps-checklist">🛒 FPS (Fair Price Shop) Checklist</option>
-            <option value="ppc-checklist">🏭 PPC (Petrol Pump Compliance) Checklist</option>
-            <option value="rice-mill">🌾 Rice Mill Inspection Checklist</option>
-            <option value="kerosene">🛢️ Kerosene Dealer Checklist</option>
-            <option value="lpg">🔥 LPG Distributor Checklist</option>
-        </select>
-        <span class="checklist-badge" id="checklist-type-badge">HSD Renewal</span>
+  <!-- FULL WIDTH SLIDER (unchanged but images updated) -->
+  <section class="slider-section">
+    <div class="slider-container" id="sliderContainer">
+      <div class="slider-track" id="sliderTrack">
+        <div class="slide slide-1"><button class="slide-btn" data-target="tools">Utility Tools <i>↓</i></button></div>
+        <div class="slide slide-2"><button class="slide-btn" data-target="legaldocs">Legal Docs <i>↓</i></button></div>
+        <div class="slide slide-3"><button class="slide-btn" data-target="aboutme">About Me <i>↓</i></button></div>
+      </div>
+      <div class="nav-arrows"><div class="arrow" id="arrowLeft">←</div><div class="arrow" id="arrowRight">→</div></div>
     </div>
+  </section>
 
-    <!-- Checklist Container (Dynamic Content) -->
-    <div id="checklist-container">
-        <div class="loading-state">Loading checklist data...</div>
+  <!-- HERO with updated stats: 10+ Tools, 20+ Pages, 50+ Posts (exactly as requested) -->
+  <section class="hero-wrap">
+    <div class="container hero">
+      <div class="hero-grid">
+        <div class="hero-text">
+          <h1>Empowering All, Through Accessible Information</h1>
+          <p>A comprehensive platform provides curated government documents, essential tools, and reliable information to simplify bureaucratic processes for everyone. The bridge the gap between government resources and public accessibility.</p>
+          <p>From legal acts and regulations to practical utilities like Electric Bill Downloader and Fuel Density calculators, a one-stop solution for citizens, professionals, and researchers alike.</p>
+          
+          <!-- UPDATED STATS: 10+ Tools, 20+ Pages, 50+ Posts (inline pill design) -->
+          <div class="stat-pill-group">
+            <div class="stat-pill"><span class="stat-number">10+</span><span class="stat-label">Tools</span></div>
+            <div class="stat-pill"><span class="stat-number">20+</span><span class="stat-label">Pages</span></div>
+            <div class="stat-pill"><span class="stat-number">50+</span><span class="stat-label">Posts</span></div>
+          </div>
+
+          <div class="btn-right"> 
+            <a href="/Posts/Journey%20of%20saratoffice.html" class="btn btn-primary">
+              <span>Discover the Journey</span>
+              <i class="fas fa-arrow-right"></i>
+            </a>
+          </div> 
+        </div> <!-- hero-text -->
+        <div class="hero-img">
+          <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=800&auto=format" alt="Government Resources & Tools" loading="lazy">
+        </div>
+      </div>
     </div>
+  </section>
+
+  <!-- TOOLS SECTION (contains Age, BMR, BMI etc) -->
+  <section id="tools" class="tools-section container">
+    <div class="section-header"><h2>Utility Tools & Calculators</h2><p>Practical utilities designed to simplify everyday tasks and calculations</p></div>
+    <div class="card-nav"><div class="card-arrow" id="toolsScrollLeft">←</div><div class="card-arrow" id="toolsScrollRight">→</div></div>
+    <div class="card-slider-container"><div class="card-slider-track" id="toolsSliderTrack">
+      <!-- tools (same as original, but keep modern) -->
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-money-bill-wave"></i></div><h3>Currency Converter</h3><p>Real-time currency conversion with up-to-date exchange rates.</p><a href="currency-converter.html" class="btn btn-outline">Use Converter</a></div></div>
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-weight-scale"></i></div><h3>Density Converter</h3><p>Convert between different density units instantly.</p><a href="density-converter.html" class="btn btn-outline">Convert Density</a></div></div>
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-lightbulb"></i></div><h3>Electricity Bill</h3><p>Calculate electricity bills, estimate power consumption.</p><a href="electricity-bill.html" class="btn btn-outline">Download Bill</a></div></div>
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-key"></i></div><h3>Password Generator</h3><p>Generate strong, secure passwords with options.</p><a href="password-generator.html" class="btn btn-outline">Generate Password</a></div></div>
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-calculator"></i></div><h3>Age Calculator</h3><p>Calculate your exact age in years, months, and days.</p><a href="age-calculator.html" class="btn btn-outline">Calculate Age</a></div></div>
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-heartbeat"></i></div><h3>BMR Calculator</h3><p>Basal Metabolic Rate for daily calorie needs.</p><a href="bmr-calculator.html" class="btn btn-outline">Calculate BMR</a></div></div>
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-heart"></i></div><h3>BMI Calculator</h3><p>Check underweight, normal, overweight.</p><a href="/bmi-calculator.html" class="btn btn-outline">Calculate BMI</a></div></div>
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-gas-pump"></i></div><h3>Fuel in Tank</h3><p>Estimate fuel quantity using dip and density.</p><a href="/fuel-in-tank-calculator.html" class="btn btn-outline">Calculate Fuel</a></div></div>
+      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-file-invoice-dollar"></i></div><h3>Income Tax</h3><p>Estimate tax liability based on current slabs.</p><a href="/income-tax.html" class="btn btn-outline">Calculate Tax</a></div></div>
+    </div></div>
+  </section>
+
+  <!-- LEGAL DOCUMENTS (abbreviated list) -->
+  <section id="legaldocs" class="documents-section container">
+    <div class="section-header"><h2>Legal Documents & Acts</h2><p>Important government acts and regulations</p></div>
+    <div class="card-nav"><div class="card-arrow" id="docsScrollLeft">←</div><div class="card-arrow" id="docsScrollRight">→</div></div>
+    <div class="card-slider-container"><div class="card-slider-track" id="docsSliderTrack">
+      <!-- first 6 cards to keep concise -->
+      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>Petroleum Act 1934</h3></div><div class="doc-body"><p>Import, transport, storage of petroleum.</p><div class="doc-meta"><span>1934</span><span>PDF</span></div><a href="#" class="btn btn-primary">View</a></div></div></div>
+      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>Petroleum Rules 2002</h3></div><div class="doc-body"><p>Safety regulations under Petroleum Act.</p><div class="doc-meta"><span>2002</span><span>PDF</span></div><a href="#" class="btn btn-primary">View</a></div></div></div>
+      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>EC Act 1955</h3></div><div class="doc-body"><p>Essential Commodities Act.</p><div class="doc-meta"><span>1955</span><span>PDF</span></div><a href="#" class="btn btn-primary">Read</a></div></div></div>
+      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>HSD License 1979</h3></div><div class="doc-body"><p>High Speed Diesel licensing.</p><div class="doc-meta"><span>1979</span><span>PDF</span></div><a href="#" class="btn btn-primary">View</a></div></div></div>
+      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>Partnership Act 1932</h3></div><div class="doc-body"><p>Indian Partnership Act.</p><div class="doc-meta"><span>1932</span><span>PDF</span></div><a href="#" class="btn btn-primary">View</a></div></div></div>
+      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>Consumer Protection 1986</h3></div><div class="doc-body"><p>Consumer rights & redressal.</p><div class="doc-meta"><span>1986</span><span>PDF</span></div><a href="#" class="btn btn-primary">Read</a></div></div></div>
+    </div></div>
+  </section>
+
+  <!-- RESOURCES with video -->
+  <section class="resources-video-section container">
+    <video class="resources-video-background" autoplay muted loop playsinline>
+      <source src="https://assets.mixkit.co/videos/40860/40860-720.mp4" type="video/mp4">
+    </video>
+    <div class="resources-content">
+      <div class="section-header"><h2>Additional Resources</h2><p>Access powerful features and valuable information.</p></div>
+      <div class="resources-grid-modern">
+        <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-sitemap"></i></div><h3>Site Map</h3><p>Explore complete website structure.</p><a href="/site-map.html" class="btn btn-outline">Site Map</a></div> 
+        <div class="resource-card-modern"><div class="resource-icon"><i class="fa-solid fa-list"></i></div><h3>Key Pages</h3><p>Browse key pages and tools.</p><a href="page-index.html" class="btn btn-outline">Browse</a></div>
+        <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-file-shield"></i></div><h3>Guard File</h3><p>Secure document management.</p><a href="guard-file.html" class="btn btn-outline">Access</a></div>
+        <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-link"></i></div><h3>Useful Links</h3><p>Curated government services.</p><a href="weblinks.html" class="btn btn-outline">Browse</a></div>
+        <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-map-marker-alt"></i></div><h3>Locations</h3><p>PPC, FPS, Rice Mills on map.</p><a href="locations.html" class="btn btn-outline">View</a></div>
+        <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-user-circle"></i></div><h3>About Me</h3><p>My journey & philosophy.</p><a href="about.html" class="btn btn-outline">Know</a></div>
+        <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-envelope"></i></div><h3>Contact</h3><p>Questions? Reach out.</p><a href="contact.html" class="btn btn-outline">Contact</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT HIGHLIGHT with orange/teal background and updated stats are also shown -->
+  <section id="aboutme" class="about-highlight">
+    <div class="container">
+      <div class="about-wrapper">
+        <div class="about-photo">
+          <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&auto=format" alt="Sarat Rout">
+          <div class="about-social">
+            <a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-pinterest-p"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div class="about-text">
+          <h2>A Life Between Duty and Devotion</h2>
+          <p>Nature, to me, is a sacred reflection of the divine — a living expression of beauty, balance, and higher purpose.</p>
+          <p>Knowledge, too, is a sacred tool — not just to inform, but to elevate. When used with intention, it unlocks potential.</p>
+          <p>My approach to public service is rooted in quiet, consistent action. Governance, for me, is not a position of power but a practice of purpose.</p>
+          <a href="about.html" class="btn btn-secondary"><span>Know More</span><i class="fas fa-user-circle"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
-<!-- ========== SITE FOOTER ========== -->
+<!-- footer placeholder -->
 <div id="site-footer">
-    <div class="footer-content">
-        <span>© 2025 Sarat Office - Civil Supplies Department</span>
-        <span>Version 2.0 | All checklists A4 optimized</span>
-    </div>
+  <div class="footer-placeholder container">
+    <p>© Sarat Office — public resource hub. All tools designed for accessibility.</p>
+  </div>
 </div>
 
-<!-- ========== DATA MANAGEMENT PANEL TOGGLE ========== -->
-<button class="data-panel-toggle" onclick="toggleDataPanel()">⚙️ Data Management Panel</button>
-
-<!-- ========== DATA MANAGEMENT PANEL ========== -->
-<div id="data-panel" class="data-panel" style="display: none;">
-    <div class="data-panel-header">
-        <h3>📝 Checklist Data Management</h3>
-        <button onclick="toggleDataPanel()">✕</button>
-    </div>
-    <div class="data-panel-content">
-        <div class="data-panel-section">
-            <label for="data-select">📋 Select Checklist to Edit:</label>
-            <select id="data-select" onchange="loadDataForEditing()">
-                <option value="hsd-renewal">⛽ HSD Renewal</option>
-                <option value="fps-checklist">🛒 FPS Checklist</option>
-                <option value="ppc-checklist">🏭 PPC Compliance</option>
-                <option value="rice-mill">🌾 Rice Mill</option>
-                <option value="kerosene">🛢️ Kerosene Dealer</option>
-                <option value="lpg">🔥 LPG Distributor</option>
-            </select>
-        </div>
-        
-        <div class="data-panel-section">
-            <label for="data-editor">✏️ Edit JSON Data:</label>
-            <textarea id="data-editor" rows="15" placeholder="Paste or edit JSON data here..."></textarea>
-            <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #666;">
-                💡 Tip: Edit the JSON data directly. Make sure to maintain valid JSON format.
-            </div>
-        </div>
-        
-        <div class="data-panel-buttons">
-            <button onclick="saveDataChanges()" class="btn-save">💾 Save Changes</button>
-            <button onclick="exportData()" class="btn-export">📤 Export Data</button>
-            <button onclick="importData()" class="btn-import">📥 Import Data</button>
-            <button onclick="previewChanges()" class="btn-preview">👁️ Preview Changes</button>
-            <button onclick="resetData()" class="btn-reset">⟲ Reset to Default</button>
-        </div>
-
-        <div id="status-message" class="status-message"></div>
-
-        <!-- Excel to JSON Converter -->
-        <div class="excel-converter">
-            <h4>📊 Excel to JSON Converter</h4>
-            <p style="color: #666; margin-bottom: 0.5rem;">Paste tab-separated Excel data (copy from Excel and paste):</p>
-            <textarea id="excel-paste" placeholder="Paste Excel data here..." rows="5" style="width: 100%; padding: 0.8rem; border: 2px solid #d0dfef; border-radius: 8px;"></textarea>
-            <button onclick="convertExcelToJSON()" class="btn-convert">🔄 Convert to JSON</button>
-            <div id="converted-json" class="converted-json" style="display: none;">
-                <textarea id="json-result" rows="5" style="width: 100%; padding: 0.8rem; border: 2px solid #d0dfef; border-radius: 8px; margin-top: 1rem;" readonly></textarea>
-                <button onclick="copyJSON()" class="btn-copy">📋 Copy JSON</button>
-                <button onclick="insertToEditor()" class="btn-copy" style="margin-left: 0.5rem;">⬆️ Insert to Editor</button>
-            </div>
-        </div>
-
-        <!-- Quick Edit Tips -->
-        <div style="margin-top: 1rem; padding: 1rem; background: #e8f0fe; border-radius: 8px;">
-            <h4 style="color: #1a3e5c; margin-bottom: 0.5rem;">💡 Quick Edit Guide</h4>
-            <ul style="color: #2c4b6e; font-size: 0.9rem; margin-left: 1.5rem;">
-                <li>Change station name, date, officer name in "metadata"</li>
-                <li>Update proprietor details in "particulars"</li>
-                <li>Add/remove documents in "documents" array</li>
-                <li>Update facility status in "facilities" array</li>
-                <li>Modify stock verification numbers in "stockVerification"</li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<!-- ========== EMBEDDED JSON DATA ========== -->
+<!-- slider scripts (same as original but robust) -->
 <script>
-    // ==================== MASTER CHECKLIST DATA ====================
-    const CHECKLIST_DATA = {
-        // ----- HSD RENEWAL (based on your Excel) -----
-        "hsd-renewal": {
-            "metadata": {
-                "title": "HSD / LUBRICANT LICENSE RENEWAL",
-                "subtitle": "Under HSD Order 1979 & Lubricants Order 1987",
-                "stationName": "Tejaswini Filling Station, Naikensira, Deogaon Block",
-                "verificationDate": "21/02/2025",
-                "verificationTime": "11:30 AM",
-                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
-            },
-            "particulars": {
-                "proprietor": {
-                    "name": "Debaraj Meher (Proprietorship)",
-                    "address": "At: Naikensira, Po/PS/Block: Deogaon, Pin: 767029"
-                },
-                "contact": {
-                    "email": "tejaswini.fuelstn@gmail.com",
-                    "mobile": "8895965811",
-                    "aadhaar": "205842503291",
-                    "pan": "AOAPM5635D (Proprietor)",
-                    "gst": "21AOAPM5635D3ZF"
-                },
-                "location": {
-                    "plotNo": "831/1476",
-                    "khataNo": "129/232",
-                    "mouza": "Naikensira",
-                    "policeStation": "Deogaon",
-                    "block": "Deogaon",
-                    "tahasil": "Deogaon",
-                    "pin": "767029",
-                    "kisama": "Gharabadi"
-                },
-                "establishmentYear": "2020",
-                "oilCompany": "BPCL",
-                "recommendation": {
-                    "letterNo": "SBP.TER.BOL-25",
-                    "date": "23/01/2020"
-                },
-                "agreementDate": "23/12/2020",
-                "noc": {
-                    "number": "2793/Judl",
-                    "date": "20.11.2020",
-                    "authority": "Collector, Balangir"
-                },
-                "powerSupply": "TPWODL: Consumer No. 911001140277"
-            },
-            "tanks": [
-                { "product": "Class A (MS)", "number": 1, "capacity": 15 },
-                { "product": "Class B (HSD)", "number": 1, "capacity": 20 }
-            ],
-            "dispensingUnits": [
-                { "model": "TIQ2442SSPN", "serial": "M2037155", "hsdNozzles": 2, "msNozzles": 2 },
-                { "model": "TIQ2442SHPN", "serial": "M2050126", "hsdNozzles": 2, "msNozzles": 2 }
-            ],
-            "licenses": [
-                { "type": "HSD License", "number": "06/2020-21", "validity": "31/03/2025" },
-                { "type": "Lubricant License", "number": "06/2020-21", "validity": "31/03/2025" },
-                { "type": "Explosive License (PESO)", "number": "P/EC/OR/14/1977 (P313459)", "validity": "31/12/2026" },
-                { "type": "Fire Safety Certificate", "number": "FIRCER1306180092023002500", "validity": "21/03/2025" },
-                { "type": "Weights & Measure - 5 Ltr Conical", "number": "NOT PRODUCED", "validity": null },
-                { "type": "Weights & Measure - Pump 1", "number": "BGR25A2073", "validity": "17/02/2026" },
-                { "type": "Weights & Measure - Pump 2", "number": "BGR25A2074", "validity": "17/02/2026" }
-            ],
-            "documents": [
-                "License – HSD (certificate copy)",
-                "License – Lubricants (certificate)",
-                "R.O.R. (record of rights) Plot/Khata",
-                "Fire Safety Certificate",
-                "Firefighting equip. bill (expiry)",
-                "Explosive Licence (PESO) class A/B",
-                "Aadhar, PAN & GSTIN copy",
-                "Legal Metrology (pumps + can)",
-                "NOC Collector & Local Authority",
-                "Agreement with Oil Company (date)",
-                "Recommendation letter – Oil Co.",
-                "Power supply details (last bill)",
-                "Police Station & Block in forms",
-                "Appointment Letter (pump)",
-                "PESO storage licence (validity)",
-                "Fire equipment expiry date",
-                "GSTIN / PAN (self attested)",
-                "Legal Metrology can & pump"
-            ],
-            "facilities": [
-                { "name": "First Aid Box", "status": "Available" },
-                { "name": "Generator set", "status": "Available" },
-                { "name": "Stock & Price Declaration board", "status": "Available" },
-                { "name": "Density Board", "status": "Available" },
-                { "name": "Citizen Charter", "status": "Available" },
-                { "name": "Clean toilet", "status": "Available" },
-                { "name": "Free Air", "status": "Available" },
-                { "name": "Clean Drinking Water", "status": "Available" },
-                { "name": "Filter Paper", "status": "Available" },
-                { "name": "5 litre calibrated measuring jar", "status": "Available" },
-                { "name": "Calibrated Hydrometer", "status": "Available" },
-                { "name": "Calibrated Thermometer", "status": "Available" },
-                { "name": "Dip Rod", "status": "Available" },
-                { "name": "ASTM Conversion Chart", "status": "Available" },
-                { "name": "Measuring glass cylinder", "status": "Available" },
-                { "name": "Water finding paste", "status": "Available" },
-                { "name": "Fuel dip paste", "status": "Available" },
-                { "name": "Consumer Complaint Register", "status": "Available" },
-                { "name": "Adequate lighting", "status": "Available" }
-            ],
-            "fireFighting": {
-                "extinguishers": [
-                    { "type": "ABC type 10 kg", "number": 4, "validity": "22/02/2026" },
-                    { "type": "CO₂ 4.5 kg", "number": 1, "validity": "22/02/2026" }
-                ],
-                "sandBuckets": 6,
-                "sump": 0
-            },
-            "records": [
-                { "name": "Stock register of MS, HSD and Lubricants", "status": "Yes", "remarks": "Satisfactory" },
-                { "name": "Density Register", "status": "Yes", "remarks": "Satisfactory" },
-                { "name": "Cash Memo", "status": "Yes", "remarks": "Satisfactory" },
-                { "name": "Daily Sales Register (DSR)", "status": "Yes", "remarks": "Satisfactory" },
-                { "name": "Inspection Register", "status": "Yes", "remarks": "Satisfactory" },
-                { "name": "Any other register", "status": "Yes", "remarks": "Satisfactory" }
-            ],
-            "stockVerification": [
-                { "product": "HSD", "bookBalance": 7834, "physicalStock": 7856, "discrepancy": 22 },
-                { "product": "MS", "bookBalance": 5967, "physicalStock": 5983, "discrepancy": 16 },
-                { "product": "Lubricants", "bookBalance": 422, "physicalStock": 422, "discrepancy": 0 }
-            ],
-            "densityVerification": [
-                { "product": "HSD", "reference": "810 to 845", "observed": 832.4, "difference": "In Range" },
-                { "product": "MS", "reference": "720 to 775", "observed": 752.4, "difference": "In Range" }
-            ],
-            "recommendation": {
-                "complaints": "No",
-                "performance": "Satisfactory",
-                "renewal": "Recommended"
-            },
-            "officers": {
-                "inspector": "Inspector of Supplies, Deogaon",
-                "acso": "Assistant Civil Supplies Officer"
-            }
-        },
-
-        // ----- FPS (Fair Price Shop) CHECKLIST -----
-        "fps-checklist": {
-            "metadata": {
-                "title": "FAIR PRICE SHOP INSPECTION",
-                "subtitle": "Under NFSA / TPDS",
-                "stationName": "Maa Tarini FPS, Bhatli",
-                "verificationDate": "15/03/2025",
-                "verificationTime": "10:00 AM",
-                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
-            },
-            "particulars": {
-                "proprietor": {
-                    "name": "Pramila Sahu",
-                    "address": "At: Bhatli Bazar, Po: Bhatli, Dist: Bargarh"
-                },
-                "contact": {
-                    "mobile": "9437155822",
-                    "aadhaar": "452178963214",
-                    "pan": "CEWPS1254D"
-                },
-                "location": {
-                    "shopNo": "FPS/BGL/125",
-                    "panchayat": "Bhatli",
-                    "block": "Bhatli",
-                    "district": "Bargarh"
-                }
-            },
-            "documents": [
-                "FPS License (validity)",
-                "Ration Card Register",
-                "Stock Register",
-                "Sale Register",
-                "ePoS Machine Receipts",
-                "Aadhaar Seeding Certificate",
-                "Weighing Scale Calibration",
-                "Display Board with Rates",
-                "Grievance Register",
-                "Past 3 Months Allocation Order"
-            ],
-            "facilities": [
-                { "name": "Weighing Scale (working)", "status": "Available" },
-                { "name": "ePoS Machine", "status": "Functional" },
-                { "name": "Display Board with Rates", "status": "Displayed" },
-                { "name": "Stock Display", "status": "Updated" },
-                { "name": "Clean Premises", "status": "Satisfactory" },
-                { "name": "Sitting Arrangement", "status": "Available" },
-                { "name": "Drinking Water", "status": "Available" }
-            ],
-            "stockVerification": [
-                { "commodity": "Wheat", "allotted": 1250, "distributed": 1120, "balance": 130, "status": "OK" },
-                { "commodity": "Rice", "allotted": 1850, "distributed": 1700, "balance": 150, "status": "OK" },
-                { "commodity": "Sugar", "allotted": 250, "distributed": 210, "balance": 40, "status": "OK" }
-            ],
-            "recommendation": {
-                "complaints": "None",
-                "performance": "Satisfactory",
-                "renewal": "Recommended"
-            },
-            "officers": {
-                "inspector": "Inspector of Supplies",
-                "acso": "ACSO, Bargarh"
-            }
-        },
-
-        // ----- PPC (Petrol Pump Compliance) CHECKLIST -----
-        "ppc-checklist": {
-            "metadata": {
-                "title": "PETROL PUMP COMPLIANCE CHECKLIST",
-                "subtitle": "Safety & Operational Audit",
-                "stationName": "Jagannath Auto Service, Sambalpur",
-                "verificationDate": "10/03/2025",
-                "verificationTime": "2:30 PM",
-                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
-            },
-            "particulars": {
-                "proprietor": {
-                    "name": "Jagannath Sahu",
-                    "address": "Ainthapali, Sambalpur"
-                },
-                "contact": {
-                    "mobile": "9861122334",
-                    "email": "jagannath.auto@gmail.com",
-                    "gst": "21ABCDE1234F1Z5"
-                },
-                "location": {
-                    "plotNo": "125/2",
-                    "khataNo": "45/3",
-                    "policeStation": "Ainthapali",
-                    "block": "Sambalpur"
-                }
-            },
-            "licenses": [
-                { "type": "HSD License", "number": "08/2022-23", "validity": "31/03/2026" },
-                { "type": "PESO License", "number": "P/EC/OR/22/2022", "validity": "31/12/2027" },
-                { "type": "Fire NOC", "number": "FIRE/SBP/2025", "validity": "20/05/2025" },
-                { "type": "Legal Metrology", "number": "LM/07/2024", "validity": "15/06/2025" }
-            ],
-            "safetyItems": [
-                { "name": "Fire Extinguishers (ABC)", "status": "4 Nos, Valid" },
-                { "name": "Sand Buckets", "status": "6 with sand" },
-                { "name": "First Aid Kit", "status": "Available" },
-                { "name": "Warning Signs", "status": "Displayed" },
-                { "name": "No Smoking Sign", "status": "Prominent" },
-                { "name": "Emergency Contact", "status": "Displayed" },
-                { "name": "Static Earthing", "status": "Working" },
-                { "name": "Flame Arrestors", "status": "Installed" }
-            ],
-            "facilities": [
-                { "name": "Filter Paper", "status": "Available" },
-                { "name": "Hydrometer", "status": "Calibrated" },
-                { "name": "Thermometer", "status": "Available" },
-                { "name": "Dip Rod", "status": "Available" },
-                { "name": "Measuring Jar (5L)", "status": "Available" },
-                { "name": "Complaint Register", "status": "Maintained" },
-                { "name": "Free Air", "status": "Working" },
-                { "name": "Toilet", "status": "Clean" }
-            ],
-            "recommendation": {
-                "complaints": "Nil",
-                "performance": "Good",
-                "renewal": "Recommended"
-            }
-        },
-
-        // ----- RICE MILL CHECKLIST -----
-        "rice-mill": {
-            "metadata": {
-                "title": "RICE MILL INSPECTION CHECKLIST",
-                "subtitle": "Under Rice Milling Industry Act",
-                "stationName": "Laxmi Rice Mill, Bargarh",
-                "verificationDate": "05/03/2025",
-                "verificationTime": "11:45 AM",
-                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
-            },
-            "particulars": {
-                "proprietor": {
-                    "name": "Laxmi Narayan Agrawal",
-                    "address": "Ghereipada, Bargarh"
-                },
-                "contact": {
-                    "mobile": "8895221345",
-                    "email": "laxmiricemill@gmail.com",
-                    "gst": "21BGHPS1234D1Z6"
-                },
-                "location": {
-                    "plotNo": "452",
-                    "khataNo": "78",
-                    "mouza": "Ghereipada",
-                    "policeStation": "Bargarh Sadar"
-                }
-            },
-            "licenses": [
-                { "type": "Rice Mill License", "number": "RM/09/2022", "validity": "31/12/2025" },
-                { "type": "Factory License", "number": "FACT/123/2023", "validity": "31/12/2025" },
-                { "type": "Pollution NOC", "number": "PCB/2024/789", "validity": "15/08/2025" },
-                { "type": "Fire NOC", "number": "FIRE/BGL/2024", "validity": "10/10/2025" }
-            ],
-            "machinery": [
-                { "name": "Sheller", "status": "Working", "capacity": "2 MT/hr" },
-                { "name": "Polisher", "status": "Working", "capacity": "1.5 MT/hr" },
-                { "name": "Grader", "status": "Working", "capacity": "2 MT/hr" },
-                { "name": "Weighbridge", "status": "Calibrated", "capacity": "50 MT" }
-            ],
-            "stockDetails": [
-                { "commodity": "Paddy", "stock": "1250 Quintals", "condition": "Good" },
-                { "commodity": "Rice (Raw)", "stock": "450 Quintals", "condition": "Good" },
-                { "commodity": "Rice (Parboiled)", "stock": "320 Quintals", "condition": "Good" },
-                { "commodity": "Broken Rice", "stock": "85 Quintals", "condition": "Good" },
-                { "commodity": "Rice Bran", "stock": "210 Quintals", "condition": "Good" }
-            ],
-            "safety": [
-                { "name": "Fire Extinguishers", "status": "8 Nos, Valid" },
-                { "name": "First Aid", "status": "Available" },
-                { "name": "Safety Guards on Machines", "status": "Installed" },
-                { "name": "Electrical Wiring", "status": "Safe" },
-                { "name": "Ventilation", "status": "Adequate" }
-            ],
-            "recommendation": {
-                "complaints": "None",
-                "performance": "Satisfactory",
-                "renewal": "Recommended"
-            }
-        },
-
-        // ----- KEROSENE DEALER CHECKLIST -----
-        "kerosene": {
-            "metadata": {
-                "title": "KEROSENE DEALER INSPECTION",
-                "subtitle": "Under Kerosene Control Order",
-                "stationName": "Bharat Kerosene Depot, Attabira",
-                "verificationDate": "18/03/2025",
-                "verificationTime": "3:00 PM",
-                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
-            },
-            "documents": [
-                "Kerosene License",
-                "Stock Register",
-                "Sale Register",
-                "Allocation Order",
-                "Transport Permit",
-                "Weights & Measure Cert",
-                "Display Board with Rates"
-            ],
-            "facilities": [
-                { "name": "Storage Tanks (Capacity)", "status": "5000 Ltrs" },
-                { "name": "Measuring Unit", "status": "Calibrated" },
-                { "name": "Fire Extinguisher", "status": "Available" },
-                { "name": "Sand Buckets", "status": "4 Nos" }
-            ],
-            "stockVerification": [
-                { "product": "SKO", "allotted": 2000, "sold": 1850, "balance": 150, "status": "OK" }
-            ],
-            "recommendation": {
-                "renewal": "Recommended"
-            }
-        },
-
-        // ----- LPG DISTRIBUTOR CHECKLIST -----
-        "lpg": {
-            "metadata": {
-                "title": "LPG DISTRIBUTOR INSPECTION",
-                "subtitle": "Under LPG Control Order",
-                "stationName": "Sai Gas Agency, Burla",
-                "verificationDate": "22/03/2025",
-                "verificationTime": "12:15 PM",
-                "verifyingOfficer": "Sri Sarat Kumar Rout, ACSO"
-            },
-            "documents": [
-                "LPG Distributorship License",
-                "PESO License",
-                "Stock Register",
-                "Connection Register",
-                "Safety Inspection Records",
-                "Staff Training Records"
-            ],
-            "safety": [
-                { "name": "Fire Extinguishers", "status": "10 Kg ABC - 4 Nos" },
-                { "name": "Water Hose", "status": "Available" },
-                { "name": "Sand Buckets", "status": "8 Nos" },
-                { "name": "Warning Signs", "status": "Displayed" },
-                { "name": "No Smoking", "status": "Prominent" }
-            ],
-            "facilities": [
-                { "name": "Godown Ventilation", "status": "Adequate" },
-                { "name": "Cylinder Storage", "status": "Proper" },
-                { "name": "First Aid", "status": "Available" },
-                { "name": "Staff Uniform", "status": "Yes" }
-            ],
-            "recommendation": {
-                "renewal": "Recommended"
-            }
-        }
-    };
-</script>
-
-<!-- ========== CHECKLIST LOADER SCRIPT ========== -->
-<script>
-    // ==================== CHECKLIST RENDERER ====================
-    class ChecklistRenderer {
-        constructor() {
-            this.currentType = 'hsd-renewal';
-            this.data = null;
-        }
-
-        // Load and render checklist
-        loadChecklist(type) {
-            this.currentType = type;
-            this.data = CHECKLIST_DATA[type];
-            
-            if (!this.data) {
-                document.getElementById('checklist-container').innerHTML = 
-                    '<div style="color: red; text-align: center; padding: 3rem;">❌ Checklist data not found!</div>';
-                return;
-            }
-
-            // Update badge
-            const badge = document.getElementById('checklist-type-badge');
-            if (badge) {
-                const names = {
-                    'hsd-renewal': 'HSD Renewal',
-                    'fps-checklist': 'FPS Checklist',
-                    'ppc-checklist': 'PPC Compliance',
-                    'rice-mill': 'Rice Mill',
-                    'kerosene': 'Kerosene Dealer',
-                    'lpg': 'LPG Distributor'
-                };
-                badge.textContent = names[type] || type;
-            }
-
-            // Render
-            this.render();
-            
-            // Update URL
-            history.pushState({type: type}, '', `?type=${type}`);
-            
-            // Restore checkbox states
-            setTimeout(() => this.restoreCheckboxStates(), 100);
-        }
-
-        // Main render function
-        render() {
-            const container = document.getElementById('checklist-container');
-            if (!this.data) return;
-
-            const html = `
-                <div class="checklist-card">
-                    ${this.renderHeader()}
-                    ${this.renderParticulars()}
-                    ${this.renderDocuments()}
-                    ${this.renderTanksAndPumps()}
-                    ${this.renderLicenses()}
-                    ${this.renderSafetyItems()}
-                    ${this.renderFacilities()}
-                    ${this.renderFireFighting()}
-                    ${this.renderMachinery()}
-                    ${this.renderRecords()}
-                    ${this.renderStockVerification()}
-                    ${this.renderDensityVerification()}
-                    ${this.renderRecommendation()}
-                    ${this.renderOfficers()}
-                </div>
-            `;
-            
-            container.innerHTML = html;
-            this.attachPrintButton();
-        }
-
-        renderHeader() {
-            const m = this.data.metadata;
-            return `
-                <div class="card-header">
-                    <div class="header-title">
-                        <h1>⛽ ${m.title || ''}</h1>
-                        <div class="station-name">${m.stationName || ''}</div>
-                        <div class="verification-info">
-                            <span>📅 ${m.verificationDate || ''}</span>
-                            <span>⏰ ${m.verificationTime || ''}</span>
-                            <span>👤 ${m.verifyingOfficer || ''}</span>
-                        </div>
-                    </div>
-                    <button class="print-btn" id="print-checklist-btn">📋 PRINT CHECKLIST</button>
-                </div>
-            `;
-        }
-
-        renderParticulars() {
-            if (!this.data.particulars) return '';
-            
-            const p = this.data.particulars;
-            const items = [];
-            
-            if (p.proprietor) {
-                items.push(
-                    `<div class="info-item"><span class="info-label">Proprietor:</span><span class="info-value">${p.proprietor.name || ''}</span></div>`,
-                    `<div class="info-item"><span class="info-label">Address:</span><span class="info-value">${p.proprietor.address || ''}</span></div>`
-                );
-            }
-            
-            if (p.contact) {
-                if (p.contact.email) items.push(`<div class="info-item"><span class="info-label">Email:</span><span class="info-value">${p.contact.email}</span></div>`);
-                if (p.contact.mobile) items.push(`<div class="info-item"><span class="info-label">Mobile:</span><span class="info-value">${p.contact.mobile}</span></div>`);
-                if (p.contact.aadhaar) items.push(`<div class="info-item"><span class="info-label">Aadhaar:</span><span class="info-value">${p.contact.aadhaar}</span></div>`);
-                if (p.contact.pan) items.push(`<div class="info-item"><span class="info-label">PAN:</span><span class="info-value">${p.contact.pan}</span></div>`);
-                if (p.contact.gst) items.push(`<div class="info-item"><span class="info-label">GST:</span><span class="info-value">${p.contact.gst}</span></div>`);
-            }
-            
-            if (p.location) {
-                if (p.location.plotNo) items.push(`<div class="info-item"><span class="info-label">Plot No.:</span><span class="info-value">${p.location.plotNo}</span></div>`);
-                if (p.location.khataNo) items.push(`<div class="info-item"><span class="info-label">Khata No.:</span><span class="info-value">${p.location.khataNo}</span></div>`);
-                if (p.location.mouza) items.push(`<div class="info-item"><span class="info-label">Mouza:</span><span class="info-value">${p.location.mouza}</span></div>`);
-                if (p.location.policeStation) items.push(`<div class="info-item"><span class="info-label">PS:</span><span class="info-value">${p.location.policeStation}</span></div>`);
-                if (p.location.block) items.push(`<div class="info-item"><span class="info-label">Block:</span><span class="info-value">${p.location.block}</span></div>`);
-            }
-            
-            if (p.oilCompany) items.push(`<div class="info-item"><span class="info-label">Oil Company:</span><span class="info-value">${p.oilCompany}</span></div>`);
-            if (p.agreementDate) items.push(`<div class="info-item"><span class="info-label">Agreement:</span><span class="info-value">${p.agreementDate}</span></div>`);
-            if (p.powerSupply) items.push(`<div class="info-item"><span class="info-label">Power Supply:</span><span class="info-value">${p.powerSupply}</span></div>`);
-
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">📋 STATION PARTICULARS</div>
-                    <div class="info-grid">
-                        ${items.join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        renderDocuments() {
-            if (!this.data.documents || !this.data.documents.length) return '';
-            
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">📸 DOCUMENTS REQUIRED <span class="badge">verify & check</span></div>
-                    <div class="documents-grid">
-                        ${this.data.documents.map((doc, index) => `
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="doc-${this.currentType}-${index}" class="doc-checkbox">
-                                <label for="doc-${this.currentType}-${index}">${doc}</label>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        renderTanksAndPumps() {
-            if (!this.data.tanks && !this.data.dispensingUnits) return '';
-            
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">⛽ TANKS & DISPENSING UNITS</div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Tanks (Product)</th>
-                                <th>No.</th>
-                                <th>Capacity (KL)</th>
-                                <th>Pump Model</th>
-                                <th>HSD Nozzles</th>
-                                <th>MS Nozzles</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${this.renderTankPumpRows()}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        renderTankPumpRows() {
-            const tanks = this.data.tanks || [];
-            const pumps = this.data.dispensingUnits || [];
-            const rows = [];
-            const maxRows = Math.max(tanks.length, pumps.length);
-            
-            for (let i = 0; i < maxRows; i++) {
-                const tank = tanks[i] || {product: '', number: '', capacity: ''};
-                const pump = pumps[i] || {model: '', hsdNozzles: '', msNozzles: ''};
-                
-                rows.push(`
-                    <tr>
-                        <td>${tank.product || '-'}</td>
-                        <td>${tank.number || '-'}</td>
-                        <td>${tank.capacity || '-'}</td>
-                        <td>${pump.model || '-'}</td>
-                        <td>${pump.hsdNozzles || '-'}</td>
-                        <td>${pump.msNozzles || '-'}</td>
-                    </tr>
-                `);
-            }
-            
-            return rows.join('');
-        }
-
-        renderLicenses() {
-            if (!this.data.licenses) return '';
-            
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">📜 LICENSE DETAILS</div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>License Type</th>
-                                <th>Number</th>
-                                <th>Validity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${this.data.licenses.map(license => `
-                                <tr>
-                                    <td>${license.type}</td>
-                                    <td>${license.number}</td>
-                                    <td>${license.validity || 'N/A'}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        renderSafetyItems() {
-            if (!this.data.safety && !this.data.safetyItems) return '';
-            
-            const items = this.data.safety || this.data.safetyItems || [];
-            
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">🛡️ SAFETY PROVISIONS</div>
-                    <div class="facilities-grid">
-                        ${items.map(item => `
-                            <div class="facility-item">
-                                <span>${item.name}</span>
-                                <span class="facility-status">${item.status}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        renderFacilities() {
-            if (!this.data.facilities) return '';
-            
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">🧷 ON-SITE FACILITIES <span class="badge">mandatory</span></div>
-                    <div class="facilities-grid">
-                        ${this.data.facilities.map(facility => `
-                            <div class="facility-item">
-                                <span>${facility.name}</span>
-                                <span class="facility-status ${facility.status === 'Available' ? 'available' : ''}">${facility.status}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        renderFireFighting() {
-            if (!this.data.fireFighting) return '';
-            
-            const ff = this.data.fireFighting;
-            
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">🧯 FIRE FIGHTING PROVISIONS</div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Number</th>
-                                <th>Validity/Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${ff.extinguishers ? ff.extinguishers.map(ex => `
-                                <tr>
-                                    <td>${ex.type}</td>
-                                    <td>${ex.number}</td>
-                                    <td>${ex.validity}</td>
-                                </tr>
-                            `).join('') : ''}
-                            ${ff.sandBuckets ? `
-                                <tr>
-                                    <td>Sand Buckets</td>
-                                    <td>${ff.sandBuckets}</td>
-                                    <td>with sand</td>
-                                </tr>
-                            ` : ''}
-                            ${ff.sump !== undefined ? `
-                                <tr>
-                                    <td>Sump</td>
-                                    <td>${ff.sump}</td>
-                                    <td>${ff.sump ? 'adequate' : 'not adequate'}</td>
-                                </tr>
-                            ` : ''}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        renderMachinery() {
-            if (!this.data.machinery) return '';
-            
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">⚙️ MACHINERY & EQUIPMENT</div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Equipment</th>
-                                <th>Status</th>
-                                <th>Capacity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${this.data.machinery.map(item => `
-                                <tr>
-                                    <td>${item.name}</td>
-                                    <td>${item.status}</td>
-                                    <td>${item.capacity || '-'}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        renderRecords() {
-            if (!this.data.records) return '';
-            
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">📋 MAINTENANCE OF RECORDS</div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Record Type</th>
-                                <th>Status</th>
-                                <th>Remarks</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${this.data.records.map(record => `
-                                <tr>
-                                    <td>${record.name}</td>
-                                    <td>${record.status}</td>
-                                    <td>${record.remarks || ''}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        renderStockVerification() {
-            if (!this.data.stockVerification) return '';
-            
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">📊 STOCK VERIFICATION</div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Book Balance</th>
-                                <th>Physical Stock</th>
-                                <th>Discrepancy</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${this.data.stockVerification.map(item => `
-                                <tr>
-                                    <td>${item.product || item.commodity}</td>
-                                    <td>${item.bookBalance || item.allotted || '-'}</td>
-                                    <td>${item.physicalStock || item.distributed || '-'}</td>
-                                    <td>${item.discrepancy || '0'}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        renderDensityVerification() {
-            if (!this.data.densityVerification) return '';
-            
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">🌡️ DENSITY VERIFICATION</div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Reference</th>
-                                <th>Observed</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${this.data.densityVerification.map(item => `
-                                <tr>
-                                    <td>${item.product}</td>
-                                    <td>${item.reference}</td>
-                                    <td>${item.observed}</td>
-                                    <td>${item.difference}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        renderRecommendation() {
-            if (!this.data.recommendation) return '';
-            
-            const r = this.data.recommendation;
-            
-            return `
-                <div class="checklist-section">
-                    <div class="section-title">✅ INSPECTION RECOMMENDATION</div>
-                    <div class="recommendation-box">
-                        ${r.complaints !== undefined ? `
-                            <div class="recommendation-item">
-                                <div class="recommendation-label">Complaints</div>
-                                <div class="recommendation-value">${r.complaints}</div>
-                            </div>
-                        ` : ''}
-                        ${r.performance !== undefined ? `
-                            <div class="recommendation-item">
-                                <div class="recommendation-label">Performance</div>
-                                <div class="recommendation-value">${r.performance}</div>
-                            </div>
-                        ` : ''}
-                        <div class="recommendation-item">
-                            <div class="recommendation-label">Renewal</div>
-                            <div class="recommendation-value">${r.renewal}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        renderOfficers() {
-            if (!this.data.officers) return '';
-            
-            const o = this.data.officers;
-            
-            return `
-                <div class="officer-section">
-                    <div class="officer-signature">
-                        <div class="officer-title">${o.inspector || 'Inspecting Officer'}</div>
-                        <div class="officer-line"></div>
-                        <small>Signature with Date</small>
-                    </div>
-                    <div class="officer-signature">
-                        <div class="officer-title">${o.acso || 'ACSO'}</div>
-                        <div class="officer-line"></div>
-                        <small>Signature with Date</small>
-                    </div>
-                </div>
-            `;
-        }
-
-        attachPrintButton() {
-            const btn = document.getElementById('print-checklist-btn');
-            if (btn) {
-                btn.addEventListener('click', () => {
-                    window.print();
-                });
-            }
-        }
-
-        restoreCheckboxStates() {
-            const checkboxes = document.querySelectorAll('.doc-checkbox');
-            checkboxes.forEach(cb => {
-                const id = cb.id;
-                const saved = localStorage.getItem(id);
-                if (saved !== null) {
-                    cb.checked = saved === 'true';
-                }
-                
-                cb.addEventListener('change', () => {
-                    localStorage.setItem(cb.id, cb.checked);
-                });
-            });
-        }
-    }
-
-    // ==================== DATA MANAGEMENT FUNCTIONS ====================
-    let renderer;
-
-    function toggleDataPanel() {
-        const panel = document.getElementById('data-panel');
-        if (panel.style.display === 'none') {
-            panel.style.display = 'flex';
-            loadDataForEditing();
-        } else {
-            panel.style.display = 'none';
-        }
-    }
-
-    function loadDataForEditing() {
-        const select = document.getElementById('data-select');
-        const type = select.value;
-        const editor = document.getElementById('data-editor');
-        editor.value = JSON.stringify(CHECKLIST_DATA[type], null, 2);
-    }
-
-    function saveDataChanges() {
-        const select = document.getElementById('data-select');
-        const type = select.value;
-        const editor = document.getElementById('data-editor');
-        
-        try {
-            const newData = JSON.parse(editor.value);
-            CHECKLIST_DATA[type] = newData;
-            
-            // Reload current checklist if it's the one being edited
-            const currentSelect = document.getElementById('checklist-type');
-            if (currentSelect.value === type) {
-                renderer.loadChecklist(type);
-            }
-            
-            showStatus('✅ Data saved successfully!', 'success');
-            
-            // Auto close panel after successful save
-            setTimeout(() => {
-                toggleDataPanel();
-            }, 1500);
-        } catch (e) {
-            showStatus('❌ Invalid JSON format: ' + e.message, 'error');
-        }
-    }
-
-    function exportData() {
-        const dataStr = JSON.stringify(CHECKLIST_DATA, null, 2);
-        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-        
-        const exportFileDefaultName = 'checklist_data.json';
-        
-        const linkElement = document.createElement('a');
-        linkElement.setAttribute('href', dataUri);
-        linkElement.setAttribute('download', exportFileDefaultName);
-        linkElement.click();
-        
-        showStatus('📤 Data exported successfully!', 'success');
-    }
-
-    function importData() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.json';
-        
-        input.onchange = e => {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            
-            reader.onload = readerEvent => {
-                try {
-                    const content = readerEvent.target.result;
-                    const importedData = JSON.parse(content);
-                    
-                    // Merge imported data with existing
-                    Object.assign(CHECKLIST_DATA, importedData);
-                    
-                    // Reload current checklist
-                    const currentSelect = document.getElementById('checklist-type');
-                    renderer.loadChecklist(currentSelect.value);
-                    
-                    showStatus('✅ Data imported successfully!', 'success');
-                    
-                    // Update editor if panel is open
-                    if (document.getElementById('data-panel').style.display !== 'none') {
-                        loadDataForEditing();
-                    }
-                } catch (error) {
-                    showStatus('❌ Error importing file: ' + error.message, 'error');
-                }
-            };
-            
-            reader.readAsText(file);
-        };
-        
-        input.click();
-    }
-
-    function previewChanges() {
-        const select = document.getElementById('data-select');
-        const type = select.value;
-        const editor = document.getElementById('data-editor');
-        
-        try {
-            const newData = JSON.parse(editor.value);
-            
-            // Temporarily store original data
-            const originalData = CHECKLIST_DATA[type];
-            
-            // Apply new data temporarily
-            CHECKLIST_DATA[type] = newData;
-            
-            // Reload preview
-            const currentSelect = document.getElementById('checklist-type');
-            if (currentSelect.value === type) {
-                renderer.loadChecklist(type);
-            }
-            
-            // Restore original data (changes not saved yet)
-            CHECKLIST_DATA[type] = originalData;
-            
-            showStatus('👁️ Preview mode - Changes not saved. Click "Save Changes" to keep.', 'success');
-        } catch (e) {
-            showStatus('❌ Invalid JSON format: ' + e.message, 'error');
-        }
-    }
-
-    function resetData() {
-        if (confirm('⚠️ Reset all data to default? This cannot be undone!')) {
-            location.reload();
-        }
-    }
-
-    function showStatus(message, type) {
-        const statusDiv = document.getElementById('status-message');
-        statusDiv.textContent = message;
-        statusDiv.className = 'status-message ' + (type === 'success' ? 'status-success' : 'status-error');
-        statusDiv.style.display = 'block';
-        
-        setTimeout(() => {
-            statusDiv.style.display = 'none';
-        }, 3000);
-    }
-
-    function convertExcelToJSON() {
-        const excelText = document.getElementById('excel-paste').value;
-        if (!excelText.trim()) {
-            alert('Please paste some Excel data first!');
-            return;
-        }
-        
-        const lines = excelText.split('\n').filter(line => line.trim());
-        if (lines.length < 2) {
-            alert('Need at least 2 rows (header + data)');
-            return;
-        }
-        
-        const headers = lines[0].split('\t').map(h => h.trim());
-        const result = [];
-        
-        for (let i = 1; i < lines.length; i++) {
-            if (!lines[i].trim()) continue;
-            const values = lines[i].split('\t').map(v => v.trim());
-            const obj = {};
-            headers.forEach((header, index) => {
-                if (header) {
-                    obj[header] = values[index] || '';
-                }
-            });
-            result.push(obj);
-        }
-        
-        document.getElementById('json-result').value = JSON.stringify(result, null, 2);
-        document.getElementById('converted-json').style.display = 'block';
-    }
-
-    function copyJSON() {
-        const json = document.getElementById('json-result');
-        json.select();
-        document.execCommand('copy');
-        alert('✅ JSON copied to clipboard!');
-    }
-
-    function insertToEditor() {
-        const json = document.getElementById('json-result').value;
-        const editor = document.getElementById('data-editor');
-        editor.value = json;
-        document.getElementById('converted-json').style.display = 'none';
-        document.getElementById('excel-paste').value = '';
-    }
-
-    // ==================== INITIALIZATION ====================
-    document.addEventListener('DOMContentLoaded', () => {
-        renderer = new ChecklistRenderer();
-        
-        // Get type from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const type = urlParams.get('type') || 'hsd-renewal';
-        
-        // Set select value
-        const select = document.getElementById('checklist-type');
-        if (select) {
-            select.value = type;
-            select.addEventListener('change', (e) => {
-                renderer.loadChecklist(e.target.value);
-            });
-        }
-        
-        // Load initial checklist
-        renderer.loadChecklist(type);
-        
-        // Handle browser back/forward
-        window.addEventListener('popstate', (e) => {
-            if (e.state && e.state.type) {
-                renderer.loadChecklist(e.state.type);
-                if (select) select.value = e.state.type;
-            }
-        });
+(function() {
+  const track = document.getElementById('sliderTrack');
+  const leftArrow = document.getElementById('arrowLeft');
+  const rightArrow = document.getElementById('arrowRight');
+  const container = document.getElementById('sliderContainer');
+  let currentIndex = 0, autoPlayInterval;
+  const totalSlides = document.querySelectorAll('.slide').length;
+  function goToSlide(index) {
+    if (index < 0) index = totalSlides - 1; if (index >= totalSlides) index = 0;
+    currentIndex = index; track.style.transform = `translateX(-${currentIndex * 100}%)`;
+  }
+  function nextSlide() { goToSlide(currentIndex + 1); }
+  function prevSlide() { goToSlide(currentIndex - 1); }
+  function startAutoPlay() { if (autoPlayInterval) clearInterval(autoPlayInterval); autoPlayInterval = setInterval(() => { nextSlide(); }, 4000); }
+  function stopAutoPlay() { if (autoPlayInterval) { clearInterval(autoPlayInterval); autoPlayInterval = null; } }
+  function restartAutoPlay() { if (!autoPlayInterval) startAutoPlay(); }
+  container.addEventListener('mouseenter', stopAutoPlay);
+  container.addEventListener('mouseleave', restartAutoPlay);
+  leftArrow.addEventListener('click', (e) => { e.stopPropagation(); prevSlide(); stopAutoPlay(); restartAutoPlay(); });
+  rightArrow.addEventListener('click', (e) => { e.stopPropagation(); nextSlide(); stopAutoPlay(); restartAutoPlay(); });
+  document.querySelectorAll('.slide-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation(); const targetId = this.getAttribute('data-target');
+      if (targetId) { const targetSection = document.getElementById(targetId); if (targetSection) targetSection.scrollIntoView({ behavior: 'smooth' }); }
     });
+  });
+  goToSlide(0); startAutoPlay();
+})();
+
+function initCardSlider(sliderId, leftId, rightId) {
+  const slider = document.getElementById(sliderId); if (!slider) return;
+  const left = document.getElementById(leftId), right = document.getElementById(rightId);
+  const amount = 350;
+  left.addEventListener('click', () => slider.scrollBy({ left: -amount, behavior: 'smooth' }));
+  right.addEventListener('click', () => slider.scrollBy({ left: amount, behavior: 'smooth' }));
+}
+initCardSlider('toolsSliderTrack','toolsScrollLeft','toolsScrollRight');
+initCardSlider('docsSliderTrack','docsScrollLeft','docsScrollRight');
 </script>
-
-<!-- Go to Top Button -->
-<a href="#" class="go-to-top" style="position: fixed; bottom: 30px; right: 30px; background: #1a3e5c; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.3s; z-index: 100; font-size: 1.5rem;">↑</a>
-
-<style>
-    .go-to-top:hover {
-        background: #0f2d44;
-        transform: translateY(-5px);
-    }
-</style>
-
+<!-- go to top placeholder (skipped for brevity) -->
 </body>
 </html>
