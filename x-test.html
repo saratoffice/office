@@ -1,412 +1,198 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Sarat Office · modern hub</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Font Awesome 6 (free) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- base style (light reset, common header/footer) – inline to keep one file -->
-  <style>
-    /* global reset / base (minimal) */
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f8fe;color:#17252e;line-height:1.5;scroll-behavior:smooth;}
-    .container{max-width:1400px;margin:0 auto;padding:0 24px;width:100%;}
-    /* simulated header/footer via simple divs (no external components) */
-    #site-header, #site-footer{background:#ffffff;box-shadow:0 4px 20px rgba(0,40,80,0.05);}
-    .header-placeholder, .footer-placeholder{display:flex;align-items:center;padding:1rem 2rem;max-width:1400px;margin:0 auto;}
-    .header-placeholder span{font-size:1.8rem;font-weight:700;background:linear-gradient(145deg,#0033cc,#7CFF00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .footer-placeholder{justify-content:center;color:#3a4a5e;font-size:1rem;border-top:1px solid rgba(0,51,204,0.1);}
-    /* general btn style (used across page) */
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:60px;font-weight:600;text-decoration:none;transition:.25s ease;border:none;cursor:pointer;font-size:1rem;}
-    .btn-primary{background:linear-gradient(135deg,#0033cc,#7CFF00);color:#fff;box-shadow:0 10px 20px -8px #0033cc80;}
-    .btn-primary:hover{transform:scale(1.04);box-shadow:0 18px 25px -8px #0b2d6e;}
-    .btn-outline{background:transparent;border:2px solid #0033cc;color:#0033cc;}
-    .btn-outline:hover{background:#0033cc;color:#fff;}
-    .btn-secondary{background:#8b5cf6;color:#fff;}
-    .btn-secondary:hover{background:#6d3cda;transform:translateY(-4px);}
-    /* stats numeric update — 10+, 20+, 50+ */
-    .stat-number{font-size:2.8rem;font-weight:800;background:linear-gradient(145deg,#0033cc,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2;}
-  </style>
-  <!-- page specific style (tight, modern, all updates included) -->
-  <style>
-    /* ===== scoped home-page style (adapted, fresh) ===== */
-    .hero-wrap{
-      background:linear-gradient(130deg,#f0f7ff 0%,#ffffff 80%);
-      padding:40px 0 20px;
-    }
-    .hero-grid{
-      display:grid;
-      grid-template-columns:1.2fr 1fr;
-      gap:50px;
-      align-items:center;
-    }
-    .hero h1{
-      font-size:3.5rem;
-      font-weight:800;
-      line-height:1.1;
-      background:linear-gradient(145deg,#0033cc,#7CFF00);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-      margin:20px 0 20px;
-    }
-    .hero p{
-      font-size:1.2rem;
-      color:#2d4055;
-      margin-bottom:28px;
-      max-width:600px;
-    }
-    .stat-pill-group{
-      display:flex;
-      flex-wrap:wrap;
-      gap:18px;
-      margin:30px 0 20px;
-    }
-    .stat-pill{
-      background:white;
-      border-radius:80px;
-      padding:8px 32px 8px 28px;
-      box-shadow:0 8px 18px -6px rgba(0,51,204,0.12);
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      border:1px solid rgba(124,255,0,0.25);
-      transition:.2s;
-    }
-    .stat-pill:hover{
-      transform:translateY(-6px);
-      border-color:#0033cc;
-      box-shadow:0 18px 25px -12px #1f3d7a;
-    }
-    .stat-pill .stat-number{font-size:2.5rem;}
-    .stat-pill .stat-label{font-size:1.1rem;font-weight:500;color:#1e2f41;letter-spacing:0.3px;}
-    .hero-img img{
-      width:100%;
-      border-radius:40px 40px 40px 40px;
-      box-shadow:0 30px 40px -15px #001f4f;
-      border:8px solid white;
-      transition:.3s;
-    }
-    .hero-img img:hover{transform:rotate(1deg) scale(1.01);}
-    .btn-right{margin-top:30px;}
-
-    /* slider (main) */
-    .slider-section{
-      width:100%;
-      background:#0a1927;
-    }
-    .slider-container{position:relative;width:100%;overflow:hidden;}
-    .slider-track{display:flex;transition:.6s cubic-bezier(0.2,0.9,0.3,1);}
-    .slide{
-      flex:0 0 100%;height:70vh;min-height:480px;
-      background-size:cover;background-position:center;display:flex;
-      align-items:flex-end;justify-content:flex-end;position:relative;
-    }
-    .slide::after{
-      content:'';position:absolute;inset:0;
-      background:linear-gradient(90deg,#00000030,#00000010);
-    }
-    .slide-1{background-image:url('https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=1400&auto=format');}
-    .slide-2{background-image:url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1400&auto=format');}
-    .slide-3{background-image:url('https://images.unsplash.com/photo-1527525443983-6e60c75fff46?w=1400&auto=format');}
-    .slide-btn{
-      position:relative;z-index:12;background:#f2f5ffdd;backdrop-filter:blur(10px);
-      border-radius:60px;padding:1rem 2.8rem;font-size:1.7rem;font-weight:500;
-      border:none;margin:0 2.5rem 2rem 0;box-shadow:0 15px 30px #00000040;
-      cursor:pointer;transition:.2s;display:flex;gap:0.8rem;align-items:center;
-    }
-    .slide-btn i{font-size:2.2rem;transition:.2s;}
-    .slide-btn:hover{background:white;transform:scale(1.05);}
-    .slide-btn:hover i{transform:translateY(5px);}
-    .nav-arrows{position:absolute;bottom:2rem;left:2rem;z-index:22;display:flex;gap:1.2rem;}
-    .arrow{
-      width:56px;height:56px;background:#172b39dd;backdrop-filter:blur(6px);
-      border-radius:40px;color:white;font-size:2.6rem;display:flex;align-items:center;
-      justify-content:center;cursor:pointer;transition:.15s;border:1px solid #fff6;
-    }
-    .arrow:hover{background:#1f3f5c;transform:scale(1.1);}
-
-    /* card sliders */
-    .card-nav{display:flex;justify-content:flex-end;gap:15px;margin:0 0 15px;}
-    .card-arrow{
-      width:48px;height:48px;border-radius:50%;background:white;box-shadow:0 10px 20px #dde3ed;
-      font-size:2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;
-      color:#0033cc;transition:.2s;border:2px solid transparent;
-    }
-    .card-arrow:hover{background:#0033cc;color:white;border-color:#7CFF00;transform:scale(1.1);}
-    .card-slider-container{width:100%;}
-    .card-slider-track{
-      display:flex;gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;
-      padding:10px 0 30px;scrollbar-width:thin;scrollbar-color:#0033cc #dbe4f0;
-    }
-    .card-slider-track::-webkit-scrollbar{height:8px;}
-    .card-slider-track::-webkit-scrollbar-track{background:#dbe4f0;border-radius:8px;}
-    .card-slider-track::-webkit-scrollbar-thumb{background:#0033cc;border-radius:8px;}
-    .card-slide{flex:0 0 330px;scroll-snap-align:start;}
-
-    /* tool card */
-    .tool-card-modern{
-      background:white;border-radius:24px;padding:30px 22px;box-shadow:0 15px 25px #ced9e9;
-      transition:.4s;height:100%;display:flex;flex-direction:column;border:1px solid #d2e2ff;
-    }
-    .tool-card-modern:hover{transform:translateY(-16px) scale(1.02);box-shadow:0 25px 40px #b0c6e0;}
-    .tool-icon{
-      width:70px;height:70px;background:linear-gradient(145deg,#7CFF0030,#0033cc20);
-      border-radius:20px;display:flex;align-items:center;justify-content:center;
-      font-size:2.2rem;color:#0033cc;margin-bottom:20px;transition:.3s;
-    }
-    .tool-card-modern:hover .tool-icon{
-      background:linear-gradient(145deg,#7CFF00,#0033cc);color:white;border-radius:50%;transform:rotate(360deg);
-    }
-    /* doc card */
-    .doc-card-modern{
-      background:white;border-radius:24px;overflow:hidden;box-shadow:0 15px 25px #d2dff0;
-      transition:.3s;height:100%;display:flex;flex-direction:column;
-    }
-    .doc-card-modern:hover{transform:translateY(-12px) scale(1.01);box-shadow:0 28px 40px #adc0db;}
-    .doc-header{
-      background:linear-gradient(145deg,#0033cc,#8b5cf6);color:white;padding:22px 20px;position:relative;
-    }
-    .doc-header h3{font-size:1.6rem;}
-    .doc-body{padding:24px 20px;flex:1;display:flex;flex-direction:column;}
-    .doc-meta{display:flex;justify-content:space-between;color:#526c8a;margin:15px 0;border-top:2px dashed #ccd9f0;padding-top:15px;}
-
-    /* resources section with video bg */
-    .resources-video-section{
-      position:relative;padding:50px 0;overflow:hidden;border-radius:48px;margin:30px auto;
-    }
-    .resources-video-background{
-      position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.2;z-index:0;pointer-events:none;
-    }
-    .resources-content{position:relative;z-index:3;}
-    .resources-grid-modern{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px;margin-top:40px;
-    }
-    .resource-card-modern{
-      background:rgba(255, 255, 255, 0.85);backdrop-filter:blur(8px);border-radius:28px;padding:32px 22px;
-      text-align:center;box-shadow:0 15px 30px #bacde0;transition:.3s;border:2px solid transparent;
-    }
-    .resource-card-modern:hover{border-color:#7CFF00;transform:translateY(-12px);background:white;}
-    .resource-icon{font-size:3rem;color:#0033cc;margin-bottom:20px;}
-
-    /* about highlight — new diagonal #FFA500 / #2a9d8f (orange & teal) */
-    .about-highlight{
-      background:linear-gradient(135deg, #FFA500 0%, #FFA500 45%, #2a9d8f 55%, #2a9d8f 100%);
-      width:100vw;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;
-      padding:60px 0;
-    }
-    .about-wrapper{
-      display:grid;grid-template-columns:1fr 1.3fr;gap:50px;align-items:center;
-    }
-    .about-photo img{
-      width:100%;max-width:420px;border-radius:50%;border:12px solid rgba(255,255,255,0.7);
-      box-shadow:0 35px 45px #00000040;transition:.3s;
-    }
-    .about-photo img:hover{transform:scale(1.06) rotate(3deg);}
-    .about-social{
-      display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:30px;
-    }
-    .about-social a{
-      width:44px;height:44px;border-radius:44px;background:#203a4c;color:white;
-      display:flex;align-items:center;justify-content:center;font-size:1.3rem;transition:.2s;
-    }
-    .about-social a:hover{transform:translateY(-7px);background:#FFA500;color:#1e2a3a;}
-    .about-text{
-      background:rgba(255,255,255,0.8);backdrop-filter:blur(4px);border-radius:50px 0 50px 0;
-      padding:40px;color:#1e2f41;
-    }
-    .about-text h2{color:#ffffff;text-shadow:0 2px 3px #1e3f4a;margin-bottom:25px;}
-    .about-text p{margin-bottom:20px;line-height:1.7;text-indent:1.5em;border-left:3px solid #FFA500;padding-left:20px;}
-
-    @media (max-width:1000px){
-      .hero-grid{grid-template-columns:1fr;}.hero h1{font-size:2.6rem;}
-      .about-wrapper{grid-template-columns:1fr;}
-    }
-    @media (max-width:600px){
-      .stat-pill-group{flex-direction:column;align-items:flex-start;}
-      .slide-btn{font-size:1.2rem;padding:0.6rem 1.6rem;}
-    }
-    /* header/footer inline simulation */
-    #site-header{background:white;margin-bottom:6px;}
-    #site-footer{margin-top:30px;}
-  </style>
-</head>
-<body class="home-page">
-
-<!-- header placeholder (instead of external component) -->
-<div id="site-header">
-  <div class="header-placeholder container">
-    <span>Sarat Office</span>
-    <div style="flex:1"></div>
-    <i class="fas fa-bars" style="font-size:2rem; color:#0033cc;"></i>
-  </div>
-</div>
-
-<main>
-  <!-- FULL WIDTH SLIDER (unchanged but images updated) -->
-  <section class="slider-section">
-    <div class="slider-container" id="sliderContainer">
-      <div class="slider-track" id="sliderTrack">
-        <div class="slide slide-1"><button class="slide-btn" data-target="tools">Utility Tools <i>↓</i></button></div>
-        <div class="slide slide-2"><button class="slide-btn" data-target="legaldocs">Legal Docs <i>↓</i></button></div>
-        <div class="slide slide-3"><button class="slide-btn" data-target="aboutme">About Me <i>↓</i></button></div>
-      </div>
-      <div class="nav-arrows"><div class="arrow" id="arrowLeft">←</div><div class="arrow" id="arrowRight">→</div></div>
-    </div>
-  </section>
-
-  <!-- HERO with updated stats: 10+ Tools, 20+ Pages, 50+ Posts (exactly as requested) -->
-  <section class="hero-wrap">
-    <div class="container hero">
-      <div class="hero-grid">
-        <div class="hero-text">
-          <h1>Empowering All, Through Accessible Information</h1>
-          <p>A comprehensive platform provides curated government documents, essential tools, and reliable information to simplify bureaucratic processes for everyone. The bridge the gap between government resources and public accessibility.</p>
-          <p>From legal acts and regulations to practical utilities like Electric Bill Downloader and Fuel Density calculators, a one-stop solution for citizens, professionals, and researchers alike.</p>
-          
-          <!-- UPDATED STATS: 10+ Tools, 20+ Pages, 50+ Posts (inline pill design) -->
-          <div class="stat-pill-group">
-            <div class="stat-pill"><span class="stat-number">10+</span><span class="stat-label">Tools</span></div>
-            <div class="stat-pill"><span class="stat-number">20+</span><span class="stat-label">Pages</span></div>
-            <div class="stat-pill"><span class="stat-number">50+</span><span class="stat-label">Posts</span></div>
-          </div>
-
-          <div class="btn-right"> 
-            <a href="/Posts/Journey%20of%20saratoffice.html" class="btn btn-primary">
-              <span>Discover the Journey</span>
-              <i class="fas fa-arrow-right"></i>
-            </a>
-          </div> 
-        </div> <!-- hero-text -->
-        <div class="hero-img">
-          <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=800&auto=format" alt="Government Resources & Tools" loading="lazy">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TOOLS SECTION (contains Age, BMR, BMI etc) -->
-  <section id="tools" class="tools-section container">
-    <div class="section-header"><h2>Utility Tools & Calculators</h2><p>Practical utilities designed to simplify everyday tasks and calculations</p></div>
-    <div class="card-nav"><div class="card-arrow" id="toolsScrollLeft">←</div><div class="card-arrow" id="toolsScrollRight">→</div></div>
-    <div class="card-slider-container"><div class="card-slider-track" id="toolsSliderTrack">
-      <!-- tools (same as original, but keep modern) -->
-      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-money-bill-wave"></i></div><h3>Currency Converter</h3><p>Real-time currency conversion with up-to-date exchange rates.</p><a href="currency-converter.html" class="btn btn-outline">Use Converter</a></div></div>
-      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-weight-scale"></i></div><h3>Density Converter</h3><p>Convert between different density units instantly.</p><a href="density-converter.html" class="btn btn-outline">Convert Density</a></div></div>
-      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-lightbulb"></i></div><h3>Electricity Bill</h3><p>Calculate electricity bills, estimate power consumption.</p><a href="electricity-bill.html" class="btn btn-outline">Download Bill</a></div></div>
-      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-key"></i></div><h3>Password Generator</h3><p>Generate strong, secure passwords with options.</p><a href="password-generator.html" class="btn btn-outline">Generate Password</a></div></div>
-      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-calculator"></i></div><h3>Age Calculator</h3><p>Calculate your exact age in years, months, and days.</p><a href="age-calculator.html" class="btn btn-outline">Calculate Age</a></div></div>
-      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-heartbeat"></i></div><h3>BMR Calculator</h3><p>Basal Metabolic Rate for daily calorie needs.</p><a href="bmr-calculator.html" class="btn btn-outline">Calculate BMR</a></div></div>
-      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-heart"></i></div><h3>BMI Calculator</h3><p>Check underweight, normal, overweight.</p><a href="/bmi-calculator.html" class="btn btn-outline">Calculate BMI</a></div></div>
-      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-gas-pump"></i></div><h3>Fuel in Tank</h3><p>Estimate fuel quantity using dip and density.</p><a href="/fuel-in-tank-calculator.html" class="btn btn-outline">Calculate Fuel</a></div></div>
-      <div class="card-slide"><div class="tool-card-modern"><div class="tool-icon"><i class="fas fa-file-invoice-dollar"></i></div><h3>Income Tax</h3><p>Estimate tax liability based on current slabs.</p><a href="/income-tax.html" class="btn btn-outline">Calculate Tax</a></div></div>
-    </div></div>
-  </section>
-
-  <!-- LEGAL DOCUMENTS (abbreviated list) -->
-  <section id="legaldocs" class="documents-section container">
-    <div class="section-header"><h2>Legal Documents & Acts</h2><p>Important government acts and regulations</p></div>
-    <div class="card-nav"><div class="card-arrow" id="docsScrollLeft">←</div><div class="card-arrow" id="docsScrollRight">→</div></div>
-    <div class="card-slider-container"><div class="card-slider-track" id="docsSliderTrack">
-      <!-- first 6 cards to keep concise -->
-      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>Petroleum Act 1934</h3></div><div class="doc-body"><p>Import, transport, storage of petroleum.</p><div class="doc-meta"><span>1934</span><span>PDF</span></div><a href="#" class="btn btn-primary">View</a></div></div></div>
-      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>Petroleum Rules 2002</h3></div><div class="doc-body"><p>Safety regulations under Petroleum Act.</p><div class="doc-meta"><span>2002</span><span>PDF</span></div><a href="#" class="btn btn-primary">View</a></div></div></div>
-      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>EC Act 1955</h3></div><div class="doc-body"><p>Essential Commodities Act.</p><div class="doc-meta"><span>1955</span><span>PDF</span></div><a href="#" class="btn btn-primary">Read</a></div></div></div>
-      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>HSD License 1979</h3></div><div class="doc-body"><p>High Speed Diesel licensing.</p><div class="doc-meta"><span>1979</span><span>PDF</span></div><a href="#" class="btn btn-primary">View</a></div></div></div>
-      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>Partnership Act 1932</h3></div><div class="doc-body"><p>Indian Partnership Act.</p><div class="doc-meta"><span>1932</span><span>PDF</span></div><a href="#" class="btn btn-primary">View</a></div></div></div>
-      <div class="card-slide"><div class="doc-card-modern"><div class="doc-header"><h3>Consumer Protection 1986</h3></div><div class="doc-body"><p>Consumer rights & redressal.</p><div class="doc-meta"><span>1986</span><span>PDF</span></div><a href="#" class="btn btn-primary">Read</a></div></div></div>
-    </div></div>
-  </section>
-
-  <!-- RESOURCES with video -->
-  <section class="resources-video-section container">
-    <video class="resources-video-background" autoplay muted loop playsinline>
-      <source src="https://assets.mixkit.co/videos/40860/40860-720.mp4" type="video/mp4">
-    </video>
-    <div class="resources-content">
-      <div class="section-header"><h2>Additional Resources</h2><p>Access powerful features and valuable information.</p></div>
-      <div class="resources-grid-modern">
-        <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-sitemap"></i></div><h3>Site Map</h3><p>Explore complete website structure.</p><a href="/site-map.html" class="btn btn-outline">Site Map</a></div> 
-        <div class="resource-card-modern"><div class="resource-icon"><i class="fa-solid fa-list"></i></div><h3>Key Pages</h3><p>Browse key pages and tools.</p><a href="page-index.html" class="btn btn-outline">Browse</a></div>
-        <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-file-shield"></i></div><h3>Guard File</h3><p>Secure document management.</p><a href="guard-file.html" class="btn btn-outline">Access</a></div>
-        <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-link"></i></div><h3>Useful Links</h3><p>Curated government services.</p><a href="weblinks.html" class="btn btn-outline">Browse</a></div>
-        <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-map-marker-alt"></i></div><h3>Locations</h3><p>PPC, FPS, Rice Mills on map.</p><a href="locations.html" class="btn btn-outline">View</a></div>
-        <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-user-circle"></i></div><h3>About Me</h3><p>My journey & philosophy.</p><a href="about.html" class="btn btn-outline">Know</a></div>
-        <div class="resource-card-modern"><div class="resource-icon"><i class="fas fa-envelope"></i></div><h3>Contact</h3><p>Questions? Reach out.</p><a href="contact.html" class="btn btn-outline">Contact</a></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT HIGHLIGHT with orange/teal background and updated stats are also shown -->
-  <section id="aboutme" class="about-highlight">
-    <div class="container">
-      <div class="about-wrapper">
-        <div class="about-photo">
-          <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&auto=format" alt="Sarat Rout">
-          <div class="about-social">
-            <a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-pinterest-p"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-github"></i></a>
-          </div>
-        </div>
-        <div class="about-text">
-          <h2>A Life Between Duty and Devotion</h2>
-          <p>Nature, to me, is a sacred reflection of the divine — a living expression of beauty, balance, and higher purpose.</p>
-          <p>Knowledge, too, is a sacred tool — not just to inform, but to elevate. When used with intention, it unlocks potential.</p>
-          <p>My approach to public service is rooted in quiet, consistent action. Governance, for me, is not a position of power but a practice of purpose.</p>
-          <a href="about.html" class="btn btn-secondary"><span>Know More</span><i class="fas fa-user-circle"></i></a>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-
-<!-- footer placeholder -->
-<div id="site-footer">
-  <div class="footer-placeholder container">
-    <p>© Sarat Office — public resource hub. All tools designed for accessibility.</p>
-  </div>
-</div>
-
-<!-- slider scripts (same as original but robust) -->
-<script>
-(function() {
-  const track = document.getElementById('sliderTrack');
-  const leftArrow = document.getElementById('arrowLeft');
-  const rightArrow = document.getElementById('arrowRight');
-  const container = document.getElementById('sliderContainer');
-  let currentIndex = 0, autoPlayInterval;
-  const totalSlides = document.querySelectorAll('.slide').length;
-  function goToSlide(index) {
-    if (index < 0) index = totalSlides - 1; if (index >= totalSlides) index = 0;
-    currentIndex = index; track.style.transform = `translateX(-${currentIndex * 100}%)`;
-  }
-  function nextSlide() { goToSlide(currentIndex + 1); }
-  function prevSlide() { goToSlide(currentIndex - 1); }
-  function startAutoPlay() { if (autoPlayInterval) clearInterval(autoPlayInterval); autoPlayInterval = setInterval(() => { nextSlide(); }, 4000); }
-  function stopAutoPlay() { if (autoPlayInterval) { clearInterval(autoPlayInterval); autoPlayInterval = null; } }
-  function restartAutoPlay() { if (!autoPlayInterval) startAutoPlay(); }
-  container.addEventListener('mouseenter', stopAutoPlay);
-  container.addEventListener('mouseleave', restartAutoPlay);
-  leftArrow.addEventListener('click', (e) => { e.stopPropagation(); prevSlide(); stopAutoPlay(); restartAutoPlay(); });
-  rightArrow.addEventListener('click', (e) => { e.stopPropagation(); nextSlide(); stopAutoPlay(); restartAutoPlay(); });
-  document.querySelectorAll('.slide-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation(); const targetId = this.getAttribute('data-target');
-      if (targetId) { const targetSection = document.getElementById(targetId); if (targetSection) targetSection.scrollIntoView({ behavior: 'smooth' }); }
-    });
-  });
-  goToSlide(0); startAutoPlay();
-})();
-
-function initCardSlider(sliderId, leftId, rightId) {
-  const slider = document.getElementById(sliderId); if (!slider) return;
-  const left = document.getElementById(leftId), right = document.getElementById(rightId);
-  const amount = 350;
-  left.addEventListener('click', () => slider.scrollBy({ left: -amount, behavior: 'smooth' }));
-  right.addEventListener('click', () => slider.scrollBy({ left: amount, behavior: 'smooth' }));
+<style>
+/* Premium Stats Design - Right Aligned */
+.hero-stats.premium-stats {
+  display: flex;
+  gap: 25px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+  justify-content: flex-end; /* Right alignment */
 }
-initCardSlider('toolsSliderTrack','toolsScrollLeft','toolsScrollRight');
-initCardSlider('docsSliderTrack','docsScrollLeft','docsScrollRight');
-</script>
-<!-- go to top placeholder (skipped for brevity) -->
-</body>
-</html>
+
+.premium-stats .stat-item-modern {
+  background: linear-gradient(145deg, #1a2639, #0f172a);
+  padding: 20px 35px;
+  border-radius: 30px;
+  box-shadow: 0 15px 30px -10px rgba(0, 51, 204, 0.3);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 130px;
+  border: 1px solid rgba(124, 255, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-stats .stat-item-modern::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #7CFF00, #0033cc, #8b5cf6, #7CFF00);
+  background-size: 300% 300%;
+  border-radius: 32px;
+  z-index: -2;
+  animation: gradientBorder 3s ease infinite;
+}
+
+.premium-stats .stat-item-modern::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: linear-gradient(145deg, #1e293b, #0f172a);
+  border-radius: 28px;
+  z-index: -1;
+}
+
+@keyframes gradientBorder {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.premium-stats .stat-number-modern {
+  font-size: 3.2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #7CFF00, #00B4D8, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+  text-shadow: 0 0 20px rgba(124, 255, 0, 0.3);
+  position: relative;
+}
+
+.premium-stats .stat-number-modern::after {
+  content: '+';
+  position: absolute;
+  top: -5px;
+  right: -15px;
+  font-size: 2rem;
+  color: #7CFF00;
+  opacity: 0.8;
+}
+
+.premium-stats .stat-label-modern {
+  font-size: 1.1rem;
+  color: #e2e8f0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 600;
+  margin-top: 5px;
+  background: linear-gradient(135deg, #ffffff, #cbd5e1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Premium Button - Right Aligned */
+.btn-right.premium-btn-right {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.premium-btn-right .btn-premium {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px 38px;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border-radius: 60px;
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+  transition: all 0.4s ease;
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5);
+}
+
+.premium-btn-right .btn-premium::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #7CFF00, #0033cc, #8b5cf6, #FF6B35, #7CFF00);
+  background-size: 300% 300%;
+  border-radius: 62px;
+  z-index: -1;
+  animation: btnBorder 4s linear infinite;
+}
+
+@keyframes btnBorder {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.premium-btn-right .btn-premium:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 20px 40px -10px rgba(124, 255, 0, 0.4);
+}
+
+.premium-btn-right .btn-premium i {
+  font-size: 1.4rem;
+  transition: transform 0.3s ease;
+  color: #7CFF00;
+}
+
+.premium-btn-right .btn-premium:hover i {
+  transform: translateX(8px) rotate(360deg);
+}
+
+.premium-btn-right .btn-premium span {
+  background: linear-gradient(135deg, #ffffff, #e2e8f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-stats.premium-stats {
+    justify-content: center;
+  }
+  
+  .premium-stats .stat-item-modern {
+    padding: 15px 25px;
+    min-width: 100px;
+  }
+  
+  .premium-stats .stat-number-modern {
+    font-size: 2.5rem;
+  }
+  
+  .premium-btn-right {
+    justify-content: center;
+  }
+}
+  </style>
+<!-- PREMIUM STATS DESIGN - Right Aligned -->
+<div class="hero-stats premium-stats">
+  <div class="stat-item-modern">
+    <span class="stat-number-modern">10</span>
+    <span class="stat-label-modern">Tools</span>
+  </div>
+  <div class="stat-item-modern">
+    <span class="stat-number-modern">20</span>
+    <span class="stat-label-modern">Pages</span>
+  </div>
+  <div class="stat-item-modern">
+    <span class="stat-number-modern">50</span>
+    <span class="stat-label-modern">Posts</span>
+  </div>
+</div>
+
+<!-- PREMIUM BUTTON - Right Aligned -->
+<div class="btn-right premium-btn-right"> 
+  <a href="/Posts/Journey%20of%20saratoffice.html" class="btn-premium">
+    <span>Discover the Journey</span>
+    <i class="fas fa-arrow-right"></i>
+  </a>
+</div>
