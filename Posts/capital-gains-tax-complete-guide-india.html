@@ -28,73 +28,170 @@
   <meta name="blog:icon" content="fa-chart-line">
 
   <style>
-    /* Additional styles for tax/finance content */
-    .tax-card {
+    /* Global reset for better looking page */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+    }
+
+    /* Main section styling */
+    .blog-post-section {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 2rem;
       background: white;
-      border-radius: 20px;
-      padding: 1.5rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-      border: 1px solid #e2e8f0;
-      transition: transform 0.2s ease;
+    }
+
+    /* Remove all underlines from headings */
+    h1, h2, h3, h4, h5, h6 {
+      text-decoration: none !important;
+      border-bottom: none !important;
+      outline: none !important;
+      line-height: 1.3;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      color: #000000;
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      margin: 2.5rem 0 1rem;
+      color: #000000;
+      position: relative;
+      display: inline-block;
+    }
+    
+    /* Subtle design element instead of line */
+    h2:after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: #000000;
+      border-radius: 2px;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      margin: 1.5rem 0 1rem;
+      color: #000000;
+    }
+
+    /* Black and white theme cards */
+    .tax-card {
+      background: #ffffff;
+      border: 2px solid #000000;
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: 12px 12px 0 rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
     }
     
     .tax-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transform: translate(-4px, -4px);
+      box-shadow: 16px 16px 0 rgba(0,0,0,0.15);
     }
     
+    /* Black background sections for white text */
+    .black-section {
+      background: #000000;
+      color: #ffffff;
+      padding: 2.5rem;
+      border-radius: 32px;
+      margin: 3rem 0;
+    }
+
+    .black-section h2, 
+    .black-section h3,
+    .black-section p,
+    .black-section li {
+      color: #ffffff !important;
+    }
+
+    .black-section h2:after {
+      background: #ffffff;
+    }
+
+    .black-section a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    /* Rate badges in black and white */
     .rate-badge {
       display: inline-block;
-      padding: 0.3rem 1rem;
-      border-radius: 30px;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
       font-weight: 600;
       font-size: 0.9rem;
+      border: 2px solid #000000;
+      background: white;
+      color: #000000;
     }
     
     .rate-short {
-      background: #fee2e2;
-      color: #b91c1c;
+      background: white;
+      color: #000000;
     }
     
     .rate-long {
-      background: #dbeafe;
-      color: #1e40af;
+      background: #000000;
+      color: white;
     }
     
     .rate-equity {
-      background: #e6f4ea;
-      color: #137333;
+      background: white;
+      color: #000000;
+      border-style: dashed;
     }
     
+    /* Formula boxes */
     .formula-box {
-      background: #f1f5f9;
-      padding: 1.2rem;
-      border-radius: 12px;
+      background: #f5f5f5;
+      padding: 1.5rem;
+      border-radius: 16px;
       font-family: 'Courier New', monospace;
       font-size: 1rem;
       text-align: center;
-      border: 1px dashed #94a3b8;
+      border: 2px solid #000000;
     }
     
+    /* Comparison table */
     .comparison-table {
       width: 100%;
       border-collapse: collapse;
       background: white;
-      border-radius: 16px;
+      border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border: 2px solid #000000;
     }
     
     .comparison-table th {
-      background: #1e293b;
+      background: #000000;
       color: white;
-      padding: 1rem;
+      padding: 1.2rem;
       text-align: left;
+      font-weight: 600;
     }
     
     .comparison-table td {
-      padding: 1rem;
-      border-bottom: 1px solid #e2e8f0;
+      padding: 1.2rem;
+      border-bottom: 1px solid #000000;
     }
     
     .comparison-table tr:last-child td {
@@ -102,22 +199,193 @@
     }
     
     .comparison-table tr:hover {
-      background: #f8fafc;
+      background: #f2f2f2;
     }
     
+    /* Info notes */
     .info-note {
-      background: #fff3cd;
-      border-left: 6px solid #ffc107;
-      padding: 1.2rem;
-      border-radius: 0 12px 12px 0;
+      background: #ffffff;
+      border: 2px solid #000000;
+      padding: 1.5rem;
+      border-radius: 16px;
       margin: 1.5rem 0;
     }
     
     .form-highlight {
-      background: #f3e8ff;
-      border-left: 6px solid #8b5cf6;
-      padding: 1.2rem;
-      border-radius: 0 12px 12px 0;
+      background: #000000;
+      color: white;
+      padding: 2rem;
+      border-radius: 24px;
+      margin: 2rem 0;
+    }
+    
+    .form-highlight h3 {
+      color: white !important;
+    }
+    
+    .form-highlight h3:after {
+      background: white;
+    }
+
+    /* Grid layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    /* Lists */
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    li {
+      margin: 0.5rem 0;
+    }
+
+    /* Back link */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      background: #000000;
+      color: white;
+      text-decoration: none;
+      border-radius: 40px;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      border: 2px solid #000000;
+      transition: all 0.2s ease;
+    }
+    
+    .back-link:hover {
+      background: white;
+      color: black;
+    }
+
+    /* Post meta */
+    .post-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      margin: 1rem 0 2rem;
+      border-top: 2px solid #000000;
+      border-bottom: 2px solid #000000;
+    }
+    
+    .post-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .category-tag {
+      background: #000000;
+      color: white !important;
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+    }
+
+    /* Hero image */
+    .hero-image {
+      margin: 2rem 0 3rem;
+      border-radius: 32px;
+      overflow: hidden;
+      border: 2px solid #000000;
+    }
+    
+    .hero-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    .hero-caption {
+      padding: 1rem;
+      background: #000000;
+      color: white;
+      font-size: 0.9rem;
+    }
+
+    /* Tags */
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 3rem 0 1rem;
+    }
+    
+    .post-tag {
+      background: #ffffff;
+      border: 2px solid #000000;
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+    }
+
+    /* Asset grid */
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .asset-item {
+      background: white;
+      border: 2px solid #000000;
+      padding: 1rem;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    /* Icon boxes */
+    .icon-box {
+      width: 60px;
+      height: 60px;
+      background: white;
+      border: 2px solid #000000;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .blog-post-section {
+        padding: 1rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      h2 {
+        font-size: 1.8rem;
+      }
+      
+      .grid-2, .grid-3, .asset-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .post-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
     }
   </style>
 </head>
@@ -158,20 +426,22 @@
     <!-- Main content -->
     <div class="post-content">
       
-      <!-- INTRODUCTION -->
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">This article provides a comprehensive overview of capital gains and the associated taxes, covering different types of assets, holding periods, and tax treatment. Here's a concise breakdown of the main concepts to help you navigate the complexities of capital gains taxation in India.</p>
+      <!-- INTRODUCTION - Black section example -->
+      <div class="black-section">
+        <p style="font-size: 1.3rem; line-height: 1.6;">This article provides a comprehensive overview of capital gains and the associated taxes, covering different types of assets, holding periods, and tax treatment. Here's a concise breakdown of the main concepts to help you navigate the complexities of capital gains taxation in India.</p>
+      </div>
       
       <!-- 1. WHAT IS CAPITAL GAIN -->
       <h2>1. What is a Capital Gain?</h2>
       
-      <div class="tax-card" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);">
+      <div class="tax-card">
         <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-          <div style="background: #3b82f6; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+          <div class="icon-box">
             <i class="fas fa-chart-line"></i>
           </div>
           <div style="flex: 1;">
             <p style="font-size: 1.2rem; margin: 0;">A <strong>capital gain</strong> is the profit from the sale of a capital asset, such as property, mutual funds, or stocks.</p>
-            <p style="margin: 0.5rem 0 0 0; color: #475569;">This profit is considered income and is taxed in the year of the sale. Capital gains tax can either be short-term or long-term, depending on the holding period of the asset.</p>
+            <p style="margin: 0.5rem 0 0 0;">This profit is considered income and is taxed in the year of the sale. Capital gains tax can either be short-term or long-term, depending on the holding period of the asset.</p>
           </div>
         </div>
       </div>
@@ -179,38 +449,28 @@
       <!-- 2. CAPITAL ASSETS -->
       <h2>2. Capital Assets</h2>
       
-      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin: 2rem 0;">
+      <div class="grid-2">
         <div>
           <p>A <strong>capital asset</strong> is any property held by an individual, like:</p>
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; margin-top: 1rem;">
-            <div style="background: white; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
-              <i class="fas fa-home" style="color: #3b82f6;"></i> Land, building, house property
-            </div>
-            <div style="background: white; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
-              <i class="fas fa-car" style="color: #3b82f6;"></i> Vehicles
-            </div>
-            <div style="background: white; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
-              <i class="fas fa-cogs" style="color: #3b82f6;"></i> Machinery
-            </div>
-            <div style="background: white; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
-              <i class="fas fa-file-alt" style="color: #3b82f6;"></i> Patents, trademarks
-            </div>
-            <div style="background: white; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
-              <i class="fas fa-chart-pie" style="color: #3b82f6;"></i> Shares, mutual fund units
-            </div>
-            <div style="background: white; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
-              <i class="fas fa-gem" style="color: #3b82f6;"></i> Jewelry
-            </div>
+          <div class="asset-grid">
+            <div class="asset-item"><i class="fas fa-home"></i> Land, building</div>
+            <div class="asset-item"><i class="fas fa-car"></i> Vehicles</div>
+            <div class="asset-item"><i class="fas fa-cogs"></i> Machinery</div>
+            <div class="asset-item"><i class="fas fa-file-alt"></i> Patents</div>
+            <div class="asset-item"><i class="fas fa-chart-pie"></i> Shares</div>
+            <div class="asset-item"><i class="fas fa-gem"></i> Jewelry</div>
           </div>
         </div>
         
-        <div style="background: #fee2e2; padding: 1.5rem; border-radius: 16px;">
-          <h4 style="margin-top: 0; color: #b91c1c;"><i class="fas fa-times-circle"></i> Not Capital Assets</h4>
+        <div class="info-note">
+          <h3 style="margin-top: 0;"><i class="fas fa-times-circle"></i> Not Capital Assets</h3>
           <ul style="margin-bottom: 0;">
-            <li>Stocks (inventory)</li>
+            <li>Stock-in-trade (inventory)</li>
             <li>Raw materials</li>
-            <li>Personal goods like clothes</li>
-            <li>Furniture</li>
+            <li>Personal effects (clothes, furniture)</li>
+            <li>Agricultural land in rural areas</li>
+            <li>6.5% Gold Bonds, 1977</li>
+            <li>Special Bearer Bonds, 1991</li>
           </ul>
         </div>
       </div>
@@ -218,28 +478,28 @@
       <!-- 3. SHORT-TERM VS LONG-TERM -->
       <h2>3. Short-Term vs. Long-Term Capital Assets</h2>
       
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
-        <div class="tax-card" style="border-top: 6px solid #f97316;">
-          <div style="background: #ffedd5; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #9a3412; font-size: 1.5rem; margin-bottom: 1rem;">
+      <div class="grid-2">
+        <div class="tax-card">
+          <div class="icon-box">
             <i class="fas fa-clock"></i>
           </div>
           <h3 style="margin-top: 0;">Short-term Capital Assets</h3>
           <ul>
-            <li>Held for <strong>less than 36 months</strong></li>
-            <li>For immovable property (land, building): <strong>less than 24 months</strong> (since FY 2017-18)</li>
-            <li>Equity shares & mutual funds: <strong>less than 12 months</strong></li>
+            <li>Held for <strong>less than 36 months</strong> (most assets)</li>
+            <li>Immovable property: <strong>less than 24 months</strong></li>
+            <li>Equity shares & equity funds: <strong>less than 12 months</strong></li>
           </ul>
         </div>
         
-        <div class="tax-card" style="border-top: 6px solid #10b981;">
-          <div style="background: #d1fae5; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #065f46; font-size: 1.5rem; margin-bottom: 1rem;">
+        <div class="tax-card">
+          <div class="icon-box">
             <i class="fas fa-calendar-check"></i>
           </div>
           <h3 style="margin-top: 0;">Long-term Capital Assets</h3>
           <ul>
-            <li>Held for <strong>more than 36 months</strong></li>
+            <li>Held for <strong>more than 36 months</strong> (most assets)</li>
             <li>Immovable property: <strong>more than 24 months</strong></li>
-            <li>Equity shares & mutual funds: <strong>more than 12 months</strong></li>
+            <li>Equity shares & equity funds: <strong>more than 12 months</strong></li>
           </ul>
         </div>
       </div>
@@ -247,108 +507,104 @@
       <!-- 4. CAPITAL GAINS TAX RATES -->
       <h2>4. Capital Gains Tax Rates</h2>
       
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
+      <div class="grid-2">
         <!-- Short-term -->
         <div class="tax-card">
-          <h3 style="margin-top: 0; color: #b91c1c;"><i class="fas fa-bolt"></i> Short-Term Capital Gains (STCG)</h3>
+          <h3 style="margin-top: 0;"><i class="fas fa-bolt"></i> Short-Term Capital Gains (STCG)</h3>
           
-          <div style="background: #f1f5f9; border-radius: 12px; padding: 1.2rem; margin: 1rem 0;">
-            <p style="margin: 0 0 0.8rem 0;"><strong>With STT (Securities Transaction Tax):</strong></p>
-            <div style="background: #fee2e2; padding: 0.8rem; border-radius: 8px; text-align: center; font-size: 1.5rem; font-weight: 700; color: #b91c1c;">15%</div>
+          <div style="margin: 1.5rem 0;">
+            <p><strong>With STT (Listed equity):</strong></p>
+            <div class="rate-badge rate-short" style="font-size: 2rem; padding: 1rem;">15%</div>
             
-            <p style="margin: 1rem 0 0.8rem 0;"><strong>Without STT:</strong></p>
-            <div style="background: #f1f5f9; padding: 0.8rem; border-radius: 8px; text-align: center;">Taxed at applicable income tax slab rate</div>
+            <p style="margin-top: 1.5rem;"><strong>Other assets:</strong></p>
+            <div class="rate-badge" style="font-size: 1.2rem;">Income slab rate</div>
           </div>
         </div>
         
         <!-- Long-term -->
         <div class="tax-card">
-          <h3 style="margin-top: 0; color: #1e40af;"><i class="fas fa-tree"></i> Long-Term Capital Gains (LTCG)</h3>
+          <h3 style="margin-top: 0;"><i class="fas fa-tree"></i> Long-Term Capital Gains (LTCG)</h3>
           
-          <div style="background: #f1f5f9; border-radius: 12px; padding: 1.2rem; margin: 1rem 0;">
-            <p style="margin: 0 0 0.8rem 0;"><strong>Equity-oriented assets:</strong></p>
-            <div style="background: #dbeafe; padding: 0.8rem; border-radius: 8px; text-align: center;">
-              <span style="font-size: 1.5rem; font-weight: 700; color: #1e40af;">10%</span>
-              <span style="display: block; font-size: 0.9rem;">if gains exceed Rs. 1 lakh (no indexation)</span>
-            </div>
+          <div style="margin: 1.5rem 0;">
+            <p><strong>Equity (with STT):</strong></p>
+            <div class="rate-badge rate-long" style="font-size: 2rem; padding: 1rem;">10%</div>
+            <p><small>over ₹1 lakh/year, no indexation</small></p>
             
-            <p style="margin: 1rem 0 0.8rem 0;"><strong>Other assets:</strong></p>
-            <div style="background: #dbeafe; padding: 0.8rem; border-radius: 8px; text-align: center;">
-              <span style="font-size: 1.5rem; font-weight: 700; color: #1e40af;">20%</span>
-              <span style="display: block; font-size: 0.9rem;">with indexation benefit</span>
-            </div>
+            <p style="margin-top: 1.5rem;"><strong>Other assets:</strong></p>
+            <div class="rate-badge rate-long" style="font-size: 2rem; padding: 1rem;">20%</div>
+            <p><small>with indexation benefit</small></p>
           </div>
         </div>
       </div>
       
-      <!-- 5. INDEXATION -->
-      <h2>5. Indexation Benefit</h2>
-      
-      <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e6f4ea 100%); padding: 2rem; border-radius: 20px; margin: 2rem 0;">
+      <!-- 5. INDEXATION BENEFIT - Black background example -->
+      <div class="black-section">
+        <h2 style="margin-top: 0;">5. Indexation Benefit</h2>
+        
         <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-          <div style="background: #3b82f6; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
-            <i class="fas fa-percent"></i>
+          <div class="icon-box" style="background: white;">
+            <i class="fas fa-percent" style="color: black;"></i>
           </div>
-          <h3 style="margin: 0; color: #1e293b;">What is Indexation?</h3>
+          <h3 style="margin: 0;">What is Indexation?</h3>
         </div>
         
-        <p style="font-size: 1.1rem;">When calculating long-term capital gains, you can adjust the cost of acquisition and cost of improvement using <strong>indexation</strong>, which accounts for inflation. This reduces the taxable capital gain significantly.</p>
+        <p style="font-size: 1.1rem;">Indexation adjusts the purchase cost of an asset for inflation using the Cost Inflation Index (CII). This reduces taxable gains significantly for long-term assets.</p>
         
-        <div class="formula-box" style="background: white; margin-top: 1.5rem;">
-          <p style="margin: 0;"><strong>Indexed Cost of Acquisition</strong> = Cost of Acquisition × (CII of year of sale / CII of year of purchase)</p>
-          <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #475569;">CII = Cost Inflation Index (notified by CBDT each year)</p>
+        <div class="formula-box" style="background: white; color: black;">
+          <p style="margin: 0;"><strong>Indexed Cost of Acquisition</strong> = Original Cost × (CII of sale year / CII of purchase year)</p>
         </div>
+        
+        <p style="margin-top: 1rem;"><strong>Important:</strong> CII is notified by CBDT each year. Base year is 2001-02 (CII=100).</p>
       </div>
       
       <!-- 6. TAXATION ON MUTUAL FUNDS -->
       <h2>6. Taxation on Mutual Funds</h2>
       
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
-        <!-- Debt Funds -->
+      <div class="grid-2">
         <div class="tax-card">
-          <div style="background: #fef3c7; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #92400e; margin-bottom: 1rem;">
+          <div class="icon-box">
             <i class="fas fa-hand-holding-usd"></i>
           </div>
           <h3 style="margin-top: 0;">Debt Funds</h3>
-          
-          <div style="margin-top: 1rem;">
-            <p><span class="rate-badge rate-short">Short-term</span> Taxed at slab rate</p>
-            <p><span class="rate-badge rate-long">Long-term</span> 20% with indexation</p>
-          </div>
+          <ul>
+            <li><span class="rate-badge rate-short">STCG</span> Taxed at slab rate</li>
+            <li><span class="rate-badge rate-long">LTCG</span> 20% with indexation</li>
+            <li>Holding period: >36 months for LTCG</li>
+          </ul>
         </div>
         
-        <!-- Equity Funds -->
         <div class="tax-card">
-          <div style="background: #d1fae5; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #065f46; margin-bottom: 1rem;">
+          <div class="icon-box">
             <i class="fas fa-chart-pie"></i>
           </div>
           <h3 style="margin-top: 0;">Equity Funds</h3>
-          
-          <div style="margin-top: 1rem;">
-            <p><span class="rate-badge rate-short">Short-term</span> 15%</p>
-            <p><span class="rate-badge rate-equity">Long-term</span> No tax on gains up to Rs. 1 lakh (post-2018), 10% above that</p>
-          </div>
+          <ul>
+            <li><span class="rate-badge rate-short">STCG</span> 15%</li>
+            <li><span class="rate-badge rate-equity">LTCG</span> 10% over ₹1L/year</li>
+            <li>Holding period: >12 months for LTCG</li>
+          </ul>
         </div>
       </div>
       
       <!-- 7. TAX ON FIXED DEPOSITS -->
       <h2>7. Tax on Fixed Deposits (FDs)</h2>
       
-      <div class="tax-card" style="margin: 2rem 0;">
+      <div class="tax-card">
         <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-          <div style="background: #8b5cf6; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white;">
+          <div class="icon-box">
             <i class="fas fa-piggy-bank"></i>
           </div>
           <h3 style="margin: 0;">Fixed Deposit Interest Taxation</h3>
         </div>
         
-        <p>Interest earned on fixed deposits (FDs) is added to your total income and taxed according to your tax slab.</p>
+        <p>Interest earned on fixed deposits is added to your total income and taxed according to your income tax slab.</p>
         
-        <div style="background: #f1f5f9; padding: 1.2rem; border-radius: 12px; margin: 1.5rem 0;">
+        <div class="info-note" style="margin: 1.5rem 0;">
           <p style="font-size: 1.2rem; font-weight: 600; margin: 0 0 0.5rem 0;">TDS on FD Interest</p>
-          <p>If interest exceeds <strong>Rs. 10,000</strong> in a year:</p>
           <ul>
+            <li>If interest exceeds <strong>₹40,000</strong> (₹50,000 for senior citizens) in a year</li>
             <li>TDS deducted by bank at <strong>10%</strong> (20% if PAN not provided)</li>
+            <li><strong>CORRECTION:</strong> Threshold is ₹40,000 (not ₹10,000 as per Budget 2019)</li>
           </ul>
         </div>
       </div>
@@ -356,20 +612,41 @@
       <!-- 8. CALCULATING CAPITAL GAINS -->
       <h2>8. Calculating Capital Gains</h2>
       
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
-        <!-- STCG Formula -->
+      <div class="grid-2">
         <div>
-          <h3>Short-Term Capital Gains (STCG)</h3>
+          <h3>Short-Term Capital Gains</h3>
           <div class="formula-box">
-            <strong>STCG =</strong> Full Value Consideration − Expenditure − Cost of Acquisition − Cost of Improvement
+            <strong>STCG =</strong> Sale Price − (Purchase Cost + Improvement Cost + Expenses)
           </div>
         </div>
         
-        <!-- LTCG Formula -->
         <div>
-          <h3>Long-Term Capital Gains (LTCG)</h3>
+          <h3>Long-Term Capital Gains</h3>
           <div class="formula-box">
-            <strong>LTCG =</strong> Full Value Consideration − Expenditure − Indexed Cost of Acquisition − Indexed Cost of Improvement − Exemptions
+            <strong>LTCG =</strong> Sale Price − (Indexed Cost + Indexed Improvement + Expenses) − Exemptions u/s 54, 54EC, etc.
+          </div>
+        </div>
+      </div>
+      
+      <!-- IMPORTANT CORRECTIONS SECTION -->
+      <div class="black-section">
+        <h2 style="margin-top: 0;">Important Corrections & Updates</h2>
+        <div class="grid-2" style="color: white;">
+          <div>
+            <h3 style="color: white;">FD TDS Threshold</h3>
+            <p><strong>Corrected:</strong> TDS on FD interest applies if interest exceeds ₹40,000 (₹50,000 for senior citizens), not ₹10,000 (old rule).</p>
+          </div>
+          <div>
+            <h3 style="color: white;">Surcharge & Cess</h3>
+            <p>Tax rates exclude surcharge (if income > ₹50L) and 4% health & education cess. Always calculate net tax accordingly.</p>
+          </div>
+          <div>
+            <h3 style="color: white;">Listed vs Unlisted Shares</h3>
+            <p>Unlisted shares: LTCG >24 months, taxed at 20% with indexation. STCG taxed at slab rate.</p>
+          </div>
+          <div>
+            <h3 style="color: white;">Grandfathering Clause</h3>
+            <p>Equity LTCG up to 31 Jan 2018 is grandfathered - cost deemed as higher of actual cost or FMV as on 31 Jan 2018.</p>
           </div>
         </div>
       </div>
@@ -377,33 +654,29 @@
       <!-- 9. AVOIDING TDS ON FIXED DEPOSITS -->
       <h2>9. Avoiding TDS on Fixed Deposits</h2>
       
-      <div class="form-highlight" style="margin: 2rem 0;">
-        <h3 style="margin-top: 0; color: #6b21a8;"><i class="fas fa-file-signature"></i> Form 15G / 15H</h3>
-        
-        <p>If your total income is below the taxable threshold, you can avoid TDS on fixed deposits by submitting:</p>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
-          <div style="background: white; padding: 1.2rem; border-radius: 12px;">
-            <div style="background: #f3e8ff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;">
-              <i class="fas fa-user" style="color: #8b5cf6;"></i>
-            </div>
-            <h4 style="margin: 0;">Form 15G</h4>
-            <p style="margin: 0.3rem 0 0;">For non-senior citizens</p>
+      <div class="grid-2">
+        <div class="tax-card">
+          <h3>Form 15G</h3>
+          <div class="icon-box">
+            <i class="fas fa-user"></i>
           </div>
-          
-          <div style="background: white; padding: 1.2rem; border-radius: 12px;">
-            <div style="background: #f3e8ff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;">
-              <i class="fas fa-user-tie" style="color: #8b5cf6;"></i>
-            </div>
-            <h4 style="margin: 0;">Form 15H</h4>
-            <p style="margin: 0.3rem 0 0;">For senior citizens</p>
-          </div>
+          <p>For individuals below 60 years whose total income is below taxable limit.</p>
         </div>
         
-        <p style="margin-top: 1.5rem; background: white; padding: 1rem; border-radius: 8px;">Submit these forms at the start of the financial year to ensure the bank doesn't deduct TDS on your interest income.</p>
+        <div class="tax-card">
+          <h3>Form 15H</h3>
+          <div class="icon-box">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <p>For senior citizens (60+) with income below taxable limit.</p>
+        </div>
       </div>
       
-      <!-- COMPARISON TABLE -->
+      <div class="info-note">
+        <p><i class="fas fa-exclamation-triangle"></i> <strong>Submit these forms at the start of each financial year to prevent TDS deduction.</strong> Can be submitted online through net banking or physically at the bank branch.</p>
+      </div>
+      
+      <!-- QUICK REFERENCE TABLE -->
       <h2>Quick Reference: Capital Gains Tax Rates</h2>
       
       <table class="comparison-table">
@@ -416,14 +689,24 @@
         </thead>
         <tbody>
           <tr>
-            <td><strong>Equity Shares (STT paid)</strong></td>
+            <td><strong>Listed Equity Shares (STT paid)</strong></td>
             <td>&lt; 12 months</td>
             <td><span class="rate-badge rate-short">15%</span></td>
           </tr>
           <tr>
-            <td><strong>Equity Shares (STT paid)</strong></td>
+            <td><strong>Listed Equity Shares (STT paid)</strong></td>
             <td>&gt; 12 months</td>
-            <td><span class="rate-badge rate-equity">10% (over ₹1L)</span></td>
+            <td><span class="rate-badge rate-equity">10% over ₹1L</span></td>
+          </tr>
+          <tr>
+            <td><strong>Unlisted Shares</strong></td>
+            <td>&lt; 24 months</td>
+            <td><span class="rate-badge rate-short">Slab rate</span></td>
+          </tr>
+          <tr>
+            <td><strong>Unlisted Shares</strong></td>
+            <td>&gt; 24 months</td>
+            <td><span class="rate-badge rate-long">20% with indexation</span></td>
           </tr>
           <tr>
             <td><strong>Immovable Property</strong></td>
@@ -448,35 +731,50 @@
         </tbody>
       </table>
       
+      <!-- KEY TAX SAVING EXEMPTIONS -->
+      <h2>Key Exemptions for LTCG</h2>
+      
+      <div class="grid-3">
+        <div class="tax-card">
+          <h3>Section 54</h3>
+          <p>Exemption on sale of residential house if proceeds invested in another house</p>
+        </div>
+        <div class="tax-card">
+          <h3>Section 54EC</h3>
+          <p>Invest in specified bonds (like NHAI/REC) up to ₹50L within 6 months</p>
+        </div>
+        <div class="tax-card">
+          <h3>Section 54F</h3>
+          <p>Sale of any asset other than house, invest in house for exemption</p>
+        </div>
+      </div>
+      
       <!-- KEY TAKEAWAYS -->
       <div class="info-note" style="margin: 3rem 0;">
-        <h3 style="margin-top: 0; color: #856404;"><i class="fas fa-lightbulb"></i> Key Takeaways</h3>
+        <h3 style="margin-top: 0;"><i class="fas fa-lightbulb"></i> Key Takeaways</h3>
         <ul style="margin-bottom: 0;">
-          <li>Holding period determines whether gains are short-term or long-term</li>
-          <li>Indexation reduces tax burden on long-term gains by accounting for inflation</li>
-          <li>Equity-oriented assets enjoy lower tax rates (15% STCG, 10% LTCG over ₹1L)</li>
-          <li>Debt funds and other assets taxed at 20% with indexation for long-term</li>
-          <li>Submit Form 15G/15H to avoid TDS on FD interest if income below taxable limit</li>
+          <li>Holding period is crucial - determines STCG vs LTCG</li>
+          <li>Indexation reduces tax burden significantly for long-term assets</li>
+          <li>Equity-oriented assets have concessional tax rates</li>
+          <li>FD TDS threshold is now ₹40,000 (₹50,000 for senior citizens)</li>
+          <li>Submit Form 15G/15H to avoid TDS if income below taxable limit</li>
+          <li>Unlisted shares have different tax treatment than listed</li>
         </ul>
       </div>
       
       <!-- CONCLUSION -->
-      <h2>Conclusion</h2>
-      
-      <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 2rem; border-radius: 24px; margin: 3rem 0;">
-  <p style="font-size: 1.1rem; line-height: 1.7; color: white;">
-    This breakdown highlights the essential aspects of capital gains taxation and provides clarity on how different assets and holding periods influence tax liabilities. Understanding these concepts helps in:
-  </p>
-
-
-        <ul style="color: color: white;">
-          <li>Planning investment exits strategically</li>
-          <li>Optimizing tax outgo through indexation</li>
-          <li>Managing TDS on fixed deposit interest</li>
-          <li>Making informed decisions between debt and equity funds</li>
+      <div class="black-section">
+        <h2 style="margin-top: 0;">Conclusion</h2>
+        
+        <p style="font-size: 1.2rem;">Understanding capital gains taxation helps in:</p>
+        <ul style="color: white;">
+          <li>Strategic exit planning to minimize tax</li>
+          <li>Availing indexation benefits for long-term holdings</li>
+          <li>Choosing between debt and equity funds wisely</li>
+          <li>Planning reinvestments to claim exemptions</li>
         </ul>
         
-        <p style="margin-top: 1.5rem; font-style: italic; opacity: 0.9;">Always consult with a tax professional for advice specific to your financial situation.</p>
+        <p style="margin-top: 2rem; font-style: italic;">This guide reflects tax rules applicable for FY 2024-25. Tax laws change frequently - consult a qualified CA for personalized advice.</p>
       </div>
       
       <!-- Tags section -->
@@ -486,37 +784,16 @@
         <span class="post-tag"><i class="fas fa-tag"></i> income-tax</span>
         <span class="post-tag"><i class="fas fa-tag"></i> mutual-funds</span>
         <span class="post-tag"><i class="fas fa-tag"></i> fixed-deposits</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> stcg</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> ltcg</span>
         <span class="post-tag"><i class="fas fa-tag"></i> indexation</span>
         <span class="post-tag"><i class="fas fa-tag"></i> tds</span>
       </div>
     </div>
 
-    <!-- Share section -->
-    <div class="share-section">
-      <div class="share-title">
-        <i class="fas fa-share-alt"></i> Share this article
-      </div>
-      <div class="share-buttons">
-        <a href="#" class="share-btn facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="share-btn twitter"><i class="fab fa-twitter"></i></a>
-        <a href="#" class="share-btn linkedin"><i class="fab fa-linkedin-in"></i></a>
-        <a href="#" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
-      </div>
-    </div>
-
-    <!-- Back to blogs -->
-    <div style="text-align: center; margin: 3rem 0;">
-      <a href="../blogs.html" class="back-link" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
-        <i class="fas fa-arrow-left"></i> Back to all articles
-      </a>
-    </div>
+    <!-- Common Post Footer -->
+    <div id="post-footer-share-container"></div>
   </section>
 
   <footer id="site-footer"></footer>
-
- 
 
 </body>
 </html>
