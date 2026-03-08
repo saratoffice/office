@@ -893,51 +893,260 @@
     .home-page .hero-image { animation-delay: 0.2s; }
     .about-highlight .about-photo { animation-delay: 0.3s; }
     .about-highlight .about-text { animation-delay: 0.4s; }
-    /* Odometer custom styling */
+ /* ============================================
+   ENHANCED ODOMETER STYLING - More Attractive
+   ============================================ */
+
+/* Base stat item styling with enhanced pill shape */
+.home-page .stat-item {
+  background: linear-gradient(145deg, #ffffff, #f0f4ff);
+  padding: 20px 35px;
+  border-radius: 80px;
+  box-shadow: var(--shadow-light);
+  border: 3px solid transparent;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 140px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  animation: fadeInUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* Gradient border effect */
+.home-page .stat-item::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, var(--primary-green), var(--primary-blue), var(--accent-purple), var(--accent-orange));
+  border-radius: 80px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+/* Inner background with glossy effect */
+.home-page .stat-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, rgba(255,255,255,0.8), rgba(255,255,255,0.2));
+  border-radius: 80px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+/* Hover effect - enhanced */
+.home-page .stat-item:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 20px 30px rgba(124, 255, 0, 0.3), 0 0 20px rgba(0, 51, 204, 0.3);
+  border-color: transparent;
+}
+
+.home-page .stat-item:hover::before {
+  opacity: 1;
+}
+
+.home-page .stat-item:hover::after {
+  opacity: 0.3;
+}
+
+/* Stat number - enhanced gradient and glow */
+.home-page .stat-number {
+  font-size: 3.2rem !important;
+  font-weight: 900 !important;
+  line-height: 1.2;
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple), var(--primary-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: numberPulse 2s infinite ease-in-out;
+}
+
+/* Odometer specific styling */
 .home-page .stat-number.odometer {
-  font-size: 2.8rem !important;
-  font-weight: 800 !important;
+  font-size: 3.2rem !important;
+  font-weight: 900 !important;
   background: none !important;
   -webkit-text-fill-color: initial !important;
   color: inherit !important;
   line-height: 1.2;
   display: inline-block;
+  position: relative;
+  z-index: 2;
 }
 
 .home-page .stat-number.odometer .odometer-digit {
-  font-family: inherit !important;
+  font-family: 'Inter', 'Segoe UI', monospace !important;
+  background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple), var(--primary-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 900 !important;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  animation: digitGlow 2s infinite ease-in-out;
 }
 
 .home-page .stat-number.odometer .odometer-formatting-mark {
   display: none;
 }
 
-/* Ensure odometer inherits gradient if needed */
-.home-page .stat-item .stat-number {
-  background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+/* Stat label - enhanced */
+.home-page .stat-label {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+  position: relative;
+  z-index: 2;
+  margin-top: 5px;
+  background: linear-gradient(135deg, var(--text-dark), var(--primary-blue));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Animation for counter appearance */
-.home-page .stat-item {
-  animation: fadeInUp 0.5s ease-out forwards;
-  opacity: 0;
-}
-
+/* Individual stat item animation delays */
 .home-page .stat-item:nth-child(1) { animation-delay: 0.1s; }
 .home-page .stat-item:nth-child(2) { animation-delay: 0.2s; }
 .home-page .stat-item:nth-child(3) { animation-delay: 0.3s; }
 
+/* Keyframe animations */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes numberPulse {
+  0%, 100% {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1), 0 0 10px rgba(124, 255, 0, 0.3);
+  }
+  50% {
+    text-shadow: 4px 4px 8px rgba(0,0,0,0.2), 0 0 20px rgba(0, 51, 204, 0.5);
+  }
+}
+
+@keyframes digitGlow {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2);
+  }
+}
+
+/* Optional: Add a subtle shine effect on hover */
+.home-page .stat-item:hover .stat-number {
+  animation: none;
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+.home-page .stat-item:hover .stat-number .odometer-digit {
+  animation: none;
+  filter: brightness(1.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .home-page .stat-item {
+    padding: 15px 25px;
+    min-width: 120px;
+  }
+  
+  .home-page .stat-number,
+  .home-page .stat-number.odometer {
+    font-size: 2.5rem !important;
+  }
+  
+  .home-page .stat-label {
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-page .stat-item {
+    padding: 12px 20px;
+    min-width: 100px;
+  }
+  
+  .home-page .stat-number,
+  .home-page .stat-number.odometer {
+    font-size: 2rem !important;
+  }
+}
+    /* Additional mobile optimizations */
+@media (max-width: 480px) {
+  /* Make stat items more touch-friendly */
+  .home-page .hero-stats {
+    gap: 15px;  /* Reduce gap between items */
+  }
+  
+  .home-page .stat-item {
+    min-width: 90px;  /* Even more compact */
+    padding: 10px 15px;
+  }
+  
+  /* Reduce animations on mobile for better performance */
+  .home-page .stat-number {
+    animation: none;  /* Disable pulsing animation on mobile */
+  }
+  
+  .home-page .stat-number.odometer .odometer-digit {
+    animation: none;  /* Disable digit glow on mobile */
+  }
+  
+  /* Simplify hover effects for mobile (tap feedback) */
+  .home-page .stat-item:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  /* Remove gradient border on mobile (performance) */
+  .home-page .stat-item::before {
+    display: none;
+  }
+  
+  /* Keep solid border on mobile */
+  .home-page .stat-item:hover {
+    border: 2px solid var(--primary-green);
+  }
+}
+
+/* Extra small devices (320px and below) */
+@media (max-width: 360px) {
+  .home-page .stat-item {
+    min-width: 80px;
+    padding: 8px 12px;
+  }
+  
+  .home-page .stat-number,
+  .home-page .stat-number.odometer {
+    font-size: 1.6rem !important;
+  }
+  
+  .home-page .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
   }
 }
   </style>
