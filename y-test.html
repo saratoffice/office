@@ -893,7 +893,12 @@
     .home-page .hero-image { animation-delay: 0.2s; }
     .about-highlight .about-photo { animation-delay: 0.3s; }
     .about-highlight .about-text { animation-delay: 0.4s; }
-    /* Odometer custom styling */
+/* ============================================
+   COMPLETE ODOMETER STYLING WITH COLORED BORDERS
+   Fully Responsive for All Devices
+   ============================================ */
+
+/* Odometer custom styling */
 .home-page .stat-number.odometer {
   font-size: 2.8rem !important;
   font-weight: 800 !important;
@@ -912,24 +917,121 @@
   display: none;
 }
 
-/* Ensure odometer inherits gradient if needed */
-.home-page .stat-item .stat-number {
-  background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+/* Base stat item styling with colored borders from beginning */
+.home-page .stat-item {
+  border: 3px solid transparent;
+  background: linear-gradient(#fff, #fff) padding-box,
+              linear-gradient(135deg, #7CFF00, #0033cc, #8b5cf6) border-box;
+  box-shadow: 0 8px 20px rgba(0, 51, 204, 0.1);
+  transition: all 0.3s ease;
+  padding: 18px 32px;
+  border-radius: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 140px;
+  position: relative;
+  cursor: pointer;
+  animation: fadeInUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* Different gradient colors for each stat item */
+.home-page .stat-item:nth-child(1) {
+  background: linear-gradient(#fff, #fff) padding-box,
+              linear-gradient(135deg, #7CFF00, #00b09b) border-box;
+}
+
+.home-page .stat-item:nth-child(2) {
+  background: linear-gradient(#fff, #fff) padding-box,
+              linear-gradient(135deg, #0033cc, #8b5cf6) border-box;
+}
+
+.home-page .stat-item:nth-child(3) {
+  background: linear-gradient(#fff, #fff) padding-box,
+              linear-gradient(135deg, #8b5cf6, #FF6B35) border-box;
+}
+
+/* Number colors matching borders */
+.home-page .stat-number {
+  background: linear-gradient(135deg, #0033cc, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.2;
+  transition: all 0.3s ease;
+}
+
+.home-page .stat-item:nth-child(1) .stat-number {
+  background: linear-gradient(135deg, #7CFF00, #00b09b);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Animation for counter appearance */
-.home-page .stat-item {
-  animation: fadeInUp 0.5s ease-out forwards;
-  opacity: 0;
+.home-page .stat-item:nth-child(2) .stat-number {
+  background: linear-gradient(135deg, #0033cc, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+.home-page .stat-item:nth-child(3) .stat-number {
+  background: linear-gradient(135deg, #8b5cf6, #FF6B35);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Ensure odometer digits inherit the gradient */
+.home-page .stat-number.odometer .odometer-digit {
+  background: inherit !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Stat label styling */
+.home-page .stat-label {
+  font-size: 1rem;
+  color: #2d3748;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  position: relative;
+  z-index: 2;
+  margin-top: 6px;
+  background: linear-gradient(135deg, #1e293b, #0033cc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hover effects */
+.home-page .stat-item:hover {
+  transform: translateY(-5px);
+}
+
+.home-page .stat-item:nth-child(1):hover {
+  box-shadow: 0 15px 30px rgba(124, 255, 0, 0.3);
+}
+
+.home-page .stat-item:nth-child(2):hover {
+  box-shadow: 0 15px 30px rgba(0, 51, 204, 0.3);
+}
+
+.home-page .stat-item:nth-child(3):hover {
+  box-shadow: 0 15px 30px rgba(139, 92, 246, 0.3);
+}
+
+/* Animation delays */
 .home-page .stat-item:nth-child(1) { animation-delay: 0.1s; }
 .home-page .stat-item:nth-child(2) { animation-delay: 0.2s; }
 .home-page .stat-item:nth-child(3) { animation-delay: 0.3s; }
 
+/* Fade in animation */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -938,6 +1040,110 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ============================================
+   TABLET RESPONSIVE (768px and below)
+   ============================================ */
+@media (max-width: 768px) {
+  .home-page .stat-item {
+    padding: 14px 24px;
+    min-width: 120px;
+    border-radius: 50px;
+    border-width: 2.5px;
+  }
+  
+  .home-page .stat-number,
+  .home-page .stat-number.odometer {
+    font-size: 2.5rem !important;
+  }
+  
+  .home-page .stat-label {
+    font-size: 0.9rem;
+    letter-spacing: 1.2px;
+  }
+  
+  .home-page .hero-stats {
+    gap: 15px;
+  }
+}
+
+/* ============================================
+   MOBILE RESPONSIVE (480px and below)
+   ============================================ */
+@media (max-width: 480px) {
+  .home-page .stat-item {
+    padding: 10px 16px;
+    min-width: 90px;
+    border-radius: 40px;
+    border-width: 2px;
+  }
+  
+  .home-page .stat-number,
+  .home-page .stat-number.odometer {
+    font-size: 1.8rem !important;
+  }
+  
+  .home-page .stat-label {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+  
+  .home-page .hero-stats {
+    gap: 10px;
+  }
+}
+
+/* ============================================
+   EXTRA SMALL DEVICES (360px and below)
+   ============================================ */
+@media (max-width: 360px) {
+  .home-page .stat-item {
+    padding: 8px 12px;
+    min-width: 75px;
+    border-radius: 35px;
+    border-width: 1.5px;
+  }
+  
+  .home-page .stat-number,
+  .home-page .stat-number.odometer {
+    font-size: 1.5rem !important;
+  }
+  
+  .home-page .stat-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.8px;
+  }
+}
+
+/* ============================================
+   TOUCH DEVICE OPTIMIZATIONS
+   ============================================ */
+@media (hover: none) and (pointer: coarse) {
+  .home-page .stat-item:hover {
+    transform: none;
+  }
+  
+  .home-page .stat-item:active {
+    transform: scale(0.97);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY - REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .home-page .stat-item,
+  .home-page .stat-number {
+    animation: none;
+    transition: none;
+  }
+  
+  .home-page .stat-item:hover {
+    transform: none;
   }
 }
   </style>
