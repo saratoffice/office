@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Comprehensive platform for government documents, converters, and useful tools for citizens and professionals.">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Odometer CSS --->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/themes/odometer-theme-default.css" />
   <!-- Common CSS (menu, footer, global styles) -->
   <link rel="stylesheet" href="style.css">
   <!-- ✅ IMPORTANT: site components for header/footer etc. -->
@@ -891,6 +893,53 @@
     .home-page .hero-image { animation-delay: 0.2s; }
     .about-highlight .about-photo { animation-delay: 0.3s; }
     .about-highlight .about-text { animation-delay: 0.4s; }
+    /* Odometer custom styling */
+.home-page .stat-number.odometer {
+  font-size: 2.8rem !important;
+  font-weight: 800 !important;
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  color: inherit !important;
+  line-height: 1.2;
+  display: inline-block;
+}
+
+.home-page .stat-number.odometer .odometer-digit {
+  font-family: inherit !important;
+}
+
+.home-page .stat-number.odometer .odometer-formatting-mark {
+  display: none;
+}
+
+/* Ensure odometer inherits gradient if needed */
+.home-page .stat-item .stat-number {
+  background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animation for counter appearance */
+.home-page .stat-item {
+  animation: fadeInUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.home-page .stat-item:nth-child(1) { animation-delay: 0.1s; }
+.home-page .stat-item:nth-child(2) { animation-delay: 0.2s; }
+.home-page .stat-item:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
   </style>
 </head>
 <body class="home-page">
@@ -917,21 +966,21 @@
       <p>A comprehensive platform provides curated government documents, essential tools, and reliable information to simplify bureaucratic processes for everyone. The bridge the gap between government resources and public accessibility.</p>
       <p>From legal acts and regulations to practical utilities like Electric Bill Downloader and Fuel Density calculators etc, a one-stop solution for citizens, professionals, and researchers alike.</p>
       
-      <!-- NEW STATS DESIGN -->
-      <div class="hero-stats">
-        <div class="stat-item">
-          <span class="stat-number">10+</span>
-          <span class="stat-label">Tools</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">20+</span>
-          <span class="stat-label">Pages</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">50+</span>
-          <span class="stat-label">Posts</span>
-        </div>
-      </div>
+      <!-- NEW STATS DESIGN WITH ODOMETER ANIMATION -->
+<div class="hero-stats">
+  <div class="stat-item">
+    <span class="stat-number odometer" id="toolsCount">0</span>
+    <span class="stat-label">Tools</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number odometer" id="pagesCount">0</span>
+    <span class="stat-label">Pages</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number odometer" id="postsCount">0</span>
+    <span class="stat-label">Posts</span>
+  </div>
+</div>
 <div class="btn-right"> 
   <a href="/Posts/Journey%20of%20saratoffice.html" class="btn btn-primary">
     <span>Discover the Journey</span>
@@ -1179,6 +1228,104 @@ document.addEventListener('DOMContentLoaded', function() {
   const sections = document.querySelectorAll('section[id]');
   sections.forEach(section => { section.style.scrollMarginTop = '100px'; });
 });
+</script>
+  <!-- Odometer JavaScript Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/odometer.min.js"></script>
+
+<script>
+// Odometer counter animation
+(function() {
+  // Target numbers (update these with your actual counts)
+  const targetTools = 10;
+  const targetPages = 20;
+  const targetPosts = 50;
+  
+  // Get elements
+  const toolsCount = document.getElementById('toolsCount');
+  const pagesCount = document.getElementById('pagesCount');
+  const postsCount = document.getElementById('postsCount');
+  
+  // Function to check if element is in viewport
+  function isElementInViewport(el) {
+    const rect = el.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }
+  
+  // Flag to ensure counters run only once
+  let countersStarted = false;
+  
+  // Function to start counters
+  function startCounters() {
+    if (countersStarted) return;
+    
+    // Check if any stat item is in viewport
+    const statItems = document.querySelectorAll('.stat-item');
+    let inView = false;
+    
+    statItems.forEach(item => {
+      if (isElementInViewport(item)) {
+        inView = true;
+      }
+    });
+    
+    if (inView) {
+      countersStarted = true;
+      
+      // Animate counters with a slight delay between each
+      setTimeout(() => {
+        if (toolsCount && toolsCount.odometer) {
+          toolsCount.odometer.update(targetTools);
+        } else {
+          toolsCount.innerHTML = targetTools;
+        }
+      }, 200);
+      
+      setTimeout(() => {
+        if (pagesCount && pagesCount.odometer) {
+          pagesCount.odometer.update(targetPages);
+        } else {
+          pagesCount.innerHTML = targetPages;
+        }
+      }, 400);
+      
+      setTimeout(() => {
+        if (postsCount && postsCount.odometer) {
+          postsCount.odometer.update(targetPosts);
+        } else {
+          postsCount.innerHTML = targetPosts;
+        }
+      }, 600);
+    }
+  }
+  
+  // Listen for scroll events
+  window.addEventListener('scroll', function() {
+    startCounters();
+  });
+  
+  // Also check on page load
+  window.addEventListener('load', function() {
+    startCounters();
+    
+    // Force update after 1 second if not started
+    setTimeout(startCounters, 1000);
+  });
+  
+  // Handle visibility change (tab switching)
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden && !countersStarted) {
+      startCounters();
+    }
+  });
+  
+  // Manual fallback after 2 seconds
+  setTimeout(startCounters, 2000);
+})();
 </script>
 </body>
 </html>
