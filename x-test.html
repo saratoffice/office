@@ -1,209 +1,1095 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/themes/odometer-theme-default.min.css"/>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery · Office & Field Operations</title>
+    <!-- Common CSS (menu, footer, global styles) -->
+    <link rel="stylesheet" href="style.css">
+    <!-- ✅ IMPORTANT: site components for header/footer etc. -->
+    <script src="assets/Scripts/site-components.js" defer></script>
+    
+    <!-- Font Awesome 6 for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts for modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-      .about-container {
-  max-width: 900px;
-  margin: 0 auto;
-  font-family: "Roboto", sans-serif;
-}
+        /* ----- GALLERY MODULE (custom classes only) ----- */
+        .gallery-module {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: #111827;
+            background: #f8fafd;
+        }
 
-.about-container p {
-  line-height: 2;
-  padding: 0 20px;
-}
+        /* IMPROVED GALLERY HEADING - more modern and impactful */
+        .gallery-heading {
+            margin-bottom: 3rem;
+            position: relative;
+        }
 
-.about-container .profile-image {
-  text-align: center;
-  padding: 30px;
-}
+        .gallery-heading::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, rgba(37,99,235,0) 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-.about-container .profile-image img {
-  width: 200px;
-  border-radius: 50%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-  padding: 8px;
-}
+        .gallery-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(245,158,11,0.06) 0%, rgba(245,158,11,0) 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-.projects-container {
-  display: flex;
-  justify-content: center;
-  padding: 8px;
-  box-shadow: 0 4px 16px -6px rgba(0, 0, 0, 0.4);
-  max-width: 550px;
-  margin: 24px auto;
-  border-radius: 20px;
-}
+        .heading-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
 
-.projects-container .project {
-  height: 160px;
-  width: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  margin: 0 32px;
-}
+        .heading-top {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
 
-.projects-container .project-name {
-  font-size: 16px;
-}
+        .heading-title-group {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
 
-.projects-container .project-number {
-  font-size: 72px;
-  font-weight: bold;
-}
+        .heading-icon {
+            background: linear-gradient(145deg, #1e3c5c, #2b5b8b);
+            width: 70px;
+            height: 70px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            box-shadow: 0 15px 30px -10px rgba(30,60,92,0.4);
+            transform: rotate(3deg);
+            transition: transform 0.2s ease;
+        }
 
-.our-team-heading {
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 48px;
-  padding-top: 64px;
-}
+        .heading-icon:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
 
-.our-team {
-  display: flex;
-  padding: 30px;
-}
+        .heading-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2.5rem, 7vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin: 0 0 0.25rem;
+            background: linear-gradient(135deg, #1e293b, #1e3c5c, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-.our-team img {
-  width: 100%;
-}
+        .heading-text .subtitle {
+            font-size: 1.2rem;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
 
-.our-team .team-member {
-  margin: 0 4px;
-  position: relative;
-}
+        .subtitle-separator {
+            width: 6px;
+            height: 6px;
+            background: #94a3b8;
+            border-radius: 50%;
+        }
 
-.our-team .designation {
-  position: absolute;
-  bottom: 30px;
-  background: #fff;
-  padding: 12px 20px;
-  border-radius: 0 20px 20px 0;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-  font-size: 14px;
-}
+        .live-indicator {
+            background: #dcfce7;
+            color: #166534;
+            padding: 0.25rem 1rem;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
 
-.about-container .our-mission {
-  padding: 20px;
-  position: relative;
-  display: flex;
-  align-items: center;
-}
+        .live-indicator i {
+            font-size: 0.6rem;
+            color: #22c55e;
+        }
 
-.about-container .our-mission .quote-icon {
-  position: absolute;
-  opacity: 0.2;
-  height: 80px;
-}
+        .stats-pills {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
 
-.about-container .our-mission p {
-  margin-left: 100px;
-  font-size: 20px;
-  font-style: italic;
-}
+        .stat-pill {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px -5px rgba(0,0,0,0.05);
+        }
 
-@media (max-width: 700px) {
-  .our-team {
-    flex-direction: column;
-    align-items: center;
-  }
+        .stat-pill i {
+            color: #2563eb;
+        }
 
-  .our-team img {
-    height: 250px;
-    width: 300px;
-    object-fit: cover;
-  }
-}
+        .stat-pill:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+            transform: translateY(-2px);
+        }
+
+        .heading-bottom {
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.8);
+            border-radius: 60px;
+            padding: 0.75rem 1.5rem;
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: 0 10px 30px -15px rgba(0,0,0,0.1);
+            max-width: 100%;
+        }
+
+        .location-marker {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .location-marker i {
+            color: #ef4444;
+        }
+
+        .location-marker span {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 0.2rem 0.6rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .heading-tags {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .heading-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        .heading-tag i {
+            color: #2563eb;
+        }
+
+        /* filter bar */
+        .gallery-filterbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 2rem 0 2rem;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 80px;
+            box-shadow: 0 10px 30px -15px rgba(0,0,0,0.1);
+            border: 1px solid #edf2f7;
+        }
+
+        .filter-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        .filter-btn {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .filter-btn i {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active {
+            background: #1e3c5c;
+            border-color: #1e3c5c;
+            color: white;
+            box-shadow: 0 8px 16px -6px rgba(30,60,92,0.25);
+        }
+
+        .filter-btn.active i {
+            color: white;
+        }
+
+        .filter-btn:hover:not(.active) {
+            background: #f1f7fd;
+            border-color: #9bb5d4;
+        }
+
+        .view-options {
+            display: flex;
+            gap: 0.4rem;
+            background: #f8fafc;
+            padding: 0.3rem;
+            border-radius: 48px;
+            border: 1px solid #e6edf6;
+        }
+
+        .view-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-size: 1rem;
+        }
+
+        .view-btn.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* gallery grid - IMPROVED MASONRY HEIGHTS */
+        .gallery-grid {
+            display: grid;
+            gap: 1.8rem;
+            transition: all 0.3s ease;
+            margin-bottom: 3rem;
+        }
+
+        /* ENHANCED MASONRY - increased row height for better image display */
+        .gallery-grid.masonry-view {
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-auto-rows: 300px; /* INCREASED from 20px to 30px for taller images */
+        }
+
+        .gallery-grid.grid-view {
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        }
+
+        .gallery-grid.list-view {
+            grid-template-columns: 1fr;
+        }
+
+        /* media card - with better image heights */
+        .media-card {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px -12px rgba(0,30,60,0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255,255,255,0.6);
+            cursor: pointer;
+            break-inside: avoid;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .media-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 28px 45px -14px rgba(20,60,120,0.3);
+            border-color: rgba(37,99,235,0.3);
+        }
+
+        .card-media {
+            position: relative;
+            overflow: hidden;
+            background: #eef3f9;
+            flex-shrink: 0;
+        }
+
+        /* Masonry specific - different heights for variety */
+        .gallery-grid.masonry-view .card-media {
+            height: 100%; /* Fill the grid row span */
+        }
+
+        .gallery-grid.masonry-view .media-card:nth-child(3n+1) .card-media {
+            min-height: 220px; /* Taller for some cards */
+        }
+
+        .gallery-grid.masonry-view .media-card:nth-child(3n+2) .card-media {
+            min-height: 260px; /* Extra tall */
+        }
+
+        .gallery-grid.masonry-view .media-card:nth-child(3n+3) .card-media {
+            min-height: 200px; /* Medium */
+        }
+
+        .gallery-grid.grid-view .card-media {
+            aspect-ratio: 4/3;
+        }
+
+        .gallery-grid.list-view .card-media {
+            aspect-ratio: 4/3;
+            max-width: 220px;
+        }
+
+        .gallery-grid.list-view .media-card {
+            flex-direction: row;
+            max-height: 180px;
+        }
+
+        .card-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .media-card:hover .card-media img {
+            transform: scale(1.05);
+        }
+
+        /* Video thumbnail play button */
+        .video-play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .media-card:hover .video-play-overlay {
+            opacity: 1;
+        }
+        .video-play-overlay i {
+            background: rgba(255,255,255,0.9);
+            color: #1e3c5c;
+            border-radius: 60px;
+            padding: 1rem 1.5rem;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .media-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(4px);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 2;
+            border: 1px solid rgba(255,255,255,0.2);
+            letter-spacing: 0.3px;
+        }
+
+        .media-badge i {
+            font-size: 0.7rem;
+            color: #fcd34d;
+        }
+
+        .card-content {
+            padding: 1.4rem 1.4rem 1.4rem;
+            background: white;
+            flex: 1;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #0f2b40;
+            letter-spacing: -0.02em;
+        }
+
+        .card-title .date-tag {
+            background: #e3edf7;
+            padding: 0.2rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #1e4a76;
+        }
+
+        .card-location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #5f6b7a;
+            margin-bottom: 0.6rem;
+        }
+
+        .card-location i {
+            color: #3b82f6;
+            font-size: 0.8rem;
+        }
+
+        .card-desc {
+            color: #36454F;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background: #f0f4fa;
+            padding: 0.25rem 1rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #365277;
+            transition: background 0.1s;
+        }
+
+        .media-card:hover .tag {
+            background: #e6edf8;
+        }
+
+        /* bottom section */
+        .gallery-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #dee8f2;
+        }
+
+        .stats-group {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .stat i {
+            color: #2563eb;
+            background: #e5eefc;
+            padding: 0.5rem;
+            border-radius: 50%;
+            font-size: 0.9rem;
+        }
+
+        .load-btn {
+            background: linear-gradient(135deg, #1e3c5c, #2563eb);
+            border: none;
+            color: white;
+            padding: 0.9rem 2.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px -8px #1e3c5c;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .load-btn:hover {
+            background: linear-gradient(135deg, #2563eb, #1e3c5c);
+            transform: translateY(-2px);
+            box-shadow: 0 18px 25px -10px #1e3c5c;
+        }
+
+        @media (max-width: 640px) {
+            .gallery-filterbar {
+                border-radius: 30px;
+                padding: 1rem;
+            }
+            .gallery-grid.list-view .media-card {
+                flex-direction: column;
+                max-height: none;
+            }
+            .gallery-grid.list-view .card-media {
+                max-width: 100%;
+            }
+            .stats-group {
+                gap: 1rem;
+            }
+            .heading-bottom {
+                border-radius: 30px;
+                padding: 1rem;
+            }
+            .heading-title-group {
+                gap: 1rem;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div class="about-container">
-      <div class="profile-image">
-        <img src="images/team-member4.png" alt="" />
-      </div>
-
-      <div class="description">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque a
-          quam nulla ipsa natus quisquam!
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum ex
-          odit tenetur alias expedita impedit in veritatis mollitia ipsam quae
-          et quia, deleniti facere praesentium sunt assumenda earum saepe
-          aperiam ullam sit. Tempora animi maxime a velit soluta laboriosam quo!
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, tempora!
-        </p>
-      </div>
-
-      <div class="projects-container">
-        <div class="project">
-          <h3 class="project-name">Websites Designed</h3>
-          <div class="project-number odometer websites-designed">0</div>
+</head>
+<body>
+  <div id="site-header"></div>
+    <!-- your existing header here -->
+    
+    <div class="gallery-module">
+        <!-- IMPROVED GALLERY HEADING - more modern and impactful -->
+        <div class="gallery-heading">
+            <div class="heading-content">
+                <div class="heading-top">
+                    <div class="heading-title-group">
+                        <div class="heading-icon">
+                            <i class="fas fa-camera-retro"></i>
+                        </div>
+                        <div class="heading-text">
+                            <h1>Visual Archive</h1>
+                            <div class="subtitle">
+                                <span>Field documentation</span>
+                                <span class="subtitle-separator"></span>
+                                <span>2024–2026</span>
+                                <span class="live-indicator"><i class="fas fa-circle"></i> LIVE</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stats-pills">
+                        <div class="stat-pill"><i class="fas fa-camera"></i> 342 photos</div>
+                        <div class="stat-pill"><i class="fas fa-video"></i> 28 videos</div>
+                        <div class="stat-pill"><i class="fas fa-location-dot"></i> 12 locations</div>
+                    </div>
+                </div>
+                <div class="heading-bottom">
+                    <div class="location-marker">
+                        <i class="fas fa-map-pin"></i>
+                        Active deployments
+                        <span>HQ + 4 depots</span>
+                    </div>
+                    <div class="heading-tags">
+                        <span class="heading-tag"><i class="fas fa-hard-hat"></i> Inspections</span>
+                        <span class="heading-tag"><i class="fas fa-users"></i> Meetings</span>
+                        <span class="heading-tag"><i class="fas fa-chalkboard"></i> Training</span>
+                        <span class="heading-tag"><i class="fas fa-oil-well"></i> Field ops</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="project">
-          <h3 class="project-name">Apps Developed</h3>
-          <div class="project-number odometer apps-developed">0</div>
-        </div>
-         <div class="project">
-          <h3 class="project-name">Websites Designed</h3>
-          <div class="project-number odometer websites-designed">0</div>
-        </div>
-      </div>
-
-      <h2 class="our-team-heading">Our Team</h2>
-
-      <div class="our-team">
-        <div class="team-member">
-          <img src="images/team-member1.png" alt="" />
-          <div class="designation">
-            <strong>Alice J.,</strong> (Project Manager)
-          </div>
-        </div>
-
-        <div class="team-member">
-          <img src="images/team-member2.png" alt="" />
-          <div class="designation">
-            <strong>Dave B.,</strong> (Lead Designer)
-          </div>
+        <!-- filter controls -->
+        <div class="gallery-filterbar">
+            <div class="filter-tabs">
+                <button class="filter-btn active" data-filter="all"><i class="fas fa-th-large"></i> All media</button>
+                <button class="filter-btn" data-filter="meeting"><i class="fas fa-users"></i> Meetings</button>
+                <button class="filter-btn" data-filter="inspection"><i class="fas fa-clipboard-check"></i> Inspections</button>
+                <button class="filter-btn" data-filter="office"><i class="fas fa-building"></i> Office</button>
+                <button class="filter-btn" data-filter="field"><i class="fas fa-hard-hat"></i> Field ops</button>
+                <button class="filter-btn" data-filter="training"><i class="fas fa-chalkboard-user"></i> Training</button>
+                <!-- New VIDEO category filter -->
+                <button class="filter-btn" data-filter="video"><i class="fas fa-video"></i> Videos</button>
+            </div>
+            <div class="view-options">
+                <button class="view-btn active" data-view="masonry"><i class="fas fa-th"></i></button>
+                <button class="view-btn" data-view="grid"><i class="fas fa-th-large"></i></button>
+                <button class="view-btn" data-view="list"><i class="fas fa-list"></i></button>
+            </div>
         </div>
 
-        <div class="team-member">
-          <img src="images/team-member3.png" alt="" />
-          <div class="designation">
-            <strong>Jeniffer A.,</strong> (Lead Programmer)
-          </div>
-        </div>
-      </div>
+        <!-- gallery grid - with improved masonry heights -->
+        <div class="gallery-grid masonry-view" id="galleryGrid">
+            
+            <!-- MEETINGS CATEGORY (5 items) - with some videos -->
+            <div class="media-card" data-category="meeting video">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/7688460/pexels-photo-7688460.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Monthly review meeting">
+                    <div class="video-play-overlay"><i class="fas fa-play"></i></div>
+                    <div class="media-badge"><i class="fas fa-video"></i> VIDEO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Monthly Ops Review <span class="date-tag">Mar 2026</span></div>
+                    <div class="card-location"><i class="fas fa-building"></i> Head Office · Conference Room A</div>
+                    <div class="card-desc">Quarterly performance review with regional managers. Safety metrics and KPI discussion. (Highlights reel)</div>
+                    <div class="card-tags"><span class="tag">Meeting</span><span class="tag">Management</span><span class="tag">Q1</span><span class="tag">Video</span></div>
+                </div>
+            </div>
 
-      <div class="our-mission">
-        <img class="quote-icon" src="images/quote-icon.png" alt="" />
-        <p>Our mission is to provide the best services to our clients.</p>
-      </div>
+            <div class="media-card" data-category="meeting">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Safety committee meeting">
+                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Safety Committee <span class="date-tag">Feb 2026</span></div>
+                    <div class="card-location"><i class="fas fa-building"></i> Training Center · Hall B</div>
+                    <div class="card-desc">Monthly safety meeting - reviewing incident reports and preventive measures.</div>
+                    <div class="card-tags"><span class="tag">Meeting</span><span class="tag">Safety</span><span class="tag">Committee</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="meeting video">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/7691740/pexels-photo-7691740.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Client consultation">
+                    <div class="video-play-overlay"><i class="fas fa-play"></i></div>
+                    <div class="media-badge"><i class="fas fa-video"></i> VIDEO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Client Meeting · HSD License <span class="date-tag">Jan 2026</span></div>
+                    <div class="card-location"><i class="fas fa-building"></i> Client Office · Andheri East</div>
+                    <div class="card-desc">Consultation on new HSD license requirements and documentation (recorded session).</div>
+                    <div class="card-tags"><span class="tag">Meeting</span><span class="tag">Client</span><span class="tag">License</span><span class="tag">Video</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="meeting">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/7529032/pexels-photo-7529032.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Town hall">
+                    <div class="media-badge"><i class="fas fa-video"></i> VIDEO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">All-Hands Town Hall <span class="date-tag">Dec 2025</span></div>
+                    <div class="card-location"><i class="fas fa-building"></i> Auditorium · HO</div>
+                    <div class="card-desc">Year-end address by CEO and annual awards ceremony (full recording).</div>
+                    <div class="card-tags"><span class="tag">Meeting</span><span class="tag">Townhall</span><span class="tag">Awards</span><span class="tag">Video</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="meeting">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Project kickoff">
+                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Pipeline Project Kickoff <span class="date-tag">Nov 2025</span></div>
+                    <div class="card-location"><i class="fas fa-map-pin"></i> Site Office · Vadodara</div>
+                    <div class="card-desc">Initial meeting for new cross-country pipeline project.</div>
+                    <div class="card-tags"><span class="tag">Meeting</span><span class="tag">Project</span><span class="tag">Pipeline</span></div>
+                </div>
+            </div>
+
+            <!-- INSPECTIONS CATEGORY (6 items) - added videos -->
+            <div class="media-card" data-category="inspection video">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/236380/pexels-photo-236380.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Depot inspection">
+                    <div class="video-play-overlay"><i class="fas fa-play"></i></div>
+                    <div class="media-badge"><i class="fas fa-video"></i> VIDEO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">HSD Depot Inspection <span class="date-tag">Mar 2026</span></div>
+                    <div class="card-location"><i class="fas fa-map-pin"></i> Whitefield · Bangalore</div>
+                    <div class="card-desc">Routine inspection of storage tanks and dispensing units (drone footage).</div>
+                    <div class="card-tags"><span class="tag">Inspection</span><span class="tag">Depot</span><span class="tag">HSD</span><span class="tag">Video</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="inspection">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/257775/pexels-photo-257775.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Pipeline inspection">
+                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Pipeline ROW Inspection <span class="date-tag">Feb 2026</span></div>
+                    <div class="card-location"><i class="fas fa-map-pin"></i> Rural · Panipat</div>
+                    <div class="card-desc">Right-of-way inspection and cathodic protection testing.</div>
+                    <div class="card-tags"><span class="tag">Inspection</span><span class="tag">Pipeline</span><span class="tag">ROW</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="inspection video">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/6963944/pexels-photo-6963944.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Safety audit">
+                    <div class="video-play-overlay"><i class="fas fa-play"></i></div>
+                    <div class="media-badge"><i class="fas fa-video"></i> VIDEO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Safety Audit <span class="date-tag">Jan 2026</span></div>
+                    <div class="card-location"><i class="fas fa-building"></i> Terminal · Chennai</div>
+                    <div class="card-desc">Annual safety audit with external auditors (interview clips).</div>
+                    <div class="card-tags"><span class="tag">Inspection</span><span class="tag">Safety</span><span class="tag">Audit</span><span class="tag">Video</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="inspection">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/5980766/pexels-photo-5980766.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Equipment calibration">
+                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Flow Meter Calibration <span class="date-tag">Dec 2025</span></div>
+                    <div class="card-location"><i class="fas fa-building"></i> Metrology Lab · Mumbai</div>
+                    <div class="card-desc">Annual calibration of custody transfer meters.</div>
+                    <div class="card-tags"><span class="tag">Inspection</span><span class="tag">Equipment</span><span class="tag">Calibration</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="inspection">
+                <div class="card-media">
+                    <img src="https://cdn.pixabay.com/photo/2013/10/14/10/37/froet-gas-195389_1280.jpg?auto=compress&cs=tinysrgb&w=600" alt="Fire safety check">
+                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Fire System Inspection <span class="date-tag">Nov 2025</span></div>
+                    <div class="card-location"><i class="fas fa-map-pin"></i> LPG Plant · Vizag</div>
+                    <div class="card-desc">Checking fire suppression systems and hydrants.</div>
+                    <div class="card-tags"><span class="tag">Inspection</span><span class="tag">Fire Safety</span><span class="tag">LPG</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="inspection">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/1486785/pexels-photo-1486785.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Environmental inspection">
+                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Environmental Compliance <span class="date-tag">Oct 2025</span></div>
+                    <div class="card-location"><i class="fas fa-map-pin"></i> Refinery · Mathura</div>
+                    <div class="card-desc">Effluent treatment plant inspection.</div>
+                    <div class="card-tags"><span class="tag">Inspection</span><span class="tag">Environment</span><span class="tag">ETP</span></div>
+                </div>
+            </div>
+
+            <!-- OFFICE CATEGORY (4 items) + video -->
+            <div class="media-card" data-category="office">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/380768/pexels-photo-380768.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Office workspace">
+                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Admin Office <span class="date-tag">2026</span></div>
+                    <div class="card-location"><i class="fas fa-building"></i> Head Office · Delhi</div>
+                    <div class="card-desc">Documentation and licensing department.</div>
+                    <div class="card-tags"><span class="tag">Office</span><span class="tag">Admin</span><span class="tag">Licensing</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="office video">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/325229/pexels-photo-325229.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Control room">
+                    <div class="video-play-overlay"><i class="fas fa-play"></i></div>
+                    <div class="media-badge"><i class="fas fa-video"></i> VIDEO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Pipeline Control Room <span class="date-tag">2026</span></div>
+                    <div class="card-location"><i class="fas fa-building"></i> Operations Center</div>
+                    <div class="card-desc">24/7 monitoring of pipeline network (time-lapse).</div>
+                    <div class="card-tags"><span class="tag">Office</span><span class="tag">Control Room</span><span class="tag">Ops</span><span class="tag">Video</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="office">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/2566581/pexels-photo-2566581.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Regional office">
+                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Regional Office <span class="date-tag">2025</span></div>
+                    <div class="card-location"><i class="fas fa-building"></i> Kolkata · Salt Lake</div>
+                    <div class="card-desc">Eastern region headquarters.</div>
+                    <div class="card-tags"><span class="tag">Office</span><span class="tag">Regional</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="office">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/1937687/pexels-photo-1937687.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Reception">
+                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Corporate Reception <span class="date-tag">2025</span></div>
+                    <div class="card-location"><i class="fas fa-building"></i> Mumbai HO</div>
+                    <div class="card-desc">Main reception and visitor area.</div>
+                    <div class="card-tags"><span class="tag">Office</span><span class="tag">Reception</span></div>
+                </div>
+            </div>
+
+            <!-- FIELD OPS CATEGORY (5 items) + video -->
+            <div class="media-card" data-category="field">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/2563197/pexels-photo-2563197.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Tanker loading">
+                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Tanker Loading Bay <span class="date-tag">Mar 2026</span></div>
+                    <div class="card-location"><i class="fas fa-map-pin"></i> Depot · Pune</div>
+                    <div class="card-desc">Bottom loading operation for HSD tankers.</div>
+                    <div class="card-tags"><span class="tag">Field</span><span class="tag">Tanker</span><span class="tag">Loading</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="field video">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/7529032/pexels-photo-7529032.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Site survey">
+                    <div class="video-play-overlay"><i class="fas fa-play"></i></div>
+                    <div class="media-badge"><i class="fas fa-video"></i> VIDEO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Site Survey <span class="date-tag">Feb 2026</span></div>
+                    <div class="card-location"><i class="fas fa-map-pin"></i> New Location · Nagpur</div>
+                    <div class="card-desc">Topographical survey for new depot (drone survey).</div>
+                    <div class="card-tags"><span class="tag">Field</span><span class="tag">Survey</span><span class="tag">Site</span><span class="tag">Video</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="field">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/236598/pexels-photo-236598.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Pipeline welding">
+                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Pipeline Welding <span class="date-tag">Jan 2026</span></div>
+                    <div class="card-location"><i class="fas fa-map-pin"></i> Right-of-Way · Gujarat</div>
+                    <div class="card-desc">Welding inspection during pipeline construction.</div>
+                    <div class="card-tags"><span class="tag">Field</span><span class="tag">Pipeline</span><span class="tag">Welding</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="field">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/257775/pexels-photo-257775.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Wellhead">
+                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Wellhead Operations <span class="date-tag">Dec 2025</span></div>
+                    <div class="card-location"><i class="fas fa-map-pin"></i> Oil Field · Assam</div>
+                    <div class="card-desc">Routine wellhead maintenance.</div>
+                    <div class="card-tags"><span class="tag">Field</span><span class="tag">Wellhead</span><span class="tag">Production</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="field video">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/8111880/pexels-photo-8111880.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Emergency response">
+                    <div class="video-play-overlay"><i class="fas fa-play"></i></div>
+                    <div class="media-badge"><i class="fas fa-video"></i> VIDEO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Mock Drill <span class="date-tag">Nov 2025</span></div>
+                    <div class="card-location"><i class="fas fa-map-pin"></i> Terminal · Kochi</div>
+                    <div class="card-desc">Emergency response team exercise (full exercise recording).</div>
+                    <div class="card-tags"><span class="tag">Field</span><span class="tag">Drill</span><span class="tag">ERT</span><span class="tag">Video</span></div>
+                </div>
+            </div>
+
+            <!-- TRAINING CATEGORY (4 items) + video -->
+            <div class="media-card" data-category="training video">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/7529040/pexels-photo-7529040.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Fire Fighting Training">
+                    <div class="video-play-overlay"><i class="fas fa-play"></i></div>
+                    <div class="media-badge"><i class="fas fa-video"></i> VIDEO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Fire Fighting Training <span class="date-tag">Feb 2026</span></div>
+                    <div class="card-location"><i class="fas fa-building"></i> Training Academy</div>
+                    <div class="card-desc">Hands-on fire extinguisher training (instructional video).</div>
+                    <div class="card-tags"><span class="tag">Training</span><span class="tag">Fire Safety</span><span class="tag">Hands-on</span><span class="tag">Video</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="training">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/7529036/pexels-photo-7529036.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Classroom training">
+                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Petroleum Rules Workshop <span class="date-tag">Jan 2026</span></div>
+                    <div class="card-location"><i class="fas fa-building"></i> Training Hall · Delhi</div>
+                    <div class="card-desc">Session on Petroleum Rules 2002 amendments.</div>
+                    <div class="card-tags"><span class="tag">Training</span><span class="tag">Classroom</span><span class="tag">Legal</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="training video">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/813011/pexels-photo-813011.jpeg?auto=compress&cs=tinysrgb&w=600" alt="PPE training">
+                    <div class="video-play-overlay"><i class="fas fa-play"></i></div>
+                    <div class="media-badge"><i class="fas fa-video"></i> VIDEO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">PPE Demonstration <span class="date-tag">Dec 2025</span></div>
+                    <div class="card-location"><i class="fas fa-building"></i> Site · Haldia</div>
+                    <div class="card-desc">Proper use of personal protective equipment (training video).</div>
+                    <div class="card-tags"><span class="tag">Training</span><span class="tag">PPE</span><span class="tag">Safety</span><span class="tag">Video</span></div>
+                </div>
+            </div>
+
+            <div class="media-card" data-category="training">
+                <div class="card-media">
+                    <img src="https://images.pexels.com/photos/7529020/pexels-photo-7529020.jpeg?auto=compress&cs=tinysrgb&w=600" alt="New employee orientation">
+                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">New Hire Orientation <span class="date-tag">Nov 2025</span></div>
+                    <div class="card-location"><i class="fas fa-building"></i> HR Training Room</div>
+                    <div class="card-desc">Induction program for new engineers.</div>
+                    <div class="card-tags"><span class="tag">Training</span><span class="tag">Induction</span><span class="tag">HR</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- gallery footer with stats and load more -->
+        <div class="gallery-footer">
+            <div class="stats-group">
+                <div class="stat"><i class="fas fa-users"></i> 5 Meetings</div>
+                <div class="stat"><i class="fas fa-clipboard-check"></i> 6 Inspections</div>
+                <div class="stat"><i class="fas fa-building"></i> 4 Office</div>
+                <div class="stat"><i class="fas fa-hard-hat"></i> 5 Field Ops</div>
+                <div class="stat"><i class="fas fa-chalkboard"></i> 4 Training</div>
+                <div class="stat"><i class="fas fa-video"></i> 9 Videos</div>
+            </div>
+            <div class="load-btn" id="loadMoreBtn">
+                <i class="fas fa-plus"></i> Load more from archive
+            </div>
+        </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/odometer.min.js"></script>
+    <!-- your existing footer here -->
 
     <script>
-      const websitesDesigned = document.querySelector(".websites-designed");
-      const appsdeveloped = document.querySelector(".apps-developed");
+        (function() {
+            // Filter functionality
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const viewBtns = document.querySelectorAll('.view-btn');
+            const gallery = document.getElementById('galleryGrid');
+            const cards = document.querySelectorAll('.media-card');
+            const loadMore = document.getElementById('loadMoreBtn');
 
-      setTimeout(() => {
-        websitesDesigned.innerHTML = "43";
-        appsdeveloped.innerHTML = "15";
-      }, 400);
+            // Filtering
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.dataset.filter;
+                    
+                    cards.forEach(card => {
+                        // dataset.category can be like "meeting video" or "inspection"
+                        const catList = card.dataset.category.split(' ');
+                        if (filter === 'all' || catList.includes(filter)) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    // Update visible count (optional)
+                    const visibleCount = Array.from(cards).filter(c => 
+                        filter === 'all' || c.dataset.category.split(' ').includes(filter)
+                    ).length;
+                });
+            });
+
+            // View toggle
+            viewBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    viewBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const view = this.dataset.view;
+                    gallery.classList.remove('masonry-view', 'grid-view', 'list-view');
+                    gallery.classList.add(`${view}-view`);
+                });
+            });
+
+            // Load more simulation
+            if(loadMore) {
+                loadMore.addEventListener('click', function() {
+                    alert('📸 Loading additional images and videos from Pexels archive... This would fetch 12 more items.');
+                });
+            }
+
+            // Optional: video click simulation (open player)
+            document.querySelectorAll('.media-card[data-category*="video"]').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (!e.target.closest('.load-btn')) {
+                        alert('🎬 Video player would open: ' + card.querySelector('.card-title').innerText);
+                    }
+                });
+            });
+        })();
     </script>
-  </body>
+   <!-- FOOTER -->
+<div id="site-footer"></div>
+  <!-- Go to Top -->
+  <script src="/assets/Scripts/gototop.js"></script>
+</body>
 </html>
