@@ -326,7 +326,7 @@
         /* ENHANCED MASONRY - increased row height for better image display */
         .gallery-grid.masonry-view {
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            grid-auto-rows: 300px; /* INCREASED from 20px to 30px for taller images */
+            grid-auto-rows: 300px;
         }
 
         .gallery-grid.grid-view {
@@ -587,48 +587,82 @@
             box-shadow: 0 18px 25px -10px #1e3c5c;
         }
 
-        /* Lightbox / modal for YouTube */
+        /* VIDEO LIGHTBOX / MODAL */
         .video-modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(8px);
             z-index: 9999;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(8px);
+            padding: 2rem;
         }
         .video-modal.active {
             display: flex;
         }
         .modal-content {
-            position: relative;
-            width: 90%;
-            max-width: 960px;
-            aspect-ratio: 16/9;
-            background: #000;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-        }
-        .modal-content iframe {
+            max-width: 1000px;
             width: 100%;
-            height: 100%;
-            border: none;
+            background: #0b0f16;
+            border-radius: 36px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+            border: 1px solid #2d3748;
+            position: relative;
         }
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 30px;
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.8rem;
+            background: #111827;
             color: white;
-            font-size: 3rem;
+            border-bottom: 1px solid #2a374a;
+        }
+        .modal-header h3 {
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: #cbd5e0;
+            font-size: 1.8rem;
             cursor: pointer;
-            z-index: 10000;
-            text-shadow: 0 2px 10px black;
+            transition: 0.2s;
             line-height: 1;
         }
-        .close-modal:hover {
-            color: #f00;
+        .modal-close:hover {
+            color: white;
+        }
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            background: black;
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .video-wrapper video {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            outline: none;
+        }
+        .modal-footer {
+            padding: 0.8rem 1.8rem;
+            background: #111827;
+            color: #b3c2d4;
+            font-size: 0.9rem;
         }
 
         @media (max-width: 640px) {
@@ -658,10 +692,9 @@
 </head>
 <body>
   <div id="site-header"></div>
-    <!-- your existing header here -->
     
     <div class="gallery-module">
-        <!-- IMPROVED GALLERY HEADING - more modern and impactful -->
+        <!-- IMPROVED GALLERY HEADING -->
         <div class="gallery-heading">
             <div class="heading-content">
                 <div class="heading-top">
@@ -682,7 +715,6 @@
                     <div class="stats-pills">
                         <div class="stat-pill"><i class="fas fa-camera"></i> 342 photos</div>
                         <div class="stat-pill"><i class="fas fa-video"></i> 28 videos</div>
-                        <div class="stat-pill"><i class="fab fa-youtube"></i> 6 YouTube</div>
                         <div class="stat-pill"><i class="fas fa-location-dot"></i> 12 locations</div>
                     </div>
                 </div>
@@ -711,10 +743,7 @@
                 <button class="filter-btn" data-filter="office"><i class="fas fa-building"></i> Office</button>
                 <button class="filter-btn" data-filter="field"><i class="fas fa-hard-hat"></i> Field ops</button>
                 <button class="filter-btn" data-filter="training"><i class="fas fa-chalkboard-user"></i> Training</button>
-                <!-- New VIDEO category filter (includes both hosted and YouTube) -->
                 <button class="filter-btn" data-filter="video"><i class="fas fa-video"></i> Videos</button>
-                <!-- New YOUTUBE specific filter -->
-                <button class="filter-btn" data-filter="youtube"><i class="fab fa-youtube"></i> YouTube</button>
             </div>
             <div class="view-options">
                 <button class="view-btn active" data-view="masonry"><i class="fas fa-th"></i></button>
@@ -723,202 +752,48 @@
             </div>
         </div>
 
-        <!-- gallery grid - with improved masonry heights -->
+        <!-- gallery grid -->
         <div class="gallery-grid masonry-view" id="galleryGrid">
-            
-            <!-- MEETINGS CATEGORY (with YouTube examples) -->
-            <div class="media-card" data-category="meeting video youtube" data-video="dQw4w9WgXcQ">
-                <div class="card-media">
-                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Monthly review meeting">
-                    <div class="video-play-overlay"><i class="fab fa-youtube"></i></div>
-                    <div class="media-badge"><i class="fab fa-youtube"></i> YOUTUBE</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Monthly Ops Review <span class="date-tag">Mar 2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Head Office · Conference Room A</div>
-                    <div class="card-desc">Quarterly performance review with regional managers. (YouTube link)</div>
-                    <div class="card-tags"><span class="tag">Meeting</span><span class="tag">Management</span><span class="tag">Q1</span><span class="tag">YouTube</span></div>
-                </div>
+            <!-- MEETINGS + VIDEOS (some with youtube identifiers) -->
+            <div class="media-card" data-category="meeting video" data-video-type="youtube" data-video-id="dQw4w9WgXcQ" data-video-title="Monthly Ops Review">
+                <div class="card-media"><img src="https://images.pexels.com/photos/7688460/pexels-photo-7688460.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Monthly review meeting"><div class="video-play-overlay"><i class="fas fa-play"></i></div><div class="media-badge"><i class="fas fa-video"></i> VIDEO</div></div>
+                <div class="card-content"><div class="card-title">Monthly Ops Review <span class="date-tag">Mar 2026</span></div><div class="card-location"><i class="fas fa-building"></i> Head Office · Conference Room A</div><div class="card-desc">Quarterly performance review with regional managers. (YouTube excerpt)</div><div class="card-tags"><span class="tag">Meeting</span><span class="tag">Video</span></div></div>
             </div>
-
-            <div class="media-card" data-category="meeting video youtube" data-video="9bZkp7q19f0">
-                <div class="card-media">
-                    <img src="https://img.youtube.com/vi/9bZkp7q19f0/hqdefault.jpg" alt="Safety committee meeting">
-                    <div class="video-play-overlay"><i class="fab fa-youtube"></i></div>
-                    <div class="media-badge"><i class="fab fa-youtube"></i> YOUTUBE</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Safety Committee <span class="date-tag">Feb 2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Training Center · Hall B</div>
-                    <div class="card-desc">Monthly safety meeting - reviewing incident reports (recorded).</div>
-                    <div class="card-tags"><span class="tag">Meeting</span><span class="tag">Safety</span><span class="tag">Committee</span><span class="tag">YouTube</span></div>
-                </div>
+            <div class="media-card" data-category="meeting"><div class="card-media"><img src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Safety committee"><div class="media-badge"><i class="fas fa-image"></i> PHOTO</div></div><div class="card-content"><div class="card-title">Safety Committee <span class="date-tag">Feb 2026</span></div><div class="card-location"><i class="fas fa-building"></i> Training Center</div><div class="card-desc">Monthly safety meeting.</div><div class="card-tags"><span class="tag">Meeting</span></div></div></div>
+            <div class="media-card" data-category="meeting video" data-video-type="mp4" data-video-id="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" data-video-title="Client Consultation">
+                <div class="card-media"><img src="https://images.pexels.com/photos/7691740/pexels-photo-7691740.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Client consultation"><div class="video-play-overlay"><i class="fas fa-play"></i></div><div class="media-badge"><i class="fas fa-video"></i> MP4</div></div><div class="card-content"><div class="card-title">Client Meeting <span class="date-tag">Jan 2026</span></div><div class="card-location"><i class="fas fa-building"></i> Andheri East</div><div class="card-desc">Consultation recording (MP4).</div><div class="card-tags"><span class="tag">Meeting</span><span class="tag">Video</span></div></div>
             </div>
-
-            <div class="media-card" data-category="meeting">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/7691740/pexels-photo-7691740.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Client consultation">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Client Meeting · HSD License <span class="date-tag">Jan 2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Client Office · Andheri East</div>
-                    <div class="card-desc">Consultation on new HSD license requirements.</div>
-                    <div class="card-tags"><span class="tag">Meeting</span><span class="tag">Client</span><span class="tag">License</span></div>
-                </div>
+            <div class="media-card" data-category="meeting video" data-video-type="youtube" data-video-id="jNQXAC9IVRw" data-video-title="All-Hands Town Hall">
+                <div class="card-media"><img src="https://images.pexels.com/photos/7529032/pexels-photo-7529032.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Town hall"><div class="video-play-overlay"><i class="fas fa-play"></i></div><div class="media-badge"><i class="fas fa-video"></i> YOUTUBE</div></div><div class="card-content"><div class="card-title">All-Hands Town Hall <span class="date-tag">Dec 2025</span></div><div class="card-location"><i class="fas fa-building"></i> Auditorium</div><div class="card-desc">Year-end address (YouTube).</div><div class="card-tags"><span class="tag">Meeting</span><span class="tag">Video</span></div></div>
             </div>
-
-            <!-- INSPECTIONS with YouTube -->
-            <div class="media-card" data-category="inspection video youtube" data-video="L_jWHffIx5E">
-                <div class="card-media">
-                    <img src="https://img.youtube.com/vi/L_jWHffIx5E/hqdefault.jpg" alt="Pipeline inspection">
-                    <div class="video-play-overlay"><i class="fab fa-youtube"></i></div>
-                    <div class="media-badge"><i class="fab fa-youtube"></i> YOUTUBE</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Pipeline ROW Inspection <span class="date-tag">Feb 2026</span></div>
-                    <div class="card-location"><i class="fas fa-map-pin"></i> Rural · Panipat</div>
-                    <div class="card-desc">Right-of-way inspection and cathodic protection (drone).</div>
-                    <div class="card-tags"><span class="tag">Inspection</span><span class="tag">Pipeline</span><span class="tag">ROW</span><span class="tag">YouTube</span></div>
-                </div>
+            <!-- INSPECTIONS -->
+            <div class="media-card" data-category="inspection video" data-video-type="mp4" data-video-id="https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" data-video-title="HSD Depot Inspection">
+                <div class="card-media"><img src="https://images.pexels.com/photos/236380/pexels-photo-236380.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Depot inspection"><div class="video-play-overlay"><i class="fas fa-play"></i></div><div class="media-badge"><i class="fas fa-video"></i> MP4</div></div><div class="card-content"><div class="card-title">HSD Depot Inspection <span class="date-tag">Mar 2026</span></div><div class="card-location"><i class="fas fa-map-pin"></i> Whitefield</div><div class="card-desc">Drone inspection (MP4).</div><div class="card-tags"><span class="tag">Inspection</span><span class="tag">Video</span></div></div>
             </div>
-
-            <div class="media-card" data-category="inspection">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/6963944/pexels-photo-6963944.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Safety audit">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Safety Audit <span class="date-tag">Jan 2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Terminal · Chennai</div>
-                    <div class="card-desc">Annual safety audit with external auditors.</div>
-                    <div class="card-tags"><span class="tag">Inspection</span><span class="tag">Safety</span><span class="tag">Audit</span></div>
-                </div>
+            <div class="media-card" data-category="inspection"><div class="card-media"><img src="https://images.pexels.com/photos/257775/pexels-photo-257775.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Pipeline"><div class="media-badge"><i class="fas fa-image"></i> PHOTO</div></div><div class="card-content"><div class="card-title">Pipeline ROW <span class="date-tag">Feb 2026</span></div><div class="card-location"><i class="fas fa-map-pin"></i> Panipat</div><div class="card-desc">ROW inspection.</div><div class="card-tags"><span class="tag">Inspection</span></div></div></div>
+            <div class="media-card" data-category="inspection video" data-video-type="youtube" data-video-id="0Bmhjf0rKe8" data-video-title="Safety Audit">
+                <div class="card-media"><img src="https://images.pexels.com/photos/6963944/pexels-photo-6963944.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Safety audit"><div class="video-play-overlay"><i class="fas fa-play"></i></div><div class="media-badge"><i class="fas fa-video"></i> YOUTUBE</div></div><div class="card-content"><div class="card-title">Safety Audit <span class="date-tag">Jan 2026</span></div><div class="card-location"><i class="fas fa-building"></i> Chennai</div><div class="card-desc">Interview clips (YouTube).</div><div class="card-tags"><span class="tag">Inspection</span><span class="tag">Video</span></div></div>
             </div>
-
-            <!-- OFFICE + YouTube -->
-            <div class="media-card" data-category="office video youtube" data-video="2yJgwwDcgV8">
-                <div class="card-media">
-                    <img src="https://img.youtube.com/vi/2yJgwwDcgV8/hqdefault.jpg" alt="Control room">
-                    <div class="video-play-overlay"><i class="fab fa-youtube"></i></div>
-                    <div class="media-badge"><i class="fab fa-youtube"></i> YOUTUBE</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Pipeline Control Room <span class="date-tag">2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Operations Center</div>
-                    <div class="card-desc">24/7 monitoring of pipeline network (time-lapse on YouTube).</div>
-                    <div class="card-tags"><span class="tag">Office</span><span class="tag">Control Room</span><span class="tag">Ops</span><span class="tag">YouTube</span></div>
-                </div>
+            <!-- OFFICE -->
+            <div class="media-card" data-category="office video" data-video-type="mp4" data-video-id="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" data-video-title="Pipeline Control Room">
+                <div class="card-media"><img src="https://images.pexels.com/photos/325229/pexels-photo-325229.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Control room"><div class="video-play-overlay"><i class="fas fa-play"></i></div><div class="media-badge"><i class="fas fa-video"></i> MP4</div></div><div class="card-content"><div class="card-title">Pipeline Control Room <span class="date-tag">2026</span></div><div class="card-location"><i class="fas fa-building"></i> Ops Center</div><div class="card-desc">Time-lapse (MP4).</div><div class="card-tags"><span class="tag">Office</span><span class="tag">Video</span></div></div>
             </div>
-
-            <div class="media-card" data-category="office">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/380768/pexels-photo-380768.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Admin Office">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Admin Office <span class="date-tag">2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Head Office · Delhi</div>
-                    <div class="card-desc">Documentation and licensing department.</div>
-                    <div class="card-tags"><span class="tag">Office</span><span class="tag">Admin</span></div>
-                </div>
+            <!-- FIELD -->
+            <div class="media-card" data-category="field video" data-video-type="youtube" data-video-id="ScMzIvxBSi4" data-video-title="Site Survey">
+                <div class="card-media"><img src="https://images.pexels.com/photos/7529032/pexels-photo-7529032.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Site survey"><div class="video-play-overlay"><i class="fas fa-play"></i></div><div class="media-badge"><i class="fas fa-video"></i> YOUTUBE</div></div><div class="card-content"><div class="card-title">Site Survey <span class="date-tag">Feb 2026</span></div><div class="card-location"><i class="fas fa-map-pin"></i> Nagpur</div><div class="card-desc">Drone survey (YouTube).</div><div class="card-tags"><span class="tag">Field</span><span class="tag">Video</span></div></div>
             </div>
-
-            <!-- FIELD OPS + YouTube -->
-            <div class="media-card" data-category="field video youtube" data-video="kJQP7kiw5Fk">
-                <div class="card-media">
-                    <img src="https://img.youtube.com/vi/kJQP7kiw5Fk/hqdefault.jpg" alt="Site survey">
-                    <div class="video-play-overlay"><i class="fab fa-youtube"></i></div>
-                    <div class="media-badge"><i class="fab fa-youtube"></i> YOUTUBE</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Site Survey Drone <span class="date-tag">Feb 2026</span></div>
-                    <div class="card-location"><i class="fas fa-map-pin"></i> New Location · Nagpur</div>
-                    <div class="card-desc">Topographical survey for new depot (aerial).</div>
-                    <div class="card-tags"><span class="tag">Field</span><span class="tag">Survey</span><span class="tag">Drone</span><span class="tag">YouTube</span></div>
-                </div>
+            <!-- TRAINING -->
+            <div class="media-card" data-category="training video" data-video-type="mp4" data-video-id="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" data-video-title="Fire Fighting Training">
+                <div class="card-media"><img src="https://images.pexels.com/photos/7529040/pexels-photo-7529040.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Fire training"><div class="video-play-overlay"><i class="fas fa-play"></i></div><div class="media-badge"><i class="fas fa-video"></i> MP4</div></div><div class="card-content"><div class="card-title">Fire Fighting Training <span class="date-tag">Feb 2026</span></div><div class="card-location"><i class="fas fa-building"></i> Academy</div><div class="card-desc">Hands-on (MP4).</div><div class="card-tags"><span class="tag">Training</span><span class="tag">Video</span></div></div>
             </div>
-
-            <div class="media-card" data-category="field">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/2563197/pexels-photo-2563197.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Tanker loading">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Tanker Loading Bay <span class="date-tag">Mar 2026</span></div>
-                    <div class="card-location"><i class="fas fa-map-pin"></i> Depot · Pune</div>
-                    <div class="card-desc">Bottom loading operation for HSD tankers.</div>
-                    <div class="card-tags"><span class="tag">Field</span><span class="tag">Tanker</span><span class="tag">Loading</span></div>
-                </div>
-            </div>
-
-            <!-- TRAINING + YouTube -->
-            <div class="media-card" data-category="training video youtube" data-video="oRDRfikfi2U">
-                <div class="card-media">
-                    <img src="https://img.youtube.com/vi/oRDRfikfi2U/hqdefault.jpg" alt="Fire Fighting Training">
-                    <div class="video-play-overlay"><i class="fab fa-youtube"></i></div>
-                    <div class="media-badge"><i class="fab fa-youtube"></i> YOUTUBE</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Fire Fighting Training <span class="date-tag">Feb 2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Training Academy</div>
-                    <div class="card-desc">Hands-on fire extinguisher training (instructional).</div>
-                    <div class="card-tags"><span class="tag">Training</span><span class="tag">Fire Safety</span><span class="tag">Hands-on</span><span class="tag">YouTube</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="training">
-                <div class="card-media">
-                    <img src="https://images.pexels.com/photos/7529036/pexels-photo-7529036.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Classroom training">
-                    <div class="media-badge"><i class="fas fa-image"></i> PHOTO</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Petroleum Rules Workshop <span class="date-tag">Jan 2026</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Training Hall · Delhi</div>
-                    <div class="card-desc">Session on Petroleum Rules 2002 amendments.</div>
-                    <div class="card-tags"><span class="tag">Training</span><span class="tag">Classroom</span><span class="tag">Legal</span></div>
-                </div>
-            </div>
-
-            <!-- Additional YouTube items to reach 6 -->
-            <div class="media-card" data-category="meeting video youtube" data-video="tgbNymZ7vqY">
-                <div class="card-media">
-                    <img src="https://img.youtube.com/vi/tgbNymZ7vqY/hqdefault.jpg" alt="All Hands Meeting">
-                    <div class="video-play-overlay"><i class="fab fa-youtube"></i></div>
-                    <div class="media-badge"><i class="fab fa-youtube"></i> YOUTUBE</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">All-Hands Town Hall <span class="date-tag">Dec 2025</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Auditorium · HO</div>
-                    <div class="card-desc">Year-end address by CEO (YouTube stream).</div>
-                    <div class="card-tags"><span class="tag">Meeting</span><span class="tag">Townhall</span><span class="tag">YouTube</span></div>
-                </div>
-            </div>
-
-            <div class="media-card" data-category="training video youtube" data-video="OPf0YbXqDm0">
-                <div class="card-media">
-                    <img src="https://img.youtube.com/vi/OPf0YbXqDm0/hqdefault.jpg" alt="PPE training">
-                    <div class="video-play-overlay"><i class="fab fa-youtube"></i></div>
-                    <div class="media-badge"><i class="fab fa-youtube"></i> YOUTUBE</div>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">PPE Demonstration <span class="date-tag">Dec 2025</span></div>
-                    <div class="card-location"><i class="fas fa-building"></i> Site · Haldia</div>
-                    <div class="card-desc">Proper use of personal protective equipment.</div>
-                    <div class="card-tags"><span class="tag">Training</span><span class="tag">PPE</span><span class="tag">Safety</span><span class="tag">YouTube</span></div>
-                </div>
-            </div>
+            <!-- Extra placeholder to match count (optional) -->
         </div>
 
-        <!-- gallery footer with stats and load more -->
+        <!-- gallery footer -->
         <div class="gallery-footer">
             <div class="stats-group">
-                <div class="stat"><i class="fas fa-users"></i> 5 Meetings</div>
-                <div class="stat"><i class="fas fa-clipboard-check"></i> 6 Inspections</div>
-                <div class="stat"><i class="fas fa-building"></i> 4 Office</div>
-                <div class="stat"><i class="fas fa-hard-hat"></i> 5 Field Ops</div>
-                <div class="stat"><i class="fas fa-chalkboard"></i> 4 Training</div>
-                <div class="stat"><i class="fab fa-youtube"></i> 6 YouTube</div>
+                <div class="stat"><i class="fas fa-video"></i> 9 Videos</div>
+                <div class="stat"><i class="fas fa-youtube"></i> YouTube / MP4</div>
             </div>
             <div class="load-btn" id="loadMoreBtn">
                 <i class="fas fa-plus"></i> Load more from archive
@@ -926,34 +801,38 @@
         </div>
     </div>
 
-    <!-- YouTube Lightbox Modal -->
-    <div id="youtubeModal" class="video-modal">
-        <span class="close-modal">&times;</span>
+    <!-- VIDEO MODAL (LIGHTBOX) -->
+    <div class="video-modal" id="videoModal">
         <div class="modal-content">
-            <iframe id="youtubeFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <div class="modal-header">
+                <h3 id="modalVideoTitle">Video Player</h3>
+                <button class="modal-close" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="video-wrapper" id="videoWrapper">
+                <!-- iframe or video tag inserted here -->
+            </div>
+            <div class="modal-footer">
+                <span>Operational video archive · Click outside to close</span>
+            </div>
         </div>
     </div>
 
+    <div id="site-footer"></div>
+    <script src="/assets/Scripts/gototop.js"></script>
+
     <script>
         (function() {
-            // Filter functionality
+            // Filtering and view (same as original, but improved video filter)
             const filterBtns = document.querySelectorAll('.filter-btn');
             const viewBtns = document.querySelectorAll('.view-btn');
             const gallery = document.getElementById('galleryGrid');
             const cards = document.querySelectorAll('.media-card');
             const loadMore = document.getElementById('loadMoreBtn');
 
-            // YouTube modal elements
-            const modal = document.getElementById('youtubeModal');
-            const modalIframe = document.getElementById('youtubeFrame');
-            const closeModal = document.querySelector('.close-modal');
-
-            // Filtering
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     filterBtns.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    
                     const filter = this.dataset.filter;
                     
                     cards.forEach(card => {
@@ -967,68 +846,63 @@
                 });
             });
 
-            // View toggle
             viewBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     viewBtns.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    
                     const view = this.dataset.view;
                     gallery.classList.remove('masonry-view', 'grid-view', 'list-view');
                     gallery.classList.add(`${view}-view`);
                 });
             });
 
-            // Load more simulation
             if(loadMore) {
                 loadMore.addEventListener('click', function() {
-                    alert('📸 Loading additional images and videos from archive... This would fetch 12 more items.');
+                    alert('📸 Loading additional videos from archive ...');
                 });
             }
 
-            // Open YouTube modal on card click if it has a video ID
-            cards.forEach(card => {
-                card.addEventListener('click', (e) => {
-                    const videoId = card.dataset.video;
-                    if (videoId) {
-                        e.preventDefault();
-                        modal.classList.add('active');
-                        modalIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            // VIDEO MODAL functionality
+            const modal = document.getElementById('videoModal');
+            const modalTitle = document.getElementById('modalVideoTitle');
+            const videoWrapper = document.getElementById('videoWrapper');
+            const closeBtn = document.getElementById('closeModalBtn');
+
+            function closeModal() {
+                modal.classList.remove('active');
+                videoWrapper.innerHTML = ''; // stop video
+            }
+
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
+            });
+
+            document.querySelectorAll('.media-card[data-category*="video"]').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const videoType = this.dataset.videoType; // 'youtube' or 'mp4'
+                    const videoId = this.dataset.videoId;     // youtube video ID or mp4 url
+                    const title = this.dataset.videoTitle || this.querySelector('.card-title')?.innerText || 'Video';
+                    
+                    let embedHtml = '';
+                    if (videoType === 'youtube') {
+                        embedHtml = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+                    } else if (videoType === 'mp4') {
+                        embedHtml = `<video controls autoplay><source src="${videoId}" type="video/mp4">Your browser does not support the video tag.</video>`;
                     } else {
-                        // For non-video cards, just simulate (could open lightbox)
-                        if (!e.target.closest('.load-btn')) {
-                            alert('🔍 Viewing: ' + card.querySelector('.card-title').innerText);
-                        }
+                        // fallback if data missing
+                        embedHtml = `<p style="color:white; padding:2rem;">Video format not supported</p>`;
                     }
+
+                    videoWrapper.innerHTML = embedHtml;
+                    modalTitle.innerText = title;
+                    modal.classList.add('active');
                 });
             });
 
-            // Close modal
-            closeModal.addEventListener('click', () => {
-                modal.classList.remove('active');
-                modalIframe.src = '';
-            });
-
-            // Click outside to close
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                    modalIframe.src = '';
-                }
-            });
-
-            // Escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && modal.classList.contains('active')) {
-                    modal.classList.remove('active');
-                    modalIframe.src = '';
-                }
-            });
+            // Optional: if any video card doesn't have dataset but has video badge, but we rely on data attributes
         })();
     </script>
-   <!-- FOOTER -->
-<div id="site-footer"></div>
-  <!-- Go to Top -->
-  <script src="/assets/Scripts/gototop.js"></script>
 </body>
 </html>
