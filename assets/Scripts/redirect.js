@@ -12,5 +12,7 @@ const redirects = {
 const path = window.location.pathname;
 
 if (redirects[path]) {
-window.location.href = redirects[path];
+    window.location.replace(redirects[path]);
+} else {
+    window.location.replace("https://saratrout.in/");
 }
