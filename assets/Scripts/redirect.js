@@ -1,56 +1,100 @@
-const redirects = {
+/**
+ * redirect.js
+ * Handles redirection from custom calendar links to actual Google Drive download URLs
+ * Place this file in assets/Scripts/redirect.js
+ */
 
-"/cal2026.pdf":"https://drive.google.com/uc?export=download&id=1jc_oIf5tSoTTaZq3IbtT3DSlWnrq8rzG",
-"/cal2026.jpg":"https://drive.google.com/uc?export=download&id=1f3PM0UYG9Iad2ULI5dHiJ5FkP5YBwWp7",
+(function() {
+    'use strict';
 
-"/cal2025.pdf":"https://docs.google.com/uc?export=download&id=12gGs7CJSUvNzNAacYuwQa4tro7IYaegM",
-"/cal2025.jpg":"https://docs.google.com/uc?export=download&id=12aqGCOOyRx5NYf3nHGQrjihTAzIJTN8N",
+    // Function to handle link redirection
+    function handleLinkClick(e) {
+        // Find the closest anchor element that was clicked
+        const link = e.target.closest('a');
+        if (!link) return;
 
-"/cal2024.pdf":"https://docs.google.com/uc?export=download&id=19kRKHCdNnXDDl3vGRSielHLtCaoxHlk7",
-"/cal2024.jpg":"https://docs.google.com/uc?export=download&id=19odhMvJXJGUwtTEUVpExbU0M354ehOJA",
+        // Get the Google Drive URL from data attribute
+        const driveUrl = link.getAttribute('data-drive');
+        if (!driveUrl) return; // Not a calendar link
 
-"/cal2023.pdf":"https://docs.google.com/uc?export=download&id=19vUcPhlmQgNCJV3XpnZqAHkUXuF4AWQd",
-"/cal2023.jpg":"https://docs.google.com/uc?export=download&id=19ohGTvexeEyCVV79lHrkif6l5kqmmOJ4",
+        // Prevent default navigation to the fake href
+        e.preventDefault();
 
-"/cal2022.pdf":"https://docs.google.com/uc?export=download&id=19kT2padJ7EErVjiZ-Eq2SijhAOHWNhHN",
-"/cal2022.jpg":"https://docs.google.com/uc?export=download&id=19wsvnjKYOjKoIZdIKREamtF3UgFwVjtv",
+        // Log for debugging (can be removed in production)
+        console.log('Redirecting to:', driveUrl);
 
-"/cal2021.pdf":"https://docs.google.com/uc?export=download&id=19oNCHuuHoTWkUxC86oR8X-qJoEPkw4LA",
-"/cal2021.jpg":"https://docs.google.com/uc?export=download&id=19oN4__ws5i5aDNSrBzSTk8m4lvo5FXTc",
+        // Redirect to the actual Google Drive download link
+        window.location.href = driveUrl;
+    }
 
-"/cal2020.pdf":"https://docs.google.com/uc?export=download&id=19kIL8uumVl-77SCCdlswrMFKRSiA95zH",
-"/cal2020.jpg":"https://docs.google.com/uc?export=download&id=19gtRaRov0YGAV6BeAQGM_0_2t6wP-1gp",
+    // Function to handle middle-click and Ctrl+click for new tabs
+    function handleMouseDown(e) {
+        const link = e.target.closest('a');
+        if (!link) return;
 
-"/cal2019.pdf":"https://docs.google.com/uc?export=download&id=19kCM8xIY0Y-kGMYfyuXEMLswIx6POj-H",
-"/cal2019.jpg":"https://docs.google.com/uc?export=download&id=19orjKyUum1jaADOSZA2LzIe9mV-tdaNH",
+        const driveUrl = link.getAttribute('data-drive');
+        if (!driveUrl) return;
 
-"/cal2018.pdf":"https://docs.google.com/uc?export=download&id=19fnCsvD3xkchwngxS_q9vdVrZccf2ouC",
-"/cal2018.jpg":"https://docs.google.com/uc?export=download&id=19iRxOe2Nq25RUXpf3YzwxTM030KqOTzF",
+        // Check for middle click (button === 1) or Ctrl/Cmd click
+        const isMiddleClick = e.button === 1;
+        const isCtrlCmdClick = e.ctrlKey || e.metaKey;
 
-"/cal2017.pdf":"https://docs.google.com/uc?export=download&id=19p9mFN2B9JUWt5jCV2h0Kh7fFkROZO_o",
-"/cal2017.jpg":"https://docs.google.com/uc?export=download&id=19rFtaSLuHRVVHcZdNtVzSd_e8ExKV7ja",
+        if (isMiddleClick || isCtrlCmdClick) {
+            // Prevent default behavior
+            e.preventDefault();
 
-"/cal2016.pdf":"https://docs.google.com/uc?export=download&id=19vKhsgbfBV1x7t1kcsoSKaOCz72sCf9d",
-"/cal2016.jpg":"https://docs.google.com/uc?export=download&id=19ibKAzzUzYaEY0fJDOFLPYYHdjibk-Uv",
+            // Open in new tab/window
+            window.open(driveUrl, '_blank');
+            
+            // Prevent further event handling
+            return false;
+        }
+    }
 
-"/cal2015.pdf":"https://docs.google.com/uc?export=download&id=19i0qPtAnudzjuIKZnUBwbxVO4IoIssVe",
-"/cal2015.jpg":"https://docs.google.com/uc?export=download&id=19jJUeKUpVlZPvbiHRmvfPKzJE_vvF2WR",
+    // Function to handle keyboard activation (Enter key)
+    function handleKeyDown(e) {
+        // Check if the focused element is our calendar link
+        const link = e.target.closest('a');
+        if (!link) return;
 
-"/cal2014.pdf":"https://docs.google.com/uc?export=download&id=19pClC5GzgrsH716ysSfArtl-CkJ4zh7P",
-"/cal2014.jpg":"https://docs.google.com/uc?export=download&id=19umf_frNz8Y-VfD12TlgdaCv_dRmMyqX",
+        const driveUrl = link.getAttribute('data-drive');
+        if (!driveUrl) return;
 
-"/cal2013.pdf":"https://docs.google.com/uc?export=download&id=19hXEmII3yO4DxiAJXusaDb0KjVhF_zGp",
-"/cal2013.jpg":"https://docs.google.com/uc?export=download&id=19rhAS62ATjWYTWWq1hF3b4DCIHiV5afo",
+        // Check if Enter key was pressed
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            window.location.href = driveUrl;
+        }
+    }
 
-"/cal2012.pdf":"https://docs.google.com/uc?export=download&id=19u23z_ubId4iXMuv_xdQOMmEo329Y5rU",
-"/cal2012.jpg":"https://docs.google.com/uc?export=download&id=19hv6USzYZFaNyHnGzBa2PL-kuShks--s"
+    // Initialize the redirection handler when DOM is ready
+    function initRedirectHandler() {
+        // Remove any existing listeners to prevent duplicates
+        document.removeEventListener('click', handleLinkClick);
+        document.removeEventListener('mousedown', handleMouseDown);
+        document.removeEventListener('keydown', handleKeyDown);
 
-};
+        // Add event listeners
+        document.addEventListener('click', handleLinkClick);
+        document.addEventListener('mousedown', handleMouseDown);
+        document.addEventListener('keydown', handleKeyDown);
 
-const path = window.location.pathname;
+        console.log('Calendar redirect handler initialized');
+    }
 
-if (redirects[path]) {
-window.location.replace(redirects[path]);
-} else {
-window.location.replace("https://saratrout.in/");
-}
+    // Run initialization when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initRedirectHandler);
+    } else {
+        // DOM is already loaded
+        initRedirectHandler();
+    }
+
+    // For frameworks that might dynamically load content,
+    // also initialize on page load
+    window.addEventListener('load', function() {
+        // Re-initialize to catch any dynamically added links
+        // (optional, depending on your needs)
+    });
+
+})();
