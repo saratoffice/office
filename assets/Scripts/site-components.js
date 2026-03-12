@@ -251,4 +251,155 @@ const SiteComponents = (function () {
 document.addEventListener('DOMContentLoaded', () => {
   SiteComponents.init();
 });
+// ============================================
+// HEADER SCROLL EFFECT AND MOBILE MENU
+// Add this to your existing JavaScript
+// ============================================
 
+document.addEventListener('DOMContentLoaded', function() {
+  'use strict';
+  
+  // ==========================================
+  // 1. SCROLL EFFECT (SHRINK HEADER)
+  // ==========================================
+  const header = document.querySelector('.site-header');
+  const body = document.body;
+  
+  let isFixed = false;
+  let scrollThreshold = 100; // Change this value to adjust when header shrinks
+  
+  function updateHeaderOnScroll() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    if (scrollTop > scrollThreshold && !isFixed) {
+      // Add fixed class
+      header.classList.add('fixed');
+      body.classList.add('has-fixed-header');
+      
+      // Set body padding to prevent content jump
+      const headerHeight = header.offsetHeight;
+      body.style.paddingTop = headerHeight + 'px';
+      
+      isFixed = true;
+    } 
+    else if (scrollTop <= scrollThreshold && isFixed) {
+      // Remove fixed class
+      header.classList.remove('fixed');
+      body.classList.remove('has-fixed-header');
+      body.style.paddingTop = '0';
+      
+      isFixed = false;
+    }
+  }
+  
+  // Throttled scroll event for better performance
+  let scrollTimeout;
+  window.addEventListener('scroll', function() {
+    if (!scrollTimeout) {
+      scrollTimeout = setTimeout(function() {
+        updateHeaderOnScroll();
+        scrollTimeout = null;
+      }, 10);
+    }
+  });
+  
+  // Update body padding on window resize
+  window.addEventListener('resize', function() {
+    if (isFixed) {
+      body.style.paddingTop = header.offsetHeight + 'px';
+    }
+  });
+  
+  // Initial call
+  updateHeaderOnScroll();
+  
+  // ==========================================
+  // 2. MOBILE MENU TOGGLE (HAMBURGER)
+  // ==========================================
+  const menuToggle = document.querySelector('.menu-toggle');
+  const menu = document.querySelector('.menu');
+  
+  if (menuToggle && menu) {
+    menuToggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      menu.classList.toggle('open');
+      this.classList.toggle('active');
+    });
+  }
+  
+  // ==========================================
+  // 3. MOBILE DROPDOWN HANDLING
+  // ==========================================
+  function setupMobileDropdowns() {
+    const isMobile = window.innerWidth <= 900;
+    const dropdowns = document.querySelectorAll('.dropdown, .sub-dropdown');
+    
+    dropdowns.forEach(dropdown => {
+      const link = dropdown.querySelector('a:first-child');
+      if (!link) return;
+      
+      if (isMobile) {
+        // Mobile: click to toggle
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          dropdown.classList.toggle('open');
+        });
+      } else {
+        // Desktop: remove open class
+        dropdown.classList.remove('open');
+        
+        // Remove mobile click handlers by cloning (optional but safe)
+        if (link._mobileHandler) {
+          link.removeEventListener('click', link._mobileHandler);
+        }
+      }
+    });
+  }
+  
+  // Initial setup
+  setupMobileDropdowns();
+  
+  // Handle window resize
+  let resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(setupMobileDropdowns, 250);
+  });
+  
+  // ==========================================
+  // 4. CLOSE MENU WHEN CLICKING OUTSIDE
+  // ==========================================
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth <= 900) {
+      const header = document.querySelector('.site-header');
+      const menu = document.querySelector('.menu');
+      const toggle = document.querySelector('.menu-toggle');
+      
+      if (!header.contains(e.target) && menu.classList.contains('open')) {
+        menu.classList.remove('open');
+        if (toggle) toggle.classList.remove('active');
+        
+        // Close all dropdowns
+        document.querySelectorAll('.dropdown, .sub-dropdown').forEach(d => {
+          d.classList.remove('open');
+        });
+      }
+    }
+  });
+  
+  // Prevent menu from closing when clicking inside
+  const menu = document.querySelector('.menu');
+  if (menu) {
+    menu.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  }
+  
+  // ==========================================
+  // 5. TOUCH DEVICE SUPPORT
+  // ==========================================
+  if ('ontouchstart' in window) {
+    document.body.classList.add('touch-device');
+  }
+});
