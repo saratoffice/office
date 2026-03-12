@@ -54,8 +54,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 20px;
+  padding: 2% 3%;
   position: relative;
+  min-height: 8vh; /* Minimum height based on viewport height */
+  height: auto;
 }
 
 /* Gradient bottom border */
@@ -65,19 +67,17 @@ body {
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 4px;
+  height: 0.4vh; /* Responsive border height based on viewport height */
+  min-height: 2px;
+  max-height: 4px;
   background: linear-gradient(90deg, #0d47a1, #00e676);
 }
 
-@media (max-width: 768px) {
-  .site-header::after {
-    height: 3px;
-  }
-}
-
+/* Additional control for very small screens */
 @media (max-width: 480px) {
-  .site-header::after {
-    height: 2px;
+  .site-header {
+    padding: 3% 4%;
+    min-height: 7vh;
   }
 }
 
@@ -87,8 +87,10 @@ body {
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: clamp(5px, 2%, 15px); /* Responsive gap */
   height: 100%;
+  width: auto;
+  max-width: 40%; /* Prevents logo from taking too much space */
 }
 
 .logo img {
@@ -98,28 +100,80 @@ body {
   object-fit: contain;
 }
 
+/* Responsive logo sizing using viewport units and percentages */
+@media (min-width: 1200px) {
+  .logo img {
+    max-height: 8vh; /* Based on viewport height */
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1199px) {
+  .logo img {
+    max-height: 7vh;
+  }
+}
+
 @media (max-width: 768px) {
+  .logo {
+    max-width: 35%; /* Smaller on mobile */
+  }
+  
   .logo img {
-    max-height: 36px;
+    max-height: 6vh;
   }
 }
 
-@media (min-width: 769px) {
+@media (max-width: 480px) {
+  .logo {
+    max-width: 30%;
+  }
+  
   .logo img {
-    max-height: 56px;
+    max-height: 5vh;
   }
 }
 
+/* Alternative approach using percentage of header height */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: clamp(5px, 2%, 15px);
+  height: 100%;
+}
+
+.logo img {
+  width: auto;
+  height: 70%; /* Takes 70% of header height */
+  max-height: 80px; /* Maximum limit */
+  min-height: 30px; /* Minimum size */
+  object-fit: contain;
+}
+
+/* Text sizing */
 .logo h1 {
-  font-size: 22px;
+  font-size: clamp(16px, 4vw, 22px); /* Responsive between 16-22px */
   font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .logo span {
-  font-size: 14px;
+  font-size: clamp(12px, 3vw, 14px); /* Responsive between 12-14px */
   font-style: italic;
+  margin: 0;
+  line-height: 1.2;
 }
 
+/* For very small screens, hide or adjust text */
+@media (max-width: 360px) {
+  .logo h1 {
+    font-size: 14px;
+  }
+  
+  .logo span {
+    font-size: 10px;
+  }
+}
 /* =================================
    MENU TOGGLE BUTTON (HAMBURGER)
    ================================= */
