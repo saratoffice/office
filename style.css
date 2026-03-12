@@ -1409,3 +1409,123 @@ form button {
     font-size: 0.8rem;
   }
 }
+/* =================================
+   TOP BAR
+   ================================= */
+.top-bar { 
+  background: var(--primary); 
+  color: #fff; 
+  font-size: 14px; 
+  padding: 6px 20px; 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  transition: all 0.3s ease;
+  height: auto;
+  max-height: 40px;
+  opacity: 1;
+  overflow: hidden;
+}
+
+/* =================================
+   HEADER
+   ================================= */
+.site-header {
+  background: #FFA500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  flex-wrap: wrap;
+}
+
+/* Gradient bottom border */
+.site-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #0d47a1, #00e676);
+  transition: height 0.3s ease;
+}
+
+/* =================================
+   FIXED HEADER STATE (SCROLL EFFECT)
+   ================================= */
+.site-header.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  animation: slideDown 0.3s ease;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  padding: 10px 20px;
+}
+
+/* Hide top bar when header is fixed */
+.site-header.fixed + .top-bar,
+.site-header.fixed .top-bar {
+  display: none;
+}
+
+/* Since top-bar is outside header in your structure, we need this */
+body.has-fixed-header .top-bar {
+  display: none;
+}
+
+/* Shrinked header elements */
+.site-header.fixed .logo img {
+  max-height: 45px;
+  transition: max-height 0.3s ease;
+}
+
+/* Adjust gradient border for fixed header */
+.site-header.fixed::after {
+  height: 3px;
+}
+
+/* Animation for header slide down */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Body padding to prevent content jump */
+body.has-fixed-header {
+  padding-top: 0; /* Will be set by JavaScript */
+}
+
+/* Adjust mobile styles for fixed header */
+@media (max-width: 900px) {
+  .site-header.fixed {
+    padding: 8px 15px;
+    min-height: 60px;
+  }
+  
+  .site-header.fixed .logo img {
+    max-height: 35px;
+  }
+  
+  .site-header.fixed .menu-toggle {
+    font-size: 24px;
+    padding: 5px 8px;
+  }
+}
+
+/* Desktop adjustments */
+@media (min-width: 901px) {
+  .site-header.fixed .dropdown-menu {
+    top: calc(100% + 5px);
+  }
+}
