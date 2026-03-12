@@ -251,3 +251,132 @@ const SiteComponents = (function () {
 document.addEventListener('DOMContentLoaded', () => {
   SiteComponents.init();
 });
+// Header scroll effect with your specific structure
+document.addEventListener('DOMContentLoaded', function() {
+  const header = document.querySelector('.site-header');
+  const topBar = document.querySelector('.top-bar');
+  const body = document.body;
+  
+  let lastScrollTop = 0;
+  let isFixed = false;
+  let headerHeight;
+  let scrollThreshold = 100; // Scroll amount before header shrinks
+  
+  // Function to update header state on scroll
+  function updateHeaderOnScroll() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    if (scrollTop > scrollThreshold) {
+      // Add fixed class if not already fixed
+      if (!isFixed) {
+        header.classList.add('fixed');
+        body.classList.add('has-fixed-header');
+        
+        // Get current header height and set body padding
+        headerHeight = header.offsetHeight;
+        body.style.paddingTop = headerHeight + 'px';
+        
+        isFixed = true;
+      }
+    } else {
+      // Remove fixed class if near top
+      if (isFixed && scrollTop <= scrollThreshold) {
+        header.classList.remove('fixed');
+        body.classList.remove('has-fixed-header');
+        body.style.paddingTop = '0';
+        
+        isFixed = false;
+      }
+    }
+    
+    lastScrollTop = scrollTop;
+  }
+  
+  // Throttled scroll event for better performance
+  let scrollTimeout;
+  window.addEventListener('scroll', function() {
+    if (!scrollTimeout) {
+      scrollTimeout = setTimeout(function() {
+        updateHeaderOnScroll();
+        scrollTimeout = null;
+      }, 10);
+    }
+  });
+  
+  // Update on window resize
+  window.addEventListener('resize', function() {
+    if (isFixed) {
+      headerHeight = header.offsetHeight;
+      body.style.paddingTop = headerHeight + 'px';
+    }
+  });
+  
+  // Initial call to set correct state on page load
+  updateHeaderOnScroll();
+  
+  // Your existing mobile menu functionality
+  const menuToggle = document.querySelector('.menu-toggle');
+  const menu = document.querySelector('.menu');
+  
+  if (menuToggle && menu) {
+    menuToggle.addEventListener('click', function() {
+      menu.classList.toggle('open');
+      this.classList.toggle('active');
+    });
+  }
+  
+  // Mobile dropdown functionality
+  if (window.innerWidth <= 900) {
+    const dropdowns = document.querySelectorAll('.dropdown, .sub-dropdown');
+    dropdowns.forEach(dropdown => {
+      const link = dropdown.querySelector('a');
+      if (link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          dropdown.classList.toggle('open');
+        });
+      }
+    });
+  }
+  
+  // Handle window resize for dropdown behavior
+  window.addEventListener('resize', function() {
+    if (window.innerWidth <= 900) {
+      // Mobile: make dropdowns clickable
+      const dropdowns = document.querySelectorAll('.dropdown, .sub-dropdown');
+      dropdowns.forEach(dropdown => {
+        const link = dropdown.querySelector('a');
+        if (link && !link.hasClickListener) {
+          link.hasClickListener = true;
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            dropdown.classList.toggle('open');
+          });
+        }
+      });
+    } else {
+      // Desktop: remove click handlers
+      const dropdowns = document.querySelectorAll('.dropdown, .sub-dropdown');
+      dropdowns.forEach(dropdown => {
+        const link = dropdown.querySelector('a');
+        if (link) {
+          link.hasClickListener = false;
+        }
+      });
+    }
+  });
+});
+
+// Optional: Add smooth scroll behavior for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
+});
