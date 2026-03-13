@@ -6,6 +6,13 @@ const SiteComponents = (function () {
     footerUrl: '/footer.html'
   };
 
+  // Scroll handler variables
+  let lastScrollTop = 0;
+  let scrollThreshold = 50;
+  let isTopBarHidden = false;
+  let isHeaderMinimized = false;
+  let scrollTimeout;
+
   async function loadTemplate(url, elementId) {
     try {
       const response = await fetch(url);
@@ -29,6 +36,60 @@ const SiteComponents = (function () {
         </div>`;
       }
     }
+  }
+
+  // NEW: Function to handle scroll-based header behavior
+  function initScrollBehavior() {
+    const topBar = document.querySelector('.top-bar');
+    const siteHeader = document.querySelector('.site-header');
+    const body = document.body;
+
+    if (!topBar || !siteHeader) {
+      console.warn('Top bar or site header not found for scroll behavior');
+      return;
+    }
+
+    function handleScroll() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Determine scroll direction
+      if (Math.abs(scrollTop - lastScrollTop) > scrollThreshold) {
+        if (scrollTop > lastScrollTop && scrollTop > 100) {
+          // Scrolling down - hide top bar and minimize header
+          if (!isTopBarHidden) {
+            topBar.classList.add('hidden');
+            siteHeader.classList.add('minimized');
+            body.classList.add('header-minimized');
+            isTopBarHidden = true;
+            isHeaderMinimized = true;
+          }
+        } else {
+          // Scrolling up - show top bar and restore header
+          if (isTopBarHidden && scrollTop < 200) { // Only show when near top
+            topBar.classList.remove('hidden');
+            siteHeader.classList.remove('minimized');
+            body.classList.remove('header-minimized');
+            isTopBarHidden = false;
+            isHeaderMinimized = false;
+          }
+        }
+        
+        lastScrollTop = scrollTop;
+      }
+    }
+
+    // Throttle scroll events for better performance
+    window.addEventListener('scroll', function() {
+      if (!scrollTimeout) {
+        scrollTimeout = setTimeout(function() {
+          handleScroll();
+          scrollTimeout = null;
+        }, 10);
+      }
+    });
+
+    // Initial check
+    handleScroll();
   }
 
   function initMobileMenu() {
@@ -228,6 +289,28 @@ const SiteComponents = (function () {
     }, 200);
   }
 
+  // NEW: Function to initialize go to top button
+  function initGoToTopButton() {
+    const goTopBtn = document.getElementById('goTopBtn');
+    
+    if (goTopBtn) {
+      window.onscroll = function() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+          goTopBtn.style.display = "block";
+        } else {
+          goTopBtn.style.display = "none";
+        }
+      };
+      
+      goTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
+  }
+
   return {
     init: async function () {
       try {
@@ -236,8 +319,13 @@ const SiteComponents = (function () {
           loadTemplate(config.footerUrl, 'site-footer')
         ]);
         
-        initMobileMenu();
-        setActiveMenuItem();
+        // Initialize all features after templates are loaded
+        setTimeout(() => {
+          initScrollBehavior();
+          initMobileMenu();
+          initGoToTopButton();
+          setActiveMenuItem();
+        }, 100);
         
         console.log('Site components initialized successfully');
       } catch (error) {
