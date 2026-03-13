@@ -251,4 +251,3 @@ const SiteComponents = (function () {
 document.addEventListener('DOMContentLoaded', () => {
   SiteComponents.init();
 });
-
