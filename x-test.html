@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flip Card Designs</title>
+    <title>3D Cube Cards</title>
     <style>
         * {
             margin: 0;
@@ -11,380 +11,540 @@
             box-sizing: border-box;
         }
 
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 2rem;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
+            text-align: center;
         }
 
         h1 {
-            text-align: center;
             color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(0,255,255,0.5);
+        }
+
+        .subtitle {
+            color: #a0a0ff;
             margin-bottom: 3rem;
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 1.2rem;
         }
 
-        .card-grid {
+        .cube-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            padding: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 4rem 2rem;
+            padding: 2rem;
         }
 
-        /* ===== BASIC FLIP CARD ===== */
-        .flip-card {
-            background-color: transparent;
-            width: 100%;
-            height: 300px;
-            perspective: 1000px; /* 3D effect */
+        /* ===== 3D CUBE CONTAINER ===== */
+        .cube-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 2rem;
+            perspective: 1000px;
             cursor: pointer;
         }
 
-        .flip-card-inner {
+        .cube {
+            width: 100%;
+            height: 100%;
             position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.8s;
             transform-style: preserve-3d;
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            border-radius: 10px;
+            transition: transform 0.5s;
         }
 
-        .flip-card:hover .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .flip-card-front, .flip-card-back {
+        .cube-face {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 10px;
+            width: 200px;
+            height: 200px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.2);
+            backface-visibility: visible;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+
+        /* Face positions */
+        .front  { transform: translateZ(100px); }
+        .back   { transform: rotateY(180deg) translateZ(100px); }
+        .right  { transform: rotateY(90deg) translateZ(100px); }
+        .left   { transform: rotateY(-90deg) translateZ(100px); }
+        .top    { transform: rotateX(90deg) translateZ(100px); }
+        .bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+        /* ===== CUBE 1: HOVER ROTATION (Y-axis) ===== */
+        .cube-1:hover {
+            transform: rotateY(180deg) rotateX(10deg);
+        }
+
+        .cube-1 .front  { background: linear-gradient(145deg, #ff6b6b, #ee5253); }
+        .cube-1 .back   { background: linear-gradient(145deg, #48dbfb, #0abde3); }
+        .cube-1 .right  { background: linear-gradient(145deg, #feca57, #ff9f43); }
+        .cube-1 .left   { background: linear-gradient(145deg, #ff9ff3, #f368e0); }
+        .cube-1 .top    { background: linear-gradient(145deg, #1dd1a1, #10ac84); }
+        .cube-1 .bottom { background: linear-gradient(145deg, #5f27cd, #341f97); }
+
+        /* ===== CUBE 2: INFINITE ROTATION ===== */
+        .cube-2 {
+            animation: rotate 10s linear infinite;
+        }
+
+        .cube-2:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotateX(0) rotateY(0); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        .cube-2 .front  { background: linear-gradient(145deg, #00d2d3, #01a3a4); }
+        .cube-2 .back   { background: linear-gradient(145deg, #ff9f43, #ee5a24); }
+        .cube-2 .right  { background: linear-gradient(145deg, #ff6b6b, #ee5253); }
+        .cube-2 .left   { background: linear-gradient(145deg, #10ac84, #1dd1a1); }
+        .cube-2 .top    { background: linear-gradient(145deg, #5f27cd, #341f97); }
+        .cube-2 .bottom { background: linear-gradient(145deg, #f368e0, #ff9ff3); }
+
+        /* ===== CUBE 3: X-AXIS ROTATION ===== */
+        .cube-3 {
+            transform: rotateX(-15deg) rotateY(15deg);
+        }
+
+        .cube-3:hover {
+            transform: rotateX(345deg) rotateY(375deg);
+        }
+
+        .cube-3 .front  { background: linear-gradient(145deg, #ffb8b8, #ff8787); }
+        .cube-3 .back   { background: linear-gradient(145deg, #c8d6e5, #8395a7); }
+        .cube-3 .right  { background: linear-gradient(145deg, #feca57, #ff9f43); }
+        .cube-3 .left   { background: linear-gradient(145deg, #48dbfb, #0abde3); }
+        .cube-3 .top    { background: linear-gradient(145deg, #ff6b6b, #ee5253); }
+        .cube-3 .bottom { background: linear-gradient(145deg, #1dd1a1, #10ac84); }
+
+        /* ===== CUBE 4: CLICK TO SPIN ===== */
+        .cube-4 {
+            transform: rotateX(-20deg) rotateY(-20deg);
+        }
+
+        .cube-4.spin {
+            animation: spin-once 1s ease-in-out;
+        }
+
+        @keyframes spin-once {
+            0% { transform: rotateX(-20deg) rotateY(-20deg); }
+            50% { transform: rotateX(340deg) rotateY(340deg); }
+            100% { transform: rotateX(-20deg) rotateY(-20deg); }
+        }
+
+        .cube-4 .front  { background: linear-gradient(145deg, #079992, #38ada9); }
+        .cube-4 .back   { background: linear-gradient(145deg, #e55039, #eb2f06); }
+        .cube-4 .right  { background: linear-gradient(145deg, #f6b93b, #fa983a); }
+        .cube-4 .left   { background: linear-gradient(145deg, #78e08f, #6ab04c); }
+        .cube-4 .top    { background: linear-gradient(145deg, #b71540, #e55039); }
+        .cube-4 .bottom { background: linear-gradient(145deg, #0c2461, #1e3799); }
+
+        /* ===== CUBE 5: PHOTO GALLERY CUBE ===== */
+        .cube-5 .front  { background: url('https://via.placeholder.com/200/ff6b6b/ffffff?text=Front') center/cover; }
+        .cube-5 .back   { background: url('https://via.placeholder.com/200/48dbfb/ffffff?text=Back') center/cover; }
+        .cube-5 .right  { background: url('https://via.placeholder.com/200/feca57/ffffff?text=Right') center/cover; }
+        .cube-5 .left   { background: url('https://via.placeholder.com/200/ff9ff3/ffffff?text=Left') center/cover; }
+        .cube-5 .top    { background: url('https://via.placeholder.com/200/1dd1a1/ffffff?text=Top') center/cover; }
+        .cube-5 .bottom { background: url('https://via.placeholder.com/200/5f27cd/ffffff?text=Bottom') center/cover; }
+
+        .cube-5 {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotateX(0) rotateY(0); }
+            50% { transform: translateY(-20px) rotateX(5deg) rotateY(5deg); }
+            100% { transform: translateY(0px) rotateX(0) rotateY(0); }
+        }
+
+        /* ===== CUBE 6: CONTACT CUBE ===== */
+        .cube-6 .cube-face {
+            text-align: center;
             padding: 1rem;
         }
 
-        .flip-card-front {
-            background: linear-gradient(145deg, #ffffff, #f0f0f0);
-            color: #333;
+        .cube-6 .front  { background: linear-gradient(145deg, #667eea, #764ba2); }
+        .cube-6 .back   { background: linear-gradient(145deg, #f093fb, #f5576c); }
+        .cube-6 .right  { background: linear-gradient(145deg, #4facfe, #00f2fe); }
+        .cube-6 .left   { background: linear-gradient(145deg, #43e97b, #38f9d7); }
+        .cube-6 .top    { background: linear-gradient(145deg, #fa709a, #fee140); }
+        .cube-6 .bottom { background: linear-gradient(145deg, #30cfd0, #330867); }
+
+        .cube-6 {
+            transform: rotateX(345deg) rotateY(15deg);
         }
 
-        .flip-card-back {
-            background: linear-gradient(145deg, #667eea, #764ba2);
-            color: white;
-            transform: rotateY(180deg);
+        .cube-6:hover {
+            transform: rotateX(375deg) rotateY(375deg);
         }
 
-        .emoji-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        /* ===== VERTICAL FLIP CARD ===== */
-        .flip-card-vertical .flip-card-inner {
-            transition: transform 0.8s;
-        }
-
-        .flip-card-vertical:hover .flip-card-inner {
-            transform: rotateX(180deg);
-        }
-
-        .flip-card-vertical .flip-card-back {
-            transform: rotateX(180deg);
-            background: linear-gradient(145deg, #43e97b, #38f9d7);
-        }
-
-        /* ===== PRODUCT FLIP CARD ===== */
-        .product-card .flip-card-front {
-            background: white;
-        }
-
-        .product-price {
+        /* ===== LABELS AND ICONS ===== */
+        .face-label {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .face-icon {
+            font-size: 3rem;
             margin: 0.5rem 0;
         }
 
-        .product-button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 0.5rem;
-            transition: background 0.3s;
+        .face-description {
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
 
-        .product-button:hover {
-            background: #764ba2;
+        .contact-item {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
         }
 
-        /* ===== PROFILE FLIP CARD ===== */
-        .profile-image {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #667eea, #764ba2);
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 3rem;
-            color: white;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
+        /* ===== CUBE CAPTIONS ===== */
+        .cube-caption {
             margin-top: 1rem;
-        }
-
-        .social-icon {
-            width: 35px;
-            height: 35px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background 0.3s;
-        }
-
-        .social-icon:hover {
-            background: rgba(255,255,255,0.4);
-        }
-
-        /* ===== SPECIAL EFFECTS ===== */
-        .glow-effect .flip-card-front {
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from { box-shadow: 0 0 10px -10px #667eea; }
-            to { box-shadow: 0 0 20px 10px #667eea; }
-        }
-
-        /* Section headers */
-        .section-title {
             color: white;
-            margin: 3rem 0 1rem 0;
-            font-size: 1.8rem;
+            font-size: 1.1rem;
             text-align: center;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.1);
+            padding: 0.5rem;
+            border-radius: 5px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .cube-container {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .cube-face {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .front  { transform: translateZ(75px); }
+            .back   { transform: rotateY(180deg) translateZ(75px); }
+            .right  { transform: rotateY(90deg) translateZ(75px); }
+            .left   { transform: rotateY(-90deg) translateZ(75px); }
+            .top    { transform: rotateX(90deg) translateZ(75px); }
+            .bottom { transform: rotateX(-90deg) translateZ(75px); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>✨ Interactive Flip Cards ✨</h1>
-
-        <!-- Horizontal Flip Cards -->
-        <h2 class="section-title">🎴 Basic Flip Cards</h2>
-        <div class="card-grid">
-            <!-- Card 1: Basic Info -->
-            <div class="flip-card">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="emoji-icon">🎨</span>
-                        <h2>Creative Design</h2>
-                        <p>Hover to reveal</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <h3>Learn More</h3>
-                        <p>Modern UI/UX design principles with beautiful animations</p>
-                        <button class="product-button">Explore →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 2: Product -->
-            <div class="flip-card product-card">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="emoji-icon">📱</span>
-                        <h2>Smart Watch</h2>
-                        <div class="product-price">$299</div>
-                        <p>Latest model</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <h3>Features</h3>
-                        <p>✓ Heart rate monitor</p>
-                        <p>✓ GPS tracking</p>
-                        <p>✓ Water resistant</p>
-                        <button class="product-button">Buy Now</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 3: Profile -->
-            <div class="flip-card">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <div class="profile-image">👩</div>
-                        <h2>Sarah Johnson</h2>
-                        <p>UX Designer</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <h3>Contact</h3>
-                        <p>📧 sarah@email.com</p>
-                        <p>📱 +1 234 567 890</p>
-                        <div class="social-links">
-                            <span class="social-icon">📘</span>
-                            <span class="social-icon">🐦</span>
-                            <span class="social-icon">📷</span>
+        <h1>🎲 3D Cube Cards</h1>
+        <div class="subtitle">Hover, click, and explore these interactive cubes</div>
+        
+        <div class="cube-grid">
+            <!-- Cube 1: Basic Hover Cube -->
+            <div class="cube-wrapper">
+                <div class="cube-container">
+                    <div class="cube cube-1">
+                        <div class="cube-face front">
+                            <div class="face-icon">🏠</div>
+                            <div class="face-label">HOME</div>
+                            <div class="face-description">Welcome</div>
+                        </div>
+                        <div class="cube-face back">
+                            <div class="face-icon">ℹ️</div>
+                            <div class="face-label">ABOUT</div>
+                            <div class="face-description">Learn more</div>
+                        </div>
+                        <div class="cube-face right">
+                            <div class="face-icon">📧</div>
+                            <div class="face-label">CONTACT</div>
+                            <div class="face-description">Get in touch</div>
+                        </div>
+                        <div class="cube-face left">
+                            <div class="face-icon">⚙️</div>
+                            <div class="face-label">SERVICES</div>
+                            <div class="face-description">What we do</div>
+                        </div>
+                        <div class="cube-face top">
+                            <div class="face-icon">📊</div>
+                            <div class="face-label">STATS</div>
+                            <div class="face-description">Our numbers</div>
+                        </div>
+                        <div class="cube-face bottom">
+                            <div class="face-icon">🎯</div>
+                            <div class="face-label">GOALS</div>
+                            <div class="face-description">Mission</div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Vertical Flip Cards -->
-        <h2 class="section-title">⬆️ Vertical Flip Cards</h2>
-        <div class="card-grid">
-            <!-- Card 4: Weather -->
-            <div class="flip-card flip-card-vertical">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="emoji-icon">☀️</span>
-                        <h2>Sunny Day</h2>
-                        <p>25°C</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <span class="emoji-icon">⛈️</span>
-                        <h2>Storm Coming</h2>
-                        <p>Prepare for rain</p>
-                        <p>Wind: 15 km/h</p>
-                    </div>
-                </div>
+                <div class="cube-caption">🔮 Hover to rotate (Y-axis)</div>
             </div>
 
-            <!-- Card 5: Stats -->
-            <div class="flip-card flip-card-vertical">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="emoji-icon">📊</span>
-                        <h2>Performance</h2>
-                        <p>Q1 Report</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <h2>+47%</h2>
-                        <p>Growth rate</p>
-                        <p>Revenue: $2.5M</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 6: Special Glow Effect -->
-            <div class="flip-card glow-effect">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="emoji-icon">✨</span>
-                        <h2>Special Offer</h2>
-                        <p>Limited time</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <h2>50% OFF</h2>
-                        <p>Use code: FLIP50</p>
-                        <button class="product-button">Claim</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Additional Interactive Features -->
-        <h2 class="section-title">🎯 Advanced Features</h2>
-        <div class="card-grid">
-            <!-- Card 7: Click to flip (alternative interaction) -->
-            <div class="flip-card" onclick="this.classList.toggle('clicked')">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="emoji-icon">👆</span>
-                        <h2>Click to Flip</h2>
-                        <p>Try clicking me!</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <h3>Great job!</h3>
-                        <p>You discovered click interaction</p>
-                        <p>✨✨✨</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 8: Gradient Design -->
-            <div class="flip-card">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front" style="background: linear-gradient(145deg, #ff6b6b, #feca57);">
-                        <span class="emoji-icon">🌈</span>
-                        <h2>Gradient</h2>
-                        <p>Colorful front</p>
-                    </div>
-                    <div class="flip-card-back" style="background: linear-gradient(145deg, #48dbfb, #ff9f43);">
-                        <h2>Vibrant Back</h2>
-                        <p>Smooth transitions</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 9: Emoji Mix -->
-            <div class="flip-card">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <div style="display: flex; gap: 0.5rem; justify-content: center;">
-                            <span class="emoji-icon">🐶</span>
-                            <span class="emoji-icon">🐱</span>
-                            <span class="emoji-icon">🐼</span>
+            <!-- Cube 2: Infinite Spinning Cube -->
+            <div class="cube-wrapper">
+                <div class="cube-container">
+                    <div class="cube cube-2">
+                        <div class="cube-face front">
+                            <div class="face-icon">⚡</div>
+                            <div class="face-label">FAST</div>
                         </div>
-                        <h2>Pets</h2>
-                        <p>Meet our animals</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <h3>Adopt Now</h3>
-                        <p>Find your perfect companion</p>
-                        <button class="product-button">Learn More</button>
+                        <div class="cube-face back">
+                            <div class="face-icon">🛡️</div>
+                            <div class="face-label">SECURE</div>
+                        </div>
+                        <div class="cube-face right">
+                            <div class="face-icon">📱</div>
+                            <div class="face-label">MOBILE</div>
+                        </div>
+                        <div class="cube-face left">
+                            <div class="face-icon">💻</div>
+                            <div class="face-label">DESKTOP</div>
+                        </div>
+                        <div class="cube-face top">
+                            <div class="face-icon">☁️</div>
+                            <div class="face-label">CLOUD</div>
+                        </div>
+                        <div class="cube-face bottom">
+                            <div class="face-icon">🔒</div>
+                            <div class="face-label">PRIVATE</div>
+                        </div>
                     </div>
                 </div>
+                <div class="cube-caption">🔄 Infinite spin (hover to pause)</div>
             </div>
+
+            <!-- Cube 3: X-axis Rotation -->
+            <div class="cube-wrapper">
+                <div class="cube-container">
+                    <div class="cube cube-3">
+                        <div class="cube-face front">
+                            <div class="face-icon">🎨</div>
+                            <div class="face-label">DESIGN</div>
+                        </div>
+                        <div class="cube-face back">
+                            <div class="face-icon">🔧</div>
+                            <div class="face-label">DEV</div>
+                        </div>
+                        <div class="cube-face right">
+                            <div class="face-icon">📈</div>
+                            <div class="face-label">MARKET</div>
+                        </div>
+                        <div class="cube-face left">
+                            <div class="face-icon">🎯</div>
+                            <div class="face-label">SEO</div>
+                        </div>
+                        <div class="cube-face top">
+                            <div class="face-icon">📝</div>
+                            <div class="face-label">CONTENT</div>
+                        </div>
+                        <div class="cube-face bottom">
+                            <div class="face-icon">📊</div>
+                            <div class="face-label">ANALYTICS</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cube-caption">📐 X-axis rotation on hover</div>
+            </div>
+
+            <!-- Cube 4: Click to Spin -->
+            <div class="cube-wrapper">
+                <div class="cube-container">
+                    <div class="cube cube-4" onclick="this.classList.add('spin'); setTimeout(() => this.classList.remove('spin'), 1000)">
+                        <div class="cube-face front">
+                            <div class="face-icon">👆</div>
+                            <div class="face-label">CLICK</div>
+                            <div class="face-description">Tap me!</div>
+                        </div>
+                        <div class="cube-face back">
+                            <div class="face-icon">🎉</div>
+                            <div class="face-label">SURPRISE</div>
+                        </div>
+                        <div class="cube-face right">
+                            <div class="face-icon">⭐</div>
+                            <div class="face-label">STAR</div>
+                        </div>
+                        <div class="cube-face left">
+                            <div class="face-icon">💎</div>
+                            <div class="face-label">GEM</div>
+                        </div>
+                        <div class="cube-face top">
+                            <div class="face-icon">🏆</div>
+                            <div class="face-label">WIN</div>
+                        </div>
+                        <div class="cube-face bottom">
+                            <div class="face-icon">🎁</div>
+                            <div class="face-label">GIFT</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cube-caption">🎯 Click for a spin!</div>
+            </div>
+
+            <!-- Cube 5: Floating Photo Cube -->
+            <div class="cube-wrapper">
+                <div class="cube-container">
+                    <div class="cube cube-5">
+                        <div class="cube-face front">
+                            <div class="face-icon">📸</div>
+                            <div class="face-label">PHOTO 1</div>
+                        </div>
+                        <div class="cube-face back">
+                            <div class="face-icon">🎥</div>
+                            <div class="face-label">PHOTO 2</div>
+                        </div>
+                        <div class="cube-face right">
+                            <div class="face-icon">📷</div>
+                            <div class="face-label">PHOTO 3</div>
+                        </div>
+                        <div class="cube-face left">
+                            <div class="face-icon">📱</div>
+                            <div class="face-label">PHOTO 4</div>
+                        </div>
+                        <div class="cube-face top">
+                            <div class="face-icon">📹</div>
+                            <div class="face-label">PHOTO 5</div>
+                        </div>
+                        <div class="cube-face bottom">
+                            <div class="face-icon">📞</div>
+                            <div class="face-label">PHOTO 6</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cube-caption">🎈 Floating animation</div>
+            </div>
+
+            <!-- Cube 6: Contact Info Cube -->
+            <div class="cube-wrapper">
+                <div class="cube-container">
+                    <div class="cube cube-6">
+                        <div class="cube-face front">
+                            <div class="face-icon">📧</div>
+                            <div class="face-label">EMAIL</div>
+                            <div class="contact-item">hello@cube.com</div>
+                        </div>
+                        <div class="cube-face back">
+                            <div class="face-icon">📱</div>
+                            <div class="face-label">PHONE</div>
+                            <div class="contact-item">+1 234 567 890</div>
+                        </div>
+                        <div class="cube-face right">
+                            <div class="face-icon">📍</div>
+                            <div class="face-label">ADDRESS</div>
+                            <div class="contact-item">3D Street, Web City</div>
+                        </div>
+                        <div class="cube-face left">
+                            <div class="face-icon">🐦</div>
+                            <div class="face-label">TWITTER</div>
+                            <div class="contact-item">@cube_cards</div>
+                        </div>
+                        <div class="cube-face top">
+                            <div class="face-icon">📘</div>
+                            <div class="face-label">FACEBOOK</div>
+                            <div class="contact-item">/3Dcubes</div>
+                        </div>
+                        <div class="cube-face bottom">
+                            <div class="face-icon">📷</div>
+                            <div class="face-label">INSTAGRAM</div>
+                            <div class="contact-item">@cube_art</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cube-caption">📞 Contact cube - hover to explore</div>
+            </div>
+        </div>
+
+        <!-- Additional Cube Controls -->
+        <div style="margin-top: 3rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <button onclick="rotateAll('X')" style="padding: 0.8rem 1.5rem; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">Rotate All X</button>
+            <button onclick="rotateAll('Y')" style="padding: 0.8rem 1.5rem; background: #764ba2; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">Rotate All Y</button>
+            <button onclick="rotateAll('reset')" style="padding: 0.8rem 1.5rem; background: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">Reset All</button>
         </div>
     </div>
 
     <script>
-        // Add click event for the click-to-flip card
-        document.querySelectorAll('.flip-card').forEach(card => {
-            card.addEventListener('click', function() {
-                if (this.classList.contains('clicked')) {
-                    this.classList.remove('clicked');
+        // Function to rotate all cubes
+        function rotateAll(axis) {
+            const cubes = document.querySelectorAll('.cube:not(.cube-2):not(.cube-4)');
+            cubes.forEach(cube => {
+                if (axis === 'X') {
+                    cube.style.transform = 'rotateX(360deg)';
+                } else if (axis === 'Y') {
+                    cube.style.transform = 'rotateY(360deg)';
                 } else {
-                    this.classList.add('clicked');
+                    cube.style.transform = '';
+                }
+                
+                // Reset after animation
+                setTimeout(() => {
+                    cube.style.transform = '';
+                }, 1000);
+            });
+        }
+
+        // Make cubes draggable (advanced feature)
+        let isDragging = false;
+        let previousX, previousY;
+        let currentRotateX = 0, currentRotateY = 0;
+
+        document.querySelectorAll('.cube-container').forEach(container => {
+            container.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                previousX = e.clientX;
+                previousY = e.clientY;
+                
+                const cube = container.querySelector('.cube');
+                if (cube && !cube.classList.contains('cube-2')) {
+                    cube.style.transition = 'none';
+                }
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                
+                const deltaX = e.clientX - previousX;
+                const deltaY = e.clientY - previousY;
+                
+                currentRotateY += deltaX * 0.5;
+                currentRotateX -= deltaY * 0.5;
+                
+                const container_rect = container.getBoundingClientRect();
+                const cubes = document.elementsFromPoint(e.clientX, e.clientY);
+                const cube = container.querySelector('.cube');
+                
+                if (cube && cubes.includes(container) && !cube.classList.contains('cube-2')) {
+                    cube.style.transform = `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg)`;
+                }
+                
+                previousX = e.clientX;
+                previousY = e.clientY;
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                const cube = container.querySelector('.cube');
+                if (cube && !cube.classList.contains('cube-2')) {
+                    cube.style.transition = 'transform 0.5s';
                 }
             });
         });
-
-        // Optional: Add CSS for clicked state
-        const style = document.createElement('style');
-        style.textContent = `
-            .flip-card.clicked .flip-card-inner {
-                transform: rotateY(180deg);
-            }
-            .flip-card-vertical.clicked .flip-card-inner {
-                transform: rotateX(180deg);
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
