@@ -1,532 +1,607 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>High Court · hex sitemap</title>
-    <!-- Font Awesome 6 (free) & Google Font for elegant typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <title>High Court · full‑slide zigzag (judgment content)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Common CSS (header/footer/global) — do not modify -->
+  <link rel="stylesheet" href="style.css">
+  <!-- site components (header/footer loader) -->
+  <script src="assets/Scripts/site-components.js" defer></script>
+  <style>
+    /* ---------- global reset & flex sticky footer ---------- */
+    body {
+      background: #f4f7fb;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    #site-header, #site-footer { flex-shrink: 0; }
 
-        body {
-            background: linear-gradient(145deg, #f2f0e9 0%, #faf7f2 100%);
-            font-family: 'Inter', sans-serif;
-            padding: 2rem 1.5rem;
-            color: #2a2b2a;
-            line-height: 1.5;
-            min-height: 100vh;
-        }
+    /* main container: two columns, zigzag placement */
+    .zigzag-grid {
+      max-width: 1300px;
+      width: 100%;
+      margin: 150px auto 60px auto;
+      padding: 20px 30px;
+      flex: 1 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;   /* two columns */
+      gap: 30px 40px;                   /* horizontal gap increased for visual separation */
+      background: transparent;
+    }
 
-        .wrapper {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+    /* ---------- full slide card (zigzag aware) ---------- */
+    .slide-card {
+      background-color: transparent;
+      width: 100%;
+      aspect-ratio: 5 / 3;
+      position: relative;
+      border-radius: 32px 16px 16px 32px;
+      box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.2);
+      transition: box-shadow 0.3s ease;
+      cursor: default;
+      overflow: visible;        /* allow sliding outside */
+    }
 
-        /* ---------- elegant header with seal ---------- */
-        .heraldic-header {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 3.5rem;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 80px;
-            padding: 1.2rem 2.5rem 1.2rem 2.2rem;
-            box-shadow: 0 15px 30px -15px rgba(70, 50, 30, 0.2), inset 0 1px 3px rgba(255,255,240,0.8);
-            border: 1px solid rgba(200, 180, 150, 0.25);
-        }
+    /* left column cards (odd) - card itself aligned to left side of its grid cell */
+    .slide-card.left-card {
+      margin-right: 0;          /* stick to left */
+      margin-left: 0;
+    }
 
-        .title-block {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
+    /* right column cards (even) - card aligned to right side of its cell */
+    .slide-card.right-card {
+      margin-left: auto;         /* stick to right */
+      margin-right: 0;
+    }
 
-        .court-emblem {
-            background: #7a2e1a;
-            color: #f6e9d9;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            box-shadow: 0 8px 12px -6px #7a3a2a;
-            border: 2px solid #e5c8a3;
-        }
+    .slide-card:hover {
+      box-shadow: 0 28px 50px -16px rgba(120, 50, 30, 0.5);
+    }
 
-        .title-block h1 {
-            font-weight: 600;
-            font-size: 2.1rem;
-            letter-spacing: -0.02em;
-            color: #2e3b2e;
-        }
+    /* both layers absolutely positioned */
+    .slide-front, .slide-back {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px 24px;
+      background: white;
+      box-sizing: border-box;
+      overflow-y: auto;
+      pointer-events: none;
+      will-change: transform;
+    }
 
-        .title-block h1 span {
-            font-weight: 300;
-            color: #7f6b5a;
-            margin: 0 6px;
-        }
+    .slide-front {
+      background: #ffffff;
+      z-index: 2;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
 
-        .flair-badge {
-            background: #cb9e7c;
-            color: #1f2b1f;
-            padding: 0.6rem 1.5rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: inset 0 0 0 1px #edd7bf, 0 6px 14px rgba(150, 100, 70, 0.15);
-        }
+    .slide-back {
+      background: linear-gradient(165deg, #f7f2ec 0%, #ffffff 100%);
+      z-index: 1;
+      border-left: 4px solid #9e2b1f;
+    }
 
-        .flair-badge i {
-            color: #3f281c;
-            font-size: 1rem;
-        }
+    /* LEFT CARD (odd): front starts at left, back behind. Hover: front slides FULLY RIGHT (100%) */
+    .slide-card.left-card .slide-front {
+      left: 0;
+      transform: translateX(0);
+    }
+    .slide-card.left-card .slide-back {
+      left: 0;
+      transform: translateX(0);
+    }
+    .slide-card.left-card:hover .slide-front {
+      transform: translateX(100%);  /* full slide to right, entire back visible */
+    }
+    .slide-card.left-card:hover .slide-back {
+      transform: translateX(0);
+      transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1) 0.05s;
+    }
 
-        .subhead-grail {
-            margin: 0 0 2rem 1rem;
-            font-size: 1.1rem;
-            color: #4f4f42;
-            background: rgba(235, 225, 210, 0.7);
-            display: inline-block;
-            padding: 0.3rem 2rem 0.3rem 2rem;
-            border-radius: 40px;
-            backdrop-filter: blur(4px);
-            border: 1px solid #dacbbc;
-        }
+    /* RIGHT CARD (even): front starts at right, back behind. Hover: front slides FULLY LEFT (-100%) */
+    .slide-card.right-card .slide-front {
+      right: 0;
+      transform: translateX(0);
+    }
+    .slide-card.right-card .slide-back {
+      right: 0;
+      transform: translateX(0);
+    }
+    .slide-card.right-card:hover .slide-front {
+      transform: translateX(-100%);  /* full slide to left, entire back visible */
+    }
+    .slide-card.right-card:hover .slide-back {
+      transform: translateX(0);
+      transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1) 0.05s;
+    }
 
-        /* ---------- HEXAGONAL GRID (modern, attractive) ---------- */
-        .hex-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px 20px;
-            margin: 3rem 0 3rem;
-        }
+    /* ----- front content (judgment styling) ----- */
+    .slide-front {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+    }
 
-        .hex-item {
-            flex: 0 0 280px;
-            filter: drop-shadow(0 10px 18px rgba(90, 60, 35, 0.12));
-            transition: filter 0.25s, transform 0.2s;
-            cursor: default;
-        }
+    .slide-front .number {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: clamp(80px, 10vw, 120px);
+      line-height: 1;
+      min-width: 120px;
+      text-align: center;
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+      background-size: cover;
+      background-position: center 30%;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    }
 
-        .hex-item:hover {
-            filter: drop-shadow(0 18px 25px rgba(110, 70, 40, 0.2));
-            transform: translateY(-6px);
-        }
+    .front-info {
+      flex: 1;
+    }
 
-        .hex-shape {
-            background: #fefcf7;
-            clip-path: polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%);
-            padding: 2rem 1.5rem 1.8rem 1.5rem;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            height: 320px;
-            border: 1px solid rgba(210, 180, 150, 0.5);
-            background: linear-gradient(135deg, #fffbf5, #fef9f0);
-            transition: border-color 0.2s;
-        }
+    .front-info .court-badge {
+      display: inline-block;
+      background: #f0e7e0;
+      padding: 4px 14px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      color: #7b3f2c;
+      margin-bottom: 8px;
+      border: 1px solid #d9c5b8;
+    }
 
-        .hex-shape::after {
-            content: '';
-            position: absolute;
-            top: 4px; left: 4px; right: 4px; bottom: 4px;
-            clip-path: polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%);
-            background: transparent;
-            border: 1px solid #e5cdb6;
-            pointer-events: none;
-            opacity: 0.5;
-        }
+    .front-info h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      padding-left: 20px;
+      color: #1e2b3c;
+      text-transform: uppercase;
+      position: relative;
+      line-height: 1.3;
+    }
 
-        .hex-category {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 600;
-            color: #b27d58;
-            margin-bottom: 12px;
-            border-bottom: 1px dashed #e1cfbc;
-            padding-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+    .front-info h3::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 6px;
+      background: linear-gradient(135deg, #9e2b1f, #c14f3a);
+      border-radius: 12px;
+    }
 
-        .hex-category i {
-            font-size: 0.9rem;
-            color: #9b613f;
-        }
+    .front-info .case-ref {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #6f5b4c;
+      margin: 8px 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-        .hex-title {
-            font-weight: 700;
-            font-size: 1.2rem;
-            line-height: 1.4;
-            color: #1e3a2b;
-            margin-bottom: 10px;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
+    .front-info .case-ref i {
+      font-size: 0.75rem;
+      color: #9e2b1f;
+    }
 
-        .hex-ref {
-            background: #eee5db;
-            align-self: flex-start;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #634d39;
-            margin: 10px 0 8px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            border: 1px solid #d7bc9f;
-        }
+    .front-info p {
+      margin: 8px 0 4px 0;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      opacity: 0.85;
+      text-align: justify;
+      color: #2c3e4e;
+      font-weight: 400;
+    }
 
-        .hex-preview {
-            font-size: 0.85rem;
-            color: #5c5a4f;
-            margin: 8px 0 12px;
-            flex: 1;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
+    /* ----- back content (judgment actions) ----- */
+    .slide-back {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 20px;
+      pointer-events: none;
+    }
 
-        .hex-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: auto;
-            border-top: 1px solid #ebddcf;
-            padding-top: 10px;
-            font-size: 0.75rem;
-        }
+    .back-title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #2d3748;
+      margin-bottom: 4px;
+      border-bottom: 3px solid #9e2b1f;
+      display: inline-block;
+      padding-bottom: 8px;
+      line-height: 1.4;
+      max-width: 90%;
+    }
 
-        .hex-permalink {
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            background: #e9e0d3;
-            padding: 4px 8px;
-            border-radius: 30px;
-            color: #3a4e3a;
-            max-width: 160px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+    .back-citation {
+      font-size: 0.85rem;
+      background: #e9ddd3;
+      padding: 4px 16px;
+      border-radius: 40px;
+      color: #4d3a2e;
+      font-weight: 500;
+      display: inline-block;
+    }
 
-        .hex-permalink i {
-            margin-right: 4px;
-            color: #a5673f;
-        }
+    .back-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      width: 100%;
+      position: relative;
+      z-index: 10;
+      margin-top: 10px;
+    }
 
-        .hex-icon-small {
-            background: #cfb094;
-            color: #28281f;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-        }
+    .back-btn {
+      background: white;
+      border: 2px solid #9e2b1f;
+      color: #7b2c1d;
+      font-weight: 600;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 150px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 6px 12px -6px rgba(150, 50, 20, 0.2);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      pointer-events: auto;
+      gap: 8px;
+    }
 
-        /* topic ornaments */
-        .topic-prevent { border-left: 4px solid #a6402e; }
-        .topic-ecact { border-left: 4px solid #c47a3a; }
-        .topic-pds { border-left: 4px solid #5d7b5f; }
+    .back-btn i {
+      font-size: 1rem;
+    }
 
-        /* filter bar with glassmorphism */
-        .topic-filters {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 28px;
-            background: rgba(255, 248, 238, 0.8);
-            backdrop-filter: blur(8px);
-            padding: 1rem 2.5rem;
-            border-radius: 60px;
-            margin: 30px 0 10px;
-            border: 1px solid #e7d8c4;
-        }
+    .back-btn:hover {
+      background: #9e2b1f;
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 14px 24px -10px #9e2b1f;
+      border-color: transparent;
+    }
 
-        .filter-tag {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-            color: #4c463a;
-        }
+    /* number background image */
+    .number[style*="background-image"] {
+      background-size: cover;
+      background-position: center;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
 
-        .filter-tag i {
-            font-size: 1.1rem;
-            color: #9d6442;
-        }
+    /* responsiveness */
+    @media (max-width: 900px) {
+      .zigzag-grid {
+        grid-template-columns: 1fr;
+        max-width: 700px;
+      }
+      .slide-card {
+        aspect-ratio: 6 / 4;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+      .slide-card.left-card .slide-front,
+      .slide-card.right-card .slide-front {
+        left: 0;
+        right: auto;
+      }
+      .slide-card.left-card:hover .slide-front,
+      .slide-card.right-card:hover .slide-front {
+        transform: translateX(100%);
+      }
+    }
 
-        .sep-dot {
-            width: 6px;
-            height: 6px;
-            background: #bea690;
-            border-radius: 50%;
-        }
-
-        /* footer emblem */
-        .scroll-footer {
-            margin-top: 4rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #655e53;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            border-top: 1px dashed #cebcab;
-            padding-top: 2rem;
-        }
-
-        .law-year {
-            background: #dad1c2;
-            padding: 0.2rem 1.2rem;
-            border-radius: 40px;
-        }
-
-        @media (max-width: 700px) {
-            .heraldic-header {
-                flex-direction: column;
-                align-items: start;
-                gap: 15px;
-                border-radius: 40px;
-            }
-            .hex-grid { gap: 20px; }
-        }
-    </style>
+    @media (max-width: 600px) {
+      .slide-front {
+        flex-direction: column;
+        text-align: center;
+        padding: 16px;
+      }
+      .front-info h3 {
+        padding-left: 0;
+      }
+      .front-info h3::before {
+        display: none;
+      }
+      .front-info p {
+        text-align: center;
+      }
+      .slide-card {
+        aspect-ratio: auto;
+        min-height: 380px;
+      }
+      .back-btn {
+        min-width: 130px;
+        padding: 10px 14px;
+        font-size: 0.95rem;
+      }
+      .slide-card.left-card:hover .slide-front,
+      .slide-card.right-card:hover .slide-front {
+        transform: translateX(100%);
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="wrapper">
-    <!-- elegant header -->
-    <div class="heraldic-header">
-        <div class="title-block">
-            <div class="court-emblem"><i class="fas fa-gavel"></i></div>
-            <h1>high court <span>·</span> digest</h1>
-        </div>
-        <div class="flair-badge">
-            <i class="fas fa-map-signs"></i> 12 landmark sitemaps
-            <i class="fas fa-feather" style="margin-left: 8px;"></i>
-        </div>
-    </div>
-    <div class="subhead-grail">
-        <i class="fas fa-asterisk" style="font-size: 0.7rem; margin-right: 10px; color:#a95531;"></i> preventive detention · EC Act vehicle release · PDS reforms
-    </div>
 
-    <!-- attractive hexagonal grid (12 items) -->
-    <div class="hex-grid">
-        <!-- 1. preventive detention main -->
-        <div class="hex-item">
-            <div class="hex-shape">
-                <div class="hex-category"><i class="fas fa-lock"></i> art. 22(5)</div>
-                <div class="hex-title">Preventive Detention & Constitutional Rights under Article 22(5)</div>
-                <div class="hex-ref"><i class="fas fa-hashtag"></i> 2024 · CRLMC 245</div>
-                <div class="hex-preview">Right to representation – delayed consideration – detention quashed.</div>
-                <div class="hex-footer">
-                    <span class="hex-permalink"><i class="fas fa-link"></i> /prev-det-art22-5</span>
-                    <span class="hex-icon-small"><i class="fas fa-arrow-right"></i></span>
-                </div>
-            </div>
-        </div>
+<div id="site-header"></div>
 
-        <!-- 2. Rabi Kumar Nanda (vehicle seizure) -->
-        <div class="hex-item">
-            <div class="hex-shape">
-                <div class="hex-category"><i class="fas fa-truck"></i> EC Act</div>
-                <div class="hex-title">Rabi Kumar Nanda v. State of Orissa: Vehicle Seizure & Release</div>
-                <div class="hex-ref"><i class="fas fa-hashtag"></i> 2023 · W.P.892</div>
-                <div class="hex-preview">Interim release of vehicle seized for alleged PDS violation – conditions.</div>
-                <div class="hex-footer">
-                    <span class="hex-permalink"><i class="fas fa-link"></i> /rabi-kumar-ec-act</span>
-                    <span class="hex-icon-small"><i class="fas fa-arrow-right"></i></span>
-                </div>
-            </div>
-        </div>
+<!-- ZIGZAG TWO-COLUMN GRID (full slide, alternating placement) -->
+<div class="zigzag-grid"></div>
 
-        <!-- 3. Storage Agents vs Transport Contractors (PDS) -->
-        <div class="hex-item">
-            <div class="hex-shape">
-                <div class="hex-category"><i class="fas fa-warehouse"></i> PDS reforms</div>
-                <div class="hex-title">Storage Agents vs. Transport Contractors: Orissa HC on PDS Reforms</div>
-                <div class="hex-ref"><i class="fas fa-hashtag"></i> 2024 · ARBA 78</div>
-                <div class="hex-preview">Liability for damaged foodgrains – agent vs contractor distinction.</div>
-                <div class="hex-footer">
-                    <span class="hex-permalink"><i class="fas fa-link"></i> /storage-transport-pds</span>
-                    <span class="hex-icon-small"><i class="fas fa-arrow-right"></i></span>
-                </div>
-            </div>
-        </div>
+<script>
+  (function() {
+    // 12 High Court judgment items – exactly as requested
+    const judgmentItems = [
+      {
+        title: "Preventive Detention & Constitutional Rights under Article 22(5)",
+        description: "Full text of the landmark judgment examining right to make representation, delayed consideration, and when detention becomes unconstitutional. Detailed analysis of Article 22(5) safeguards.",
+        imageUrl: "/assets/images/AI-Images/AI.webp",
+        court: "Orissa HC",
+        caseRef: "2024 · CRLMC 245/2024",
+        frontLink: "/judgments/preventive-detention-art22-5.html",
+        backAction1: { text: "📄 read judgment", link: "/judgments/preventive-detention-art22-5.html" },
+        backAction2: { text: "⚖️ case analysis", link: "/judgments/preventive-detention-art22-5.html" }
+      },
+      {
+        title: "Rabi Kumar Nanda v. State of Orissa: Vehicle Seizure & Release under Essential Commodities Act",
+        description: "Landmark ruling on interim release of vehicle seized for alleged PDS violation. Conditions for release, bank guarantee, and principles under EC Act.",
+        imageUrl: "/assets/images/AI-Images/Machine.webp",
+        court: "Orissa HC",
+        caseRef: "2023 · W.P.(C) 892/2023",
+        frontLink: "/judgments/rabi-kumar-nanda-ec-act.html",
+        backAction1: { text: "📄 full text", link: "/judgments/rabi-kumar-nanda-ec-act.html" },
+        backAction2: { text: "🚚 seizure notes", link: "/judgments/rabi-kumar-nanda-ec-act.html" }
+      },
+      {
+        title: "Storage Agents vs. Transport Contractors: Orissa High Court Judgment on PDS Reforms",
+        description: "Landmark distinction between storage agents and transport contractors. Liability for damaged foodgrains, PDS reforms, and allocation of responsibility.",
+        imageUrl: "/assets/images/AI-Images/swaraj.webp",
+        court: "Orissa HC",
+        caseRef: "2024 · ARBA 78/2024",
+        frontLink: "/judgments/storage-agents-transport-pds.html",
+        backAction1: { text: "📄 judgment", link: "/judgments/storage-agents-transport-pds.html" },
+        backAction2: { text: "📦 PDS analysis", link: "/judgments/storage-agents-transport-pds.html" }
+      },
+      {
+        title: "Sk. Salim v. State : preventive detention & right to documents",
+        description: "Non-supply of relied upon documents renders detention unconstitutional. Detailed examination of Article 22(5) and right to effective representation.",
+        imageUrl: "/assets/images/AI-Images/ShareMarket.webp",
+        court: "Calcutta HC",
+        caseRef: "2022 · WP 1145/2022",
+        frontLink: "/judgments/salim-preventive-docs.html",
+        backAction1: { text: "📄 opinion", link: "/judgments/salim-preventive-docs.html" },
+        backAction2: { text: "🔍 document right", link: "/judgments/salim-preventive-docs.html" }
+      },
+      {
+        title: "Jagmal Singh v. State: release of vehicle seized under EC Act",
+        description: "Principles governing interim release of vehicles seized under Essential Commodities Act. Security bond, valuation, and magisterial powers.",
+        imageUrl: "/assets/images/AI-Images/transforming.webp",
+        court: "Punjab & Haryana HC",
+        caseRef: "2023 · CRM-M 2398/2023",
+        frontLink: "/judgments/jagmal-singh-ec-act.html",
+        backAction1: { text: "📄 full text", link: "/judgments/jagmal-singh-ec-act.html" },
+        backAction2: { text: "⚙️ release conditions", link: "/judgments/jagmal-singh-ec-act.html" }
+      },
+      {
+        title: "Transport contractor liability: food grain shortage – PDS",
+        description: "Transport contractor cannot be treated as storage agent for recovery of shortage. Important distinction under PDS reforms and liability framework.",
+        imageUrl: "/assets/images/AI-Images/intelligent-energy.webp",
+        court: "Allahabad HC",
+        caseRef: "2024 · Writ C 4081/2024",
+        frontLink: "/judgments/transport-vs-storage-pds.html",
+        backAction1: { text: "📄 judgment", link: "/judgments/transport-vs-storage-pds.html" },
+        backAction2: { text: "🚛 contractor duty", link: "/judgments/transport-vs-storage-pds.html" }
+      },
+      {
+        title: "Article 22(5) – communication of grounds in detainee’s language",
+        description: "Detention order set aside for not providing grounds in language understood by detenu. Right to make representation includes linguistic access.",
+        imageUrl: "/assets/images/AI-Images/kpmg.webp",
+        court: "Delhi HC",
+        caseRef: "2023 · CRL.A. 789/2023",
+        frontLink: "/judgments/detention-language-rights.html",
+        backAction1: { text: "📄 read", link: "/judgments/detention-language-rights.html" },
+        backAction2: { text: "🌐 language right", link: "/judgments/detention-language-rights.html" }
+      },
+      {
+        title: "Shivlal v. State: release of vehicle on 'supurtnama' – EC Act",
+        description: "Magistrate's power to release vehicle seized under Essential Commodities Act. Procedure for supurtnama and conditions for interim custody.",
+        imageUrl: "/assets/images/AI-Images/intelligent.webp",
+        court: "Madhya Pradesh HC",
+        caseRef: "2022 · MCRC 56782/2022",
+        frontLink: "/judgments/shivlal-vehicle-release.html",
+        backAction1: { text: "📄 judgment", link: "/judgments/shivlal-vehicle-release.html" },
+        backAction2: { text: "📝 supurtnama", link: "/judgments/shivlal-vehicle-release.html" }
+      },
+      {
+        title: "Storage agent not liable for transit loss: PDS reforms",
+        description: "Agent only responsible for storage, not for contractor's negligence during transit. Important clarification for PDS liability regime.",
+        imageUrl: "/assets/images/AI-Images/AI.webp",
+        court: "Gujarat HC",
+        caseRef: "2023 · SCA 10234/2023",
+        frontLink: "/judgments/gujarat-storage-agent.html",
+        backAction1: { text: "📄 full text", link: "/judgments/gujarat-storage-agent.html" },
+        backAction2: { text: "📦 storage duty", link: "/judgments/gujarat-storage-agent.html" }
+      },
+      {
+        title: "Delay in deciding representation – Article 22(5) violation",
+        description: "Unreasonable delay by advisory board in deciding representation renders detention invalid. Speedy consideration is constitutional mandate.",
+        imageUrl: "/assets/images/AI-Images/Machine.webp",
+        court: "Bombay HC",
+        caseRef: "2024 · CRLWP 2047/2024",
+        frontLink: "/judgments/delay-representation-art22-5.html",
+        backAction1: { text: "📄 opinion", link: "/judgments/delay-representation-art22-5.html" },
+        backAction2: { text: "⏱️ delay analysis", link: "/judgments/delay-representation-art22-5.html" }
+      },
+      {
+        title: "Mahendra Kumar v. State: release of seized vehicle – EC Act",
+        description: "Conditional release of vehicle – furnishing bank guarantee instead of vehicle custody. Alternatives to physical custody under EC Act.",
+        imageUrl: "/assets/images/AI-Images/swaraj.webp",
+        court: "Rajasthan HC",
+        caseRef: "2023 · SBWP 6543/2023",
+        frontLink: "/judgments/mahendra-ec-act-release.html",
+        backAction1: { text: "📄 judgment", link: "/judgments/mahendra-ec-act-release.html" },
+        backAction2: { text: "🏦 guarantee", link: "/judgments/mahendra-ec-act-release.html" }
+      },
+      {
+        title: "FCI v. Storage Agent: demurrage & handling – PDS reform",
+        description: "Storage agent cannot be penalised for delay caused by transport contractor. Demurrage charges and handling responsibility under PDS.",
+        imageUrl: "/assets/images/AI-Images/transforming.webp",
+        court: "Karnataka HC",
+        caseRef: "2024 · W.P. 11077/2024",
+        frontLink: "/judgments/karnataka-storage-pds.html",
+        backAction1: { text: "📄 full text", link: "/judgments/karnataka-storage-pds.html" },
+        backAction2: { text: "⚖️ demurrage", link: "/judgments/karnataka-storage-pds.html" }
+      }
+    ];
 
-        <!-- 4. Sk. Salim preventive detention -->
-        <div class="hex-item">
-            <div class="hex-shape">
-                <div class="hex-category"><i class="fas fa-lock"></i> art.22(5)</div>
-                <div class="hex-title">Sk. Salim v. State : preventive detention & right to documents</div>
-                <div class="hex-ref"><i class="fas fa-hashtag"></i> 2022 · WP 1145</div>
-                <div class="hex-preview">Non‑supply of relied documents – detention unconstitutional.</div>
-                <div class="hex-footer">
-                    <span class="hex-permalink"><i class="fas fa-link"></i> /salim-preventive-docs</span>
-                    <span class="hex-icon-small"><i class="fas fa-arrow-right"></i></span>
-                </div>
-            </div>
-        </div>
+    const container = document.querySelector(".zigzag-grid");
+    if (!container) return;
+    container.innerHTML = "";
 
-        <!-- 5. Jagmal Singh vehicle EC Act -->
-        <div class="hex-item">
-            <div class="hex-shape">
-                <div class="hex-category"><i class="fas fa-truck"></i> EC Act</div>
-                <div class="hex-title">Jagmal Singh v. State: release of vehicle seized under EC Act</div>
-                <div class="hex-ref"><i class="fas fa-hashtag"></i> 2023 · CRM-M 2398</div>
-                <div class="hex-preview">Principles of interim release – security bond.</div>
-                <div class="hex-footer">
-                    <span class="hex-permalink"><i class="fas fa-link"></i> /jagmal-ec-act</span>
-                    <span class="hex-icon-small"><i class="fas fa-arrow-right"></i></span>
-                </div>
-            </div>
-        </div>
+    judgmentItems.forEach((item, index) => {
+      const number = (index + 1).toString().padStart(2, "0");
 
-        <!-- 6. Transport contractor liability (Allahabad) PDS -->
-        <div class="hex-item">
-            <div class="hex-shape">
-                <div class="hex-category"><i class="fas fa-boxes-stacked"></i> PDS</div>
-                <div class="hex-title">Transport contractor liability: food grain shortage – PDS</div>
-                <div class="hex-ref"><i class="fas fa-hashtag"></i> 2024 · Writ 4081</div>
-                <div class="hex-preview">Contractor cannot be treated as storage agent – recovery quashed.</div>
-                <div class="hex-footer">
-                    <span class="hex-permalink"><i class="fas fa-link"></i> /transport-vs-storage</span>
-                    <span class="hex-icon-small"><i class="fas fa-arrow-right"></i></span>
-                </div>
-            </div>
-        </div>
+      // main slide-card container with alternating placement: even index = left, odd = right
+      const card = document.createElement("div");
+      card.className = `slide-card ${index % 2 === 0 ? 'left-card' : 'right-card'}`;
 
-        <!-- 7. Delhi HC – language rights (preventive) -->
-        <div class="hex-item">
-            <div class="hex-shape">
-                <div class="hex-category"><i class="fas fa-lock"></i> art.22(5)</div>
-                <div class="hex-title">Article 22(5) – communication in detainee’s language</div>
-                <div class="hex-ref"><i class="fas fa-hashtag"></i> 2023 · CRL.A.789</div>
-                <div class="hex-preview">Detention order set aside for lack of Hindi translation.</div>
-                <div class="hex-footer">
-                    <span class="hex-permalink"><i class="fas fa-link"></i> /detention-language</span>
-                    <span class="hex-icon-small"><i class="fas fa-arrow-right"></i></span>
-                </div>
-            </div>
-        </div>
+      // ---------- FRONT SIDE ----------
+      const frontDiv = document.createElement("div");
+      frontDiv.className = "slide-front";
 
-        <!-- 8. Shivlal v. State – EC Act vehicle -->
-        <div class="hex-item">
-            <div class="hex-shape">
-                <div class="hex-category"><i class="fas fa-truck"></i> EC Act</div>
-                <div class="hex-title">Shivlal v. State: release on 'supurtnama' – EC Act</div>
-                <div class="hex-ref"><i class="fas fa-hashtag"></i> 2022 · MCRC 56782</div>
-                <div class="hex-preview">Magistrate’s power to release seized vehicle.</div>
-                <div class="hex-footer">
-                    <span class="hex-permalink"><i class="fas fa-link"></i> /shivlal-vehicle</span>
-                    <span class="hex-icon-small"><i class="fas fa-arrow-right"></i></span>
-                </div>
-            </div>
-        </div>
+      const numberSpan = document.createElement("div");
+      numberSpan.className = "number";
+      numberSpan.style.backgroundImage = `url('${item.imageUrl}')`;
+      numberSpan.textContent = number;
 
-        <!-- 9. Gujarat storage agent not liable (PDS) -->
-        <div class="hex-item">
-            <div class="hex-shape">
-                <div class="hex-category"><i class="fas fa-people-arrows"></i> PDS</div>
-                <div class="hex-title">Storage agent not liable for transit loss: PDS reforms</div>
-                <div class="hex-ref"><i class="fas fa-hashtag"></i> 2023 · SCA 10234</div>
-                <div class="hex-preview">Agent only responsible for storage, not contractor’s negligence.</div>
-                <div class="hex-footer">
-                    <span class="hex-permalink"><i class="fas fa-link"></i> /gujarat-storage</span>
-                    <span class="hex-icon-small"><i class="fas fa-arrow-right"></i></span>
-                </div>
-            </div>
-        </div>
+      const infoDiv = document.createElement("div");
+      infoDiv.className = "front-info";
 
-        <!-- 10. Bombay HC – delay in representation (preventive) -->
-        <div class="hex-item">
-            <div class="hex-shape">
-                <div class="hex-category"><i class="fas fa-clock"></i> art.22(5)</div>
-                <div class="hex-title">Delay in deciding representation – Article 22(5) violation</div>
-                <div class="hex-ref"><i class="fas fa-hashtag"></i> 2024 · CRLWP 2047</div>
-                <div class="hex-preview">Unreasonable delay by advisory board – detention invalid.</div>
-                <div class="hex-footer">
-                    <span class="hex-permalink"><i class="fas fa-link"></i> /delay-repr-art22</span>
-                    <span class="hex-icon-small"><i class="fas fa-arrow-right"></i></span>
-                </div>
-            </div>
-        </div>
+      const courtBadge = document.createElement("span");
+      courtBadge.className = "court-badge";
+      courtBadge.textContent = item.court;
 
-        <!-- 11. Mahendra Kumar – EC Act release -->
-        <div class="hex-item">
-            <div class="hex-shape">
-                <div class="hex-category"><i class="fas fa-truck"></i> EC Act</div>
-                <div class="hex-title">Mahendra Kumar v. State: release of seized vehicle</div>
-                <div class="hex-ref"><i class="fas fa-hashtag"></i> 2023 · SBWP 6543</div>
-                <div class="hex-preview">Conditional release – bank guarantee instead of custody.</div>
-                <div class="hex-footer">
-                    <span class="hex-permalink"><i class="fas fa-link"></i> /mahendra-ec-act</span>
-                    <span class="hex-icon-small"><i class="fas fa-arrow-right"></i></span>
-                </div>
-            </div>
-        </div>
+      const titleEl = document.createElement("h3");
+      titleEl.textContent = item.title;
 
-        <!-- 12. FCI v. Storage Agent – Karnataka PDS -->
-        <div class="hex-item">
-            <div class="hex-shape">
-                <div class="hex-category"><i class="fas fa-hand-holding-hand"></i> PDS</div>
-                <div class="hex-title">FCI v. Storage Agent: demurrage & handling – PDS reform</div>
-                <div class="hex-ref"><i class="fas fa-hashtag"></i> 2024 · WP 11077</div>
-                <div class="hex-preview">Agent cannot be penalised for delay caused by transport.</div>
-                <div class="hex-footer">
-                    <span class="hex-permalink"><i class="fas fa-link"></i> /karnataka-storage-pds</span>
-                    <span class="hex-icon-small"><i class="fas fa-arrow-right"></i></span>
-                </div>
-            </div>
-        </div>
-    </div>
+      const caseRefEl = document.createElement("div");
+      caseRefEl.className = "case-ref";
+      caseRefEl.innerHTML = `<i class="fas fa-gavel"></i> ${item.caseRef}`;
 
-    <!-- stylish filter/tag bar -->
-    <div class="topic-filters">
-        <span class="filter-tag"><i class="fas fa-lock"></i> preventive detention (4)</span>
-        <span class="sep-dot"></span>
-        <span class="filter-tag"><i class="fas fa-truck"></i> EC Act vehicle (4)</span>
-        <span class="sep-dot"></span>
-        <span class="filter-tag"><i class="fas fa-warehouse"></i> PDS reforms (4)</span>
-        <span class="sep-dot"></span>
-        <span class="filter-tag"><i class="fas fa-sitemap"></i> full index · 12 hexes</span>
-    </div>
+      const descEl = document.createElement("p");
+      descEl.textContent = item.description;
 
-    <!-- footer with courtly touch -->
-    <div class="scroll-footer">
-        <span><i class="fas fa-scale-balanced"></i> High Court of Judicature</span>
-        <span class="law-year"><i class="fas fa-calendar-alt"></i> 2022–2024</span>
-        <span><i class="fas fa-map-pin"></i> 12 sitemap entries · github pages ready</span>
-    </div>
-</div>
+      infoDiv.appendChild(courtBadge);
+      infoDiv.appendChild(titleEl);
+      infoDiv.appendChild(caseRefEl);
+      infoDiv.appendChild(descEl);
+      frontDiv.appendChild(numberSpan);
+      frontDiv.appendChild(infoDiv);
+
+      // ---------- BACK SIDE (judgment actions) ----------
+      const backDiv = document.createElement("div");
+      backDiv.className = "slide-back";
+
+      const backHeading = document.createElement("div");
+      backHeading.className = "back-title";
+      backHeading.textContent = item.title.length > 50 ? item.title.substring(0, 50) + "…" : item.title;
+
+      const backCitation = document.createElement("div");
+      backCitation.className = "back-citation";
+      backCitation.textContent = `${item.court} · ${item.caseRef}`;
+
+      const actionsDiv = document.createElement("div");
+      actionsDiv.className = "back-actions";
+
+      // button 1 (full judgment)
+      const btn1 = document.createElement("a");
+      btn1.className = "back-btn";
+      btn1.innerHTML = `<i class="fas fa-file-lines"></i> ${item.backAction1.text}`;
+      btn1.href = item.backAction1.link;
+      btn1.setAttribute("target", "_blank");
+      btn1.setAttribute("rel", "noopener noreferrer");
+
+      // button 2 (analysis / related)
+      const btn2 = document.createElement("a");
+      btn2.className = "back-btn";
+      btn2.innerHTML = `<i class="fas fa-scale-balanced"></i> ${item.backAction2.text}`;
+      btn2.href = item.backAction2.link;
+      btn2.setAttribute("target", "_blank");
+      btn2.setAttribute("rel", "noopener noreferrer");
+
+      actionsDiv.appendChild(btn1);
+      actionsDiv.appendChild(btn2);
+      backDiv.appendChild(backHeading);
+      backDiv.appendChild(backCitation);
+      backDiv.appendChild(actionsDiv);
+
+      // assemble card
+      card.appendChild(frontDiv);
+      card.appendChild(backDiv);
+      container.appendChild(card);
+
+      // ---------- CLICK HANDLING ----------
+      // front side click opens judgment
+      frontDiv.addEventListener("click", (e) => {
+        window.open(item.frontLink, '_blank', 'noopener,noreferrer');
+      });
+
+      // back side click (if on container or heading/citation) opens same judgment
+      backDiv.addEventListener("click", (e) => {
+        if (e.target === backDiv || e.target.classList.contains('back-title') || e.target === backHeading || e.target.classList.contains('back-citation') || e.target === backCitation) {
+          window.open(item.backAction1.link, '_blank', 'noopener,noreferrer');
+        }
+      });
+    });
+  })();
+</script>
+
+<!-- FOOTER -->
+<div id="site-footer"></div>
+
+<!-- Go to Top (existing) -->
+<script src="/assets/Scripts/gototop.js"></script>
 </body>
 </html>
