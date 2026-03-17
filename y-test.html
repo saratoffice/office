@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sarat Office · Magnetic slide index (two‑column)</title>
+  <title>High Court · magnetic slide index (judgment content)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Fonts (consistent) -->
+  <!-- Fonts (Roboto + Poppins) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
@@ -47,11 +47,11 @@
       border-radius: 32px 16px 16px 32px;
       box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.2);
       transition: box-shadow 0.3s ease;
-      cursor: pointer;
+      cursor: default;        /* we manage clicks via js */
     }
 
     .slide-card:hover {
-      box-shadow: 0 24px 48px -16px rgba(0, 80, 160, 0.4);
+      box-shadow: 0 24px 48px -16px rgba(100, 40, 20, 0.4);
     }
 
     /* both layers absolutely positioned */
@@ -70,7 +70,7 @@
       background: white;
       box-sizing: border-box;
       overflow-y: auto;
-      pointer-events: none;        /* all clicks go through to card, but we handle via JS */
+      pointer-events: none;        /* all clicks go through to card, but we handle via JS on layers */
     }
 
     .slide-front {
@@ -81,10 +81,10 @@
     }
 
     .slide-back {
-      background: linear-gradient(165deg, #f0f4fa 0%, #ffffff 100%);
+      background: linear-gradient(165deg, #f7f2ec 0%, #ffffff 100%);
       transform: translateX(0);
       z-index: 1;
-      border-left: 4px solid #2563eb;
+      border-left: 4px solid #9e2b1f;    /* deep red for judicial accent */
     }
 
     /* on hover: front slides right, back becomes visible */
@@ -98,7 +98,7 @@
       transition: transform 0.4s ease-out 0.05s;
     }
 
-    /* ----- front content (left-aligned) ----- */
+    /* ----- front content (left-aligned) with judgment styling ----- */
     .slide-front {
       display: flex;
       flex-direction: row;
@@ -125,15 +125,29 @@
       flex: 1;
     }
 
+    .front-info .court-badge {
+      display: inline-block;
+      background: #f0e7e0;
+      padding: 4px 14px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      color: #7b3f2c;
+      margin-bottom: 8px;
+      border: 1px solid #d9c5b8;
+    }
+
     .front-info h3 {
       margin: 0 0 10px 0;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 700;
       letter-spacing: -0.01em;
       padding-left: 20px;
-      color: #111827;
+      color: #1e2b3c;
       text-transform: uppercase;
       position: relative;
+      line-height: 1.3;
     }
 
     .front-info h3::before {
@@ -143,20 +157,36 @@
       top: 6px;
       bottom: 6px;
       width: 6px;
-      background: linear-gradient(135deg, #2563eb, #1e40af);
+      background: linear-gradient(135deg, #9e2b1f, #c14f3a);
       border-radius: 12px;
+    }
+
+    .front-info .case-ref {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #6f5b4c;
+      margin: 8px 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .front-info .case-ref i {
+      font-size: 0.75rem;
+      color: #9e2b1f;
     }
 
     .front-info p {
       margin: 8px 0 4px 0;
-      line-height: 1.7;
-      font-size: 0.98rem;
-      opacity: 0.8;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      opacity: 0.85;
       text-align: justify;
-      color: #1f2937;
+      color: #2c3e4e;
+      font-weight: 400;
     }
 
-    /* ----- back content (centered, two buttons) ----- */
+    /* ----- back content (judgment actions) ----- */
     .slide-back {
       display: flex;
       flex-direction: column;
@@ -170,12 +200,23 @@
     .back-title {
       font-family: 'Poppins', sans-serif;
       font-weight: 700;
-      font-size: 1.5rem;
-      color: #1e293b;
+      font-size: 1.3rem;
+      color: #2d3748;
       margin-bottom: 4px;
-      border-bottom: 3px solid #2563eb;
+      border-bottom: 3px solid #9e2b1f;
       display: inline-block;
       padding-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .back-citation {
+      font-size: 0.85rem;
+      background: #e9ddd3;
+      padding: 4px 16px;
+      border-radius: 40px;
+      color: #4d3a2e;
+      font-weight: 500;
+      display: inline-block;
     }
 
     .back-actions {
@@ -186,21 +227,22 @@
       width: 100%;
       position: relative;
       z-index: 10;
+      margin-top: 10px;
     }
 
     .back-btn {
       background: white;
-      border: 2px solid #2563eb;
-      color: #1e40af;
+      border: 2px solid #9e2b1f;
+      color: #7b2c1d;
       font-weight: 600;
-      padding: 14px 24px;
-      border-radius: 60px;
-      font-size: 1.2rem;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-size: 1.1rem;
       cursor: pointer;
       transition: all 0.2s ease;
-      min-width: 160px;
+      min-width: 150px;
       backdrop-filter: blur(4px);
-      box-shadow: 0 8px 14px -6px rgba(0, 60, 130, 0.2);
+      box-shadow: 0 6px 12px -6px rgba(150, 50, 20, 0.2);
       text-transform: uppercase;
       letter-spacing: 0.5px;
       display: inline-flex;
@@ -208,26 +250,27 @@
       justify-content: center;
       text-decoration: none;
       pointer-events: auto;    /* buttons remain clickable */
+      gap: 8px;
+    }
+
+    .back-btn i {
+      font-size: 1rem;
     }
 
     .back-btn:hover {
-      background: #2563eb;
+      background: #9e2b1f;
       color: white;
       transform: scale(1.05);
-      box-shadow: 0 14px 24px -10px #2563eb;
+      box-shadow: 0 14px 24px -10px #9e2b1f;
       border-color: transparent;
     }
 
-    /* extra click target for back area (if clicked outside buttons) – we'll handle via JS */
+    /* extra click target for back area */
     .slide-back {
       pointer-events: none;
     }
 
-    .slide-card {
-      cursor: default;  /* we manage clicks via js */
-    }
-
-    /* number background image (inline) */
+    /* number background image */
     .number[style*="background-image"] {
       background-size: cover;
       background-position: center;
@@ -264,12 +307,12 @@
       }
       .slide-card {
         aspect-ratio: auto;
-        min-height: 320px;
+        min-height: 360px;
       }
       .back-btn {
         min-width: 130px;
-        padding: 12px 16px;
-        font-size: 1rem;
+        padding: 10px 14px;
+        font-size: 0.95rem;
       }
       .slide-card:hover .slide-front {
         transform: translateX(65%);
@@ -281,76 +324,132 @@
 
 <div id="site-header"></div>
 
-<!-- MAIN TWO-COLUMN MAGNETIC SLIDE GRID -->
+<!-- MAIN TWO-COLUMN MAGNETIC SLIDE GRID (JUDGMENT CONTENT) -->
 <div class="magnetic-grid"></div>
 
 <script>
   (function() {
-    // same data, exactly as original
-    const listItems = [
+    // 12 High Court judgment items – exactly as requested
+    const judgmentItems = [
       {
-        title: "Gunny Specifications",
-        description: "Official specifications for jute gunny bags including dimensions, weight tolerance, stitching standards, and tensile strength. Used for packaging food grains, these BIS guidelines ensure uniform quality.",
+        title: "Preventive Detention & Constitutional Rights under Article 22(5)",
+        description: "Full text of the landmark judgment examining right to make representation, delayed consideration, and when detention becomes unconstitutional. Detailed analysis of Article 22(5) safeguards.",
         imageUrl: "/assets/images/AI-Images/AI.webp",
-        frontLink: "Posts/Specification%20of%20Gunny%20Bags.html",
-        backAction1: { text: "📄 View Specification", link: "Posts/Specification%20of%20Gunny%20Bags.html" },
-        backAction2: { text: "🔍 Check Details", link: "Posts/Specification%20of%20Gunny%20Bags.html" }
+        court: "Orissa HC",
+        caseRef: "2024 · CRLMC 245/2024",
+        frontLink: "/judgments/preventive-detention-art22-5.html",
+        backAction1: { text: "📄 read judgment", link: "/judgments/preventive-detention-art22-5.html" },
+        backAction2: { text: "⚖️ case analysis", link: "/judgments/preventive-detention-art22-5.html" }
       },
       {
-        title: "ASTM D 1250",
-        description: "ASTM D1250 is the standard guide for petroleum measurement tables, providing volume correction factors for crude oil and refined products. It defines procedures to adjust volumes to standard temperatures.",
+        title: "Rabi Kumar Nanda v. State of Orissa: Vehicle Seizure & Release under Essential Commodities Act",
+        description: "Landmark ruling on interim release of vehicle seized for alleged PDS violation. Conditions for release, bank guarantee, and principles under EC Act.",
         imageUrl: "/assets/images/AI-Images/Machine.webp",
-        frontLink: "/Posts/astm-d1250-petroleum-measurement-guide.html",
-        backAction1: { text: "📊 Volume Tables", link: "/Posts/astm-d1250-petroleum-measurement-complete-guide.html" },
-        backAction2: { text: "⚙️ Calculator", link: "/Posts/astm-d1250-petroleum-measurement-complete-guide.html" }
+        court: "Orissa HC",
+        caseRef: "2023 · W.P.(C) 892/2023",
+        frontLink: "/judgments/rabi-kumar-nanda-ec-act.html",
+        backAction1: { text: "📄 full text", link: "/judgments/rabi-kumar-nanda-ec-act.html" },
+        backAction2: { text: "🚚 seizure notes", link: "/judgments/rabi-kumar-nanda-ec-act.html" }
       },
       {
-        title: "Work Locations",
-        description: "Geotagged map of operational sites including paddy purchase centers, fair price shops, and storage warehouses. Each marker contains address, contact person, and a direct Google Maps link.",
+        title: "Storage Agents vs. Transport Contractors: Orissa High Court Judgment on PDS Reforms",
+        description: "Landmark distinction between storage agents and transport contractors. Liability for damaged foodgrains, PDS reforms, and allocation of responsibility.",
         imageUrl: "/assets/images/AI-Images/swaraj.webp",
-        frontLink: "/locations.html",
-        backAction1: { text: "🗺️ Open Map View", link: "/locations.html" },
-        backAction2: { text: "📋 Location List", link: "/locations.html" }
+        court: "Orissa HC",
+        caseRef: "2024 · ARBA 78/2024",
+        frontLink: "/judgments/storage-agents-transport-pds.html",
+        backAction1: { text: "📄 judgment", link: "/judgments/storage-agents-transport-pds.html" },
+        backAction2: { text: "📦 PDS analysis", link: "/judgments/storage-agents-transport-pds.html" }
       },
       {
-        title: "Web Links",
-        description: "Handpicked directory of useful websites: government portals (eUpkar, Food Corporation), commodity price trackers, technical standards libraries (BIS, ISO), and internal dashboards.",
+        title: "Sk. Salim v. State : preventive detention & right to documents",
+        description: "Non-supply of relied upon documents renders detention unconstitutional. Detailed examination of Article 22(5) and right to effective representation.",
         imageUrl: "/assets/images/AI-Images/ShareMarket.webp",
-        frontLink: "/weblinks.html",
-        backAction1: { text: "🔖 All Links", link: "/weblinks.html" },
-        backAction2: { text: "➕ Suggest Link", link: "/weblinks.html" }
+        court: "Calcutta HC",
+        caseRef: "2022 · WP 1145/2022",
+        frontLink: "/judgments/salim-preventive-docs.html",
+        backAction1: { text: "📄 opinion", link: "/judgments/salim-preventive-docs.html" },
+        backAction2: { text: "🔍 document right", link: "/judgments/salim-preventive-docs.html" }
       },
       {
-        title: "Guard File",
-        description: "Govt published guidelines, important letters, SOPs, gazettes, and circulars — all archived here for quick reference and compliance.",
+        title: "Jagmal Singh v. State: release of vehicle seized under EC Act",
+        description: "Principles governing interim release of vehicles seized under Essential Commodities Act. Security bond, valuation, and magisterial powers.",
         imageUrl: "/assets/images/AI-Images/transforming.webp",
-        frontLink: "/guard-file.html",
-        backAction1: { text: "📜 Gazette Archive", link: "/guard-file.html" },
-        backAction2: { text: "⚖️ SOPs", link: "/guard-file.html" }
+        court: "Punjab & Haryana HC",
+        caseRef: "2023 · CRM-M 2398/2023",
+        frontLink: "/judgments/jagmal-singh-ec-act.html",
+        backAction1: { text: "📄 full text", link: "/judgments/jagmal-singh-ec-act.html" },
+        backAction2: { text: "⚙️ release conditions", link: "/judgments/jagmal-singh-ec-act.html" }
       },
       {
-        title: "Visuaal Archive",
-        description: "Visual documentation of activities: Meeting highlights, seminar coverage, training sessions, site inspections, and team events.",
+        title: "Transport contractor liability: food grain shortage – PDS",
+        description: "Transport contractor cannot be treated as storage agent for recovery of shortage. Important distinction under PDS reforms and liability framework.",
         imageUrl: "/assets/images/AI-Images/intelligent-energy.webp",
-        frontLink: "/visual-archive.html",
-        backAction1: { text: "📸 Photos", link: "/visual-archive.html" },
-        backAction2: { text: "🎥 videos", link: "/visual-archive.html" }
+        court: "Allahabad HC",
+        caseRef: "2024 · Writ C 4081/2024",
+        frontLink: "/judgments/transport-vs-storage-pds.html",
+        backAction1: { text: "📄 judgment", link: "/judgments/transport-vs-storage-pds.html" },
+        backAction2: { text: "🚛 contractor duty", link: "/judgments/transport-vs-storage-pds.html" }
       },
       {
-        title: "Color Palettes",
-        description: "Sole popular colors displayed as palettes — click any color code to copy it instantly for use in your designs. Create the perfect palette or get inspired by thousands of beautiful color schemes.",
+        title: "Article 22(5) – communication of grounds in detainee’s language",
+        description: "Detention order set aside for not providing grounds in language understood by detenu. Right to make representation includes linguistic access.",
         imageUrl: "/assets/images/AI-Images/kpmg.webp",
-        frontLink: "/color-palettes.html",
-        backAction1: { text: "🎨 Copy Palette", link: "/color-palettes.html" },
-        backAction2: { text: "📱 WCAG contrast", link: "/color-palettes.html" }
+        court: "Delhi HC",
+        caseRef: "2023 · CRL.A. 789/2023",
+        frontLink: "/judgments/detention-language-rights.html",
+        backAction1: { text: "📄 read", link: "/judgments/detention-language-rights.html" },
+        backAction2: { text: "🌐 language right", link: "/judgments/detention-language-rights.html" }
       },
       {
-        title: "List of Fonts",
-        description: "Some popular font styles are displayed here for use — browse and see previews to choose the perfect typeface. Click any card to explore the font on www.coolors.co/fonts",
+        title: "Shivlal v. State: release of vehicle on 'supurtnama' – EC Act",
+        description: "Magistrate's power to release vehicle seized under Essential Commodities Act. Procedure for supurtnama and conditions for interim custody.",
         imageUrl: "/assets/images/AI-Images/intelligent.webp",
-        frontLink: "/fonts.html",
-        backAction1: { text: "🔤 Preview", link: "/fonts.html" },
-        backAction2: { text: "⬇️ Download pack", link: "/fonts.html" }
+        court: "Madhya Pradesh HC",
+        caseRef: "2022 · MCRC 56782/2022",
+        frontLink: "/judgments/shivlal-vehicle-release.html",
+        backAction1: { text: "📄 judgment", link: "/judgments/shivlal-vehicle-release.html" },
+        backAction2: { text: "📝 supurtnama", link: "/judgments/shivlal-vehicle-release.html" }
+      },
+      {
+        title: "Storage agent not liable for transit loss: PDS reforms",
+        description: "Agent only responsible for storage, not for contractor's negligence during transit. Important clarification for PDS liability regime.",
+        imageUrl: "/assets/images/AI-Images/AI.webp",
+        court: "Gujarat HC",
+        caseRef: "2023 · SCA 10234/2023",
+        frontLink: "/judgments/gujarat-storage-agent.html",
+        backAction1: { text: "📄 full text", link: "/judgments/gujarat-storage-agent.html" },
+        backAction2: { text: "📦 storage duty", link: "/judgments/gujarat-storage-agent.html" }
+      },
+      {
+        title: "Delay in deciding representation – Article 22(5) violation",
+        description: "Unreasonable delay by advisory board in deciding representation renders detention invalid. Speedy consideration is constitutional mandate.",
+        imageUrl: "/assets/images/AI-Images/Machine.webp",
+        court: "Bombay HC",
+        caseRef: "2024 · CRLWP 2047/2024",
+        frontLink: "/judgments/delay-representation-art22-5.html",
+        backAction1: { text: "📄 opinion", link: "/judgments/delay-representation-art22-5.html" },
+        backAction2: { text: "⏱️ delay analysis", link: "/judgments/delay-representation-art22-5.html" }
+      },
+      {
+        title: "Mahendra Kumar v. State: release of seized vehicle – EC Act",
+        description: "Conditional release of vehicle – furnishing bank guarantee instead of vehicle custody. Alternatives to physical custody under EC Act.",
+        imageUrl: "/assets/images/AI-Images/swaraj.webp",
+        court: "Rajasthan HC",
+        caseRef: "2023 · SBWP 6543/2023",
+        frontLink: "/judgments/mahendra-ec-act-release.html",
+        backAction1: { text: "📄 judgment", link: "/judgments/mahendra-ec-act-release.html" },
+        backAction2: { text: "🏦 guarantee", link: "/judgments/mahendra-ec-act-release.html" }
+      },
+      {
+        title: "FCI v. Storage Agent: demurrage & handling – PDS reform",
+        description: "Storage agent cannot be penalised for delay caused by transport contractor. Demurrage charges and handling responsibility under PDS.",
+        imageUrl: "/assets/images/AI-Images/transforming.webp",
+        court: "Karnataka HC",
+        caseRef: "2024 · W.P. 11077/2024",
+        frontLink: "/judgments/karnataka-storage-pds.html",
+        backAction1: { text: "📄 full text", link: "/judgments/karnataka-storage-pds.html" },
+        backAction2: { text: "⚖️ demurrage", link: "/judgments/karnataka-storage-pds.html" }
       }
     ];
 
@@ -358,14 +457,14 @@
     if (!container) return;
     container.innerHTML = "";
 
-    listItems.forEach((item, index) => {
+    judgmentItems.forEach((item, index) => {
       const number = (index + 1).toString().padStart(2, "0");
 
       // main slide-card container
       const card = document.createElement("div");
       card.className = "slide-card";
 
-      // ---------- FRONT SIDE (static, but we attach click) ----------
+      // ---------- FRONT SIDE ----------
       const frontDiv = document.createElement("div");
       frontDiv.className = "slide-front";
 
@@ -377,40 +476,54 @@
       const infoDiv = document.createElement("div");
       infoDiv.className = "front-info";
 
+      const courtBadge = document.createElement("span");
+      courtBadge.className = "court-badge";
+      courtBadge.textContent = item.court;
+
       const titleEl = document.createElement("h3");
       titleEl.textContent = item.title;
+
+      const caseRefEl = document.createElement("div");
+      caseRefEl.className = "case-ref";
+      caseRefEl.innerHTML = `<i class="fas fa-gavel"></i> ${item.caseRef}`;
 
       const descEl = document.createElement("p");
       descEl.textContent = item.description;
 
+      infoDiv.appendChild(courtBadge);
       infoDiv.appendChild(titleEl);
+      infoDiv.appendChild(caseRefEl);
       infoDiv.appendChild(descEl);
       frontDiv.appendChild(numberSpan);
       frontDiv.appendChild(infoDiv);
 
-      // ---------- BACK SIDE (with two buttons) ----------
+      // ---------- BACK SIDE (judgment actions) ----------
       const backDiv = document.createElement("div");
       backDiv.className = "slide-back";
 
       const backHeading = document.createElement("div");
       backHeading.className = "back-title";
-      backHeading.textContent = item.title + " • more";
+      backHeading.textContent = item.title.length > 50 ? item.title.substring(0, 50) + "…" : item.title;
+
+      const backCitation = document.createElement("div");
+      backCitation.className = "back-citation";
+      backCitation.textContent = `${item.court} · ${item.caseRef}`;
 
       const actionsDiv = document.createElement("div");
       actionsDiv.className = "back-actions";
 
-      // button 1 (same as frontLink)
+      // button 1 (full judgment)
       const btn1 = document.createElement("a");
       btn1.className = "back-btn";
-      btn1.textContent = item.backAction1.text;
+      btn1.innerHTML = `<i class="fas fa-file-lines"></i> ${item.backAction1.text}`;
       btn1.href = item.backAction1.link;
       btn1.setAttribute("target", "_blank");
       btn1.setAttribute("rel", "noopener noreferrer");
 
-      // button 2 (same as frontLink)
+      // button 2 (analysis / related)
       const btn2 = document.createElement("a");
       btn2.className = "back-btn";
-      btn2.textContent = item.backAction2.text;
+      btn2.innerHTML = `<i class="fas fa-scale-balanced"></i> ${item.backAction2.text}`;
       btn2.href = item.backAction2.link;
       btn2.setAttribute("target", "_blank");
       btn2.setAttribute("rel", "noopener noreferrer");
@@ -418,6 +531,7 @@
       actionsDiv.appendChild(btn1);
       actionsDiv.appendChild(btn2);
       backDiv.appendChild(backHeading);
+      backDiv.appendChild(backCitation);
       backDiv.appendChild(actionsDiv);
 
       // assemble card
@@ -425,19 +539,16 @@
       card.appendChild(backDiv);
       container.appendChild(card);
 
-      // ---------- CLICK HANDLING (open frontLink when clicking front area) ----------
-      // we want the front side (anywhere except back buttons) to open frontLink
-      // but back buttons have their own anchors, so they work natively.
+      // ---------- CLICK HANDLING ----------
+      // front side click opens judgment
       frontDiv.addEventListener("click", (e) => {
-        // if the click originated from an interactive element inside front (none actually), still we open.
-        // there are no buttons on front, so safe.
+        // ignore if click originated from interactive elements (none in front)
         window.open(item.frontLink, '_blank', 'noopener,noreferrer');
       });
 
-      // optional: if user clicks on backDiv but NOT on a button, open same frontLink
+      // back side click (if on container or heading/citation) opens same judgment
       backDiv.addEventListener("click", (e) => {
-        // if target is backDiv itself or backHeading (non-anchor), open link
-        if (e.target === backDiv || e.target.classList.contains('back-title') || e.target === backHeading) {
+        if (e.target === backDiv || e.target.classList.contains('back-title') || e.target === backHeading || e.target.classList.contains('back-citation') || e.target === backCitation) {
           window.open(item.backAction1.link, '_blank', 'noopener,noreferrer');
         }
       });
@@ -451,5 +562,7 @@
 <!-- Go to Top (existing) -->
 <script src="/assets/Scripts/gototop.js"></script>
 
+<!-- Font Awesome for icons (if not already in header) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </body>
 </html>
