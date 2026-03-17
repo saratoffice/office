@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>12 Advanced Flip Cards</title>
+    <title>Flip Card Designs</title>
     <style>
         * {
             margin: 0;
@@ -11,47 +11,40 @@
             box-sizing: border-box;
         }
 
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 2rem;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         h1 {
             text-align: center;
             color: white;
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 20px rgba(0,255,255,0.5);
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #a0a0ff;
             margin-bottom: 3rem;
-            font-size: 1.2rem;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 320px));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
-            justify-content: center;
             padding: 1rem;
         }
 
-        /* Base Flip Card Styles */
+        /* ===== BASIC FLIP CARD ===== */
         .flip-card {
             background-color: transparent;
             width: 100%;
-            height: 400px;
-            perspective: 2000px;
+            height: 300px;
+            perspective: 1000px; /* 3D effect */
             cursor: pointer;
         }
 
@@ -62,7 +55,8 @@
             text-align: center;
             transition: transform 0.8s;
             transform-style: preserve-3d;
-            border-radius: 15px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            border-radius: 10px;
         }
 
         .flip-card:hover .flip-card-inner {
@@ -74,403 +68,86 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: 15px;
+            border-radius: 10px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 1.5rem;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            padding: 1rem;
         }
 
-        /* ===== CARD 1: 3D Depth Card ===== */
-        .card-1 .flip-card-front {
-            background: linear-gradient(145deg, #ff6b6b, #ee5253);
-            transform: rotateY(0deg) translateZ(20px);
-            box-shadow: -10px 10px 20px rgba(0,0,0,0.3);
+        .flip-card-front {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            color: #333;
         }
 
-        .card-1 .flip-card-back {
-            background: linear-gradient(145deg, #48dbfb, #0abde3);
-            transform: rotateY(180deg) translateZ(20px);
-            box-shadow: 10px -10px 20px rgba(0,0,0,0.3);
-        }
-
-        /* ===== CARD 2: Glowing Edge Card ===== */
-        .card-2 .flip-card-front {
-            background: #2c3e50;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card-2 .flip-card-front::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
-            border-radius: 15px;
-            z-index: -1;
-            animation: glowing 3s linear infinite;
-        }
-
-        @keyframes glowing {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
-        }
-
-        .card-2 .flip-card-back {
-            background: #34495e;
-            border: 2px solid #feca57;
-        }
-
-        /* ===== CARD 3: Shatter Effect Card ===== */
-        .card-3 .flip-card-front {
-            background: linear-gradient(145deg, #feca57, #ff9f43);
-            position: relative;
-        }
-
-        .card-3 .flip-card-front::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, 
-                transparent 30%, 
-                rgba(255,255,255,0.3) 50%, 
-                transparent 70%);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
-        }
-
-        .card-3:hover .flip-card-front::after {
-            transform: translateX(100%);
-        }
-
-        .card-3 .flip-card-back {
-            background: linear-gradient(145deg, #ff9ff3, #f368e0);
-            clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
-        }
-
-        /* ===== CARD 4: Liquid Morph Card ===== */
-        .card-4 .flip-card-front {
-            background: linear-gradient(145deg, #1dd1a1, #10ac84);
-            animation: liquid 5s ease-in-out infinite;
-        }
-
-        @keyframes liquid {
-            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-            25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-            50% { border-radius: 50% 60% 30% 60% / 40% 50% 60% 50%; }
-            75% { border-radius: 60% 40% 50% 40% / 30% 50% 70% 50%; }
-        }
-
-        .card-4 .flip-card-back {
-            background: linear-gradient(145deg, #5f27cd, #341f97);
-            animation: liquidReverse 5s ease-in-out infinite;
-        }
-
-        @keyframes liquidReverse {
-            0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-            25% { border-radius: 70% 30% 30% 70% / 60% 40% 60% 40%; }
-            50% { border-radius: 30% 60% 30% 60% / 70% 30% 70% 30%; }
-            75% { border-radius: 70% 30% 60% 40% / 30% 60% 40% 70%; }
-        }
-
-        /* ===== CARD 5: Neon Pulse Card ===== */
-        .card-5 .flip-card-front {
-            background: #0f0f1f;
-            border: 2px solid #0ff;
-            box-shadow: 0 0 20px #0ff, inset 0 0 20px #0ff;
-            animation: neonPulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes neonPulse {
-            0%, 100% { box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff; }
-            50% { box-shadow: 0 0 50px #0ff, inset 0 0 30px #0ff; }
-        }
-
-        .card-5 .flip-card-back {
-            background: #1f0f1f;
-            border: 2px solid #f0f;
-            box-shadow: 0 0 20px #f0f, inset 0 0 20px #f0f;
-        }
-
-        /* ===== CARD 6: Particle Background Card ===== */
-        .card-6 .flip-card-front {
+        .flip-card-back {
             background: linear-gradient(145deg, #667eea, #764ba2);
-            position: relative;
-            overflow: hidden;
+            color: white;
+            transform: rotateY(180deg);
         }
 
-        .card-6 .flip-card-front .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: white;
-            border-radius: 50%;
-            animation: particleFloat 4s infinite;
-        }
-
-        @keyframes particleFloat {
-            0% { transform: translateY(0) translateX(0); opacity: 1; }
-            100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
-        }
-
-        .card-6 .flip-card-back {
-            background: linear-gradient(145deg, #f093fb, #f5576c);
-        }
-
-        /* ===== CARD 7: Holographic Card ===== */
-        .card-7 .flip-card-front {
-            background: linear-gradient(45deg, 
-                #ff0000, #ff8000, #ffff00, #00ff00, 
-                #00ffff, #0000ff, #8000ff, #ff00ff);
-            background-size: 400% 400%;
-            animation: holographic 10s ease infinite;
-        }
-
-        @keyframes holographic {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .card-7 .flip-card-back {
-            background: linear-gradient(145deg, #2c3e50, #34495e);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card-7 .flip-card-back::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, 
-                transparent 30%, 
-                rgba(255,255,255,0.2) 50%, 
-                transparent 70%);
-            animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-            from { transform: rotate(0deg) translateY(-100%); }
-            to { transform: rotate(360deg) translateY(100%); }
-        }
-
-        /* ===== CARD 8: 3D Layered Card ===== */
-        .card-8 .flip-card-front {
-            background: linear-gradient(145deg, #ff6b6b, #ee5253);
-            transform-style: preserve-3d;
-        }
-
-        .card-8 .flip-card-front::before,
-        .card-8 .flip-card-front::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 15px;
-            transition: transform 0.3s;
-        }
-
-        .card-8 .flip-card-front::before {
-            background: linear-gradient(145deg, #48dbfb, #0abde3);
-            transform: translateZ(-10px);
-        }
-
-        .card-8 .flip-card-front::after {
-            background: linear-gradient(145deg, #feca57, #ff9f43);
-            transform: translateZ(-20px);
-        }
-
-        .card-8 .flip-card-back {
-            background: linear-gradient(145deg, #ff9ff3, #f368e0);
-        }
-
-        /* ===== CARD 9: Flip with Scale Effect ===== */
-        .card-9 .flip-card-inner {
-            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        .card-9:hover .flip-card-inner {
-            transform: rotateY(180deg) scale(1.1);
-        }
-
-        .card-9 .flip-card-front {
-            background: linear-gradient(145deg, #00d2d3, #01a3a4);
-        }
-
-        .card-9 .flip-card-back {
-            background: linear-gradient(145deg, #ff9f43, #ee5a24);
-        }
-
-        /* ===== CARD 10: Flip with Rotate and Skew ===== */
-        .card-10 .flip-card-inner {
-            transition: transform 1s;
-        }
-
-        .card-10:hover .flip-card-inner {
-            transform: rotateY(180deg) rotateX(10deg) skew(5deg, 5deg);
-        }
-
-        .card-10 .flip-card-front {
-            background: linear-gradient(145deg, #10ac84, #1dd1a1);
-        }
-
-        .card-10 .flip-card-back {
-            background: linear-gradient(145deg, #5f27cd, #341f97);
-        }
-
-        /* ===== CARD 11: Mirror Reflection Card ===== */
-        .card-11 .flip-card-front {
-            background: linear-gradient(145deg, #f368e0, #ff9ff3);
-            -webkit-box-reflect: below 5px linear-gradient(transparent, rgba(0,0,0,0.3));
-        }
-
-        .card-11 .flip-card-back {
-            background: linear-gradient(145deg, #0abde3, #48dbfb);
-        }
-
-        /* ===== CARD 12: Flip with Blur Transition ===== */
-        .card-12 .flip-card-front {
-            background: linear-gradient(145deg, #ee5253, #ff6b6b);
-            filter: blur(0px);
-            transition: filter 0.3s;
-        }
-
-        .card-12:hover .flip-card-front {
-            filter: blur(3px);
-        }
-
-        .card-12 .flip-card-back {
-            background: linear-gradient(145deg, #341f97, #5f27cd);
-            filter: blur(0px);
-        }
-
-        .card-12:hover .flip-card-back {
-            filter: blur(3px);
-        }
-
-        /* Icon and Text Styles */
-        .card-icon {
+        .emoji-icon {
             font-size: 4rem;
             margin-bottom: 1rem;
         }
 
-        .card-title {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        /* ===== VERTICAL FLIP CARD ===== */
+        .flip-card-vertical .flip-card-inner {
+            transition: transform 0.8s;
         }
 
-        .card-subtitle {
-            font-size: 1rem;
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 1rem;
+        .flip-card-vertical:hover .flip-card-inner {
+            transform: rotateX(180deg);
         }
 
-        .card-text {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: white;
-            margin-bottom: 1rem;
+        .flip-card-vertical .flip-card-back {
+            transform: rotateX(180deg);
+            background: linear-gradient(145deg, #43e97b, #38f9d7);
         }
 
-        .card-list {
-            list-style: none;
-            text-align: left;
-            width: 100%;
-        }
-
-        .card-list li {
-            margin: 0.5rem 0;
-            color: white;
-            font-size: 0.95rem;
-        }
-
-        .card-button {
-            padding: 0.8rem 2rem;
-            background: rgba(255,255,255,0.2);
-            border: 2px solid white;
-            border-radius: 30px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 1rem;
-            backdrop-filter: blur(5px);
-        }
-
-        .card-button:hover {
+        /* ===== PRODUCT FLIP CARD ===== */
+        .product-card .flip-card-front {
             background: white;
-            color: #333;
-            transform: scale(1.05);
         }
 
-        .badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255,255,255,0.3);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: white;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-
-        .rating {
-            color: gold;
-            font-size: 1.2rem;
-            margin: 0.5rem 0;
-        }
-
-        .price {
-            font-size: 2rem;
+        .product-price {
+            font-size: 1.5rem;
             font-weight: bold;
-            color: white;
+            color: #667eea;
             margin: 0.5rem 0;
         }
 
-        .old-price {
-            font-size: 1rem;
-            text-decoration: line-through;
-            opacity: 0.7;
-            margin-left: 0.5rem;
-        }
-
-        .progress-bar {
-            width: 80%;
-            height: 10px;
-            background: rgba(255,255,255,0.2);
+        .product-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
             border-radius: 5px;
-            margin: 1rem 0;
-            overflow: hidden;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: background 0.3s;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #feca57, #ff6b6b);
-            border-radius: 5px;
-            animation: progressFill 2s ease-out;
+        .product-button:hover {
+            background: #764ba2;
         }
 
-        @keyframes progressFill {
-            from { width: 0%; }
-            to { width: 75%; }
+        /* ===== PROFILE FLIP CARD ===== */
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            color: white;
         }
 
-        .social-icons {
+        .social-links {
             display: flex;
             gap: 1rem;
             margin-top: 1rem;
@@ -484,470 +161,227 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.2rem;
-            transition: all 0.3s;
+            transition: background 0.3s;
         }
 
         .social-icon:hover {
-            background: white;
-            color: #333;
-            transform: translateY(-3px);
+            background: rgba(255,255,255,0.4);
         }
 
-        .timer {
-            font-size: 1.5rem;
-            font-weight: bold;
+        /* ===== SPECIAL EFFECTS ===== */
+        .glow-effect .flip-card-front {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px -10px #667eea; }
+            to { box-shadow: 0 0 20px 10px #667eea; }
+        }
+
+        /* Section headers */
+        .section-title {
             color: white;
-            margin: 1rem 0;
-        }
-
-        .flip-counter {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.9rem;
+            margin: 3rem 0 1rem 0;
+            font-size: 1.8rem;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🃏 12 Advanced Flip Cards</h1>
-        <div class="subtitle">Hover each card to reveal unique interactive effects</div>
+        <h1>✨ Interactive Flip Cards ✨</h1>
 
+        <!-- Horizontal Flip Cards -->
+        <h2 class="section-title">🎴 Basic Flip Cards</h2>
         <div class="card-grid">
-            <!-- CARD 1: 3D Depth Card with Product Info -->
-            <div class="flip-card card-1">
+            <!-- Card 1: Basic Info -->
+            <div class="flip-card">
                 <div class="flip-card-inner">
                     <div class="flip-card-front">
-                        <span class="badge">NEW</span>
-                        <span class="card-icon">🎧</span>
-                        <h2 class="card-title">AirPods Pro</h2>
-                        <div class="rating">★★★★★</div>
-                        <div class="price">$249 <span class="old-price">$299</span></div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 75%"></div>
-                        </div>
-                        <p class="card-subtitle">75% sold today!</p>
+                        <span class="emoji-icon">🎨</span>
+                        <h2>Creative Design</h2>
+                        <p>Hover to reveal</p>
                     </div>
                     <div class="flip-card-back">
-                        <span class="badge">SPECS</span>
-                        <ul class="card-list">
-                            <li>✓ Active Noise Cancellation</li>
-                            <li>✓ Spatial Audio</li>
-                            <li>✓ 24hr Battery Life</li>
-                            <li>✓ Sweat Resistant</li>
-                        </ul>
-                        <button class="card-button">ADD TO CART</button>
-                        <div class="flip-counter">#1 of 12</div>
+                        <h3>Learn More</h3>
+                        <p>Modern UI/UX design principles with beautiful animations</p>
+                        <button class="product-button">Explore →</button>
                     </div>
                 </div>
             </div>
 
-            <!-- CARD 2: Glowing Edge Card with Profile -->
-            <div class="flip-card card-2">
+            <!-- Card 2: Product -->
+            <div class="flip-card product-card">
                 <div class="flip-card-inner">
                     <div class="flip-card-front">
-                        <span class="badge">PRO</span>
-                        <span class="card-icon">👩‍💻</span>
-                        <h2 class="card-title">Sarah Chen</h2>
-                        <p class="card-subtitle">Lead Developer</p>
-                        <div class="social-icons">
+                        <span class="emoji-icon">📱</span>
+                        <h2>Smart Watch</h2>
+                        <div class="product-price">$299</div>
+                        <p>Latest model</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3>Features</h3>
+                        <p>✓ Heart rate monitor</p>
+                        <p>✓ GPS tracking</p>
+                        <p>✓ Water resistant</p>
+                        <button class="product-button">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Profile -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="profile-image">👩</div>
+                        <h2>Sarah Johnson</h2>
+                        <p>UX Designer</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3>Contact</h3>
+                        <p>📧 sarah@email.com</p>
+                        <p>📱 +1 234 567 890</p>
+                        <div class="social-links">
                             <span class="social-icon">📘</span>
                             <span class="social-icon">🐦</span>
-                            <span class="social-icon">🔗</span>
+                            <span class="social-icon">📷</span>
                         </div>
-                    </div>
-                    <div class="flip-card-back">
-                        <span class="badge">SKILLS</span>
-                        <ul class="card-list">
-                            <li>✓ React • 5 years</li>
-                            <li>✓ Node.js • 4 years</li>
-                            <li>✓ Python • 3 years</li>
-                            <li>✓ 50+ projects</li>
-                        </ul>
-                        <button class="card-button">VIEW PORTFOLIO</button>
-                        <div class="flip-counter">#2 of 12</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CARD 3: Shatter Effect Card with Deal -->
-            <div class="flip-card card-3">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="badge">HOT</span>
-                        <span class="card-icon">⌚</span>
-                        <h2 class="card-title">Smart Watch</h2>
-                        <div class="price">$179</div>
-                        <div class="timer">⏰ 23:59:59</div>
-                    </div>
-                    <div class="flip-card-back">
-                        <span class="badge">FEATURES</span>
-                        <ul class="card-list">
-                            <li>✓ Heart Rate Monitor</li>
-                            <li>✓ GPS Tracking</li>
-                            <li>✓ Sleep Analysis</li>
-                            <li>✓ 7-day battery</li>
-                        </ul>
-                        <button class="card-button">SHOP NOW</button>
-                        <div class="flip-counter">#3 of 12</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CARD 4: Liquid Morph Card with Service -->
-            <div class="flip-card card-4">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="badge">PREMIUM</span>
-                        <span class="card-icon">☁️</span>
-                        <h2 class="card-title">Cloud Storage</h2>
-                        <div class="price">$9.99/mo</div>
-                        <p class="card-subtitle">1TB Storage</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <span class="badge">INCLUDES</span>
-                        <ul class="card-list">
-                            <li>✓ 1TB Storage</li>
-                            <li>✓ End-to-end encryption</li>
-                            <li>✓ 24/7 support</li>
-                            <li>✓ 30-day trial</li>
-                        </ul>
-                        <button class="card-button">START TRIAL</button>
-                        <div class="flip-counter">#4 of 12</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CARD 5: Neon Pulse Card with Gaming -->
-            <div class="flip-card card-5">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="badge">GAMER</span>
-                        <span class="card-icon">🎮</span>
-                        <h2 class="card-title">Gaming Mouse</h2>
-                        <div class="rating">★★★★☆</div>
-                        <div class="price">$59.99</div>
-                    </div>
-                    <div class="flip-card-back">
-                        <span class="badge">SPECS</span>
-                        <ul class="card-list">
-                            <li>✓ 16,000 DPI</li>
-                            <li>✓ RGB Lighting</li>
-                            <li>✓ 8 Programmable Buttons</li>
-                            <li>✓ 2-year warranty</li>
-                        </ul>
-                        <button class="card-button">BUY NOW</button>
-                        <div class="flip-counter">#5 of 12</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CARD 6: Particle Background Card with Course -->
-            <div class="flip-card card-6">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <div class="particle" style="top: 20%; left: 20%; animation-delay: 0s;"></div>
-                        <div class="particle" style="top: 50%; left: 70%; animation-delay: 0.5s;"></div>
-                        <div class="particle" style="top: 80%; left: 30%; animation-delay: 1s;"></div>
-                        <div class="particle" style="top: 30%; left: 80%; animation-delay: 1.5s;"></div>
-                        <span class="badge">LEARNING</span>
-                        <span class="card-icon">📚</span>
-                        <h2 class="card-title">Web Dev Course</h2>
-                        <p class="card-subtitle">Complete Bootcamp</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <span class="badge">CURRICULUM</span>
-                        <ul class="card-list">
-                            <li>✓ 50+ hours video</li>
-                            <li>✓ 10 projects</li>
-                            <li>✓ Certificate</li>
-                            <li>✓ Lifetime access</li>
-                        </ul>
-                        <button class="card-button">ENROLL NOW</button>
-                        <div class="flip-counter">#6 of 12</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CARD 7: Holographic Card with NFT -->
-            <div class="flip-card card-7">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="badge">DIGITAL</span>
-                        <span class="card-icon">🎨</span>
-                        <h2 class="card-title">Digital Art NFT</h2>
-                        <div class="price">0.5 ETH</div>
-                        <p class="card-subtitle">Edition of 100</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <span class="badge">DETAILS</span>
-                        <ul class="card-list">
-                            <li>✓ High-res 4K</li>
-                            <li>✓ Commercial rights</li>
-                            <li>✓ Metadata included</li>
-                            <li>✓ 5% royalty</li>
-                        </ul>
-                        <button class="card-button">VIEW ON OPENSEA</button>
-                        <div class="flip-counter">#7 of 12</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CARD 8: 3D Layered Card with Travel -->
-            <div class="flip-card card-8">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="badge">TRAVEL</span>
-                        <span class="card-icon">✈️</span>
-                        <h2 class="card-title">Paris Getaway</h2>
-                        <div class="price">$599</div>
-                        <p class="card-subtitle">3 days, 2 nights</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <span class="badge">INCLUDES</span>
-                        <ul class="card-list">
-                            <li>✓ Round-trip flights</li>
-                            <li>✓ 4-star hotel</li>
-                            <li>✓ Breakfast included</li>
-                            <li>✓ Eiffel tour</li>
-                        </ul>
-                        <button class="card-button">BOOK NOW</button>
-                        <div class="flip-counter">#8 of 12</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CARD 9: Scale Effect Card with Fitness -->
-            <div class="flip-card card-9">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="badge">FITNESS</span>
-                        <span class="card-icon">💪</span>
-                        <h2 class="card-title">Gym Membership</h2>
-                        <div class="price">$39.99/mo</div>
-                        <p class="card-subtitle">No contract</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <span class="badge">AMENITIES</span>
-                        <ul class="card-list">
-                            <li>✓ 24/7 access</li>
-                            <li>✓ Personal trainer</li>
-                            <li>✓ Group classes</li>
-                            <li>✓ Sauna included</li>
-                        </ul>
-                        <button class="card-button">JOIN NOW</button>
-                        <div class="flip-counter">#9 of 12</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CARD 10: Rotate & Skew Card with Restaurant -->
-            <div class="flip-card card-10">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="badge">🍕</span>
-                        <span class="card-icon">🏪</span>
-                        <h2 class="card-title">Pizza Paradise</h2>
-                        <div class="rating">★★★★★</div>
-                        <p class="card-subtitle">500+ reviews</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <span class="badge">OFFER</span>
-                        <ul class="card-list">
-                            <li>✓ Free delivery</li>
-                            <li>✓ 2-for-1 Tuesdays</li>
-                            <li>✓ Student discount</li>
-                            <li>✓ 30-min guarantee</li>
-                        </ul>
-                        <button class="card-button">ORDER NOW</button>
-                        <div class="flip-counter">#10 of 12</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CARD 11: Mirror Reflection Card with App -->
-            <div class="flip-card card-11">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="badge">APP</span>
-                        <span class="card-icon">📱</span>
-                        <h2 class="card-title">Photo Editor Pro</h2>
-                        <div class="price">$4.99</div>
-                        <p class="card-subtitle">One-time purchase</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <span class="badge">FEATURES</span>
-                        <ul class="card-list">
-                            <li>✓ AI filters</li>
-                            <li>✓ 100+ effects</li>
-                            <li>✓ Batch editing</li>
-                            <li>✓ No watermark</li>
-                        </ul>
-                        <button class="card-button">DOWNLOAD</button>
-                        <div class="flip-counter">#11 of 12</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CARD 12: Blur Transition Card with Event -->
-            <div class="flip-card card-12">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <span class="badge">EVENT</span>
-                        <span class="card-icon">🎪</span>
-                        <h2 class="card-title">Music Festival</h2>
-                        <div class="price">$149</div>
-                        <p class="card-subtitle">3-day pass</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <span class="badge">LINEUP</span>
-                        <ul class="card-list">
-                            <li>✓ 20+ artists</li>
-                            <li>✓ 3 stages</li>
-                            <li>✓ Camping included</li>
-                            <li>✓ Early bird access</li>
-                        </ul>
-                        <button class="card-button">GET TICKETS</button>
-                        <div class="flip-counter">#12 of 12</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Interactive Demo Section -->
-        <div style="text-align: center; margin-top: 3rem; color: white;">
-            <p style="margin-bottom: 1rem; opacity: 0.9;">✨ Each card features unique effects and content ✨</p>
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                <button onclick="revealAllCards()" style="padding: 0.8rem 2rem; background: #ff6b6b; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Reveal All Cards</button>
-                <button onclick="resetAllCards()" style="padding: 0.8rem 2rem; background: #4ecdc4; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Reset All Cards</button>
-                <button onclick="randomFlip()" style="padding: 0.8rem 2rem; background: #feca57; color: #2c3e50; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Random Flip</button>
+        <!-- Vertical Flip Cards -->
+        <h2 class="section-title">⬆️ Vertical Flip Cards</h2>
+        <div class="card-grid">
+            <!-- Card 4: Weather -->
+            <div class="flip-card flip-card-vertical">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <span class="emoji-icon">☀️</span>
+                        <h2>Sunny Day</h2>
+                        <p>25°C</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <span class="emoji-icon">⛈️</span>
+                        <h2>Storm Coming</h2>
+                        <p>Prepare for rain</p>
+                        <p>Wind: 15 km/h</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5: Stats -->
+            <div class="flip-card flip-card-vertical">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <span class="emoji-icon">📊</span>
+                        <h2>Performance</h2>
+                        <p>Q1 Report</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h2>+47%</h2>
+                        <p>Growth rate</p>
+                        <p>Revenue: $2.5M</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6: Special Glow Effect -->
+            <div class="flip-card glow-effect">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <span class="emoji-icon">✨</span>
+                        <h2>Special Offer</h2>
+                        <p>Limited time</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h2>50% OFF</h2>
+                        <p>Use code: FLIP50</p>
+                        <button class="product-button">Claim</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Interactive Features -->
+        <h2 class="section-title">🎯 Advanced Features</h2>
+        <div class="card-grid">
+            <!-- Card 7: Click to flip (alternative interaction) -->
+            <div class="flip-card" onclick="this.classList.toggle('clicked')">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <span class="emoji-icon">👆</span>
+                        <h2>Click to Flip</h2>
+                        <p>Try clicking me!</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3>Great job!</h3>
+                        <p>You discovered click interaction</p>
+                        <p>✨✨✨</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 8: Gradient Design -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front" style="background: linear-gradient(145deg, #ff6b6b, #feca57);">
+                        <span class="emoji-icon">🌈</span>
+                        <h2>Gradient</h2>
+                        <p>Colorful front</p>
+                    </div>
+                    <div class="flip-card-back" style="background: linear-gradient(145deg, #48dbfb, #ff9f43);">
+                        <h2>Vibrant Back</h2>
+                        <p>Smooth transitions</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 9: Emoji Mix -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                            <span class="emoji-icon">🐶</span>
+                            <span class="emoji-icon">🐱</span>
+                            <span class="emoji-icon">🐼</span>
+                        </div>
+                        <h2>Pets</h2>
+                        <p>Meet our animals</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3>Adopt Now</h3>
+                        <p>Find your perfect companion</p>
+                        <button class="product-button">Learn More</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Function to reveal all cards
-        function revealAllCards() {
-            document.querySelectorAll('.flip-card').forEach(card => {
-                card.classList.add('hover');
-                card.querySelector('.flip-card-inner').style.transform = 'rotateY(180deg)';
-            });
-        }
-
-        // Function to reset all cards
-        function resetAllCards() {
-            document.querySelectorAll('.flip-card').forEach(card => {
-                card.classList.remove('hover');
-                card.querySelector('.flip-card-inner').style.transform = '';
-            });
-        }
-
-        // Function to randomly flip cards
-        function randomFlip() {
-            document.querySelectorAll('.flip-card').forEach(card => {
-                if (Math.random() > 0.5) {
-                    card.querySelector('.flip-card-inner').style.transform = 'rotateY(180deg)';
+        // Add click event for the click-to-flip card
+        document.querySelectorAll('.flip-card').forEach(card => {
+            card.addEventListener('click', function() {
+                if (this.classList.contains('clicked')) {
+                    this.classList.remove('clicked');
                 } else {
-                    card.querySelector('.flip-card-inner').style.transform = '';
-                }
-            });
-        }
-
-        // Add click to flip functionality (optional)
-        document.querySelectorAll('.flip-card').forEach(card => {
-            card.addEventListener('click', function(e) {
-                if (!e.target.classList.contains('card-button') && !e.target.classList.contains('social-icon')) {
-                    const inner = this.querySelector('.flip-card-inner');
-                    if (inner.style.transform === 'rotateY(180deg)') {
-                        inner.style.transform = '';
-                    } else {
-                        inner.style.transform = 'rotateY(180deg)';
-                    }
+                    this.classList.add('clicked');
                 }
             });
         });
 
-        // Button click event propagation prevention
-        document.querySelectorAll('.card-button').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                alert('Button clicked! (Demo action)');
-            });
-        });
-
-        // Social icon click handler
-        document.querySelectorAll('.social-icon').forEach(icon => {
-            icon.addEventListener('click', function(e) {
-                e.stopPropagation();
-                alert('Social media link! (Demo)');
-            });
-        });
-
-        // Timer animation for card 3
-        function updateTimer() {
-            const timerElement = document.querySelector('.card-3 .timer');
-            if (timerElement) {
-                let time = timerElement.textContent.replace('⏰ ', '');
-                let [hours, minutes, seconds] = time.split(':').map(Number);
-                
-                seconds--;
-                if (seconds < 0) {
-                    seconds = 59;
-                    minutes--;
-                    if (minutes < 0) {
-                        minutes = 59;
-                        hours--;
-                        if (hours < 0) {
-                            hours = 23;
-                        }
-                    }
-                }
-                
-                timerElement.textContent = `⏰ ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }
-        }
-
-        // Update timer every second
-        setInterval(updateTimer, 1000);
-
-        // Add particle animation to card 6
-        function createParticles() {
-            const card = document.querySelector('.card-6 .flip-card-front');
-            if (card) {
-                for (let i = 0; i < 20; i++) {
-                    const particle = document.createElement('div');
-                    particle.className = 'particle';
-                    particle.style.top = Math.random() * 100 + '%';
-                    particle.style.left = Math.random() * 100 + '%';
-                    particle.style.animationDelay = Math.random() * 2 + 's';
-                    particle.style.animationDuration = 3 + Math.random() * 2 + 's';
-                    card.appendChild(particle);
-                }
-            }
-        }
-
-        // Initialize particles
-        createParticles();
-
-        // Progress bar animation on hover
-        document.querySelectorAll('.flip-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                const progressFill = this.querySelector('.progress-fill');
-                if (progressFill) {
-                    progressFill.style.animation = 'none';
-                    progressFill.offsetHeight; // Trigger reflow
-                    progressFill.style.animation = 'progressFill 2s ease-out';
-                }
-            });
-        });
-
-        // Add CSS for hover state class
+        // Optional: Add CSS for clicked state
         const style = document.createElement('style');
         style.textContent = `
-            .flip-card.hover .flip-card-inner {
-                transform: rotateY(180deg) !important;
+            .flip-card.clicked .flip-card-inner {
+                transform: rotateY(180deg);
+            }
+            .flip-card-vertical.clicked .flip-card-inner {
+                transform: rotateX(180deg);
             }
         `;
         document.head.appendChild(style);
