@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>High Court · magnetic slide index (judgment content)</title>
+  <title>High Court · zigzag magnetic index (judgment content)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Fonts (Roboto + Poppins) -->
+  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <!-- Common CSS (header/footer/global) — do not modify -->
   <link rel="stylesheet" href="style.css">
   <!-- site components (header/footer loader) -->
@@ -25,8 +26,8 @@
     }
     #site-header, #site-footer { flex-shrink: 0; }
 
-    /* main container: two columns, each cell is a magnetic slide container */
-    .magnetic-grid {
+    /* main container: two columns, zigzag placement */
+    .zigzag-grid {
       max-width: 1300px;
       width: 100%;
       margin: 150px auto 60px auto;
@@ -38,7 +39,7 @@
       background: transparent;
     }
 
-    /* ---------- magnetic slide card (replaces flip) ---------- */
+    /* ---------- magnetic slide card (zigzag aware) ---------- */
     .slide-card {
       background-color: transparent;
       width: 100%;
@@ -47,7 +48,20 @@
       border-radius: 32px 16px 16px 32px;
       box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.2);
       transition: box-shadow 0.3s ease;
-      cursor: default;        /* we manage clicks via js */
+      cursor: default;
+      /* default: left column cards have left origin, right column cards have right origin */
+    }
+
+    /* left column cards (odd) - card itself aligned to left side of its grid cell */
+    .slide-card.left-card {
+      margin-right: auto;  /* stick to left within cell */
+      width: 100%;
+    }
+
+    /* right column cards (even) - card aligned to right side of its cell */
+    .slide-card.right-card {
+      margin-left: auto;   /* stick to right within cell */
+      width: 100%;
     }
 
     .slide-card:hover {
@@ -58,7 +72,6 @@
     .slide-front, .slide-back {
       position: absolute;
       top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
       border-radius: inherit;
@@ -70,35 +83,56 @@
       background: white;
       box-sizing: border-box;
       overflow-y: auto;
-      pointer-events: none;        /* all clicks go through to card, but we handle via JS on layers */
+      pointer-events: none;
     }
 
     .slide-front {
       background: #ffffff;
-      transform: translateX(0);
       z-index: 2;
       box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
 
     .slide-back {
       background: linear-gradient(165deg, #f7f2ec 0%, #ffffff 100%);
-      transform: translateX(0);
       z-index: 1;
-      border-left: 4px solid #9e2b1f;    /* deep red for judicial accent */
+      border-left: 4px solid #9e2b1f;    /* judicial accent */
     }
 
-    /* on hover: front slides right, back becomes visible */
-    .slide-card:hover .slide-front {
-      transform: translateX(75%);
-      transition: transform 0.4s ease-out;
+    /* LEFT CARD (odd): front starts at left, back behind, hover slides RIGHT */
+    .slide-card.left-card .slide-front {
+      left: 0;
+      transform: translateX(0);
     }
-
-    .slide-card:hover .slide-back {
+    .slide-card.left-card .slide-back {
+      left: 0;
+      transform: translateX(0);
+    }
+    .slide-card.left-card:hover .slide-front {
+      transform: translateX(75%);  /* slides to right, revealing back */
+    }
+    .slide-card.left-card:hover .slide-back {
       transform: translateX(0);
       transition: transform 0.4s ease-out 0.05s;
     }
 
-    /* ----- front content (left-aligned) with judgment styling ----- */
+    /* RIGHT CARD (even): front starts at right side, back behind, hover slides LEFT */
+    .slide-card.right-card .slide-front {
+      right: 0;
+      transform: translateX(0);
+    }
+    .slide-card.right-card .slide-back {
+      right: 0;
+      transform: translateX(0);
+    }
+    .slide-card.right-card:hover .slide-front {
+      transform: translateX(-75%);  /* slides to left, revealing back */
+    }
+    .slide-card.right-card:hover .slide-back {
+      transform: translateX(0);
+      transition: transform 0.4s ease-out 0.05s;
+    }
+
+    /* ----- front content (judgment styling) ----- */
     .slide-front {
       display: flex;
       flex-direction: row;
@@ -194,7 +228,7 @@
       align-items: center;
       text-align: center;
       gap: 20px;
-      pointer-events: none;    /* we make buttons clickable individually */
+      pointer-events: none;
     }
 
     .back-title {
@@ -249,7 +283,7 @@
       align-items: center;
       justify-content: center;
       text-decoration: none;
-      pointer-events: auto;    /* buttons remain clickable */
+      pointer-events: auto;
       gap: 8px;
     }
 
@@ -265,11 +299,6 @@
       border-color: transparent;
     }
 
-    /* extra click target for back area */
-    .slide-back {
-      pointer-events: none;
-    }
-
     /* number background image */
     .number[style*="background-image"] {
       background-size: cover;
@@ -281,12 +310,23 @@
 
     /* responsiveness */
     @media (max-width: 900px) {
-      .magnetic-grid {
+      .zigzag-grid {
         grid-template-columns: 1fr;
         max-width: 700px;
       }
       .slide-card {
         aspect-ratio: 6 / 4;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+      .slide-card.left-card .slide-front,
+      .slide-card.right-card .slide-front {
+        left: 0;
+        right: auto;
+      }
+      .slide-card.left-card:hover .slide-front,
+      .slide-card.right-card:hover .slide-front {
+        transform: translateX(70%);
       }
     }
 
@@ -314,7 +354,8 @@
         padding: 10px 14px;
         font-size: 0.95rem;
       }
-      .slide-card:hover .slide-front {
+      .slide-card.left-card:hover .slide-front,
+      .slide-card.right-card:hover .slide-front {
         transform: translateX(65%);
       }
     }
@@ -324,8 +365,8 @@
 
 <div id="site-header"></div>
 
-<!-- MAIN TWO-COLUMN MAGNETIC SLIDE GRID (JUDGMENT CONTENT) -->
-<div class="magnetic-grid"></div>
+<!-- ZIGZAG TWO-COLUMN GRID (judgment content) -->
+<div class="zigzag-grid"></div>
 
 <script>
   (function() {
@@ -453,7 +494,7 @@
       }
     ];
 
-    const container = document.querySelector(".magnetic-grid");
+    const container = document.querySelector(".zigzag-grid");
     if (!container) return;
     container.innerHTML = "";
 
@@ -462,7 +503,7 @@
 
       // main slide-card container
       const card = document.createElement("div");
-      card.className = "slide-card";
+      card.className = `slide-card ${index % 2 === 0 ? 'left-card' : 'right-card'}`; // zigzag: even left, odd right
 
       // ---------- FRONT SIDE ----------
       const frontDiv = document.createElement("div");
@@ -542,7 +583,6 @@
       // ---------- CLICK HANDLING ----------
       // front side click opens judgment
       frontDiv.addEventListener("click", (e) => {
-        // ignore if click originated from interactive elements (none in front)
         window.open(item.frontLink, '_blank', 'noopener,noreferrer');
       });
 
@@ -561,8 +601,5 @@
 
 <!-- Go to Top (existing) -->
 <script src="/assets/Scripts/gototop.js"></script>
-
-<!-- Font Awesome for icons (if not already in header) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </body>
 </html>
