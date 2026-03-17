@@ -2,604 +2,550 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>High Court · zigzag magnetic index (judgment content)</title>
+  <title>LPG Distributor Inspection · Professional Format</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <!-- Common CSS (header/footer/global) — do not modify -->
-  <link rel="stylesheet" href="style.css">
-  <!-- site components (header/footer loader) -->
-  <script src="assets/Scripts/site-components.js" defer></script>
+  <!-- Common CSS (global styles) – but we use isolated prefix -->
+  <link rel="stylesheet" href="/style.css">
+  <!-- site components for header/footer etc. -->
+  <script src="/assets/Scripts/site-components.js" defer></script>
   <style>
-    /* ---------- global reset & flex sticky footer ---------- */
+    /* ----- global reset & background ----- */
     body {
-      background: #f4f7fb;
-      font-family: 'Roboto', sans-serif;
       margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      background: #f5f9ff;
+      font-family: 'Segoe UI', Roboto, sans-serif;
     }
-    #site-header, #site-footer { flex-shrink: 0; }
 
-    /* main container: two columns, zigzag placement */
-    .zigzag-grid {
-      max-width: 1300px;
+    /* 🧱 main card – LPG inspection edition (isolated with "lpg2-" prefix) */
+    .lpg-updated-card {
+      all: initial;
+      display: block;
+      max-width: 1000px;
       width: 100%;
-      margin: 150px auto 60px auto;
-      padding: 20px 30px;
-      flex: 1 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;   /* two columns */
-      gap: 30px;
-      background: transparent;
-    }
-
-    /* ---------- magnetic slide card (zigzag aware) ---------- */
-    .slide-card {
-      background-color: transparent;
-      width: 100%;
-      aspect-ratio: 5 / 3;
-      position: relative;
-      border-radius: 32px 16px 16px 32px;
-      box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.2);
-      transition: box-shadow 0.3s ease;
-      cursor: default;
-      /* default: left column cards have left origin, right column cards have right origin */
-    }
-
-    /* left column cards (odd) - card itself aligned to left side of its grid cell */
-    .slide-card.left-card {
-      margin-right: auto;  /* stick to left within cell */
-      width: 100%;
-    }
-
-    /* right column cards (even) - card aligned to right side of its cell */
-    .slide-card.right-card {
-      margin-left: auto;   /* stick to right within cell */
-      width: 100%;
-    }
-
-    .slide-card:hover {
-      box-shadow: 0 24px 48px -16px rgba(100, 40, 20, 0.4);
-    }
-
-    /* both layers absolutely positioned */
-    .slide-front, .slide-back {
-      position: absolute;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: inherit;
-      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 20px 24px;
       background: white;
-      box-sizing: border-box;
-      overflow-y: auto;
-      pointer-events: none;
-    }
-
-    .slide-front {
-      background: #ffffff;
-      z-index: 2;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    }
-
-    .slide-back {
-      background: linear-gradient(165deg, #f7f2ec 0%, #ffffff 100%);
-      z-index: 1;
-      border-left: 4px solid #9e2b1f;    /* judicial accent */
-    }
-
-    /* LEFT CARD (odd): front starts at left, back behind, hover slides RIGHT */
-    .slide-card.left-card .slide-front {
-      left: 0;
-      transform: translateX(0);
-    }
-    .slide-card.left-card .slide-back {
-      left: 0;
-      transform: translateX(0);
-    }
-    .slide-card.left-card:hover .slide-front {
-      transform: translateX(75%);  /* slides to right, revealing back */
-    }
-    .slide-card.left-card:hover .slide-back {
-      transform: translateX(0);
-      transition: transform 0.4s ease-out 0.05s;
-    }
-
-    /* RIGHT CARD (even): front starts at right side, back behind, hover slides LEFT */
-    .slide-card.right-card .slide-front {
-      right: 0;
-      transform: translateX(0);
-    }
-    .slide-card.right-card .slide-back {
-      right: 0;
-      transform: translateX(0);
-    }
-    .slide-card.right-card:hover .slide-front {
-      transform: translateX(-75%);  /* slides to left, revealing back */
-    }
-    .slide-card.right-card:hover .slide-back {
-      transform: translateX(0);
-      transition: transform 0.4s ease-out 0.05s;
-    }
-
-    /* ----- front content (judgment styling) ----- */
-    .slide-front {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .slide-front .number {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 800;
-      font-size: clamp(80px, 10vw, 120px);
-      line-height: 1;
-      min-width: 120px;
-      text-align: center;
-      color: transparent;
-      background-clip: text;
-      -webkit-background-clip: text;
-      background-size: cover;
-      background-position: center 30%;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
-    }
-
-    .front-info {
-      flex: 1;
-    }
-
-    .front-info .court-badge {
-      display: inline-block;
-      background: #f0e7e0;
-      padding: 4px 14px;
-      border-radius: 40px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.8px;
-      color: #7b3f2c;
-      margin-bottom: 8px;
-      border: 1px solid #d9c5b8;
-    }
-
-    .front-info h3 {
-      margin: 0 0 10px 0;
-      font-size: 1.4rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      padding-left: 20px;
-      color: #1e2b3c;
-      text-transform: uppercase;
-      position: relative;
-      line-height: 1.3;
-    }
-
-    .front-info h3::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 6px;
-      bottom: 6px;
-      width: 6px;
-      background: linear-gradient(135deg, #9e2b1f, #c14f3a);
-      border-radius: 12px;
-    }
-
-    .front-info .case-ref {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #6f5b4c;
-      margin: 8px 0 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .front-info .case-ref i {
-      font-size: 0.75rem;
-      color: #9e2b1f;
-    }
-
-    .front-info p {
-      margin: 8px 0 4px 0;
-      line-height: 1.6;
-      font-size: 0.95rem;
-      opacity: 0.85;
-      text-align: justify;
-      color: #2c3e4e;
-      font-weight: 400;
-    }
-
-    /* ----- back content (judgment actions) ----- */
-    .slide-back {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      gap: 20px;
-      pointer-events: none;
-    }
-
-    .back-title {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 700;
-      font-size: 1.3rem;
-      color: #2d3748;
-      margin-bottom: 4px;
-      border-bottom: 3px solid #9e2b1f;
-      display: inline-block;
-      padding-bottom: 8px;
+      border-radius: 28px;
+      box-shadow: 0 16px 30px rgba(0, 40, 60, 0.2);
+      padding: 1.4rem 1.6rem 0.9rem 1.6rem;
+      border: 1px solid #b3c6dc;
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
       line-height: 1.4;
+      color: #1c2d3f;
+      margin: 1rem auto;
+      box-sizing: border-box;
     }
 
-    .back-citation {
-      font-size: 0.85rem;
-      background: #e9ddd3;
-      padding: 4px 16px;
-      border-radius: 40px;
-      color: #4d3a2e;
-      font-weight: 500;
-      display: inline-block;
+    .lpg-updated-card * {
+      all: revert;
+      box-sizing: border-box;
     }
 
-    .back-actions {
+    /* header */
+    .lpg2-top {
       display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-      width: 100%;
-      position: relative;
-      z-index: 10;
-      margin-top: 10px;
-    }
-
-    .back-btn {
-      background: white;
-      border: 2px solid #9e2b1f;
-      color: #7b2c1d;
-      font-weight: 600;
-      padding: 12px 20px;
-      border-radius: 50px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      min-width: 150px;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 6px 12px -6px rgba(150, 50, 20, 0.2);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      display: inline-flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      pointer-events: auto;
+      border-bottom: 4px solid #0047a0;
+      padding-bottom: 0.4rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
       gap: 8px;
     }
-
-    .back-btn i {
-      font-size: 1rem;
+    .lpg2-top h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #003366;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-
-    .back-btn:hover {
-      background: #9e2b1f;
+    .lpg2-top h1 small {
+      font-size: 0.9rem;
+      font-weight: 400;
+      background: #dae5f2;
+      color: #003366;
+      padding: 0.2rem 1.2rem;
+      border-radius: 40px;
+    }
+    .lpg2-print-btn {
+      background: #003366;
+      border: none;
       color: white;
-      transform: scale(1.05);
-      box-shadow: 0 14px 24px -10px #9e2b1f;
-      border-color: transparent;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.5rem 2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,40,70,0.3);
+      transition: 0.1s;
+      border: 1px solid #001f3f;
+    }
+    .lpg2-print-btn:hover { background: #002244; }
+
+    /* section headers (same style as others) */
+    .lpg2-section-title {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #0047a0;
+      border-left: 8px solid #ff8c1a;
+      padding-left: 14px;
+      margin: 1.2rem 0 0.6rem 0;
+      background: linear-gradient(to right, #f0f6ff, transparent);
     }
 
-    /* number background image */
-    .number[style*="background-image"] {
-      background-size: cover;
-      background-position: center;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+    /* basic details grid – 3 cols, NO dotted borders, just plain underlines */
+    .lpg2-basic-grid {
+      background: #f2f7ff;
+      border-radius: 24px;
+      padding: 1rem 1.4rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.7rem 1.8rem;
+      border: 1px solid #c7d8ec;
+      margin-bottom: 0.8rem;
+    }
+    .lpg2-basic-item {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 5px;
+      font-size: 0.95rem;
+    }
+    .lpg2-basic-item .lpg2-label {
+      font-weight: 650;
+      color: #003366;
+      min-width: 110px;
+    }
+    .lpg2-basic-item .lpg2-value {
+      background: transparent;
+      border-bottom: 1px solid #7895b7;    /* solid line — no dots, no oval */
+      min-width: 160px;
+      color: #0b1f30;
+      padding: 0.1rem 0.3rem;
+      line-height: 1.5;
     }
 
-    /* responsiveness */
-    @media (max-width: 900px) {
-      .zigzag-grid {
-        grid-template-columns: 1fr;
-        max-width: 700px;
+    /* two‑column checklist (like ppc/fps) */
+    .lpg2-check-two {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.3rem 1.2rem;
+    }
+    .lpg2-check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 0.25rem 0;
+      border-bottom: 1px dotted #b4c6db;
+    }
+    .lpg2-check-item input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      accent-color: #0047a0;
+      flex-shrink: 0;
+    }
+    .lpg2-check-item label {
+      font-size: 0.9rem;
+      line-height: 1.3;
+      color: #1e3349;
+    }
+
+    /* stock summary – REPLACED with detailed table format (no dashed lines) */
+    .lpg2-stock-detailed {
+      background: #f5f9ff;
+      border-radius: 24px;
+      padding: 0.8rem 1.2rem 1rem;
+      margin: 0.7rem 0 0.9rem;
+      border: 1px solid #b8cee9;
+    }
+    .lpg2-stock-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 1px 5px rgba(0,20,40,0.1);
+    }
+    .lpg2-stock-table th {
+      background: #003366;
+      color: white;
+      font-weight: 600;
+      padding: 0.5rem 0.3rem;
+      text-align: center;
+    }
+    .lpg2-stock-table td {
+      border: 1px solid #b5c9e0;
+      padding: 0.4rem 0.2rem;
+      text-align: center;
+    }
+    .lpg2-stock-table td:first-child {
+      font-weight: 550;
+      background: #eaf2fc;
+    }
+
+    /* sub-head inside stock section */
+    .lpg2-subhead {
+      font-weight: 650;
+      color: #003366;
+      margin: 0.8rem 0 0.2rem 0;
+      font-size: 1rem;
+      border-left: 5px solid #ff8c1a;
+      padding-left: 8px;
+    }
+
+    /* consumer database / delivery summary (plain rows) */
+    .lpg2-mini-stat {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 2.5rem;
+      background: #f2f7ff;
+      border-radius: 24px;
+      padding: 0.8rem 1.5rem;
+      border: 1px solid #b8cee9;
+      margin: 0.8rem 0;
+    }
+    .lpg2-mini-stat span {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .lpg2-mini-stat strong {
+      color: #003366;
+    }
+    .lpg2-mini-stat .stat-line {
+      border-bottom: 1px solid #6883a3;
+      min-width: 100px;
+      padding: 0 0.2rem;
+    }
+
+    /* safety / facility group with badges */
+    .lpg2-facility-group {
+      background: #e7f0fb;
+      border-radius: 24px;
+      padding: 0.8rem 1.2rem 1rem;
+      margin-top: 1rem;
+      border: 1px solid #9eb9d4;
+      border-left: 8px solid #ff6a00;
+    }
+    .lpg2-fac-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.2rem 1rem;
+    }
+    .lpg2-fac-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      border-bottom: 1px dotted #8aa4c2;
+      padding: 0.2rem 0;
+    }
+    .lpg2-fac-item .lpg2-badge {
+      background: #0047a0;
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.15rem 0.7rem;
+      border-radius: 30px;
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
+    /* violation box */
+    .lpg2-violation-box {
+      background: #fff1e0;
+      border-radius: 24px;
+      padding: 0.8rem 1.3rem;
+      border-left: 8px solid #cc3300;
+      margin: 1rem 0 0.5rem;
+    }
+
+    /* signature row */
+    .lpg2-sign-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #e2ecf9;
+      padding: 0.7rem 1.8rem;
+      border-radius: 40px;
+      margin: 1rem 0 0.2rem;
+      font-weight: 500;
+      flex-wrap: wrap;
+    }
+    .lpg2-stamp {
+      border: 2px dotted #003366;
+      background: white;
+      padding: 0.3rem 2rem;
+      border-radius: 30px;
+      font-family: 'Courier New', monospace;
+    }
+
+    hr { border: 1px solid #cbdbea; margin: 0.7rem 0; }
+
+    /* navigation links */
+    .lpg2-nav-links {
+      margin: 1.0rem auto 0.5rem;
+      max-width: 1000px;
+      padding: 0 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+    .lpg2-nav-item {
+      background: #dbeafe;
+      border-radius: 40px;
+      padding: 0.35rem 1.3rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: 1px solid #7ca2c9;
+      color: #1a3c5e;
+      transition: 0.1s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .lpg2-nav-item:hover {
+      background: #bed9ff;
+      border-color: #2b5880;
+    }
+    .lpg2-nav-item.active {
+      background: #003366;
+      border-color: #00224d;
+      color: white;
+    }
+
+    /* print rules */
+    @media print {
+      @page { size: A4; margin: 0.3in; }
+      body > :not(.lpg-updated-card):not(script) {
+        display: none !important;
       }
-      .slide-card {
-        aspect-ratio: 6 / 4;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+      body {
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
       }
-      .slide-card.left-card .slide-front,
-      .slide-card.right-card .slide-front {
-        left: 0;
-        right: auto;
+      .lpg-updated-card {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        border: none !important;
+        padding: 0.2rem !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        font-size: 10.5pt !important;
       }
-      .slide-card.left-card:hover .slide-front,
-      .slide-card.right-card:hover .slide-front {
-        transform: translateX(70%);
+      .lpg2-print-btn {
+        display: none !important;
+      }
+      .lpg2-nav-links {
+        display: none !important;
+      }
+      #site-header, #site-footer, .gototop {
+        display: none !important;
       }
     }
 
-    @media (max-width: 600px) {
-      .slide-front {
-        flex-direction: column;
-        text-align: center;
-        padding: 16px;
-      }
-      .front-info h3 {
-        padding-left: 0;
-      }
-      .front-info h3::before {
-        display: none;
-      }
-      .front-info p {
-        text-align: center;
-      }
-      .slide-card {
-        aspect-ratio: auto;
-        min-height: 360px;
-      }
-      .back-btn {
-        min-width: 130px;
-        padding: 10px 14px;
-        font-size: 0.95rem;
-      }
-      .slide-card.left-card:hover .slide-front,
-      .slide-card.right-card:hover .slide-front {
-        transform: translateX(65%);
-      }
+    /* mobile */
+    @media screen and (max-width: 700px) {
+      .lpg2-basic-grid { grid-template-columns: 1fr; }
+      .lpg2-check-two { grid-template-columns: 1fr; }
+      .lpg2-fac-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
+<!-- site header placeholder (not printed) -->
 <div id="site-header"></div>
 
-<!-- ZIGZAG TWO-COLUMN GRID (judgment content) -->
-<div class="zigzag-grid"></div>
+<!-- ========== NAVIGATION TABS ========== -->
+<div class="lpg2-nav-links">
+  <a href="/formats/petrolpumpchecklist.html" class="lpg2-nav-item">⛽ Petrol pump</a>
+  <a href="/formats/lpgchecklist.html" class="lpg2-nav-item active">🔥 LPG checklist (current)</a>
+  <a href="/formats/fpschecklist.html" class="lpg2-nav-item">🍚 FPS checklist</a>
+  <a href="/formats/ppcchecklist.html" class="lpg2-nav-item">🌾 PPC verification</a>
+</div>
 
+<!-- MAIN CARD – LPG INSPECTION (professional format) -->
+<div class="lpg-updated-card" id="lpgPrintUpdated">
+
+  <div class="lpg2-top">
+    <h1>⛽ LPG DISTRIBUTOR INSPECTION <small>Essential Commodities Act · Gas Cylinder Rules 2016</small></h1>
+    <button class="lpg2-print-btn" id="printLpgUpdated">🖨️ PRINT</button>
+  </div>
+
+  <!-- 1️⃣ Basic Details – DOTTED OVAL REMOVED (solid underline) -->
+  <div class="lpg2-section-title">1️⃣ BASIC DETAILS OF DISTRIBUTOR</div>
+  <div class="lpg2-basic-grid">
+    <div class="lpg2-basic-item"><span class="lpg2-label">Distributor Name:</span><span class="lpg2-value">_________________________</span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Proprietor/Manager:</span><span class="lpg2-value">_________________________</span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Address:</span><span class="lpg2-value">_________________________</span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">District:</span><span class="lpg2-value">_________________________</span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Oil Marketing Company:</span><span class="lpg2-value">IOCL / BPCL / HPCL</span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Distributor Code:</span><span class="lpg2-value">_________________________</span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Licence / Agreement No.:</span><span class="lpg2-value">_________________</span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Date & Time of Inspection:</span><span class="lpg2-value">_________________</span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Inspecting Officer:</span><span class="lpg2-value">_________________</span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Designation:</span><span class="lpg2-value">_________________________</span></div>
+  </div>
+
+  <!-- 2️⃣ STOCK VERIFICATION – detailed tables (no dotted lines) -->
+  <div class="lpg2-section-title">2️⃣ STOCK VERIFICATION OF LPG CYLINDERS</div>
+  <div class="lpg2-stock-detailed">
+    <div class="lpg2-subhead">A. Filled Cylinders</div>
+    <table class="lpg2-stock-table">
+      <tr><th>Type</th><th>Opening Stock</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Physical</th><th>Diff</th></tr>
+      <tr><td>14.2 Kg Domestic</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td></tr>
+      <tr><td>19 Kg Commercial</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td></tr>
+      <tr><td>5 Kg Domestic</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td></tr>
+    </table>
+
+    <div class="lpg2-subhead" style="margin-top:1rem;">B. Empty Cylinders</div>
+    <table class="lpg2-stock-table">
+      <tr><th>Type</th><th>Book Balance</th><th>Physical Balance</th><th>Difference</th></tr>
+      <tr><td>14.2 Kg</td><td>_____</td><td>_____</td><td>_____</td></tr>
+      <tr><td>19 Kg</td><td>_____</td><td>_____</td><td>_____</td></tr>
+      <tr><td>5 Kg</td><td>_____</td><td>_____</td><td>_____</td></tr>
+    </table>
+
+    <div class="lpg2-subhead" style="margin-top:1rem;">C. Defective / Damaged Cylinders</div>
+    <table class="lpg2-stock-table">
+      <tr><th>Type</th><th>14.2 Kg</th><th>19 Kg</th><th>5 Kg</th></tr>
+      <tr><td>Quantity</td><td>_____</td><td>_____</td><td>_____</td></tr>
+    </table>
+  </div>
+
+  <!-- 3️⃣ CONSUMER DATABASE & WAITING LIST (newly added) -->
+  <div class="lpg2-section-title">3️⃣ CONSUMER DATABASE VERIFICATION</div>
+  <div class="lpg2-mini-stat">
+    <span><strong>Domestic (Normal):</strong> <span class="stat-line">_________</span></span>
+    <span><strong>Ujjwala Consumers:</strong> <span class="stat-line">_________</span></span>
+    <span><strong>Commercial Consumers:</strong> <span class="stat-line">_________</span></span>
+  </div>
+  <div class="lpg2-mini-stat" style="margin-top:0.3rem;">
+    <span><strong>Active Domestic:</strong> <span class="stat-line">_________</span></span>
+    <span><strong>Active Ujjwala:</strong> <span class="stat-line">_________</span></span>
+    <span><strong>Active Commercial:</strong> <span class="stat-line">_________</span></span>
+  </div>
+  <div class="lpg2-mini-stat" style="margin-top:0.3rem;">
+    <span><strong>Waiting List (Domestic):</strong> <span class="stat-line">_________</span></span>
+    <span><strong>Waiting List (Ujjwala):</strong> <span class="stat-line">_________</span></span>
+  </div>
+
+  <!-- 4️⃣ REFILL SUPPLY (last 3 months) -->
+  <div class="lpg2-section-title">4️⃣ REFILL CYLINDER SUPPLY (LAST 3 MONTHS)</div>
+  <div class="lpg2-stock-detailed" style="padding:0.6rem;">
+    <table class="lpg2-stock-table">
+      <tr><th>Month</th><th>Domestic Cylinders Received</th><th>Commercial Cylinders Received</th></tr>
+      <tr><td>Month 1</td><td>_________</td><td>_________</td></tr>
+      <tr><td>Month 2</td><td>_________</td><td>_________</td></tr>
+      <tr><td>Month 3</td><td>_________</td><td>_________</td></tr>
+    </table>
+  </div>
+
+  <!-- 5️⃣ DELIVERY & DISTRIBUTION SYSTEM (merged existing + new) -->
+  <div class="lpg2-section-title">5️⃣ DELIVERY & DISTRIBUTION SYSTEM</div>
+  <div class="lpg2-check-two">
+    <div class="lpg2-check-item"><input type="checkbox"> Home delivery system available</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Delivery register maintained</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Delivery vehicles inspected</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Weighing machine available</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Electronic POS machine used</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Cash memo / invoice book maintained</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Godown stock register updated</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Electronic distribution records</div>
+  </div>
+
+  <!-- 6️⃣ SAFETY COMPLIANCE (from professional list) -->
+  <div class="lpg2-section-title">6️⃣ SAFETY COMPLIANCE</div>
+  <div class="lpg2-check-two">
+    <div class="lpg2-check-item"><input type="checkbox"> Fire extinguishers (CO₂ / DCP) available</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Sand buckets available (with lid)</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Warning boards / "No Smoking" signage displayed</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Proper ventilation in godown</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Emergency exit clear</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Electrical wiring insulated</div>
+  </div>
+
+  <!-- 7️⃣ RECORDS VERIFIED (from professional list) -->
+  <div class="lpg2-section-title">7️⃣ RECORDS VERIFIED</div>
+  <div class="lpg2-check-two">
+    <div class="lpg2-check-item"><input type="checkbox"> Stock Register</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Consumer Register</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Cash Memo / Invoice Book</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Delivery Register</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Godown Stock Register</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Electronic Distribution Records</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Complaint register maintained</div>
+    <div class="lpg2-check-item"><input type="checkbox"> KYC records available</div>
+  </div>
+
+  <!-- 8️⃣ ADDITIONAL COMPLIANCE (handling, transport etc) -->
+  <div class="lpg2-section-title">8️⃣ HANDLING & TRANSPORT COMPLIANCE</div>
+  <div class="lpg2-check-two">
+    <div class="lpg2-check-item"><input type="checkbox"> No decanting of LPG observed</div>
+    <div class="lpg2-check-item"><input type="checkbox"> No unauthorized refilling activity</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Trained staff available</div>
+    <div class="lpg2-check-item"><input type="checkbox"> PPE used by staff</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Valid transport license (if applicable)</div>
+    <div class="lpg2-check-item"><input type="checkbox"> TREM Card available</div>
+  </div>
+
+  <!-- 9️⃣ VIOLATIONS / DEFICIENCIES OBSERVED (same) -->
+  <div class="lpg2-section-title">9️⃣ VIOLATIONS / DEFICIENCIES OBSERVED (Essential Commodities Act, 1955 & LPG Order 2000)</div>
+  <div class="lpg2-violation-box">
+    <div style="font-weight:600; margin-bottom:6px;">📌 (Detail specific rule violations – for prosecution purpose)</div>
+    <div style="min-height:50px; background:white; border-radius:20px; padding:0.6rem 1rem; border:1px solid #cc9;">
+      _________________________________________________________________<br>
+      _________________________________________________________________
+    </div>
+  </div>
+
+  <!-- CRITICAL SAFETY CHECKS (LPG specific) unchanged -->
+  <div class="lpg2-facility-group">
+    <div style="font-weight:700; font-size:1rem; color:#003366; margin-bottom:6px;">🧯 CRITICAL SAFETY CHECKS (LPG specific)</div>
+    <div class="lpg2-fac-grid">
+      <div class="lpg2-fac-item"><span>⚠️ No smoking / No mobile signage</span> <span class="lpg2-badge">displayed</span></div>
+      <div class="lpg2-fac-item"><span>🧯 Fire extinguisher monthly check</span> <span class="lpg2-badge">up to date</span></div>
+      <div class="lpg2-fac-item"><span>📏 Hydrostatic test record (cylinders)</span> <span class="lpg2-badge">verified</span></div>
+      <div class="lpg2-fac-item"><span>🔧 Valve protection caps intact</span> <span class="lpg2-badge">OK</span></div>
+      <div class="lpg2-fac-item"><span>⚡ Flameproof electrical fittings</span> <span class="lpg2-badge">compliant</span></div>
+      <div class="lpg2-fac-item"><span>🧪 Leak detection checklist</span> <span class="lpg2-badge">maintained</span></div>
+      <div class="lpg2-fac-item"><span>🧯 Sand buckets (filled, with lid)</span> <span class="lpg2-badge">4 buckets</span></div>
+      <div class="lpg2-fac-item"><span>📢 Emergency contact board</span> <span class="lpg2-badge">visible</span></div>
+    </div>
+  </div>
+
+  <!-- signature & stamp -->
+  <div class="lpg2-sign-row">
+    <span>✅ Inspecting Officer: _______________________</span>
+    <span class="lpg2-stamp">📅 Date: ___________</span>
+  </div>
+  <hr>
+  <div style="font-size:0.7rem; color:#3f6185; text-align:right;">Gas Cylinder Rules 2016 · Essential Commodities Act · LPG Order 2000 compliant format</div>
+</div>
+
+<!-- ========== NAVIGATION TABS (bottom) ========== -->
+<div class="lpg2-nav-links">
+  <a href="/formats/petrolpumpchecklist.html" class="lpg2-nav-item">⛽ Petrol pump</a>
+  <a href="/formats/lpgchecklist.html" class="lpg2-nav-item active">🔥 LPG checklist (current)</a>
+  <a href="/formats/fpschecklist.html" class="lpg2-nav-item">🍚 FPS checklist</a>
+  <a href="/formats/ppcchecklist.html" class="lpg2-nav-item">🌾 PPC verification</a>
+</div>
+
+<!-- print trigger -->
 <script>
-  (function() {
-    // 12 High Court judgment items – exactly as requested
-    const judgmentItems = [
-      {
-        title: "Preventive Detention & Constitutional Rights under Article 22(5)",
-        description: "Full text of the landmark judgment examining right to make representation, delayed consideration, and when detention becomes unconstitutional. Detailed analysis of Article 22(5) safeguards.",
-        imageUrl: "/assets/images/AI-Images/AI.webp",
-        court: "Orissa HC",
-        caseRef: "2024 · CRLMC 245/2024",
-        frontLink: "/judgments/preventive-detention-art22-5.html",
-        backAction1: { text: "📄 read judgment", link: "/judgments/preventive-detention-art22-5.html" },
-        backAction2: { text: "⚖️ case analysis", link: "/judgments/preventive-detention-art22-5.html" }
-      },
-      {
-        title: "Rabi Kumar Nanda v. State of Orissa: Vehicle Seizure & Release under Essential Commodities Act",
-        description: "Landmark ruling on interim release of vehicle seized for alleged PDS violation. Conditions for release, bank guarantee, and principles under EC Act.",
-        imageUrl: "/assets/images/AI-Images/Machine.webp",
-        court: "Orissa HC",
-        caseRef: "2023 · W.P.(C) 892/2023",
-        frontLink: "/judgments/rabi-kumar-nanda-ec-act.html",
-        backAction1: { text: "📄 full text", link: "/judgments/rabi-kumar-nanda-ec-act.html" },
-        backAction2: { text: "🚚 seizure notes", link: "/judgments/rabi-kumar-nanda-ec-act.html" }
-      },
-      {
-        title: "Storage Agents vs. Transport Contractors: Orissa High Court Judgment on PDS Reforms",
-        description: "Landmark distinction between storage agents and transport contractors. Liability for damaged foodgrains, PDS reforms, and allocation of responsibility.",
-        imageUrl: "/assets/images/AI-Images/swaraj.webp",
-        court: "Orissa HC",
-        caseRef: "2024 · ARBA 78/2024",
-        frontLink: "/judgments/storage-agents-transport-pds.html",
-        backAction1: { text: "📄 judgment", link: "/judgments/storage-agents-transport-pds.html" },
-        backAction2: { text: "📦 PDS analysis", link: "/judgments/storage-agents-transport-pds.html" }
-      },
-      {
-        title: "Sk. Salim v. State : preventive detention & right to documents",
-        description: "Non-supply of relied upon documents renders detention unconstitutional. Detailed examination of Article 22(5) and right to effective representation.",
-        imageUrl: "/assets/images/AI-Images/ShareMarket.webp",
-        court: "Calcutta HC",
-        caseRef: "2022 · WP 1145/2022",
-        frontLink: "/judgments/salim-preventive-docs.html",
-        backAction1: { text: "📄 opinion", link: "/judgments/salim-preventive-docs.html" },
-        backAction2: { text: "🔍 document right", link: "/judgments/salim-preventive-docs.html" }
-      },
-      {
-        title: "Jagmal Singh v. State: release of vehicle seized under EC Act",
-        description: "Principles governing interim release of vehicles seized under Essential Commodities Act. Security bond, valuation, and magisterial powers.",
-        imageUrl: "/assets/images/AI-Images/transforming.webp",
-        court: "Punjab & Haryana HC",
-        caseRef: "2023 · CRM-M 2398/2023",
-        frontLink: "/judgments/jagmal-singh-ec-act.html",
-        backAction1: { text: "📄 full text", link: "/judgments/jagmal-singh-ec-act.html" },
-        backAction2: { text: "⚙️ release conditions", link: "/judgments/jagmal-singh-ec-act.html" }
-      },
-      {
-        title: "Transport contractor liability: food grain shortage – PDS",
-        description: "Transport contractor cannot be treated as storage agent for recovery of shortage. Important distinction under PDS reforms and liability framework.",
-        imageUrl: "/assets/images/AI-Images/intelligent-energy.webp",
-        court: "Allahabad HC",
-        caseRef: "2024 · Writ C 4081/2024",
-        frontLink: "/judgments/transport-vs-storage-pds.html",
-        backAction1: { text: "📄 judgment", link: "/judgments/transport-vs-storage-pds.html" },
-        backAction2: { text: "🚛 contractor duty", link: "/judgments/transport-vs-storage-pds.html" }
-      },
-      {
-        title: "Article 22(5) – communication of grounds in detainee’s language",
-        description: "Detention order set aside for not providing grounds in language understood by detenu. Right to make representation includes linguistic access.",
-        imageUrl: "/assets/images/AI-Images/kpmg.webp",
-        court: "Delhi HC",
-        caseRef: "2023 · CRL.A. 789/2023",
-        frontLink: "/judgments/detention-language-rights.html",
-        backAction1: { text: "📄 read", link: "/judgments/detention-language-rights.html" },
-        backAction2: { text: "🌐 language right", link: "/judgments/detention-language-rights.html" }
-      },
-      {
-        title: "Shivlal v. State: release of vehicle on 'supurtnama' – EC Act",
-        description: "Magistrate's power to release vehicle seized under Essential Commodities Act. Procedure for supurtnama and conditions for interim custody.",
-        imageUrl: "/assets/images/AI-Images/intelligent.webp",
-        court: "Madhya Pradesh HC",
-        caseRef: "2022 · MCRC 56782/2022",
-        frontLink: "/judgments/shivlal-vehicle-release.html",
-        backAction1: { text: "📄 judgment", link: "/judgments/shivlal-vehicle-release.html" },
-        backAction2: { text: "📝 supurtnama", link: "/judgments/shivlal-vehicle-release.html" }
-      },
-      {
-        title: "Storage agent not liable for transit loss: PDS reforms",
-        description: "Agent only responsible for storage, not for contractor's negligence during transit. Important clarification for PDS liability regime.",
-        imageUrl: "/assets/images/AI-Images/AI.webp",
-        court: "Gujarat HC",
-        caseRef: "2023 · SCA 10234/2023",
-        frontLink: "/judgments/gujarat-storage-agent.html",
-        backAction1: { text: "📄 full text", link: "/judgments/gujarat-storage-agent.html" },
-        backAction2: { text: "📦 storage duty", link: "/judgments/gujarat-storage-agent.html" }
-      },
-      {
-        title: "Delay in deciding representation – Article 22(5) violation",
-        description: "Unreasonable delay by advisory board in deciding representation renders detention invalid. Speedy consideration is constitutional mandate.",
-        imageUrl: "/assets/images/AI-Images/Machine.webp",
-        court: "Bombay HC",
-        caseRef: "2024 · CRLWP 2047/2024",
-        frontLink: "/judgments/delay-representation-art22-5.html",
-        backAction1: { text: "📄 opinion", link: "/judgments/delay-representation-art22-5.html" },
-        backAction2: { text: "⏱️ delay analysis", link: "/judgments/delay-representation-art22-5.html" }
-      },
-      {
-        title: "Mahendra Kumar v. State: release of seized vehicle – EC Act",
-        description: "Conditional release of vehicle – furnishing bank guarantee instead of vehicle custody. Alternatives to physical custody under EC Act.",
-        imageUrl: "/assets/images/AI-Images/swaraj.webp",
-        court: "Rajasthan HC",
-        caseRef: "2023 · SBWP 6543/2023",
-        frontLink: "/judgments/mahendra-ec-act-release.html",
-        backAction1: { text: "📄 judgment", link: "/judgments/mahendra-ec-act-release.html" },
-        backAction2: { text: "🏦 guarantee", link: "/judgments/mahendra-ec-act-release.html" }
-      },
-      {
-        title: "FCI v. Storage Agent: demurrage & handling – PDS reform",
-        description: "Storage agent cannot be penalised for delay caused by transport contractor. Demurrage charges and handling responsibility under PDS.",
-        imageUrl: "/assets/images/AI-Images/transforming.webp",
-        court: "Karnataka HC",
-        caseRef: "2024 · W.P. 11077/2024",
-        frontLink: "/judgments/karnataka-storage-pds.html",
-        backAction1: { text: "📄 full text", link: "/judgments/karnataka-storage-pds.html" },
-        backAction2: { text: "⚖️ demurrage", link: "/judgments/karnataka-storage-pds.html" }
-      }
-    ];
-
-    const container = document.querySelector(".zigzag-grid");
-    if (!container) return;
-    container.innerHTML = "";
-
-    judgmentItems.forEach((item, index) => {
-      const number = (index + 1).toString().padStart(2, "0");
-
-      // main slide-card container
-      const card = document.createElement("div");
-      card.className = `slide-card ${index % 2 === 0 ? 'left-card' : 'right-card'}`; // zigzag: even left, odd right
-
-      // ---------- FRONT SIDE ----------
-      const frontDiv = document.createElement("div");
-      frontDiv.className = "slide-front";
-
-      const numberSpan = document.createElement("div");
-      numberSpan.className = "number";
-      numberSpan.style.backgroundImage = `url('${item.imageUrl}')`;
-      numberSpan.textContent = number;
-
-      const infoDiv = document.createElement("div");
-      infoDiv.className = "front-info";
-
-      const courtBadge = document.createElement("span");
-      courtBadge.className = "court-badge";
-      courtBadge.textContent = item.court;
-
-      const titleEl = document.createElement("h3");
-      titleEl.textContent = item.title;
-
-      const caseRefEl = document.createElement("div");
-      caseRefEl.className = "case-ref";
-      caseRefEl.innerHTML = `<i class="fas fa-gavel"></i> ${item.caseRef}`;
-
-      const descEl = document.createElement("p");
-      descEl.textContent = item.description;
-
-      infoDiv.appendChild(courtBadge);
-      infoDiv.appendChild(titleEl);
-      infoDiv.appendChild(caseRefEl);
-      infoDiv.appendChild(descEl);
-      frontDiv.appendChild(numberSpan);
-      frontDiv.appendChild(infoDiv);
-
-      // ---------- BACK SIDE (judgment actions) ----------
-      const backDiv = document.createElement("div");
-      backDiv.className = "slide-back";
-
-      const backHeading = document.createElement("div");
-      backHeading.className = "back-title";
-      backHeading.textContent = item.title.length > 50 ? item.title.substring(0, 50) + "…" : item.title;
-
-      const backCitation = document.createElement("div");
-      backCitation.className = "back-citation";
-      backCitation.textContent = `${item.court} · ${item.caseRef}`;
-
-      const actionsDiv = document.createElement("div");
-      actionsDiv.className = "back-actions";
-
-      // button 1 (full judgment)
-      const btn1 = document.createElement("a");
-      btn1.className = "back-btn";
-      btn1.innerHTML = `<i class="fas fa-file-lines"></i> ${item.backAction1.text}`;
-      btn1.href = item.backAction1.link;
-      btn1.setAttribute("target", "_blank");
-      btn1.setAttribute("rel", "noopener noreferrer");
-
-      // button 2 (analysis / related)
-      const btn2 = document.createElement("a");
-      btn2.className = "back-btn";
-      btn2.innerHTML = `<i class="fas fa-scale-balanced"></i> ${item.backAction2.text}`;
-      btn2.href = item.backAction2.link;
-      btn2.setAttribute("target", "_blank");
-      btn2.setAttribute("rel", "noopener noreferrer");
-
-      actionsDiv.appendChild(btn1);
-      actionsDiv.appendChild(btn2);
-      backDiv.appendChild(backHeading);
-      backDiv.appendChild(backCitation);
-      backDiv.appendChild(actionsDiv);
-
-      // assemble card
-      card.appendChild(frontDiv);
-      card.appendChild(backDiv);
-      container.appendChild(card);
-
-      // ---------- CLICK HANDLING ----------
-      // front side click opens judgment
-      frontDiv.addEventListener("click", (e) => {
-        window.open(item.frontLink, '_blank', 'noopener,noreferrer');
-      });
-
-      // back side click (if on container or heading/citation) opens same judgment
-      backDiv.addEventListener("click", (e) => {
-        if (e.target === backDiv || e.target.classList.contains('back-title') || e.target === backHeading || e.target.classList.contains('back-citation') || e.target === backCitation) {
-          window.open(item.backAction1.link, '_blank', 'noopener,noreferrer');
-        }
-      });
-    });
-  })();
+  document.getElementById('printLpgUpdated')?.addEventListener('click', function() {
+    window.print();
+  });
 </script>
 
-<!-- FOOTER -->
+<!-- FOOTER placeholder -->
 <div id="site-footer"></div>
-
-<!-- Go to Top (existing) -->
+<!-- Go to Top -->
 <script src="/assets/Scripts/gototop.js"></script>
+
 </body>
 </html>
