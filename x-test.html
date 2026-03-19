@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>High Court · Reports (2024)</title>
+  <title>High Court · Reports (seamless grid)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,7 +42,6 @@
       min-height: 100vh;
     }
 
-    /* typography */
     h1, h2, h3 {
       font-family: 'Playfair Display', serif;
       font-weight: 700;
@@ -178,12 +177,12 @@
       opacity: 0.8;
     }
 
-    /* judgment grid – more balanced */
+    /* ──────────── SEAMLESS GRID – NO GAPS ──────────── */
     .judgment-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-      background: rgba(180, 148, 92, 0.15);
+      gap: 0;                     /* ← absolutely no gaps */
+      background: transparent;     /* let cards define borders */
       border: 1px solid var(--border-subtle);
       margin-bottom: 2.5rem;
     }
@@ -191,28 +190,33 @@
     .grid-card {
       background: var(--ink-light);
       position: relative;
-      transition: background 0.2s;
-      min-height: 320px;
+      transition: background 0.2s, border-color 0.2s;
+      min-height: 340px;
       display: flex;
       flex-direction: column;
-      border: 1px solid transparent;
-      outline-offset: -2px;
+      border: 1px solid var(--border-subtle);
+      margin: 0;                  /* no margins */
+      outline: none;
+      z-index: 1;
     }
 
-    .grid-card:hover {
-      background: #1f2842;
-      border-color: rgba(180, 148, 92, 0.5);
-      z-index: 5;
-    }
-
-    /* featured first card (larger area) */
+    /* featured first card (spans two rows) – still gapless */
     .grid-card.featured {
       grid-row: span 2;
-      min-height: 600px;
+      min-height: 680px;          /* 2×340 = 680px, keeps alignment */
     }
 
     .grid-card.wide {
       grid-column: span 2;
+    }
+
+    /* hover effect lifts card above neighbours, but does not create gap */
+    .grid-card:hover {
+      background: #1f2842;
+      border-color: var(--gold);
+      z-index: 10;
+      transform: scale(1.00);      /* no scaling that would break alignment */
+      box-shadow: 0 0 0 1px var(--gold); /* inner glow instead of gap */
     }
 
     .card-content {
@@ -224,7 +228,7 @@
       z-index: 2;
     }
 
-    /* ornamental numerals */
+    /* ornamental numerals – consistent positioning */
     .card-numeral {
       font-family: 'Playfair Display', serif;
       font-size: 7rem;
@@ -325,7 +329,7 @@
       font-size: 0.5rem;
     }
 
-    /* Hover overlay – refined */
+    /* Hover overlay – refined, absolutely positioned inside card */
     .hover-overlay {
       position: absolute;
       inset: 0;
@@ -435,7 +439,7 @@
       margin-right: 0.5rem;
     }
 
-    /* responsive */
+    /* responsive – maintain gapless */
     @media (max-width: 1024px) {
       .judgment-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -459,23 +463,20 @@
       .grid-card.wide {
         grid-column: span 1;
       }
+      .grid-card.featured {
+        min-height: 340px;
+      }
       .header-reports {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
-      }
-      .stamp-archive {
-        align-self: flex-start;
-      }
-      .card-numeral {
-        font-size: 5rem;
       }
     }
   </style>
 </head>
 <body>
 <div class="wrapper">
-  <!-- HEADER with better hierarchy -->
+  <!-- HEADER -->
   <div class="header-reports">
     <div class="title-block">
       <h1>HIGH COURT <span>· REPORTS</span></h1>
@@ -489,7 +490,7 @@
     </div>
   </div>
 
-  <!-- FILTER bar (clear categories) -->
+  <!-- FILTER -->
   <div class="filter-panel">
     <span class="filter-label"><i class="fas fa-filter"></i> COURT</span>
     <span class="filter-item active">ALL</span>
@@ -506,7 +507,7 @@
     <span class="filter-item">VEHICLE RELEASE</span>
   </div>
 
-  <!-- GRID -->
+  <!-- SEAMLESS GRID (no gaps) -->
   <div class="judgment-grid" id="judgmentGrid"></div>
 
   <!-- FOOTER -->
@@ -606,16 +607,15 @@
     }
   ];
 
-  // cards: first is featured, indices 4 and 9 wide
   const grid = document.getElementById('judgmentGrid');
   if (!grid) return;
 
   judgments.forEach((j, idx) => {
     const card = document.createElement('div');
     card.className = 'grid-card';
-    // first card featured
+    // first card featured (taller)
     if (idx === 0) card.classList.add('featured');
-    // wide cards (eg 4 and 9) – for visual relief (span 2 cols)
+    // cards at index 4 and 9 get wide class (spans two columns)
     if (idx === 4 || idx === 9) card.classList.add('wide');
 
     const numeral = (idx + 1).toString().padStart(2,'0');
@@ -632,7 +632,7 @@
           <span class="footer-seal"><i class="fas fa-circle"></i> Reported</span>
         </div>
       </div>
-      <!-- hover overlay with buttons -->
+      <!-- hover overlay -->
       <div class="hover-overlay">
         <div class="overlay-icon"><i class="fas fa-gavel"></i></div>
         <div class="overlay-quote">${j.title}</div>
@@ -646,7 +646,7 @@
     grid.appendChild(card);
   });
 
-  // basic filter simulation (active class toggle)
+  // filter simulation (active class toggle)
   document.querySelectorAll('.filter-item:not(.filter-label)').forEach(item => {
     item.addEventListener('click', function(e) {
       document.querySelectorAll('.filter-item').forEach(el => el.classList.remove('active'));
@@ -656,6 +656,6 @@
 })();
 </script>
 
-<!-- small note: all links are placeholders (#) for demo -->
+<!-- all links are placeholders (#) for demonstration -->
 </body>
 </html>
