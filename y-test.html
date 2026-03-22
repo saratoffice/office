@@ -1,806 +1,814 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Essential Commodity Act – High Court Judgements | Sarat Office</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:wght@300;400;600&family=Fira+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blogs | Article Gallery</title>
 
-  :root {
-    --ink: #1a1208;
-    --parchment: #f5f0e8;
-    --cream: #faf7f2;
-    --gold: #b8860b;
-    --gold-light: #d4a520;
-    --rust: #8b3a1e;
-    --slate: #3d4a5c;
-    --muted: #7a7060;
-    --border: #d6ccb4;
-    --shadow: rgba(26,18,8,0.12);
-    --card-bg: #ffffff;
-    --tag-bg: #f0ebe0;
-  }
+  <!-- Site components -->
+  <script src="assets/Scripts/site-components.js" defer></script>
 
-  body {
-    background: var(--cream);
-    color: var(--ink);
-    font-family: 'Source Serif 4', Georgia, serif;
-    line-height: 1.7;
-    min-height: 100vh;
-  }
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-  /* ── Section Header ── */
-  .section-header {
-    text-align: center;
-    padding: 60px 24px 40px;
-  }
-  .section-header::before {
-    content: '';
-    display: block;
-    width: 60px;
-    height: 3px;
-    background: var(--gold);
-    margin: 0 auto 24px;
-  }
-  .section-kicker {
-    font-family: 'Fira Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--rust);
-    margin-bottom: 14px;
-  }
-  .section-title {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: clamp(28px, 5vw, 48px);
-    font-weight: 900;
-    color: var(--ink);
-    line-height: 1.18;
-    max-width: 700px;
-    margin: 0 auto 16px;
-  }
-  .section-title em { font-style: italic; color: var(--gold); }
-  .section-sub {
-    font-size: 15px;
-    color: var(--muted);
-    max-width: 540px;
-    margin: 0 auto;
-    font-weight: 300;
-  }
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
-  /* ── Filter Tabs ── */
-  .filter-bar {
-    padding: 0 24px 36px;
-    display: flex;
-    justify-content: center;
-  }
-  .filter-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-    background: var(--parchment);
-    padding: 6px;
-    border-radius: 50px;
-    border: 1px solid var(--border);
-  }
-  .filter-tab {
-    font-family: 'Fira Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 8px 18px;
-    border-radius: 50px;
-    border: none;
-    cursor: pointer;
-    background: transparent;
-    color: var(--muted);
-    transition: all 0.25s ease;
-    white-space: nowrap;
-  }
-  .filter-tab:hover { color: var(--ink); background: var(--card-bg); }
-  .filter-tab.active { background: var(--ink); color: var(--parchment); }
+  <link rel="stylesheet" href="style.css">
 
-  /* ── Results count ── */
-  .results-count {
-    text-align: center;
-    font-family: 'Fira Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 24px;
-    letter-spacing: 0.06em;
-  }
+  <style>
+    /* ─── DESIGN TOKENS ─────────────────────────────── */
+    :root {
+      --bg:        #0c0e14;
+      --surface:   #13161f;
+      --card:      #181b27;
+      --card-hov:  #1e2133;
+      --border:    rgba(255,255,255,0.06);
+      --accent:    #5b7fff;
+      --accent2:   #a78bfa;
+      --accent3:   #34d399;
+      --txt:       #e4e7f0;
+      --txt-muted: #7a8099;
+      --txt-dim:   #4a5068;
+      --radius:    16px;
+      --radius-sm: 10px;
+      --sans:      'DM Sans', sans-serif;
+      --display:   'Syne', sans-serif;
+    }
 
-  /* ── Grid ── */
-  .judgements-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
-    padding: 0 24px 80px;
-    max-width: 1240px;
-    margin: 0 auto;
-  }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* ── Card ── */
-  .j-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    position: relative;
-  }
-  .j-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--gold);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
-  }
-  .j-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px var(--shadow); }
-  .j-card:hover::before { transform: scaleX(1); }
-  .j-card[data-hidden="true"] { display: none; }
+    body {
+      background: var(--bg);
+      color: var(--txt);
+      font-family: var(--sans);
+      min-height: 100vh;
+    }
 
-  .card-band {
-    background: var(--parchment);
-    padding: 14px 20px 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--border);
-  }
-  .card-court {
-    font-family: 'Fira Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--rust);
-  }
-  .card-year {
-    font-family: 'Fira Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--slate);
-    background: var(--card-bg);
-    padding: 3px 9px;
-    border-radius: 50px;
-    border: 1px solid var(--border);
-  }
-  .card-body {
-    padding: 22px 22px 18px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  .card-case-no {
-    font-family: 'Fira Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-    margin-bottom: 8px;
-    letter-spacing: 0.04em;
-  }
-  .card-title {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--ink);
-    line-height: 1.35;
-    margin-bottom: 10px;
-  }
-  .card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-bottom: 14px;
-  }
-  .card-tag {
-    font-family: 'Fira Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: var(--tag-bg);
-    color: var(--slate);
-    padding: 3px 8px;
-    border-radius: 2px;
-    border: 1px solid var(--border);
-  }
-  .card-excerpt {
-    font-size: 13.5px;
-    color: var(--muted);
-    line-height: 1.65;
-    flex: 1;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .card-footer {
-    padding: 14px 22px 18px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
+    /* ─── PAGE SHELL ─────────────────────────────────── */
+    .blogs-shell {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
 
-  /* ── Buttons ── */
-  .btn {
-    font-family: 'Fira Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    border: none;
-    cursor: pointer;
-    padding: 8px 14px;
-    border-radius: 2px;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .btn-read-more { background: var(--ink); color: var(--parchment); flex: 1; justify-content: center; }
-  .btn-read-more:hover { background: var(--rust); }
-  .btn-share { background: var(--parchment); color: var(--slate); border: 1px solid var(--border); }
-  .btn-share:hover { background: var(--gold-light); color: var(--ink); border-color: var(--gold-light); }
-  .btn-full-judgment { background: var(--rust); color: #fff; padding: 10px 20px; font-size: 11px; }
-  .btn-full-judgment:hover { background: #6b2c14; }
-  .btn-modal-share { background: var(--parchment); color: var(--slate); border: 1px solid var(--border); padding: 10px 16px; font-size: 11px; }
-  .btn-modal-share:hover { background: var(--gold-light); border-color: var(--gold-light); color: var(--ink); }
+    /* ─── HERO HEADER ────────────────────────────────── */
+    .blogs-hero {
+      position: relative;
+      padding: 5rem 0 3.5rem;
+      overflow: hidden;
+      text-align: center;
+    }
 
-  /* ── Share dropdown ── */
-  .share-wrapper { position: relative; }
-  .share-dropdown {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    right: 0;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    min-width: 160px;
-    box-shadow: 0 8px 32px var(--shadow);
-    display: none;
-    z-index: 100;
-    overflow: hidden;
-  }
-  .share-dropdown.open { display: block; }
-  .share-option {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    font-family: 'Fira Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    color: var(--slate);
-    cursor: pointer;
-    border: none;
-    background: none;
-    width: 100%;
-    text-align: left;
-    transition: background 0.15s;
-  }
-  .share-option:hover { background: var(--parchment); }
-  .share-option svg { width: 14px; height: 14px; flex-shrink: 0; }
+    /* Ambient blobs */
+    .blogs-hero::before,
+    .blogs-hero::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blogs-hero::before {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, rgba(91,127,255,.22), transparent 70%);
+      top: -120px; left: 50%;
+      transform: translateX(-50%);
+    }
+    .blogs-hero::after {
+      width: 380px; height: 380px;
+      background: radial-gradient(circle, rgba(167,139,250,.18), transparent 70%);
+      top: 60px; right: 10%;
+    }
 
-  /* ── Modal ── */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(26, 18, 8, 0.75);
-    backdrop-filter: blur(4px);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-  }
-  .modal-overlay.open { opacity: 1; visibility: visible; }
-  .modal {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    max-width: 680px;
-    width: 100%;
-    max-height: 85vh;
-    overflow-y: auto;
-    transform: translateY(20px);
-    transition: transform 0.3s ease;
-    position: relative;
-  }
-  .modal-overlay.open .modal { transform: translateY(0); }
-  .modal-header {
-    background: var(--parchment);
-    padding: 24px 60px 20px 28px;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 1;
-  }
-  .modal-meta {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
-  }
-  .modal-court-badge {
-    font-family: 'Fira Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--rust);
-    background: rgba(139,58,30,0.08);
-    padding: 4px 10px;
-    border-radius: 2px;
-  }
-  .modal-year-badge {
-    font-family: 'Fira Mono', monospace;
-    font-size: 11px;
-    color: var(--slate);
-  }
-  .modal-title {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 22px;
-    font-weight: 900;
-    color: var(--ink);
-    line-height: 1.3;
-    margin-bottom: 6px;
-  }
-  .modal-case-no {
-    font-family: 'Fira Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-  }
-  .modal-close {
-    position: absolute;
-    top: 20px; right: 20px;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    width: 32px; height: 32px;
-    cursor: pointer;
-    font-size: 16px;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--muted);
-    transition: all 0.2s;
-  }
-  .modal-close:hover { background: var(--ink); color: var(--parchment); border-color: var(--ink); }
-  .modal-body { padding: 28px; }
-  .modal-section-title {
-    font-family: 'Fira Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 10px;
-    margin-top: 24px;
-  }
-  .modal-section-title:first-child { margin-top: 0; }
-  .modal-text { font-size: 14.5px; color: #3a3328; line-height: 1.75; }
-  .modal-ruling {
-    background: var(--parchment);
-    border-left: 3px solid var(--gold);
-    padding: 14px 18px;
-    border-radius: 0 2px 2px 0;
-    font-size: 14px;
-    color: var(--ink);
-    font-style: italic;
-    line-height: 1.7;
-    margin-top: 8px;
-  }
-  .modal-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .modal-tag {
-    font-family: 'Fira Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    background: var(--tag-bg);
-    color: var(--slate);
-    padding: 4px 10px;
-    border-radius: 2px;
-    border: 1px solid var(--border);
-  }
-  .modal-footer {
-    padding: 20px 28px 28px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
+    .hero-eyebrow {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-family: var(--sans);
+      font-size: .78rem;
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(91,127,255,.1);
+      border: 1px solid rgba(91,127,255,.25);
+      padding: .35rem 1rem;
+      border-radius: 30px;
+      margin-bottom: 1.4rem;
+    }
 
-  /* ── Toast ── */
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--ink);
-    color: var(--parchment);
-    font-family: 'Fira Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    padding: 10px 20px;
-    border-radius: 2px;
-    z-index: 9999;
-    transition: transform 0.3s ease;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
+    .blogs-hero h1 {
+      position: relative;
+      font-family: var(--display);
+      font-size: clamp(2.6rem, 5vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+      color: var(--txt);
+      margin-bottom: 1rem;
+    }
 
-  @media (max-width: 600px) {
-    .judgements-grid { grid-template-columns: 1fr; padding: 0 16px 60px; }
-    .modal-body, .modal-footer { padding: 20px; }
-    .modal-header { padding: 18px 50px 16px 18px; }
-    .filter-tabs { gap: 5px; }
-    .filter-tab { font-size: 10px; padding: 7px 12px; }
-  }
-</style>
+    .blogs-hero h1 span {
+      background: linear-gradient(110deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .blogs-hero p {
+      position: relative;
+      color: var(--txt-muted);
+      font-size: 1.1rem;
+      font-weight: 300;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ─── FILTER BAR ─────────────────────────────────── */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+
+    /* Search */
+    .search-wrap {
+      flex: 2;
+      min-width: 220px;
+      position: relative;
+    }
+    .search-wrap i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--txt-dim);
+      font-size: .85rem;
+      pointer-events: none;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: .72rem 1rem .72rem 2.4rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--txt);
+      font-family: var(--sans);
+      font-size: .9rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .search-wrap input::placeholder { color: var(--txt-dim); }
+    .search-wrap input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(91,127,255,.12);
+    }
+
+    /* Category select */
+    .cat-wrap {
+      position: relative;
+      min-width: 170px;
+    }
+    .cat-wrap i {
+      position: absolute;
+      right: .9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--txt-dim);
+      font-size: .75rem;
+      pointer-events: none;
+    }
+    .cat-wrap select {
+      width: 100%;
+      padding: .72rem 2rem .72rem 1rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--txt);
+      font-family: var(--sans);
+      font-size: .9rem;
+      cursor: pointer;
+      appearance: none;
+      transition: border-color .2s;
+    }
+    .cat-wrap select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* Sort pills */
+    .sort-pills {
+      display: flex;
+      gap: .35rem;
+      background: var(--card);
+      padding: .3rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+    .sort-pill {
+      padding: .48rem .9rem;
+      border: none;
+      background: transparent;
+      color: var(--txt-muted);
+      font-family: var(--sans);
+      font-size: .82rem;
+      font-weight: 500;
+      border-radius: 7px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      transition: background .2s, color .2s;
+    }
+    .sort-pill:hover { color: var(--txt); }
+    .sort-pill.active {
+      background: var(--accent);
+      color: #fff;
+    }
+    .sort-pill i { font-size: .75rem; }
+
+    /* ─── TAGS CLOUD ─────────────────────────────────── */
+    .tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-bottom: 1.5rem;
+      min-height: 44px;
+    }
+    .tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      padding: .36rem .9rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      font-size: .78rem;
+      font-weight: 500;
+      color: var(--txt-muted);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .tag-chip i { font-size: .65rem; }
+    .tag-chip:hover {
+      color: var(--txt);
+      border-color: rgba(91,127,255,.4);
+      transform: translateY(-1px);
+    }
+    .tag-chip.active {
+      background: rgba(91,127,255,.15);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ─── RESULTS BAR ────────────────────────────────── */
+    .results-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.8rem;
+    }
+    .results-bar .count {
+      font-size: .85rem;
+      color: var(--txt-dim);
+    }
+    .clear-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--accent);
+      cursor: pointer;
+      padding: .3rem .8rem;
+      border-radius: 30px;
+      background: rgba(91,127,255,.08);
+      border: 1px solid rgba(91,127,255,.2);
+      transition: background .2s;
+    }
+    .clear-btn:hover { background: rgba(91,127,255,.15); }
+
+    /* ─── BLOG GRID ──────────────────────────────────── */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.4rem;
+    }
+
+    /* ─── BLOG CARD ──────────────────────────────────── */
+    .blog-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      transition: transform .28s cubic-bezier(.22,1,.36,1),
+                  box-shadow .28s ease,
+                  border-color .28s ease;
+      animation: cardIn .45s ease both;
+    }
+    .blog-card:hover {
+      transform: translateY(-7px);
+      border-color: rgba(91,127,255,.28);
+      box-shadow: 0 24px 48px rgba(0,0,0,.4),
+                  0 0 0 1px rgba(91,127,255,.12);
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Staggered delay for cards */
+    .blog-card:nth-child(1)  { animation-delay: .04s; }
+    .blog-card:nth-child(2)  { animation-delay: .08s; }
+    .blog-card:nth-child(3)  { animation-delay: .12s; }
+    .blog-card:nth-child(4)  { animation-delay: .16s; }
+    .blog-card:nth-child(5)  { animation-delay: .20s; }
+    .blog-card:nth-child(6)  { animation-delay: .24s; }
+    .blog-card:nth-child(7)  { animation-delay: .28s; }
+    .blog-card:nth-child(8)  { animation-delay: .32s; }
+
+    /* Card image banner */
+    .card-banner {
+      height: 148px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* Gradient fills per category (via data attr) */
+    .card-banner[data-cat="technology"]    { background: linear-gradient(135deg,#1a2060,#3b4ea8); }
+    .card-banner[data-cat="legal"]         { background: linear-gradient(135deg,#1d1a40,#5b3fa0); }
+    .card-banner[data-cat="technical"]     { background: linear-gradient(135deg,#0d2830,#1a7a70); }
+    .card-banner[data-cat="science"]       { background: linear-gradient(135deg,#0f2b1d,#216a42); }
+    .card-banner[data-cat="business"]      { background: linear-gradient(135deg,#261808,#8a4a0a); }
+    .card-banner[data-cat="lifestyle"]     { background: linear-gradient(135deg,#28101a,#8a2a58); }
+    .card-banner[data-cat="health"]        { background: linear-gradient(135deg,#0d1f2d,#1a6a8a); }
+    .card-banner[data-cat="design"]        { background: linear-gradient(135deg,#1a0d28,#6a2a9a); }
+    .card-banner[data-cat="art"]           { background: linear-gradient(135deg,#200a0a,#8a2020); }
+    .card-banner[data-cat="travel"]        { background: linear-gradient(135deg,#041424,#0a4a7a); }
+    .card-banner[data-cat="food"]          { background: linear-gradient(135deg,#1a0c00,#7a3a00); }
+    .card-banner[data-cat="uncategorized"] { background: linear-gradient(135deg,#15192a,#2a3060); }
+
+    /* Default fallback */
+    .card-banner:not([data-cat]) { background: linear-gradient(135deg,#15192a,#2a3060); }
+
+    /* Noise texture overlay */
+    .card-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
+      opacity: .6;
+    }
+
+    .card-banner .icon-wrap {
+      position: relative;
+      width: 56px; height: 56px;
+      background: rgba(255,255,255,.1);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: rgba(255,255,255,.9);
+      border: 1px solid rgba(255,255,255,.15);
+      backdrop-filter: blur(4px);
+      transition: transform .2s;
+    }
+    .blog-card:hover .icon-wrap { transform: scale(1.08); }
+
+    .card-badge {
+      position: absolute;
+      top: .9rem;
+      right: .9rem;
+      background: rgba(0,0,0,.45);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,.12);
+      color: rgba(255,255,255,.85);
+      font-size: .68rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .25rem .65rem;
+      border-radius: 20px;
+    }
+
+    /* Card body */
+    .card-body {
+      padding: 1.2rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: .7rem;
+    }
+
+    .card-title {
+      font-family: var(--display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--txt);
+      line-height: 1.4;
+      letter-spacing: -.2px;
+    }
+
+    .card-excerpt {
+      font-size: .84rem;
+      color: var(--txt-muted);
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: .75rem;
+      color: var(--txt-dim);
+      padding-top: .65rem;
+      border-top: 1px solid var(--border);
+    }
+    .card-meta span { display: flex; align-items: center; gap: .3rem; }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .3rem;
+    }
+    .card-tag {
+      font-size: .68rem;
+      padding: .2rem .55rem;
+      background: rgba(91,127,255,.1);
+      border: 1px solid rgba(91,127,255,.2);
+      border-radius: 20px;
+      color: var(--accent);
+    }
+
+    .card-cta {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      color: var(--accent);
+      font-size: .8rem;
+      font-weight: 600;
+    }
+    .card-cta i {
+      transition: transform .2s;
+      font-size: .7rem;
+    }
+    .blog-card:hover .card-cta i { transform: translateX(4px); }
+
+    /* ─── STATES ─────────────────────────────────────── */
+    .state-box {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 5rem 2rem;
+      color: var(--txt-muted);
+    }
+    .state-box i {
+      font-size: 2.8rem;
+      margin-bottom: 1.2rem;
+      display: block;
+      color: var(--txt-dim);
+    }
+    .state-box h3 {
+      font-family: var(--display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--txt);
+      margin-bottom: .5rem;
+    }
+    .state-box p { font-size: .9rem; }
+
+    .loading-spin {
+      animation: spin 1s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── PAGINATION ─────────────────────────────────── */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+      margin-top: 3.5rem;
+    }
+    .page-btn {
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--txt-muted);
+      font-family: var(--sans);
+      font-size: .85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .page-btn:hover:not([disabled]):not(.active) {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .page-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .page-btn[disabled] { opacity: .35; cursor: not-allowed; }
+    .page-btn.wide { width: auto; padding: 0 .9rem; gap: .4rem; font-size: .8rem; }
+    .page-dots { color: var(--txt-dim); font-size: .85rem; padding: 0 .2rem; }
+
+    /* ─── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 1200px) { .blog-grid { grid-template-columns: repeat(3,1fr); } }
+    @media (max-width: 900px)  { .blog-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 580px)  {
+      .blog-grid { grid-template-columns: 1fr; }
+      .filter-bar { flex-direction: column; align-items: stretch; }
+      .sort-pills { width: 100%; }
+      .sort-pill { flex: 1; justify-content: center; }
+      .blogs-shell { padding: 0 1rem 4rem; }
+    }
+  </style>
 </head>
+
 <body>
+  <header id="site-header"></header>
 
-<div class="section-header">
-  <p class="section-kicker">Legal Reference · Essential Commodities Act, 1955</p>
-  <h2 class="section-title">Landmark <em>High Court</em> Judgements</h2>
-  <p class="section-sub">Significant judicial pronouncements shaping the interpretation and enforcement of the ECA, 1955 across Indian High Courts.</p>
-</div>
+  <div class="blogs-shell">
 
-<div class="filter-bar">
-  <div class="filter-tabs">
-    <button class="filter-tab active" data-filter="all">All Judgements</button>
-    <button class="filter-tab" data-filter="licensing">Licensing</button>
-    <button class="filter-tab" data-filter="search-seizure">Search &amp; Seizure</button>
-    <button class="filter-tab" data-filter="price-control">Price Control</button>
-    <button class="filter-tab" data-filter="penalty">Penalty &amp; Forfeiture</button>
-    <button class="filter-tab" data-filter="constitutional">Constitutional</button>
-  </div>
-</div>
-
-<p class="results-count" id="resultsCount">Showing 12 judgements</p>
-
-<div class="judgements-grid" id="judgementsGrid"></div>
-
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal" id="modalBox">
-    <div class="modal-header">
-      <div class="modal-meta">
-        <span class="modal-court-badge" id="mCourt"></span>
-        <span class="modal-year-badge" id="mYear"></span>
-      </div>
-      <h3 class="modal-title" id="mTitle"></h3>
-      <p class="modal-case-no" id="mCaseNo"></p>
-      <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+    <!-- Hero -->
+    <div class="blogs-hero">
+      <div class="hero-eyebrow"><i class="fas fa-book-open"></i> Knowledge Hub</div>
+      <h1>The <span>Blog</span> Gallery</h1>
+      <p>Discover curated articles, deep-dives, and insights across every topic that matters.</p>
     </div>
-    <div class="modal-body" id="mBody"></div>
-    <div class="modal-footer" id="mFooter"></div>
-  </div>
-</div>
 
-<div class="toast" id="toast"></div>
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <div class="search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search by title, content, or author…">
+      </div>
+
+      <div class="cat-wrap">
+        <select id="categorySelect">
+          <option value="all">All Categories</option>
+        </select>
+        <i class="fas fa-chevron-down"></i>
+      </div>
+
+      <div class="sort-pills">
+        <button class="sort-pill active" data-sort="latest"><i class="fas fa-clock"></i> Latest</button>
+        <button class="sort-pill" data-sort="oldest"><i class="fas fa-calendar"></i> Oldest</button>
+        <button class="sort-pill" data-sort="popular"><i class="fas fa-fire"></i> Popular</button>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div class="tags-row" id="tagsCloud">
+      <span class="tag-chip active" data-tag="all"><i class="fas fa-tag"></i> All</span>
+    </div>
+
+    <!-- Results bar -->
+    <div class="results-bar">
+      <span class="count" id="resultsCount">Loading articles…</span>
+      <span class="clear-btn" id="clearFilters"><i class="fas fa-times"></i> Clear filters</span>
+    </div>
+
+    <!-- Grid -->
+    <div class="blog-grid" id="blogGrid">
+      <div class="state-box">
+        <i class="fas fa-spinner loading-spin"></i>
+        <h3>Loading articles…</h3>
+        <p>Fetching the latest posts for you</p>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+  <footer id="site-footer"></footer>
+  <script src="assets/Scripts/gototop.js"></script>
 
 <script>
-const judgements = [
-  {
-    id: 1,
-    court: "Allahabad High Court",
-    year: "1978",
-    caseNo: "Civil Misc. Writ No. 4221/1978",
-    title: "Ram Narain Lal v. State of Uttar Pradesh",
-    category: "licensing",
-    tags: ["Licence Cancellation", "Natural Justice", "Fair Hearing"],
-    excerpt: "Cancellation of a fair-price shop licence without affording opportunity of hearing held violative of natural justice under ECA, 1955.",
-    facts: "The petitioner held a fair-price shop licence under the U.P. Ration Licensing Order. The licensing authority cancelled his licence on grounds of irregularities in distribution without issuing a show-cause notice or granting a personal hearing.",
-    issue: "Whether cancellation of a licence under the Essential Commodities Act without affording an opportunity of hearing is valid.",
-    ruling: "The court held that any order adversely affecting a person's right to carry on business must be preceded by notice and a fair hearing. The cancellation order was quashed and the matter was remanded for fresh consideration after following principles of natural justice.",
-    significance: "Firmly established that even statutory licensing authorities under the ECA must adhere to principles of natural justice before taking adverse action against a licensee.",
-    postSlug: "ram-narain-lal-vs-state-up-1978"
-  },
-  {
-    id: 2,
-    court: "Bombay High Court",
-    year: "1985",
-    caseNo: "Writ Petition No. 1902/1985",
-    title: "Jamnadas Nathmal v. Union of India",
-    category: "search-seizure",
-    tags: ["Search", "Seizure", "Section 6A ECA", "Reasonable Grounds"],
-    excerpt: "Seizure of stock without recording reasons in writing as required under Section 6A held illegal and stock directed to be released.",
-    facts: "Petitioner's godown was searched and edible oils seized by an authorised officer. The officer failed to record reasons for belief before conducting the search as mandated by Section 6A of the ECA.",
-    issue: "Whether a seizure effected without recording reasons to believe in writing is valid under the Essential Commodities Act.",
-    ruling: "The court held that recording of reasons before seizure is a mandatory procedural safeguard, not a mere formality. Failure to record reasons rendered the search and seizure illegal and directed immediate release of seized goods.",
-    significance: "Strengthened procedural safeguards available to traders against arbitrary executive action under the ECA and mandated strict compliance with Section 6A.",
-    postSlug: "jamnadas-nathmal-vs-union-of-india-1985"
-  },
-  {
-    id: 3,
-    court: "Madras High Court",
-    year: "1991",
-    caseNo: "W.P. No. 7843/1991",
-    title: "P. Subramanian v. State of Tamil Nadu",
-    category: "price-control",
-    tags: ["Price Fixation", "Paddy", "Control Order", "Article 19(1)(g)"],
-    excerpt: "State's power to fix procurement price of paddy upheld but arbitrary price fixation below cost of production held unreasonable.",
-    facts: "The State of Tamil Nadu fixed the procurement price for paddy under the Tamil Nadu Paddy Procurement Control Order. The petitioner-farmers contended that the price was fixed below cost of cultivation, making farming unviable.",
-    issue: "Whether price fixation under the ECA can be challenged as unreasonable when it falls below cost of production.",
-    ruling: "While upholding the State's power to fix prices under ECA, the court held that price fixation must not be totally arbitrary. The State was directed to constitute a review committee to reassess procurement prices taking actual cost of cultivation into account.",
-    significance: "Recognised that farmers' right to receive a reasonably fair price is protected and that price control powers under ECA must be exercised rationally.",
-    postSlug: "p-subramanian-vs-state-tamilnadu-1991"
-  },
-  {
-    id: 4,
-    court: "Punjab & Haryana High Court",
-    year: "1997",
-    caseNo: "CWP No. 12076/1997",
-    title: "Haryana Roller Flour Mills Assn. v. State of Haryana",
-    category: "licensing",
-    tags: ["Stock Limits", "Wheat", "Flour Mills", "Section 3 ECA"],
-    excerpt: "Imposition of stock limits on roller flour mills without proper notification held ultra vires Section 3 of ECA.",
-    facts: "The State of Haryana imposed stock limits on wheat held by roller flour mills through an executive order without following the statutory procedure prescribed under Section 3 read with Section 5 of the ECA.",
-    issue: "Whether stock limits can be imposed on a commodity through an executive circular without a formal control order under Section 3 of the ECA.",
-    ruling: "The High Court quashed the executive circular imposing stock limits and held that restriction on possession of any essential commodity must be made through a formal statutory order published in the official gazette in accordance with Section 3 of the ECA.",
-    significance: "Reaffirmed the need for strict procedural compliance while exercising delegated legislative powers under the ECA.",
-    postSlug: "haryana-roller-flour-mills-assn-1997"
-  },
-  {
-    id: 5,
-    court: "Karnataka High Court",
-    year: "2002",
-    caseNo: "W.P. No. 33451/2002",
-    title: "R. Krishnappa v. State of Karnataka",
-    category: "penalty",
-    tags: ["Confiscation", "Proportionality", "Section 6C", "Penalty"],
-    excerpt: "Confiscation of entire stock disproportionate to minor technical violation held excessive; proportionality principle applied.",
-    facts: "The petitioner's rice mill was inspected and a minor discrepancy in stock records found. The entire stock of rice was ordered to be confiscated under Section 6C of the ECA despite no evidence of black-marketing or hoarding.",
-    issue: "Whether the principle of proportionality governs confiscation orders under the Essential Commodities Act.",
-    ruling: "The court held that confiscation of property must be proportionate to the gravity of the offence. A blanket confiscation order for a minor record-keeping lapse was quashed and a token penalty was substituted.",
-    significance: "Introduced the constitutional doctrine of proportionality into ECA penal proceedings, restraining arbitrary exercise of confiscation powers.",
-    postSlug: "r-krishnappa-vs-state-karnataka-2002"
-  },
-  {
-    id: 6,
-    court: "Calcutta High Court",
-    year: "1988",
-    caseNo: "W.P. No. 6713(W)/1988",
-    title: "Narendra Nath Das v. State of West Bengal",
-    category: "search-seizure",
-    tags: ["Vehicle Inspection", "Transit Pass", "Section 6A", "Goods in Transit"],
-    excerpt: "Detention of a vehicle transporting essential commodities on the highway without valid authorisation held illegal.",
-    facts: "A vehicle transporting rice inter-district was detained at a checkpost as the driver could not produce a transit pass. The driver claimed the transit pass was with the owner.",
-    issue: "Whether a vehicle carrying essential commodities can be detained merely because the transit pass is not on the person of the driver.",
-    ruling: "The court held that detention of goods in transit must be supported by reasonable grounds of belief of a contravention. Mere absence of the document on the driver's person does not justify prolonged detention of the vehicle and goods.",
-    significance: "Protected legitimate trade in essential commodities from overzealous enforcement at checkposts and clarified the standard of 'reasonable grounds' for detention.",
-    postSlug: "narendra-nath-das-vs-west-bengal-1988"
-  },
-  {
-    id: 7,
-    court: "Rajasthan High Court",
-    year: "2006",
-    caseNo: "S.B. Civil Writ No. 4455/2006",
-    title: "Om Prakash Gupta v. State of Rajasthan",
-    category: "constitutional",
-    tags: ["Article 14", "Equal Treatment", "Classification", "Dealers"],
-    excerpt: "Selective imposition of stock limits on one category of traders while exempting another similarly situated category held violative of Article 14.",
-    facts: "Stock limits under the Rajasthan Essential Commodities Control Order were selectively imposed on wholesale dealers but not on retail chain stores handling comparable quantities.",
-    issue: "Whether selective application of stock limits to one class of traders, arbitrarily excluding other similarly situated traders, violates Article 14 of the Constitution.",
-    ruling: "The High Court held that while the Legislature has wide power under Section 3 of the ECA to impose differential controls, such differentiation must rest on an intelligible differentia having a rational nexus to the object. The selective imposition failed this test and was struck down.",
-    significance: "Applied Article 14 scrutiny to delegated legislation under the ECA and set limits on arbitrary classification of traders under control orders.",
-    postSlug: "om-prakash-gupta-vs-state-rajasthan-2006"
-  },
-  {
-    id: 8,
-    court: "Gujarat High Court",
-    year: "1994",
-    caseNo: "Special Civil Application No. 9032/1994",
-    title: "Kantilal Manilal Shah v. State of Gujarat",
-    category: "penalty",
-    tags: ["Mens Rea", "Criminal Intent", "Section 7", "Burden of Proof"],
-    excerpt: "Prosecution under Section 7 of ECA requires proof of knowledge of contravention; conviction based on mere possession without proving mens rea set aside.",
-    facts: "The accused was prosecuted for possessing wheat in excess of prescribed limits. The trial court convicted him solely on the basis of excess possession, without proof that he was aware of the applicable stock limit.",
-    issue: "Whether mens rea is an ingredient of the offence under Section 7 of the Essential Commodities Act.",
-    ruling: "The Gujarat High Court held that though the ECA is a social welfare legislation, prosecution under Section 7 for order violations that are essentially criminal in nature requires proof of knowledge of the contravention. Acquittal was upheld.",
-    significance: "Balanced strict liability principles in economic legislation with the fundamental criminal law requirement of knowledge, protecting bona fide traders.",
-    postSlug: "kantilal-manilal-shah-vs-gujarat-1994"
-  },
-  {
-    id: 9,
-    court: "Delhi High Court",
-    year: "2010",
-    caseNo: "W.P.(C) 7214/2010",
-    title: "All India Rice Exporters Assn. v. Union of India",
-    category: "price-control",
-    tags: ["Export Restriction", "MEP", "World Trade", "Section 3 ECA"],
-    excerpt: "Imposition of Minimum Export Price on non-basmati rice under ECA upheld as a valid measure to ensure domestic availability.",
-    facts: "The Central Government imposed a Minimum Export Price (MEP) and export restrictions on non-basmati rice under Section 3 of the ECA to control domestic prices and ensure supply. Exporters challenged this as excessive restriction on trade.",
-    issue: "Whether imposition of MEP and export restrictions on rice under the ECA is within the legislative competence and is constitutionally valid.",
-    ruling: "The Delhi High Court upheld the power of the Central Government to restrict exports of essential commodities under Section 3 of the ECA to prevent price rise and ensure equitable distribution. The policy nexus to public interest was found to be clear and valid.",
-    significance: "Affirmed the wide scope of Section 3 to include export control measures and confirmed the executive's power to use ECA as a price-stabilisation tool.",
-    postSlug: "all-india-rice-exporters-union-of-india-2010"
-  },
-  {
-    id: 10,
-    court: "Andhra Pradesh High Court",
-    year: "2000",
-    caseNo: "W.P. No. 28634/2000",
-    title: "Krishna Roller Flour Mills v. State of A.P.",
-    category: "search-seizure",
-    tags: ["Night Search", "Section 6A", "Authorised Officer", "Power Limits"],
-    excerpt: "Search conducted at night at residential premises by an officer exceeding territorial jurisdiction held illegal.",
-    facts: "Officers authorised under the A.P. Essential Commodities Control Act conducted a search of the owner's residence at 10 PM to seize suspected stock ledgers. The officers were from a district different from where the search was conducted.",
-    issue: "Whether an authorised officer under the ECA can conduct a search of residential premises at night and outside his territorial jurisdiction.",
-    ruling: "The court held that the power of search under Section 6A is confined to the area of authorisation and cannot extend to residential premises without additional justification. A night search of a residence requires compelling reason. The search was quashed.",
-    significance: "Placed significant restrictions on the search and seizure powers of ECA enforcement officers regarding territorial limits and residential privacy.",
-    postSlug: "krishna-roller-flour-mills-ap-2000"
-  },
-  {
-    id: 11,
-    court: "Madhya Pradesh High Court",
-    year: "2015",
-    caseNo: "W.P. No. 9178/2015",
-    title: "M.P. Kirana Vyapari Sangh v. State of M.P.",
-    category: "constitutional",
-    tags: ["Delegated Legislation", "Ultra Vires", "Section 3", "Control Order"],
-    excerpt: "State Control Order mandating digital stock registers upheld as valid regulatory measure; 12-month transition period directed.",
-    facts: "A control order mandating all licensed dealers of essential commodities to maintain stock registers in digital format was challenged as an unreasonable restriction, particularly for small grocers lacking digital infrastructure.",
-    issue: "Whether mandating digital record-keeping under a State Control Order under the ECA is within the State's delegated legislative power and is reasonable.",
-    ruling: "The High Court upheld the digital register requirement as a valid regulatory measure aligned with modern governance and the ECA's objective of ensuring accountability in distribution. The State was directed to provide a 12-month reasonable transition period.",
-    significance: "Recognised the power of the State to modernise compliance requirements under the ECA while ensuring reasonable time for transition for smaller traders.",
-    postSlug: "mp-kirana-vyapari-sangh-state-mp-2015"
-  },
-  {
-    id: 12,
-    court: "Orissa High Court",
-    year: "1982",
-    caseNo: "OJC No. 2341/1982",
-    title: "Brundaban Sahu v. State of Orissa",
-    category: "penalty",
-    tags: ["Forfeiture", "Vehicle", "Section 6C", "Innocent Owner"],
-    excerpt: "Forfeiture of vehicle used in transportation of excess paddy stock quashed where vehicle owner was unaware of contravention by hirer.",
-    facts: "A truck was hired to transport paddy. The hirer carried stock in excess of the prescribed limit without the knowledge of the vehicle owner. The vehicle was seized and ordered to be forfeited under Section 6C of the ECA.",
-    issue: "Whether the vehicle of an innocent owner who has no knowledge of the contraband activity can be forfeited under Section 6C of the Essential Commodities Act.",
-    ruling: "The Orissa High Court held that forfeiture of property of an innocent owner who had no knowledge that his vehicle was being used to carry excess essential commodity stocks is constitutionally impermissible. The forfeiture was quashed and the vehicle was ordered to be returned.",
-    significance: "Carved out protection for innocent third-party vehicle owners against penal consequences under the ECA arising from the acts of the person who hired the vehicle.",
-    postSlug: "brundaban-sahu-vs-state-orissa-1982"
+(function() {
+  const POSTS_PER_PAGE = 12;
+  const POSTS_DIRECTORY = 'Posts/';
+
+  let allPosts = [], filteredPosts = [];
+  let currentPage = 1, currentSort = 'latest';
+  let currentCategory = 'all', currentTag = 'all', searchQuery = '';
+
+  const blogGrid        = document.getElementById('blogGrid');
+  const paginationDiv   = document.getElementById('pagination');
+  const searchInput     = document.getElementById('searchInput');
+  const categorySelect  = document.getElementById('categorySelect');
+  const sortBtns        = document.querySelectorAll('.sort-pill');
+  const tagsCloud       = document.getElementById('tagsCloud');
+  const resultsCount    = document.getElementById('resultsCount');
+  const clearFiltersBtn = document.getElementById('clearFilters');
+
+  // ── Load manifest ──────────────────────────────────
+  async function loadAllPosts() {
+    try {
+      const res = await fetch('posts-manifest.json');
+      if (!res.ok) throw new Error('Manifest not found');
+      const manifest = await res.json();
+      if (!Array.isArray(manifest) || !manifest.length) return [];
+      const posts = await Promise.all(manifest.map(fetchPostMetadata));
+      return posts.filter(Boolean);
+    } catch (e) {
+      console.error('Load error:', e);
+      return [];
+    }
   }
-];
 
-/* ──── Share HTML helper ──── */
-function shareOptionsHTML(j, ctx) {
-  const url = 'https://saratoffice.in/judgements/' + j.postSlug + '/';
-  const text = encodeURIComponent(j.title + ' \u2013 ' + j.court + ' (' + j.year + ') | ECA Judgements');
-  const eu = encodeURIComponent(url);
-  return '<button class="share-option" onclick="shareWA(\'' + text + '\',\'' + eu + '\')">'
-    + '<svg viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.785 23.541l4.637-1.484A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.814 9.814 0 01-5.001-1.371l-.359-.214-3.724 1.193 1.192-3.636-.234-.374A9.787 9.787 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>WhatsApp</button>'
-    + '<button class="share-option" onclick="shareTW(\'' + text + '\',\'' + eu + '\')">'
-    + '<svg viewBox="0 0 24 24" fill="#1DA1F2"><path d="M23.953 4.569a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.691 8.094 4.066 6.13 1.64 3.161a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.061a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.937 4.937 0 004.604 3.417 9.868 9.868 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63a9.936 9.936 0 002.46-2.548z"/></svg>Twitter / X</button>'
-    + '<button class="share-option" onclick="copyLink(\'' + url + '\')">'
-    + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>Copy Link</button>';
-}
+  async function fetchPostMetadata(filename) {
+    try {
+      const res = await fetch(POSTS_DIRECTORY + filename);
+      if (!res.ok) return null;
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const getMeta = n => { const m = doc.querySelector(`meta[name="${n}"]`); return m ? m.getAttribute('content') : null; };
+      const extractExcerpt = () => {
+        const ex = getMeta('blog:excerpt');
+        if (ex) return ex;
+        const p = doc.querySelector('p');
+        return p ? p.textContent.substring(0,150) + '…' : 'Read this interesting article…';
+      };
+      const iconMap = { technology:'fa-microchip',lifestyle:'fa-heart',travel:'fa-plane',food:'fa-utensils',health:'fa-heartbeat',business:'fa-briefcase',design:'fa-pencil-ruler',science:'fa-flask',art:'fa-palette',legal:'fa-gavel',technical:'fa-gear',uncategorized:'fa-newspaper' };
+      const category = getMeta('blog:category') || 'uncategorized';
+      return {
+        id: filename, filename, url: POSTS_DIRECTORY + filename,
+        title:    getMeta('blog:title') || filename.replace('.html','').replace(/%20/g,' '),
+        excerpt:  extractExcerpt(),
+        category,
+        tags:     getMeta('blog:tags') ? getMeta('blog:tags').split(',').map(t=>t.trim()) : [],
+        author:   getMeta('blog:author') || 'Unknown',
+        date:     getMeta('blog:date') || new Date().toISOString().split('T')[0],
+        readTime: parseInt(getMeta('blog:readTime')) || Math.floor(Math.random()*10)+3,
+        views:    parseInt(getMeta('blog:views')) || Math.floor(Math.random()*5000)+500,
+        icon:     getMeta('blog:icon') || iconMap[category] || 'fa-newspaper',
+      };
+    } catch(e) { return null; }
+  }
 
-/* ──── Card builder ──── */
-function buildCard(j) {
-  const tags = j.tags.map(t => '<span class="card-tag">' + t + '</span>').join('');
-  return '<div class="j-card" data-id="' + j.id + '" data-category="' + j.category + '">'
-    + '<div class="card-band"><span class="card-court">' + j.court + '</span><span class="card-year">' + j.year + '</span></div>'
-    + '<div class="card-body">'
-    + '<p class="card-case-no">' + j.caseNo + '</p>'
-    + '<h3 class="card-title">' + j.title + '</h3>'
-    + '<div class="card-tags">' + tags + '</div>'
-    + '<p class="card-excerpt">' + j.excerpt + '</p>'
-    + '</div>'
-    + '<div class="card-footer">'
-    + '<button class="btn btn-read-more" onclick="openModal(' + j.id + ')">'
-    + '<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="0" y="4.5" width="8" height="1" fill="currentColor"/><path d="M5.5 1.5L9 5L5.5 8.5" stroke="currentColor" stroke-width="1" fill="none"/></svg>Read More</button>'
-    + '<div class="share-wrapper">'
-    + '<button class="btn btn-share" onclick="toggleShare(event,' + j.id + ',\'card\')">'
-    + '<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="9" cy="2" r="1.5" stroke="currentColor" stroke-width="1"/><circle cx="2" cy="5.5" r="1.5" stroke="currentColor" stroke-width="1"/><circle cx="9" cy="9" r="1.5" stroke="currentColor" stroke-width="1"/><line x1="3.3" y1="4.7" x2="7.8" y2="2.8" stroke="currentColor" stroke-width="1"/><line x1="3.3" y1="6.3" x2="7.8" y2="8.2" stroke="currentColor" stroke-width="1"/></svg>Share</button>'
-    + '<div class="share-dropdown" id="share-card-' + j.id + '">' + shareOptionsHTML(j, 'card') + '</div>'
-    + '</div></div></div>';
-}
+  // ── Tag icon helper ────────────────────────────────
+  function getTagIcon(tag) {
+    const map = { 'ec act':'fa-gavel','confiscation':'fa-box','seizure':'fa-handcuffs','legal':'fa-scale-balanced','smart-meter':'fa-microchip','electricity':'fa-bolt','energy':'fa-solar-panel','technology':'fa-code','jute':'fa-leaf','textiles':'fa-tshirt','foodgrains':'fa-wheat' };
+    const tl = tag.toLowerCase();
+    for (const [k,v] of Object.entries(map)) if (tl.includes(k)) return v;
+    return 'fa-tag';
+  }
 
-function renderCards() {
-  document.getElementById('judgementsGrid').innerHTML = judgements.map(buildCard).join('');
-}
+  // ── Populate filters ───────────────────────────────
+  function buildFilters(posts) {
+    const cats = ['all', ...new Set(posts.map(p=>p.category))];
+    categorySelect.innerHTML = cats.map(c => `<option value="${c}">${c.charAt(0).toUpperCase()+c.slice(1)}</option>`).join('');
 
-/* ──── Filter ──── */
-document.addEventListener('click', function(e) {
-  if (e.target.classList.contains('filter-tab')) {
-    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-    e.target.classList.add('active');
-    const filter = e.target.dataset.filter;
-    let visible = 0;
-    document.querySelectorAll('.j-card').forEach(function(card) {
-      const match = filter === 'all' || card.dataset.category === filter;
-      card.dataset.hidden = match ? 'false' : 'true';
-      if (match) visible++;
+    const tagsToRemove = ['detention','commodities','section 6a','section-6a','innovation','sustainability','LDL','VLDL','CoQ10','excel-tips','excel-formulas','petroleum','density','productivity'];
+    const tagCount = new Map();
+    posts.forEach(p => p.tags.forEach(t => {
+      if (!tagsToRemove.some(r => t.toLowerCase() === r.toLowerCase() || t.toLowerCase().includes(r.toLowerCase()))) {
+        tagCount.set(t, (tagCount.get(t)||0)+1);
+      }
+    }));
+
+    const sorted = [...tagCount.entries()].sort((a,b)=>b[1]-a[1]).slice(0,15);
+
+    tagsCloud.innerHTML = `<span class="tag-chip active" data-tag="all"><i class="fas fa-tag"></i> All</span>` +
+      sorted.map(([tag,count]) => `<span class="tag-chip" data-tag="${tag}"><i class="fas ${getTagIcon(tag)}"></i> ${tag} <small style="opacity:.6">${count}</small></span>`).join('');
+
+    document.querySelectorAll('.tag-chip').forEach(c => c.addEventListener('click', () => {
+      document.querySelectorAll('.tag-chip').forEach(x=>x.classList.remove('active'));
+      c.classList.add('active');
+      currentTag = c.dataset.tag;
+      currentPage = 1;
+      renderPosts();
+    }));
+  }
+
+  // ── Filter ─────────────────────────────────────────
+  function filterPosts() {
+    let f = [...allPosts];
+    if (currentCategory !== 'all') f = f.filter(p=>p.category===currentCategory);
+    if (currentTag !== 'all') f = f.filter(p=>p.tags.includes(currentTag));
+    if (searchQuery) { const q=searchQuery.toLowerCase(); f=f.filter(p=>p.title.toLowerCase().includes(q)||p.excerpt.toLowerCase().includes(q)||p.author.toLowerCase().includes(q)); }
+    f.sort((a,b)=>currentSort==='popular'?b.views-a.views:currentSort==='oldest'?new Date(a.date)-new Date(b.date):new Date(b.date)-new Date(a.date));
+    return f;
+  }
+
+  // ── Render ─────────────────────────────────────────
+  function renderPosts() {
+    filteredPosts = filterPosts();
+    const total = filteredPosts.length;
+    const pages = Math.ceil(total / POSTS_PER_PAGE);
+    if (currentPage > pages) currentPage = pages||1;
+    const start = (currentPage-1)*POSTS_PER_PAGE;
+    const slice = filteredPosts.slice(start, start+POSTS_PER_PAGE);
+
+    resultsCount.textContent = total === 0 ? 'No articles found'
+      : `Showing ${start+1}–${Math.min(start+POSTS_PER_PAGE,total)} of ${total} articles`;
+
+    if (!slice.length) {
+      blogGrid.innerHTML = `<div class="state-box"><i class="fas fa-search"></i><h3>Nothing here</h3><p>Try adjusting your filters or search query</p></div>`;
+    } else {
+      blogGrid.innerHTML = slice.map(post => `
+        <div class="blog-card" onclick="window.location.href='${post.url}'">
+          <div class="card-banner" data-cat="${post.category.toLowerCase()}">
+            <div class="icon-wrap"><i class="fas ${post.icon}"></i></div>
+            <span class="card-badge">${post.category}</span>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">${post.title}</h3>
+            <p class="card-excerpt">${post.excerpt}</p>
+            <div class="card-meta">
+              <span><i class="fas fa-user"></i> ${post.author}</span>
+              <span><i class="fas fa-calendar-alt"></i> ${fmtDate(post.date)}</span>
+              <span><i class="fas fa-clock"></i> ${post.readTime}m</span>
+            </div>
+            ${post.tags.length ? `<div class="card-tags">${post.tags.slice(0,3).map(t=>`<span class="card-tag">${t}</span>`).join('')}</div>` : ''}
+            <div class="card-cta">Read article <i class="fas fa-arrow-right"></i></div>
+          </div>
+        </div>`).join('');
+    }
+
+    renderPagination(pages);
+  }
+
+  function fmtDate(d) {
+    return new Date(d).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+  }
+
+  // ── Pagination ─────────────────────────────────────
+  function renderPagination(pages) {
+    if (pages <= 1) { paginationDiv.innerHTML=''; return; }
+    let h = `<button class="page-btn wide" data-page="${currentPage-1}" ${currentPage===1?'disabled':''}><i class="fas fa-chevron-left"></i> Prev</button>`;
+    for (let i=1; i<=pages; i++) {
+      if (i===1||i===pages||(i>=currentPage-2&&i<=currentPage+2)) {
+        h += `<button class="page-btn ${i===currentPage?'active':''}" data-page="${i}">${i}</button>`;
+      } else if (i===currentPage-3||i===currentPage+3) {
+        h += `<span class="page-dots">…</span>`;
+      }
+    }
+    h += `<button class="page-btn wide" data-page="${currentPage+1}" ${currentPage===pages?'disabled':''}>Next <i class="fas fa-chevron-right"></i></button>`;
+    paginationDiv.innerHTML = h;
+    paginationDiv.querySelectorAll('.page-btn[data-page]').forEach(b => {
+      b.addEventListener('click', () => {
+        if (!b.disabled) { currentPage=parseInt(b.dataset.page); renderPosts(); window.scrollTo({top:0,behavior:'smooth'}); }
+      });
     });
-    document.getElementById('resultsCount').textContent = 'Showing ' + visible + ' judgement' + (visible !== 1 ? 's' : '');
   }
-});
 
-/* ──── Modal ──── */
-function openModal(id) {
-  const j = judgements.find(function(x) { return x.id === id; });
-  if (!j) return;
-  document.getElementById('mCourt').textContent = j.court;
-  document.getElementById('mYear').textContent = j.year;
-  document.getElementById('mTitle').textContent = j.title;
-  document.getElementById('mCaseNo').textContent = j.caseNo;
+  // ── Events ─────────────────────────────────────────
+  searchInput.addEventListener('input', e => { searchQuery=e.target.value; currentPage=1; renderPosts(); });
+  categorySelect.addEventListener('change', e => { currentCategory=e.target.value; currentPage=1; renderPosts(); });
+  sortBtns.forEach(b => b.addEventListener('click', () => {
+    sortBtns.forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    currentSort=b.dataset.sort; currentPage=1; renderPosts();
+  }));
+  clearFiltersBtn.addEventListener('click', () => {
+    searchInput.value=''; categorySelect.value='all';
+    document.querySelectorAll('.tag-chip').forEach(c=>c.classList.remove('active'));
+    document.querySelector('.tag-chip[data-tag="all"]').classList.add('active');
+    searchQuery=''; currentCategory='all'; currentTag='all'; currentPage=1; renderPosts();
+  });
 
-  const tags = j.tags.map(function(t) { return '<span class="modal-tag">' + t + '</span>'; }).join('');
-  document.getElementById('mBody').innerHTML =
-    '<p class="modal-section-title">Facts of the Case</p><p class="modal-text">' + j.facts + '</p>'
-    + '<p class="modal-section-title">Issue Before the Court</p><p class="modal-text">' + j.issue + '</p>'
-    + '<p class="modal-section-title">Holding &amp; Ruling</p><div class="modal-ruling">' + j.ruling + '</div>'
-    + '<p class="modal-section-title">Significance</p><p class="modal-text">' + j.significance + '</p>'
-    + '<p class="modal-section-title">Key Points of Law</p><div class="modal-tags">' + tags + '</div>';
+  // ── Init ───────────────────────────────────────────
+  async function init() {
+    blogGrid.innerHTML = `<div class="state-box"><i class="fas fa-spinner loading-spin"></i><h3>Loading articles…</h3><p>Fetching the latest posts for you</p></div>`;
+    allPosts = await loadAllPosts();
+    if (!allPosts.length) {
+      blogGrid.innerHTML = `<div class="state-box"><i class="fas fa-file-alt"></i><h3>No posts found</h3><p>Add HTML files to the Posts/ folder — the GitHub Action will auto-generate the manifest.</p></div>`;
+      resultsCount.textContent = '0 articles';
+      return;
+    }
+    buildFilters(allPosts);
+    renderPosts();
+  }
 
-  const postUrl = 'https://saratoffice.in/judgements/' + j.postSlug + '/';
-  document.getElementById('mFooter').innerHTML =
-    '<a class="btn btn-full-judgment" href="' + postUrl + '" target="_blank" rel="noopener">'
-    + '<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 10L10 1M10 1H4M10 1V7" stroke="currentColor" stroke-width="1.2"/></svg>Read Full Judgment</a>'
-    + '<div class="share-wrapper">'
-    + '<button class="btn btn-modal-share" onclick="toggleShare(event,' + j.id + ',\'modal\')">'
-    + '<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="9" cy="2" r="1.5" stroke="currentColor" stroke-width="1"/><circle cx="2" cy="5.5" r="1.5" stroke="currentColor" stroke-width="1"/><circle cx="9" cy="9" r="1.5" stroke="currentColor" stroke-width="1"/><line x1="3.3" y1="4.7" x2="7.8" y2="2.8" stroke="currentColor" stroke-width="1"/><line x1="3.3" y1="6.3" x2="7.8" y2="8.2" stroke="currentColor" stroke-width="1"/></svg>Share</button>'
-    + '<div class="share-dropdown" id="share-modal-' + j.id + '">' + shareOptionsHTML(j, 'modal') + '</div>'
-    + '</div>';
-
-  document.getElementById('modalOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-  closeAllDropdowns();
-}
-
-document.getElementById('modalOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-
-document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
-
-/* ──── Share ──── */
-function toggleShare(e, id, ctx) {
-  e.stopPropagation();
-  const ddId = 'share-' + ctx + '-' + id;
-  const dd = document.getElementById(ddId);
-  const wasOpen = dd && dd.classList.contains('open');
-  closeAllDropdowns();
-  if (!wasOpen && dd) dd.classList.add('open');
-}
-
-function closeAllDropdowns() {
-  document.querySelectorAll('.share-dropdown').forEach(function(d) { d.classList.remove('open'); });
-}
-
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.share-wrapper')) closeAllDropdowns();
-});
-
-function shareWA(text, url) { window.open('https://wa.me/?text=' + text + '%20' + url, '_blank'); closeAllDropdowns(); }
-function shareTW(text, url) { window.open('https://twitter.com/intent/tweet?text=' + text + '&url=' + url, '_blank'); closeAllDropdowns(); }
-function copyLink(url) {
-  navigator.clipboard.writeText(url).then(function() { showToast('Link copied to clipboard'); }).catch(function() { showToast('Copy failed — please copy manually'); });
-  closeAllDropdowns();
-}
-
-/* ──── Toast ──── */
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 2800);
-}
-
-renderCards();
+  init();
+})();
 </script>
 </body>
 </html>
