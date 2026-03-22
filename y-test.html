@@ -118,10 +118,11 @@
     }
     .masthead-title {
       font-family: 'DM Serif Display', serif;
-      font-size: 2.1rem;
+      font-size: 1.7rem;
       color: #fff;
-      line-height: 1.1;
+      line-height: 1.15;
       letter-spacing: -0.01em;
+      white-space: nowrap;
     }
     .masthead-title em {
       font-style: italic;
@@ -434,12 +435,16 @@
     .mt-sm { margin-top: 0.6rem; }
     .tbl-gap { margin-top: 1rem; }
 
-    /* === SHARE BUTTONS === */
+    /* === SHARE DROPDOWN === */
     .share-btns {
       display: flex;
       gap: 8px;
       align-self: flex-start;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      align-items: flex-start;
+    }
+    .share-dropdown {
+      position: relative;
     }
     .share-btn {
       font-family: 'DM Sans', sans-serif;
@@ -456,25 +461,119 @@
       gap: 6px;
       transition: 0.15s;
       text-decoration: none;
+      white-space: nowrap;
     }
     .share-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
-    .btn-wa  { background: #25D366; color: #fff; }
-    .btn-wa:hover  { background: #1ebe5d; }
-    .btn-tg  { background: #229ED9; color: #fff; }
-    .btn-tg:hover  { background: #1a8ec4; }
+    .btn-share-main {
+      background: rgba(255,255,255,0.13);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.9);
+    }
+    .btn-share-main:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.6); }
+    .btn-share-main .arrow {
+      font-size: 0.6rem;
+      margin-left: 2px;
+      transition: transform 0.15s;
+    }
+    .share-dropdown.open .arrow { transform: rotate(180deg); }
+    .share-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      background: #fff;
+      border: 1px solid #d0d8e0;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      min-width: 160px;
+      z-index: 100;
+    }
+    .share-dropdown.open .share-menu { display: block; }
+    .share-menu a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.55rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      transition: background 0.1s;
+      border-bottom: 1px solid #eef0f2;
+    }
+    .share-menu a:last-child { border-bottom: none; }
+    .share-menu a:hover { background: #f5f7fa; }
+    .share-menu a svg { width: 17px; height: 17px; flex-shrink: 0; }
+    .wa-icon { color: #25D366; }
+    .tg-icon { color: #229ED9; }
     .btn-print { background: transparent; border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.85); }
     .btn-print:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); color: #fff; }
 
-    /* === PRINT === */
+    /* === PRINT – FORCED 3 PAGES A4 === */
     @media print {
-      @page { size: A4; margin: 0.5in 0.4in; }
-      body { background: white; padding: 0; }
+      @page { size: A4 portrait; margin: 0.45in 0.4in; }
+      @page :first        { margin-top: 0.35in; }
+
+      html, body { height: auto; }
+      body { background: white !important; padding: 0; font-size: 8.5pt; }
       .nav-strip, .share-btns { display: none !important; }
-      .main-card { box-shadow: none; border: none; }
-      .card-body { padding: 0 1.5rem 1rem; }
-      .masthead { padding: 1.2rem 1.5rem; }
-      .masthead-title { font-size: 1.6rem; }
-      .check-item:hover, .detail-row:hover { background: transparent; }
+      .page-wrap { max-width: 100%; padding: 0; }
+      .main-card { box-shadow: none; border: none; border-radius: 0; }
+      .masthead { padding: 0.6rem 0.8rem 0.5rem; }
+      .masthead-title { font-size: 1.1rem; white-space: nowrap; }
+      .masthead-subtitle { font-size: 0.6rem; margin-top: 0.2rem; }
+      .card-body { padding: 0 0.8rem 0.5rem; }
+
+      /* tighten all section heads */
+      .sec-head { margin: 0.55rem 0 0.35rem; padding-bottom: 0.25rem; }
+      .sec-num  { font-size: 1.1rem; }
+      .sec-title { font-size: 0.85rem; }
+      .sec-tag  { font-size: 0.58rem; }
+
+      /* tighten detail rows */
+      .detail-row { padding: 0.28rem 0.6rem; }
+      .d-label { font-size: 0.68rem; min-width: 120px; }
+
+      /* tighten tables */
+      table.data-tbl th, table.data-tbl td { padding: 0.28rem 0.3rem; font-size: 0.7rem; }
+
+      /* tighten checklists */
+      .check-item { padding: 0.28rem 0.6rem; }
+      .check-item label { font-size: 0.72rem; }
+      .check-item input[type="checkbox"] { width: 12px; height: 12px; }
+
+      /* status row */
+      .status-row { padding: 0.45rem 0.8rem; }
+      .status-badge { font-size: 0.65rem; }
+
+      /* sign row */
+      .sign-row { margin-top: 0.8rem; padding-top: 0.6rem; }
+      .sign-block-label { font-size: 0.6rem; }
+
+      /* card footer */
+      .card-footer { padding: 0.35rem 0.8rem; }
+      .footer-note { font-size: 0.58rem; }
+
+      /* tbl gap */
+      .tbl-gap { margin-top: 0.5rem; }
+
+      /* PAGE BREAKS – split content across exactly 3 pages */
+      /* Page 1: Basic Details + Stock + Consumer + Refill supply */
+      /* Page 2: Safety + Valve + Delivery + Godown */
+      /* Page 3: Records + Critical + Signatures */
+
+      /* force break BEFORE section 05 (Safety) → starts page 2 */
+      .sec-head[data-sec="05"] { page-break-before: always; margin-top: 0; }
+
+      /* force break BEFORE section 09 (Records) → starts page 3 */
+      .sec-head[data-sec="09"] { page-break-before: always; margin-top: 0; }
+
+      /* prevent breaks inside blocks */
+      .details-grid, .tbl-wrap, .check-grid, .status-row, .sign-row {
+        page-break-inside: avoid;
+      }
     }
 
     /* === RESPONSIVE === */
@@ -518,7 +617,7 @@
     <div class="masthead">
       <div class="masthead-inner">
         <div>
-          <div class="masthead-title">LPG Distributor<br><em>Inspection Report</em></div>
+          <div class="masthead-title">⛽ LPG Distributor <em>Inspection Report</em></div>
           <div class="masthead-subtitle">
             <span>EC Act</span>
             <span>LPG Order 2000</span>
@@ -526,14 +625,22 @@
           </div>
         </div>
         <div class="share-btns">
-          <a class="share-btn btn-wa" id="btnWa" href="#" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.096.541 4.064 1.487 5.779L.057 23.057a.75.75 0 00.906.942l5.424-1.417A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.713 9.713 0 01-4.952-1.352l-.355-.21-3.676.96.983-3.584-.23-.368A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
-            WhatsApp
-          </a>
-          <a class="share-btn btn-tg" id="btnTg" href="#" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-            Telegram
-          </a>
+          <div class="share-dropdown" id="shareDropdown">
+            <button class="share-btn btn-share-main" id="shareToggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Share <span class="arrow">▾</span>
+            </button>
+            <div class="share-menu">
+              <a href="#" id="btnWa">
+                <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.096.541 4.064 1.487 5.779L.057 23.057a.75.75 0 00.906.942l5.424-1.417A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.713 9.713 0 01-4.952-1.352l-.355-.21-3.676.96.983-3.584-.23-.368A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+                WhatsApp
+              </a>
+              <a href="#" id="btnTg">
+                <svg class="tg-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                Telegram
+              </a>
+            </div>
+          </div>
           <button class="share-btn btn-print" id="printBtn">⎙ Print</button>
         </div>
       </div>
@@ -543,10 +650,9 @@
     <div class="card-body">
 
       <!-- ① BASIC DETAILS -->
-      <div class="sec-head">
+      <div class="sec-head" data-sec="01">
         <div class="sec-num">01</div>
         <div>
-          <div class="sec-label">Section</div>
           <div class="sec-title">Basic Details of Distributor</div>
         </div>
       </div>
@@ -563,10 +669,9 @@
       </div>
 
       <!-- ② STOCK VERIFICATION -->
-      <div class="sec-head">
+      <div class="sec-head" data-sec="02">
         <div class="sec-num">02</div>
         <div>
-          <div class="sec-label">Section</div>
           <div class="sec-title">Stock Verification of LPG Cylinders</div>
         </div>
         <div class="sec-tag">Physical Count</div>
@@ -608,10 +713,9 @@
       </div>
 
       <!-- ③ CONSUMER DATABASE -->
-      <div class="sec-head">
+      <div class="sec-head" data-sec="03">
         <div class="sec-num">03</div>
         <div>
-          <div class="sec-label">Section</div>
           <div class="sec-title">Consumer Database Verification</div>
         </div>
       </div>
@@ -626,10 +730,9 @@
       </div>
 
       <!-- ④ REFILL SUPPLY -->
-      <div class="sec-head">
+      <div class="sec-head" data-sec="04">
         <div class="sec-num">04</div>
         <div>
-          <div class="sec-label">Section</div>
           <div class="sec-title">Refill Cylinder Supply — Last 3 Months, Category Wise</div>
         </div>
       </div>
@@ -652,11 +755,9 @@
         </table>
       </div>
 
-      <!-- ⑤ SAFETY & CERTIFICATE COMPLIANCE -->
-      <div class="sec-head">
+      <div class="sec-head" data-sec="05">
         <div class="sec-num">05</div>
         <div>
-          <div class="sec-label">Section</div>
           <div class="sec-title">Safety & Certificate Compliance</div>
         </div>
         <div class="sec-tag">Fire + Legal Metrology</div>
@@ -676,11 +777,9 @@
         <div class="detail-row" style="grid-column: 1 / -1;"><span class="d-label">LMPC Certificate Available</span><span class="d-line"></span></div>
       </div>
 
-      <!-- ⑥ VALVE / O-RING & LEAKAGE -->
-      <div class="sec-head">
+      <div class="sec-head" data-sec="06">
         <div class="sec-num">06</div>
         <div>
-          <div class="sec-label">Section</div>
           <div class="sec-title">Valve / O-Ring & Leakage Verification</div>
         </div>
       </div>
@@ -692,11 +791,9 @@
         <div class="check-item"><input type="checkbox" id="v4"><label for="v4">Staff trained in leak detection</label></div>
       </div>
 
-      <!-- ⑦ DELIVERY & DISTRIBUTION -->
-      <div class="sec-head">
+      <div class="sec-head" data-sec="07">
         <div class="sec-num">07</div>
         <div>
-          <div class="sec-label">Section</div>
           <div class="sec-title">Delivery & Distribution System</div>
         </div>
       </div>
@@ -712,11 +809,9 @@
         <div class="check-item"><input type="checkbox" id="d8"><label for="d8">Electronic distribution records</label></div>
       </div>
 
-      <!-- ⑧ GODOWN SAFETY -->
-      <div class="sec-head">
+      <div class="sec-head" data-sec="08">
         <div class="sec-num">08</div>
         <div>
-          <div class="sec-label">Section</div>
           <div class="sec-title">Additional Safety Checks at Godown</div>
         </div>
       </div>
@@ -732,11 +827,9 @@
         <div class="check-item"><input type="checkbox" id="g8"><label for="g8">Hydrostatic test record (cylinders)</label></div>
       </div>
 
-      <!-- ⑨ RECORDS VERIFIED -->
-      <div class="sec-head">
+      <div class="sec-head" data-sec="09">
         <div class="sec-num">09</div>
         <div>
-          <div class="sec-label">Section</div>
           <div class="sec-title">Records Verified</div>
         </div>
       </div>
@@ -752,11 +845,9 @@
         <div class="check-item"><input type="checkbox" id="r8"><label for="r8">KYC records available</label></div>
       </div>
 
-      <!-- CRITICAL SAFETY STATUS -->
-      <div class="sec-head" style="margin-top: 2rem;">
+      <div class="sec-head" data-sec="crit" style="margin-top: 2rem;">
         <div class="sec-num" style="color: var(--accent); font-size:1.2rem;">!</div>
         <div>
-          <div class="sec-label">Critical</div>
           <div class="sec-title">LPG-Specific Safety Status</div>
         </div>
       </div>
@@ -784,7 +875,10 @@
           <div class="sign-block-label">Date of Inspection</div>
           <div class="sign-line"></div>
         </div>
-        
+        <div class="sign-block">
+          <div class="sign-block-label">Official Stamp</div>
+          <div class="sign-line"></div>
+        </div>
       </div>
 
     </div><!-- /card-body -->
@@ -808,15 +902,21 @@
 </div><!-- /page-wrap -->
 
 <script>
+  // Print
   document.getElementById('printBtn')?.addEventListener('click', () => window.print());
 
+  // Share dropdown toggle
+  const dropdown = document.getElementById('shareDropdown');
+  document.getElementById('shareToggle')?.addEventListener('click', function(e) {
+    e.stopPropagation();
+    dropdown.classList.toggle('open');
+  });
+  document.addEventListener('click', () => dropdown?.classList.remove('open'));
+
+  // Share text
   function getShareText() {
-    const dist = document.querySelectorAll('.d-line')[0]?.textContent?.trim() || '';
-    const date = document.querySelectorAll('.d-line')[7]?.textContent?.trim() || '';
     return encodeURIComponent(
       '📋 *LPG Distributor Inspection Report*\n' +
-      (dist ? '🏪 Distributor: ' + dist + '\n' : '') +
-      (date ? '📅 Date: ' + date + '\n' : '') +
       '🔗 EC Act · LPG Order 2000\n' +
       '✅ Safety Integrated (Fire NOC + Legal Metrology)\n\n' +
       window.location.href
@@ -825,15 +925,18 @@
 
   document.getElementById('btnWa')?.addEventListener('click', function(e) {
     e.preventDefault();
-    const url = 'https://wa.me/?text=' + getShareText();
-    window.open(url, '_blank', 'noopener');
+    dropdown.classList.remove('open');
+    window.open('https://wa.me/?text=' + getShareText(), '_blank', 'noopener');
   });
 
   document.getElementById('btnTg')?.addEventListener('click', function(e) {
     e.preventDefault();
-    const url = 'https://t.me/share/url?url=' + encodeURIComponent(window.location.href) +
-      '&text=' + encodeURIComponent('📋 LPG Distributor Inspection Report\n✅ EC Act · LPG Order 2000 · Safety Integrated');
-    window.open(url, '_blank', 'noopener');
+    dropdown.classList.remove('open');
+    window.open(
+      'https://t.me/share/url?url=' + encodeURIComponent(window.location.href) +
+      '&text=' + encodeURIComponent('📋 LPG Distributor Inspection Report\n✅ EC Act · LPG Order 2000'),
+      '_blank', 'noopener'
+    );
   });
 </script>
 </body>
