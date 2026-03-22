@@ -511,69 +511,79 @@
     .btn-print { background: transparent; border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.85); }
     .btn-print:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); color: #fff; }
 
-    /* === PRINT – FORCED 3 PAGES A4 === */
+    /* print-page wrapper: invisible on screen, active only in print */
+    .print-page { display: contents; }
+    .page-spacer { display: none; }
+
+    /* === PRINT – FORCED 3 FULL PAGES A4 === */
     @media print {
-      @page { size: A4 portrait; margin: 0.45in 0.4in; }
-      @page :first        { margin-top: 0.35in; }
+      @page { size: A4 portrait; margin: 0.38in 0.36in; }
 
-      html, body { height: auto; }
-      body { background: white !important; padding: 0; font-size: 8.5pt; }
+      html, body { height: auto; background: white !important; padding: 0; margin: 0; }
       .nav-strip, .share-btns { display: none !important; }
-      .page-wrap { max-width: 100%; padding: 0; }
-      .main-card { box-shadow: none; border: none; border-radius: 0; }
-      .masthead { padding: 0.6rem 0.8rem 0.5rem; }
-      .masthead-title { font-size: 1.1rem; white-space: nowrap; }
-      .masthead-subtitle { font-size: 0.6rem; margin-top: 0.2rem; }
-      .card-body { padding: 0 0.8rem 0.5rem; }
+      .page-wrap { max-width: 100%; padding: 0; margin: 0; }
+      .main-card { box-shadow: none; border: none; border-radius: 0; overflow: visible; }
+      .masthead { padding: 0.45rem 0.7rem 0.4rem; }
+      .masthead::before, .masthead::after { display: none; }
+      .masthead-title { font-size: 1rem; white-space: nowrap; }
+      .masthead-subtitle { font-size: 0.55rem; margin-top: 0.15rem; gap: 6px; }
+      .masthead-subtitle span { padding: 0.1rem 0.4rem; }
+      .card-body { padding: 0; }
+      .card-footer { padding: 0.25rem 0.7rem; }
+      .footer-note { font-size: 0.55rem; }
+      .footer-mark { font-size: 0.68rem; }
 
-      /* tighten all section heads */
-      .sec-head { margin: 0.55rem 0 0.35rem; padding-bottom: 0.25rem; }
-      .sec-num  { font-size: 1.1rem; }
-      .sec-title { font-size: 0.85rem; }
-      .sec-tag  { font-size: 0.58rem; }
+      /* ── print-page: each fills exactly one A4 page ── */
+      .print-page {
+        display: flex !important;
+        flex-direction: column;
+        height: calc(297mm - 0.76in);
+        overflow: hidden;
+        page-break-after: always;
+        break-after: page;
+      }
+      .print-page:last-child { page-break-after: auto; break-after: auto; }
+      .print-page .masthead { flex-shrink: 0; }
 
-      /* tighten detail rows */
-      .detail-row { padding: 0.28rem 0.6rem; }
-      .d-label { font-size: 0.68rem; min-width: 120px; }
+      /* spacer fills leftover vertical space → no blank gap */
+      .page-spacer { display: block !important; flex: 1; min-height: 0; }
+      .sec-head { margin: 0.3rem 0 0.22rem; padding: 0 0.7rem 0.18rem; border-bottom-width: 1px; }
+      .sec-num  { font-size: 0.9rem; min-width: 22px; }
+      .sec-title { font-size: 0.78rem; }
+      .sec-tag  { font-size: 0.55rem; padding: 0.1rem 0.4rem; }
 
-      /* tighten tables */
-      table.data-tbl th, table.data-tbl td { padding: 0.28rem 0.3rem; font-size: 0.7rem; }
+      /* detail rows */
+      .details-grid { border-radius: 0; }
+      .detail-row { padding: 0.22rem 0.7rem; }
+      .d-label { font-size: 0.64rem; min-width: 110px; }
+      .d-line { min-height: 14px; }
 
-      /* tighten checklists */
-      .check-item { padding: 0.28rem 0.6rem; }
-      .check-item label { font-size: 0.72rem; }
-      .check-item input[type="checkbox"] { width: 12px; height: 12px; }
+      /* tables */
+      .tbl-wrap { border-radius: 0; margin: 0; }
+      .tbl-wrap + .tbl-wrap { margin-top: 0.3rem; }
+      .tbl-title { padding: 0.22rem 0.7rem; font-size: 0.6rem; }
+      table.data-tbl th { padding: 0.22rem 0.25rem; font-size: 0.62rem; }
+      table.data-tbl td { padding: 0.22rem 0.25rem; font-size: 0.64rem; }
+
+      /* checklist */
+      .check-grid { border-radius: 0; }
+      .check-item { padding: 0.22rem 0.7rem; }
+      .check-item label { font-size: 0.66rem; line-height: 1.25; }
+      .check-item input[type="checkbox"] { width: 11px; height: 11px; margin-top: 1px; }
+
+      /* safety group labels */
+      .safety-group-label { padding: 0.18rem 0.7rem; font-size: 0.6rem; }
 
       /* status row */
-      .status-row { padding: 0.45rem 0.8rem; }
-      .status-badge { font-size: 0.65rem; }
+      .status-row { padding: 0.35rem 0.7rem; margin: 0; border-radius: 0; gap: 5px 10px; }
+      .status-badge { font-size: 0.6rem; }
+      .status-badge .dot { width: 5px; height: 5px; }
 
       /* sign row */
-      .sign-row { margin-top: 0.8rem; padding-top: 0.6rem; }
-      .sign-block-label { font-size: 0.6rem; }
-
-      /* card footer */
-      .card-footer { padding: 0.35rem 0.8rem; }
-      .footer-note { font-size: 0.58rem; }
-
-      /* tbl gap */
-      .tbl-gap { margin-top: 0.5rem; }
-
-      /* PAGE BREAKS – split content across exactly 3 pages */
-      /* Page 1: Basic Details + Stock + Consumer + Refill supply */
-      /* Page 2: Safety + Valve + Delivery + Godown */
-      /* Page 3: Records + Critical + Signatures */
-
-      /* force break BEFORE section 05 (Safety) → starts page 2 */
-      .sec-head[data-sec="05"] { page-break-before: always; margin-top: 0; }
-
-      /* force break BEFORE section 09 (Records) → starts page 3 */
-      .sec-head[data-sec="09"] { page-break-before: always; margin-top: 0; }
-
-      /* prevent breaks inside blocks */
-      .details-grid, .tbl-wrap, .check-grid, .status-row, .sign-row {
-        page-break-inside: avoid;
-      }
+      .sign-row { margin-top: 0; padding: 0.4rem 0.7rem 0.2rem; border-top-width: 1px; gap: 0.5rem; flex-wrap: nowrap; }
+      .sign-block { min-width: 0; flex: 1; }
+      .sign-block-label { font-size: 0.55rem; }
+      .sign-line { min-height: 22px; }
     }
 
     /* === RESPONSIVE === */
@@ -649,221 +659,167 @@
     <!-- BODY -->
     <div class="card-body">
 
-      <!-- ① BASIC DETAILS -->
-      <div class="sec-head" data-sec="01">
-        <div class="sec-num">01</div>
-        <div>
-          <div class="sec-title">Basic Details of Distributor</div>
+    <!-- ══════════ PRINT PAGE 1: Basic Details + Stock + Consumer + Refill ══════════ -->
+    <div class="print-page" id="pp1">
+      <div>
+        <div class="sec-head" data-sec="01"><div class="sec-num">01</div><div><div class="sec-title">Basic Details of Distributor</div></div></div>
+        <div class="details-grid">
+          <div class="detail-row"><span class="d-label">Distributor Name</span><span class="d-line"></span></div>
+          <div class="detail-row"><span class="d-label">Proprietor / Manager</span><span class="d-line"></span></div>
+          <div class="detail-row"><span class="d-label">Address</span><span class="d-line"></span></div>
+          <div class="detail-row"><span class="d-label">Block Name</span><span class="d-line"></span></div>
+          <div class="detail-row"><span class="d-label">Oil Marketing Company</span><span class="d-line"></span></div>
+          <div class="detail-row"><span class="d-label">Distributor Code</span><span class="d-line"></span></div>
+          <div class="detail-row"><span class="d-label">Agreement No.</span><span class="d-line"></span></div>
+          <div class="detail-row"><span class="d-label">Date & Time of Inspection</span><span class="d-line"></span></div>
+        </div>
+
+        <div class="sec-head" data-sec="02"><div class="sec-num">02</div><div><div class="sec-title">Stock Verification of LPG Cylinders</div></div><div class="sec-tag">Physical Count</div></div>
+        <div class="tbl-wrap">
+          <div class="tbl-title">A — Filled Cylinders</div>
+          <table class="data-tbl">
+            <thead><tr><th>Type</th><th>Opening</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Balance</th><th>Physical</th><th>Difference</th></tr></thead>
+            <tbody>
+              <tr><td>14.2 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>19 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>5 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tbl-wrap tbl-gap">
+          <div class="tbl-title">B — Empty Cylinders</div>
+          <table class="data-tbl">
+            <thead><tr><th>Type</th><th>Opening</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Balance</th><th>Physical</th><th>Difference</th></tr></thead>
+            <tbody>
+              <tr><td>14.2 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>19 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>5 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tbl-wrap tbl-gap">
+          <div class="tbl-title">C — Other Cylinders (Defective / Seized)</div>
+          <table class="data-tbl">
+            <thead><tr><th>Type</th><th>14.2 Kg</th><th>5 Kg (D)</th><th>19 Kg</th><th>5 Kg (C)</th></tr></thead>
+            <tbody>
+              <tr><td>Defective / Damaged</td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Seized / Zima</td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sec-head" data-sec="03"><div class="sec-num">03</div><div><div class="sec-title">Consumer Database Verification</div></div></div>
+        <div class="check-grid">
+          <div class="check-item"><input type="checkbox" id="c1"><label for="c1">Domestic (Normal) consumers</label></div>
+          <div class="check-item"><input type="checkbox" id="c2"><label for="c2">Ujjwala consumers</label></div>
+          <div class="check-item"><input type="checkbox" id="c3"><label for="c3">Commercial consumers</label></div>
+          <div class="check-item"><input type="checkbox" id="c4"><label for="c4">Active domestic count verified</label></div>
+          <div class="check-item"><input type="checkbox" id="c5"><label for="c5">Active Ujjwala count verified</label></div>
+          <div class="check-item"><input type="checkbox" id="c6"><label for="c6">Active commercial count verified</label></div>
+        </div>
+
+        <div class="sec-head" data-sec="04"><div class="sec-num">04</div><div><div class="sec-title">Refill Cylinder Supply — Last 3 Months, Category Wise</div></div></div>
+        <div class="tbl-wrap">
+          <table class="data-tbl">
+            <thead>
+              <tr><th rowspan="2">Month</th><th colspan="2">Domestic Cylinders Received</th><th colspan="2">Commercial Cylinders Received</th></tr>
+              <tr><th>14.2 Kg</th><th>5 Kg</th><th>19 Kg</th><th>Other</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Month 1</td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Month 2</td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Month 3</td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="page-spacer"></div>
+    </div><!-- /pp1 -->
+
+    <!-- ══════════ PRINT PAGE 2: Safety + Valve + Delivery + Godown ══════════ -->
+    <div class="print-page" id="pp2">
+      <div>
+        <div class="sec-head" data-sec="05"><div class="sec-num">05</div><div><div class="sec-title">Safety & Certificate Compliance</div></div><div class="sec-tag">Fire + Legal Metrology</div></div>
+        <div class="details-grid">
+          <div class="safety-group-label">🔥 Fire Safety Certificate & Inspection</div>
+          <div class="detail-row"><span class="d-label">Fire Safety Cert. No.</span><span class="d-line"></span></div>
+          <div class="detail-row"><span class="d-label">Valid Up To</span><span class="d-line"></span></div>
+          <div class="detail-row"><span class="d-label">Last Inspection Date</span><span class="d-line"></span></div>
+          <div class="detail-row"><span class="d-label">Fire NOC Reference</span><span class="d-line"></span></div>
+          <div class="safety-group-label">⚖️ Legal Metrology — Weights & Measures</div>
+          <div class="detail-row"><span class="d-label">Weighing Scale (Model/ID)</span><span class="d-line"></span></div>
+          <div class="detail-row"><span class="d-label">Certified Test Weight Set</span><span class="d-line"></span></div>
+          <div class="detail-row"><span class="d-label">Spring Balance (Yes/No)</span><span class="d-line"></span></div>
+          <div class="detail-row"><span class="d-label">Scale Verification Due Date</span><span class="d-line"></span></div>
+          <div class="detail-row" style="grid-column:1/-1"><span class="d-label">LMPC Certificate Available</span><span class="d-line"></span></div>
+        </div>
+
+        <div class="sec-head" data-sec="06"><div class="sec-num">06</div><div><div class="sec-title">Valve / O-Ring & Leakage Verification</div></div></div>
+        <div class="check-grid">
+          <div class="check-item"><input type="checkbox" id="v1"><label for="v1">O-ring of each swapped cylinder checked</label></div>
+          <div class="check-item"><input type="checkbox" id="v2"><label for="v2">Soap water / leak detector used</label></div>
+          <div class="check-item"><input type="checkbox" id="v3"><label for="v3">No leakage at valve stem / joint</label></div>
+          <div class="check-item"><input type="checkbox" id="v4"><label for="v4">Staff trained in leak detection</label></div>
+        </div>
+
+        <div class="sec-head" data-sec="07"><div class="sec-num">07</div><div><div class="sec-title">Delivery & Distribution System</div></div></div>
+        <div class="check-grid">
+          <div class="check-item"><input type="checkbox" id="d1"><label for="d1">Home delivery system available</label></div>
+          <div class="check-item"><input type="checkbox" id="d2"><label for="d2">Delivery register maintained</label></div>
+          <div class="check-item"><input type="checkbox" id="d3"><label for="d3">Delivery vehicles inspected</label></div>
+          <div class="check-item"><input type="checkbox" id="d4"><label for="d4">Weighing machine available</label></div>
+          <div class="check-item"><input type="checkbox" id="d5"><label for="d5">Electronic POS machine used</label></div>
+          <div class="check-item"><input type="checkbox" id="d6"><label for="d6">Cash memo / invoice book maintained</label></div>
+          <div class="check-item"><input type="checkbox" id="d7"><label for="d7">Godown stock register updated</label></div>
+          <div class="check-item"><input type="checkbox" id="d8"><label for="d8">Electronic distribution records</label></div>
+        </div>
+
+        <div class="sec-head" data-sec="08"><div class="sec-num">08</div><div><div class="sec-title">Additional Safety Checks at Godown</div></div></div>
+        <div class="check-grid">
+          <div class="check-item"><input type="checkbox" id="g1"><label for="g1">Fire extinguishers (DCP/CO₂) available & serviced</label></div>
+          <div class="check-item"><input type="checkbox" id="g2"><label for="g2">Sand buckets (filled, with lid)</label></div>
+          <div class="check-item"><input type="checkbox" id="g3"><label for="g3">Warning boards / "No Smoking" signage</label></div>
+          <div class="check-item"><input type="checkbox" id="g4"><label for="g4">Proper ventilation in godown</label></div>
+          <div class="check-item"><input type="checkbox" id="g5"><label for="g5">Emergency exit clear</label></div>
+          <div class="check-item"><input type="checkbox" id="g6"><label for="g6">Electrical wiring insulated</label></div>
+          <div class="check-item"><input type="checkbox" id="g7"><label for="g7">Flameproof electrical fittings</label></div>
+          <div class="check-item"><input type="checkbox" id="g8"><label for="g8">Hydrostatic test record (cylinders)</label></div>
+        </div>
+      </div>
+      <div class="page-spacer"></div>
+    </div><!-- /pp2 -->
+
+    <!-- ══════════ PRINT PAGE 3: Records + Critical Status + Signatures ══════════ -->
+    <div class="print-page" id="pp3">
+      <div>
+        <div class="sec-head" data-sec="09"><div class="sec-num">09</div><div><div class="sec-title">Records Verified</div></div></div>
+        <div class="check-grid">
+          <div class="check-item"><input type="checkbox" id="r1"><label for="r1">Stock Register</label></div>
+          <div class="check-item"><input type="checkbox" id="r2"><label for="r2">Consumer Register</label></div>
+          <div class="check-item"><input type="checkbox" id="r3"><label for="r3">Cash Memo / Invoice Book</label></div>
+          <div class="check-item"><input type="checkbox" id="r4"><label for="r4">Delivery Register</label></div>
+          <div class="check-item"><input type="checkbox" id="r5"><label for="r5">Godown Stock Register</label></div>
+          <div class="check-item"><input type="checkbox" id="r6"><label for="r6">Electronic Distribution Records</label></div>
+          <div class="check-item"><input type="checkbox" id="r7"><label for="r7">Complaint register maintained</label></div>
+          <div class="check-item"><input type="checkbox" id="r8"><label for="r8">KYC records available</label></div>
+        </div>
+
+        <div class="sec-head" data-sec="crit"><div class="sec-num" style="color:var(--accent);font-size:1.2rem;">!</div><div><div class="sec-title">LPG-Specific Safety Status</div></div></div>
+        <div class="status-row">
+          <div class="status-badge"><span class="dot"></span><span>No Smoking / No Mobile signage <strong>displayed</strong></span></div>
+          <div class="status-badge"><span class="dot"></span><span>Fire extinguisher monthly check <strong>up to date</strong></span></div>
+          <div class="status-badge"><span class="dot"></span><span>Hydrostatic test record <strong>verified</strong></span></div>
+          <div class="status-badge"><span class="dot"></span><span>Valve protection caps <strong>intact</strong></span></div>
+          <div class="status-badge"><span class="dot"></span><span>Flameproof fittings <strong>compliant</strong></span></div>
+          <div class="status-badge"><span class="dot"></span><span>Leak detection checklist <strong>maintained</strong></span></div>
         </div>
       </div>
 
-      <div class="details-grid">
-        <div class="detail-row"><span class="d-label">Distributor Name</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Proprietor / Manager</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Address</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Block Name</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Oil Marketing Company</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Distributor Code</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Agreement No.</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Date & Time of Inspection</span><span class="d-line"></span></div>
-      </div>
+      <div class="page-spacer"></div>
 
-      <!-- ② STOCK VERIFICATION -->
-      <div class="sec-head" data-sec="02">
-        <div class="sec-num">02</div>
-        <div>
-          <div class="sec-title">Stock Verification of LPG Cylinders</div>
-        </div>
-        <div class="sec-tag">Physical Count</div>
-      </div>
-
-      <div class="tbl-wrap">
-        <div class="tbl-title">A — Filled Cylinders</div>
-        <table class="data-tbl">
-          <thead><tr><th>Type</th><th>Opening</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Balance</th><th>Physical</th><th>Difference</th></tr></thead>
-          <tbody>
-            <tr><td>14.2 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>19 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>5 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="tbl-wrap tbl-gap">
-        <div class="tbl-title">B — Empty Cylinders</div>
-        <table class="data-tbl">
-          <thead><tr><th>Type</th><th>Opening</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Balance</th><th>Physical</th><th>Difference</th></tr></thead>
-          <tbody>
-            <tr><td>14.2 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>19 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>5 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="tbl-wrap tbl-gap">
-        <div class="tbl-title">C — Other Cylinders (Defective / Seized)</div>
-        <table class="data-tbl">
-          <thead><tr><th>Type</th><th>14.2 Kg</th><th>5 Kg (D)</th><th>19 Kg</th><th>5 Kg (C)</th></tr></thead>
-          <tbody>
-            <tr><td>Defective / Damaged</td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>Seized / Zima</td><td></td><td></td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- ③ CONSUMER DATABASE -->
-      <div class="sec-head" data-sec="03">
-        <div class="sec-num">03</div>
-        <div>
-          <div class="sec-title">Consumer Database Verification</div>
-        </div>
-      </div>
-
-      <div class="check-grid">
-        <div class="check-item"><input type="checkbox" id="c1"><label for="c1">Domestic (Normal) consumers</label></div>
-        <div class="check-item"><input type="checkbox" id="c2"><label for="c2">Ujjwala consumers</label></div>
-        <div class="check-item"><input type="checkbox" id="c3"><label for="c3">Commercial consumers</label></div>
-        <div class="check-item"><input type="checkbox" id="c4"><label for="c4">Active domestic count verified</label></div>
-        <div class="check-item"><input type="checkbox" id="c5"><label for="c5">Active Ujjwala count verified</label></div>
-        <div class="check-item"><input type="checkbox" id="c6"><label for="c6">Active commercial count verified</label></div>
-      </div>
-
-      <!-- ④ REFILL SUPPLY -->
-      <div class="sec-head" data-sec="04">
-        <div class="sec-num">04</div>
-        <div>
-          <div class="sec-title">Refill Cylinder Supply — Last 3 Months, Category Wise</div>
-        </div>
-      </div>
-
-      <div class="tbl-wrap">
-        <table class="data-tbl">
-          <thead>
-            <tr>
-              <th rowspan="2">Month</th>
-              <th colspan="2">Domestic Cylinders Received</th>
-              <th colspan="2">Commercial Cylinders Received</th>
-            </tr>
-            <tr><th>14.2 Kg</th><th>5 Kg</th><th>19 Kg</th><th>Other</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Month 1</td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>Month 2</td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>Month 3</td><td></td><td></td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="sec-head" data-sec="05">
-        <div class="sec-num">05</div>
-        <div>
-          <div class="sec-title">Safety & Certificate Compliance</div>
-        </div>
-        <div class="sec-tag">Fire + Legal Metrology</div>
-      </div>
-
-      <div class="details-grid">
-        <div class="safety-group-label">🔥 Fire Safety Certificate & Inspection</div>
-        <div class="detail-row"><span class="d-label">Fire Safety Cert. No.</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Valid Up To</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Last Inspection Date</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Fire NOC Reference</span><span class="d-line"></span></div>
-        <div class="safety-group-label">⚖️ Legal Metrology — Weights & Measures</div>
-        <div class="detail-row"><span class="d-label">Weighing Scale (Model/ID)</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Certified Test Weight Set</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Spring Balance (Yes/No)</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Scale Verification Due Date</span><span class="d-line"></span></div>
-        <div class="detail-row" style="grid-column: 1 / -1;"><span class="d-label">LMPC Certificate Available</span><span class="d-line"></span></div>
-      </div>
-
-      <div class="sec-head" data-sec="06">
-        <div class="sec-num">06</div>
-        <div>
-          <div class="sec-title">Valve / O-Ring & Leakage Verification</div>
-        </div>
-      </div>
-
-      <div class="check-grid">
-        <div class="check-item"><input type="checkbox" id="v1"><label for="v1">O-ring of each swapped cylinder checked</label></div>
-        <div class="check-item"><input type="checkbox" id="v2"><label for="v2">Soap water / leak detector used</label></div>
-        <div class="check-item"><input type="checkbox" id="v3"><label for="v3">No leakage at valve stem / joint</label></div>
-        <div class="check-item"><input type="checkbox" id="v4"><label for="v4">Staff trained in leak detection</label></div>
-      </div>
-
-      <div class="sec-head" data-sec="07">
-        <div class="sec-num">07</div>
-        <div>
-          <div class="sec-title">Delivery & Distribution System</div>
-        </div>
-      </div>
-
-      <div class="check-grid">
-        <div class="check-item"><input type="checkbox" id="d1"><label for="d1">Home delivery system available</label></div>
-        <div class="check-item"><input type="checkbox" id="d2"><label for="d2">Delivery register maintained</label></div>
-        <div class="check-item"><input type="checkbox" id="d3"><label for="d3">Delivery vehicles inspected</label></div>
-        <div class="check-item"><input type="checkbox" id="d4"><label for="d4">Weighing machine available</label></div>
-        <div class="check-item"><input type="checkbox" id="d5"><label for="d5">Electronic POS machine used</label></div>
-        <div class="check-item"><input type="checkbox" id="d6"><label for="d6">Cash memo / invoice book maintained</label></div>
-        <div class="check-item"><input type="checkbox" id="d7"><label for="d7">Godown stock register updated</label></div>
-        <div class="check-item"><input type="checkbox" id="d8"><label for="d8">Electronic distribution records</label></div>
-      </div>
-
-      <div class="sec-head" data-sec="08">
-        <div class="sec-num">08</div>
-        <div>
-          <div class="sec-title">Additional Safety Checks at Godown</div>
-        </div>
-      </div>
-
-      <div class="check-grid">
-        <div class="check-item"><input type="checkbox" id="g1"><label for="g1">Fire extinguishers (DCP/CO₂) available & serviced</label></div>
-        <div class="check-item"><input type="checkbox" id="g2"><label for="g2">Sand buckets (filled, with lid)</label></div>
-        <div class="check-item"><input type="checkbox" id="g3"><label for="g3">Warning boards / "No Smoking" signage</label></div>
-        <div class="check-item"><input type="checkbox" id="g4"><label for="g4">Proper ventilation in godown</label></div>
-        <div class="check-item"><input type="checkbox" id="g5"><label for="g5">Emergency exit clear</label></div>
-        <div class="check-item"><input type="checkbox" id="g6"><label for="g6">Electrical wiring insulated</label></div>
-        <div class="check-item"><input type="checkbox" id="g7"><label for="g7">Flameproof electrical fittings</label></div>
-        <div class="check-item"><input type="checkbox" id="g8"><label for="g8">Hydrostatic test record (cylinders)</label></div>
-      </div>
-
-      <div class="sec-head" data-sec="09">
-        <div class="sec-num">09</div>
-        <div>
-          <div class="sec-title">Records Verified</div>
-        </div>
-      </div>
-
-      <div class="check-grid">
-        <div class="check-item"><input type="checkbox" id="r1"><label for="r1">Stock Register</label></div>
-        <div class="check-item"><input type="checkbox" id="r2"><label for="r2">Consumer Register</label></div>
-        <div class="check-item"><input type="checkbox" id="r3"><label for="r3">Cash Memo / Invoice Book</label></div>
-        <div class="check-item"><input type="checkbox" id="r4"><label for="r4">Delivery Register</label></div>
-        <div class="check-item"><input type="checkbox" id="r5"><label for="r5">Godown Stock Register</label></div>
-        <div class="check-item"><input type="checkbox" id="r6"><label for="r6">Electronic Distribution Records</label></div>
-        <div class="check-item"><input type="checkbox" id="r7"><label for="r7">Complaint register maintained</label></div>
-        <div class="check-item"><input type="checkbox" id="r8"><label for="r8">KYC records available</label></div>
-      </div>
-
-      <div class="sec-head" data-sec="crit" style="margin-top: 2rem;">
-        <div class="sec-num" style="color: var(--accent); font-size:1.2rem;">!</div>
-        <div>
-          <div class="sec-title">LPG-Specific Safety Status</div>
-        </div>
-      </div>
-
-      <div class="status-row">
-        <div class="status-badge"><span class="dot"></span><span>No Smoking / No Mobile signage <strong>displayed</strong></span></div>
-        <div class="status-badge"><span class="dot"></span><span>Fire extinguisher monthly check <strong>up to date</strong></span></div>
-        <div class="status-badge"><span class="dot"></span><span>Hydrostatic test record <strong>verified</strong></span></div>
-        <div class="status-badge"><span class="dot"></span><span>Valve protection caps <strong>intact</strong></span></div>
-        <div class="status-badge"><span class="dot"></span><span>Flameproof fittings <strong>compliant</strong></span></div>
-        <div class="status-badge"><span class="dot"></span><span>Leak detection checklist <strong>maintained</strong></span></div>
-      </div>
-
-      <!-- SIGNATURE ROW -->
+      <!-- Signature pinned to page bottom by flexbox -->
       <div class="sign-row">
-        <div class="sign-block" style="flex: 2; max-width: 340px;">
+        <div class="sign-block" style="flex:2;max-width:340px;">
           <div class="sign-block-label">Inspecting Officer — Name & Designation</div>
           <div class="sign-line"></div>
         </div>
@@ -880,6 +836,7 @@
           <div class="sign-line"></div>
         </div>
       </div>
+    </div><!-- /pp3 -->
 
     </div><!-- /card-body -->
 
