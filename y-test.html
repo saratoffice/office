@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>LPG Distributor Inspection · EC Act · LPG Order 2000</title>
+  <title>LPG Distributor Inspection · EC Act · LPG Order 2000 · 3-Page Print</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
@@ -20,7 +20,6 @@
       --accent-warm: #e85d20;
       --accent-gold: #c49a1a;
       --accent-green: #2a6b3c;
-      --accent-green-light: #e8f3ec;
       --fire: #e84c1e;
       --law: #1a4d8f;
       --shadow: 0 2px 12px rgba(13,27,42,0.10);
@@ -122,7 +121,6 @@
       color: #fff;
       line-height: 1.15;
       letter-spacing: -0.01em;
-      white-space: nowrap;
     }
     .masthead-title em {
       font-style: italic;
@@ -431,7 +429,6 @@
       letter-spacing: 0.04em;
     }
 
-    /* spacing helpers */
     .mt-sm { margin-top: 0.6rem; }
     .tbl-gap { margin-top: 1rem; }
 
@@ -511,82 +508,79 @@
     .btn-print { background: transparent; border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.85); }
     .btn-print:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); color: #fff; }
 
-    /* print-page wrapper: invisible on screen, active only in print */
-    .print-page { display: contents; }
-    .page-spacer { display: none; }
-
-    /* === PRINT – FORCED 3 FULL PAGES A4 === */
+    /* === PRINT – 3 EXACT PAGES (A4 PORTRAIT) === */
     @media print {
-      @page { size: A4 portrait; margin: 0.38in 0.36in; }
-
-      html, body { height: auto; background: white !important; padding: 0; margin: 0; }
-      .nav-strip, .share-btns { display: none !important; }
+      @page { size: A4 portrait; margin: 0.45in 0.4in; }
+      body { background: white; padding: 0; margin: 0; }
+      .nav-strip, .share-btns, .share-dropdown, .print-btn { display: none !important; }
       .page-wrap { max-width: 100%; padding: 0; margin: 0; }
-      .main-card { box-shadow: none; border: none; border-radius: 0; overflow: visible; }
-      .masthead { padding: 0.45rem 0.7rem 0.4rem; }
+      .main-card { box-shadow: none; border: none; border-radius: 0; overflow: visible; background: white; }
+      .masthead { padding: 0.35rem 0.6rem 0.3rem; background: var(--ink); }
       .masthead::before, .masthead::after { display: none; }
-      .masthead-title { font-size: 1rem; white-space: nowrap; }
-      .masthead-subtitle { font-size: 0.55rem; margin-top: 0.15rem; gap: 6px; }
-      .masthead-subtitle span { padding: 0.1rem 0.4rem; }
-      .card-body { padding: 0; }
-      .card-footer { padding: 0.25rem 0.7rem; }
-      .footer-note { font-size: 0.55rem; }
-      .footer-mark { font-size: 0.68rem; }
+      .masthead-title { font-size: 0.95rem; white-space: nowrap; }
+      .masthead-subtitle { font-size: 0.5rem; margin-top: 0.1rem; gap: 4px; }
+      .masthead-subtitle span { padding: 0.05rem 0.4rem; }
+      .card-body { padding: 0 0.2rem; }
+      .card-footer { padding: 0.2rem 0.6rem; }
+      .footer-note { font-size: 0.5rem; }
+      .footer-mark { font-size: 0.6rem; }
 
-      /* ── print-page: each fills exactly one A4 page ── */
+      /* Each print-page = exactly 1 A4 page (flex column, auto spacing) */
       .print-page {
         display: flex !important;
         flex-direction: column;
-        height: calc(297mm - 0.76in);
-        overflow: hidden;
+        height: calc(100vh - 0.9in);  /* fallback, but page-break ensures break */
         page-break-after: always;
         break-after: page;
+        margin-bottom: 0;
+        padding-bottom: 0;
+        position: relative;
+        background: white;
       }
-      .print-page:last-child { page-break-after: auto; break-after: auto; }
+      .print-page:last-child {
+        page-break-after: auto;
+        break-after: auto;
+        height: auto;
+        min-height: calc(100vh - 0.9in);
+      }
       .print-page .masthead { flex-shrink: 0; }
-
-      /* spacer fills leftover vertical space → no blank gap */
-      .page-spacer { display: block !important; flex: 1; min-height: 0; }
-      .sec-head { margin: 0.3rem 0 0.22rem; padding: 0 0.7rem 0.18rem; border-bottom-width: 1px; }
-      .sec-num  { font-size: 0.9rem; min-width: 22px; }
-      .sec-title { font-size: 0.78rem; }
-      .sec-tag  { font-size: 0.55rem; padding: 0.1rem 0.4rem; }
-
-      /* detail rows */
-      .details-grid { border-radius: 0; }
-      .detail-row { padding: 0.22rem 0.7rem; }
-      .d-label { font-size: 0.64rem; min-width: 110px; }
-      .d-line { min-height: 14px; }
-
-      /* tables */
-      .tbl-wrap { border-radius: 0; margin: 0; }
-      .tbl-wrap + .tbl-wrap { margin-top: 0.3rem; }
-      .tbl-title { padding: 0.22rem 0.7rem; font-size: 0.6rem; }
-      table.data-tbl th { padding: 0.22rem 0.25rem; font-size: 0.62rem; }
-      table.data-tbl td { padding: 0.22rem 0.25rem; font-size: 0.64rem; }
-
-      /* checklist */
-      .check-grid { border-radius: 0; }
-      .check-item { padding: 0.22rem 0.7rem; }
-      .check-item label { font-size: 0.66rem; line-height: 1.25; }
-      .check-item input[type="checkbox"] { width: 11px; height: 11px; margin-top: 1px; }
-
-      /* safety group labels */
-      .safety-group-label { padding: 0.18rem 0.7rem; font-size: 0.6rem; }
-
-      /* status row */
-      .status-row { padding: 0.35rem 0.7rem; margin: 0; border-radius: 0; gap: 5px 10px; }
-      .status-badge { font-size: 0.6rem; }
+      
+      /* Compress spacings to avoid overflow but keep all content */
+      .sec-head { margin: 0.55rem 0 0.25rem; padding-bottom: 0.2rem; gap: 8px; }
+      .sec-num { font-size: 1rem; min-width: 24px; }
+      .sec-title { font-size: 0.75rem; }
+      .sec-tag { font-size: 0.5rem; padding: 0.05rem 0.4rem; }
+      .detail-row { padding: 0.2rem 0.5rem; }
+      .d-label { font-size: 0.6rem; min-width: 100px; }
+      .d-line { min-height: 12px; border-bottom-width: 0.8px; }
+      .tbl-wrap { margin: 0.35rem 0; border-radius: 0; }
+      .tbl-title { padding: 0.2rem 0.6rem; font-size: 0.55rem; }
+      table.data-tbl th { padding: 0.2rem 0.2rem; font-size: 0.58rem; }
+      table.data-tbl td { padding: 0.2rem 0.2rem; font-size: 0.62rem; }
+      .check-item { padding: 0.25rem 0.6rem; gap: 8px; }
+      .check-item label { font-size: 0.64rem; line-height: 1.25; }
+      .check-item input { width: 11px; height: 11px; margin-top: 1px; }
+      .safety-group-label { padding: 0.18rem 0.6rem; font-size: 0.55rem; }
+      .status-row { padding: 0.35rem 0.7rem; margin: 0.4rem 0; gap: 6px 12px; }
+      .status-badge { font-size: 0.55rem; }
       .status-badge .dot { width: 5px; height: 5px; }
-
-      /* sign row */
-      .sign-row { margin-top: 0; padding: 0.4rem 0.7rem 0.2rem; border-top-width: 1px; gap: 0.5rem; flex-wrap: nowrap; }
-      .sign-block { min-width: 0; flex: 1; }
+      .sign-row { margin-top: 0.4rem; padding-top: 0.4rem; gap: 0.6rem; flex-wrap: wrap; }
+      .sign-block { min-width: 170px; }
       .sign-block-label { font-size: 0.55rem; }
-      .sign-line { min-height: 22px; }
+      .sign-line { min-height: 20px; }
+      
+      /* dynamic spacer: allows flex to push signature to bottom on last page */
+      .page-spacer {
+        display: block !important;
+        flex: 1;
+        min-height: 0;
+        width: 100%;
+      }
+      /* Force tables/checklists not to overflow */
+      .details-grid, .tbl-wrap, .check-grid { break-inside: avoid; page-break-inside: avoid; }
+      .sec-head { break-after: avoid; }
     }
 
-    /* === RESPONSIVE === */
     @media (max-width: 700px) {
       .card-body { padding: 0 1rem 1.5rem; }
       .masthead { padding: 1.4rem 1.2rem 1.2rem; }
@@ -594,25 +588,16 @@
       .check-grid { grid-template-columns: 1fr; }
       .check-item { border-right: none; }
       .check-item:nth-last-child(2) { border-bottom: 1px solid var(--rule); }
-      .safety-fields { grid-template-columns: 1fr; }
       .masthead-title { font-size: 1.5rem; }
     }
 
-    /* entrance animation */
-    .main-card {
-      animation: fadeUp 0.4s ease both;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .main-card { animation: fadeUp 0.4s ease both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
 
 <div class="page-wrap">
-
-  <!-- NAV -->
   <nav class="nav-strip">
     <a href="/formats/petrolpumpchecklist.html" class="nav-item">⛽ Petrol Pump</a>
     <a href="/formats/lpgchecklist.html" class="nav-item active">🔥 LPG Checklist</a>
@@ -620,281 +605,124 @@
     <a href="/formats/ppcchecklist.html" class="nav-item">🌾 PPC Verification</a>
   </nav>
 
-  <!-- MAIN CARD -->
   <div class="main-card" id="lpgPrint">
-
-    <!-- MASTHEAD -->
     <div class="masthead">
       <div class="masthead-inner">
         <div>
           <div class="masthead-title">⛽ LPG Distributor <em>Inspection Report</em></div>
-          <div class="masthead-subtitle">
-            <span>EC Act</span>
-            <span>LPG Order 2000</span>
-            <span>Safety Integrated</span>
-          </div>
+          <div class="masthead-subtitle"><span>EC Act</span><span>LPG Order 2000</span><span>Safety Integrated</span></div>
         </div>
         <div class="share-btns">
           <div class="share-dropdown" id="shareDropdown">
-            <button class="share-btn btn-share-main" id="shareToggle">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-              Share <span class="arrow">▾</span>
-            </button>
-            <div class="share-menu">
-              <a href="#" id="btnWa">
-                <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.096.541 4.064 1.487 5.779L.057 23.057a.75.75 0 00.906.942l5.424-1.417A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.713 9.713 0 01-4.952-1.352l-.355-.21-3.676.96.983-3.584-.23-.368A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
-                WhatsApp
-              </a>
-              <a href="#" id="btnTg">
-                <svg class="tg-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-                Telegram
-              </a>
-            </div>
+            <button class="share-btn btn-share-main" id="shareToggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share <span class="arrow">▾</span></button>
+            <div class="share-menu"><a href="#" id="btnWa"><svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.096.541 4.064 1.487 5.779L.057 23.057a.75.75 0 00.906.942l5.424-1.417A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.713 9.713 0 01-4.952-1.352l-.355-.21-3.676.96.983-3.584-.23-.368A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>WhatsApp</a><a href="#" id="btnTg"><svg class="tg-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a></div>
           </div>
           <button class="share-btn btn-print" id="printBtn">⎙ Print</button>
         </div>
       </div>
     </div>
 
-    <!-- BODY -->
     <div class="card-body">
+      <!-- PAGE 1: Basic + Stock + Consumer DB + Refill -->
+      <div class="print-page">
+        <div>
+          <div class="sec-head"><div class="sec-num">01</div><div><div class="sec-title">Basic Details of Distributor</div></div></div>
+          <div class="details-grid">
+            <div class="detail-row"><span class="d-label">Distributor Name</span><span class="d-line"></span></div>
+            <div class="detail-row"><span class="d-label">Proprietor / Manager</span><span class="d-line"></span></div>
+            <div class="detail-row"><span class="d-label">Address</span><span class="d-line"></span></div>
+            <div class="detail-row"><span class="d-label">Block Name</span><span class="d-line"></span></div>
+            <div class="detail-row"><span class="d-label">Oil Marketing Company</span><span class="d-line"></span></div>
+            <div class="detail-row"><span class="d-label">Distributor Code</span><span class="d-line"></span></div>
+            <div class="detail-row"><span class="d-label">Agreement No.</span><span class="d-line"></span></div>
+            <div class="detail-row"><span class="d-label">Date & Time of Inspection</span><span class="d-line"></span></div>
+          </div>
 
-    <!-- ══════════ PRINT PAGE 1: Basic Details + Stock + Consumer + Refill ══════════ -->
-    <div class="print-page" id="pp1">
-      <div>
-        <div class="sec-head" data-sec="01"><div class="sec-num">01</div><div><div class="sec-title">Basic Details of Distributor</div></div></div>
-        <div class="details-grid">
-          <div class="detail-row"><span class="d-label">Distributor Name</span><span class="d-line"></span></div>
-          <div class="detail-row"><span class="d-label">Proprietor / Manager</span><span class="d-line"></span></div>
-          <div class="detail-row"><span class="d-label">Address</span><span class="d-line"></span></div>
-          <div class="detail-row"><span class="d-label">Block Name</span><span class="d-line"></span></div>
-          <div class="detail-row"><span class="d-label">Oil Marketing Company</span><span class="d-line"></span></div>
-          <div class="detail-row"><span class="d-label">Distributor Code</span><span class="d-line"></span></div>
-          <div class="detail-row"><span class="d-label">Agreement No.</span><span class="d-line"></span></div>
-          <div class="detail-row"><span class="d-label">Date & Time of Inspection</span><span class="d-line"></span></div>
-        </div>
+          <div class="sec-head"><div class="sec-num">02</div><div><div class="sec-title">Stock Verification of LPG Cylinders</div></div><div class="sec-tag">Physical Count</div></div>
+          <div class="tbl-wrap"><div class="tbl-title">A — Filled Cylinders</div><table class="data-tbl"><thead><tr><th>Type</th><th>Opening</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Balance</th><th>Physical</th><th>Difference</th></tr></thead><tbody><tr><td>14.2 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>19 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>5 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+          <div class="tbl-wrap tbl-gap"><div class="tbl-title">B — Empty Cylinders</div><table class="data-tbl"><thead><tr><th>Type</th><th>Opening</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Balance</th><th>Physical</th><th>Difference</th></tr></thead><tbody><tr><td>14.2 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>19 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>5 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+          <div class="tbl-wrap tbl-gap"><div class="tbl-title">C — Other Cylinders (Defective / Seized)</div><table class="data-tbl"><thead><tr><th>Type</th><th>14.2 Kg</th><th>5 Kg (D)</th><th>19 Kg</th><th>5 Kg (C)</th></tr></thead><tbody><tr><td>Defective / Damaged</td><td></td><td></td><td></td><td></td></tr><tr><td>Seized / Zima</td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
 
-        <div class="sec-head" data-sec="02"><div class="sec-num">02</div><div><div class="sec-title">Stock Verification of LPG Cylinders</div></div><div class="sec-tag">Physical Count</div></div>
-        <div class="tbl-wrap">
-          <div class="tbl-title">A — Filled Cylinders</div>
-          <table class="data-tbl">
-            <thead><tr><th>Type</th><th>Opening</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Balance</th><th>Physical</th><th>Difference</th></tr></thead>
-            <tbody>
-              <tr><td>14.2 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>19 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>5 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="tbl-wrap tbl-gap">
-          <div class="tbl-title">B — Empty Cylinders</div>
-          <table class="data-tbl">
-            <thead><tr><th>Type</th><th>Opening</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Balance</th><th>Physical</th><th>Difference</th></tr></thead>
-            <tbody>
-              <tr><td>14.2 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>19 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>5 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="tbl-wrap tbl-gap">
-          <div class="tbl-title">C — Other Cylinders (Defective / Seized)</div>
-          <table class="data-tbl">
-            <thead><tr><th>Type</th><th>14.2 Kg</th><th>5 Kg (D)</th><th>19 Kg</th><th>5 Kg (C)</th></tr></thead>
-            <tbody>
-              <tr><td>Defective / Damaged</td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>Seized / Zima</td><td></td><td></td><td></td><td></td></tr>
-            </tbody>
-          </table>
-        </div>
+          <div class="sec-head"><div class="sec-num">03</div><div><div class="sec-title">Consumer Database Verification</div></div></div>
+          <div class="check-grid"><div class="check-item"><input type="checkbox" id="c1"><label for="c1">Domestic (Normal) consumers</label></div><div class="check-item"><input type="checkbox" id="c2"><label for="c2">Ujjwala consumers</label></div><div class="check-item"><input type="checkbox" id="c3"><label for="c3">Commercial consumers</label></div><div class="check-item"><input type="checkbox" id="c4"><label for="c4">Active domestic count verified</label></div><div class="check-item"><input type="checkbox" id="c5"><label for="c5">Active Ujjwala count verified</label></div><div class="check-item"><input type="checkbox" id="c6"><label for="c6">Active commercial count verified</label></div></div>
 
-        <div class="sec-head" data-sec="03"><div class="sec-num">03</div><div><div class="sec-title">Consumer Database Verification</div></div></div>
-        <div class="check-grid">
-          <div class="check-item"><input type="checkbox" id="c1"><label for="c1">Domestic (Normal) consumers</label></div>
-          <div class="check-item"><input type="checkbox" id="c2"><label for="c2">Ujjwala consumers</label></div>
-          <div class="check-item"><input type="checkbox" id="c3"><label for="c3">Commercial consumers</label></div>
-          <div class="check-item"><input type="checkbox" id="c4"><label for="c4">Active domestic count verified</label></div>
-          <div class="check-item"><input type="checkbox" id="c5"><label for="c5">Active Ujjwala count verified</label></div>
-          <div class="check-item"><input type="checkbox" id="c6"><label for="c6">Active commercial count verified</label></div>
+          <div class="sec-head"><div class="sec-num">04</div><div><div class="sec-title">Refill Cylinder Supply — Last 3 Months</div></div></div>
+          <div class="tbl-wrap"><table class="data-tbl"><thead><tr><th rowspan="2">Month</th><th colspan="2">Domestic Cylinders</th><th colspan="2">Commercial Cylinders</th></tr><tr><th>14.2 Kg</th><th>5 Kg</th><th>19 Kg</th><th>Other</th></tr></thead><tbody><tr><td>Month 1</td><td></td><td></td><td></td><td></td></tr><tr><td>Month 2</td><td></td><td></td><td></td><td></td></tr><tr><td>Month 3</td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
         </div>
-
-        <div class="sec-head" data-sec="04"><div class="sec-num">04</div><div><div class="sec-title">Refill Cylinder Supply — Last 3 Months, Category Wise</div></div></div>
-        <div class="tbl-wrap">
-          <table class="data-tbl">
-            <thead>
-              <tr><th rowspan="2">Month</th><th colspan="2">Domestic Cylinders Received</th><th colspan="2">Commercial Cylinders Received</th></tr>
-              <tr><th>14.2 Kg</th><th>5 Kg</th><th>19 Kg</th><th>Other</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Month 1</td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>Month 2</td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>Month 3</td><td></td><td></td><td></td><td></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="page-spacer"></div>
-    </div><!-- /pp1 -->
-
-    <!-- ══════════ PRINT PAGE 2: Safety + Valve + Delivery + Godown ══════════ -->
-    <div class="print-page" id="pp2">
-      <div>
-        <div class="sec-head" data-sec="05"><div class="sec-num">05</div><div><div class="sec-title">Safety & Certificate Compliance</div></div><div class="sec-tag">Fire + Legal Metrology</div></div>
-        <div class="details-grid">
-          <div class="safety-group-label">🔥 Fire Safety Certificate & Inspection</div>
-          <div class="detail-row"><span class="d-label">Fire Safety Cert. No.</span><span class="d-line"></span></div>
-          <div class="detail-row"><span class="d-label">Valid Up To</span><span class="d-line"></span></div>
-          <div class="detail-row"><span class="d-label">Last Inspection Date</span><span class="d-line"></span></div>
-          <div class="detail-row"><span class="d-label">Fire NOC Reference</span><span class="d-line"></span></div>
-          <div class="safety-group-label">⚖️ Legal Metrology — Weights & Measures</div>
-          <div class="detail-row"><span class="d-label">Weighing Scale (Model/ID)</span><span class="d-line"></span></div>
-          <div class="detail-row"><span class="d-label">Certified Test Weight Set</span><span class="d-line"></span></div>
-          <div class="detail-row"><span class="d-label">Spring Balance (Yes/No)</span><span class="d-line"></span></div>
-          <div class="detail-row"><span class="d-label">Scale Verification Due Date</span><span class="d-line"></span></div>
-          <div class="detail-row" style="grid-column:1/-1"><span class="d-label">LMPC Certificate Available</span><span class="d-line"></span></div>
-        </div>
-
-        <div class="sec-head" data-sec="06"><div class="sec-num">06</div><div><div class="sec-title">Valve / O-Ring & Leakage Verification</div></div></div>
-        <div class="check-grid">
-          <div class="check-item"><input type="checkbox" id="v1"><label for="v1">O-ring of each swapped cylinder checked</label></div>
-          <div class="check-item"><input type="checkbox" id="v2"><label for="v2">Soap water / leak detector used</label></div>
-          <div class="check-item"><input type="checkbox" id="v3"><label for="v3">No leakage at valve stem / joint</label></div>
-          <div class="check-item"><input type="checkbox" id="v4"><label for="v4">Staff trained in leak detection</label></div>
-        </div>
-
-        <div class="sec-head" data-sec="07"><div class="sec-num">07</div><div><div class="sec-title">Delivery & Distribution System</div></div></div>
-        <div class="check-grid">
-          <div class="check-item"><input type="checkbox" id="d1"><label for="d1">Home delivery system available</label></div>
-          <div class="check-item"><input type="checkbox" id="d2"><label for="d2">Delivery register maintained</label></div>
-          <div class="check-item"><input type="checkbox" id="d3"><label for="d3">Delivery vehicles inspected</label></div>
-          <div class="check-item"><input type="checkbox" id="d4"><label for="d4">Weighing machine available</label></div>
-          <div class="check-item"><input type="checkbox" id="d5"><label for="d5">Electronic POS machine used</label></div>
-          <div class="check-item"><input type="checkbox" id="d6"><label for="d6">Cash memo / invoice book maintained</label></div>
-          <div class="check-item"><input type="checkbox" id="d7"><label for="d7">Godown stock register updated</label></div>
-          <div class="check-item"><input type="checkbox" id="d8"><label for="d8">Electronic distribution records</label></div>
-        </div>
-
-        <div class="sec-head" data-sec="08"><div class="sec-num">08</div><div><div class="sec-title">Additional Safety Checks at Godown</div></div></div>
-        <div class="check-grid">
-          <div class="check-item"><input type="checkbox" id="g1"><label for="g1">Fire extinguishers (DCP/CO₂) available & serviced</label></div>
-          <div class="check-item"><input type="checkbox" id="g2"><label for="g2">Sand buckets (filled, with lid)</label></div>
-          <div class="check-item"><input type="checkbox" id="g3"><label for="g3">Warning boards / "No Smoking" signage</label></div>
-          <div class="check-item"><input type="checkbox" id="g4"><label for="g4">Proper ventilation in godown</label></div>
-          <div class="check-item"><input type="checkbox" id="g5"><label for="g5">Emergency exit clear</label></div>
-          <div class="check-item"><input type="checkbox" id="g6"><label for="g6">Electrical wiring insulated</label></div>
-          <div class="check-item"><input type="checkbox" id="g7"><label for="g7">Flameproof electrical fittings</label></div>
-          <div class="check-item"><input type="checkbox" id="g8"><label for="g8">Hydrostatic test record (cylinders)</label></div>
-        </div>
-      </div>
-      <div class="page-spacer"></div>
-    </div><!-- /pp2 -->
-
-    <!-- ══════════ PRINT PAGE 3: Records + Critical Status + Signatures ══════════ -->
-    <div class="print-page" id="pp3">
-      <div>
-        <div class="sec-head" data-sec="09"><div class="sec-num">09</div><div><div class="sec-title">Records Verified</div></div></div>
-        <div class="check-grid">
-          <div class="check-item"><input type="checkbox" id="r1"><label for="r1">Stock Register</label></div>
-          <div class="check-item"><input type="checkbox" id="r2"><label for="r2">Consumer Register</label></div>
-          <div class="check-item"><input type="checkbox" id="r3"><label for="r3">Cash Memo / Invoice Book</label></div>
-          <div class="check-item"><input type="checkbox" id="r4"><label for="r4">Delivery Register</label></div>
-          <div class="check-item"><input type="checkbox" id="r5"><label for="r5">Godown Stock Register</label></div>
-          <div class="check-item"><input type="checkbox" id="r6"><label for="r6">Electronic Distribution Records</label></div>
-          <div class="check-item"><input type="checkbox" id="r7"><label for="r7">Complaint register maintained</label></div>
-          <div class="check-item"><input type="checkbox" id="r8"><label for="r8">KYC records available</label></div>
-        </div>
-
-        <div class="sec-head" data-sec="crit"><div class="sec-num" style="color:var(--accent);font-size:1.2rem;">!</div><div><div class="sec-title">LPG-Specific Safety Status</div></div></div>
-        <div class="status-row">
-          <div class="status-badge"><span class="dot"></span><span>No Smoking / No Mobile signage <strong>displayed</strong></span></div>
-          <div class="status-badge"><span class="dot"></span><span>Fire extinguisher monthly check <strong>up to date</strong></span></div>
-          <div class="status-badge"><span class="dot"></span><span>Hydrostatic test record <strong>verified</strong></span></div>
-          <div class="status-badge"><span class="dot"></span><span>Valve protection caps <strong>intact</strong></span></div>
-          <div class="status-badge"><span class="dot"></span><span>Flameproof fittings <strong>compliant</strong></span></div>
-          <div class="status-badge"><span class="dot"></span><span>Leak detection checklist <strong>maintained</strong></span></div>
-        </div>
+        <div class="page-spacer"></div>
       </div>
 
-      <div class="page-spacer"></div>
+      <!-- PAGE 2: Safety & Certificate + Valve + Delivery + Godown Safety -->
+      <div class="print-page">
+        <div>
+          <div class="sec-head"><div class="sec-num">05</div><div><div class="sec-title">Safety & Certificate Compliance</div></div><div class="sec-tag">Fire + Legal Metrology</div></div>
+          <div class="details-grid">
+            <div class="safety-group-label">🔥 Fire Safety Certificate & Inspection</div>
+            <div class="detail-row"><span class="d-label">Fire Safety Cert. No.</span><span class="d-line"></span></div>
+            <div class="detail-row"><span class="d-label">Valid Up To</span><span class="d-line"></span></div>
+            <div class="detail-row"><span class="d-label">Last Inspection Date</span><span class="d-line"></span></div>
+            <div class="detail-row"><span class="d-label">Fire NOC Reference</span><span class="d-line"></span></div>
+            <div class="safety-group-label">⚖️ Legal Metrology — Weights & Measures</div>
+            <div class="detail-row"><span class="d-label">Weighing Scale (Model/ID)</span><span class="d-line"></span></div>
+            <div class="detail-row"><span class="d-label">Certified Test Weight Set</span><span class="d-line"></span></div>
+            <div class="detail-row"><span class="d-label">Spring Balance (Yes/No)</span><span class="d-line"></span></div>
+            <div class="detail-row"><span class="d-label">Scale Verification Due Date</span><span class="d-line"></span></div>
+            <div class="detail-row"><span class="d-label">LMPC Certificate Available</span><span class="d-line"></span></div>
+          </div>
 
-      <!-- Signature pinned to page bottom by flexbox -->
-      <div class="sign-row">
-        <div class="sign-block" style="flex:2;max-width:340px;">
-          <div class="sign-block-label">Inspecting Officer — Name & Designation</div>
-          <div class="sign-line"></div>
+          <div class="sec-head"><div class="sec-num">06</div><div><div class="sec-title">Valve / O-Ring & Leakage Verification</div></div></div>
+          <div class="check-grid"><div class="check-item"><input type="checkbox" id="v1"><label for="v1">O-ring of each swapped cylinder checked</label></div><div class="check-item"><input type="checkbox" id="v2"><label for="v2">Soap water / leak detector used</label></div><div class="check-item"><input type="checkbox" id="v3"><label for="v3">No leakage at valve stem / joint</label></div><div class="check-item"><input type="checkbox" id="v4"><label for="v4">Staff trained in leak detection</label></div></div>
+
+          <div class="sec-head"><div class="sec-num">07</div><div><div class="sec-title">Delivery & Distribution System</div></div></div>
+          <div class="check-grid"><div class="check-item"><input type="checkbox" id="d1"><label for="d1">Home delivery system available</label></div><div class="check-item"><input type="checkbox" id="d2"><label for="d2">Delivery register maintained</label></div><div class="check-item"><input type="checkbox" id="d3"><label for="d3">Delivery vehicles inspected</label></div><div class="check-item"><input type="checkbox" id="d4"><label for="d4">Weighing machine available</label></div><div class="check-item"><input type="checkbox" id="d5"><label for="d5">Electronic POS machine used</label></div><div class="check-item"><input type="checkbox" id="d6"><label for="d6">Cash memo / invoice book maintained</label></div><div class="check-item"><input type="checkbox" id="d7"><label for="d7">Godown stock register updated</label></div><div class="check-item"><input type="checkbox" id="d8"><label for="d8">Electronic distribution records</label></div></div>
+
+          <div class="sec-head"><div class="sec-num">08</div><div><div class="sec-title">Additional Safety Checks at Godown</div></div></div>
+          <div class="check-grid"><div class="check-item"><input type="checkbox" id="g1"><label for="g1">Fire extinguishers (DCP/CO₂) available & serviced</label></div><div class="check-item"><input type="checkbox" id="g2"><label for="g2">Sand buckets (filled, with lid)</label></div><div class="check-item"><input type="checkbox" id="g3"><label for="g3">Warning boards / "No Smoking" signage</label></div><div class="check-item"><input type="checkbox" id="g4"><label for="g4">Proper ventilation in godown</label></div><div class="check-item"><input type="checkbox" id="g5"><label for="g5">Emergency exit clear</label></div><div class="check-item"><input type="checkbox" id="g6"><label for="g6">Electrical wiring insulated</label></div><div class="check-item"><input type="checkbox" id="g7"><label for="g7">Flameproof electrical fittings</label></div><div class="check-item"><input type="checkbox" id="g8"><label for="g8">Hydrostatic test record (cylinders)</label></div></div>
         </div>
-        <div class="sign-block">
-          <div class="sign-block-label">Signature</div>
-          <div class="sign-line"></div>
+        <div class="page-spacer"></div>
+      </div>
+
+      <!-- PAGE 3: Records + Safety Status + Signatures (with bottom pin) -->
+      <div class="print-page">
+        <div>
+          <div class="sec-head"><div class="sec-num">09</div><div><div class="sec-title">Records Verified</div></div></div>
+          <div class="check-grid"><div class="check-item"><input type="checkbox" id="r1"><label for="r1">Stock Register</label></div><div class="check-item"><input type="checkbox" id="r2"><label for="r2">Consumer Register</label></div><div class="check-item"><input type="checkbox" id="r3"><label for="r3">Cash Memo / Invoice Book</label></div><div class="check-item"><input type="checkbox" id="r4"><label for="r4">Delivery Register</label></div><div class="check-item"><input type="checkbox" id="r5"><label for="r5">Godown Stock Register</label></div><div class="check-item"><input type="checkbox" id="r6"><label for="r6">Electronic Distribution Records</label></div><div class="check-item"><input type="checkbox" id="r7"><label for="r7">Complaint register maintained</label></div><div class="check-item"><input type="checkbox" id="r8"><label for="r8">KYC records available</label></div></div>
+
+          <div class="sec-head"><div class="sec-num" style="color:var(--accent);">!</div><div><div class="sec-title">LPG-Specific Safety Status</div></div></div>
+          <div class="status-row"><div class="status-badge"><span class="dot"></span><span>No Smoking / No Mobile signage displayed</span></div><div class="status-badge"><span class="dot"></span><span>Fire extinguisher monthly check up to date</span></div><div class="status-badge"><span class="dot"></span><span>Hydrostatic test record verified</span></div><div class="status-badge"><span class="dot"></span><span>Valve protection caps intact</span></div><div class="status-badge"><span class="dot"></span><span>Flameproof fittings compliant</span></div><div class="status-badge"><span class="dot"></span><span>Leak detection checklist maintained</span></div></div>
         </div>
-        <div class="sign-block">
-          <div class="sign-block-label">Date of Inspection</div>
-          <div class="sign-line"></div>
-        </div>
-        <div class="sign-block">
-          <div class="sign-block-label">Official Stamp</div>
-          <div class="sign-line"></div>
+        <div class="page-spacer"></div>
+        <div class="sign-row">
+          <div class="sign-block" style="flex:2;"><div class="sign-block-label">Inspecting Officer — Name & Designation</div><div class="sign-line"></div></div>
+          <div class="sign-block"><div class="sign-block-label">Signature</div><div class="sign-line"></div></div>
+          <div class="sign-block"><div class="sign-block-label">Date of Inspection</div><div class="sign-line"></div></div>
+          <div class="sign-block"><div class="sign-block-label">Official Stamp</div><div class="sign-line"></div></div>
         </div>
       </div>
-    </div><!-- /pp3 -->
+    </div>
 
-    </div><!-- /card-body -->
-
-    <!-- FOOTER -->
     <div class="card-footer">
       <span class="footer-note">Fire NOC + Legal Metrology · O-ring check · EC Act format · LPG Order 2000</span>
       <span class="footer-mark">LPG Inspection</span>
     </div>
+  </div>
 
-  </div><!-- /main-card -->
-
-  <!-- BOTTOM NAV -->
   <nav class="nav-strip" style="margin-top: 1.5rem;">
     <a href="/formats/petrolpumpchecklist.html" class="nav-item">⛽ Petrol Pump</a>
     <a href="/formats/lpgchecklist.html" class="nav-item active">🔥 LPG Checklist</a>
     <a href="/formats/fpschecklist.html" class="nav-item">🍚 FPS Checklist</a>
     <a href="/formats/ppcchecklist.html" class="nav-item">🌾 PPC Verification</a>
   </nav>
-
-</div><!-- /page-wrap -->
+</div>
 
 <script>
-  // Print
   document.getElementById('printBtn')?.addEventListener('click', () => window.print());
-
-  // Share dropdown toggle
   const dropdown = document.getElementById('shareDropdown');
-  document.getElementById('shareToggle')?.addEventListener('click', function(e) {
-    e.stopPropagation();
-    dropdown.classList.toggle('open');
-  });
+  document.getElementById('shareToggle')?.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('open'); });
   document.addEventListener('click', () => dropdown?.classList.remove('open'));
-
-  // Share text
-  function getShareText() {
-    return encodeURIComponent(
-      '📋 *LPG Distributor Inspection Report*\n' +
-      '🔗 EC Act · LPG Order 2000\n' +
-      '✅ Safety Integrated (Fire NOC + Legal Metrology)\n\n' +
-      window.location.href
-    );
-  }
-
-  document.getElementById('btnWa')?.addEventListener('click', function(e) {
-    e.preventDefault();
-    dropdown.classList.remove('open');
-    window.open('https://wa.me/?text=' + getShareText(), '_blank', 'noopener');
-  });
-
-  document.getElementById('btnTg')?.addEventListener('click', function(e) {
-    e.preventDefault();
-    dropdown.classList.remove('open');
-    window.open(
-      'https://t.me/share/url?url=' + encodeURIComponent(window.location.href) +
-      '&text=' + encodeURIComponent('📋 LPG Distributor Inspection Report\n✅ EC Act · LPG Order 2000'),
-      '_blank', 'noopener'
-    );
-  });
+  function getShareText() { return encodeURIComponent('📋 *LPG Distributor Inspection Report*\n🔗 EC Act · LPG Order 2000\n✅ Safety Integrated (Fire NOC + Legal Metrology)\n\n' + window.location.href); }
+  document.getElementById('btnWa')?.addEventListener('click', (e) => { e.preventDefault(); dropdown.classList.remove('open'); window.open('https://wa.me/?text=' + getShareText(), '_blank'); });
+  document.getElementById('btnTg')?.addEventListener('click', (e) => { e.preventDefault(); dropdown.classList.remove('open'); window.open('https://t.me/share/url?url=' + encodeURIComponent(window.location.href) + '&text=' + encodeURIComponent('📋 LPG Distributor Inspection Report\n✅ EC Act · LPG Order 2000'), '_blank'); });
 </script>
 </body>
 </html>
