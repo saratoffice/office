@@ -93,35 +93,115 @@
       padding: 0.2rem 0.7rem; border-radius: 3px;
     }
 
-    /* MASTHEAD ACTIONS */
-    .masthead-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-
-    /* Group for WA + TG side by side (below each other on mobile but horizontal by default) */
-    .share-group {
+    /* MASTHEAD ACTIONS - SEPARATE SHARE DROPDOWN & PRINT BUTTON (UNMERGED) */
+    .masthead-actions {
       display: flex;
-      gap: 8px;
       align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
     }
-    .share-btn {
-      font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
-      letter-spacing: 0.08em; text-transform: uppercase; padding: 0.5rem 1rem;
-      border-radius: 4px; cursor: pointer; background: transparent;
-      border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.85);
-      transition: 0.15s; display: inline-flex; align-items: center; gap: 6px;
+
+    /* SHARE DROPDOWN (WhatsApp + Telegram inside dropdown) */
+    .share-dropdown {
+      position: relative;
+    }
+    .share-toggle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.2rem;
+      border-radius: 4px;
+      cursor: pointer;
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.85);
+      transition: 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .share-toggle:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.6);
+      color: #fff;
+    }
+    .share-toggle .chevron {
+      width: 11px;
+      height: 11px;
+      transition: transform 0.2s;
+    }
+    .share-dropdown.open .share-toggle .chevron {
+      transform: rotate(180deg);
+    }
+    .share-menu {
+      position: absolute;
+      top: calc(100% + 7px);
+      right: 0;
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      min-width: 170px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: opacity 0.18s, transform 0.18s, visibility 0.18s;
+      z-index: 200;
+    }
+    .share-dropdown.open .share-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .share-menu a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.7rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink-mid);
       text-decoration: none;
+      transition: background 0.12s;
     }
-    .share-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); color: #fff; }
-    .share-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
-    .icon-wa path, .icon-tg path { fill: currentColor; }
-    
-    .print-btn {
-      font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
-      letter-spacing: 0.08em; text-transform: uppercase; padding: 0.5rem 1.2rem;
-      border-radius: 4px; cursor: pointer; background: transparent;
-      border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.85);
+    .share-menu a:hover {
+      background: rgba(13,27,42,0.05);
+    }
+    .share-menu a svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+    .share-menu a:first-child {
+      border-bottom: 1px solid var(--rule);
+    }
+    .icon-wa { color: #25D366; }
+    .icon-tg { color: #229ED9; }
+
+    /* STANDALONE PRINT BUTTON (SEPARATE) */
+    .print-btn-standalone {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.2rem;
+      border-radius: 4px;
+      cursor: pointer;
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.85);
       transition: 0.15s;
     }
-    .print-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); color: #fff; }
+    .print-btn-standalone:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.6);
+      color: #fff;
+    }
 
     /* CARD BODY */
     .card-body { padding: 0 2.5rem 2rem; }
@@ -185,7 +265,7 @@
 
     .tbl-gap { margin-top: 1rem; }
 
-    /* ========== PRINT & SHARE: DEEP BLACK TEXT FOR ALL ELEMENTS ========== */
+    /* ========== PRINT: DEEP BLACK TEXT FOR ALL ELEMENTS ========== */
     @media print {
       @page { size: A4; margin: 0.5in 0.4in; }
       body { background: white; padding: 0; }
@@ -215,10 +295,8 @@
       table.data-tbl td, table.data-tbl th { border: 1px solid #333 !important; background: #fff !important; }
       .details-grid, .check-grid, .tbl-wrap { border-color: #333 !important; }
     }
-
-    /* Additional class for share screenshot simulation — deep black via JS injected style? Actually share uses text, but for visual consistency, we also add a share-all-black class optionally. However requirement is that "on Share or print the output copy text should be deep black". For print we already enforce; for share (WhatsApp/Telegram) we are sharing plain text with proper formatting — it's inherently black in chat apps. For the actual page copy or any future "Copy as text" we also ensure high contrast. */
     
-    /* Responsive fine-tune */
+    /* Responsive */
     @media (max-width: 700px) {
       .card-body { padding: 0 1rem 1.5rem; }
       .masthead { padding: 1.4rem 1.2rem 1.2rem; }
@@ -227,8 +305,9 @@
       .check-grid { grid-template-columns: 1fr; }
       .check-item { border-right: none; }
       .check-item:nth-last-child(2) { border-bottom: 1px solid var(--rule); }
-      .share-group { gap: 6px; }
-      .share-btn { padding: 0.4rem 0.9rem; font-size: 0.7rem; }
+      .masthead-actions { gap: 8px; }
+      .share-toggle, .print-btn-standalone { padding: 0.4rem 1rem; font-size: 0.7rem; }
+      .share-menu { min-width: 150px; right: 0; left: auto; }
     }
   </style>
 </head>
@@ -256,20 +335,28 @@
           </div>
         </div>
 
+        <!-- ACTIONS: SHARE DROPDOWN + SEPARATE PRINT BUTTON (UNMERGED) -->
         <div class="masthead-actions">
-          <!-- WA + TG buttons: side-by-side, both visible below each other on mobile but here they stay horizontal group -->
-          <div class="share-group">
-            <a id="btnWa" href="#" class="share-btn" target="_blank" rel="noopener">
-              <svg class="icon-wa" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.096.541 4.064 1.487 5.779L.057 23.057a.75.75 0 00.906.942l5.424-1.417A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.713 9.713 0 01-4.952-1.352l-.355-.21-3.676.96.983-3.584-.23-.368A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
-              WhatsApp
-            </a>
-            <a id="btnTg" href="#" class="share-btn" target="_blank" rel="noopener">
-              <svg class="icon-tg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-              Telegram
-            </a>
+          <!-- Share Dropdown (contains WhatsApp + Telegram) -->
+          <div class="share-dropdown" id="shareDropdown">
+            <button class="share-toggle" id="shareToggle" aria-expanded="false" aria-haspopup="true">
+              ↗ Share
+              <svg class="chevron" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 1l4 4 4-4"/></svg>
+            </button>
+            <div class="share-menu" id="shareMenu" role="menu">
+              <a id="btnWa" href="#" target="_blank" rel="noopener" role="menuitem">
+                <svg class="icon-wa" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.096.541 4.064 1.487 5.779L.057 23.057a.75.75 0 00.906.942l5.424-1.417A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.713 9.713 0 01-4.952-1.352l-.355-.21-3.676.96.983-3.584-.23-.368A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+                WhatsApp
+              </a>
+              <a id="btnTg" href="#" target="_blank" rel="noopener" role="menuitem">
+                <svg class="icon-tg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                Telegram
+              </a>
+            </div>
           </div>
-          <!-- Standalone Print button -->
-          <button class="print-btn" id="printBtn">⎙ Print</button>
+
+          <!-- Standalone Print Button (separate, not merged) -->
+          <button class="print-btn-standalone" id="printBtn">⎙ Print</button>
         </div>
       </div>
     </div>
@@ -282,8 +369,8 @@
         <div class="sec-title">Basic Details of Distributor</div>
       </div>
       <div class="details-grid">
-        <div class="detail-row"><span class="d-label">Distributor Name</span><span class="d-line" contenteditable="false" data-field="distributor"></span></div>
-        <div class="detail-row"><span class="d-label">Proprietor / Manager</span><span class="d-line" contenteditable="false"></span></div>
+        <div class="detail-row"><span class="d-label">Distributor Name</span><span class="d-line" contenteditable="false"></span></div>
+        <div class="detail-row"><span class="d-label">Proprietor / Manager</span><span class="d-line"></span></div>
         <div class="detail-row"><span class="d-label">Address</span><span class="d-line"></span></div>
         <div class="detail-row"><span class="d-label">Block Name</span><span class="d-line"></span></div>
         <div class="detail-row"><span class="d-label">Oil Marketing Company</span><span class="d-line"></span></div>
@@ -292,7 +379,7 @@
         <div class="detail-row"><span class="d-label">Date & Time of Inspection</span><span class="d-line"></span></div>
       </div>
 
-      <!-- 02 Stock Verification -->
+      <!-- 02 -->
       <div class="sec-head">
         <div class="sec-num">02</div>
         <div class="sec-title">Stock Verification of LPG Cylinders</div>
@@ -331,7 +418,7 @@
       <div class="check-item"><input type="checkbox" id="c6"><label for="c6">Active commercial count verified</label></div></div>
 
       <!-- 04 Refill -->
-      <div class="sec-head"><div class="sec-num">04</div><div class="sec-title">Refill Cylinder Supply — Last 3 Months</div></div>
+      <div class="sec-head"><div class="sec-num">04</div><div class="sec-title">Refill Cylinder Supply — Last 3 Months, Category Wise</div></div>
       <div class="tbl-wrap"><table class="data-tbl"><thead><tr><th rowspan="2">Month</th><th colspan="2">Domestic Cylinders Received</th><th colspan="2">Commercial Cylinders Received</th></tr><tr><th>14.2 Kg</th><th>5 Kg</th><th>19 Kg</th><th>Other</th></tr></thead>
       <tbody><tr><td>Month 1</td><td></td><td></td><td></td><td></td></tr><tr><td>Month 2</td><td></td><td></td><td></td><td></td></tr><tr><td>Month 3</td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
 
@@ -399,8 +486,25 @@
 </div>
 
 <script>
+  // Share dropdown logic
+  const dropdown = document.getElementById('shareDropdown');
+  const toggle = document.getElementById('shareToggle');
+  toggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = dropdown.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target)) {
+      dropdown.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // Print button (standalone)
   document.getElementById('printBtn').addEventListener('click', () => window.print());
 
+  // Build share text with deep black readiness (rich text for WhatsApp)
   function getShareText() {
     const distElem = document.querySelectorAll('.d-line')[0];
     const dist = distElem ? (distElem.innerText || distElem.textContent).trim() : '';
@@ -416,17 +520,14 @@
     );
   }
 
-  const btnWa = document.getElementById('btnWa');
-  const btnTg = document.getElementById('btnTg');
-  
-  btnWa.addEventListener('click', function(e) {
+  document.getElementById('btnWa').addEventListener('click', function(e) {
     e.preventDefault();
     window.open('https://wa.me/?text=' + getShareText(), '_blank', 'noopener');
   });
   
-  btnTg.addEventListener('click', function(e) {
+  document.getElementById('btnTg').addEventListener('click', function(e) {
     e.preventDefault();
-    const shareMsg = '📋 LPG Distributor Inspection Report%0A✅ EC Act · LPG Order 2000 · Safety Integrated%0A%0A' + encodeURIComponent(window.location.href);
+    const shareMsg = '📋 LPG Distributor Inspection Report%0A✅ EC Act · LPG Order 2000 · Safety Integrated%0A%0A';
     window.open('https://t.me/share/url?url=' + encodeURIComponent(window.location.href) + '&text=' + encodeURIComponent('📋 LPG Distributor Inspection Report\n✅ EC Act · LPG Order 2000 · Safety Integrated'), '_blank', 'noopener');
   });
 </script>
