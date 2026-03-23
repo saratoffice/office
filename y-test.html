@@ -91,7 +91,6 @@
       position: relative;
       overflow: hidden;
     }
-    
     .masthead::before {
       content: '';
       position: absolute;
@@ -512,140 +511,79 @@
     .btn-print { background: transparent; border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.85); }
     .btn-print:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); color: #fff; }
 
-    /* print-page wrapper: transparent on screen */
-    .print-page { display: block; }
+    /* print-page wrapper: invisible on screen, active only in print */
+    .print-page { display: contents; }
     .page-spacer { display: none; }
 
-    /* === PRINT – EXACTLY 3 A4 PAGES === */
+    /* === PRINT – FORCED 3 FULL PAGES A4 === */
     @media print {
-      /* ---- page setup ---- */
-      @page { size: A4 portrait; margin: 10mm 10mm; }
+      @page { size: A4 portrait; margin: 0.38in 0.36in; }
 
-      /* ---- reset everything that causes phantom pages ---- */
-      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      html { height: auto !important; }
-      body {
-        background: white !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        height: auto !important;
-        min-height: unset !important;
+      html, body { height: auto; background: white !important; padding: 0; margin: 0; }
+      .nav-strip, .share-btns { display: none !important; }
+      .page-wrap { max-width: 100%; padding: 0; margin: 0; }
+      .main-card { box-shadow: none; border: none; border-radius: 0; overflow: visible; }
+      .masthead { padding: 0.45rem 0.7rem 0.4rem; }
+      .masthead::before, .masthead::after { display: none; }
+      .masthead-title { font-size: 1rem; white-space: nowrap; }
+      .masthead-subtitle { font-size: 0.55rem; margin-top: 0.15rem; gap: 6px; }
+      .masthead-subtitle span { padding: 0.1rem 0.4rem; }
+      .card-body { padding: 0; }
+      .card-footer { padding: 0.25rem 0.7rem; }
+      .footer-note { font-size: 0.55rem; }
+      .footer-mark { font-size: 0.68rem; }
+
+      /* ── print-page: each fills exactly one A4 page ── */
+      .print-page {
+        display: flex !important;
+        flex-direction: column;
+        height: calc(297mm - 0.76in);
+        overflow: hidden;
+        page-break-after: always;
+        break-after: page;
       }
+      .print-page:last-child { page-break-after: auto; break-after: auto; }
+      .print-page .masthead { flex-shrink: 0; }
 
-      /* ---- hide non-print elements ---- */
-      .nav-strip,
-      .share-btns,
-      .card-footer { display: none !important; }
+      /* spacer fills leftover vertical space → no blank gap */
+      .page-spacer { display: block !important; flex: 1; min-height: 0; }
+      .sec-head { margin: 0.3rem 0 0.22rem; padding: 0 0.7rem 0.18rem; border-bottom-width: 1px; }
+      .sec-num  { font-size: 0.9rem; min-width: 22px; }
+      .sec-title { font-size: 0.78rem; }
+      .sec-tag  { font-size: 0.55rem; padding: 0.1rem 0.4rem; }
 
-      /* ---- strip decorative shadows/borders ---- */
-      .page-wrap { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
-      .main-card {
-        box-shadow: none !important;
-        border: none !important;
-        border-radius: 0 !important;
-        overflow: visible !important;
-      }
+      /* detail rows */
+      .details-grid { border-radius: 0; }
+      .detail-row { padding: 0.22rem 0.7rem; }
+      .d-label { font-size: 0.64rem; min-width: 110px; }
+      .d-line { min-height: 14px; }
 
-      /* ---- masthead compact ---- */
-      .masthead {
-        padding: 4mm 5mm 3mm !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-      .masthead::before, .masthead::after { display: none !important; }
-      .masthead-inner { gap: 4mm !important; }
-      .masthead-title { font-size: 11pt !important; white-space: nowrap !important; }
-      .masthead-subtitle { font-size: 6pt !important; margin-top: 1mm !important; gap: 3mm !important; }
-      .masthead-subtitle span { padding: 0.5mm 2mm !important; }
+      /* tables */
+      .tbl-wrap { border-radius: 0; margin: 0; }
+      .tbl-wrap + .tbl-wrap { margin-top: 0.3rem; }
+      .tbl-title { padding: 0.22rem 0.7rem; font-size: 0.6rem; }
+      table.data-tbl th { padding: 0.22rem 0.25rem; font-size: 0.62rem; }
+      table.data-tbl td { padding: 0.22rem 0.25rem; font-size: 0.64rem; }
 
-      /* ---- card body ---- */
-      .card-body { padding: 0 !important; }
+      /* checklist */
+      .check-grid { border-radius: 0; }
+      .check-item { padding: 0.22rem 0.7rem; }
+      .check-item label { font-size: 0.66rem; line-height: 1.25; }
+      .check-item input[type="checkbox"] { width: 11px; height: 11px; margin-top: 1px; }
 
-      /* ---- section heads ---- */
-      .sec-head {
-        margin: 3mm 0 1.5mm !important;
-        padding: 0 5mm 1mm !important;
-        border-bottom-width: 0.5pt !important;
-        gap: 4mm !important;
-      }
-      .sec-num  { font-size: 9pt !important; min-width: 14px !important; }
-      .sec-title { font-size: 8.5pt !important; }
-      .sec-tag  { font-size: 6pt !important; padding: 0.3mm 2mm !important; }
+      /* safety group labels */
+      .safety-group-label { padding: 0.18rem 0.7rem; font-size: 0.6rem; }
 
-      /* ---- detail grids ---- */
-      .details-grid { border-radius: 0 !important; margin-bottom: 0 !important; }
-      .detail-row { padding: 1.2mm 5mm !important; }
-      .d-label { font-size: 7pt !important; min-width: 26mm !important; }
-      .d-line { min-height: 3mm !important; }
-      .safety-group-label { padding: 0.8mm 5mm !important; font-size: 6.5pt !important; }
+      /* status row */
+      .status-row { padding: 0.35rem 0.7rem; margin: 0; border-radius: 0; gap: 5px 10px; }
+      .status-badge { font-size: 0.6rem; }
+      .status-badge .dot { width: 5px; height: 5px; }
 
-      /* ---- tables ---- */
-      .tbl-wrap { border-radius: 0 !important; margin: 0 !important; }
-      .tbl-wrap + .tbl-wrap,
-      .tbl-wrap.tbl-gap { margin-top: 1.5mm !important; }
-      .tbl-title { padding: 1mm 5mm !important; font-size: 6pt !important; }
-      table.data-tbl th { padding: 1mm 1.5mm !important; font-size: 6.5pt !important; }
-      table.data-tbl td { padding: 1mm 1.5mm !important; font-size: 7pt !important; min-width: unset !important; }
-      table.data-tbl td:first-child { min-width: unset !important; }
-
-      /* ---- checklists ---- */
-      .check-grid { border-radius: 0 !important; }
-      .check-item { padding: 1.2mm 5mm !important; }
-      .check-item label { font-size: 7pt !important; line-height: 1.3 !important; }
-      .check-item input[type="checkbox"] { width: 9px !important; height: 9px !important; }
-
-      /* ---- status row ---- */
-      .status-row {
-        padding: 2mm 5mm !important;
-        margin: 0 !important;
-        border-radius: 0 !important;
-        gap: 2mm 4mm !important;
-      }
-      .status-badge { font-size: 6.5pt !important; }
-      .status-badge .dot { width: 4px !important; height: 4px !important; }
-
-      /* ---- sign row ---- */
-      .sign-row {
-        margin-top: 4mm !important;
-        padding-top: 3mm !important;
-        padding-left: 5mm !important;
-        padding-right: 5mm !important;
-        gap: 3mm !important;
-        flex-wrap: nowrap !important;
-      }
-      .sign-block { min-width: 0 !important; flex: 1 !important; }
-      .sign-block-label { font-size: 6pt !important; }
-      .sign-line { min-height: 6mm !important; }
-
-      /* ---- PAGE BREAK CONTROL ---- */
-      /* Never break inside these blocks */
-      .details-grid,
-      .tbl-wrap,
-      .check-grid,
-      .status-row,
-      .sign-row {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-      }
-
-      /* Force page 2 start before section 05 */
-      #pp2 {
-        page-break-before: always !important;
-        break-before: page !important;
-      }
-
-      /* Force page 3 start before section 09 */
-      #pp3 {
-        page-break-before: always !important;
-        break-before: page !important;
-      }
-
-      /* spacer: invisible, zero size in print */
-      .page-spacer { display: none !important; }
-
-      /* prevent extra blank page from footer/nav */
-      .card-footer,
-      .bottom-nav { display: none !important; }
+      /* sign row */
+      .sign-row { margin-top: 0; padding: 0.4rem 0.7rem 0.2rem; border-top-width: 1px; gap: 0.5rem; flex-wrap: nowrap; }
+      .sign-block { min-width: 0; flex: 1; }
+      .sign-block-label { font-size: 0.55rem; }
+      .sign-line { min-height: 22px; }
     }
 
     /* === RESPONSIVE === */
@@ -721,9 +659,9 @@
     <!-- BODY -->
     <div class="card-body">
 
-    <!-- ══════════ PRINT PAGE 1: Masthead + Basic Details + Stock + Consumer + Refill ══════════ -->
+    <!-- ══════════ PRINT PAGE 1: Basic Details + Stock + Consumer + Refill ══════════ -->
     <div class="print-page" id="pp1">
-
+      <div>
         <div class="sec-head" data-sec="01"><div class="sec-num">01</div><div><div class="sec-title">Basic Details of Distributor</div></div></div>
         <div class="details-grid">
           <div class="detail-row"><span class="d-label">Distributor Name</span><span class="d-line"></span></div>
@@ -794,12 +732,13 @@
             </tbody>
           </table>
         </div>
-
+      </div>
+      <div class="page-spacer"></div>
     </div><!-- /pp1 -->
 
     <!-- ══════════ PRINT PAGE 2: Safety + Valve + Delivery + Godown ══════════ -->
     <div class="print-page" id="pp2">
-
+      <div>
         <div class="sec-head" data-sec="05"><div class="sec-num">05</div><div><div class="sec-title">Safety & Certificate Compliance</div></div><div class="sec-tag">Fire + Legal Metrology</div></div>
         <div class="details-grid">
           <div class="safety-group-label">🔥 Fire Safety Certificate & Inspection</div>
@@ -846,12 +785,13 @@
           <div class="check-item"><input type="checkbox" id="g7"><label for="g7">Flameproof electrical fittings</label></div>
           <div class="check-item"><input type="checkbox" id="g8"><label for="g8">Hydrostatic test record (cylinders)</label></div>
         </div>
-
+      </div>
+      <div class="page-spacer"></div>
     </div><!-- /pp2 -->
 
     <!-- ══════════ PRINT PAGE 3: Records + Critical Status + Signatures ══════════ -->
     <div class="print-page" id="pp3">
-
+      <div>
         <div class="sec-head" data-sec="09"><div class="sec-num">09</div><div><div class="sec-title">Records Verified</div></div></div>
         <div class="check-grid">
           <div class="check-item"><input type="checkbox" id="r1"><label for="r1">Stock Register</label></div>
@@ -873,26 +813,29 @@
           <div class="status-badge"><span class="dot"></span><span>Flameproof fittings <strong>compliant</strong></span></div>
           <div class="status-badge"><span class="dot"></span><span>Leak detection checklist <strong>maintained</strong></span></div>
         </div>
+      </div>
 
-        <div class="sign-row">
-          <div class="sign-block" style="flex:2;max-width:340px;">
-            <div class="sign-block-label">Inspecting Officer — Name & Designation</div>
-            <div class="sign-line"></div>
-          </div>
-          <div class="sign-block">
-            <div class="sign-block-label">Signature</div>
-            <div class="sign-line"></div>
-          </div>
-          <div class="sign-block">
-            <div class="sign-block-label">Date of Inspection</div>
-            <div class="sign-line"></div>
-          </div>
-          <div class="sign-block">
-            <div class="sign-block-label">Official Stamp</div>
-            <div class="sign-line"></div>
-          </div>
+      <div class="page-spacer"></div>
+
+      <!-- Signature pinned to page bottom by flexbox -->
+      <div class="sign-row">
+        <div class="sign-block" style="flex:2;max-width:340px;">
+          <div class="sign-block-label">Inspecting Officer — Name & Designation</div>
+          <div class="sign-line"></div>
         </div>
-
+        <div class="sign-block">
+          <div class="sign-block-label">Signature</div>
+          <div class="sign-line"></div>
+        </div>
+        <div class="sign-block">
+          <div class="sign-block-label">Date of Inspection</div>
+          <div class="sign-line"></div>
+        </div>
+        <div class="sign-block">
+          <div class="sign-block-label">Official Stamp</div>
+          <div class="sign-line"></div>
+        </div>
+      </div>
     </div><!-- /pp3 -->
 
     </div><!-- /card-body -->
@@ -906,7 +849,7 @@
   </div><!-- /main-card -->
 
   <!-- BOTTOM NAV -->
-  <nav class="nav-strip bottom-nav" style="margin-top: 1.5rem;">
+  <nav class="nav-strip" style="margin-top: 1.5rem;">
     <a href="/formats/petrolpumpchecklist.html" class="nav-item">⛽ Petrol Pump</a>
     <a href="/formats/lpgchecklist.html" class="nav-item active">🔥 LPG Checklist</a>
     <a href="/formats/fpschecklist.html" class="nav-item">🍚 FPS Checklist</a>
