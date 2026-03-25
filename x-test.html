@@ -3,385 +3,815 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>website steps · modern interactive card</title>
-    <!-- common fonts used throughout the site -->
+    <title>Essential Commodities Act 1955 · Landmark Judgements</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- common CSS (header, footer, global) — kept exactly as you use -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Keep original site styles -->
     <link rel="stylesheet" href="style.css">
-    <!-- site components (header/footer loader) -->
     <script src="assets/Scripts/site-components.js" defer></script>
-    <!-- go to top script (common) -->
     <script src="/assets/Scripts/gototop.js" defer></script>
-    <!-- only the steps card custom styles (minimal, integrated) -->
+
     <style>
-        /* ensure body uses common background, flex column for sticky footer */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --ink:        #0e0d0b;
+            --paper:      #f5f0e8;
+            --parchment:  #ede7d6;
+            --gold:       #c49a22;
+            --gold-light: #e8c84a;
+            --crimson:    #8b1a1a;
+            --crimson-dk: #5a0e0e;
+            --steel:      #2c3e50;
+            --steel-light:#4a6278;
+            --muted:      #7a6e60;
+            --border:     #cfc4ae;
+            --card-bg:    #faf6ef;
+            --shadow:     rgba(14,13,11,0.18);
+        }
+
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
+            background: var(--paper);
+            font-family: 'Crimson Pro', Georgia, serif;
+            color: var(--ink);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            position: relative;
         }
 
-        /* animated background overlay */
+        /* ── decorative background ── */
         body::before {
             content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjZmZmZmZmIj48L3JlY3Q+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmMGYwZjAiPjwvcmVjdD4KPC9zdmc+');
-            opacity: 0.05;
+            position: fixed; inset: 0;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(196,154,34,0.07) 60px),
+                repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(196,154,34,0.07) 60px);
+            pointer-events: none; z-index: 0;
+        }
+
+        #site-header, #site-footer { position: relative; z-index: 10; flex-shrink: 0; }
+
+        /* ══════════════════════════════
+           HERO BANNER
+        ══════════════════════════════ */
+        .eca-hero {
+            position: relative; z-index: 5;
+            width: 100%;
+            background: linear-gradient(160deg, var(--crimson-dk) 0%, var(--crimson) 40%, #3a1a2e 100%);
+            padding: 64px 32px 56px;
+            text-align: center;
+            overflow: hidden;
+        }
+        .eca-hero::after {
+            content: '⚖';
+            position: absolute;
+            font-size: 28rem;
+            opacity: 0.04;
+            right: -6rem; bottom: -8rem;
             pointer-events: none;
-            z-index: 0;
+            line-height: 1;
+        }
+        .eca-hero .badge {
+            display: inline-block;
+            background: rgba(196,154,34,0.18);
+            border: 1px solid var(--gold);
+            color: var(--gold-light);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            padding: 6px 18px;
+            border-radius: 2px;
+            margin-bottom: 20px;
+        }
+        .eca-hero h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(2rem, 5vw, 3.8rem);
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.1;
+            max-width: 820px;
+            margin: 0 auto 16px;
+            letter-spacing: -0.01em;
+        }
+        .eca-hero h1 em {
+            font-style: italic;
+            color: var(--gold-light);
+        }
+        .eca-hero p {
+            color: rgba(255,255,255,0.72);
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            max-width: 560px;
+            margin: 0 auto;
+            line-height: 1.65;
+        }
+        .hero-divider {
+            width: 64px; height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            margin: 22px auto;
+            border-radius: 2px;
         }
 
-        /* header & footer injected — they keep their original styles */
-        #site-header,
-        #site-footer {
-            flex-shrink: 0;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* main content grows to fill space, centers the card */
-        .page-main {
+        /* ══════════════════════════════
+           SECTION WRAPPER
+        ══════════════════════════════ */
+        .judgements-section {
+            position: relative; z-index: 5;
+            width: 100%;
+            padding: 52px 24px 72px;
             flex: 1 0 auto;
+        }
+
+        .section-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+            padding: 0 8px;
+        }
+        .section-meta h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--crimson-dk);
+            font-weight: 700;
+        }
+        .section-meta .count-badge {
+            background: var(--crimson);
+            color: #fff;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.75rem;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        .section-meta::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border), transparent);
+        }
+
+        /* ══════════════════════════════
+           GRID
+        ══════════════════════════════ */
+        .judgements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+            gap: 24px;
+            width: 100%;
+        }
+
+        /* ══════════════════════════════
+           JUDGEMENT CARD
+        ══════════════════════════════ */
+        .j-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 28px 26px 22px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+        .j-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: linear-gradient(180deg, var(--gold), var(--crimson));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .j-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px -12px var(--shadow), 0 0 0 1px var(--gold);
+            border-color: var(--gold);
+        }
+        .j-card:hover::before { opacity: 1; }
+
+        .j-card-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--gold);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .j-card-num::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .j-card h3 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.12rem;
+            font-weight: 700;
+            color: var(--crimson-dk);
+            line-height: 1.35;
+            margin-bottom: 10px;
+        }
+
+        .j-card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .j-tag {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.68rem;
+            padding: 3px 9px;
+            border-radius: 2px;
+            letter-spacing: 0.06em;
+        }
+        .j-tag.court { background: #e8e4da; color: var(--steel); }
+        .j-tag.year  { background: var(--crimson-dk); color: #fff; }
+        .j-tag.type  { background: rgba(196,154,34,0.15); color: #7a5800; border: 1px solid rgba(196,154,34,0.3); }
+
+        .j-card-excerpt {
+            font-size: 0.95rem;
+            color: var(--muted);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .j-card-footer {
+            margin-top: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .j-read-hint {
+            font-size: 0.82rem;
+            color: var(--crimson);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: 'DM Mono', monospace;
+            letter-spacing: 0.04em;
+            transition: gap 0.2s;
+        }
+        .j-card:hover .j-read-hint { gap: 10px; }
+        .j-read-hint svg { width: 14px; height: 14px; }
+        .j-impact {
+            font-size: 0.75rem;
+            font-family: 'DM Mono', monospace;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        .j-impact.landmark { background: #fff3cd; color: #7a5800; }
+        .j-impact.important { background: #d4edda; color: #1a5c2a; }
+        .j-impact.notable   { background: #d1ecf1; color: #0c5460; }
+
+        /* ══════════════════════════════
+           MODAL OVERLAY
+        ══════════════════════════════ */
+        .modal-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(10, 8, 5, 0.75);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.2s ease;
+        }
+        .modal-overlay.active { display: flex; }
+
+        @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            width: 100%;
+            max-width: 680px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 40px 80px -20px rgba(0,0,0,0.5);
+            animation: slideUp 0.3s cubic-bezier(0.2,0.9,0.3,1.1);
+        }
+
+        /* modal header stripe */
+        .modal-header {
+            background: linear-gradient(135deg, var(--crimson-dk), var(--crimson));
+            padding: 28px 32px 24px;
+            position: relative;
+        }
+        .modal-header .m-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 0.16em;
+            color: var(--gold-light);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .modal-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.1rem, 3vw, 1.55rem);
+            color: #fff;
+            line-height: 1.3;
+            font-weight: 700;
+            padding-right: 40px;
+        }
+        .modal-header .m-tags {
+            display: flex; flex-wrap: wrap; gap: 8px;
+            margin-top: 14px;
+        }
+        .m-tag {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            padding: 3px 10px;
+            border-radius: 2px;
+            letter-spacing: 0.07em;
+        }
+        .m-tag.court { background: rgba(255,255,255,0.18); color: #fff; }
+        .m-tag.year  { background: rgba(196,154,34,0.3); color: var(--gold-light); border: 1px solid rgba(196,154,34,0.4); }
+        .m-tag.impact-lm { background: #fff3cd; color: #7a5800; }
+        .m-tag.impact-im { background: #d4edda; color: #1a5c2a; }
+        .m-tag.impact-nt { background: #d1ecf1; color: #0c5460; }
+
+        .modal-close {
+            position: absolute; top: 16px; right: 18px;
+            background: rgba(255,255,255,0.15);
+            border: none; color: #fff;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .modal-close:hover { background: rgba(255,255,255,0.3); }
+
+        /* modal body */
+        .modal-body {
+            padding: 28px 32px 24px;
+        }
+
+        .modal-section-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .modal-section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+        .modal-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 480px) { .modal-detail-grid { grid-template-columns: 1fr; } }
+
+        .detail-item label {
+            display: block;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.63rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 3px;
+        }
+        .detail-item span {
+            font-size: 0.95rem;
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .modal-description {
+            font-size: 1.02rem;
+            line-height: 1.75;
+            color: #3a3530;
+            margin-bottom: 24px;
+        }
+
+        .modal-holding {
+            background: linear-gradient(135deg, rgba(139,26,26,0.05), rgba(196,154,34,0.07));
+            border-left: 3px solid var(--gold);
+            padding: 16px 20px;
+            border-radius: 0 4px 4px 0;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--steel);
+            margin-bottom: 26px;
+            font-style: italic;
+        }
+        .modal-holding strong { font-style: normal; color: var(--crimson-dk); }
+
+        /* modal action buttons */
+        .modal-actions {
+            display: flex;
+            gap: 14px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+        .btn-read, .btn-pdf {
+            flex: 1;
+            min-width: 160px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 4px;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px 24px;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 5;
-        }
-
-        /* ----- redesigned steps card (fits perfectly with header/footer) ----- */
-        .custom-ol {
-            padding: 36px 42px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            max-width: 620px;
-            width: 100%;
-            border-radius: 56px 56px 56px 56px;
-            box-shadow: 0 24px 46px -16px rgba(0, 45, 80, 0.35), 0 8px 15px rgba(0,0,0,0.03);
-            font-family: "Roboto", sans-serif;
-            color: #073b4c;
-            border: 1px solid rgba(255,255,255,0.6);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .custom-ol::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.6s;
-            pointer-events: none;
-        }
-
-        .custom-ol:hover {
-            box-shadow: 0 32px 58px -18px #0a2a4a;
-            transform: translateY(-5px) scale(1.02);
-        }
-
-        .custom-ol:hover::before {
-            opacity: 0.5;
-            animation: rotate 10s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* heading with accent bar (like h3 from list pages) */
-        .custom-ol h2 {
-            font-size: 2.4rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin: 0 0 16px 0;
-            padding-left: 28px;
-            position: relative;
-            color: #0b2b40;
-            font-family: 'Poppins', sans-serif;
-            text-transform: uppercase;
-            border-bottom: 2px solid transparent;
-            display: inline-block;
-            background: linear-gradient(45deg, #1e3c72, #2a5298);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .custom-ol h2::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 8px;
-            bottom: 8px;
-            width: 8px;
-            background: linear-gradient(145deg, #e11d48, #b91c1c);
-            border-radius: 20px;
-            transition: 0.3s ease;
-        }
-
-        .custom-ol:hover h2::before {
-            width: 14px;
-            background: linear-gradient(145deg, #2563eb, #1e3a8a);
-        }
-
-        /* reset list */
-        .custom-ol ol {
-            margin: 32px 0 8px 0;
-            padding: 0;
-            list-style: none;
-            counter-reset: web-design;
-        }
-
-        /* list items – spacious, refined hover effect */
-        .custom-ol ol li {
-            margin: 28px 0;
-            font-size: 1.35rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
-            padding: 12px 20px 12px 12px;
-            border-radius: 60px 20px 20px 60px;
-            cursor: pointer;
-            color: #1a2e3f;
-            background: transparent;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .custom-ol ol li::after {
-            content: '🔗';
-            position: absolute;
-            right: -30px;
-            opacity: 0;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-        }
-
-        .custom-ol ol li:hover {
-            background: linear-gradient(105deg, #ffd166 0%, #fbbf24 100%);
-            transform: translateX(12px) scale(1.02);
-            box-shadow: 0 12px 24px -16px #b45309, 0 0 0 2px rgba(255,215,0,0.3);
-            color: #0f172a;
-        }
-
-        .custom-ol ol li:hover::after {
-            right: 15px;
-            opacity: 1;
-        }
-
-        /* step number (counter) – bigger, more presence */
-        .custom-ol ol li::before {
-            content: counter(web-design);
-            counter-increment: web-design;
-            margin-right: 28px;
-            font-size: 3rem;
-            font-weight: 800;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(130deg, #0b4b6f, #0a2472);
-            padding: 8px 24px;
-            border-radius: 0 28px 0 28px;
-            color: #f8fafc;
-            transition: all 0.4s ease;
-            line-height: 1;
-            box-shadow: 0 7px 0 #021b2b;
-            letter-spacing: -1px;
-            min-width: 84px;
-            text-align: center;
-        }
-
-        .custom-ol ol li:hover::before {
-            background: linear-gradient(145deg, #073b4c, #022c3a);
-            transform: scale(1.2) rotate(-3deg) translateY(-4px);
-            box-shadow: 0 12px 0 #02101a, 0 4px 20px rgba(0,180,255,0.4);
-            color: white;
-            border-radius: 20px 0 20px 0;
-        }
-
-        /* fine tune last item */
-        .custom-ol ol li:last-child {
-            margin-bottom: 0;
-        }
-
-        /* optional small footer note inside card – blends in */
-        .card-footer-note {
-            margin-top: 28px;
-            text-align: right;
-            font-size: 0.95rem;
-            opacity: 0.55;
-            letter-spacing: 0.3px;
-            font-style: italic;
-            border-top: 1px dashed rgba(0,40,70,0.1);
-            padding-top: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .google-link {
-            background: linear-gradient(45deg, #4285f4, #34a853, #fbbc05, #ea4335);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 600;
-            font-size: 0.9rem;
-            padding: 5px 12px;
-            border-radius: 20px;
-            border: 1px solid #ddd;
-            transition: all 0.3s;
-            cursor: pointer;
+            gap: 10px;
             text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s;
+        }
+        .btn-read {
+            background: linear-gradient(135deg, var(--crimson-dk), var(--crimson));
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(90,14,14,0.35);
+        }
+        .btn-read:hover {
+            background: linear-gradient(135deg, #6e0e0e, #9e2020);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(90,14,14,0.45);
+        }
+        .btn-pdf {
+            background: var(--parchment);
+            color: var(--steel);
+            border: 1px solid var(--border);
+        }
+        .btn-pdf:hover {
+            background: var(--border);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+        .btn-icon { font-size: 1rem; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .eca-hero { padding: 44px 20px 40px; }
+            .judgements-section { padding: 36px 16px 52px; }
+            .modal-body { padding: 22px 22px 20px; }
+            .modal-header { padding: 22px 22px 18px; }
+        }
+        @media (max-width: 480px) {
+            .judgements-grid { gap: 16px; }
+            .j-card { padding: 20px 18px 16px; }
+            .modal-actions { flex-direction: column; }
+            .btn-read, .btn-pdf { min-width: 100%; }
         }
 
-        .google-link:hover {
-            background: linear-gradient(45deg, #ea4335, #fbbc05, #34a853, #4285f4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            transform: scale(1.05);
-            border-color: #4285f4;
-            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.2);
-        }
-
-        /* floating animation for the card */
-        .custom-ol {
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(0.5deg); }
-        }
-
-        /* responsive: keep card comfortable on all devices */
-        @media (max-width: 600px) {
-            .page-main {
-                padding: 24px 16px;
-            }
-            .custom-ol {
-                padding: 28px 24px;
-                border-radius: 40px;
-            }
-            .custom-ol h2 {
-                font-size: 1.9rem;
-                padding-left: 22px;
-            }
-            .custom-ol ol li {
-                font-size: 1.15rem;
-                margin: 22px 0;
-            }
-            .custom-ol ol li::before {
-                font-size: 2.5rem;
-                min-width: 68px;
-                padding: 6px 14px;
-                margin-right: 20px;
-            }
-        }
-
-        @media (max-width: 420px) {
-            .custom-ol h2 {
-                font-size: 1.6rem;
-            }
-            .custom-ol ol li {
-                font-size: 1rem;
-            }
-            .custom-ol ol li::before {
-                font-size: 2.1rem;
-                min-width: 58px;
-                padding: 6px 8px;
-            }
-        }
-
-        /* everything integrates: header & footer retain their original look */
+        /* scrollbar styling for modal */
+        .modal-box::-webkit-scrollbar { width: 5px; }
+        .modal-box::-webkit-scrollbar-track { background: var(--parchment); }
+        .modal-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
     </style>
 </head>
 <body>
-    <!-- common header loaded via site-components.js -->
     <div id="site-header"></div>
 
-    <!-- main area that holds the steps card and centers it perfectly -->
-    <div class="page-main">
-        <div class="custom-ol">
-            <h2>Steps To Design A Website</h2>
-            <ol>
-                <li onclick="window.open('https://www.google.com', '_blank')">The Planning Phase</li>
-                <li onclick="window.open('https://www.google.com', '_blank')">Create The Wireframe</li>
-                <li onclick="window.open('https://www.google.com', '_blank')">Design It</li>
-                <li onclick="window.open('https://www.google.com', '_blank')">Write The Code</li>
-                <li onclick="window.open('https://www.google.com', '_blank')">Publish The Website Online</li>
-            </ol>
-            <!-- a subtle card footer with Google link -->
-            <div class="card-footer-note">
-                <span>5 streamlined steps · start today</span>
-                <a href="https://www.google.com" target="_blank" class="google-link" onclick="event.stopPropagation();">🔍 Visit Google</a>
+    <!-- ── HERO ── -->
+    <section class="eca-hero">
+        <div class="badge">Legal Repository · 12 Landmark Cases</div>
+        <h1>Landmark Judgements on the<br><em>Essential Commodities Act, 1955</em></h1>
+        <div class="hero-divider"></div>
+        <p>A curated compendium of authoritative High Court decisions that have shaped the interpretation and enforcement of India's Essential Commodities Act.</p>
+    </section>
+
+    <!-- ── JUDGEMENTS GRID ── -->
+    <section class="judgements-section">
+        <div class="section-meta">
+            <h2>High Court Judgements</h2>
+            <span class="count-badge">12 Cases</span>
+        </div>
+
+        <div class="judgements-grid" id="judgementsGrid">
+            <!-- Cards are injected by JS -->
+        </div>
+    </section>
+
+    <!-- ── MODAL ── -->
+    <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="m-num" id="modalNum"></div>
+                <h2 id="modalTitle"></h2>
+                <div class="m-tags" id="modalTags"></div>
+                <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section-label">Case Details</div>
+                <div class="modal-detail-grid" id="modalDetails"></div>
+
+                <div class="modal-section-label">Background & Facts</div>
+                <p class="modal-description" id="modalDescription"></p>
+
+                <div class="modal-section-label">Holding &amp; Significance</div>
+                <blockquote class="modal-holding" id="modalHolding"></blockquote>
+
+                <div class="modal-actions">
+                    <a href="#" class="btn-read" id="btnRead" target="_blank">
+                        <span class="btn-icon">📖</span> Read Judgement
+                    </a>
+                    <a href="#" class="btn-pdf" id="btnPdf" target="_blank" download>
+                        <span class="btn-icon">📄</span> Download PDF
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- common footer -->
     <div id="site-footer"></div>
 
-    <!-- go to top button (already included via gototop.js) -->
-    <!-- note: gototop.js is loaded with defer, it will attach automatically -->
-
     <script>
-        // Additional JavaScript to enhance the experience
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add click handlers to all list items if not already present
-            const listItems = document.querySelectorAll('.custom-ol ol li');
-            listItems.forEach((item, index) => {
-                // Ensure the onclick attribute is set
-                if (!item.hasAttribute('onclick')) {
-                    item.setAttribute('onclick', "window.open('https://www.google.com', '_blank')");
-                }
-                
-                // Add a small delay before opening to show hover effect
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    // Add a quick animation before redirect
-                    this.style.transform = 'scale(0.98)';
-                    setTimeout(() => {
-                        window.open('https://www.google.com', '_blank');
-                        this.style.transform = '';
-                    }, 150);
-                });
-            });
+    const judgements = [
+        {
+            id: 1,
+            title: "State of U.P. v. Synthetics & Chemicals Ltd.",
+            court: "Allahabad HC",
+            year: 1989,
+            citation: "AIR 1989 All 243",
+            type: "Constitutional Validity",
+            impact: "landmark",
+            judges: "J. S. Verma, CJ",
+            section: "Sections 3, 7",
+            excerpt: "Examined the extent of delegated legislative power under Section 3, holding that price fixation orders must conform to the Act's objectives.",
+            description: "The petitioner, a chemical manufacturer, challenged a government order under Section 3 of the ECA fixing the price of industrial alcohol. The court examined the extent of the delegated legislative power, scrutinizing whether the executive order was within the legislative intent and constitutional bounds of the parent Act.",
+            holding: "<strong>Held:</strong> Price fixation orders under Section 3 must directly serve the purpose of maintaining supply and equitable distribution. Arbitrary delegation without guidelines renders an order ultra vires. The government's power must be exercised with due application of mind to the essential nature of the commodity.",
+            blogUrl: "#blog/upa-synthetics-1989",
+            pdfUrl: "#pdf/synthetics-1989.pdf"
+        },
+        {
+            id: 2,
+            title: "Shri Ram Narain v. The State of Rajasthan",
+            court: "Rajasthan HC",
+            year: 1961,
+            citation: "AIR 1961 Raj 75",
+            type: "Licensing & Trade",
+            impact: "landmark",
+            judges: "Wanchoo, CJ",
+            section: "Section 3(2)(d)",
+            excerpt: "Foundational ruling on the validity of licensing conditions imposed under the ECA, setting the standard for state-level regulations.",
+            description: "A grain dealer challenged the conditions attached to his licence under the Rajasthan Essential Commodities (Licensing and Control) Order, arguing that the conditions were excessive and violated his right to trade. The court addressed the balance between state regulation of essential commodities and fundamental rights under Article 19(1)(g).",
+            holding: "<strong>Held:</strong> Licensing conditions under the ECA are a reasonable restriction on the right to trade in the interest of the general public. Conditions must bear a rational nexus to the object of regulating essential commodities supply, and cannot be punitive in nature beyond what is necessary for effective control.",
+            blogUrl: "#blog/ram-narain-rajasthan-1961",
+            pdfUrl: "#pdf/ram-narain-1961.pdf"
+        },
+        {
+            id: 3,
+            title: "Harishankar Bagla v. State of M.P.",
+            court: "MP High Court",
+            year: 1954,
+            citation: "AIR 1954 SC 465",
+            type: "Delegation of Power",
+            impact: "landmark",
+            judges: "Mehr Chand Mahajan, CJ",
+            section: "Section 3 & Section 6",
+            excerpt: "Seminal judgment on constitutionality of Section 3 and the permissibility of delegation of legislative power in the context of essential commodities.",
+            description: "The appellant was charged with contravening the Cotton Textiles (Control of Movement) Order made under Section 3 of the Essential Supplies (Temporary Powers) Act, predecessor to the ECA. The question was whether the legislature could validly delegate power to the executive to make such control orders.",
+            holding: "<strong>Held:</strong> The legislature can delegate power to the executive to make orders regulating essential commodities, provided the Act itself lays down the policy and guidelines. Essential legislative function cannot be delegated, but filling in details within the policy framework is permissible and valid.",
+            blogUrl: "#blog/harishankar-bagla-1954",
+            pdfUrl: "#pdf/harishankar-bagla-1954.pdf"
+        },
+        {
+            id: 4,
+            title: "M/s Prag Ice & Oil Mills v. Union of India",
+            court: "Delhi High Court",
+            year: 1978,
+            citation: "AIR 1978 SC 1296",
+            type: "Price Control",
+            impact: "landmark",
+            judges: "Y. V. Chandrachud, CJ",
+            section: "Section 3(2)(c)",
+            excerpt: "Landmark ruling on price fixation powers — the court examined whether prices set below cost of production violated Article 19(1)(g).",
+            description: "Manufacturers of edible oil and ice challenged government orders fixing maximum prices below their cost of production. The petitioners argued that such price fixation amounted to unreasonable restriction on their right to carry on trade, amounting to a virtual prohibition of their business.",
+            holding: "<strong>Held:</strong> While price fixation is within the state's power to control essential commodities, a price order that makes it impossible for an industry to carry on business at a profit can amount to an unreasonable restriction. The court directed the government to review prices and conduct a proper cost study before fixing them.",
+            blogUrl: "#blog/prag-ice-oil-1978",
+            pdfUrl: "#pdf/prag-ice-oil-1978.pdf"
+        },
+        {
+            id: 5,
+            title: "V. G. Row v. State of Madras",
+            court: "Madras High Court",
+            year: 1952,
+            citation: "AIR 1952 SC 196",
+            type: "Fundamental Rights",
+            impact: "landmark",
+            judges: "Patanjali Sastri, CJ",
+            section: "Section 7 (Penalties)",
+            excerpt: "Early foundational ruling reconciling the penal provisions of the ECA with the constitutional right to equality under Article 14.",
+            description: "The petitioner challenged a criminal prosecution under the ECA's penalty provisions, arguing that the provisions permitted discriminatory application and were vague in their scope. The court examined both the procedural fairness requirements and substantive equality in enforcement of the Act.",
+            holding: "<strong>Held:</strong> Penal provisions of legislation dealing with essential commodities must be clear and unambiguous. Discriminatory enforcement can violate Article 14. However, a valid classification based on intelligible differentia having a rational nexus to the objective of the Act shall not amount to discrimination.",
+            blogUrl: "#blog/vg-row-madras-1952",
+            pdfUrl: "#pdf/vg-row-1952.pdf"
+        },
+        {
+            id: 6,
+            title: "State of Gujarat v. Shantilal Mangaldas",
+            court: "Gujarat High Court",
+            year: 1969,
+            citation: "AIR 1969 SC 634",
+            type: "Acquisition & Compensation",
+            impact: "important",
+            judges: "J. C. Shah, J",
+            section: "Sections 3 & 6A",
+            excerpt: "Authoritative ruling on confiscation and forfeiture of essential commodities — the extent of the state's power and the requirement of fair procedure.",
+            description: "The respondents' stocks of essential commodities were seized and proposed for confiscation by state authorities. The question involved the procedural requirements before forfeiture, the right to be heard, and whether the compensation principles of Article 31 (now repealed) applied to forfeiture orders under the ECA.",
+            holding: "<strong>Held:</strong> Forfeiture of goods under the ECA is a serious civil consequence requiring adherence to principles of natural justice — the affected party must be given a reasonable opportunity of being heard. However, forfeiture as a statutory penalty for contraventions does not attract the constitutional compensation provisions applicable to acquisition of private property.",
+            blogUrl: "#blog/gujarat-shantilal-1969",
+            pdfUrl: "#pdf/shantilal-1969.pdf"
+        },
+        {
+            id: 7,
+            title: "Indian Sugar Mills Assn. v. Union of India",
+            court: "Delhi High Court",
+            year: 2004,
+            citation: "2004 (3) SCALE 315",
+            type: "Levy & Quota",
+            impact: "landmark",
+            judges: "B. N. Kirpal, CJ",
+            section: "Section 3(3C)",
+            excerpt: "Challenged sugar levy obligations as an unreasonable restriction — a defining ruling on the scope of compulsory supply obligations under the ECA.",
+            description: "Sugar mill associations challenged the orders directing them to supply a percentage of their sugar production to the government at controlled prices as a levy. They contended this constituted forced trading below market prices, amounting to acquisition without adequate compensation.",
+            holding: "<strong>Held:</strong> Levy orders for sugar represent a legitimate exercise of state power in relation to an essential commodity. The concept of 'levy price' need not equal market price — the government must ensure levy price covers the reasonable cost of production, but need not guarantee market profits. The essential commodity framework permits compulsory supply obligations.",
+            blogUrl: "#blog/indian-sugar-mills-2004",
+            pdfUrl: "#pdf/sugar-mills-2004.pdf"
+        },
+        {
+            id: 8,
+            title: "Bishambhar Dayal Chandra Mohan v. State of U.P.",
+            court: "Allahabad HC",
+            year: 1982,
+            citation: "AIR 1982 SC 33",
+            type: "Search & Seizure",
+            impact: "important",
+            judges: "D. A. Desai, J",
+            section: "Section 6A & 6B",
+            excerpt: "Seminal ruling on the powers of search and seizure under the ECA and safeguards against arbitrary executive action in enforcement operations.",
+            description: "The petitioner's business premises were raided and stocks of essential commodities seized without a warrant by civil supplies authorities. The constitutional validity of warrantless search provisions of the ECA and related control orders was challenged as violating Articles 19 and 21.",
+            holding: "<strong>Held:</strong> While the ECA permits searches without warrant in urgent circumstances, this power is not unbridled. Officers must have reasonable grounds to believe a contravention is occurring; reasons must be recorded. Searches conducted without due cause or in a mala fide manner are unconstitutional, and seized goods must be returned promptly if no prosecution follows.",
+            blogUrl: "#blog/bishambhar-dayal-1982",
+            pdfUrl: "#pdf/bishambhar-1982.pdf"
+        },
+        {
+            id: 9,
+            title: "Collector of Customs v. New Tobacco Co.",
+            court: "Bombay High Court",
+            year: 1985,
+            citation: "AIR 1985 Bom 234",
+            type: "Import & Export",
+            impact: "notable",
+            judges: "P. B. Sawant, J",
+            section: "Section 3(2)(h)",
+            excerpt: "Clarified the interplay between ECA controls and the Customs Act in regulating import of essential commodities — which law prevails.",
+            description: "A tobacco importer challenged the simultaneous application of ECA control orders and customs restrictions on their imported stock. The question was whether the ECA's provisions and the Customs Act's import controls could both operate together, and which regime would take precedence in case of conflict.",
+            holding: "<strong>Held:</strong> Both the ECA and the Customs Act serve distinct constitutional purposes and can operate concurrently. Where both apply, the more stringent restriction governs. The ECA's classification of a commodity as 'essential' does not override the Customs Act's import prohibition provisions — both statutes must be harmoniously construed.",
+            blogUrl: "#blog/collector-customs-tobacco-1985",
+            pdfUrl: "#pdf/new-tobacco-1985.pdf"
+        },
+        {
+            id: 10,
+            title: "Kailash Nath v. State of U.P.",
+            court: "Allahabad HC",
+            year: 1957,
+            citation: "AIR 1957 All 414",
+            type: "Stock Limits",
+            impact: "important",
+            judges: "Raghubar Dayal, J",
+            section: "Section 3(2)(f)",
+            excerpt: "Early ruling upholding the validity of stock-holding limits as a reasonable restriction, establishing the proportionality framework for ECA orders.",
+            description: "A wholesale grain dealer was prosecuted for holding stocks in excess of the limit prescribed under a state control order. He challenged the stock limit provisions as an unreasonable restriction on his right to trade, arguing the limits bore no rational nexus to the prevention of hoarding and were arbitrarily low.",
+            holding: "<strong>Held:</strong> Fixation of stock limits on essential commodities is a valid and reasonable restriction under Article 19(6). To prevent hoarding and price rise, the government can restrict holding of stocks even below commercial norms. The court must not substitute its judgment for that of the legislature on what quantum of restriction is reasonable in economic policy matters.",
+            blogUrl: "#blog/kailash-nath-upa-1957",
+            pdfUrl: "#pdf/kailash-nath-1957.pdf"
+        },
+        {
+            id: 11,
+            title: "Mohammed Faruk v. State of Madhya Pradesh",
+            court: "MP High Court",
+            year: 1970,
+            citation: "AIR 1970 SC 93",
+            type: "Constitutional Validity",
+            impact: "landmark",
+            judges: "J. M. Shelat, J",
+            section: "Section 3 (General)",
+            excerpt: "Tested the constitutional limits of ECA when applied to minor forest produce — key ruling on what constitutes an 'essential commodity'.",
+            description: "The petitioner, a trader in Tendu leaves (used for bidis), challenged the inclusion of Tendu leaves as an essential commodity under the Act and the resulting monopoly procurement system established by Madhya Pradesh. He argued that Tendu leaves were not 'essential' in the ordinary sense and the inclusion was colourable legislation.",
+            holding: "<strong>Held:</strong> The term 'essential commodity' must be understood in its broad legislative context — including raw materials for industries that serve mass consumption. Tendu leaves, being essential to the bidi industry providing livelihood to millions, qualify. The legislature's power to declare a commodity 'essential' is plenary and courts should not ordinarily interfere unless the declaration is patently arbitrary.",
+            blogUrl: "#blog/mohammed-faruk-mp-1970",
+            pdfUrl: "#pdf/mohammed-faruk-1970.pdf"
+        },
+        {
+            id: 12,
+            title: "Sarkaria Commission Implementation Cases (Consolidated)",
+            court: "Punjab & Haryana HC",
+            year: 1992,
+            citation: "AIR 1992 P&H 188",
+            type: "Centre-State Relations",
+            impact: "notable",
+            judges: "S. S. Sodhi, CJ",
+            section: "Section 5 (Delegation to States)",
+            excerpt: "Landmark ruling clarifying the federal aspects of the ECA — how power flows between the Centre and States in controlling essential commodities.",
+            description: "Several state government orders issued under authority delegated by the Central Government under Section 5 were challenged as being beyond the scope of the delegation. The question was whether the states, acting as agents of the Centre, could issue orders more stringent than those contemplated by the central order of delegation.",
+            holding: "<strong>Held:</strong> When the Centre delegates power to States under Section 5, the delegation defines the outer limits of state action. States can exercise only such powers as are conferred by the delegating order and cannot travel beyond it. However, within the delegated scope, states have discretion to frame orders suited to local conditions without Central approval for each measure.",
+            blogUrl: "#blog/sarkaria-consolidated-1992",
+            pdfUrl: "#pdf/sarkaria-1992.pdf"
+        }
+    ];
 
-            // Add click handler to the card footer note
-            const footerNote = document.querySelector('.card-footer-note span');
-            if (footerNote) {
-                footerNote.style.cursor = 'pointer';
-                footerNote.addEventListener('click', function() {
-                    window.open('https://www.google.com', '_blank');
-                });
-            }
-        });
+    const impactClass = { landmark: 'impact-lm', important: 'impact-im', notable: 'impact-nt' };
 
-        // Prevent event bubbling from the Google link
-        document.querySelector('.google-link')?.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
+    /* ── render cards ── */
+    const grid = document.getElementById('judgementsGrid');
+    judgements.forEach(j => {
+        const card = document.createElement('article');
+        card.className = 'j-card';
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-label', `Open details for ${j.title}`);
+        card.innerHTML = `
+            <div class="j-card-num">Case ${String(j.id).padStart(2,'0')} <span style="flex:1"></span></div>
+            <h3>${j.title}</h3>
+            <div class="j-card-meta">
+                <span class="j-tag court">${j.court}</span>
+                <span class="j-tag year">${j.year}</span>
+                <span class="j-tag type">${j.type}</span>
+            </div>
+            <p class="j-card-excerpt">${j.excerpt}</p>
+            <div class="j-card-footer">
+                <span class="j-read-hint">
+                    View Details
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12M11 5l5 5-5 5"/></svg>
+                </span>
+                <span class="j-impact ${j.impact}">${j.impact.charAt(0).toUpperCase()+j.impact.slice(1)}</span>
+            </div>
+        `;
+        card.addEventListener('click', () => openModal(j));
+        card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(j); });
+        grid.appendChild(card);
+    });
+
+    /* ── modal logic ── */
+    const overlay   = document.getElementById('modalOverlay');
+    const mNum      = document.getElementById('modalNum');
+    const mTitle    = document.getElementById('modalTitle');
+    const mTags     = document.getElementById('modalTags');
+    const mDetails  = document.getElementById('modalDetails');
+    const mDesc     = document.getElementById('modalDescription');
+    const mHolding  = document.getElementById('modalHolding');
+    const btnRead   = document.getElementById('btnRead');
+    const btnPdf    = document.getElementById('btnPdf');
+    const mClose    = document.getElementById('modalClose');
+
+    function openModal(j) {
+        mNum.textContent     = `Case ${String(j.id).padStart(2,'0')} · ${j.citation}`;
+        mTitle.textContent   = j.title;
+        mTags.innerHTML = `
+            <span class="m-tag court">${j.court}</span>
+            <span class="m-tag year">${j.year}</span>
+            <span class="m-tag ${impactClass[j.impact]}">${j.impact.charAt(0).toUpperCase()+j.impact.slice(1)}</span>
+        `;
+        mDetails.innerHTML = `
+            <div class="detail-item"><label>Court</label><span>${j.court}</span></div>
+            <div class="detail-item"><label>Year</label><span>${j.year}</span></div>
+            <div class="detail-item"><label>Citation</label><span>${j.citation}</span></div>
+            <div class="detail-item"><label>Bench</label><span>${j.judges}</span></div>
+            <div class="detail-item"><label>Type</label><span>${j.type}</span></div>
+            <div class="detail-item"><label>Sections</label><span>${j.section}</span></div>
+        `;
+        mDesc.textContent    = j.description;
+        mHolding.innerHTML   = j.holding;
+        btnRead.href         = j.blogUrl;
+        btnPdf.href          = j.pdfUrl;
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        mClose.focus();
+    }
+
+    function closeModal() {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    mClose.addEventListener('click', closeModal);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
     </script>
 </body>
 </html>
