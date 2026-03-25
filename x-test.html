@@ -4,647 +4,497 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blogs | Article Gallery</title>
-  
+
   <link rel="stylesheet" href="style.css">
   <script src="assets/Scripts/site-components.js" defer></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --ink: #0a0a0a;
-      --ink-2: #111111;
-      --cream: #f5f0e8;
-      --cream-muted: #c8bfab;
-      --accent: #c8702a;
-      --accent-light: #e8934a;
-      --rule: #2a2a2a;
-      --rule-light: #1e1e1e;
-      --serif: 'Playfair Display', Georgia, serif;
-      --mono: 'DM Mono', 'Courier New', monospace;
-      --body: 'Crimson Pro', Georgia, serif;
+      --white:   #ffffff;
+      --off-white: #fafafa;
+      --border:  #e8e8e8;
+      --border-light: #f0f0f0;
+      --text-primary: #111111;
+      --text-secondary: #555555;
+      --text-muted: #999999;
+      --accent:  #1a1a1a;
+      --accent-hover: #333333;
+      --tag-bg:  #f4f4f4;
+      --tag-active: #111111;
+      --shadow-sm: 0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+      --shadow-hover: 0 8px 32px rgba(0,0,0,0.12);
+      --radius: 4px;
+      --radius-lg: 8px;
     }
-
-    html { scroll-behavior: smooth; }
 
     body {
-      background: var(--ink);
-      color: var(--cream);
-      font-family: var(--body);
-      font-size: 18px;
+      background: var(--white);
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
       line-height: 1.6;
-      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ── NOISE OVERLAY ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.5;
-    }
-
-    /* ── MASTHEAD ── */
-    .masthead {
-      border-bottom: 1px solid var(--rule);
-      padding: 2.5rem 4rem 0;
-      position: relative;
-    }
-
-    .masthead-top {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      padding-bottom: 1.5rem;
-      border-bottom: 3px double var(--rule);
-    }
-
-    .masthead-date {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      color: var(--cream-muted);
-      text-transform: uppercase;
-    }
-
-    .masthead-title {
-      font-family: var(--serif);
-      font-size: clamp(4rem, 10vw, 8rem);
-      font-weight: 900;
-      line-height: 0.9;
-      letter-spacing: -0.03em;
+    /* ── MASTHEAD ──────────────────────────────────── */
+    .blogs-masthead {
+      border-bottom: 1px solid var(--border);
+      padding: 3.5rem 0 3rem;
       text-align: center;
-      color: var(--cream);
-      padding: 1.5rem 0 1rem;
+      background: var(--white);
+    }
+
+    .blogs-masthead .label {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
       position: relative;
     }
 
-    .masthead-title em {
-      font-style: italic;
-      color: var(--accent);
+    .blogs-masthead .label::before,
+    .blogs-masthead .label::after {
+      content: '';
+      display: inline-block;
+      width: 28px;
+      height: 1px;
+      background: var(--border);
+      vertical-align: middle;
+      margin: 0 0.8rem;
     }
 
-    .masthead-rule {
+    .blogs-masthead h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 0.8rem;
+    }
+
+    .blogs-masthead .subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-weight: 300;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── LAYOUT ──────────────────────────────────────── */
+    .blogs-section {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+
+    /* ── TOOLBAR ──────────────────────────────────────── */
+    .toolbar {
       display: flex;
       align-items: center;
       gap: 1rem;
-      padding: 1rem 0 1.5rem;
-    }
-
-    .masthead-rule::before,
-    .masthead-rule::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--rule);
-    }
-
-    .masthead-tagline {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      color: var(--cream-muted);
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    /* ── SEARCH BAR ── */
-    .control-strip {
-      padding: 1.2rem 4rem;
-      border-bottom: 1px solid var(--rule);
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      background: var(--ink-2);
       flex-wrap: wrap;
+      padding: 1.4rem 0;
+      border-bottom: 1px solid var(--border-light);
+      margin-bottom: 1.5rem;
     }
 
-    .search-wrap {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
+    .search-box {
       flex: 1;
       min-width: 220px;
-      border-bottom: 1px solid var(--cream-muted);
-      padding-bottom: 0.4rem;
-    }
-
-    .search-wrap i {
-      color: var(--cream-muted);
-      font-size: 0.8rem;
-    }
-
-    .search-wrap input {
-      background: none;
-      border: none;
-      outline: none;
-      color: var(--cream);
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      width: 100%;
-    }
-
-    .search-wrap input::placeholder {
-      color: var(--rule);
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-    }
-
-    .category-select-wrap {
+      max-width: 340px;
       position: relative;
     }
 
-    .category-select-wrap select {
-      background: none;
-      border: 1px solid var(--rule);
-      color: var(--cream-muted);
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.5rem 2rem 0.5rem 0.8rem;
+    .search-box i {
+      position: absolute;
+      left: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.62rem 1rem 0.62rem 2.4rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text-primary);
+      background: var(--off-white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: #aaa;
+      background: var(--white);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-box input::placeholder { color: var(--text-muted); }
+
+    .category-filter {
+      position: relative;
+    }
+
+    .category-filter select {
       appearance: none;
+      padding: 0.62rem 2.2rem 0.62rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      background: var(--off-white);
       cursor: pointer;
       transition: border-color 0.2s;
     }
 
-    .category-select-wrap select:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
+    .category-filter select:focus { outline: none; border-color: #aaa; }
 
-    .category-select-wrap select option {
-      background: var(--ink-2);
-    }
-
-    .category-select-wrap i {
+    .category-filter i {
       position: absolute;
-      right: 0.7rem;
+      right: 0.75rem;
       top: 50%;
       transform: translateY(-50%);
-      color: var(--cream-muted);
-      font-size: 0.6rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
       pointer-events: none;
     }
 
-    .sort-group {
+    .sort-controls {
       display: flex;
       gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-left: auto;
     }
 
-    .sort-pill {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 0.45rem 1rem;
-      border: 1px solid var(--rule);
-      background: none;
-      color: var(--cream-muted);
+    .sort-btn {
+      padding: 0.6rem 1.1rem;
+      border: none;
+      border-left: 1px solid var(--border);
+      background: var(--off-white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-muted);
       cursor: pointer;
-      transition: all 0.2s;
-      margin-left: -1px;
-    }
-
-    .sort-pill:first-child { border-radius: 2px 0 0 2px; }
-    .sort-pill:last-child { border-radius: 0 2px 2px 0; }
-
-    .sort-pill.active,
-    .sort-pill:hover {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: var(--ink);
-    }
-
-    /* ── TAGS ── */
-    .tags-strip {
-      padding: 1rem 4rem;
-      border-bottom: 1px solid var(--rule);
+      transition: background 0.15s, color 0.15s;
       display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
       align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
     }
 
-    .tags-label {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--cream-muted);
-      margin-right: 0.5rem;
+    .sort-btn:first-child { border-left: none; }
+
+    .sort-btn:hover { background: #f0f0f0; color: var(--text-primary); }
+
+    .sort-btn.active {
+      background: var(--white);
+      color: var(--text-primary);
+      font-weight: 600;
     }
 
-    .tag-chip {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.08em;
-      padding: 0.3rem 0.8rem;
-      border: 1px solid var(--rule);
-      color: var(--cream-muted);
+    /* ── TAGS CLOUD ──────────────────────────────────────── */
+    .tags-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      padding: 1rem 0 1.4rem;
+      border-bottom: 1px solid var(--border-light);
+      margin-bottom: 1.8rem;
+    }
+
+    .tag {
+      padding: 0.32rem 0.85rem;
+      background: var(--tag-bg);
+      border-radius: 2px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      color: var(--text-secondary);
       cursor: pointer;
-      transition: all 0.2s;
-      background: none;
-      border-radius: 1px;
-      text-transform: lowercase;
+      border: 1px solid transparent;
+      transition: all 0.15s;
     }
 
-    .tag-chip:hover { border-color: var(--cream-muted); color: var(--cream); }
+    .tag:hover { background: #ebebeb; color: var(--text-primary); }
 
-    .tag-chip.active {
-      background: var(--cream);
-      border-color: var(--cream);
-      color: var(--ink);
+    .tag.active {
+      background: var(--tag-active);
+      color: var(--white);
+      border-color: var(--tag-active);
     }
 
-    /* ── RESULTS BAR ── */
-    .results-bar {
-      padding: 0.8rem 4rem;
+    .tag i { margin-right: 0.25rem; font-size: 0.65rem; }
+
+    /* ── RESULTS META ──────────────────────────────────────── */
+    .results-info {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--rule);
+      margin-bottom: 1.8rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
     }
 
-    .results-count {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--cream-muted);
-    }
-
-    .clear-btn {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent-light);
-      cursor: pointer;
+    .clear-filters {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      transition: color 0.2s;
-      background: none;
-      border: none;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0.3rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: all 0.15s;
+      background: var(--white);
     }
 
-    .clear-btn:hover { color: var(--cream); }
+    .clear-filters:hover { background: var(--off-white); border-color: #ccc; }
 
-    /* ── GRID ── */
-    .grid-wrapper {
-      padding: 0 4rem;
-    }
-
+    /* ── BLOG GRID ──────────────────────────────────────── */
     .blog-grid {
       display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 0;
-      border-left: 1px solid var(--rule);
-      border-top: 1px solid var(--rule);
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border-light);
+      border: 1px solid var(--border-light);
+      margin-bottom: 3rem;
     }
 
-    /* ── CARD ── */
+    /* ── BLOG CARD ──────────────────────────────────────── */
     .blog-card {
-      border-right: 1px solid var(--rule);
-      border-bottom: 1px solid var(--rule);
+      background: var(--white);
       cursor: pointer;
-      position: relative;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
-      animation: cardIn 0.5s ease both;
-      background: var(--ink);
-      transition: background 0.3s;
+      transition: background 0.2s;
+      animation: fadeUp 0.4s ease both;
     }
 
-    /* Cards span 4 columns each (3 per row) */
-    .blog-card { grid-column: span 4; }
+    .blog-card:hover { background: var(--off-white); }
 
-    /* Featured first card spans 8 cols */
-    .blog-card:first-child { grid-column: span 8; flex-direction: row; }
-    .blog-card:first-child .card-visual { width: 45%; height: auto; min-height: 280px; flex-shrink: 0; }
-    .blog-card:first-child .card-body { flex: 1; }
-    .blog-card:first-child .card-title { font-size: 1.9rem; }
+    /* stagger animation */
+    .blog-card:nth-child(1) { animation-delay: 0.02s; }
+    .blog-card:nth-child(2) { animation-delay: 0.06s; }
+    .blog-card:nth-child(3) { animation-delay: 0.10s; }
+    .blog-card:nth-child(4) { animation-delay: 0.14s; }
+    .blog-card:nth-child(5) { animation-delay: 0.18s; }
+    .blog-card:nth-child(6) { animation-delay: 0.22s; }
 
-    .blog-card:hover { background: var(--rule-light); }
-
-    /* Hover accent bar */
-    .blog-card::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: var(--accent);
-      transition: width 0.4s ease;
-    }
-
-    .blog-card:hover::after { width: 100%; }
-
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Stagger */
-    .blog-card:nth-child(1) { animation-delay: 0.05s; }
-    .blog-card:nth-child(2) { animation-delay: 0.1s; }
-    .blog-card:nth-child(3) { animation-delay: 0.15s; }
-    .blog-card:nth-child(4) { animation-delay: 0.2s; }
-    .blog-card:nth-child(5) { animation-delay: 0.25s; }
-    .blog-card:nth-child(6) { animation-delay: 0.3s; }
-    .blog-card:nth-child(7) { animation-delay: 0.35s; }
-
-    .card-visual {
-      height: 180px;
+    .blog-image {
+      height: 130px;
+      background: var(--off-white);
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      overflow: hidden;
-      flex-shrink: 0;
+      border-bottom: 1px solid var(--border-light);
     }
 
-    /* Each category gets a distinct color theme */
-    .card-visual[data-cat="legal"]      { background: linear-gradient(135deg, #1a0e05 0%, #3d1a00 100%); }
-    .card-visual[data-cat="technology"] { background: linear-gradient(135deg, #020d1a 0%, #003352 100%); }
-    .card-visual[data-cat="science"]    { background: linear-gradient(135deg, #030e07 0%, #003320 100%); }
-    .card-visual[data-cat="health"]     { background: linear-gradient(135deg, #1a0508 0%, #3d0012 100%); }
-    .card-visual[data-cat="business"]   { background: linear-gradient(135deg, #0d0d00 0%, #2e2a00 100%); }
-    .card-visual[data-cat="lifestyle"]  { background: linear-gradient(135deg, #0d001a 0%, #2e003d 100%); }
-    .card-visual[data-cat="design"]     { background: linear-gradient(135deg, #001a1a 0%, #003d3d 100%); }
-    .card-visual[data-cat="uncategorized"] { background: linear-gradient(135deg, #0a0a0a 0%, #1e1e1e 100%); }
-    .card-visual[data-cat="technical"]  { background: linear-gradient(135deg, #020d1a 0%, #003352 100%); }
+    /* Subtle category-based tints */
+    .blog-image[data-cat="technology"]   { background: #f0f4ff; }
+    .blog-image[data-cat="legal"]        { background: #f5f0ff; }
+    .blog-image[data-cat="science"]      { background: #f0fff4; }
+    .blog-image[data-cat="business"]     { background: #fff8f0; }
+    .blog-image[data-cat="health"]       { background: #fff0f0; }
+    .blog-image[data-cat="design"]       { background: #fffbf0; }
 
-    .card-visual-icon {
-      font-size: 2.5rem;
-      opacity: 0.25;
-      color: var(--cream);
-      transition: opacity 0.3s, transform 0.4s;
-      z-index: 1;
+    .blog-image .icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      box-shadow: var(--shadow-sm);
     }
 
-    .blog-card:hover .card-visual-icon {
-      opacity: 0.45;
-      transform: scale(1.1) rotate(-5deg);
-    }
-
-    .card-cat-badge {
+    .blog-category-badge {
       position: absolute;
-      top: 0;
-      left: 0;
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.18em;
+      top: 0.85rem;
+      right: 0.85rem;
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--cream-muted);
-      padding: 0.5rem 0.8rem;
-      background: rgba(0,0,0,0.5);
+      color: var(--text-muted);
+      background: var(--white);
+      border: 1px solid var(--border);
+      padding: 0.22rem 0.65rem;
+      border-radius: var(--radius);
     }
 
-    .card-issue {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      font-family: var(--mono);
-      font-size: 0.55rem;
-      letter-spacing: 0.12em;
-      color: var(--accent);
-      padding: 0.3rem 0.6rem;
-      background: rgba(0,0,0,0.6);
-    }
-
-    .card-body {
-      padding: 1.4rem 1.4rem 1.2rem;
+    .blog-content {
+      padding: 1.4rem 1.5rem 1.2rem;
+      flex-grow: 1;
       display: flex;
       flex-direction: column;
-      flex: 1;
     }
 
-    .card-title {
-      font-family: var(--serif);
-      font-size: 1.2rem;
-      font-weight: 700;
-      line-height: 1.3;
-      color: var(--cream);
-      margin-bottom: 0.7rem;
+    .blog-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--text-primary);
+      margin-bottom: 0.65rem;
       letter-spacing: -0.01em;
-      transition: color 0.2s;
     }
 
-    .blog-card:hover .card-title { color: #fff; }
-
-    .card-excerpt {
-      font-size: 0.88rem;
-      color: var(--cream-muted);
+    .blog-excerpt {
+      font-size: 0.855rem;
+      color: var(--text-secondary);
       line-height: 1.65;
+      flex-grow: 1;
       margin-bottom: 1rem;
-      flex: 1;
       font-weight: 300;
     }
 
-    .card-rule {
-      height: 1px;
-      background: var(--rule);
-      margin-bottom: 0.8rem;
-    }
-
-    .card-footer {
+    .blog-meta {
       display: flex;
       justify-content: space-between;
-      align-items: flex-end;
+      align-items: center;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--border-light);
+      margin-bottom: 0.9rem;
     }
 
-    .card-byline {
+    .blog-meta .meta-item { display: flex; align-items: center; gap: 0.35rem; }
+
+    .blog-tags {
       display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-    }
-
-    .card-author {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--cream-muted);
-    }
-
-    .card-date {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.08em;
-      color: var(--rule);
-      color: #555;
-    }
-
-    .card-tags {
-      display: flex;
-      gap: 0.3rem;
       flex-wrap: wrap;
-      justify-content: flex-end;
+      gap: 0.3rem;
+      margin-bottom: 1rem;
     }
 
-    .card-tag {
-      font-family: var(--mono);
-      font-size: 0.55rem;
-      letter-spacing: 0.08em;
-      padding: 0.15rem 0.5rem;
-      border: 1px solid var(--rule);
-      color: #555;
+    .blog-tag {
+      font-size: 0.7rem;
+      padding: 0.18rem 0.6rem;
+      background: var(--tag-bg);
+      border-radius: 2px;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.01em;
     }
 
-    .card-arrow {
+    .read-more {
       display: flex;
       align-items: center;
       gap: 0.4rem;
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: 0.03em;
       text-transform: uppercase;
-      color: var(--accent);
-      margin-top: 1rem;
-      opacity: 0;
-      transform: translateX(-8px);
-      transition: opacity 0.3s, transform 0.3s;
     }
 
-    .blog-card:hover .card-arrow {
-      opacity: 1;
-      transform: translateX(0);
-    }
+    .read-more i { font-size: 0.7rem; transition: transform 0.2s; }
+    .blog-card:hover .read-more i { transform: translateX(4px); }
 
-    /* ── LOADING / EMPTY ── */
-    .state-block {
+    /* ── LOADING / NO-RESULTS ───────────────────────── */
+    .loading, .no-results {
       grid-column: 1 / -1;
-      padding: 6rem 2rem;
       text-align: center;
-      border-right: 1px solid var(--rule);
-      border-bottom: 1px solid var(--rule);
+      padding: 5rem 2rem;
+      color: var(--text-muted);
+      background: var(--white);
     }
 
-    .state-block i {
-      font-size: 2rem;
-      color: var(--rule);
-      margin-bottom: 1rem;
-      display: block;
-    }
+    .loading i { font-size: 1.5rem; margin-bottom: 0.8rem; animation: spin 1s linear infinite; }
 
-    .state-block h3 {
-      font-family: var(--serif);
-      font-size: 1.5rem;
-      color: var(--cream-muted);
-      margin-bottom: 0.5rem;
-    }
+    .no-results i { font-size: 2.5rem; margin-bottom: 1rem; color: var(--border); }
+    .no-results h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--text-secondary); }
+    .no-results p { font-size: 0.88rem; }
 
-    .state-block p {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      color: #555;
-      text-transform: uppercase;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .spin { animation: spin 1.2s linear infinite; }
-
-    /* ── PAGINATION ── */
-    .pagination-strip {
-      padding: 2rem 4rem;
+    /* ── PAGINATION ─────────────────────────────────── */
+    .pagination {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 0.3rem;
-      border-top: 1px solid var(--rule);
+      margin: 2rem 0 1rem;
     }
 
-    .pg-btn {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.08em;
-      padding: 0.5rem 0.9rem;
-      border: 1px solid var(--rule);
-      background: none;
-      color: var(--cream-muted);
-      cursor: pointer;
-      transition: all 0.2s;
-      min-width: 40px;
-      text-align: center;
-    }
-
-    .pg-btn:hover:not(:disabled):not(.active) {
-      border-color: var(--cream-muted);
-      color: var(--cream);
-    }
-
-    .pg-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: var(--ink);
-    }
-
-    .pg-btn:disabled { opacity: 0.25; cursor: default; }
-    .pg-dots { color: var(--rule); font-family: var(--mono); font-size: 0.7rem; padding: 0 0.3rem; }
-
-    /* ── FOOTER RULE ── */
-    .footer-rule {
-      border-top: 3px double var(--rule);
-      padding: 1.2rem 4rem;
+    .page-btn {
+      min-width: 36px;
+      height: 36px;
+      padding: 0 0.75rem;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      gap: 0.3rem;
     }
 
-    .footer-mark {
-      font-family: var(--serif);
-      font-size: 1.1rem;
-      font-style: italic;
-      color: var(--cream-muted);
+    .page-btn:hover:not(:disabled):not(.active) {
+      background: var(--off-white);
+      border-color: #ccc;
+      color: var(--text-primary);
     }
 
-    .footer-copy {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
-      color: #444;
-      text-transform: uppercase;
+    .page-btn.active {
+      background: var(--text-primary);
+      border-color: var(--text-primary);
+      color: var(--white);
+      font-weight: 600;
     }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 1100px) {
-      .masthead, .control-strip, .tags-strip, .results-bar, .grid-wrapper, .pagination-strip, .footer-rule {
-        padding-left: 2rem;
-        padding-right: 2rem;
-      }
-      .blog-card:first-child { grid-column: span 12; flex-direction: column; }
-      .blog-card:first-child .card-visual { width: 100%; min-height: 200px; }
+    .page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .page-dots { color: var(--text-muted); font-size: 0.9rem; padding: 0 0.2rem; }
+
+    /* ── KEYFRAMES ──────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 800px) {
-      .blog-card { grid-column: span 6 !important; }
-      .masthead-title { font-size: 3rem; }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
-    @media (max-width: 560px) {
-      .blog-card { grid-column: span 12 !important; }
-      .masthead, .control-strip, .tags-strip, .results-bar, .grid-wrapper, .pagination-strip, .footer-rule {
-        padding-left: 1.2rem;
-        padding-right: 1.2rem;
-      }
-      .masthead-title { font-size: 2.4rem; }
-      .control-strip { flex-direction: column; align-items: flex-start; }
-      .sort-group { flex-wrap: wrap; }
+    /* ── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 900px) {
+      .blog-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .blog-grid { grid-template-columns: 1fr; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .search-box { max-width: 100%; }
+      .sort-controls { margin-left: 0; }
+      .blogs-section { padding: 0 1rem 4rem; }
     }
   </style>
 </head>
@@ -652,109 +502,87 @@
 <body>
   <header id="site-header"></header>
 
-  <!-- ── MASTHEAD ── -->
-  <div class="masthead">
-    <div class="masthead-top">
-      <span class="masthead-date" id="todayDate">Loading…</span>
-      <span class="masthead-date">Est. 2024 · Vol. I</span>
-    </div>
-    <div class="masthead-title">
-      The <em>Article</em><br>Gallery
-    </div>
-    <div class="masthead-rule">
-      <span class="masthead-tagline">Insights · Analysis · Discovery</span>
-    </div>
+  <!-- Masthead -->
+  <div class="blogs-masthead">
+    <div class="label">Publication</div>
+    <h1>Blog Gallery</h1>
+    <p class="subtitle">Discover inspiring articles, stories, and insights</p>
   </div>
 
-  <!-- ── CONTROLS ── -->
-  <div class="control-strip">
-    <div class="search-wrap">
-      <i class="fas fa-search"></i>
-      <input type="text" id="searchInput" placeholder="Search articles…">
-    </div>
+  <!-- Main blogs section -->
+  <section class="blogs-section">
 
-    <div class="category-select-wrap">
-      <select id="categorySelect">
-        <option value="all">All Categories</option>
-      </select>
-      <i class="fas fa-chevron-down"></i>
-    </div>
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search articles…">
+      </div>
 
-    <div class="sort-group">
-      <button class="sort-pill active" data-sort="latest"><i class="fas fa-clock"></i> Latest</button>
-      <button class="sort-pill" data-sort="oldest"><i class="fas fa-calendar"></i> Oldest</button>
-      <button class="sort-pill" data-sort="popular"><i class="fas fa-fire"></i> Popular</button>
-    </div>
-  </div>
+      <div class="category-filter">
+        <select id="categorySelect">
+          <option value="all">All Categories</option>
+        </select>
+        <i class="fas fa-chevron-down"></i>
+      </div>
 
-  <!-- ── TAGS ── -->
-  <div class="tags-strip" id="tagsCloud">
-    <span class="tags-label">Topics →</span>
-    <span class="tag-chip active" data-tag="all">all</span>
-  </div>
-
-  <!-- ── RESULTS ── -->
-  <div class="results-bar">
-    <span class="results-count" id="resultsCount">Loading…</span>
-    <button class="clear-btn" id="clearFilters"><i class="fas fa-times"></i> Clear</button>
-  </div>
-
-  <!-- ── GRID ── -->
-  <div class="grid-wrapper">
-    <div class="blog-grid" id="blogGrid">
-      <div class="state-block">
-        <i class="fas fa-circle-notch spin"></i>
-        <h3>Gathering the press…</h3>
-        <p>Loading articles from archive</p>
+      <div class="sort-controls">
+        <button class="sort-btn active" data-sort="latest"><i class="fas fa-clock"></i> Latest</button>
+        <button class="sort-btn" data-sort="oldest"><i class="fas fa-calendar"></i> Oldest</button>
+        <button class="sort-btn" data-sort="popular"><i class="fas fa-fire"></i> Popular</button>
       </div>
     </div>
-  </div>
 
-  <!-- ── PAGINATION ── -->
-  <div class="pagination-strip" id="pagination"></div>
+    <!-- Tags Cloud -->
+    <div class="tags-cloud" id="tagsCloud">
+      <span class="tag active" data-tag="all"><i class="fas fa-tag"></i> All</span>
+    </div>
 
-  <!-- ── FOOTER RULE ── -->
-  <div class="footer-rule">
-    <span class="footer-mark">The Article Gallery</span>
-    <span class="footer-copy">All articles reserved · Read responsibly</span>
-  </div>
+    <!-- Results Info -->
+    <div class="results-info">
+      <span id="resultsCount">Loading articles…</span>
+      <span class="clear-filters" id="clearFilters"><i class="fas fa-times"></i> Clear filters</span>
+    </div>
+
+    <!-- Blog Grid -->
+    <div class="blog-grid" id="blogGrid">
+      <div class="loading">
+        <i class="fas fa-spinner"></i>
+        <p>Loading articles…</p>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+  </section>
 
   <footer id="site-footer"></footer>
   <script src="assets/Scripts/gototop.js"></script>
 
 <script>
-(function() {
+(function () {
   const POSTS_PER_PAGE = 12;
   const POSTS_DIRECTORY = 'Posts/';
 
-  let allPosts = [];
-  let filteredPosts = [];
-  let currentPage = 1;
-  let currentSort = 'latest';
-  let currentCategory = 'all';
-  let currentTag = 'all';
-  let searchQuery = '';
+  let allPosts = [], filteredPosts = [];
+  let currentPage = 1, currentSort = 'latest',
+      currentCategory = 'all', currentTag = 'all', searchQuery = '';
 
-  const blogGrid = document.getElementById('blogGrid');
-  const paginationDiv = document.getElementById('pagination');
-  const searchInput = document.getElementById('searchInput');
-  const categorySelect = document.getElementById('categorySelect');
-  const sortBtns = document.querySelectorAll('.sort-pill');
-  const tagsCloud = document.getElementById('tagsCloud');
+  const blogGrid        = document.getElementById('blogGrid');
+  const paginationDiv   = document.getElementById('pagination');
+  const searchInput     = document.getElementById('searchInput');
+  const categorySelect  = document.getElementById('categorySelect');
+  const sortBtns        = document.querySelectorAll('.sort-btn');
+  const tagsCloud       = document.getElementById('tagsCloud');
   const resultsCountSpan = document.getElementById('resultsCount');
   const clearFiltersBtn = document.getElementById('clearFilters');
 
-  // Set date
-  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-US', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-  });
-
   async function loadAllPosts() {
     try {
-      const r = await fetch('posts-manifest.json');
-      if (!r.ok) throw new Error('manifest not found');
-      const manifest = await r.json();
-      if (!Array.isArray(manifest) || manifest.length === 0) return [];
+      const res = await fetch('posts-manifest.json');
+      if (!res.ok) throw new Error('Manifest not found');
+      const manifest = await res.json();
+      if (!Array.isArray(manifest) || !manifest.length) return [];
       const posts = await Promise.all(manifest.map(fetchPostMetadata));
       return posts.filter(Boolean);
     } catch (e) {
@@ -765,93 +593,63 @@
 
   async function fetchPostMetadata(filename) {
     try {
-      const r = await fetch(POSTS_DIRECTORY + filename);
-      if (!r.ok) return null;
-      const html = await r.text();
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-
-      const getMeta = name => {
-        const m = doc.querySelector(`meta[name="${name}"]`);
-        return m ? m.getAttribute('content') : null;
-      };
-
+      const res = await fetch(POSTS_DIRECTORY + filename);
+      if (!res.ok) return null;
+      const html = await res.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const getMeta = (n) => { const m = doc.querySelector(`meta[name="${n}"]`); return m ? m.getAttribute('content') : null; };
       const extractExcerpt = () => {
         const ex = getMeta('blog:excerpt');
         if (ex) return ex;
         const p = doc.querySelector('p');
-        return p ? p.textContent.substring(0, 150) + '…' : 'Read this article…';
+        return p ? p.textContent.substring(0, 150) + '…' : 'Read this interesting article…';
       };
-
-      const icons = {
-        technology: 'fa-microchip', lifestyle: 'fa-heart', travel: 'fa-plane',
-        food: 'fa-utensils', health: 'fa-heartbeat', business: 'fa-briefcase',
-        design: 'fa-pencil-ruler', science: 'fa-flask', art: 'fa-palette',
-        legal: 'fa-gavel', technical: 'fa-gear', uncategorized: 'fa-newspaper'
-      };
-
+      const iconMap = { technology:'fa-microchip', lifestyle:'fa-heart', travel:'fa-plane', food:'fa-utensils', health:'fa-heartbeat', business:'fa-briefcase', design:'fa-pencil-ruler', science:'fa-flask', art:'fa-palette', legal:'fa-gavel', technical:'fa-gear', uncategorized:'fa-newspaper' };
       const category = getMeta('blog:category') || 'uncategorized';
-      const tags = getMeta('blog:tags') ? getMeta('blog:tags').split(',').map(t => t.trim()) : [];
-
       return {
         id: filename, filename, url: POSTS_DIRECTORY + filename,
         title: getMeta('blog:title') || filename.replace('.html','').replace(/%20/g,' '),
-        excerpt: extractExcerpt(), category, tags,
+        excerpt: extractExcerpt(),
+        category,
+        tags: getMeta('blog:tags') ? getMeta('blog:tags').split(',').map(t=>t.trim()) : [],
         author: getMeta('blog:author') || 'Unknown',
         date: getMeta('blog:date') || new Date().toISOString().split('T')[0],
         readTime: parseInt(getMeta('blog:readTime')) || Math.floor(Math.random()*10)+3,
         views: parseInt(getMeta('blog:views')) || Math.floor(Math.random()*5000)+500,
-        icon: getMeta('blog:icon') || icons[category] || 'fa-newspaper'
+        icon: getMeta('blog:icon') || iconMap[category] || 'fa-newspaper'
       };
-    } catch (e) {
-      console.error(e);
-      return null;
-    }
+    } catch (e) { return null; }
   }
 
   function getTagIcon(tag) {
-    const map = {
-      'ec act':'fa-gavel','confiscation':'fa-box','seizure':'fa-handcuffs',
-      'legal':'fa-scale-balanced','smart-meter':'fa-microchip','electricity':'fa-bolt',
-      'energy':'fa-solar-panel','technology':'fa-code','genus-power':'fa-building',
-      'jute':'fa-leaf','textiles':'fa-shirt','foodgrains':'fa-wheat-awn',
-      'packaging':'fa-box-open','is standard':'fa-certificate'
-    };
+    const icons = { 'ec act':'fa-gavel','confiscation':'fa-box','seizure':'fa-handcuffs','legal':'fa-scale-balanced','smart-meter':'fa-microchip','electricity':'fa-bolt','energy':'fa-solar-panel','technology':'fa-code','jute':'fa-leaf','textiles':'fa-shirt','sacking bags':'fa-box','foodgrains':'fa-wheat-awn','packaging':'fa-box-open','is standard':'fa-certificate' };
     const tl = tag.toLowerCase();
-    for (const [k, v] of Object.entries(map)) if (tl.includes(k)) return v;
+    for (const [k,v] of Object.entries(icons)) if (tl.includes(k)) return v;
     return 'fa-tag';
   }
 
   function updateFiltersFromPosts(posts) {
-    const cats = ['all', ...new Set(posts.map(p => p.category))];
-    categorySelect.innerHTML = cats.map(c =>
+    const categories = ['all', ...new Set(posts.map(p=>p.category))];
+    categorySelect.innerHTML = categories.map(c=>
       `<option value="${c}">${c.charAt(0).toUpperCase()+c.slice(1)}</option>`
     ).join('');
 
-    const remove = ['detention','commodities','section 6a','section-6a','innovation',
-      'sustainability','LDL','VLDL','CoQ10','excel-tips','excel-formulas','petroleum',
-      'density','productivity'];
-
+    const tagsToRemove = ['detention','commodities','section 6a','section-6a','innovation','sustainability','packaging','LDL','VLDL','CoQ10','excel-tips','excel-formulas','petroleum','density','productivity'];
     const tagCount = new Map();
-    posts.forEach(post => post.tags.forEach(tag => {
-      const skip = remove.some(r => tag.toLowerCase().includes(r.toLowerCase().trim()));
-      if (!skip) tagCount.set(tag, (tagCount.get(tag)||0)+1);
+    posts.forEach(p => p.tags.forEach(t => {
+      if (!tagsToRemove.some(r => t.toLowerCase()===r.toLowerCase()||t.toLowerCase().includes(r.toLowerCase()))) {
+        tagCount.set(t, (tagCount.get(t)||0)+1);
+      }
     }));
-
-    const top = Array.from(tagCount.entries()).sort((a,b)=>b[1]-a[1]).slice(0,18);
-
-    tagsCloud.innerHTML = `
-      <span class="tags-label">Topics →</span>
-      <span class="tag-chip active" data-tag="all">all</span>
-      ${top.map(([tag,count])=>`
-        <span class="tag-chip" data-tag="${tag}">${tag} <sup style="opacity:0.5;font-size:0.55rem">${count}</sup></span>
-      `).join('')}
-    `;
-
-    document.querySelectorAll('.tag-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        document.querySelectorAll('.tag-chip').forEach(t => t.classList.remove('active'));
-        chip.classList.add('active');
-        currentTag = chip.dataset.tag;
+    const sorted = Array.from(tagCount.entries()).sort((a,b)=>b[1]-a[1]).slice(0,15);
+    tagsCloud.innerHTML = `<span class="tag active" data-tag="all"><i class="fas fa-tag"></i> All</span>`
+      + sorted.map(([t,c])=>`<span class="tag" data-tag="${t}"><i class="fas ${getTagIcon(t)}"></i> ${t} (${c})</span>`).join('');
+    document.querySelectorAll('.tag').forEach(tag => {
+      tag.addEventListener('click', () => {
+        document.querySelectorAll('.tag').forEach(t=>t.classList.remove('active'));
+        tag.classList.add('active');
+        currentTag = tag.dataset.tag;
         currentPage = 1;
         renderPosts();
       });
@@ -860,149 +658,86 @@
 
   function filterPosts() {
     let f = [...allPosts];
-    if (currentCategory !== 'all') f = f.filter(p => p.category === currentCategory);
-    if (currentTag !== 'all') f = f.filter(p => p.tags.includes(currentTag));
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      f = f.filter(p =>
-        p.title.toLowerCase().includes(q) ||
-        p.excerpt.toLowerCase().includes(q) ||
-        p.author.toLowerCase().includes(q)
-      );
-    }
-    f.sort((a,b) => {
-      if (currentSort === 'latest') return new Date(b.date)-new Date(a.date);
-      if (currentSort === 'oldest') return new Date(a.date)-new Date(b.date);
-      return b.views - a.views;
-    });
+    if (currentCategory !== 'all') f = f.filter(p=>p.category===currentCategory);
+    if (currentTag !== 'all') f = f.filter(p=>p.tags.includes(currentTag));
+    if (searchQuery) { const q=searchQuery.toLowerCase(); f=f.filter(p=>p.title.toLowerCase().includes(q)||p.excerpt.toLowerCase().includes(q)||p.author.toLowerCase().includes(q)); }
+    f.sort((a,b)=>{ if(currentSort==='latest') return new Date(b.date)-new Date(a.date); if(currentSort==='oldest') return new Date(a.date)-new Date(b.date); return b.views-a.views; });
     return f;
   }
 
-  function formatDate(d) {
-    return new Date(d).toLocaleDateString('en-US', {year:'numeric',month:'short',day:'numeric'});
-  }
+  function formatDate(d) { return new Date(d).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}); }
 
   function renderPosts() {
     filteredPosts = filterPosts();
     const total = filteredPosts.length;
-    const pages = Math.ceil(total / POSTS_PER_PAGE);
-    if (currentPage > pages) currentPage = Math.max(1, pages);
-
+    const totalPages = Math.ceil(total/POSTS_PER_PAGE);
+    if (currentPage > totalPages) currentPage = totalPages||1;
     const start = (currentPage-1)*POSTS_PER_PAGE;
-    const slice = filteredPosts.slice(start, start+POSTS_PER_PAGE);
+    const end   = start+POSTS_PER_PAGE;
+    const show  = filteredPosts.slice(start,end);
 
-    resultsCountSpan.textContent = total === 0
-      ? 'No articles found'
-      : `${start+1}–${Math.min(start+POSTS_PER_PAGE, total)} of ${total} articles`;
+    resultsCountSpan.textContent = total===0 ? 'No articles found' : `Showing ${start+1}–${Math.min(end,total)} of ${total} articles`;
 
-    if (slice.length === 0) {
-      blogGrid.innerHTML = `
-        <div class="state-block">
-          <i class="fas fa-magnifying-glass"></i>
-          <h3>No articles found</h3>
-          <p>Try different filters or search terms</p>
-        </div>`;
+    if (!show.length) {
+      blogGrid.innerHTML = `<div class="no-results"><i class="fas fa-search"></i><h3>No articles found</h3><p>Try adjusting your filters or search query</p></div>`;
     } else {
-      blogGrid.innerHTML = slice.map((post, idx) => {
-        const featured = idx === 0 && currentPage === 1;
-        return `
-        <article class="blog-card" onclick="window.location.href='${post.url}'">
-          <div class="card-visual" data-cat="${post.category}">
-            <i class="fas ${post.icon} card-visual-icon"></i>
-            <span class="card-cat-badge">${post.category}</span>
-            <span class="card-issue">${post.readTime} min read</span>
+      blogGrid.innerHTML = show.map(post => `
+        <div class="blog-card" onclick="window.location.href='${post.url}'">
+          <div class="blog-image" data-cat="${post.category}">
+            <div class="icon-wrap"><i class="fas ${post.icon}"></i></div>
+            <span class="blog-category-badge">${post.category}</span>
           </div>
-          <div class="card-body">
-            <h2 class="card-title">${post.title}</h2>
-            <p class="card-excerpt">${post.excerpt}</p>
-            <div class="card-rule"></div>
-            <div class="card-footer">
-              <div class="card-byline">
-                <span class="card-author">${post.author}</span>
-                <span class="card-date">${formatDate(post.date)}</span>
-              </div>
-              <div class="card-tags">
-                ${post.tags.slice(0,2).map(t=>`<span class="card-tag">${t}</span>`).join('')}
-              </div>
+          <div class="blog-content">
+            <h3 class="blog-title">${post.title}</h3>
+            <p class="blog-excerpt">${post.excerpt}</p>
+            <div class="blog-meta">
+              <span class="meta-item"><i class="fas fa-user"></i>${post.author}</span>
+              <span class="meta-item"><i class="fas fa-calendar"></i>${formatDate(post.date)}</span>
+              <span class="meta-item"><i class="fas fa-clock"></i>${post.readTime} min</span>
             </div>
-            <div class="card-arrow">Read article <i class="fas fa-arrow-right"></i></div>
+            <div class="blog-tags">${post.tags.slice(0,3).map(t=>`<span class="blog-tag">${t}</span>`).join('')}</div>
+            <div class="read-more">Read article <i class="fas fa-arrow-right"></i></div>
           </div>
-        </article>`;
-      }).join('');
+        </div>
+      `).join('');
     }
-
-    renderPagination(pages);
+    renderPagination(totalPages);
   }
 
-  function renderPagination(total) {
-    if (total <= 1) { paginationDiv.innerHTML = ''; return; }
-    let h = `<button class="pg-btn" data-page="${currentPage-1}" ${currentPage===1?'disabled':''}><i class="fas fa-chevron-left"></i> Prev</button>`;
-    for (let i=1;i<=total;i++) {
-      if (i===1||i===total||(i>=currentPage-2&&i<=currentPage+2)) {
-        h += `<button class="pg-btn ${i===currentPage?'active':''}" data-page="${i}">${i}</button>`;
-      } else if (i===currentPage-3||i===currentPage+3) {
-        h += `<span class="pg-dots">…</span>`;
-      }
+  function renderPagination(totalPages) {
+    if (totalPages <= 1) { paginationDiv.innerHTML=''; return; }
+    let html = `<button class="page-btn" ${currentPage===1?'disabled':''} data-page="${currentPage-1}"><i class="fas fa-chevron-left"></i> Prev</button>`;
+    for (let i=1;i<=totalPages;i++) {
+      if (i===1||i===totalPages||(i>=currentPage-2&&i<=currentPage+2)) html+=`<button class="page-btn ${i===currentPage?'active':''}" data-page="${i}">${i}</button>`;
+      else if (i===currentPage-3||i===currentPage+3) html+=`<span class="page-dots">…</span>`;
     }
-    h += `<button class="pg-btn" data-page="${currentPage+1}" ${currentPage===total?'disabled':''}>Next <i class="fas fa-chevron-right"></i></button>`;
-    paginationDiv.innerHTML = h;
-    paginationDiv.querySelectorAll('.pg-btn[data-page]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (!btn.disabled) {
-          currentPage = parseInt(btn.dataset.page);
-          renderPosts();
-          window.scrollTo({top:0,behavior:'smooth'});
-        }
-      });
+    html+=`<button class="page-btn" ${currentPage===totalPages?'disabled':''} data-page="${currentPage+1}">Next <i class="fas fa-chevron-right"></i></button>`;
+    paginationDiv.innerHTML = html;
+    paginationDiv.querySelectorAll('.page-btn[data-page]').forEach(btn => {
+      btn.addEventListener('click', () => { if(!btn.disabled){currentPage=parseInt(btn.dataset.page);renderPosts();window.scrollTo({top:0,behavior:'smooth'});} });
     });
   }
 
-  searchInput.addEventListener('input', e => {
-    searchQuery = e.target.value; currentPage = 1; renderPosts();
-  });
-
-  categorySelect.addEventListener('change', e => {
-    currentCategory = e.target.value; currentPage = 1; renderPosts();
-  });
-
-  sortBtns.forEach(btn => btn.addEventListener('click', () => {
-    sortBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentSort = btn.dataset.sort; currentPage = 1; renderPosts();
-  }));
-
-  clearFiltersBtn.addEventListener('click', () => {
-    searchInput.value = '';
-    categorySelect.value = 'all';
-    document.querySelectorAll('.tag-chip').forEach(t => t.classList.remove('active'));
-    document.querySelector('.tag-chip[data-tag="all"]')?.classList.add('active');
-    searchQuery = ''; currentCategory = 'all'; currentTag = 'all'; currentPage = 1;
-    renderPosts();
-  });
+  searchInput.addEventListener('input', e=>{searchQuery=e.target.value;currentPage=1;renderPosts();});
+  categorySelect.addEventListener('change', e=>{currentCategory=e.target.value;currentPage=1;renderPosts();});
+  sortBtns.forEach(btn=>btn.addEventListener('click',()=>{sortBtns.forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentSort=btn.dataset.sort;currentPage=1;renderPosts();}));
+  clearFiltersBtn.addEventListener('click',()=>{searchInput.value='';categorySelect.value='all';document.querySelectorAll('.tag').forEach(t=>t.classList.remove('active'));document.querySelector('.tag[data-tag="all"]').classList.add('active');searchQuery='';currentCategory='all';currentTag='all';currentPage=1;renderPosts();});
 
   async function init() {
-    blogGrid.innerHTML = `
-      <div class="state-block">
-        <i class="fas fa-circle-notch spin"></i>
-        <h3>Gathering the press…</h3>
-        <p>Loading articles from archive</p>
-      </div>`;
-
-    allPosts = await loadAllPosts();
-
-    if (allPosts.length === 0) {
-      blogGrid.innerHTML = `
-        <div class="state-block">
-          <i class="fas fa-file-lines"></i>
-          <h3>No articles yet</h3>
-          <p>Add HTML files to Posts/ — the manifest will auto-generate</p>
-        </div>`;
-      resultsCountSpan.textContent = '0 articles';
-      return;
+    try {
+      blogGrid.innerHTML='<div class="loading"><i class="fas fa-spinner"></i><p>Loading articles…</p></div>';
+      allPosts = await loadAllPosts();
+      if (!allPosts.length) {
+        blogGrid.innerHTML=`<div class="no-results"><i class="fas fa-file-alt"></i><h3>No posts found</h3><p>Add HTML files to the Posts/ folder and run the GitHub Action.</p></div>`;
+        resultsCountSpan.textContent='0 articles';
+        return;
+      }
+      updateFiltersFromPosts(allPosts);
+      renderPosts();
+    } catch(e) {
+      console.error(e);
+      blogGrid.innerHTML=`<div class="no-results"><i class="fas fa-exclamation-triangle"></i><h3>Error loading posts</h3><p>Please refresh the page or try again later.</p></div>`;
     }
-
-    updateFiltersFromPosts(allPosts);
-    renderPosts();
   }
 
   init();
