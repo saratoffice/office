@@ -1,895 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>LPG Distributor Inspection · EC Act · LPG Order 2000</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --ink: #0d1b2a;
-      --ink-mid: #2d4a6a;
-      --ink-soft: #5a7a9a;
-      --ink-ghost: #9ab3cc;
-      --page: #f5f0e8;
-      --card: #faf8f4;
-      --rule: #d8cfc0;
-      --accent: #c8390a;
-      --accent-warm: #e85d20;
-      --accent-gold: #c49a1a;
-      --accent-green: #2a6b3c;
-      --accent-green-light: #e8f3ec;
-      --fire: #e84c1e;
-      --law: #1a4d8f;
-      --shadow: 0 2px 12px rgba(13,27,42,0.10);
-      --shadow-lg: 0 8px 40px rgba(13,27,42,0.14);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website steps · modern interactive card</title>
+    <!-- common fonts used throughout the site -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- common CSS (header, footer, global) — kept exactly as you use -->
+    <link rel="stylesheet" href="style.css">
+    <!-- site components (header/footer loader) -->
+    <script src="assets/Scripts/site-components.js" defer></script>
+    <!-- go to top script (common) -->
+    <script src="/assets/Scripts/gototop.js" defer></script>
+    <!-- only the steps card custom styles (minimal, integrated) -->
+    <style>
+        /* ensure body uses common background, flex column for sticky footer */
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+        }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* animated background overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjZmZmZmZmIj48L3JlY3Q+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmMGYwZjAiPjwvcmVjdD4KPC9zdmc+');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    body {
-      background: var(--page);
-      background-image:
-        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(200,57,10,0.04) 0%, transparent 60%),
-        url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23c8a87a' fill-opacity='0.04'%3E%3Crect x='0' y='0' width='1' height='40'/%3E%3Crect x='0' y='0' width='40' height='1'/%3E%3C/g%3E%3C/svg%3E");
-      font-family: 'DM Sans', sans-serif;
-      color: var(--ink);
-      min-height: 100vh;
-      padding: 2rem 1rem 3rem;
-    }
+        /* header & footer injected — they keep their original styles */
+        #site-header,
+        #site-footer {
+            flex-shrink: 0;
+            position: relative;
+            z-index: 10;
+        }
 
-    /* === PAGE WRAPPER === */
-    .page-wrap {
-      max-width: 1060px;
-      margin: 0 auto;
-    }
+        /* main content grows to fill space, centers the card */
+        .page-main {
+            flex: 1 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 5;
+        }
 
-    /* === NAV STRIP === */
-    .nav-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 1.8rem;
-      justify-content: center;
-    }
-    .nav-item {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      padding: 0.35rem 1.1rem;
-      border-radius: 4px;
-      border: 1.5px solid var(--rule);
-      color: var(--ink-mid);
-      text-decoration: none;
-      background: var(--card);
-      transition: 0.15s;
-    }
-    .nav-item:hover { border-color: var(--accent); color: var(--accent); }
-    .nav-item.active {
-      background: var(--ink);
-      border-color: var(--ink);
-      color: #fff;
-    }
+        /* ----- redesigned steps card (fits perfectly with header/footer) ----- */
+        .custom-ol {
+            padding: 36px 42px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            max-width: 620px;
+            width: 100%;
+            border-radius: 56px 56px 56px 56px;
+            box-shadow: 0 24px 46px -16px rgba(0, 45, 80, 0.35), 0 8px 15px rgba(0,0,0,0.03);
+            font-family: "Roboto", sans-serif;
+            color: #073b4c;
+            border: 1px solid rgba(255,255,255,0.6);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
 
-    /* === MAIN CARD === */
-    .main-card {
-      background: var(--card);
-      border: 1px solid var(--rule);
-      border-radius: 6px;
-      box-shadow: var(--shadow-lg);
-      overflow: hidden;
-    }
+        .custom-ol::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.6s;
+            pointer-events: none;
+        }
 
-    /* === MASTHEAD === */
-    .masthead {
-      background: var(--ink);
-      padding: 2rem 2.5rem 1.6rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .masthead::before {
-      content: '';
-      position: absolute;
-      right: -40px; top: -40px;
-      width: 260px; height: 260px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(200,57,10,0.18) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .masthead::after {
-      content: '';
-      position: absolute;
-      left: 0; bottom: 0;
-      width: 100%; height: 3px;
-      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-gold) 50%, transparent 100%);
-    }
-    .masthead-inner {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-      position: relative;
-      z-index: 1;
-    }
-    .masthead-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 2.1rem;
-      color: #fff;
-      line-height: 1.1;
-      letter-spacing: -0.01em;
-      white-space: nowrap;
-    }
-    .masthead-title em {
-      font-style: italic;
-      color: #f0c8a0;
-    }
-    .masthead-subtitle {
-      margin-top: 0.5rem;
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--ink-ghost);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .masthead-subtitle span {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
-      padding: 0.2rem 0.7rem;
-      border-radius: 3px;
-    }
-    .action-group {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      flex-wrap: wrap;
-    }
-    .share-dropdown {
-      position: relative;
-      display: inline-block;
-    }
-    .share-main-btn {
-      font-family: 'DM Sans', sans-serif;
-      background: rgba(255,255,255,0.08);
-      border: 1.5px solid rgba(255,255,255,0.35);
-      color: rgba(255,255,255,0.9);
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 0.5rem 1.4rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: 0.15s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .share-main-btn:hover {
-      background: rgba(255,255,255,0.16);
-      border-color: rgba(255,255,255,0.6);
-      color: #fff;
-    }
-    .share-menu {
-      position: absolute;
-      top: 100%;
-      right: 0;
-      margin-top: 8px;
-      background: var(--card);
-      border: 1px solid var(--rule);
-      border-radius: 8px;
-      box-shadow: var(--shadow-lg);
-      min-width: 160px;
-      z-index: 20;
-      display: none;
-      overflow: hidden;
-    }
-    .share-menu.show {
-      display: block;
-    }
-    .share-option {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0.7rem 1.2rem;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 500;
-      text-decoration: none;
-      color: var(--ink);
-      transition: background 0.12s;
-      cursor: pointer;
-    }
-    .share-option:hover {
-      background: rgba(200,57,10,0.08);
-    }
-    .share-option svg {
-      width: 18px;
-      height: 18px;
-    }
-    .print-btn {
-      font-family: 'DM Sans', sans-serif;
-      background: transparent;
-      border: 1.5px solid rgba(255,255,255,0.3);
-      color: rgba(255,255,255,0.85);
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 0.5rem 1.4rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: 0.15s;
-      align-self: flex-start;
-    }
-    .print-btn:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.6);
-      color: #fff;
-    }
+        .custom-ol:hover {
+            box-shadow: 0 32px 58px -18px #0a2a4a;
+            transform: translateY(-5px) scale(1.02);
+        }
 
-    /* === CARD BODY === */
-    .card-body {
-      padding: 0 2.5rem 2rem;
-    }
+        .custom-ol:hover::before {
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
 
-    /* === SECTION HEADING — REMOVED "Section" text === */
-    .sec-head {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 2rem 0 0.9rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1.5px solid var(--rule);
-    }
-    .sec-num {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.7rem;
-      color: var(--rule);
-      line-height: 1;
-      min-width: 32px;
-    }
-    /* .sec-label removed — hidden as requested */
-    .sec-label {
-      display: none;
-    }
-    .sec-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.12rem;
-      color: var(--ink);
-      line-height: 1.2;
-    }
-    .sec-tag {
-      margin-left: auto;
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      border: 1px solid var(--accent);
-      padding: 0.15rem 0.6rem;
-      border-radius: 3px;
-    }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
-    /* === BASIC DETAILS GRID === */
-    .details-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0;
-      border: 1px solid var(--rule);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .detail-row {
-      display: flex;
-      align-items: baseline;
-      padding: 0.6rem 1rem;
-      gap: 10px;
-      border-bottom: 1px solid var(--rule);
-      background: var(--card);
-      transition: background 0.1s;
-    }
-    .detail-row:nth-child(odd) { background: rgba(13,27,42,0.02); }
-    .detail-row:hover { background: rgba(200,57,10,0.03); }
-    .detail-row:last-child, .detail-row:nth-last-child(2):nth-child(odd) { border-bottom: none; }
-    .d-label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-      min-width: 140px;
-      flex-shrink: 0;
-    }
-    .d-line {
-      flex: 1;
-      border-bottom: 1px solid var(--ink-ghost);
-      min-height: 18px;
-      min-width: 100px;
-    }
+        /* heading with accent bar (like h3 from list pages) */
+        .custom-ol h2 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin: 0 0 16px 0;
+            padding-left: 28px;
+            position: relative;
+            color: #0b2b40;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            border-bottom: 2px solid transparent;
+            display: inline-block;
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-    /* === TABLES === */
-    .tbl-wrap {
-      border: 1px solid var(--rule);
-      border-radius: 4px;
-      overflow: hidden;
-      margin: 0.8rem 0;
-    }
-    .tbl-title {
-      background: var(--ink);
-      color: rgba(255,255,255,0.6);
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 0.4rem 1rem;
-    }
-    table.data-tbl {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.82rem;
-    }
-    table.data-tbl th {
-      background: rgba(13,27,42,0.06);
-      color: var(--ink-mid);
-      font-weight: 600;
-      font-size: 0.72rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 0.5rem 0.6rem;
-      text-align: center;
-      border: 1px solid var(--rule);
-    }
-    table.data-tbl td {
-      border: 1px solid var(--rule);
-      padding: 0.45rem 0.6rem;
-      text-align: center;
-      background: var(--card);
-      color: var(--ink-mid);
-      min-width: 52px;
-    }
-    table.data-tbl td:first-child {
-      text-align: left;
-      font-weight: 500;
-      background: rgba(13,27,42,0.025);
-      color: var(--ink);
-      min-width: 160px;
-    }
-    table.data-tbl tr:last-child td { border-bottom: none; }
+        .custom-ol h2::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 8px;
+            background: linear-gradient(145deg, #e11d48, #b91c1c);
+            border-radius: 20px;
+            transition: 0.3s ease;
+        }
 
-    /* === CHECKLIST === */
-    .check-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0;
-      border: 1px solid var(--rule);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .check-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 0.55rem 1rem;
-      border-bottom: 1px solid var(--rule);
-      border-right: 1px solid var(--rule);
-      background: var(--card);
-      transition: background 0.1s;
-    }
-    .check-item:hover { background: rgba(200,57,10,0.02); }
-    .check-item:nth-child(even) { border-right: none; }
-    .check-item:nth-last-child(1), .check-item:nth-last-child(2) { border-bottom: none; }
-    .check-item input[type="checkbox"] {
-      width: 15px;
-      height: 15px;
-      accent-color: var(--accent);
-      flex-shrink: 0;
-      margin-top: 2px;
-      cursor: pointer;
-    }
-    .check-item label {
-      font-size: 0.86rem;
-      color: var(--ink-mid);
-      line-height: 1.4;
-      cursor: pointer;
-    }
+        .custom-ol:hover h2::before {
+            width: 14px;
+            background: linear-gradient(145deg, #2563eb, #1e3a8a);
+        }
 
-    /* === SAFETY GRID (matches Basic Details style) === */
-    .safety-group-label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--card);
-      background: var(--ink-mid);
-      padding: 0.28rem 1rem;
-      grid-column: 1 / -1;
-    }
+        /* reset list */
+        .custom-ol ol {
+            margin: 32px 0 8px 0;
+            padding: 0;
+            list-style: none;
+            counter-reset: web-design;
+        }
 
-    /* === STATUS BADGES ROW === */
-    .status-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 12px;
-      background: var(--ink);
-      border-radius: 4px;
-      padding: 1rem 1.4rem;
-      margin: 1rem 0;
-    }
-    .status-badge {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 0.77rem;
-      color: rgba(255,255,255,0.75);
-    }
-    .status-badge .dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--accent-gold);
-      flex-shrink: 0;
-    }
-    .status-badge strong {
-      color: rgba(255,255,255,0.55);
-      font-size: 0.68rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
+        /* list items – spacious, refined hover effect */
+        .custom-ol ol li {
+            margin: 28px 0;
+            font-size: 1.35rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            padding: 12px 20px 12px 12px;
+            border-radius: 60px 20px 20px 60px;
+            cursor: pointer;
+            color: #1a2e3f;
+            background: transparent;
+            position: relative;
+            overflow: hidden;
+        }
 
-    /* === SIGN ROW === */
-    .sign-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-top: 1.8rem;
-      padding-top: 1.2rem;
-      border-top: 1.5px solid var(--rule);
-    }
-    .sign-block {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      min-width: 200px;
-    }
-    .sign-block-label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-    }
-    .sign-line {
-      border-bottom: 1.5px solid var(--ink);
-      width: 100%;
-      min-height: 28px;
-    }
+        .custom-ol ol li::after {
+            content: '🔗';
+            position: absolute;
+            right: -30px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
 
-    /* === FOOTER === */
-    .card-footer {
-      background: rgba(13,27,42,0.04);
-      border-top: 1px solid var(--rule);
-      padding: 0.7rem 2.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .footer-note {
-      font-size: 0.68rem;
-      color: var(--ink-ghost);
-      letter-spacing: 0.04em;
-    }
-    .footer-mark {
-      font-family: 'DM Serif Display', serif;
-      font-size: 0.82rem;
-      color: var(--accent);
-      letter-spacing: 0.04em;
-    }
+        .custom-ol ol li:hover {
+            background: linear-gradient(105deg, #ffd166 0%, #fbbf24 100%);
+            transform: translateX(12px) scale(1.02);
+            box-shadow: 0 12px 24px -16px #b45309, 0 0 0 2px rgba(255,215,0,0.3);
+            color: #0f172a;
+        }
 
-    /* spacing helpers */
-    .mt-sm { margin-top: 0.6rem; }
-    .tbl-gap { margin-top: 1rem; }
+        .custom-ol ol li:hover::after {
+            right: 15px;
+            opacity: 1;
+        }
 
-    /* === PRINT === */
-   /* === PRINT === */
-@media print {
-  @page { size: A4; margin: 0.5in 0.4in; }
-  body { 
-    background: white; 
-    padding: 0;
-    color: #000000 !important;  /* ADD THIS - forces all body text to black */
-  }
-  .nav-strip, .action-group, .share-dropdown, .share-menu { display: none !important; }
-  .main-card { box-shadow: none; border: none; }
-  .card-body { padding: 0 1.5rem 1rem; }
-  .masthead { 
-    padding: 1.2rem 1.5rem;
-    background: #1a2a3a !important;  /* OPTIONAL: keep dark header background */
-  }
-  .masthead-title { 
-    font-size: 1.6rem; 
-    white-space: normal;
-    color: #000000 !important;  /* ADD THIS - black title text */
-  }
-  .check-item:hover, .detail-row:hover { background: transparent; }
-  
-  /* ADD THESE RULES for black text throughout */
-  .main-card, .card-body, .sec-title, .d-label, .check-item label,
-  .detail-row, .tbl-wrap, table, td, th, .status-row, .sign-block-label,
-  .footer-note, .footer-mark, .sec-num, .sec-tag, .tbl-title {
-    color: #000000 !important;
-  }
-  
-  /* Ensure table headers and cells are black */
-  table.data-tbl th, table.data-tbl td {
-    color: #000000 !important;
-    border-color: #cccccc !important;
-  }
-  
-  /* Dark backgrounds should be adjusted for better contrast */
-  .tbl-title, .safety-group-label, .status-row {
-    background: #e0e0e0 !important;
-    color: #000000 !important;
-  }
-  
-  /* Keep checkbox borders visible */
-  .check-item input[type="checkbox"] {
-    border-color: #000000 !important;
-  }
-  
-  /* Signature lines visible */
-  .sign-line {
-    border-bottom-color: #000000 !important;
-  }
-}
+        /* step number (counter) – bigger, more presence */
+        .custom-ol ol li::before {
+            content: counter(web-design);
+            counter-increment: web-design;
+            margin-right: 28px;
+            font-size: 3rem;
+            font-weight: 800;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(130deg, #0b4b6f, #0a2472);
+            padding: 8px 24px;
+            border-radius: 0 28px 0 28px;
+            color: #f8fafc;
+            transition: all 0.4s ease;
+            line-height: 1;
+            box-shadow: 0 7px 0 #021b2b;
+            letter-spacing: -1px;
+            min-width: 84px;
+            text-align: center;
+        }
 
-    /* === RESPONSIVE === */
-    @media (max-width: 700px) {
-      .card-body { padding: 0 1rem 1.5rem; }
-      .masthead { padding: 1.4rem 1.2rem 1.2rem; }
-      .details-grid { grid-template-columns: 1fr; }
-      .check-grid { grid-template-columns: 1fr; }
-      .check-item { border-right: none; }
-      .check-item:nth-last-child(2) { border-bottom: 1px solid var(--rule); }
-      .safety-fields { grid-template-columns: 1fr; }
-      .masthead-title { font-size: 1.5rem; white-space: normal; }
-    }
+        .custom-ol ol li:hover::before {
+            background: linear-gradient(145deg, #073b4c, #022c3a);
+            transform: scale(1.2) rotate(-3deg) translateY(-4px);
+            box-shadow: 0 12px 0 #02101a, 0 4px 20px rgba(0,180,255,0.4);
+            color: white;
+            border-radius: 20px 0 20px 0;
+        }
 
-    /* entrance animation */
-    .main-card {
-      animation: fadeUp 0.4s ease both;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+        /* fine tune last item */
+        .custom-ol ol li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* optional small footer note inside card – blends in */
+        .card-footer-note {
+            margin-top: 28px;
+            text-align: right;
+            font-size: 0.95rem;
+            opacity: 0.55;
+            letter-spacing: 0.3px;
+            font-style: italic;
+            border-top: 1px dashed rgba(0,40,70,0.1);
+            padding-top: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .google-link {
+            background: linear-gradient(45deg, #4285f4, #34a853, #fbbc05, #ea4335);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .google-link:hover {
+            background: linear-gradient(45deg, #ea4335, #fbbc05, #34a853, #4285f4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transform: scale(1.05);
+            border-color: #4285f4;
+            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.2);
+        }
+
+        /* floating animation for the card */
+        .custom-ol {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(0.5deg); }
+        }
+
+        /* responsive: keep card comfortable on all devices */
+        @media (max-width: 600px) {
+            .page-main {
+                padding: 24px 16px;
+            }
+            .custom-ol {
+                padding: 28px 24px;
+                border-radius: 40px;
+            }
+            .custom-ol h2 {
+                font-size: 1.9rem;
+                padding-left: 22px;
+            }
+            .custom-ol ol li {
+                font-size: 1.15rem;
+                margin: 22px 0;
+            }
+            .custom-ol ol li::before {
+                font-size: 2.5rem;
+                min-width: 68px;
+                padding: 6px 14px;
+                margin-right: 20px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .custom-ol h2 {
+                font-size: 1.6rem;
+            }
+            .custom-ol ol li {
+                font-size: 1rem;
+            }
+            .custom-ol ol li::before {
+                font-size: 2.1rem;
+                min-width: 58px;
+                padding: 6px 8px;
+            }
+        }
+
+        /* everything integrates: header & footer retain their original look */
+    </style>
 </head>
 <body>
+    <!-- common header loaded via site-components.js -->
+    <div id="site-header"></div>
 
-<div class="page-wrap">
-
-  <!-- NAV -->
-  <nav class="nav-strip">
-    <a href="/formats/petrolpumpchecklist.html" class="nav-item">⛽ Petrol Pump</a>
-    <a href="/formats/lpgchecklist.html" class="nav-item active">🔥 LPG Checklist</a>
-    <a href="/formats/fpschecklist.html" class="nav-item">🍚 FPS Checklist</a>
-    <a href="/formats/ppcchecklist.html" class="nav-item">🌾 PPC Verification</a>
-  </nav>
-
-  <!-- MAIN CARD -->
-  <div class="main-card" id="lpgPrint">
-
-    <!-- MASTHEAD -->
-    <div class="masthead">
-      <div class="masthead-inner">
-        <div>
-          <!-- LPG Distributor Inspection Report now one line -->
-          <div class="masthead-title">LPG Distributor <em>Inspection Report</em></div>
-          <div class="masthead-subtitle">
-            <span>EC Act</span>
-            <span>LPG Order 2000</span>
-            <span>Safety Integrated</span>
-          </div>
-        </div>
-        <div class="action-group">
-          <!-- Unified Share button with dropdown -->
-          <div class="share-dropdown" id="shareDropdownContainer">
-            <button class="share-main-btn" id="shareMainBtn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-              Share
-            </button>
-            <div class="share-menu" id="shareMenu">
-              <a class="share-option" id="dropdownWa" href="#" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.096.541 4.064 1.487 5.779L.057 23.057a.75.75 0 00.906.942l5.424-1.417A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.713 9.713 0 01-4.952-1.352l-.355-.21-3.676.96.983-3.584-.23-.368A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
-                WhatsApp
-              </a>
-              <a class="share-option" id="dropdownTg" href="#" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-                Telegram
-              </a>
+    <!-- main area that holds the steps card and centers it perfectly -->
+    <div class="page-main">
+        <div class="custom-ol">
+            <h2>Steps To Design A Website</h2>
+            <ol>
+                <li onclick="window.open('https://www.google.com', '_blank')">The Planning Phase</li>
+                <li onclick="window.open('https://www.google.com', '_blank')">Create The Wireframe</li>
+                <li onclick="window.open('https://www.google.com', '_blank')">Design It</li>
+                <li onclick="window.open('https://www.google.com', '_blank')">Write The Code</li>
+                <li onclick="window.open('https://www.google.com', '_blank')">Publish The Website Online</li>
+            </ol>
+            <!-- a subtle card footer with Google link -->
+            <div class="card-footer-note">
+                <span>5 streamlined steps · start today</span>
+                <a href="https://www.google.com" target="_blank" class="google-link" onclick="event.stopPropagation();">🔍 Visit Google</a>
             </div>
-          </div>
-          <button class="print-btn" id="printBtn">⎙ Print</button>
         </div>
-      </div>
     </div>
 
-    <!-- BODY (all original content, only "Section" labels removed) -->
-    <div class="card-body">
+    <!-- common footer -->
+    <div id="site-footer"></div>
 
-      <!-- ① BASIC DETAILS -->
-      <div class="sec-head">
-        <div class="sec-num">01</div>
-        <div>
-          <div class="sec-title">Basic Details of Distributor</div>
-        </div>
-      </div>
+    <!-- go to top button (already included via gototop.js) -->
+    <!-- note: gototop.js is loaded with defer, it will attach automatically -->
 
-      <div class="details-grid">
-        <div class="detail-row"><span class="d-label">Distributor Name</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Proprietor / Manager</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Address</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Block Name</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Oil Marketing Company</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Distributor Code</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Agreement No.</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Date & Time of Inspection</span><span class="d-line"></span></div>
-      </div>
+    <script>
+        // Additional JavaScript to enhance the experience
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers to all list items if not already present
+            const listItems = document.querySelectorAll('.custom-ol ol li');
+            listItems.forEach((item, index) => {
+                // Ensure the onclick attribute is set
+                if (!item.hasAttribute('onclick')) {
+                    item.setAttribute('onclick', "window.open('https://www.google.com', '_blank')");
+                }
+                
+                // Add a small delay before opening to show hover effect
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Add a quick animation before redirect
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        window.open('https://www.google.com', '_blank');
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
 
-      <!-- ② STOCK VERIFICATION -->
-      <div class="sec-head">
-        <div class="sec-num">02</div>
-        <div>
-          <div class="sec-title">Stock Verification of LPG Cylinders</div>
-        </div>
-        <div class="sec-tag">Physical Count</div>
-      </div>
+            // Add click handler to the card footer note
+            const footerNote = document.querySelector('.card-footer-note span');
+            if (footerNote) {
+                footerNote.style.cursor = 'pointer';
+                footerNote.addEventListener('click', function() {
+                    window.open('https://www.google.com', '_blank');
+                });
+            }
+        });
 
-      <div class="tbl-wrap">
-        <div class="tbl-title">A — Filled Cylinders</div>
-        <table class="data-tbl">
-          <thead><tr><th>Type</th><th>Opening</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Balance</th><th>Physical</th><th>Difference</th></tr></thead>
-          <tbody>
-            <tr><td>14.2 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>19 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>5 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="tbl-wrap tbl-gap">
-        <div class="tbl-title">B — Empty Cylinders</div>
-        <table class="data-tbl">
-          <thead><tr><th>Type</th><th>Opening</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Balance</th><th>Physical</th><th>Difference</th></tr></thead>
-          <tbody>
-            <tr><td>14.2 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>19 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>5 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="tbl-wrap tbl-gap">
-        <div class="tbl-title">C — Other Cylinders (Defective / Seized)</div>
-        <table class="data-tbl">
-          <thead><tr><th>Type</th><th>14.2 Kg</th><th>5 Kg (D)</th><th>19 Kg</th><th>5 Kg (C)</th></tr></thead>
-          <tbody>
-            <tr><td>Defective / Damaged</td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>Seized / Zima</td><td></td><td></td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- ③ CONSUMER DATABASE -->
-      <div class="sec-head">
-        <div class="sec-num">03</div>
-        <div><div class="sec-title">Consumer Database Verification</div></div>
-      </div>
-      <div class="check-grid">
-        <div class="check-item"><input type="checkbox" id="c1"><label for="c1">Domestic (Normal) consumers</label></div>
-        <div class="check-item"><input type="checkbox" id="c2"><label for="c2">Ujjwala consumers</label></div>
-        <div class="check-item"><input type="checkbox" id="c3"><label for="c3">Commercial consumers</label></div>
-        <div class="check-item"><input type="checkbox" id="c4"><label for="c4">Active domestic count verified</label></div>
-        <div class="check-item"><input type="checkbox" id="c5"><label for="c5">Active Ujjwala count verified</label></div>
-        <div class="check-item"><input type="checkbox" id="c6"><label for="c6">Active commercial count verified</label></div>
-      </div>
-
-      <!-- ④ REFILL SUPPLY -->
-      <div class="sec-head">
-        <div class="sec-num">04</div>
-        <div><div class="sec-title">Refill Cylinder Supply — Last 3 Months, Category Wise</div></div>
-      </div>
-      <div class="tbl-wrap">
-        <table class="data-tbl">
-          <thead><tr><th rowspan="2">Month</th><th colspan="2">Domestic Cylinders Received</th><th colspan="2">Commercial Cylinders Received</th></tr><tr><th>14.2 Kg</th><th>5 Kg</th><th>19 Kg</th><th>Other</th></tr></thead>
-          <tbody><tr><td>Month 1</td><td></td><td></td><td></td><td></td></tr><tr><td>Month 2</td><td></td><td></td><td></td><td></td></tr><tr><td>Month 3</td><td></td><td></td><td></td><td></td></tr></tbody>
-        </table>
-      </div>
-
-      <!-- ⑤ SAFETY & CERTIFICATE COMPLIANCE -->
-      <div class="sec-head">
-        <div class="sec-num">05</div>
-        <div><div class="sec-title">Safety & Certificate Compliance</div></div>
-        <div class="sec-tag">Fire + Legal Metrology</div>
-      </div>
-      <div class="details-grid">
-        <div class="safety-group-label">🔥 Fire Safety Certificate & Inspection</div>
-        <div class="detail-row"><span class="d-label">Fire Safety Cert. No.</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Valid Up To</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Last Inspection Date</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Fire NOC Reference</span><span class="d-line"></span></div>
-        <div class="safety-group-label">⚖️ Legal Metrology — Weights & Measures</div>
-        <div class="detail-row"><span class="d-label">Weighing Scale (Model/ID)</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Certified Test Weight Set</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Spring Balance (Yes/No)</span><span class="d-line"></span></div>
-        <div class="detail-row"><span class="d-label">Scale Verification Due Date</span><span class="d-line"></span></div>
-        <div class="detail-row" style="grid-column: 1 / -1;"><span class="d-label">LMPC Certificate Available</span><span class="d-line"></span></div>
-      </div>
-
-      <!-- ⑥ VALVE / O-RING & LEAKAGE -->
-      <div class="sec-head">
-        <div class="sec-num">06</div>
-        <div><div class="sec-title">Valve / O-Ring & Leakage Verification</div></div>
-      </div>
-      <div class="check-grid">
-        <div class="check-item"><input type="checkbox" id="v1"><label for="v1">O-ring of each swapped cylinder checked</label></div>
-        <div class="check-item"><input type="checkbox" id="v2"><label for="v2">Soap water / leak detector used</label></div>
-        <div class="check-item"><input type="checkbox" id="v3"><label for="v3">No leakage at valve stem / joint</label></div>
-        <div class="check-item"><input type="checkbox" id="v4"><label for="v4">Staff trained in leak detection</label></div>
-      </div>
-
-      <!-- ⑦ DELIVERY & DISTRIBUTION -->
-      <div class="sec-head">
-        <div class="sec-num">07</div>
-        <div><div class="sec-title">Delivery & Distribution System</div></div>
-      </div>
-      <div class="check-grid">
-        <div class="check-item"><input type="checkbox" id="d1"><label for="d1">Home delivery system available</label></div>
-        <div class="check-item"><input type="checkbox" id="d2"><label for="d2">Delivery register maintained</label></div>
-        <div class="check-item"><input type="checkbox" id="d3"><label for="d3">Delivery vehicles inspected</label></div>
-        <div class="check-item"><input type="checkbox" id="d4"><label for="d4">Weighing machine available</label></div>
-        <div class="check-item"><input type="checkbox" id="d5"><label for="d5">Electronic POS machine used</label></div>
-        <div class="check-item"><input type="checkbox" id="d6"><label for="d6">Cash memo / invoice book maintained</label></div>
-        <div class="check-item"><input type="checkbox" id="d7"><label for="d7">Godown stock register updated</label></div>
-        <div class="check-item"><input type="checkbox" id="d8"><label for="d8">Electronic distribution records</label></div>
-      </div>
-
-      <!-- ⑧ GODOWN SAFETY -->
-      <div class="sec-head">
-        <div class="sec-num">08</div>
-        <div><div class="sec-title">Additional Safety Checks at Godown</div></div>
-      </div>
-      <div class="check-grid">
-        <div class="check-item"><input type="checkbox" id="g1"><label for="g1">Fire extinguishers (DCP/CO₂) available & serviced</label></div>
-        <div class="check-item"><input type="checkbox" id="g2"><label for="g2">Sand buckets (filled, with lid)</label></div>
-        <div class="check-item"><input type="checkbox" id="g3"><label for="g3">Warning boards / "No Smoking" signage</label></div>
-        <div class="check-item"><input type="checkbox" id="g4"><label for="g4">Proper ventilation in godown</label></div>
-        <div class="check-item"><input type="checkbox" id="g5"><label for="g5">Emergency exit clear</label></div>
-        <div class="check-item"><input type="checkbox" id="g6"><label for="g6">Electrical wiring insulated</label></div>
-        <div class="check-item"><input type="checkbox" id="g7"><label for="g7">Flameproof electrical fittings</label></div>
-        <div class="check-item"><input type="checkbox" id="g8"><label for="g8">Hydrostatic test record (cylinders)</label></div>
-      </div>
-
-      <!-- ⑨ RECORDS VERIFIED -->
-      <div class="sec-head">
-        <div class="sec-num">09</div>
-        <div><div class="sec-title">Records Verified</div></div>
-      </div>
-      <div class="check-grid">
-        <div class="check-item"><input type="checkbox" id="r1"><label for="r1">Stock Register</label></div>
-        <div class="check-item"><input type="checkbox" id="r2"><label for="r2">Consumer Register</label></div>
-        <div class="check-item"><input type="checkbox" id="r3"><label for="r3">Cash Memo / Invoice Book</label></div>
-        <div class="check-item"><input type="checkbox" id="r4"><label for="r4">Delivery Register</label></div>
-        <div class="check-item"><input type="checkbox" id="r5"><label for="r5">Godown Stock Register</label></div>
-        <div class="check-item"><input type="checkbox" id="r6"><label for="r6">Electronic Distribution Records</label></div>
-        <div class="check-item"><input type="checkbox" id="r7"><label for="r7">Complaint register maintained</label></div>
-        <div class="check-item"><input type="checkbox" id="r8"><label for="r8">KYC records available</label></div>
-      </div>
-
-      <!-- CRITICAL SAFETY STATUS -->
-      <div class="sec-head" style="margin-top: 2rem;">
-        <div class="sec-num" style="color: var(--accent); font-size:1.2rem;">!</div>
-        <div><div class="sec-title">LPG-Specific Safety Status</div></div>
-      </div>
-      <div class="status-row">
-        <div class="status-badge"><span class="dot"></span><span>No Smoking / No Mobile signage <strong>displayed</strong></span></div>
-        <div class="status-badge"><span class="dot"></span><span>Fire extinguisher monthly check <strong>up to date</strong></span></div>
-        <div class="status-badge"><span class="dot"></span><span>Hydrostatic test record <strong>verified</strong></span></div>
-        <div class="status-badge"><span class="dot"></span><span>Valve protection caps <strong>intact</strong></span></div>
-        <div class="status-badge"><span class="dot"></span><span>Flameproof fittings <strong>compliant</strong></span></div>
-        <div class="status-badge"><span class="dot"></span><span>Leak detection checklist <strong>maintained</strong></span></div>
-      </div>
-
-      <!-- SIGNATURE ROW -->
-      <div class="sign-row">
-        <div class="sign-block" style="flex: 2; max-width: 340px;"><div class="sign-block-label">Inspecting Officer — Name & Designation</div><div class="sign-line"></div></div>
-        <div class="sign-block"><div class="sign-block-label">Signature</div><div class="sign-line"></div></div>
-        <div class="sign-block"><div class="sign-block-label">Date of Inspection</div><div class="sign-line"></div></div>
-        <div class="sign-block"><div class="sign-block-label">Official Stamp</div><div class="sign-line"></div></div>
-      </div>
-
-    </div><!-- /card-body -->
-    <div class="card-footer">
-      <span class="footer-note">Fire NOC + Legal Metrology · O-ring check · EC Act format · LPG Order 2000</span>
-      <span class="footer-mark">LPG Inspection</span>
-    </div>
-  </div>
-
-  <nav class="nav-strip" style="margin-top: 1.5rem;">
-    <a href="/formats/petrolpumpchecklist.html" class="nav-item">⛽ Petrol Pump</a>
-    <a href="/formats/lpgchecklist.html" class="nav-item active">🔥 LPG Checklist</a>
-    <a href="/formats/fpschecklist.html" class="nav-item">🍚 FPS Checklist</a>
-    <a href="/formats/ppcchecklist.html" class="nav-item">🌾 PPC Verification</a>
-  </nav>
-
-</div>
-
-<script>
-  (function() {
-    const printBtn = document.getElementById('printBtn');
-    if (printBtn) printBtn.addEventListener('click', () => window.print());
-
-    const shareContainer = document.getElementById('shareDropdownContainer');
-    const shareMainBtn = document.getElementById('shareMainBtn');
-    const shareMenu = document.getElementById('shareMenu');
-    
-    if (shareMainBtn && shareMenu) {
-      shareMainBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        shareMenu.classList.toggle('show');
-      });
-      document.addEventListener('click', function(e) {
-        if (!shareContainer.contains(e.target)) {
-          shareMenu.classList.remove('show');
-        }
-      });
-    }
-
-    function getShareTextForWhatsApp() {
-      const distLine = document.querySelectorAll('.d-line')[0]?.textContent?.trim() || '';
-      const dateLine = document.querySelectorAll('.d-line')[7]?.textContent?.trim() || '';
-      return encodeURIComponent(
-        '📋 *LPG Distributor Inspection Report*\n' +
-        (distLine ? '🏪 Distributor: ' + distLine + '\n' : '') +
-        (dateLine ? '📅 Date: ' + dateLine + '\n' : '') +
-        '🔗 EC Act · LPG Order 2000\n✅ Safety Integrated (Fire NOC + Legal Metrology)\n\n' +
-        window.location.href
-      );
-    }
-
-    const waBtn = document.getElementById('dropdownWa');
-    const tgBtn = document.getElementById('dropdownTg');
-    if (waBtn) {
-      waBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const url = 'https://wa.me/?text=' + getShareTextForWhatsApp();
-        window.open(url, '_blank', 'noopener');
-        shareMenu.classList.remove('show');
-      });
-    }
-    if (tgBtn) {
-      tgBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(window.location.href) +
-          '&text=' + encodeURIComponent('📋 LPG Distributor Inspection Report\n✅ EC Act · LPG Order 2000 · Safety Integrated');
-        window.open(shareUrl, '_blank', 'noopener');
-        shareMenu.classList.remove('show');
-      });
-    }
-  })();
-</script>
+        // Prevent event bubbling from the Google link
+        document.querySelector('.google-link')?.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    </script>
 </body>
 </html>
-```
