@@ -1,196 +1,664 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Income Tax Calculator FY 2025-26</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <title>Income Tax Calculator FY 2025-26 (New Regime)</title>
-  <!-- Common CSS -->
-    <link rel="stylesheet" href="style.css">
-  <!-- ✅ IMPORTANT: Add the script for common header footer menu etc with defer HERE -->
-    <script src="assets/Scripts/site-components.js" defer></script>
-   <style>
-    :root {
-    --ink: #1a1510;
-    --ink-2: #3d3328;
-    --ink-3: #7a6e61;
-    --cream: #f5f0e8;
-    --cream-2: #ede6d8;
-    --cream-3: #e2d9c8;
-    --paper: #faf7f2;
-    --gold: #c9882a;
-    --gold-light: #e8b455;
-    --gold-pale: #f9f1e2;
-    --green: #2d6a4f;
-    --green-light: #e8f4ef;
-    --red: #9b2226;
-    --blue: #1d3557;
-    --blue-light: #e8eff8;
-    --shadow-sm: 0 2px 8px rgba(26,21,16,0.06);
-    --shadow-md: 0 4px 20px rgba(26,21,16,0.09);
-    --shadow-lg: 0 12px 40px rgba(26,21,16,0.12);
-    --radius: 16px;
-    --radius-sm: 10px;
-  }
+/* ============================================================
+   TAX CALCULATOR — ALL STYLES SCOPED UNDER .tax-calc
+   Safe to embed alongside any common header/footer CSS.
+   ============================================================ */
 
-  /* HEADER */
-  .header{text-align:center;margin-bottom:40px;padding-bottom:32px;border-bottom:2px solid var(--cream-3)}
-  .badge{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#fff;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 16px;border-radius:40px;margin-bottom:18px}
-  .header h1{font-family:'DM Serif Display',serif;font-size:clamp(28px,6vw,52px);color:var(--ink);line-height:1.1;margin-bottom:10px}
-  .header h1 em{font-style:italic;color:var(--gold)}
-  .header p{color:var(--ink-3);font-size:15px}
+.tax-calc {
+  --ink: #1a1510;
+  --ink-2: #3d3328;
+  --ink-3: #7a6e61;
+  --cream: #f5f0e8;
+  --cream-2: #ede6d8;
+  --cream-3: #e2d9c8;
+  --paper: #faf7f2;
+  --gold: #c9882a;
+  --gold-light: #e8b455;
+  --gold-pale: #f9f1e2;
+  --green: #2d6a4f;
+  --green-light: #e8f4ef;
+  --red: #9b2226;
+  --blue: #1d3557;
+  --blue-light: #e8eff8;
+  --shadow-sm: 0 2px 8px rgba(26,21,16,0.06);
+  --shadow-md: 0 4px 20px rgba(26,21,16,0.09);
+  --shadow-lg: 0 12px 40px rgba(26,21,16,0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
 
-  /* SECTION TITLE */
-  .sec-title{display:flex;align-items:center;gap:12px;font-family:'DM Serif Display',serif;font-size:21px;color:var(--ink);margin:36px 0 16px}
-  .sec-title::after{content:'';flex:1;height:1px;background:var(--cream-3)}
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  padding: 32px 16px 64px;
+}
 
-  /* CARDS */
-  .card{background:var(--paper);border:1px solid var(--cream-3);border-radius:var(--radius);padding:24px 28px;box-shadow:var(--shadow-sm);transition:box-shadow .2s}
-  .card:hover{box-shadow:var(--shadow-md)}
-  .card-title{font-family:'DM Serif Display',serif;font-size:17px;color:var(--ink);margin-bottom:20px;padding-bottom:14px;border-bottom:1px dashed var(--cream-3);display:flex;align-items:center;gap:8px}
+/* WRAPPER */
+.tax-calc .tc-wrapper {
+  max-width: 1040px;
+  margin: 0 auto;
+}
 
-  /* GRID */
-  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+/* ── HEADER ─────────────────────────────────────────────────
+   Renamed .tc-header (not .header) to avoid clash with
+   your common .site-header and any .header utility classes.
+   ──────────────────────────────────────────────────────── */
+.tax-calc .tc-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  border-bottom: 2px solid var(--cream-3);
+}
+.tax-calc .tc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gold);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 5px 16px;
+  border-radius: 40px;
+  margin-bottom: 18px;
+}
+/* Reset h1 overrides that common CSS may apply */
+.tax-calc .tc-header h1 {
+  font-family: 'DM Serif Display', serif !important;
+  font-size: clamp(28px, 6vw, 52px) !important;
+  color: var(--ink) !important;
+  line-height: 1.1 !important;
+  margin-bottom: 10px !important;
+  border-bottom: none !important;
+  background: none !important;
+  padding: 0 !important;
+  text-align: center !important;
+  display: block !important;
+}
+.tax-calc .tc-header h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+.tax-calc .tc-header p {
+  color: var(--ink-3);
+  font-size: 15px;
+  text-indent: 0 !important; /* override ec-article p+p indent */
+  margin: 0 !important;
+}
 
-  /* EMPLOYMENT */
-  .emp-strip{background:var(--paper);border:1px solid var(--cream-3);border-radius:var(--radius);padding:18px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:8px;box-shadow:var(--shadow-sm)}
-  .emp-label{font-size:12px;font-weight:600;color:var(--ink-3);letter-spacing:.5px;text-transform:uppercase;min-width:130px}
-  .emp-opts{display:flex;gap:10px;flex-wrap:wrap}
-  .emp-opt input{display:none}
-  .emp-opt label{display:flex;align-items:center;gap:7px;padding:8px 20px;border-radius:40px;border:1.5px solid var(--cream-3);font-size:14px;font-weight:500;color:var(--ink-2);cursor:pointer;transition:all .2s;background:var(--cream)}
-  .emp-opt label:hover{border-color:var(--gold);color:var(--gold)}
-  .emp-opt input:checked+label{background:var(--gold);border-color:var(--gold);color:white;font-weight:600;box-shadow:0 4px 12px rgba(201,136,42,.3)}
-  .dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex-shrink:0}
+/* SECTION TITLE */
+.tax-calc .sec-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'DM Serif Display', serif;
+  font-size: 21px;
+  color: var(--ink);
+  margin: 36px 0 16px;
+}
+.tax-calc .sec-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--cream-3);
+}
 
-  /* INPUT ROWS */
-  .input-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--cream-2);gap:12px}
-  .input-row:last-of-type{border-bottom:none}
-  .input-row label{font-size:14px;color:var(--ink-2);font-weight:400;flex:1;display:flex;align-items:center;gap:6px}
-  .inp-wrap{position:relative;display:flex;align-items:center}
-  .inp-wrap .curr{position:absolute;left:12px;font-size:12px;color:var(--ink-3);font-family:'DM Mono',monospace;pointer-events:none}
-  input[type=number]{width:140px;padding:8px 12px 8px 26px;border:1.5px solid var(--cream-3);border-radius:var(--radius-sm);font-size:14px;font-family:'DM Mono',monospace;text-align:right;color:var(--ink);background:var(--cream);transition:all .2s;-moz-appearance:textfield}
-  input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
-  input[type=number]:focus{outline:none;border-color:var(--gold);background:white;box-shadow:0 0 0 3px rgba(201,136,42,.12)}
+/* ── CARDS ───────────────────────────────────────────────────
+   Common CSS defines .card with different padding/shadow.
+   We override all those properties inside .tax-calc scope.
+   ──────────────────────────────────────────────────────── */
+.tax-calc .tc-card {
+  background: var(--paper);
+  border: 1px solid var(--cream-3);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow .2s;
+  margin-bottom: 0;
+}
+.tax-calc .tc-card:hover { box-shadow: var(--shadow-md); }
+.tax-calc .tc-card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px;
+  color: var(--ink);
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed var(--cream-3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-  /* BARS */
-  .bar{display:flex;justify-content:space-between;align-items:center;border-radius:var(--radius-sm);padding:13px 16px;margin:10px 0}
-  .bar.green{background:var(--green-light);border:1px solid #b7dcc8}
-  .bar.green .bl{color:var(--green);font-size:13px;font-weight:600}
-  .bar.green .bv{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:var(--green)}
-  .bar.blue{background:var(--blue-light);border-left:3px solid var(--blue)}
-  .bar.blue .bl{font-size:13px;color:var(--blue);font-weight:500}
-  .bar.blue .bv{font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--blue)}
-  .bar.gold{background:var(--gold-pale);border-left:3px solid var(--gold)}
-  .bar.gold .bl{font-size:13px;color:var(--gold);font-weight:500}
-  .bar.gold .bv{font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--gold)}
+/* GRID */
+.tax-calc .tc-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.tax-calc .tc-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
 
-  /* NET TAXABLE BANNER */
-  .net-banner{background:var(--ink);border-radius:var(--radius);padding:22px 28px;display:flex;justify-content:space-between;align-items:center;margin:8px 0 0}
-  .nb-left .nb-sub{font-size:13px;color:rgba(255,255,255,.45)}
-  .nb-left .nb-main{font-size:15px;color:rgba(255,255,255,.7);font-weight:400}
-  .nb-right{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:var(--gold-light)}
+/* ── EMPLOYMENT STRIP ──────────────────────────────────────── */
+.tax-calc .emp-strip {
+  background: var(--paper);
+  border: 1px solid var(--cream-3);
+  border-radius: var(--radius);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow-sm);
+}
+.tax-calc .emp-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-3);
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  min-width: 130px;
+}
+.tax-calc .emp-opts { display: flex; gap: 10px; flex-wrap: wrap; }
+.tax-calc .emp-opt input { display: none; }
+.tax-calc .emp-opt label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 20px;
+  border-radius: 40px;
+  border: 1.5px solid var(--cream-3);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all .2s;
+  background: var(--cream);
+}
+.tax-calc .emp-opt label:hover { border-color: var(--gold); color: var(--gold); }
+.tax-calc .emp-opt input:checked + label {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(201,136,42,.3);
+}
+.tax-calc .tc-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
 
-  /* CG CARDS */
-  .cg-card{background:var(--paper);border:1px solid var(--cream-3);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:box-shadow .2s}
-  .cg-card:hover{box-shadow:var(--shadow-md)}
-  .cg-head{padding:13px 18px;font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
-  .cg-head.stcg{background:#fff3e0;color:#e65100}
-  .cg-head.ltcg{background:#e8f5e9;color:#2e7d32}
-  .cg-head.vda{background:#ede7f6;color:#4527a0}
-  .rate{margin-left:auto;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:700}
-  .stcg .rate{background:#e65100;color:white}
-  .ltcg .rate{background:#2e7d32;color:white}
-  .vda .rate{background:#4527a0;color:white}
-  .cg-body{padding:14px 18px}
-  .cg-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--cream-2);font-size:13px}
-  .cg-row:last-child{border-bottom:none}
-  .cg-row .cl{color:var(--ink-3)}
-  .cg-row .cv{font-family:'DM Mono',monospace;font-weight:500;color:var(--ink-2)}
-  .cg-row.hi{background:var(--cream-2);border-radius:8px;padding:8px 10px;margin:6px -10px 0}
-  .cg-row.hi .cl{font-weight:600;color:var(--ink)}
-  .cg-row.hi .cv{color:var(--ink);font-size:15px;font-weight:600}
-  .cg-inp-wrap{position:relative}
-  .cg-inp-wrap .cc{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--ink-3);font-family:'DM Mono',monospace;pointer-events:none}
-  .cg-inp-wrap input{width:110px;padding:6px 8px 6px 22px;font-size:13px}
+/* ── INPUT ROWS ────────────────────────────────────────────── */
+.tax-calc .input-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--cream-2);
+  gap: 12px;
+}
+.tax-calc .input-row:last-of-type { border-bottom: none; }
+.tax-calc .input-row label {
+  font-size: 14px;
+  color: var(--ink-2);
+  font-weight: 400;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  /* reset common form label styles */
+  width: auto;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  border: none;
+}
+.tax-calc .inp-wrap { position: relative; display: flex; align-items: center; }
+.tax-calc .inp-wrap .curr {
+  position: absolute;
+  left: 12px;
+  font-size: 12px;
+  color: var(--ink-3);
+  font-family: 'DM Mono', monospace;
+  pointer-events: none;
+}
 
-  /* SLAB TABLE */
-  .slab-wrap{background:var(--paper);border:1px solid var(--cream-3);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}
-  .slab-table{width:100%;border-collapse:collapse}
-  .slab-table thead th{background:var(--ink);color:rgba(255,255,255,.6);font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:12px 16px;text-align:left;font-weight:500}
-  .slab-table thead th:last-child{text-align:right}
-  .slab-table tbody td{padding:12px 16px;font-size:14px;border-bottom:1px solid var(--cream-2);color:var(--ink-2)}
-  .slab-table tbody td:last-child{text-align:right;font-family:'DM Mono',monospace;font-weight:500;color:var(--ink)}
-  .slab-table tbody tr:hover td{background:var(--cream)}
-  .slab-table .rebate-row td{color:var(--red);font-style:italic}
-  .slab-table .rebate-row td:last-child{color:var(--red)}
+/* ── INPUTS ─────────────────────────────────────────────────
+   Common CSS applies styles to form input globally.
+   We reset and restyle inside .tax-calc scope.
+   ──────────────────────────────────────────────────────── */
+.tax-calc input[type=number] {
+  width: 140px;
+  padding: 8px 12px 8px 26px;
+  border: 1.5px solid var(--cream-3);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: 'DM Mono', monospace;
+  text-align: right;
+  color: var(--ink);
+  background: var(--cream);
+  transition: all .2s;
+  -moz-appearance: textfield;
+  /* reset common form input */
+  margin-top: 0;
+}
+.tax-calc input[type=number]::-webkit-inner-spin-button,
+.tax-calc input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+.tax-calc input[type=number]:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(201,136,42,.12);
+}
 
-  /* MARGINAL RELIEF */
-  .mr-box{border:1.5px solid var(--gold-light);border-radius:var(--radius);overflow:hidden;margin-bottom:8px}
-  .mr-head{background:var(--gold-pale);padding:14px 20px;display:flex;align-items:center;gap:10px;font-weight:600;color:var(--gold);font-size:14px}
-  .mr-body{padding:16px 20px}
-  .rbadge{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:40px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
-  .rbadge.yes{background:var(--green);color:white}
-  .rbadge.no{background:var(--red);color:white}
-  .mr-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-  .mr-item{background:var(--cream);border-radius:var(--radius-sm);padding:12px 14px;text-align:center}
-  .mr-item .mil{font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-  .mr-item .miv{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:var(--ink)}
-  .mr-save{grid-column:span 2;background:var(--green);color:white;border-radius:var(--radius-sm);padding:12px;text-align:center;font-size:15px;font-weight:600}
+/* ── BARS ──────────────────────────────────────────────────── */
+.tax-calc .tc-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
+  margin: 10px 0;
+}
+.tax-calc .tc-bar.green { background: var(--green-light); border: 1px solid #b7dcc8; }
+.tax-calc .tc-bar.green .bl { color: var(--green); font-size: 13px; font-weight: 600; }
+.tax-calc .tc-bar.green .bv { font-family: 'DM Mono', monospace; font-size: 17px; font-weight: 500; color: var(--green); }
+.tax-calc .tc-bar.blue { background: var(--blue-light); border-left: 3px solid var(--blue); }
+.tax-calc .tc-bar.blue .bl { font-size: 13px; color: var(--blue); font-weight: 500; }
+.tax-calc .tc-bar.blue .bv { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 600; color: var(--blue); }
+.tax-calc .tc-bar.gold { background: var(--gold-pale); border-left: 3px solid var(--gold); }
+.tax-calc .tc-bar.gold .bl { font-size: 13px; color: var(--gold); font-weight: 500; }
+.tax-calc .tc-bar.gold .bv { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 600; color: var(--gold); }
 
-  /* SUMMARY */
-  .summary{background:var(--ink);border-radius:var(--radius);padding:32px;color:white;margin-top:8px}
-  .summary h2{font-family:'DM Serif Display',serif;font-size:22px;color:white;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.1)}
-  .s-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-  .s-item{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-sm);padding:16px 18px;transition:background .2s}
-  .s-item:hover{background:rgba(255,255,255,.1)}
-  .s-item .sl{font-size:11px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
-  .s-item .sv{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:rgba(255,255,255,.9)}
-  .s-item.hi2{background:rgba(201,136,42,.15);border-color:rgba(201,136,42,.3)}
-  .s-item.hi2 .sv{color:var(--gold-light)}
-  .final-row{grid-column:span 3;background:var(--gold);border-radius:var(--radius-sm);padding:22px 24px;display:flex;justify-content:space-between;align-items:center;margin-top:4px;box-shadow:0 8px 24px rgba(201,136,42,.4)}
-  .final-row .fl{font-size:13px;color:rgba(255,255,255,.8);font-weight:600}
-  .final-row .fl strong{font-size:20px;color:white;font-family:'DM Serif Display',serif;display:block}
-  .final-row .fv{font-family:'DM Mono',monospace;font-size:36px;font-weight:500;color:white}
+/* NET TAXABLE BANNER */
+.tax-calc .net-banner {
+  background: var(--ink);
+  border-radius: var(--radius);
+  padding: 22px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 8px 0 0;
+}
+.tax-calc .net-banner .nb-sub { font-size: 13px; color: rgba(255,255,255,.45); }
+.tax-calc .net-banner .nb-main { font-size: 15px; color: rgba(255,255,255,.7); font-weight: 400; }
+.tax-calc .net-banner .nb-right {
+  font-family: 'DM Mono', monospace;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--gold-light);
+}
 
-  /* TOOLTIP */
-  .tip{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:var(--cream-3);color:var(--ink-3);font-size:10px;font-weight:700;cursor:default;position:relative;flex-shrink:0;transition:background .2s}
-  .tip:hover{background:var(--gold);color:white}
-  .tip .tb{visibility:hidden;opacity:0;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--ink);color:rgba(255,255,255,.85);font-size:12px;line-height:1.6;padding:12px 14px;border-radius:var(--radius-sm);width:240px;pointer-events:none;transition:opacity .15s;z-index:9999;font-weight:400;box-shadow:var(--shadow-lg)}
-  .tip:hover .tb{visibility:visible;opacity:1}
-  .tip .tb::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink)}
+/* ── CG CARDS ──────────────────────────────────────────────── */
+.tax-calc .cg-card {
+  background: var(--paper);
+  border: 1px solid var(--cream-3);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow .2s;
+}
+.tax-calc .cg-card:hover { box-shadow: var(--shadow-md); }
+.tax-calc .cg-head {
+  padding: 13px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tax-calc .cg-head.stcg { background: #fff3e0; color: #e65100; }
+.tax-calc .cg-head.ltcg { background: #e8f5e9; color: #2e7d32; }
+.tax-calc .cg-head.vda  { background: #ede7f6; color: #4527a0; }
+.tax-calc .tc-rate { margin-left: auto; font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 700; }
+.tax-calc .stcg .tc-rate { background: #e65100; color: white; }
+.tax-calc .ltcg .tc-rate { background: #2e7d32; color: white; }
+.tax-calc .vda  .tc-rate { background: #4527a0; color: white; }
+.tax-calc .cg-body { padding: 14px 18px; }
+.tax-calc .cg-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--cream-2);
+  font-size: 13px;
+}
+.tax-calc .cg-row:last-child { border-bottom: none; }
+.tax-calc .cg-row .cl { color: var(--ink-3); }
+.tax-calc .cg-row .cv { font-family: 'DM Mono', monospace; font-weight: 500; color: var(--ink-2); }
+.tax-calc .cg-row.hi {
+  background: var(--cream-2);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin: 6px -10px 0;
+}
+.tax-calc .cg-row.hi .cl { font-weight: 600; color: var(--ink); }
+.tax-calc .cg-row.hi .cv { color: var(--ink); font-size: 15px; font-weight: 600; }
+.tax-calc .cg-inp-wrap { position: relative; }
+.tax-calc .cg-inp-wrap .cc {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--ink-3);
+  font-family: 'DM Mono', monospace;
+  pointer-events: none;
+}
+.tax-calc .cg-inp-wrap input { width: 110px; padding: 6px 8px 6px 22px; font-size: 13px; }
 
-  /* STATUS */
-  .status{font-size:12px;margin-top:8px;display:flex;align-items:center;gap:5px}
-  .status.ok{color:var(--green)}
-  .status.warn{color:var(--gold)}
+/* ── SLAB TABLE ─────────────────────────────────────────────
+   Common CSS has global table/th/td styles.
+   We override them inside .tax-calc scope.
+   ──────────────────────────────────────────────────────── */
+.tax-calc .slab-wrap {
+  background: var(--paper);
+  border: 1px solid var(--cream-3);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  /* neutralise ec-article table 3D effect if inherited */
+  transform: none;
+}
+.tax-calc .slab-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0;
+  box-shadow: none;
+  border-radius: 0;
+  transform: none;
+  transition: none;
+  font-size: 14px;
+}
+.tax-calc .slab-table:hover {
+  box-shadow: none;
+  transform: none;
+}
+.tax-calc .slab-table thead th {
+  background: var(--ink) !important;
+  color: rgba(255,255,255,.6) !important;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 500;
+  border-right: none;
+  border-bottom: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+.tax-calc .slab-table thead th::after { display: none; }
+.tax-calc .slab-table thead th:last-child { text-align: right; }
+.tax-calc .slab-table tbody td {
+  padding: 12px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--cream-2);
+  border-right: none;
+  color: var(--ink-2);
+  background: none !important;
+  box-shadow: none;
+  transition: none;
+  vertical-align: middle;
+  font-weight: 400;
+}
+.tax-calc .slab-table tbody td:last-child {
+  text-align: right;
+  font-family: 'DM Mono', monospace;
+  font-weight: 500;
+  color: var(--ink);
+  border-right: none;
+}
+.tax-calc .slab-table tbody tr:hover td {
+  background: var(--cream) !important;
+  border-bottom-color: var(--cream-2);
+}
+.tax-calc .slab-table tbody tr:hover td:first-child {
+  border-left: none;
+  color: var(--ink-2);
+}
+.tax-calc .slab-table .rebate-row td { color: var(--red); font-style: italic; }
+.tax-calc .slab-table .rebate-row td:last-child { color: var(--red); }
 
-  /* RESPONSIVE */
-  @media(max-width:820px){
-    .grid-2,.grid-3,.s-grid{grid-template-columns:1fr}
-    .final-row{grid-column:span 1;flex-direction:column;gap:10px;text-align:center}
-    .mr-grid{grid-template-columns:1fr 1fr}
-    .mr-save{grid-column:span 2}
-    input[type=number]{width:120px}
-  }
-  @media(max-width:540px){
-    body{padding:16px 10px 48px}
-    .card,.summary,.emp-strip{padding:18px 16px}
-    .header h1{font-size:26px}
-    .input-row{flex-direction:column;align-items:flex-start;gap:6px}
-    input[type=number]{width:100%}
-    .net-banner{flex-direction:column;gap:10px;text-align:center}
-    .mr-grid{grid-template-columns:1fr}
-    .mr-save{grid-column:span 1}
-  }
-  </style>
+/* ── MARGINAL RELIEF ───────────────────────────────────────── */
+.tax-calc .mr-box {
+  border: 1.5px solid var(--gold-light);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.tax-calc .mr-head {
+  background: var(--gold-pale);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: var(--gold);
+  font-size: 14px;
+}
+.tax-calc .mr-body { padding: 16px 20px; }
+.tax-calc .rbadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 40px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.tax-calc .rbadge.yes { background: var(--green); color: white; }
+.tax-calc .rbadge.no  { background: var(--red);   color: white; }
+.tax-calc .mr-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+.tax-calc .mr-item {
+  background: var(--cream);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  text-align: center;
+}
+.tax-calc .mr-item .mil {
+  font-size: 11px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 4px;
+}
+.tax-calc .mr-item .miv {
+  font-family: 'DM Mono', monospace;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.tax-calc .mr-save {
+  grid-column: span 2;
+  background: var(--green);
+  color: white;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ── SUMMARY ───────────────────────────────────────────────── */
+.tax-calc .tc-summary {
+  background: var(--ink);
+  border-radius: var(--radius);
+  padding: 32px;
+  color: white;
+  margin-top: 8px;
+}
+.tax-calc .tc-summary h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  color: white;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  background: none;
+  text-align: left;
+  border-left: none;
+}
+.tax-calc .s-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.tax-calc .s-item {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  transition: background .2s;
+}
+.tax-calc .s-item:hover { background: rgba(255,255,255,.1); }
+.tax-calc .s-item .sl {
+  font-size: 11px;
+  color: rgba(255,255,255,.45);
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 6px;
+}
+.tax-calc .s-item .sv {
+  font-family: 'DM Mono', monospace;
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(255,255,255,.9);
+}
+.tax-calc .s-item.hi2 { background: rgba(201,136,42,.15); border-color: rgba(201,136,42,.3); }
+.tax-calc .s-item.hi2 .sv { color: var(--gold-light); }
+.tax-calc .final-row {
+  grid-column: span 3;
+  background: var(--gold);
+  border-radius: var(--radius-sm);
+  padding: 22px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  box-shadow: 0 8px 24px rgba(201,136,42,.4);
+}
+.tax-calc .final-row .fl { font-size: 13px; color: rgba(255,255,255,.8); font-weight: 600; }
+.tax-calc .final-row .fl strong {
+  font-size: 20px;
+  color: white;
+  font-family: 'DM Serif Display', serif;
+  display: block;
+}
+.tax-calc .final-row .fv {
+  font-family: 'DM Mono', monospace;
+  font-size: 36px;
+  font-weight: 500;
+  color: white;
+}
+
+/* ── TOOLTIP ───────────────────────────────────────────────── */
+.tax-calc .tc-tip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--cream-3);
+  color: var(--ink-3);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: default;
+  position: relative;
+  flex-shrink: 0;
+  transition: background .2s;
+}
+.tax-calc .tc-tip:hover { background: var(--gold); color: white; }
+.tax-calc .tc-tip .tb {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: rgba(255,255,255,.85);
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  width: 240px;
+  pointer-events: none;
+  transition: opacity .15s;
+  z-index: 9999;
+  font-weight: 400;
+  box-shadow: var(--shadow-lg);
+}
+.tax-calc .tc-tip:hover .tb { visibility: visible; opacity: 1; }
+.tax-calc .tc-tip .tb::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--ink);
+}
+
+/* STATUS */
+.tax-calc .tc-status { font-size: 12px; margin-top: 8px; display: flex; align-items: center; gap: 5px; }
+.tax-calc .tc-status.ok   { color: var(--green); }
+.tax-calc .tc-status.warn { color: var(--gold); }
+
+/* ── RESPONSIVE ────────────────────────────────────────────── */
+@media (max-width: 820px) {
+  .tax-calc .tc-grid-2,
+  .tax-calc .tc-grid-3,
+  .tax-calc .s-grid { grid-template-columns: 1fr; }
+  .tax-calc .final-row { grid-column: span 1; flex-direction: column; gap: 10px; text-align: center; }
+  .tax-calc .mr-grid { grid-template-columns: 1fr 1fr; }
+  .tax-calc .mr-save { grid-column: span 2; }
+  .tax-calc input[type=number] { width: 120px; }
+}
+@media (max-width: 540px) {
+  .tax-calc { padding: 16px 10px 48px; }
+  .tax-calc .tc-card,
+  .tax-calc .tc-summary,
+  .tax-calc .emp-strip { padding: 18px 16px; }
+  .tax-calc .tc-header h1 { font-size: 26px !important; }
+  .tax-calc .input-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .tax-calc input[type=number] { width: 100%; }
+  .tax-calc .net-banner { flex-direction: column; gap: 10px; text-align: center; }
+  .tax-calc .mr-grid { grid-template-columns: 1fr; }
+  .tax-calc .mr-save { grid-column: span 1; }
+}
+
+</style>
 </head>
 <body>
-  <div id="site-header"></div>
-  <div class="wrapper">
 
-  <header class="header">
-    <div class="badge">✦ FY 2025–26 &nbsp;·&nbsp; New Tax Regime</div>
+<!-- ═══════════════════════════════════════════════════════════
+     YOUR COMMON HEADER GOES HERE (site-header, top-bar etc.)
+     None of the .tax-calc styles will touch it.
+     ═══════════════════════════════════════════════════════════ -->
+
+<div class="tax-calc">
+<div class="tc-wrapper">
+
+  <!-- HEADER -->
+  <header class="tc-header">
+    <div class="tc-badge">✦ FY 2025–26 &nbsp;·&nbsp; New Tax Regime</div>
     <h1>Income Tax<br><em>Calculator</em></h1>
     <p>Budget 2025 &nbsp;·&nbsp; Section 115BAC &nbsp;·&nbsp; Updated slabs &amp; rebate</p>
   </header>
@@ -199,48 +667,85 @@
   <div class="emp-strip">
     <span class="emp-label">Employment type</span>
     <div class="emp-opts">
-      <div class="emp-opt"><input type="radio" id="es" name="emp" value="salaried" checked onchange="calc()"><label for="es"><span class="dot"></span>Salaried</label></div>
-      <div class="emp-opt"><input type="radio" id="eb" name="emp" value="business" onchange="calc()"><label for="eb"><span class="dot"></span>Business</label></div>
-      <div class="emp-opt"><input type="radio" id="ep" name="emp" value="pensioner" onchange="calc()"><label for="ep"><span class="dot"></span>Pensioner</label></div>
+      <div class="emp-opt">
+        <input type="radio" id="es" name="emp" value="salaried" checked onchange="tcCalc()">
+        <label for="es"><span class="tc-dot"></span>Salaried</label>
+      </div>
+      <div class="emp-opt">
+        <input type="radio" id="eb" name="emp" value="business" onchange="tcCalc()">
+        <label for="eb"><span class="tc-dot"></span>Business</label>
+      </div>
+      <div class="emp-opt">
+        <input type="radio" id="ep" name="emp" value="pensioner" onchange="tcCalc()">
+        <label for="ep"><span class="tc-dot"></span>Pensioner</label>
+      </div>
     </div>
   </div>
 
   <!-- INCOME SOURCES -->
   <div class="sec-title">💼 Income Sources</div>
-  <div class="grid-2">
+  <div class="tc-grid-2">
 
-    <div class="card">
-      <div class="card-title">💰 Gross Income Details</div>
-      <div class="input-row"><label>Gross Salary / Pension</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="grossSalary" value="1228769" onchange="calc()" onkeyup="calc()"></div></div>
-      <div class="input-row"><label>Other Sources</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="otherSources" value="0" onchange="calc()" onkeyup="calc()"></div></div>
-      <div class="input-row"><label>Interest Income</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="interestIncome" value="0" onchange="calc()" onkeyup="calc()"></div></div>
-      <div class="input-row"><label>Dividend Income</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="dividendIncome" value="0" onchange="calc()" onkeyup="calc()"></div></div>
-      <div class="input-row"><label>Rental Income (let-out property)</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="grossRent" value="50000" onchange="calc()" onkeyup="calc()"></div></div>
-      <div class="bar green" style="margin-top:18px">
+    <div class="tc-card">
+      <div class="tc-card-title">💰 Gross Income Details</div>
+      <div class="input-row">
+        <label>Gross Salary / Pension</label>
+        <div class="inp-wrap"><span class="curr">₹</span><input type="number" id="grossSalary" value="1228769" onchange="tcCalc()" onkeyup="tcCalc()"></div>
+      </div>
+      <div class="input-row">
+        <label>Other Sources</label>
+        <div class="inp-wrap"><span class="curr">₹</span><input type="number" id="otherSources" value="0" onchange="tcCalc()" onkeyup="tcCalc()"></div>
+      </div>
+      <div class="input-row">
+        <label>Interest Income</label>
+        <div class="inp-wrap"><span class="curr">₹</span><input type="number" id="interestIncome" value="0" onchange="tcCalc()" onkeyup="tcCalc()"></div>
+      </div>
+      <div class="input-row">
+        <label>Dividend Income</label>
+        <div class="inp-wrap"><span class="curr">₹</span><input type="number" id="dividendIncome" value="0" onchange="tcCalc()" onkeyup="tcCalc()"></div>
+      </div>
+      <div class="input-row">
+        <label>Rental Income (let-out property)</label>
+        <div class="inp-wrap"><span class="curr">₹</span><input type="number" id="grossRent" value="50000" onchange="tcCalc()" onkeyup="tcCalc()"></div>
+      </div>
+      <div class="tc-bar green" style="margin-top:18px">
         <span class="bl">Total Income (before deductions)</span>
         <span class="bv" id="totalIncomeDisplay">₹0</span>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-title">🏠 House Property <span class="tip">i<span class="tb">GAV − Municipal Taxes = NAV. 30% standard deduction on NAV. Loss from let-out property cannot be set off under the new regime.</span></span></div>
-      <div class="input-row"><label>Municipal Taxes Paid</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="municipalTaxes" value="3000" onchange="calc()" onkeyup="calc()"></div></div>
-      <div class="input-row"><label>Interest on Let-Out Loan</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="letOutLoan" value="100000" onchange="calc()" onkeyup="calc()"></div></div>
-      <div class="bar blue">
-        <span class="bl">📊 HP Income (computed) <span class="tip" style="background:rgba(29,53,87,.15);color:var(--blue)">i<span class="tb">Rent − Municipal Tax = NAV. Less 30% deduction on NAV. Less loan interest. Negative = loss (not set-offable).</span></span></span>
+    <div class="tc-card">
+      <div class="tc-card-title">
+        🏠 House Property
+        <span class="tc-tip">i<span class="tb">GAV − Municipal Taxes = NAV. 30% standard deduction on NAV. Loss from let-out property cannot be set off under the new regime.</span></span>
+      </div>
+      <div class="input-row">
+        <label>Municipal Taxes Paid</label>
+        <div class="inp-wrap"><span class="curr">₹</span><input type="number" id="municipalTaxes" value="3000" onchange="tcCalc()" onkeyup="tcCalc()"></div>
+      </div>
+      <div class="input-row">
+        <label>Interest on Let-Out Loan</label>
+        <div class="inp-wrap"><span class="curr">₹</span><input type="number" id="letOutLoan" value="100000" onchange="tcCalc()" onkeyup="tcCalc()"></div>
+      </div>
+      <div class="tc-bar blue">
+        <span class="bl">
+          📊 HP Income (computed)
+          <span class="tc-tip" style="background:rgba(29,53,87,.15);color:var(--blue)">i<span class="tb">Rent − Municipal Tax = NAV. Less 30% deduction on NAV. Less loan interest. Negative = loss (not set-offable).</span></span>
+        </span>
         <span class="bv" id="hpIncomeDisplay">₹0</span>
       </div>
-      <div class="bar gold">
+      <div class="tc-bar gold">
         <span class="bl">✅ Taxable HP Income (≥ 0 only)</span>
         <span class="bv" id="taxableHPDisplay">₹0</span>
       </div>
-      <div class="bar blue" id="stdBar">
+      <div class="tc-bar blue" id="stdBar">
         <span class="bl">📌 Standard Deduction u/s 16(ia)</span>
         <span class="bv" id="stdDeductionValue">₹75,000</span>
       </div>
-      <p class="status ok" id="stdStatus">✔ Standard deduction applicable (salaried / pensioner)</p>
+      <p class="tc-status ok" id="stdStatus">✔ Standard deduction applicable (salaried / pensioner)</p>
     </div>
-  </div>
+
+  </div><!-- end tc-grid-2 -->
 
   <!-- NET TAXABLE BANNER -->
   <div class="net-banner">
@@ -253,41 +758,47 @@
 
   <!-- CAPITAL GAINS -->
   <div class="sec-title">📈 Capital Gains &amp; Digital Assets</div>
-  <div class="grid-3">
+  <div class="tc-grid-3">
+
     <div class="cg-card">
-      <div class="cg-head stcg">Short-Term CG<span class="rate">20%</span></div>
+      <div class="cg-head stcg">Short-Term CG<span class="tc-rate">20%</span></div>
       <div class="cg-body">
-        <div class="cg-row"><span class="cl">Gain Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="stcgAmount" value="0" onchange="calc()"></div></span></div>
+        <div class="cg-row"><span class="cl">Gain Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="stcgAmount" value="0" onchange="tcCalc()"></div></span></div>
         <div class="cg-row"><span class="cl">Exemption</span><span class="cv" id="stcgExemption">₹0</span></div>
         <div class="cg-row"><span class="cl">Taxable Amount</span><span class="cv" id="taxableSTCG">₹0</span></div>
         <div class="cg-row hi"><span class="cl">Tax @ 20%</span><span class="cv" id="stcgTaxAmount">₹0</span></div>
       </div>
     </div>
+
     <div class="cg-card">
-      <div class="cg-head ltcg">Long-Term CG<span class="rate">12.5%</span></div>
+      <div class="cg-head ltcg">Long-Term CG<span class="tc-rate">12.5%</span></div>
       <div class="cg-body">
-        <div class="cg-row"><span class="cl">Gain Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="ltcgAmount" value="0" onchange="calc()"></div></span></div>
+        <div class="cg-row"><span class="cl">Gain Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="ltcgAmount" value="0" onchange="tcCalc()"></div></span></div>
         <div class="cg-row"><span class="cl">Exemption (max ₹1.25L)</span><span class="cv" id="ltcgExemption">₹0</span></div>
         <div class="cg-row"><span class="cl">Taxable Amount</span><span class="cv" id="taxableLTCG">₹0</span></div>
         <div class="cg-row hi"><span class="cl">Tax @ 12.5%</span><span class="cv" id="ltcgTaxAmount">₹0</span></div>
       </div>
     </div>
+
     <div class="cg-card">
-      <div class="cg-head vda">Digital Assets<span class="rate">30%</span></div>
+      <div class="cg-head vda">Digital Assets<span class="tc-rate">30%</span></div>
       <div class="cg-body">
-        <div class="cg-row"><span class="cl">Income Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="digitalAssetsAmount" value="0" onchange="calc()"></div></span></div>
+        <div class="cg-row"><span class="cl">Income Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="digitalAssetsAmount" value="0" onchange="tcCalc()"></div></span></div>
         <div class="cg-row"><span class="cl">Exemption</span><span class="cv" id="digitalExemption">₹0</span></div>
         <div class="cg-row"><span class="cl">Taxable Amount</span><span class="cv" id="taxableDigital">₹0</span></div>
         <div class="cg-row hi"><span class="cl">Tax @ 30%</span><span class="cv" id="digitalTaxAmount">₹0</span></div>
       </div>
     </div>
-  </div>
+
+  </div><!-- end tc-grid-3 -->
 
   <!-- SLABS -->
   <div class="sec-title">📊 Tax Slab Breakdown</div>
   <div class="slab-wrap">
     <table class="slab-table">
-      <thead><tr><th>Income Range</th><th>Rate</th><th>Tax Amount</th></tr></thead>
+      <thead>
+        <tr><th>Income Range</th><th>Rate</th><th>Tax Amount</th></tr>
+      </thead>
       <tbody>
         <tr><td>Up to ₹4,00,000</td><td>Nil</td><td id="slab1">₹0</td></tr>
         <tr><td>₹4,00,001 – ₹8,00,000</td><td>5%</td><td id="slab2">₹0</td></tr>
@@ -304,13 +815,16 @@
   <!-- MARGINAL RELIEF -->
   <div class="sec-title">🛡️ Marginal Relief</div>
   <div class="mr-box">
-    <div class="mr-head">🛡️ Marginal Relief Analysis <span class="tip" style="color:var(--gold);background:rgba(201,136,42,.15)">i<span class="tb">Applicable when income is ₹12,00,001–₹12,75,000. Tax is capped at Income − ₹12,00,000.</span></span></div>
+    <div class="mr-head">
+      🛡️ Marginal Relief Analysis
+      <span class="tc-tip" style="color:var(--gold);background:rgba(201,136,42,.15)">i<span class="tb">Applicable when income is ₹12,00,001–₹12,75,000. Tax is capped at Income − ₹12,00,000.</span></span>
+    </div>
     <div class="mr-body" id="mrBody"></div>
   </div>
 
   <!-- FINAL SUMMARY -->
   <div class="sec-title">💰 Final Tax Summary</div>
-  <div class="summary">
+  <div class="tc-summary">
     <h2>Your Tax at a Glance</h2>
     <div class="s-grid">
       <div class="s-item"><div class="sl">Gross Income</div><div class="sv" id="sumTotal">₹0</div></div>
@@ -329,96 +843,144 @@
     </div>
   </div>
 
-</div>
+</div><!-- end tc-wrapper -->
+</div><!-- end tax-calc -->
+
+<!-- ═══════════════════════════════════════════════════════════
+     YOUR COMMON FOOTER GOES HERE (mega-footer etc.)
+     None of the .tax-calc styles will touch it.
+     ═══════════════════════════════════════════════════════════ -->
 
 <script>
-  const f=n=>'₹'+Math.round(isNaN(n)?0:n).toLocaleString('en-IN');
-  const g=id=>parseFloat(document.getElementById(id)?.value)||0;
-  const s=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
+  /* Renamed calc() → tcCalc() to avoid collision with any
+     other calc() function that may exist on the page.      */
 
-  function calc(){
-    const gSal=g('grossSalary'),oSrc=g('otherSources'),iInc=g('interestIncome'),
-          dInc=g('dividendIncome'),rent=g('grossRent'),mTax=g('municipalTaxes'),
-          lloan=g('letOutLoan'),stcg=g('stcgAmount'),ltcg=g('ltcgAmount'),vda=g('digitalAssetsAmount');
-    const emp=document.querySelector('input[name="emp"]:checked')?.value||'salaried';
-    const isSP=emp==='salaried'||emp==='pensioner';
+  const tcFmt = n => '₹' + Math.round(isNaN(n) ? 0 : n).toLocaleString('en-IN');
+  const tcGet = id => parseFloat(document.getElementById(id)?.value) || 0;
+  const tcSet = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+
+  function tcCalc() {
+    const gSal  = tcGet('grossSalary'),
+          oSrc  = tcGet('otherSources'),
+          iInc  = tcGet('interestIncome'),
+          dInc  = tcGet('dividendIncome'),
+          rent  = tcGet('grossRent'),
+          mTax  = tcGet('municipalTaxes'),
+          lloan = tcGet('letOutLoan'),
+          stcg  = tcGet('stcgAmount'),
+          ltcg  = tcGet('ltcgAmount'),
+          vda   = tcGet('digitalAssetsAmount');
+
+    const emp  = document.querySelector('input[name="emp"]:checked')?.value || 'salaried';
+    const isSP = emp === 'salaried' || emp === 'pensioner';
 
     // House property
-    const nav=rent-mTax, stdHP=nav>0?nav*.30:0, hpInc=nav-stdHP-lloan, txHP=hpInc>0?hpInc:0;
+    const nav   = rent - mTax;
+    const stdHP = nav > 0 ? nav * 0.30 : 0;
+    const hpInc = nav - stdHP - lloan;
+    const txHP  = hpInc > 0 ? hpInc : 0;
+
     // Totals
-    const totalInc=gSal+oSrc+iInc+dInc+rent;
-    const stdDed=isSP?Math.min(gSal,75000):0;
-    const netTx=Math.max(0,gSal+oSrc+iInc+dInc-stdDed+txHP);
+    const totalInc = gSal + oSrc + iInc + dInc + rent;
+    const stdDed   = isSP ? Math.min(gSal, 75000) : 0;
+    const netTx    = Math.max(0, gSal + oSrc + iInc + dInc - stdDed + txHP);
 
-    // Update income displays
-    s('totalIncomeDisplay',f(totalInc));
-    s('hpIncomeDisplay',f(hpInc));
-    s('taxableHPDisplay',f(txHP));
-    s('taxableIncomeDisplay',f(netTx));
-    s('stdDeductionValue',f(stdDed));
-    const stEl=document.getElementById('stdStatus');
-    if(isSP){stEl.className='status ok';stEl.textContent=`✔ Standard deduction ${f(stdDed)} applied`}
-    else{stEl.className='status warn';stEl.textContent='⚠ Not applicable (business / profession)'}
+    // Update displays
+    tcSet('totalIncomeDisplay',   tcFmt(totalInc));
+    tcSet('hpIncomeDisplay',      tcFmt(hpInc));
+    tcSet('taxableHPDisplay',     tcFmt(txHP));
+    tcSet('taxableIncomeDisplay', tcFmt(netTx));
+    tcSet('stdDeductionValue',    tcFmt(stdDed));
 
-    // CG
-    const ltEx=Math.min(ltcg,125000),txLTCG=Math.max(0,ltcg-ltEx);
-    const stcgT=stcg*.20,ltcgT=txLTCG*.125,vdaT=vda*.30,cgTax=stcgT+ltcgT+vdaT;
-    s('stcgExemption','₹0');s('taxableSTCG',f(stcg));s('stcgTaxAmount',f(stcgT));
-    s('ltcgExemption',f(ltEx));s('taxableLTCG',f(txLTCG));s('ltcgTaxAmount',f(ltcgT));
-    s('digitalExemption','₹0');s('taxableDigital',f(vda));s('digitalTaxAmount',f(vdaT));
+    const stEl = document.getElementById('stdStatus');
+    if (isSP) {
+      stEl.className = 'tc-status ok';
+      stEl.textContent = `✔ Standard deduction ${tcFmt(stdDed)} applied`;
+    } else {
+      stEl.className = 'tc-status warn';
+      stEl.textContent = '⚠ Not applicable (business / profession)';
+    }
+
+    // Capital gains
+    const ltEx   = Math.min(ltcg, 125000);
+    const txLTCG = Math.max(0, ltcg - ltEx);
+    const stcgT  = stcg * 0.20;
+    const ltcgT  = txLTCG * 0.125;
+    const vdaT   = vda * 0.30;
+    const cgTax  = stcgT + ltcgT + vdaT;
+
+    tcSet('stcgExemption',   '₹0');
+    tcSet('taxableSTCG',     tcFmt(stcg));
+    tcSet('stcgTaxAmount',   tcFmt(stcgT));
+    tcSet('ltcgExemption',   tcFmt(ltEx));
+    tcSet('taxableLTCG',     tcFmt(txLTCG));
+    tcSet('ltcgTaxAmount',   tcFmt(ltcgT));
+    tcSet('digitalExemption','₹0');
+    tcSet('taxableDigital',  tcFmt(vda));
+    tcSet('digitalTaxAmount',tcFmt(vdaT));
 
     // Slabs
-    const r=slabs(netTx);
-    ['1','2','3','4','5','6','7'].forEach(i=>s('slab'+i,f(r.b['s'+i])));
-    s('rebateDisplay',r.rebate>0?`− ${f(r.rebate)}`:'—');
+    const r = tcSlabs(netTx);
+    ['1','2','3','4','5','6','7'].forEach(i => tcSet('slab' + i, tcFmt(r.b['s' + i])));
+    tcSet('rebateDisplay', r.rebate > 0 ? `− ${tcFmt(r.rebate)}` : '—');
 
     // Marginal relief
-    const taxBR=r.tax+r.rebate, limT=Math.max(0,netTx-1200000);
-    let finalReg=taxBR, mrHTML='';
-    if(netTx>1200000&&netTx<=1275000){
-      if(taxBR>limT){
-        finalReg=limT;
-        const sv=taxBR-limT;
-        mrHTML=`<span class="rbadge yes">✓ Applicable</span>
+    const taxBR = r.tax + r.rebate;
+    const limT  = Math.max(0, netTx - 1200000);
+    let finalReg = taxBR, mrHTML = '';
+
+    if (netTx > 1200000 && netTx <= 1275000) {
+      if (taxBR > limT) {
+        finalReg = limT;
+        const sv = taxBR - limT;
+        mrHTML = `<span class="rbadge yes">✓ Applicable</span>
         <p style="font-size:13px;color:var(--ink-3);margin-bottom:12px">Tax capped at Income − ₹12,00,000</p>
         <div class="mr-grid">
-          <div class="mr-item"><div class="mil">Normal Tax</div><div class="miv">${f(taxBR)}</div></div>
-          <div class="mr-item"><div class="mil">Tax with Relief</div><div class="miv">${f(limT)}</div></div>
-          <div class="mr-save">💰 You save ${f(sv)}</div>
+          <div class="mr-item"><div class="mil">Normal Tax</div><div class="miv">${tcFmt(taxBR)}</div></div>
+          <div class="mr-item"><div class="mil">Tax with Relief</div><div class="miv">${tcFmt(limT)}</div></div>
+          <div class="mr-save">💰 You save ${tcFmt(sv)}</div>
         </div>`;
       } else {
-        mrHTML=`<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Normal tax ≤ Income − ₹12L. Relief not required.</p>`;
+        mrHTML = `<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Normal tax ≤ Income − ₹12L. Relief not required.</p>`;
       }
-    } else if(netTx<=1200000){
-      mrHTML=`<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Income ${f(netTx)} is within ₹12,00,000 threshold. Rebate u/s 87A: ${f(r.rebate)}</p>`;
+    } else if (netTx <= 1200000) {
+      mrHTML = `<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Income ${tcFmt(netTx)} is within ₹12,00,000 threshold. Rebate u/s 87A: ${tcFmt(r.rebate)}</p>`;
     } else {
-      finalReg=taxBR;
-      mrHTML=`<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Income ${f(netTx)} exceeds ₹12,75,000 threshold.</p>`;
+      finalReg = taxBR;
+      mrHTML = `<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Income ${tcFmt(netTx)} exceeds ₹12,75,000 threshold.</p>`;
     }
-    document.getElementById('mrBody').innerHTML=mrHTML;
+    document.getElementById('mrBody').innerHTML = mrHTML;
 
-    const tBC=finalReg+cgTax, cess=tBC*.04, final=Math.ceil(tBC+cess);
-    s('sumTotal',f(totalInc));s('sumStd',f(stdDed));s('sumHP',f(txHP));
-    s('sumNet',f(netTx));s('sumReg',f(finalReg));s('sumSTCG',f(stcgT));
-    s('sumLTCG',f(ltcgT));s('sumVDA',f(vdaT));s('sumCess',f(cess));s('sumFinal',f(final));
+    const tBC  = finalReg + cgTax;
+    const cess = tBC * 0.04;
+    const final = Math.ceil(tBC + cess);
+
+    tcSet('sumTotal', tcFmt(totalInc));
+    tcSet('sumStd',   tcFmt(stdDed));
+    tcSet('sumHP',    tcFmt(txHP));
+    tcSet('sumNet',   tcFmt(netTx));
+    tcSet('sumReg',   tcFmt(finalReg));
+    tcSet('sumSTCG',  tcFmt(stcgT));
+    tcSet('sumLTCG',  tcFmt(ltcgT));
+    tcSet('sumVDA',   tcFmt(vdaT));
+    tcSet('sumCess',  tcFmt(cess));
+    tcSet('sumFinal', tcFmt(final));
   }
 
-  function slabs(inc){
-    const b={s1:0,s2:0,s3:0,s4:0,s5:0,s6:0,s7:0};
-    if(inc>2400000){b.s7=(inc-2400000)*.30;b.s6=400000*.25;b.s5=400000*.20;b.s4=400000*.15;b.s3=400000*.10;b.s2=400000*.05}
-    else if(inc>2000000){b.s6=(inc-2000000)*.25;b.s5=400000*.20;b.s4=400000*.15;b.s3=400000*.10;b.s2=400000*.05}
-    else if(inc>1600000){b.s5=(inc-1600000)*.20;b.s4=400000*.15;b.s3=400000*.10;b.s2=400000*.05}
-    else if(inc>1200000){b.s4=(inc-1200000)*.15;b.s3=400000*.10;b.s2=400000*.05}
-    else if(inc>800000){b.s3=(inc-800000)*.10;b.s2=400000*.05}
-    else if(inc>400000){b.s2=(inc-400000)*.05}
-    let tax=Object.values(b).reduce((a,c)=>a+c,0),rebate=0;
-    if(inc<=1200000&&tax>0){rebate=Math.min(tax,60000);tax-=rebate}
-    return{tax,rebate,b}
+  function tcSlabs(inc) {
+    const b = { s1:0, s2:0, s3:0, s4:0, s5:0, s6:0, s7:0 };
+    if      (inc > 2400000) { b.s7=(inc-2400000)*.30; b.s6=400000*.25; b.s5=400000*.20; b.s4=400000*.15; b.s3=400000*.10; b.s2=400000*.05; }
+    else if (inc > 2000000) { b.s6=(inc-2000000)*.25; b.s5=400000*.20; b.s4=400000*.15; b.s3=400000*.10; b.s2=400000*.05; }
+    else if (inc > 1600000) { b.s5=(inc-1600000)*.20; b.s4=400000*.15; b.s3=400000*.10; b.s2=400000*.05; }
+    else if (inc > 1200000) { b.s4=(inc-1200000)*.15; b.s3=400000*.10; b.s2=400000*.05; }
+    else if (inc >  800000) { b.s3=(inc-800000)*.10;  b.s2=400000*.05; }
+    else if (inc >  400000) { b.s2=(inc-400000)*.05; }
+    let tax = Object.values(b).reduce((a, c) => a + c, 0), rebate = 0;
+    if (inc <= 1200000 && tax > 0) { rebate = Math.min(tax, 60000); tax -= rebate; }
+    return { tax, rebate, b };
   }
 
-  window.onload=calc;
+  window.addEventListener('DOMContentLoaded', tcCalc);
 </script>
-  <div id="site-footer"></div>
-<script src="/assets/Scripts/gototop.js"></script>
 </body>
 </html>
