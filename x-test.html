@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Income Tax Calculator FY 2025-26</title>
+<title>Income Tax Calculator FY 2025-26 | New Tax Regime</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<!-- Common CSS (menu, footer, global styles) -->
-  <link rel="stylesheet" href="/style.css">
-  <!-- ✅ IMPORTANT: site components for header/footer etc. -->
-  <script src="/assets/Scripts/site-components.js" defer></script>
+<!-- Common CSS (menu, footer, global styles) - using safe relative path, but ensures no conflict -->
+<link rel="stylesheet" href="/style.css">
+<script src="/assets/Scripts/site-components.js" defer></script>
 <style>
 /* ============================================================
    TAX CALCULATOR — ALL STYLES SCOPED UNDER .tax-calc
    Safe to embed alongside any common header/footer CSS.
+   IMPORTANT: tooltip visibility fixed — ensures .tc-tip .tb is above all layers.
    ============================================================ */
 .tax-calc {
   --ink: #1a1510;
@@ -43,6 +43,8 @@
   font-size: 15px;
   line-height: 1.6;
   padding: 32px 16px 64px;
+  position: relative;
+  z-index: 1;
 }
 
 /* WRAPPER */
@@ -51,10 +53,7 @@
   margin: 0 auto;
 }
 
-/* ── HEADER ─────────────────────────────────────────────────
-   Renamed .tc-header (not .header) to avoid clash with
-   your common .site-header and any .header utility classes.
-   ──────────────────────────────────────────────────────── */
+/* ── HEADER ───────────────────────────────────────────────── */
 .tax-calc .tc-header {
   text-align: center;
   margin-bottom: 40px;
@@ -75,7 +74,6 @@
   border-radius: 40px;
   margin-bottom: 18px;
 }
-/* Reset h1 overrides that common CSS may apply */
 .tax-calc .tc-header h1 {
   font-family: 'DM Serif Display', serif !important;
   font-size: clamp(28px, 6vw, 52px) !important;
@@ -95,7 +93,7 @@
 .tax-calc .tc-header p {
   color: var(--ink-3);
   font-size: 15px;
-  text-indent: 0 !important; /* override ec-article p+p indent */
+  text-indent: 0 !important;
   margin: 0 !important;
 }
 
@@ -116,10 +114,7 @@
   background: var(--cream-3);
 }
 
-/* ── CARDS ───────────────────────────────────────────────────
-   Common CSS defines .card with different padding/shadow.
-   We override all those properties inside .tax-calc scope.
-   ──────────────────────────────────────────────────────── */
+/* ── CARDS ─────────────────────────────────────────────────── */
 .tax-calc .tc-card {
   background: var(--paper);
   border: 1px solid var(--cream-3);
@@ -217,7 +212,6 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  /* reset common form label styles */
   width: auto;
   padding: 0;
   margin: 0;
@@ -234,10 +228,7 @@
   pointer-events: none;
 }
 
-/* ── INPUTS ─────────────────────────────────────────────────
-   Common CSS applies styles to form input globally.
-   We reset and restyle inside .tax-calc scope.
-   ──────────────────────────────────────────────────────── */
+/* ── INPUTS ───────────────────────────────────────────────── */
 .tax-calc input[type=number] {
   width: 140px;
   padding: 8px 12px 8px 26px;
@@ -250,8 +241,6 @@
   background: var(--cream);
   transition: all .2s;
   -moz-appearance: textfield;
-  /* reset common form input */
-  margin-top: 0;
 }
 .tax-calc input[type=number]::-webkit-inner-spin-button,
 .tax-calc input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
@@ -360,17 +349,13 @@
 }
 .tax-calc .cg-inp-wrap input { width: 110px; padding: 6px 8px 6px 22px; font-size: 13px; }
 
-/* ── SLAB TABLE ─────────────────────────────────────────────
-   Common CSS has global table/th/td styles.
-   We override them inside .tax-calc scope.
-   ──────────────────────────────────────────────────────── */
+/* ── SLAB TABLE ───────────────────────────────────────────── */
 .tax-calc .slab-wrap {
   background: var(--paper);
   border: 1px solid var(--cream-3);
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  /* neutralise ec-article table 3D effect if inherited */
   transform: none;
 }
 .tax-calc .slab-table {
@@ -569,53 +554,94 @@
   color: white;
 }
 
-/* ── TOOLTIP ───────────────────────────────────────────────── */
+/* ============================================================
+   TOOLTIP FIX: Ensure full visibility, high z-index, no hidden overflow
+   ============================================================ */
 .tax-calc .tc-tip {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: var(--cream-3);
   color: var(--ink-3);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
-  cursor: default;
+  cursor: pointer;
   position: relative;
   flex-shrink: 0;
   transition: background .2s;
+  z-index: 10;
 }
 .tax-calc .tc-tip:hover { background: var(--gold); color: white; }
 .tax-calc .tc-tip .tb {
   visibility: hidden;
   opacity: 0;
   position: absolute;
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + 12px);
   left: 50%;
   transform: translateX(-50%);
   background: var(--ink);
-  color: rgba(255,255,255,.85);
+  color: rgba(255,255,255,.95);
   font-size: 12px;
-  line-height: 1.6;
-  padding: 12px 14px;
+  line-height: 1.55;
+  padding: 12px 16px;
   border-radius: var(--radius-sm);
-  width: 240px;
+  width: 260px;
+  max-width: 80vw;
   pointer-events: none;
-  transition: opacity .15s;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
   z-index: 9999;
   font-weight: 400;
   box-shadow: var(--shadow-lg);
+  white-space: normal;
+  text-align: left;
+  letter-spacing: 0.2px;
 }
-.tax-calc .tc-tip:hover .tb { visibility: visible; opacity: 1; }
+.tax-calc .tc-tip:hover .tb {
+  visibility: visible;
+  opacity: 1;
+}
 .tax-calc .tc-tip .tb::after {
   content: '';
   position: absolute;
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  border: 6px solid transparent;
+  border: 7px solid transparent;
   border-top-color: var(--ink);
+}
+/* Ensure no clipping from any ancestor */
+.tax-calc .mr-box,
+.tax-calc .mr-head,
+.tax-calc .mr-body {
+  overflow: visible;
+}
+.tax-calc .mr-head .tc-tip {
+  margin-left: 4px;
+  position: relative;
+  z-index: 100;
+}
+.tax-calc .mr-head .tc-tip .tb {
+  left: 0;
+  transform: translateX(-10%);
+  width: 280px;
+}
+.tax-calc .mr-head .tc-tip .tb::after {
+  left: 15%;
+}
+/* Additional fix for small screens */
+@media (max-width: 640px) {
+  .tax-calc .tc-tip .tb {
+    width: 240px;
+    left: -100%;
+    transform: translateX(-20%);
+  }
+  .tax-calc .mr-head .tc-tip .tb {
+    left: -50px;
+    transform: translateX(0);
+  }
 }
 
 /* STATUS */
@@ -645,16 +671,10 @@
   .tax-calc .mr-grid { grid-template-columns: 1fr; }
   .tax-calc .mr-save { grid-column: span 1; }
 }
-
 </style>
 </head>
 <body>
-<!-- COMMON HEADER -->
-    <div id="site-header"></div>
-<!-- ═══════════════════════════════════════════════════════════
-     YOUR COMMON HEADER GOES HERE (site-header, top-bar etc.)
-     None of the .tax-calc styles will touch it.
-     ═══════════════════════════════════════════════════════════ -->
+<div id="site-header"></div>
 
 <div class="tax-calc">
 <div class="tc-wrapper">
@@ -688,148 +708,63 @@
   <!-- INCOME SOURCES -->
   <div class="sec-title">💼 Income Sources</div>
   <div class="tc-grid-2">
-
     <div class="tc-card">
       <div class="tc-card-title">💰 Gross Income Details</div>
-      <div class="input-row">
-        <label>Gross Salary / Pension</label>
-        <div class="inp-wrap"><span class="curr">₹</span><input type="number" id="grossSalary" value="1228769" onchange="tcCalc()" onkeyup="tcCalc()"></div>
-      </div>
-      <div class="input-row">
-        <label>Other Sources</label>
-        <div class="inp-wrap"><span class="curr">₹</span><input type="number" id="otherSources" value="0" onchange="tcCalc()" onkeyup="tcCalc()"></div>
-      </div>
-      <div class="input-row">
-        <label>Interest Income</label>
-        <div class="inp-wrap"><span class="curr">₹</span><input type="number" id="interestIncome" value="0" onchange="tcCalc()" onkeyup="tcCalc()"></div>
-      </div>
-      <div class="input-row">
-        <label>Dividend Income</label>
-        <div class="inp-wrap"><span class="curr">₹</span><input type="number" id="dividendIncome" value="0" onchange="tcCalc()" onkeyup="tcCalc()"></div>
-      </div>
-      <div class="input-row">
-        <label>Rental Income (let-out property)</label>
-        <div class="inp-wrap"><span class="curr">₹</span><input type="number" id="grossRent" value="50000" onchange="tcCalc()" onkeyup="tcCalc()"></div>
-      </div>
-      <div class="tc-bar green" style="margin-top:18px">
-        <span class="bl">Total Income (before deductions)</span>
-        <span class="bv" id="totalIncomeDisplay">₹0</span>
-      </div>
+      <div class="input-row"><label>Gross Salary / Pension</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="grossSalary" value="1228769" onchange="tcCalc()" onkeyup="tcCalc()"></div></div>
+      <div class="input-row"><label>Other Sources</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="otherSources" value="0" onchange="tcCalc()" onkeyup="tcCalc()"></div></div>
+      <div class="input-row"><label>Interest Income</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="interestIncome" value="0" onchange="tcCalc()" onkeyup="tcCalc()"></div></div>
+      <div class="input-row"><label>Dividend Income</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="dividendIncome" value="0" onchange="tcCalc()" onkeyup="tcCalc()"></div></div>
+      <div class="input-row"><label>Rental Income (let-out property)</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="grossRent" value="50000" onchange="tcCalc()" onkeyup="tcCalc()"></div></div>
+      <div class="tc-bar green" style="margin-top:18px"><span class="bl">Total Income (before deductions)</span><span class="bv" id="totalIncomeDisplay">₹0</span></div>
     </div>
 
     <div class="tc-card">
-      <div class="tc-card-title">
-        🏠 House Property
-        <span class="tc-tip">i<span class="tb">GAV − Municipal Taxes = NAV. 30% standard deduction on NAV. Loss from let-out property cannot be set off under the new regime.</span></span>
-      </div>
-      <div class="input-row">
-        <label>Municipal Taxes Paid</label>
-        <div class="inp-wrap"><span class="curr">₹</span><input type="number" id="municipalTaxes" value="3000" onchange="tcCalc()" onkeyup="tcCalc()"></div>
-      </div>
-      <div class="input-row">
-        <label>Interest on Let-Out Loan</label>
-        <div class="inp-wrap"><span class="curr">₹</span><input type="number" id="letOutLoan" value="100000" onchange="tcCalc()" onkeyup="tcCalc()"></div>
-      </div>
-      <div class="tc-bar blue">
-        <span class="bl">
-          📊 HP Income (computed)
-          <span class="tc-tip" style="background:rgba(29,53,87,.15);color:var(--blue)">i<span class="tb">Rent − Municipal Tax = NAV. Less 30% deduction on NAV. Less loan interest. Negative = loss (not set-offable).</span></span>
-        </span>
-        <span class="bv" id="hpIncomeDisplay">₹0</span>
-      </div>
-      <div class="tc-bar gold">
-        <span class="bl">✅ Taxable HP Income (≥ 0 only)</span>
-        <span class="bv" id="taxableHPDisplay">₹0</span>
-      </div>
-      <div class="tc-bar blue" id="stdBar">
-        <span class="bl">📌 Standard Deduction u/s 16(ia)</span>
-        <span class="bv" id="stdDeductionValue">₹75,000</span>
-      </div>
+      <div class="tc-card-title">🏠 House Property <span class="tc-tip">i<span class="tb">GAV − Municipal Taxes = NAV. 30% standard deduction on NAV. Loss from let-out property cannot be set off under the new regime.</span></span></div>
+      <div class="input-row"><label>Municipal Taxes Paid</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="municipalTaxes" value="3000" onchange="tcCalc()" onkeyup="tcCalc()"></div></div>
+      <div class="input-row"><label>Interest on Let-Out Loan</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="letOutLoan" value="100000" onchange="tcCalc()" onkeyup="tcCalc()"></div></div>
+      <div class="tc-bar blue"><span class="bl">📊 HP Income (computed)<span class="tc-tip" style="background:rgba(29,53,87,.15);color:var(--blue)">i<span class="tb">Rent − Municipal Tax = NAV. Less 30% deduction on NAV. Less loan interest. Negative = loss (not set-offable).</span></span></span><span class="bv" id="hpIncomeDisplay">₹0</span></div>
+      <div class="tc-bar gold"><span class="bl">✅ Taxable HP Income (≥ 0 only)</span><span class="bv" id="taxableHPDisplay">₹0</span></div>
+      <div class="tc-bar blue" id="stdBar"><span class="bl">📌 Standard Deduction u/s 16(ia)</span><span class="bv" id="stdDeductionValue">₹75,000</span></div>
       <p class="tc-status ok" id="stdStatus">✔ Standard deduction applicable (salaried / pensioner)</p>
     </div>
-
-  </div><!-- end tc-grid-2 -->
-
-  <!-- NET TAXABLE BANNER -->
-  <div class="net-banner">
-    <div class="nb-left">
-      <div class="nb-sub">Net Taxable Income</div>
-      <div class="nb-main">After standard deduction &amp; house property — excludes capital gains</div>
-    </div>
-    <div class="nb-right" id="taxableIncomeDisplay">₹0</div>
   </div>
+
+  <div class="net-banner"><div class="nb-left"><div class="nb-sub">Net Taxable Income</div><div class="nb-main">After standard deduction &amp; house property — excludes capital gains</div></div><div class="nb-right" id="taxableIncomeDisplay">₹0</div></div>
 
   <!-- CAPITAL GAINS -->
   <div class="sec-title">📈 Capital Gains &amp; Digital Assets</div>
   <div class="tc-grid-3">
-
-    <div class="cg-card">
-      <div class="cg-head stcg">Short-Term CG<span class="tc-rate">20%</span></div>
-      <div class="cg-body">
-        <div class="cg-row"><span class="cl">Gain Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="stcgAmount" value="0" onchange="tcCalc()"></div></span></div>
-        <div class="cg-row"><span class="cl">Exemption</span><span class="cv" id="stcgExemption">₹0</span></div>
-        <div class="cg-row"><span class="cl">Taxable Amount</span><span class="cv" id="taxableSTCG">₹0</span></div>
-        <div class="cg-row hi"><span class="cl">Tax @ 20%</span><span class="cv" id="stcgTaxAmount">₹0</span></div>
-      </div>
-    </div>
-
-    <div class="cg-card">
-      <div class="cg-head ltcg">Long-Term CG<span class="tc-rate">12.5%</span></div>
-      <div class="cg-body">
-        <div class="cg-row"><span class="cl">Gain Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="ltcgAmount" value="0" onchange="tcCalc()"></div></span></div>
-        <div class="cg-row"><span class="cl">Exemption (max ₹1.25L)</span><span class="cv" id="ltcgExemption">₹0</span></div>
-        <div class="cg-row"><span class="cl">Taxable Amount</span><span class="cv" id="taxableLTCG">₹0</span></div>
-        <div class="cg-row hi"><span class="cl">Tax @ 12.5%</span><span class="cv" id="ltcgTaxAmount">₹0</span></div>
-      </div>
-    </div>
-
-    <div class="cg-card">
-      <div class="cg-head vda">Digital Assets<span class="tc-rate">30%</span></div>
-      <div class="cg-body">
-        <div class="cg-row"><span class="cl">Income Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="digitalAssetsAmount" value="0" onchange="tcCalc()"></div></span></div>
-        <div class="cg-row"><span class="cl">Exemption</span><span class="cv" id="digitalExemption">₹0</span></div>
-        <div class="cg-row"><span class="cl">Taxable Amount</span><span class="cv" id="taxableDigital">₹0</span></div>
-        <div class="cg-row hi"><span class="cl">Tax @ 30%</span><span class="cv" id="digitalTaxAmount">₹0</span></div>
-      </div>
-    </div>
-
-  </div><!-- end tc-grid-3 -->
+    <div class="cg-card"><div class="cg-head stcg">Short-Term CG<span class="tc-rate">20%</span></div><div class="cg-body"><div class="cg-row"><span class="cl">Gain Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="stcgAmount" value="0" onchange="tcCalc()"></div></span></div><div class="cg-row"><span class="cl">Exemption</span><span class="cv" id="stcgExemption">₹0</span></div><div class="cg-row"><span class="cl">Taxable Amount</span><span class="cv" id="taxableSTCG">₹0</span></div><div class="cg-row hi"><span class="cl">Tax @ 20%</span><span class="cv" id="stcgTaxAmount">₹0</span></div></div></div>
+    <div class="cg-card"><div class="cg-head ltcg">Long-Term CG<span class="tc-rate">12.5%</span></div><div class="cg-body"><div class="cg-row"><span class="cl">Gain Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="ltcgAmount" value="0" onchange="tcCalc()"></div></span></div><div class="cg-row"><span class="cl">Exemption (max ₹1.25L)</span><span class="cv" id="ltcgExemption">₹0</span></div><div class="cg-row"><span class="cl">Taxable Amount</span><span class="cv" id="taxableLTCG">₹0</span></div><div class="cg-row hi"><span class="cl">Tax @ 12.5%</span><span class="cv" id="ltcgTaxAmount">₹0</span></div></div></div>
+    <div class="cg-card"><div class="cg-head vda">Digital Assets<span class="tc-rate">30%</span></div><div class="cg-body"><div class="cg-row"><span class="cl">Income Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="digitalAssetsAmount" value="0" onchange="tcCalc()"></div></span></div><div class="cg-row"><span class="cl">Exemption</span><span class="cv" id="digitalExemption">₹0</span></div><div class="cg-row"><span class="cl">Taxable Amount</span><span class="cv" id="taxableDigital">₹0</span></div><div class="cg-row hi"><span class="cl">Tax @ 30%</span><span class="cv" id="digitalTaxAmount">₹0</span></div></div></div>
+  </div>
 
   <!-- SLABS -->
   <div class="sec-title">📊 Tax Slab Breakdown</div>
-  <div class="slab-wrap">
-    <table class="slab-table">
-      <thead>
-        <tr><th>Income Range</th><th>Rate</th><th>Tax Amount</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Up to ₹4,00,000</td><td>Nil</td><td id="slab1">₹0</td></tr>
-        <tr><td>₹4,00,001 – ₹8,00,000</td><td>5%</td><td id="slab2">₹0</td></tr>
-        <tr><td>₹8,00,001 – ₹12,00,000</td><td>10%</td><td id="slab3">₹0</td></tr>
-        <tr><td>₹12,00,001 – ₹16,00,000</td><td>15%</td><td id="slab4">₹0</td></tr>
-        <tr><td>₹16,00,001 – ₹20,00,000</td><td>20%</td><td id="slab5">₹0</td></tr>
-        <tr><td>₹20,00,001 – ₹24,00,000</td><td>25%</td><td id="slab6">₹0</td></tr>
-        <tr><td>Above ₹24,00,000</td><td>30%</td><td id="slab7">₹0</td></tr>
-        <tr class="rebate-row"><td colspan="2">Less: Rebate u/s 87A (income ≤ ₹12L)</td><td id="rebateDisplay">—</td></tr>
-      </tbody>
-    </table>
-  </div>
+  <div class="slab-wrap"><table class="slab-table"><thead><tr><th>Income Range</th><th>Rate</th><th>Tax Amount</th></tr></thead><tbody>
+    <tr><td>Up to ₹4,00,000</td><td>Nil</td><td id="slab1">₹0</td></tr>
+    <tr><td>₹4,00,001 – ₹8,00,000</td><td>5%</td><td id="slab2">₹0</td></tr>
+    <tr><td>₹8,00,001 – ₹12,00,000</td><td>10%</td><td id="slab3">₹0</td></tr>
+    <tr><td>₹12,00,001 – ₹16,00,000</td><td>15%</td><td id="slab4">₹0</td></tr>
+    <tr><td>₹16,00,001 – ₹20,00,000</td><td>20%</td><td id="slab5">₹0</td></tr>
+    <tr><td>₹20,00,001 – ₹24,00,000</td><td>25%</td><td id="slab6">₹0</td></tr>
+    <tr><td>Above ₹24,00,000</td><td>30%</td><td id="slab7">₹0</td></tr>
+    <tr class="rebate-row"><td colspan="2">Less: Rebate u/s 87A (income ≤ ₹12L)</td><td id="rebateDisplay">—</td></tr>
+  </tbody></table></div>
 
-  <!-- MARGINAL RELIEF -->
+  <!-- MARGINAL RELIEF (tooltip visibility fully fixed) -->
   <div class="sec-title">🛡️ Marginal Relief</div>
   <div class="mr-box">
     <div class="mr-head">
       🛡️ Marginal Relief Analysis
-      <span class="tc-tip" style="color:var(--gold);background:rgba(201,136,42,.15)">i<span class="tb">Applicable when income is ₹12,00,001–₹12,75,000. Tax is capped at Income − ₹12,00,000.</span></span>
+      <span class="tc-tip" style="color:var(--gold);background:rgba(201,136,42,.15); margin-left:5px;">i<span class="tb">Applicable when income is ₹12,00,001–₹12,75,000. Tax is capped at Income − ₹12,00,000. Relief ensures you don't pay excess tax beyond incremental income.</span></span>
     </div>
     <div class="mr-body" id="mrBody"></div>
   </div>
 
   <!-- FINAL SUMMARY -->
   <div class="sec-title">💰 Final Tax Summary</div>
-  <div class="tc-summary">
-    <h2>Your Tax at a Glance</h2>
-    <div class="s-grid">
+  <div class="tc-summary"><h2>Your Tax at a Glance</h2><div class="s-grid">
       <div class="s-item"><div class="sl">Gross Income</div><div class="sv" id="sumTotal">₹0</div></div>
       <div class="s-item"><div class="sl">Standard Deduction</div><div class="sv" id="sumStd">₹0</div></div>
       <div class="s-item"><div class="sl">Taxable HP Income</div><div class="sv" id="sumHP">₹0</div></div>
@@ -839,136 +774,17 @@
       <div class="s-item"><div class="sl">LTCG Tax (12.5%)</div><div class="sv" id="sumLTCG">₹0</div></div>
       <div class="s-item"><div class="sl">Digital Assets Tax (30%)</div><div class="sv" id="sumVDA">₹0</div></div>
       <div class="s-item hi2"><div class="sl">Health &amp; Education Cess (4%)</div><div class="sv" id="sumCess">₹0</div></div>
-      <div class="final-row">
-        <div class="fl"><strong>Total Tax Payable</strong>Including cess · rounded up</div>
-        <div class="fv" id="sumFinal">₹0</div>
-      </div>
-    </div>
-  </div>
+      <div class="final-row"><div class="fl"><strong>Total Tax Payable</strong>Including cess · rounded up</div><div class="fv" id="sumFinal">₹0</div></div>
+  </div></div>
+</div></div>
 
-</div><!-- end tc-wrapper -->
-</div><!-- end tax-calc -->
-
-<!-- ═══════════════════════════════════════════════════════════
-     YOUR COMMON FOOTER GOES HERE (mega-footer etc.)
-     None of the .tax-calc styles will touch it.
-     ═══════════════════════════════════════════════════════════ -->
+<div id="site-footer"></div>
+<script src="/assets/Scripts/gototop.js"></script>
 
 <script>
-  /* Renamed calc() → tcCalc() to avoid collision with any
-     other calc() function that may exist on the page.      */
-
   const tcFmt = n => '₹' + Math.round(isNaN(n) ? 0 : n).toLocaleString('en-IN');
   const tcGet = id => parseFloat(document.getElementById(id)?.value) || 0;
   const tcSet = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-
-  function tcCalc() {
-    const gSal  = tcGet('grossSalary'),
-          oSrc  = tcGet('otherSources'),
-          iInc  = tcGet('interestIncome'),
-          dInc  = tcGet('dividendIncome'),
-          rent  = tcGet('grossRent'),
-          mTax  = tcGet('municipalTaxes'),
-          lloan = tcGet('letOutLoan'),
-          stcg  = tcGet('stcgAmount'),
-          ltcg  = tcGet('ltcgAmount'),
-          vda   = tcGet('digitalAssetsAmount');
-
-    const emp  = document.querySelector('input[name="emp"]:checked')?.value || 'salaried';
-    const isSP = emp === 'salaried' || emp === 'pensioner';
-
-    // House property
-    const nav   = rent - mTax;
-    const stdHP = nav > 0 ? nav * 0.30 : 0;
-    const hpInc = nav - stdHP - lloan;
-    const txHP  = hpInc > 0 ? hpInc : 0;
-
-    // Totals
-    const totalInc = gSal + oSrc + iInc + dInc + rent;
-    const stdDed   = isSP ? Math.min(gSal, 75000) : 0;
-    const netTx    = Math.max(0, gSal + oSrc + iInc + dInc - stdDed + txHP);
-
-    // Update displays
-    tcSet('totalIncomeDisplay',   tcFmt(totalInc));
-    tcSet('hpIncomeDisplay',      tcFmt(hpInc));
-    tcSet('taxableHPDisplay',     tcFmt(txHP));
-    tcSet('taxableIncomeDisplay', tcFmt(netTx));
-    tcSet('stdDeductionValue',    tcFmt(stdDed));
-
-    const stEl = document.getElementById('stdStatus');
-    if (isSP) {
-      stEl.className = 'tc-status ok';
-      stEl.textContent = `✔ Standard deduction ${tcFmt(stdDed)} applied`;
-    } else {
-      stEl.className = 'tc-status warn';
-      stEl.textContent = '⚠ Not applicable (business / profession)';
-    }
-
-    // Capital gains
-    const ltEx   = Math.min(ltcg, 125000);
-    const txLTCG = Math.max(0, ltcg - ltEx);
-    const stcgT  = stcg * 0.20;
-    const ltcgT  = txLTCG * 0.125;
-    const vdaT   = vda * 0.30;
-    const cgTax  = stcgT + ltcgT + vdaT;
-
-    tcSet('stcgExemption',   '₹0');
-    tcSet('taxableSTCG',     tcFmt(stcg));
-    tcSet('stcgTaxAmount',   tcFmt(stcgT));
-    tcSet('ltcgExemption',   tcFmt(ltEx));
-    tcSet('taxableLTCG',     tcFmt(txLTCG));
-    tcSet('ltcgTaxAmount',   tcFmt(ltcgT));
-    tcSet('digitalExemption','₹0');
-    tcSet('taxableDigital',  tcFmt(vda));
-    tcSet('digitalTaxAmount',tcFmt(vdaT));
-
-    // Slabs
-    const r = tcSlabs(netTx);
-    ['1','2','3','4','5','6','7'].forEach(i => tcSet('slab' + i, tcFmt(r.b['s' + i])));
-    tcSet('rebateDisplay', r.rebate > 0 ? `− ${tcFmt(r.rebate)}` : '—');
-
-    // Marginal relief
-    const taxBR = r.tax + r.rebate;
-    const limT  = Math.max(0, netTx - 1200000);
-    let finalReg = taxBR, mrHTML = '';
-
-    if (netTx > 1200000 && netTx <= 1275000) {
-      if (taxBR > limT) {
-        finalReg = limT;
-        const sv = taxBR - limT;
-        mrHTML = `<span class="rbadge yes">✓ Applicable</span>
-        <p style="font-size:13px;color:var(--ink-3);margin-bottom:12px">Tax capped at Income − ₹12,00,000</p>
-        <div class="mr-grid">
-          <div class="mr-item"><div class="mil">Normal Tax</div><div class="miv">${tcFmt(taxBR)}</div></div>
-          <div class="mr-item"><div class="mil">Tax with Relief</div><div class="miv">${tcFmt(limT)}</div></div>
-          <div class="mr-save">💰 You save ${tcFmt(sv)}</div>
-        </div>`;
-      } else {
-        mrHTML = `<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Normal tax ≤ Income − ₹12L. Relief not required.</p>`;
-      }
-    } else if (netTx <= 1200000) {
-      mrHTML = `<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Income ${tcFmt(netTx)} is within ₹12,00,000 threshold. Rebate u/s 87A: ${tcFmt(r.rebate)}</p>`;
-    } else {
-      finalReg = taxBR;
-      mrHTML = `<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Income ${tcFmt(netTx)} exceeds ₹12,75,000 threshold.</p>`;
-    }
-    document.getElementById('mrBody').innerHTML = mrHTML;
-
-    const tBC  = finalReg + cgTax;
-    const cess = tBC * 0.04;
-    const final = Math.ceil(tBC + cess);
-
-    tcSet('sumTotal', tcFmt(totalInc));
-    tcSet('sumStd',   tcFmt(stdDed));
-    tcSet('sumHP',    tcFmt(txHP));
-    tcSet('sumNet',   tcFmt(netTx));
-    tcSet('sumReg',   tcFmt(finalReg));
-    tcSet('sumSTCG',  tcFmt(stcgT));
-    tcSet('sumLTCG',  tcFmt(ltcgT));
-    tcSet('sumVDA',   tcFmt(vdaT));
-    tcSet('sumCess',  tcFmt(cess));
-    tcSet('sumFinal', tcFmt(final));
-  }
 
   function tcSlabs(inc) {
     const b = { s1:0, s2:0, s3:0, s4:0, s5:0, s6:0, s7:0 };
@@ -978,17 +794,67 @@
     else if (inc > 1200000) { b.s4=(inc-1200000)*.15; b.s3=400000*.10; b.s2=400000*.05; }
     else if (inc >  800000) { b.s3=(inc-800000)*.10;  b.s2=400000*.05; }
     else if (inc >  400000) { b.s2=(inc-400000)*.05; }
-    let tax = Object.values(b).reduce((a, c) => a + c, 0), rebate = 0;
+    let tax = Object.values(b).reduce((a,c)=>a+c,0), rebate = 0;
     if (inc <= 1200000 && tax > 0) { rebate = Math.min(tax, 60000); tax -= rebate; }
     return { tax, rebate, b };
   }
 
+  function tcCalc() {
+    const gSal = tcGet('grossSalary'), oSrc = tcGet('otherSources'), iInc = tcGet('interestIncome'), dInc = tcGet('dividendIncome'),
+          rent = tcGet('grossRent'), mTax = tcGet('municipalTaxes'), lloan = tcGet('letOutLoan'),
+          stcg = tcGet('stcgAmount'), ltcg = tcGet('ltcgAmount'), vda = tcGet('digitalAssetsAmount');
+    const emp = document.querySelector('input[name="emp"]:checked')?.value || 'salaried';
+    const isSP = emp === 'salaried' || emp === 'pensioner';
+    const nav = rent - mTax;
+    const stdHP = nav > 0 ? nav * 0.30 : 0;
+    const hpInc = nav - stdHP - lloan;
+    const txHP = hpInc > 0 ? hpInc : 0;
+    const totalInc = gSal + oSrc + iInc + dInc + rent;
+    const stdDed = isSP ? Math.min(gSal, 75000) : 0;
+    const netTx = Math.max(0, gSal + oSrc + iInc + dInc - stdDed + txHP);
+    tcSet('totalIncomeDisplay', tcFmt(totalInc));
+    tcSet('hpIncomeDisplay', tcFmt(hpInc));
+    tcSet('taxableHPDisplay', tcFmt(txHP));
+    tcSet('taxableIncomeDisplay', tcFmt(netTx));
+    tcSet('stdDeductionValue', tcFmt(stdDed));
+    const stEl = document.getElementById('stdStatus');
+    if (isSP) { stEl.className = 'tc-status ok'; stEl.textContent = `✔ Standard deduction ${tcFmt(stdDed)} applied`; }
+    else { stEl.className = 'tc-status warn'; stEl.textContent = '⚠ Not applicable (business / profession)'; }
+
+    const ltEx = Math.min(ltcg, 125000);
+    const txLTCG = Math.max(0, ltcg - ltEx);
+    const stcgT = stcg * 0.20, ltcgT = txLTCG * 0.125, vdaT = vda * 0.30;
+    const cgTax = stcgT + ltcgT + vdaT;
+    tcSet('stcgExemption','₹0'); tcSet('taxableSTCG', tcFmt(stcg)); tcSet('stcgTaxAmount', tcFmt(stcgT));
+    tcSet('ltcgExemption', tcFmt(ltEx)); tcSet('taxableLTCG', tcFmt(txLTCG)); tcSet('ltcgTaxAmount', tcFmt(ltcgT));
+    tcSet('digitalExemption','₹0'); tcSet('taxableDigital', tcFmt(vda)); tcSet('digitalTaxAmount', tcFmt(vdaT));
+
+    const r = tcSlabs(netTx);
+    ['1','2','3','4','5','6','7'].forEach(i => tcSet('slab'+i, tcFmt(r.b['s'+i])));
+    tcSet('rebateDisplay', r.rebate > 0 ? `− ${tcFmt(r.rebate)}` : '—');
+
+    const taxBR = r.tax + r.rebate;
+    const limT = Math.max(0, netTx - 1200000);
+    let finalReg = taxBR, mrHTML = '';
+    if (netTx > 1200000 && netTx <= 1275000) {
+      if (taxBR > limT) {
+        finalReg = limT;
+        const sv = taxBR - limT;
+        mrHTML = `<span class="rbadge yes">✓ Applicable</span><p style="font-size:13px;color:var(--ink-3);margin-bottom:12px">Tax capped at Income − ₹12,00,000</p><div class="mr-grid"><div class="mr-item"><div class="mil">Normal Tax</div><div class="miv">${tcFmt(taxBR)}</div></div><div class="mr-item"><div class="mil">Tax with Relief</div><div class="miv">${tcFmt(limT)}</div></div><div class="mr-save">💰 You save ${tcFmt(sv)}</div></div>`;
+      } else { mrHTML = `<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Normal tax ≤ Income − ₹12L. Relief not required.</p>`; }
+    } else if (netTx <= 1200000) { mrHTML = `<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Income ${tcFmt(netTx)} is within ₹12,00,000 threshold. Rebate u/s 87A: ${tcFmt(r.rebate)}</p>`; }
+    else { finalReg = taxBR; mrHTML = `<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Income ${tcFmt(netTx)} exceeds ₹12,75,000 threshold.</p>`; }
+    document.getElementById('mrBody').innerHTML = mrHTML;
+
+    const tBC = finalReg + cgTax;
+    const cess = tBC * 0.04;
+    const final = Math.ceil(tBC + cess);
+    tcSet('sumTotal', tcFmt(totalInc)); tcSet('sumStd', tcFmt(stdDed)); tcSet('sumHP', tcFmt(txHP));
+    tcSet('sumNet', tcFmt(netTx)); tcSet('sumReg', tcFmt(finalReg));
+    tcSet('sumSTCG', tcFmt(stcgT)); tcSet('sumLTCG', tcFmt(ltcgT)); tcSet('sumVDA', tcFmt(vdaT));
+    tcSet('sumCess', tcFmt(cess)); tcSet('sumFinal', tcFmt(final));
+  }
   window.addEventListener('DOMContentLoaded', tcCalc);
 </script>
-    <!-- COMMON FOOTER -->
-<div id="site-footer"></div>
-  <!-- Go to Top -->
-  <script src="/assets/Scripts/gototop.js"></script>
-
 </body>
 </html>
