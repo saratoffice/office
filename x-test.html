@@ -1,757 +1,421 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blogs | Article Gallery</title>
-
-  <link rel="stylesheet" href="style.css">
-  <script src="assets/Scripts/site-components.js" defer></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --gold-50:  #fffdf0;
-      --gold-100: #fef9d7;
-      --gold-200: #fdf0a0;
-      --gold-300: #fbe46a;
-      --gold-400: #f5cc30;
-      --gold-500: #e8b800;
-      --gold-600: #c99a00;
-      --gold-700: #a07800;
-      --gold-800: #7a5c00;
-
-      --bg-page:       #fffef7;
-      --bg-card:       #fffdf0;
-      --border-gold:   #e8c84a;
-      --border-deep:   #c99a00;
-      --border-accent: #a07800;
-
-      /* Rich multi-colour text */
-      --title-color:   #5c3a00;
-      --author-color:  #1a6b3c;
-      --date-color:    #7b3fa0;
-      --read-color:    #b5390a;
-      --cat-color:     #005a8e;
-      --excerpt-color: #4a3800;
-
-      --tag-bg:          #fdf0a0;
-      --tag-border:      #e8c84a;
-      --tag-text:        #7a5c00;
-      --tag-active-bg:   #c99a00;
-      --tag-active-text: #fffdf0;
-
-      --card-shadow:       0 4px 18px rgba(200,152,0,0.13),0 1px 4px rgba(200,152,0,0.08);
-      --card-hover-shadow: 0 14px 40px rgba(200,130,0,0.22),0 4px 12px rgba(200,130,0,0.12);
-    }
-
-    body {
-      background: var(--bg-page);
-      background-image:
-        radial-gradient(ellipse at 8% 18%, rgba(251,228,106,0.22) 0%, transparent 50%),
-        radial-gradient(ellipse at 92% 82%, rgba(248,210,50,0.16) 0%, transparent 50%);
-      font-family: 'Nunito', sans-serif;
-      font-size: 15px;
-      color: var(--excerpt-color);
-      -webkit-font-smoothing: antialiased;
-      min-height: 100vh;
-    }
-
-    /* ── MASTHEAD ──────────────────────────────────── */
-    .blogs-masthead {
-      background: linear-gradient(160deg, #fff8d0 0%, #ffeea0 45%, #ffd84a 100%);
-      border-bottom: 3px solid var(--border-deep);
-      padding: 4rem 2rem 3.2rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .blogs-masthead::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 28px,
-        rgba(200,152,0,0.05) 28px,
-        rgba(200,152,0,0.05) 30px
-      );
-      pointer-events: none;
-    }
-
-    .masthead-label {
-      font-size: 0.7rem;
-      font-weight: 800;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-      color: var(--gold-700);
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.9rem;
-    }
-
-    .masthead-label .line {
-      display: inline-block;
-      width: 44px;
-      height: 2px;
-      background: var(--border-deep);
-      border-radius: 2px;
-    }
-
-    .blogs-masthead h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.6rem, 6vw, 4.2rem);
-      font-weight: 700;
-      color: var(--title-color);
-      letter-spacing: -0.01em;
-      line-height: 1.1;
-      margin-bottom: 0.8rem;
-      text-shadow: 0 2px 10px rgba(200,130,0,0.18);
-    }
-
-    .blogs-masthead .subtitle {
-      font-size: 1rem;
-      color: var(--gold-700);
-      font-weight: 400;
-      letter-spacing: 0.03em;
-    }
-
-    /* ── LAYOUT ─────────────────────────────────── */
-    .blogs-section {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 2.2rem 2rem 5rem;
-    }
-
-    /* ── TOOLBAR ──────────────────────────────────── */
-    .toolbar {
-      background: var(--bg-card);
-      border: 2px solid var(--border-gold);
-      border-radius: 14px;
-      padding: 1.2rem 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-bottom: 1.4rem;
-      box-shadow: var(--card-shadow);
-    }
-
-    .search-box { flex: 1; min-width: 200px; max-width: 320px; position: relative; }
-
-    .search-box i {
-      position: absolute; left: 0.9rem; top: 50%;
-      transform: translateY(-50%); color: var(--gold-600); font-size: 0.82rem;
-    }
-
-    .search-box input {
-      width: 100%;
-      padding: 0.65rem 1rem 0.65rem 2.4rem;
-      border: 1.5px solid var(--border-gold);
-      border-radius: 8px;
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.88rem;
-      color: var(--title-color);
-      background: #fffef7;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .search-box input:focus {
-      outline: none;
-      border-color: var(--border-deep);
-      box-shadow: 0 0 0 3px rgba(232,184,0,0.2);
-    }
-
-    .search-box input::placeholder { color: var(--gold-600); }
-
-    .category-filter { position: relative; }
-
-    .category-filter select {
-      appearance: none;
-      padding: 0.65rem 2.2rem 0.65rem 1rem;
-      border: 1.5px solid var(--border-gold);
-      border-radius: 8px;
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.88rem;
-      color: var(--cat-color);
-      font-weight: 700;
-      background: #fffef7;
-      cursor: pointer;
-    }
-
-    .category-filter select:focus { outline: none; border-color: var(--border-deep); }
-
-    .category-filter i {
-      position: absolute; right: 0.75rem; top: 50%;
-      transform: translateY(-50%); font-size: 0.72rem;
-      color: var(--gold-600); pointer-events: none;
-    }
-
-    .sort-controls {
-      display: flex;
-      border: 1.5px solid var(--border-gold);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-left: auto;
-    }
-
-    .sort-btn {
-      padding: 0.62rem 1.1rem;
-      border: none;
-      border-left: 1.5px solid var(--border-gold);
-      background: #fffef7;
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--gold-700);
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      white-space: nowrap;
-    }
-
-    .sort-btn:first-child { border-left: none; }
-    .sort-btn:hover { background: var(--gold-100); color: var(--title-color); }
-    .sort-btn.active { background: var(--gold-400); color: var(--title-color); font-weight: 800; }
-
-    /* ── TAGS ──────────────────────────────────────── */
-    .tags-cloud {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      padding: 1rem 1.4rem;
-      background: var(--bg-card);
-      border: 2px solid var(--border-gold);
-      border-radius: 12px;
-      margin-bottom: 1.6rem;
-      box-shadow: var(--card-shadow);
-    }
-
-    .tag {
-      padding: 0.34rem 0.9rem;
-      background: var(--tag-bg);
-      border: 1.5px solid var(--tag-border);
-      border-radius: 30px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--tag-text);
-      cursor: pointer;
-      transition: all 0.18s;
-    }
-
-    .tag:hover { background: var(--gold-300); border-color: var(--border-deep); transform: translateY(-2px); }
-
-    .tag.active {
-      background: var(--tag-active-bg);
-      border-color: var(--border-accent);
-      color: var(--tag-active-text);
-      box-shadow: 0 3px 10px rgba(160,120,0,0.25);
-    }
-
-    .tag i { margin-right: 0.3rem; font-size: 0.65rem; }
-
-    /* ── RESULTS META ─────────────────────────────── */
-    .results-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.8rem;
-      font-size: 0.83rem;
-      color: var(--gold-700);
-      font-weight: 700;
-    }
-
-    .clear-filters {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-      color: var(--read-color);
-      font-weight: 800;
-      cursor: pointer;
-      padding: 0.32rem 0.9rem;
-      border: 1.5px solid #e88070;
-      border-radius: 30px;
-      background: #fff5f3;
-      transition: all 0.18s;
-    }
-
-    .clear-filters:hover { background: #ffe0da; }
-
-    /* ── BLOG GRID ─────────────────────────────────── */
-    .blog-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.6rem;
-      margin-bottom: 3rem;
-    }
-
-    /* ── BLOG CARD ─────────────────────────────────── */
-    .blog-card {
-      background: var(--bg-card);
-      border: 2.5px solid var(--border-gold);
-      border-radius: 18px;
-      overflow: hidden;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.2s;
-      box-shadow: var(--card-shadow);
-      animation: riseUp 0.45s ease both;
-      position: relative;
-    }
-
-    /* Coloured top stripe cycles through 3 colours */
-    .blog-card::before {
-      content: '';
-      display: block;
-      height: 5px;
-      width: 100%;
-      position: absolute;
-      top: 0; left: 0;
-      border-radius: 18px 18px 0 0;
-    }
-
-    .blog-card:nth-child(3n+1)::before { background: linear-gradient(90deg,#e05c1a,#f5a623); }
-    .blog-card:nth-child(3n+2)::before { background: linear-gradient(90deg,#1a6b8a,#30bcd4); }
-    .blog-card:nth-child(3n+3)::before { background: linear-gradient(90deg,#6b3fa0,#c06ed4); }
-
-    .blog-card:hover {
-      transform: translateY(-9px) scale(1.013);
-      box-shadow: var(--card-hover-shadow);
-      border-color: var(--border-deep);
-    }
-
-    /* Stagger */
-    .blog-card:nth-child(1){animation-delay:.03s}
-    .blog-card:nth-child(2){animation-delay:.08s}
-    .blog-card:nth-child(3){animation-delay:.13s}
-    .blog-card:nth-child(4){animation-delay:.18s}
-    .blog-card:nth-child(5){animation-delay:.23s}
-    .blog-card:nth-child(6){animation-delay:.28s}
-    .blog-card:nth-child(7){animation-delay:.33s}
-    .blog-card:nth-child(8){animation-delay:.38s}
-    .blog-card:nth-child(9){animation-delay:.43s}
-
-    /* ── CARD IMAGE ─────────────────────────────────── */
-    .blog-image {
-      height: 136px;
-      margin-top: 5px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      border-bottom: 2px solid var(--border-gold);
-      background: linear-gradient(135deg,#fef9d7 0%,#fdf0a0 60%,#fbe46a 100%);
-    }
-
-    .blog-image[data-cat="technology"] { background: linear-gradient(135deg,#e8f4fd,#c5e3f7,#a8d4f0); }
-    .blog-image[data-cat="legal"]      { background: linear-gradient(135deg,#f0ebff,#ddd0f8,#c8b8f0); }
-    .blog-image[data-cat="science"]    { background: linear-gradient(135deg,#e8fdf0,#c0f0d0,#9de0b8); }
-    .blog-image[data-cat="business"]   { background: linear-gradient(135deg,#fff3e0,#ffe0b0,#ffc870); }
-    .blog-image[data-cat="health"]     { background: linear-gradient(135deg,#fde8e8,#f8c0c0,#f09898); }
-    .blog-image[data-cat="design"]     { background: linear-gradient(135deg,#fef0ff,#f0c8f8,#e0a0f0); }
-
-    .icon-wrap {
-      width: 58px; height: 58px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.78);
-      border: 2.5px solid var(--border-gold);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      color: var(--gold-700);
-      box-shadow: 0 4px 14px rgba(200,152,0,0.2);
-    }
-
-    .blog-category-badge {
-      position: absolute;
-      top: 0.75rem; right: 0.75rem;
-      font-size: 0.65rem;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--cat-color);
-      background: rgba(255,255,255,0.92);
-      border: 1.5px solid #a8d0f0;
-      padding: 0.22rem 0.7rem;
-      border-radius: 30px;
-    }
-
-    /* ── CARD BODY ──────────────────────────────────── */
-    .blog-content {
-      padding: 1.3rem 1.4rem 1.2rem;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .blog-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.15rem;
-      font-weight: 700;
-      line-height: 1.42;
-      color: var(--title-color);
-      margin-bottom: 0.65rem;
-    }
-
-    .blog-excerpt {
-      font-size: 0.855rem;
-      color: var(--excerpt-color);
-      line-height: 1.7;
-      flex-grow: 1;
-      margin-bottom: 1rem;
-      font-weight: 400;
-    }
-
-    .blog-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.55rem 1.1rem;
-      font-size: 0.76rem;
-      padding: 0.72rem 0;
-      border-top: 1.5px dashed var(--border-gold);
-      border-bottom: 1.5px dashed var(--border-gold);
-      margin-bottom: 0.9rem;
-    }
-
-    .meta-item { display: flex; align-items: center; gap: 0.35rem; }
-    .meta-author { color: var(--author-color); font-weight: 800; }
-    .meta-date   { color: var(--date-color);   font-weight: 700; }
-    .meta-time   { color: #636363;             font-weight: 600; }
-
-    .blog-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.9rem; }
-
-    .blog-tag {
-      font-size: 0.7rem;
-      padding: 0.2rem 0.65rem;
-      background: var(--tag-bg);
-      border: 1px solid var(--tag-border);
-      border-radius: 20px;
-      color: var(--tag-text);
-      font-weight: 700;
-    }
-
-    .read-more {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      font-size: 0.78rem;
-      font-weight: 800;
-      color: var(--read-color);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      border-bottom: 2px solid transparent;
-      transition: border-color 0.2s, gap 0.2s;
-      width: fit-content;
-    }
-
-    .read-more i { font-size: 0.7rem; transition: transform 0.22s; }
-    .blog-card:hover .read-more { border-bottom-color: var(--read-color); }
-    .blog-card:hover .read-more i { transform: translateX(5px); }
-
-    /* ── LOADING / NO-RESULTS ──────────────────────── */
-    .loading, .no-results {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 5rem 2rem;
-      color: var(--gold-700);
-      background: var(--bg-card);
-      border: 2px dashed var(--border-gold);
-      border-radius: 18px;
-    }
-
-    .loading i { font-size: 2rem; margin-bottom: 0.8rem; animation: spin 1s linear infinite; color: var(--gold-500); display: block; }
-    .no-results i { font-size: 3rem; margin-bottom: 1rem; color: var(--gold-300); display: block; }
-    .no-results h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--title-color); margin-bottom: 0.5rem; }
-    .no-results p { font-size: 0.9rem; color: var(--gold-600); }
-
-    /* ── PAGINATION ──────────────────────────────────── */
-    .pagination {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.45rem;
-      margin: 1.5rem 0 1rem;
-    }
-
-    .page-btn {
-      min-width: 38px; height: 38px;
-      padding: 0 0.85rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid var(--border-gold);
-      border-radius: 8px;
-      background: var(--bg-card);
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--gold-700);
-      cursor: pointer;
-      transition: all 0.18s;
-      gap: 0.3rem;
-    }
-
-    .page-btn:hover:not(:disabled):not(.active) {
-      background: var(--gold-200);
-      border-color: var(--border-deep);
-      color: var(--title-color);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(200,152,0,0.18);
-    }
-
-    .page-btn.active {
-      background: var(--gold-400);
-      border-color: var(--border-deep);
-      color: var(--title-color);
-      font-weight: 800;
-      box-shadow: 0 3px 12px rgba(200,152,0,0.3);
-    }
-
-    .page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-    .page-dots { color: var(--gold-500); font-size: 1rem; padding: 0 0.2rem; }
-
-    /* ── KEYFRAMES ───────────────────────────────────── */
-    @keyframes riseUp {
-      from { opacity: 0; transform: translateY(20px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── RESPONSIVE ─────────────────────────────────── */
-    @media (max-width: 960px) { .blog-grid { grid-template-columns: repeat(2,1fr); } }
-
-    @media (max-width: 620px) {
-      .blog-grid { grid-template-columns: 1fr; }
-      .toolbar { flex-direction: column; align-items: stretch; }
-      .search-box { max-width: 100%; }
-      .sort-controls { margin-left: 0; }
-      .blogs-section { padding: 1.5rem 1rem 4rem; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Income Tax Calculator FY 2025-26</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1510;
+    --ink-2: #3d3328;
+    --ink-3: #7a6e61;
+    --cream: #f5f0e8;
+    --cream-2: #ede6d8;
+    --cream-3: #e2d9c8;
+    --paper: #faf7f2;
+    --gold: #c9882a;
+    --gold-light: #e8b455;
+    --gold-pale: #f9f1e2;
+    --green: #2d6a4f;
+    --green-light: #e8f4ef;
+    --red: #9b2226;
+    --blue: #1d3557;
+    --blue-light: #e8eff8;
+    --shadow-sm: 0 2px 8px rgba(26,21,16,0.06);
+    --shadow-md: 0 4px 20px rgba(26,21,16,0.09);
+    --shadow-lg: 0 12px 40px rgba(26,21,16,0.12);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;padding:32px 16px 64px}
+  .wrapper{max-width:1040px;margin:0 auto}
+
+  /* HEADER */
+  .header{text-align:center;margin-bottom:40px;padding-bottom:32px;border-bottom:2px solid var(--cream-3)}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#fff;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 16px;border-radius:40px;margin-bottom:18px}
+  .header h1{font-family:'DM Serif Display',serif;font-size:clamp(28px,6vw,52px);color:var(--ink);line-height:1.1;margin-bottom:10px}
+  .header h1 em{font-style:italic;color:var(--gold)}
+  .header p{color:var(--ink-3);font-size:15px}
+
+  /* SECTION TITLE */
+  .sec-title{display:flex;align-items:center;gap:12px;font-family:'DM Serif Display',serif;font-size:21px;color:var(--ink);margin:36px 0 16px}
+  .sec-title::after{content:'';flex:1;height:1px;background:var(--cream-3)}
+
+  /* CARDS */
+  .card{background:var(--paper);border:1px solid var(--cream-3);border-radius:var(--radius);padding:24px 28px;box-shadow:var(--shadow-sm);transition:box-shadow .2s}
+  .card:hover{box-shadow:var(--shadow-md)}
+  .card-title{font-family:'DM Serif Display',serif;font-size:17px;color:var(--ink);margin-bottom:20px;padding-bottom:14px;border-bottom:1px dashed var(--cream-3);display:flex;align-items:center;gap:8px}
+
+  /* GRID */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+
+  /* EMPLOYMENT */
+  .emp-strip{background:var(--paper);border:1px solid var(--cream-3);border-radius:var(--radius);padding:18px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:8px;box-shadow:var(--shadow-sm)}
+  .emp-label{font-size:12px;font-weight:600;color:var(--ink-3);letter-spacing:.5px;text-transform:uppercase;min-width:130px}
+  .emp-opts{display:flex;gap:10px;flex-wrap:wrap}
+  .emp-opt input{display:none}
+  .emp-opt label{display:flex;align-items:center;gap:7px;padding:8px 20px;border-radius:40px;border:1.5px solid var(--cream-3);font-size:14px;font-weight:500;color:var(--ink-2);cursor:pointer;transition:all .2s;background:var(--cream)}
+  .emp-opt label:hover{border-color:var(--gold);color:var(--gold)}
+  .emp-opt input:checked+label{background:var(--gold);border-color:var(--gold);color:white;font-weight:600;box-shadow:0 4px 12px rgba(201,136,42,.3)}
+  .dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+  /* INPUT ROWS */
+  .input-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--cream-2);gap:12px}
+  .input-row:last-of-type{border-bottom:none}
+  .input-row label{font-size:14px;color:var(--ink-2);font-weight:400;flex:1;display:flex;align-items:center;gap:6px}
+  .inp-wrap{position:relative;display:flex;align-items:center}
+  .inp-wrap .curr{position:absolute;left:12px;font-size:12px;color:var(--ink-3);font-family:'DM Mono',monospace;pointer-events:none}
+  input[type=number]{width:140px;padding:8px 12px 8px 26px;border:1.5px solid var(--cream-3);border-radius:var(--radius-sm);font-size:14px;font-family:'DM Mono',monospace;text-align:right;color:var(--ink);background:var(--cream);transition:all .2s;-moz-appearance:textfield}
+  input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+  input[type=number]:focus{outline:none;border-color:var(--gold);background:white;box-shadow:0 0 0 3px rgba(201,136,42,.12)}
+
+  /* BARS */
+  .bar{display:flex;justify-content:space-between;align-items:center;border-radius:var(--radius-sm);padding:13px 16px;margin:10px 0}
+  .bar.green{background:var(--green-light);border:1px solid #b7dcc8}
+  .bar.green .bl{color:var(--green);font-size:13px;font-weight:600}
+  .bar.green .bv{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:var(--green)}
+  .bar.blue{background:var(--blue-light);border-left:3px solid var(--blue)}
+  .bar.blue .bl{font-size:13px;color:var(--blue);font-weight:500}
+  .bar.blue .bv{font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--blue)}
+  .bar.gold{background:var(--gold-pale);border-left:3px solid var(--gold)}
+  .bar.gold .bl{font-size:13px;color:var(--gold);font-weight:500}
+  .bar.gold .bv{font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--gold)}
+
+  /* NET TAXABLE BANNER */
+  .net-banner{background:var(--ink);border-radius:var(--radius);padding:22px 28px;display:flex;justify-content:space-between;align-items:center;margin:8px 0 0}
+  .nb-left .nb-sub{font-size:13px;color:rgba(255,255,255,.45)}
+  .nb-left .nb-main{font-size:15px;color:rgba(255,255,255,.7);font-weight:400}
+  .nb-right{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:var(--gold-light)}
+
+  /* CG CARDS */
+  .cg-card{background:var(--paper);border:1px solid var(--cream-3);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:box-shadow .2s}
+  .cg-card:hover{box-shadow:var(--shadow-md)}
+  .cg-head{padding:13px 18px;font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .cg-head.stcg{background:#fff3e0;color:#e65100}
+  .cg-head.ltcg{background:#e8f5e9;color:#2e7d32}
+  .cg-head.vda{background:#ede7f6;color:#4527a0}
+  .rate{margin-left:auto;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:700}
+  .stcg .rate{background:#e65100;color:white}
+  .ltcg .rate{background:#2e7d32;color:white}
+  .vda .rate{background:#4527a0;color:white}
+  .cg-body{padding:14px 18px}
+  .cg-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--cream-2);font-size:13px}
+  .cg-row:last-child{border-bottom:none}
+  .cg-row .cl{color:var(--ink-3)}
+  .cg-row .cv{font-family:'DM Mono',monospace;font-weight:500;color:var(--ink-2)}
+  .cg-row.hi{background:var(--cream-2);border-radius:8px;padding:8px 10px;margin:6px -10px 0}
+  .cg-row.hi .cl{font-weight:600;color:var(--ink)}
+  .cg-row.hi .cv{color:var(--ink);font-size:15px;font-weight:600}
+  .cg-inp-wrap{position:relative}
+  .cg-inp-wrap .cc{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--ink-3);font-family:'DM Mono',monospace;pointer-events:none}
+  .cg-inp-wrap input{width:110px;padding:6px 8px 6px 22px;font-size:13px}
+
+  /* SLAB TABLE */
+  .slab-wrap{background:var(--paper);border:1px solid var(--cream-3);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}
+  .slab-table{width:100%;border-collapse:collapse}
+  .slab-table thead th{background:var(--ink);color:rgba(255,255,255,.6);font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:12px 16px;text-align:left;font-weight:500}
+  .slab-table thead th:last-child{text-align:right}
+  .slab-table tbody td{padding:12px 16px;font-size:14px;border-bottom:1px solid var(--cream-2);color:var(--ink-2)}
+  .slab-table tbody td:last-child{text-align:right;font-family:'DM Mono',monospace;font-weight:500;color:var(--ink)}
+  .slab-table tbody tr:hover td{background:var(--cream)}
+  .slab-table .rebate-row td{color:var(--red);font-style:italic}
+  .slab-table .rebate-row td:last-child{color:var(--red)}
+
+  /* MARGINAL RELIEF */
+  .mr-box{border:1.5px solid var(--gold-light);border-radius:var(--radius);overflow:hidden;margin-bottom:8px}
+  .mr-head{background:var(--gold-pale);padding:14px 20px;display:flex;align-items:center;gap:10px;font-weight:600;color:var(--gold);font-size:14px}
+  .mr-body{padding:16px 20px}
+  .rbadge{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:40px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
+  .rbadge.yes{background:var(--green);color:white}
+  .rbadge.no{background:var(--red);color:white}
+  .mr-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  .mr-item{background:var(--cream);border-radius:var(--radius-sm);padding:12px 14px;text-align:center}
+  .mr-item .mil{font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+  .mr-item .miv{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:var(--ink)}
+  .mr-save{grid-column:span 2;background:var(--green);color:white;border-radius:var(--radius-sm);padding:12px;text-align:center;font-size:15px;font-weight:600}
+
+  /* SUMMARY */
+  .summary{background:var(--ink);border-radius:var(--radius);padding:32px;color:white;margin-top:8px}
+  .summary h2{font-family:'DM Serif Display',serif;font-size:22px;color:white;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.1)}
+  .s-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .s-item{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-sm);padding:16px 18px;transition:background .2s}
+  .s-item:hover{background:rgba(255,255,255,.1)}
+  .s-item .sl{font-size:11px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+  .s-item .sv{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:rgba(255,255,255,.9)}
+  .s-item.hi2{background:rgba(201,136,42,.15);border-color:rgba(201,136,42,.3)}
+  .s-item.hi2 .sv{color:var(--gold-light)}
+  .final-row{grid-column:span 3;background:var(--gold);border-radius:var(--radius-sm);padding:22px 24px;display:flex;justify-content:space-between;align-items:center;margin-top:4px;box-shadow:0 8px 24px rgba(201,136,42,.4)}
+  .final-row .fl{font-size:13px;color:rgba(255,255,255,.8);font-weight:600}
+  .final-row .fl strong{font-size:20px;color:white;font-family:'DM Serif Display',serif;display:block}
+  .final-row .fv{font-family:'DM Mono',monospace;font-size:36px;font-weight:500;color:white}
+
+  /* TOOLTIP */
+  .tip{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:var(--cream-3);color:var(--ink-3);font-size:10px;font-weight:700;cursor:default;position:relative;flex-shrink:0;transition:background .2s}
+  .tip:hover{background:var(--gold);color:white}
+  .tip .tb{visibility:hidden;opacity:0;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--ink);color:rgba(255,255,255,.85);font-size:12px;line-height:1.6;padding:12px 14px;border-radius:var(--radius-sm);width:240px;pointer-events:none;transition:opacity .15s;z-index:9999;font-weight:400;box-shadow:var(--shadow-lg)}
+  .tip:hover .tb{visibility:visible;opacity:1}
+  .tip .tb::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink)}
+
+  /* STATUS */
+  .status{font-size:12px;margin-top:8px;display:flex;align-items:center;gap:5px}
+  .status.ok{color:var(--green)}
+  .status.warn{color:var(--gold)}
+
+  /* RESPONSIVE */
+  @media(max-width:820px){
+    .grid-2,.grid-3,.s-grid{grid-template-columns:1fr}
+    .final-row{grid-column:span 1;flex-direction:column;gap:10px;text-align:center}
+    .mr-grid{grid-template-columns:1fr 1fr}
+    .mr-save{grid-column:span 2}
+    input[type=number]{width:120px}
+  }
+  @media(max-width:540px){
+    body{padding:16px 10px 48px}
+    .card,.summary,.emp-strip{padding:18px 16px}
+    .header h1{font-size:26px}
+    .input-row{flex-direction:column;align-items:flex-start;gap:6px}
+    input[type=number]{width:100%}
+    .net-banner{flex-direction:column;gap:10px;text-align:center}
+    .mr-grid{grid-template-columns:1fr}
+    .mr-save{grid-column:span 1}
+  }
+</style>
 </head>
-
 <body>
-  <header id="site-header"></header>
+<div class="wrapper">
 
-  <div class="blogs-masthead">
-    <div class="masthead-label">
-      <span class="line"></span> Publication <span class="line"></span>
+  <header class="header">
+    <div class="badge">✦ FY 2025–26 &nbsp;·&nbsp; New Tax Regime</div>
+    <h1>Income Tax<br><em>Calculator</em></h1>
+    <p>Budget 2025 &nbsp;·&nbsp; Section 115BAC &nbsp;·&nbsp; Updated slabs &amp; rebate</p>
+  </header>
+
+  <!-- EMPLOYMENT -->
+  <div class="emp-strip">
+    <span class="emp-label">Employment type</span>
+    <div class="emp-opts">
+      <div class="emp-opt"><input type="radio" id="es" name="emp" value="salaried" checked onchange="calc()"><label for="es"><span class="dot"></span>Salaried</label></div>
+      <div class="emp-opt"><input type="radio" id="eb" name="emp" value="business" onchange="calc()"><label for="eb"><span class="dot"></span>Business</label></div>
+      <div class="emp-opt"><input type="radio" id="ep" name="emp" value="pensioner" onchange="calc()"><label for="ep"><span class="dot"></span>Pensioner</label></div>
     </div>
-    <h1>✦ Blog Gallery ✦</h1>
-    <p class="subtitle">Discover inspiring articles, stories &amp; golden insights</p>
   </div>
 
-  <section class="blogs-section">
+  <!-- INCOME SOURCES -->
+  <div class="sec-title">💼 Income Sources</div>
+  <div class="grid-2">
 
-    <div class="toolbar">
-      <div class="search-box">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="Search articles…">
+    <div class="card">
+      <div class="card-title">💰 Gross Income Details</div>
+      <div class="input-row"><label>Gross Salary / Pension</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="grossSalary" value="1228769" onchange="calc()" onkeyup="calc()"></div></div>
+      <div class="input-row"><label>Other Sources</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="otherSources" value="0" onchange="calc()" onkeyup="calc()"></div></div>
+      <div class="input-row"><label>Interest Income</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="interestIncome" value="0" onchange="calc()" onkeyup="calc()"></div></div>
+      <div class="input-row"><label>Dividend Income</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="dividendIncome" value="0" onchange="calc()" onkeyup="calc()"></div></div>
+      <div class="input-row"><label>Rental Income (let-out property)</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="grossRent" value="50000" onchange="calc()" onkeyup="calc()"></div></div>
+      <div class="bar green" style="margin-top:18px">
+        <span class="bl">Total Income (before deductions)</span>
+        <span class="bv" id="totalIncomeDisplay">₹0</span>
       </div>
-      <div class="category-filter">
-        <select id="categorySelect"><option value="all">All Categories</option></select>
-        <i class="fas fa-chevron-down"></i>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏠 House Property <span class="tip">i<span class="tb">GAV − Municipal Taxes = NAV. 30% standard deduction on NAV. Loss from let-out property cannot be set off under the new regime.</span></span></div>
+      <div class="input-row"><label>Municipal Taxes Paid</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="municipalTaxes" value="3000" onchange="calc()" onkeyup="calc()"></div></div>
+      <div class="input-row"><label>Interest on Let-Out Loan</label><div class="inp-wrap"><span class="curr">₹</span><input type="number" id="letOutLoan" value="100000" onchange="calc()" onkeyup="calc()"></div></div>
+      <div class="bar blue">
+        <span class="bl">📊 HP Income (computed) <span class="tip" style="background:rgba(29,53,87,.15);color:var(--blue)">i<span class="tb">Rent − Municipal Tax = NAV. Less 30% deduction on NAV. Less loan interest. Negative = loss (not set-offable).</span></span></span>
+        <span class="bv" id="hpIncomeDisplay">₹0</span>
       </div>
-      <div class="sort-controls">
-        <button class="sort-btn active" data-sort="latest"><i class="fas fa-clock"></i> Latest</button>
-        <button class="sort-btn" data-sort="oldest"><i class="fas fa-calendar"></i> Oldest</button>
-        <button class="sort-btn" data-sort="popular"><i class="fas fa-fire"></i> Popular</button>
+      <div class="bar gold">
+        <span class="bl">✅ Taxable HP Income (≥ 0 only)</span>
+        <span class="bv" id="taxableHPDisplay">₹0</span>
+      </div>
+      <div class="bar blue" id="stdBar">
+        <span class="bl">📌 Standard Deduction u/s 16(ia)</span>
+        <span class="bv" id="stdDeductionValue">₹75,000</span>
+      </div>
+      <p class="status ok" id="stdStatus">✔ Standard deduction applicable (salaried / pensioner)</p>
+    </div>
+  </div>
+
+  <!-- NET TAXABLE BANNER -->
+  <div class="net-banner">
+    <div class="nb-left">
+      <div class="nb-sub">Net Taxable Income</div>
+      <div class="nb-main">After standard deduction &amp; house property — excludes capital gains</div>
+    </div>
+    <div class="nb-right" id="taxableIncomeDisplay">₹0</div>
+  </div>
+
+  <!-- CAPITAL GAINS -->
+  <div class="sec-title">📈 Capital Gains &amp; Digital Assets</div>
+  <div class="grid-3">
+    <div class="cg-card">
+      <div class="cg-head stcg">Short-Term CG<span class="rate">20%</span></div>
+      <div class="cg-body">
+        <div class="cg-row"><span class="cl">Gain Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="stcgAmount" value="0" onchange="calc()"></div></span></div>
+        <div class="cg-row"><span class="cl">Exemption</span><span class="cv" id="stcgExemption">₹0</span></div>
+        <div class="cg-row"><span class="cl">Taxable Amount</span><span class="cv" id="taxableSTCG">₹0</span></div>
+        <div class="cg-row hi"><span class="cl">Tax @ 20%</span><span class="cv" id="stcgTaxAmount">₹0</span></div>
       </div>
     </div>
-
-    <div class="tags-cloud" id="tagsCloud">
-      <span class="tag active" data-tag="all"><i class="fas fa-tag"></i> All</span>
+    <div class="cg-card">
+      <div class="cg-head ltcg">Long-Term CG<span class="rate">12.5%</span></div>
+      <div class="cg-body">
+        <div class="cg-row"><span class="cl">Gain Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="ltcgAmount" value="0" onchange="calc()"></div></span></div>
+        <div class="cg-row"><span class="cl">Exemption (max ₹1.25L)</span><span class="cv" id="ltcgExemption">₹0</span></div>
+        <div class="cg-row"><span class="cl">Taxable Amount</span><span class="cv" id="taxableLTCG">₹0</span></div>
+        <div class="cg-row hi"><span class="cl">Tax @ 12.5%</span><span class="cv" id="ltcgTaxAmount">₹0</span></div>
+      </div>
     </div>
-
-    <div class="results-info">
-      <span id="resultsCount">Loading articles…</span>
-      <span class="clear-filters" id="clearFilters"><i class="fas fa-times"></i> Clear filters</span>
+    <div class="cg-card">
+      <div class="cg-head vda">Digital Assets<span class="rate">30%</span></div>
+      <div class="cg-body">
+        <div class="cg-row"><span class="cl">Income Amount</span><span class="cv"><div class="cg-inp-wrap"><span class="cc">₹</span><input type="number" id="digitalAssetsAmount" value="0" onchange="calc()"></div></span></div>
+        <div class="cg-row"><span class="cl">Exemption</span><span class="cv" id="digitalExemption">₹0</span></div>
+        <div class="cg-row"><span class="cl">Taxable Amount</span><span class="cv" id="taxableDigital">₹0</span></div>
+        <div class="cg-row hi"><span class="cl">Tax @ 30%</span><span class="cv" id="digitalTaxAmount">₹0</span></div>
+      </div>
     </div>
+  </div>
 
-    <div class="blog-grid" id="blogGrid">
-      <div class="loading"><i class="fas fa-spinner"></i><p>Loading golden articles…</p></div>
+  <!-- SLABS -->
+  <div class="sec-title">📊 Tax Slab Breakdown</div>
+  <div class="slab-wrap">
+    <table class="slab-table">
+      <thead><tr><th>Income Range</th><th>Rate</th><th>Tax Amount</th></tr></thead>
+      <tbody>
+        <tr><td>Up to ₹4,00,000</td><td>Nil</td><td id="slab1">₹0</td></tr>
+        <tr><td>₹4,00,001 – ₹8,00,000</td><td>5%</td><td id="slab2">₹0</td></tr>
+        <tr><td>₹8,00,001 – ₹12,00,000</td><td>10%</td><td id="slab3">₹0</td></tr>
+        <tr><td>₹12,00,001 – ₹16,00,000</td><td>15%</td><td id="slab4">₹0</td></tr>
+        <tr><td>₹16,00,001 – ₹20,00,000</td><td>20%</td><td id="slab5">₹0</td></tr>
+        <tr><td>₹20,00,001 – ₹24,00,000</td><td>25%</td><td id="slab6">₹0</td></tr>
+        <tr><td>Above ₹24,00,000</td><td>30%</td><td id="slab7">₹0</td></tr>
+        <tr class="rebate-row"><td colspan="2">Less: Rebate u/s 87A (income ≤ ₹12L)</td><td id="rebateDisplay">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MARGINAL RELIEF -->
+  <div class="sec-title">🛡️ Marginal Relief</div>
+  <div class="mr-box">
+    <div class="mr-head">🛡️ Marginal Relief Analysis <span class="tip" style="color:var(--gold);background:rgba(201,136,42,.15)">i<span class="tb">Applicable when income is ₹12,00,001–₹12,75,000. Tax is capped at Income − ₹12,00,000.</span></span></div>
+    <div class="mr-body" id="mrBody"></div>
+  </div>
+
+  <!-- FINAL SUMMARY -->
+  <div class="sec-title">💰 Final Tax Summary</div>
+  <div class="summary">
+    <h2>Your Tax at a Glance</h2>
+    <div class="s-grid">
+      <div class="s-item"><div class="sl">Gross Income</div><div class="sv" id="sumTotal">₹0</div></div>
+      <div class="s-item"><div class="sl">Standard Deduction</div><div class="sv" id="sumStd">₹0</div></div>
+      <div class="s-item"><div class="sl">Taxable HP Income</div><div class="sv" id="sumHP">₹0</div></div>
+      <div class="s-item"><div class="sl">Net Taxable Income</div><div class="sv" id="sumNet">₹0</div></div>
+      <div class="s-item"><div class="sl">Regular Income Tax</div><div class="sv" id="sumReg">₹0</div></div>
+      <div class="s-item"><div class="sl">STCG Tax (20%)</div><div class="sv" id="sumSTCG">₹0</div></div>
+      <div class="s-item"><div class="sl">LTCG Tax (12.5%)</div><div class="sv" id="sumLTCG">₹0</div></div>
+      <div class="s-item"><div class="sl">Digital Assets Tax (30%)</div><div class="sv" id="sumVDA">₹0</div></div>
+      <div class="s-item hi2"><div class="sl">Health &amp; Education Cess (4%)</div><div class="sv" id="sumCess">₹0</div></div>
+      <div class="final-row">
+        <div class="fl"><strong>Total Tax Payable</strong>Including cess · rounded up</div>
+        <div class="fv" id="sumFinal">₹0</div>
+      </div>
     </div>
+  </div>
 
-    <div class="pagination" id="pagination"></div>
-  </section>
-
-  <footer id="site-footer"></footer>
-  <script src="assets/Scripts/gototop.js"></script>
+</div>
 
 <script>
-(function () {
-  const POSTS_PER_PAGE = 12;
-  const POSTS_DIRECTORY = 'Posts/';
+  const f=n=>'₹'+Math.round(isNaN(n)?0:n).toLocaleString('en-IN');
+  const g=id=>parseFloat(document.getElementById(id)?.value)||0;
+  const s=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
 
-  let allPosts = [], filteredPosts = [];
-  let currentPage = 1, currentSort = 'latest',
-      currentCategory = 'all', currentTag = 'all', searchQuery = '';
+  function calc(){
+    const gSal=g('grossSalary'),oSrc=g('otherSources'),iInc=g('interestIncome'),
+          dInc=g('dividendIncome'),rent=g('grossRent'),mTax=g('municipalTaxes'),
+          lloan=g('letOutLoan'),stcg=g('stcgAmount'),ltcg=g('ltcgAmount'),vda=g('digitalAssetsAmount');
+    const emp=document.querySelector('input[name="emp"]:checked')?.value||'salaried';
+    const isSP=emp==='salaried'||emp==='pensioner';
 
-  const blogGrid         = document.getElementById('blogGrid');
-  const paginationDiv    = document.getElementById('pagination');
-  const searchInput      = document.getElementById('searchInput');
-  const categorySelect   = document.getElementById('categorySelect');
-  const sortBtns         = document.querySelectorAll('.sort-btn');
-  const tagsCloud        = document.getElementById('tagsCloud');
-  const resultsCountSpan = document.getElementById('resultsCount');
-  const clearFiltersBtn  = document.getElementById('clearFilters');
+    // House property
+    const nav=rent-mTax, stdHP=nav>0?nav*.30:0, hpInc=nav-stdHP-lloan, txHP=hpInc>0?hpInc:0;
+    // Totals
+    const totalInc=gSal+oSrc+iInc+dInc+rent;
+    const stdDed=isSP?Math.min(gSal,75000):0;
+    const netTx=Math.max(0,gSal+oSrc+iInc+dInc-stdDed+txHP);
 
-  async function loadAllPosts() {
-    try {
-      const res = await fetch('posts-manifest.json');
-      if (!res.ok) throw new Error('Manifest not found');
-      const manifest = await res.json();
-      if (!Array.isArray(manifest) || !manifest.length) return [];
-      const posts = await Promise.all(manifest.map(fetchPostMetadata));
-      return posts.filter(Boolean);
-    } catch (e) { console.error(e); return []; }
-  }
+    // Update income displays
+    s('totalIncomeDisplay',f(totalInc));
+    s('hpIncomeDisplay',f(hpInc));
+    s('taxableHPDisplay',f(txHP));
+    s('taxableIncomeDisplay',f(netTx));
+    s('stdDeductionValue',f(stdDed));
+    const stEl=document.getElementById('stdStatus');
+    if(isSP){stEl.className='status ok';stEl.textContent=`✔ Standard deduction ${f(stdDed)} applied`}
+    else{stEl.className='status warn';stEl.textContent='⚠ Not applicable (business / profession)'}
 
-  async function fetchPostMetadata(filename) {
-    try {
-      const res = await fetch(POSTS_DIRECTORY + filename);
-      if (!res.ok) return null;
-      const html = await res.text();
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-      const getMeta = n => { const m = doc.querySelector(`meta[name="${n}"]`); return m ? m.getAttribute('content') : null; };
-      const extractExcerpt = () => {
-        const ex = getMeta('blog:excerpt'); if (ex) return ex;
-        const p = doc.querySelector('p');
-        return p ? p.textContent.substring(0, 150) + '…' : 'Read this interesting article…';
-      };
-      const iconMap = { technology:'fa-microchip',lifestyle:'fa-heart',travel:'fa-plane',food:'fa-utensils',health:'fa-heartbeat',business:'fa-briefcase',design:'fa-pencil-ruler',science:'fa-flask',art:'fa-palette',legal:'fa-gavel',technical:'fa-gear',uncategorized:'fa-newspaper' };
-      const category = getMeta('blog:category') || 'uncategorized';
-      return {
-        id: filename, filename, url: POSTS_DIRECTORY + filename,
-        title:    getMeta('blog:title') || filename.replace('.html','').replace(/%20/g,' '),
-        excerpt:  extractExcerpt(), category,
-        tags:     getMeta('blog:tags') ? getMeta('blog:tags').split(',').map(t=>t.trim()) : [],
-        author:   getMeta('blog:author') || 'Unknown',
-        date:     getMeta('blog:date') || new Date().toISOString().split('T')[0],
-        readTime: parseInt(getMeta('blog:readTime')) || Math.floor(Math.random()*10)+3,
-        views:    parseInt(getMeta('blog:views')) || Math.floor(Math.random()*5000)+500,
-        icon:     getMeta('blog:icon') || iconMap[category] || 'fa-newspaper'
-      };
-    } catch (e) { return null; }
-  }
+    // CG
+    const ltEx=Math.min(ltcg,125000),txLTCG=Math.max(0,ltcg-ltEx);
+    const stcgT=stcg*.20,ltcgT=txLTCG*.125,vdaT=vda*.30,cgTax=stcgT+ltcgT+vdaT;
+    s('stcgExemption','₹0');s('taxableSTCG',f(stcg));s('stcgTaxAmount',f(stcgT));
+    s('ltcgExemption',f(ltEx));s('taxableLTCG',f(txLTCG));s('ltcgTaxAmount',f(ltcgT));
+    s('digitalExemption','₹0');s('taxableDigital',f(vda));s('digitalTaxAmount',f(vdaT));
 
-  function getTagIcon(tag) {
-    const icons = { 'ec act':'fa-gavel','confiscation':'fa-box','seizure':'fa-handcuffs','legal':'fa-scale-balanced','smart-meter':'fa-microchip','electricity':'fa-bolt','energy':'fa-solar-panel','technology':'fa-code','jute':'fa-leaf','textiles':'fa-shirt','foodgrains':'fa-wheat-awn','is standard':'fa-certificate' };
-    const tl = tag.toLowerCase();
-    for (const [k,v] of Object.entries(icons)) if (tl.includes(k)) return v;
-    return 'fa-tag';
-  }
+    // Slabs
+    const r=slabs(netTx);
+    ['1','2','3','4','5','6','7'].forEach(i=>s('slab'+i,f(r.b['s'+i])));
+    s('rebateDisplay',r.rebate>0?`− ${f(r.rebate)}`:'—');
 
-  function updateFiltersFromPosts(posts) {
-    const categories = ['all', ...new Set(posts.map(p=>p.category))];
-    categorySelect.innerHTML = categories.map(c=>`<option value="${c}">${c.charAt(0).toUpperCase()+c.slice(1)}</option>`).join('');
-    const tagsToRemove = ['detention','commodities','section 6a','section-6a','innovation','sustainability','packaging','LDL','VLDL','CoQ10','excel-tips','excel-formulas','petroleum','density','productivity'];
-    const tagCount = new Map();
-    posts.forEach(p => p.tags.forEach(t => {
-      if (!tagsToRemove.some(r=>t.toLowerCase()===r.toLowerCase()||t.toLowerCase().includes(r.toLowerCase()))) tagCount.set(t,(tagCount.get(t)||0)+1);
-    }));
-    const sorted = Array.from(tagCount.entries()).sort((a,b)=>b[1]-a[1]).slice(0,15);
-    tagsCloud.innerHTML = `<span class="tag active" data-tag="all"><i class="fas fa-tag"></i> All</span>`
-      + sorted.map(([t,c])=>`<span class="tag" data-tag="${t}"><i class="fas ${getTagIcon(t)}"></i> ${t} (${c})</span>`).join('');
-    document.querySelectorAll('.tag').forEach(tag=>{
-      tag.addEventListener('click',()=>{ document.querySelectorAll('.tag').forEach(t=>t.classList.remove('active')); tag.classList.add('active'); currentTag=tag.dataset.tag; currentPage=1; renderPosts(); });
-    });
-  }
-
-  function filterPosts() {
-    let f = [...allPosts];
-    if (currentCategory !== 'all') f = f.filter(p=>p.category===currentCategory);
-    if (currentTag !== 'all') f = f.filter(p=>p.tags.includes(currentTag));
-    if (searchQuery) { const q=searchQuery.toLowerCase(); f=f.filter(p=>p.title.toLowerCase().includes(q)||p.excerpt.toLowerCase().includes(q)||p.author.toLowerCase().includes(q)); }
-    f.sort((a,b)=>{ if(currentSort==='latest') return new Date(b.date)-new Date(a.date); if(currentSort==='oldest') return new Date(a.date)-new Date(b.date); return b.views-a.views; });
-    return f;
-  }
-
-  function formatDate(d) { return new Date(d).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}); }
-
-  function renderPosts() {
-    filteredPosts = filterPosts();
-    const total = filteredPosts.length;
-    const totalPages = Math.ceil(total/POSTS_PER_PAGE);
-    if (currentPage > totalPages) currentPage = totalPages||1;
-    const start=(currentPage-1)*POSTS_PER_PAGE, end=start+POSTS_PER_PAGE;
-    const show=filteredPosts.slice(start,end);
-    resultsCountSpan.textContent = total===0 ? 'No articles found' : `Showing ${start+1}–${Math.min(end,total)} of ${total} articles`;
-    if (!show.length) {
-      blogGrid.innerHTML=`<div class="no-results"><i class="fas fa-search"></i><h3>No articles found</h3><p>Try adjusting your filters or search query</p></div>`;
-    } else {
-      blogGrid.innerHTML = show.map(post=>`
-        <div class="blog-card" onclick="window.location.href='${post.url}'">
-          <div class="blog-image" data-cat="${post.category}">
-            <div class="icon-wrap"><i class="fas ${post.icon}"></i></div>
-            <span class="blog-category-badge">${post.category}</span>
-          </div>
-          <div class="blog-content">
-            <h3 class="blog-title">${post.title}</h3>
-            <p class="blog-excerpt">${post.excerpt}</p>
-            <div class="blog-meta">
-              <span class="meta-item meta-author"><i class="fas fa-user"></i>${post.author}</span>
-              <span class="meta-item meta-date"><i class="fas fa-calendar-days"></i>${formatDate(post.date)}</span>
-              <span class="meta-item meta-time"><i class="fas fa-clock"></i>${post.readTime} min read</span>
-            </div>
-            <div class="blog-tags">${post.tags.slice(0,3).map(t=>`<span class="blog-tag">${t}</span>`).join('')}</div>
-            <div class="read-more">Read article <i class="fas fa-arrow-right"></i></div>
-          </div>
-        </div>
-      `).join('');
-    }
-    renderPagination(totalPages);
-  }
-
-  function renderPagination(totalPages) {
-    if (totalPages<=1) { paginationDiv.innerHTML=''; return; }
-    let html=`<button class="page-btn" ${currentPage===1?'disabled':''} data-page="${currentPage-1}"><i class="fas fa-chevron-left"></i> Prev</button>`;
-    for (let i=1;i<=totalPages;i++) {
-      if(i===1||i===totalPages||(i>=currentPage-2&&i<=currentPage+2)) html+=`<button class="page-btn ${i===currentPage?'active':''}" data-page="${i}">${i}</button>`;
-      else if(i===currentPage-3||i===currentPage+3) html+=`<span class="page-dots">…</span>`;
-    }
-    html+=`<button class="page-btn" ${currentPage===totalPages?'disabled':''} data-page="${currentPage+1}">Next <i class="fas fa-chevron-right"></i></button>`;
-    paginationDiv.innerHTML=html;
-    paginationDiv.querySelectorAll('.page-btn[data-page]').forEach(btn=>{
-      btn.addEventListener('click',()=>{ if(!btn.disabled){currentPage=parseInt(btn.dataset.page);renderPosts();window.scrollTo({top:0,behavior:'smooth'});} });
-    });
-  }
-
-  searchInput.addEventListener('input', e=>{searchQuery=e.target.value;currentPage=1;renderPosts();});
-  categorySelect.addEventListener('change', e=>{currentCategory=e.target.value;currentPage=1;renderPosts();});
-  sortBtns.forEach(btn=>btn.addEventListener('click',()=>{sortBtns.forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentSort=btn.dataset.sort;currentPage=1;renderPosts();}));
-  clearFiltersBtn.addEventListener('click',()=>{ searchInput.value='';categorySelect.value='all'; document.querySelectorAll('.tag').forEach(t=>t.classList.remove('active')); document.querySelector('.tag[data-tag="all"]').classList.add('active'); searchQuery='';currentCategory='all';currentTag='all';currentPage=1;renderPosts(); });
-
-  async function init() {
-    try {
-      blogGrid.innerHTML='<div class="loading"><i class="fas fa-spinner"></i><p>Loading golden articles…</p></div>';
-      allPosts = await loadAllPosts();
-      if (!allPosts.length) {
-        blogGrid.innerHTML=`<div class="no-results"><i class="fas fa-file-alt"></i><h3>No posts found</h3><p>Add HTML files to the Posts/ folder and run the GitHub Action.</p></div>`;
-        resultsCountSpan.textContent='0 articles'; return;
+    // Marginal relief
+    const taxBR=r.tax+r.rebate, limT=Math.max(0,netTx-1200000);
+    let finalReg=taxBR, mrHTML='';
+    if(netTx>1200000&&netTx<=1275000){
+      if(taxBR>limT){
+        finalReg=limT;
+        const sv=taxBR-limT;
+        mrHTML=`<span class="rbadge yes">✓ Applicable</span>
+        <p style="font-size:13px;color:var(--ink-3);margin-bottom:12px">Tax capped at Income − ₹12,00,000</p>
+        <div class="mr-grid">
+          <div class="mr-item"><div class="mil">Normal Tax</div><div class="miv">${f(taxBR)}</div></div>
+          <div class="mr-item"><div class="mil">Tax with Relief</div><div class="miv">${f(limT)}</div></div>
+          <div class="mr-save">💰 You save ${f(sv)}</div>
+        </div>`;
+      } else {
+        mrHTML=`<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Normal tax ≤ Income − ₹12L. Relief not required.</p>`;
       }
-      updateFiltersFromPosts(allPosts);
-      renderPosts();
-    } catch(e) {
-      console.error(e);
-      blogGrid.innerHTML=`<div class="no-results"><i class="fas fa-exclamation-triangle"></i><h3>Error loading posts</h3><p>Please refresh or try again later.</p></div>`;
+    } else if(netTx<=1200000){
+      mrHTML=`<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Income ${f(netTx)} is within ₹12,00,000 threshold. Rebate u/s 87A: ${f(r.rebate)}</p>`;
+    } else {
+      finalReg=taxBR;
+      mrHTML=`<span class="rbadge no">✗ Not applicable</span><p style="font-size:13px;color:var(--ink-3);margin-top:8px">Income ${f(netTx)} exceeds ₹12,75,000 threshold.</p>`;
     }
+    document.getElementById('mrBody').innerHTML=mrHTML;
+
+    const tBC=finalReg+cgTax, cess=tBC*.04, final=Math.ceil(tBC+cess);
+    s('sumTotal',f(totalInc));s('sumStd',f(stdDed));s('sumHP',f(txHP));
+    s('sumNet',f(netTx));s('sumReg',f(finalReg));s('sumSTCG',f(stcgT));
+    s('sumLTCG',f(ltcgT));s('sumVDA',f(vdaT));s('sumCess',f(cess));s('sumFinal',f(final));
   }
 
-  init();
-})();
+  function slabs(inc){
+    const b={s1:0,s2:0,s3:0,s4:0,s5:0,s6:0,s7:0};
+    if(inc>2400000){b.s7=(inc-2400000)*.30;b.s6=400000*.25;b.s5=400000*.20;b.s4=400000*.15;b.s3=400000*.10;b.s2=400000*.05}
+    else if(inc>2000000){b.s6=(inc-2000000)*.25;b.s5=400000*.20;b.s4=400000*.15;b.s3=400000*.10;b.s2=400000*.05}
+    else if(inc>1600000){b.s5=(inc-1600000)*.20;b.s4=400000*.15;b.s3=400000*.10;b.s2=400000*.05}
+    else if(inc>1200000){b.s4=(inc-1200000)*.15;b.s3=400000*.10;b.s2=400000*.05}
+    else if(inc>800000){b.s3=(inc-800000)*.10;b.s2=400000*.05}
+    else if(inc>400000){b.s2=(inc-400000)*.05}
+    let tax=Object.values(b).reduce((a,c)=>a+c,0),rebate=0;
+    if(inc<=1200000&&tax>0){rebate=Math.min(tax,60000);tax-=rebate}
+    return{tax,rebate,b}
+  }
+
+  window.onload=calc;
 </script>
 </body>
 </html>
