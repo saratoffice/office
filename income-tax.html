@@ -275,7 +275,7 @@
       flex-shrink: 0;
     }
 
-    /* ---- INFO ICON & TOOLTIP ---- */
+    /* ---- INFO ICON ---- */
     .tc-info-icon {
       display: inline-flex;
       align-items: center;
@@ -288,124 +288,161 @@
       font-weight: 700;
       font-style: italic;
       cursor: pointer;
-      position: relative;
       flex-shrink: 0;
-      transition: background 0.2s;
-      z-index: 100;
+      transition: background 0.2s, transform 0.2s;
+      position: relative;
+      z-index: 10;
     }
 
     .tc-info-icon:hover {
       background: var(--gold);
-      z-index: 1000;
+      transform: scale(1.15);
     }
 
-    .tc-tooltip {
-      visibility: hidden;
-      opacity: 0;
-      position: absolute;
-      background: var(--ink);
-      color: #c8d8ee;
-      padding: 20px 22px;
+    /* Hide all inline .tc-tooltip spans — JS floating tooltip takes over */
+    .tc-tooltip { display: none !important; }
+
+    /* ---- FLOATING TOOLTIP (JS-powered, appended to body) ---- */
+    #tc-floating-tooltip {
+      position: fixed;
+      z-index: 2147483647;
+      width: 300px;
+      background: #0f1623;
+      border: 1px solid rgba(200,146,42,0.45);
       border-radius: 16px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.4);
-      width: 320px;
-      z-index: 999999;
-      font-size: 13px;
-      font-weight: normal;
-      text-align: left;
+      padding: 0;
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.45),
+        0 0 0 1px rgba(200,146,42,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.04);
       pointer-events: none;
-      transition: opacity 0.2s ease, visibility 0.2s ease;
+      opacity: 0;
+      transform: translateY(6px) scale(0.97);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
       line-height: 1.6;
-      border: 1px solid rgba(200,146,42,0.3);
+      color: #b8cde0;
+      overflow: hidden;
     }
 
-    .tc-tooltip::before {
+    #tc-floating-tooltip.tc-tt-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Arrow */
+    #tc-floating-tooltip::before {
       content: '';
       position: absolute;
-      border: 10px solid transparent;
+      width: 0; height: 0;
+      border: 9px solid transparent;
     }
 
-    .tc-info-icon[data-tooltip="top-right"] .tc-tooltip {
-      bottom: 28px;
-      left: 0;
-      transform: translateX(-8%);
+    #tc-floating-tooltip.arrow-up::before {
+      top: -18px;
+      left: var(--arrow-x, 20px);
+      border-bottom-color: rgba(200,146,42,0.45);
     }
-    .tc-info-icon[data-tooltip="top-right"] .tc-tooltip::before {
-      bottom: -20px; left: 14px;
-      border-top-color: var(--ink);
-    }
-
-    .tc-info-icon[data-tooltip="bottom-left"] .tc-tooltip {
-      top: 28px;
-      right: 0; left: auto;
-      transform: translateX(8%);
-    }
-    .tc-info-icon[data-tooltip="bottom-left"] .tc-tooltip::before {
-      top: -20px; right: 14px;
-      border-bottom-color: var(--ink);
+    #tc-floating-tooltip.arrow-up::after {
+      content: '';
+      position: absolute;
+      top: -16px;
+      left: calc(var(--arrow-x, 20px) + 1px);
+      width: 0; height: 0;
+      border: 8px solid transparent;
+      border-bottom-color: #0f1623;
     }
 
-    .tc-info-icon[data-tooltip="top-left"] .tc-tooltip {
-      bottom: 28px;
-      right: 0; left: auto;
-      transform: translateX(8%);
+    #tc-floating-tooltip.arrow-down::before {
+      bottom: -18px;
+      left: var(--arrow-x, 20px);
+      border-top-color: rgba(200,146,42,0.45);
     }
-    .tc-info-icon[data-tooltip="top-left"] .tc-tooltip::before {
-      bottom: -20px; right: 14px;
-      border-top-color: var(--ink);
+    #tc-floating-tooltip.arrow-down::after {
+      content: '';
+      position: absolute;
+      bottom: -16px;
+      left: calc(var(--arrow-x, 20px) + 1px);
+      width: 0; height: 0;
+      border: 8px solid transparent;
+      border-top-color: #0f1623;
     }
 
-    .tc-info-icon:hover .tc-tooltip {
-      visibility: visible;
-      opacity: 1;
+    /* Tooltip inner sections */
+    .tc-tt-header {
+      background: linear-gradient(135deg, #1a2840, #162036);
+      border-bottom: 1px solid rgba(200,146,42,0.2);
+      padding: 13px 18px 11px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .tc-tooltip h4 {
+    .tc-tt-header-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--gold, #c8922a);
+      flex-shrink: 0;
+      box-shadow: 0 0 6px rgba(200,146,42,0.6);
+    }
+
+    .tc-tt-title {
       font-family: 'Syne', sans-serif;
-      color: var(--gold-light);
-      margin-bottom: 10px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
+      color: #e8b84b;
+      letter-spacing: 0.2px;
     }
 
-    .tc-tooltip ul, .tc-tooltip ol {
-      margin-left: 16px;
-      margin-bottom: 10px;
+    .tc-tt-body {
+      padding: 14px 18px 16px;
     }
 
-    .tc-tooltip li { margin-bottom: 4px; }
+    .tc-tt-body p { margin-bottom: 8px; color: #a8bdd4; }
+    .tc-tt-body p:last-child { margin-bottom: 0; }
 
-    .tc-tooltip table { width: 100%; border-collapse: collapse; margin: 8px 0; }
-    .tc-tooltip td {
-      padding: 6px 4px;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      color: #b0c4de;
+    .tc-tt-body ul, .tc-tt-body ol {
+      margin: 6px 0 8px 16px;
+      color: #a8bdd4;
+    }
+    .tc-tt-body li { margin-bottom: 5px; }
+    .tc-tt-body strong { color: #d4e8ff; font-weight: 600; }
+
+    .tc-tt-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 6px 0 4px;
+    }
+    .tc-tt-table tr { border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .tc-tt-table tr:last-child { border-bottom: none; }
+    .tc-tt-table td {
+      padding: 6px 2px;
       font-size: 12px;
+      color: #90aac4;
     }
-    .tc-tooltip td:last-child {
+    .tc-tt-table td:last-child {
       text-align: right;
       font-weight: 600;
-      color: #e0ecff;
+      color: #cce0ff;
     }
-    .tc-tooltip tr:last-child td { border-bottom: none; }
+    .tc-tt-table tr.tt-total-row td {
+      color: #e8b84b;
+      font-weight: 700;
+      border-top: 1px solid rgba(200,146,42,0.25);
+      padding-top: 8px;
+    }
 
-    .tc-tooltip .tc-note {
-      background: rgba(200,146,42,0.15);
-      padding: 10px 12px;
+    .tc-tt-note {
+      background: rgba(200,146,42,0.1);
+      border: 1px solid rgba(200,146,42,0.25);
+      border-left: 3px solid #c8922a;
       border-radius: 8px;
-      color: var(--gold-light);
+      padding: 9px 12px;
+      color: #d4a843;
       font-size: 12px;
       margin-top: 10px;
-      border-left: 3px solid var(--gold);
-    }
-
-    .tc-tooltip .tc-total-row {
-      background: rgba(200,146,42,0.15);
-      font-weight: 700;
-      padding: 8px 10px;
-      border-radius: 8px;
-      margin-top: 6px;
-      color: var(--gold-light);
+      line-height: 1.5;
     }
 
     /* ---- INPUT ROWS ---- */
@@ -1026,12 +1063,9 @@
         <header class="tc-card-header">
           <span class="card-icon">💰</span>
           Income Details
-          <span class="tc-info-icon" data-tooltip="bottom-right">i
-            <span class="tc-tooltip">
-              <h4>Income Details</h4>
-              <p>Enter all your income sources for the financial year.</p>
-            </span>
-          </span>
+          <span class="tc-info-icon"
+            data-tip-title="Income Details"
+            data-tip-body="Enter all your income sources for the financial year including salary, rental income, interest, and dividends.">i</span>
         </header>
 
         <div class="tc-input-row">
@@ -1066,20 +1100,9 @@
         <header class="tc-card-header">
           <span class="card-icon">🏠</span>
           House Property Deductions
-          <span class="tc-info-icon" data-tooltip="bottom-left">i
-            <span class="tc-tooltip">
-              <h4>House Property Calculation</h4>
-              <table>
-                <tr><td>Gross Annual Value (GAV)</td><td id="tooltipGAV">₹50,000</td></tr>
-                <tr><td>Less: Municipal Taxes</td><td id="tooltipMunicipal">₹3,000</td></tr>
-                <tr style="font-weight:700;"><td>Net Annual Value (NAV)</td><td id="tooltipNAV">₹47,000</td></tr>
-                <tr><td>Less: 30% Std. Deduction on NAV</td><td id="tooltipStdDed">₹14,100</td></tr>
-                <tr><td>Less: Interest on Let-Out</td><td id="tooltipInterest">₹1,00,000</td></tr>
-                <tr class="tc-total-row"><td>Income from House Property</td><td id="tooltipHPIncome">₹-67,100</td></tr>
-              </table>
-              <div class="tc-note">⚠️ Loss from house property cannot be set off against salary under new regime.</div>
-            </span>
-          </span>
+          <span class="tc-info-icon"
+            data-tip-title="House Property Calculation"
+            data-tip-type="hp-table">i</span>
         </header>
 
         <div class="tc-input-row">
@@ -1094,12 +1117,9 @@
         <div class="tc-hp-simple">
           <span style="display:flex;align-items:center;gap:6px;">
             📊 House Property Income (Computed)
-            <span class="tc-info-icon" style="background:var(--ink-soft);width:18px;height:18px;font-size:10px;">i
-              <span class="tc-tooltip" style="width:260px;">
-                <strong style="color:var(--gold-light);">Loss Cannot Be Set Off</strong><br>
-                Any loss from house property cannot reduce your salary or other income.
-              </span>
-            </span>
+            <span class="tc-info-icon"
+              data-tip-title="Loss Cannot Be Set Off"
+              data-tip-body="Any loss from house property cannot reduce your salary or other income under the New Tax Regime.">i</span>
           </span>
           <span id="hpIncomeSimple">₹-67,100</span>
         </div>
@@ -1107,12 +1127,9 @@
         <div class="tc-taxable-hp">
           <span style="display:flex;align-items:center;gap:6px;">
             ✅ Taxable House Property Income
-            <span class="tc-info-icon" style="background:var(--green);width:18px;height:18px;font-size:10px;">i
-              <span class="tc-tooltip" style="width:260px;">
-                <strong style="color:var(--gold-light);">Taxable HP Income</strong><br>
-                Only positive house property income is added to taxable income. Losses are ignored.
-              </span>
-            </span>
+            <span class="tc-info-icon"
+              data-tip-title="Taxable HP Income"
+              data-tip-body="Only positive house property income is added to your taxable income. Losses from house property are completely ignored under the new regime.">i</span>
           </span>
           <span id="taxableHPDisplay">₹0.00</span>
         </div>
@@ -1120,12 +1137,9 @@
         <div class="tc-deduction-row" id="stdDeductionRow">
           <span style="display:flex;align-items:center;gap:6px;">
             📌 Standard Deduction (Salaried / Pensioner)
-            <span class="tc-info-icon" data-tooltip="top-left">i
-              <span class="tc-tooltip">
-                <strong style="color:var(--gold-light);">Standard Deduction u/s 16(ia)</strong><br>
-                Flat ₹75,000 deduction, limited to actual salary income.
-              </span>
-            </span>
+            <span class="tc-info-icon"
+              data-tip-title="Standard Deduction u/s 16(ia)"
+              data-tip-body="Flat ₹75,000 deduction available to salaried employees and pensioners. If your gross salary is less than ₹75,000, the deduction equals your salary amount.">i</span>
           </span>
           <span id="stdDeductionValue">₹75,000</span>
         </div>
@@ -1139,12 +1153,9 @@
     <div class="tc-net-taxable-card">
       <div class="label">
         Net Taxable Income (after all deductions)
-        <span class="tc-info-icon" data-tooltip="top-right">i
-          <span class="tc-tooltip">
-            <strong style="color:var(--gold-light);">Net Taxable Income</strong><br>
-            Income after standard deduction. House property losses do NOT reduce other income under the new regime.
-          </span>
-        </span>
+        <span class="tc-info-icon"
+          data-tip-title="Net Taxable Income"
+          data-tip-body="Total income after deducting the standard deduction (for salaried/pensioners). House property losses do NOT reduce other income under the New Tax Regime — only positive HP income is added.">i</span>
       </div>
       <div class="value" id="taxableIncomeDisplay">₹11,53,769.00</div>
     </div>
@@ -1152,16 +1163,9 @@
     <!-- ======== CAPITAL GAINS ======== -->
     <h2 class="tc-heading-secondary">
       📈 Capital Gains &amp; Digital Assets
-      <span class="tc-info-icon" data-tooltip="top-right">i
-        <span class="tc-tooltip">
-          <h4>Capital Gains Tax Rates 2025</h4>
-          <ul>
-            <li><strong style="color:var(--gold-light);">STCG (20%):</strong> Assets held ≤24 months</li>
-            <li><strong style="color:var(--gold-light);">LTCG (12.5%):</strong> Assets held &gt;24 months, ₹1.25L exemption</li>
-            <li><strong style="color:var(--gold-light);">Digital Assets (30%):</strong> Crypto, NFTs</li>
-          </ul>
-        </span>
-      </span>
+      <span class="tc-info-icon"
+        data-tip-title="Capital Gains Tax Rates 2025"
+        data-tip-type="cg-list">i</span>
     </h2>
 
     <div class="tc-cg-container">
@@ -1219,13 +1223,9 @@
 
     <!-- ======== MARGINAL RELIEF ======== -->
     <div class="tc-marginal-relief" id="marginalReliefInfo">
-      <span class="tc-info-icon" data-tooltip="top-right">i
-        <span class="tc-tooltip">
-          <h4>Marginal Relief</h4>
-          <p>For income slightly above ₹12 lakh, tax is limited to (income − ₹12,00,000). Applicable till taxable income is ₹12,75,000.</p>
-          <div class="tc-note">Example (₹12,10,000): Normal tax ₹61,500 → With relief: ₹10,000 only.</div>
-        </span>
-      </span>
+      <span class="tc-info-icon"
+        data-tip-title="Marginal Relief"
+        data-tip-type="marginal-relief">i</span>
       <div class="tc-relief-content">
         <strong>🛡️ Marginal Relief Analysis</strong>
         <div id="marginalReliefAmount" class="tc-relief-amount"></div>
@@ -1522,7 +1522,156 @@
     window.onload = function() { calculateTax(); };
   </script>
 
+  <!-- ============ FLOATING TOOLTIP ENGINE ============ -->
+  <script>
+  (function() {
+    // Create the floating tooltip element
+    const tt = document.createElement('div');
+    tt.id = 'tc-floating-tooltip';
+    tt.innerHTML = `
+      <div class="tc-tt-header">
+        <span class="tc-tt-header-dot"></span>
+        <span class="tc-tt-title" id="tt-title-text"></span>
+      </div>
+      <div class="tc-tt-body" id="tt-body-content"></div>
+    `;
+    document.body.appendChild(tt);
+
+    const TT_W = 300;
+    const MARGIN = 12; // gap between icon and tooltip
+    const EDGE_PAD = 10; // min distance from viewport edge
+
+    function buildBody(icon) {
+      const type = icon.dataset.tipType;
+      const body = icon.dataset.tipBody;
+
+      if (type === 'hp-table') {
+        const gav       = document.getElementById('tooltipGAV')?.textContent     || '—';
+        const mun       = document.getElementById('tooltipMunicipal')?.textContent || '—';
+        const nav       = document.getElementById('tooltipNAV')?.textContent     || '—';
+        const std       = document.getElementById('tooltipStdDed')?.textContent  || '—';
+        const interest  = document.getElementById('tooltipInterest')?.textContent || '—';
+        const hpIncome  = document.getElementById('tooltipHPIncome')?.textContent || '—';
+        return `
+          <table class="tc-tt-table">
+            <tr><td>Gross Annual Value (GAV)</td><td>${gav}</td></tr>
+            <tr><td>Less: Municipal Taxes</td><td>${mun}</td></tr>
+            <tr><td><strong>Net Annual Value (NAV)</strong></td><td><strong>${nav}</strong></td></tr>
+            <tr><td>Less: 30% Std. Deduction on NAV</td><td>${std}</td></tr>
+            <tr><td>Less: Interest on Let-Out</td><td>${interest}</td></tr>
+            <tr class="tt-total-row"><td>Income from House Property</td><td>${hpIncome}</td></tr>
+          </table>
+          <div class="tc-tt-note">⚠️ Loss from house property cannot be set off against salary or other income under the New Tax Regime.</div>`;
+      }
+
+      if (type === 'cg-list') {
+        return `
+          <ul>
+            <li><strong>STCG (20%):</strong> Assets held ≤24 months — no exemption allowed.</li>
+            <li><strong>LTCG (12.5%):</strong> Assets held &gt;24 months — ₹1,25,000 exemption per year.</li>
+            <li><strong>Digital Assets (30%):</strong> Crypto, NFTs, and other virtual digital assets.</li>
+          </ul>`;
+      }
+
+      if (type === 'marginal-relief') {
+        return `
+          <p>For income slightly above ₹12 lakh, tax is capped at <strong>(Income − ₹12,00,000)</strong> instead of normal slab tax.</p>
+          <div class="tc-tt-note">
+            <strong>Example:</strong> Income ₹12,10,000<br>
+            Normal tax = ₹61,500 &nbsp;→&nbsp; With relief = ₹10,000<br>
+            Applicable till income ≤ ₹12,75,000
+          </div>`;
+      }
+
+      // Default: plain text body
+      return body ? `<p>${body}</p>` : '';
+    }
+
+    function positionTooltip(icon) {
+      const rect = icon.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      // Measure tooltip height (make it visible but transparent first)
+      tt.style.visibility = 'hidden';
+      tt.style.display = 'block';
+      const ttH = tt.offsetHeight;
+      tt.style.visibility = '';
+      tt.style.display = '';
+
+      // Decide vertical: prefer above, fall back to below
+      const spaceAbove = rect.top;
+      const spaceBelow = vh - rect.bottom;
+      let placeAbove = spaceAbove > ttH + MARGIN + 20;
+      if (!placeAbove && spaceBelow < ttH + MARGIN + 20) {
+        // Not enough space either way — pick whichever is larger
+        placeAbove = spaceAbove > spaceBelow;
+      }
+
+      // Horizontal: align left edge of tooltip with icon center, then clamp to viewport
+      let left = rect.left + rect.width / 2 - TT_W / 2;
+      left = Math.max(EDGE_PAD, Math.min(vw - TT_W - EDGE_PAD, left));
+
+      // Arrow X position relative to tooltip
+      const iconCenterX = rect.left + rect.width / 2;
+      let arrowX = iconCenterX - left - 9; // 9 = border width
+      arrowX = Math.max(12, Math.min(TT_W - 30, arrowX));
+
+      let top;
+      if (placeAbove) {
+        top = rect.top + window.scrollY - ttH - MARGIN;
+        tt.className = 'arrow-down';
+      } else {
+        top = rect.bottom + window.scrollY + MARGIN;
+        tt.className = 'arrow-up';
+      }
+
+      tt.style.setProperty('--arrow-x', arrowX + 'px');
+      tt.style.left = left + 'px';
+      tt.style.top  = top + 'px';
+      tt.style.width = TT_W + 'px';
+    }
+
+    let hideTimer = null;
+
+    function showTooltip(icon) {
+      clearTimeout(hideTimer);
+
+      const title = icon.dataset.tipTitle || '';
+      document.getElementById('tt-title-text').textContent = title;
+      document.getElementById('tt-body-content').innerHTML = buildBody(icon);
+
+      positionTooltip(icon);
+      // Force reflow so transition fires
+      tt.getBoundingClientRect();
+      tt.classList.add('tc-tt-visible');
+    }
+
+    function hideTooltip() {
+      hideTimer = setTimeout(() => {
+        tt.classList.remove('tc-tt-visible');
+      }, 80);
+    }
+
+    // Attach listeners to all info icons
+    document.querySelectorAll('.tc-info-icon').forEach(icon => {
+      icon.addEventListener('mouseenter', () => showTooltip(icon));
+      icon.addEventListener('mouseleave', hideTooltip);
+      icon.addEventListener('focus',      () => showTooltip(icon));
+      icon.addEventListener('blur',       hideTooltip);
+    });
+
+    // Reposition on scroll / resize
+    window.addEventListener('scroll', () => {
+      if (tt.classList.contains('tc-tt-visible')) {
+        const activeIcon = document.querySelector('.tc-info-icon:hover');
+        if (activeIcon) positionTooltip(activeIcon);
+      }
+    }, { passive: true });
+  })();
+  </script>
+
   <div id="site-footer"></div>
-  <script src="/assets/Scripts/gototop.js"></script>
+<script src="/assets/Scripts/gototop.js"></script>
 </body>
 </html>
