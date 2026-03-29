@@ -2,443 +2,360 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>PPC Verification · KMS 2024-25</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
 
-  <!-- Common CSS (global menu/footer) – kept minimal to avoid conflicts -->
+  <!-- Common CSS (global styles) -->
   <link rel="stylesheet" href="/style.css">
-  <!-- site components for header/footer (still loaded, but we override inside card) -->
+
+  <!-- ✅ SHARED checklist styles -->
+  <link rel="stylesheet" href="/assets/css/checklist-common.css">
+
+  <!-- ✅ site components for header/footer -->
   <script src="/assets/Scripts/site-components.js" defer></script>
 
+  <!-- ════════════════════════════════════════════
+       PPC-SPECIFIC styles only.
+       Everything shared lives in checklist-common.css.
+  ════════════════════════════════════════════ -->
   <style>
-    /* ----- global reset for body (only background) ----- */
-    body {
-      margin: 0;
-      background: #f2f6fc;
-      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-    }
-
-    /* 🧱 PPC CARD – fully isolated with unique prefix "ppc-" */
-    .ppc-verification-card {
-      all: initial;                    /* kill inheritance from outer css */
-      display: block;
-      max-width: 1100px;
-      width: 100%;
-      background: #ffffff;
-      border-radius: 24px;
-      box-shadow: 0 12px 28px rgba(0, 20, 30, 0.15);
-      padding: 1.5rem 1.8rem 1.2rem 1.8rem;
-      border: 1px solid #c0d0e3;
-      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-      line-height: 1.4;
-      color: #1f2e40;
-      margin: 1.5rem auto;
-      box-sizing: border-box;
-    }
-
-    .ppc-verification-card * {
-      all: revert;
-      box-sizing: border-box;
-    }
-
-    /* header row */
-    .ppc-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 3px solid #1f4a3c;
-      padding-bottom: 0.5rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .ppc-top h1 {
-      font-size: 1.9rem;
-      font-weight: 700;
-      color: #1f4a3c;
-      margin: 0;
-      letter-spacing: -0.3px;
-    }
-
-    .ppc-top h1 small {
-      font-size: 0.9rem;
-      background: #dff0e6;
-      color: #0f3b2e;
-      padding: 0.25rem 1rem;
-      border-radius: 30px;
-      margin-left: 10px;
-      font-weight: 500;
-    }
-
-    .ppc-print-btn {
-      background: #1f4a3c;
-      border: none;
-      color: white;
-      font-weight: 600;
-      font-size: 0.95rem;
-      padding: 0.45rem 1.8rem;
-      border-radius: 40px;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,40,30,0.25);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid #17412e;
-      transition: 0.1s;
-    }
-    .ppc-print-btn:hover { background: #0d3629; }
-
-    /* particulars grid (fields) */
-    .ppc-details-grid {
-      background: #f0f7f2;
-      border-radius: 24px;
-      padding: 1rem 1.5rem;
-      margin-bottom: 1.3rem;
-      border: 1px solid #bad0c1;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.8rem 2rem;
-    }
-
-    .ppc-field {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .ppc-field .ppc-label {
-      font-weight: 700;
-      color: #1f4a3c;
-      min-width: 170px;
-      font-size: 0.92rem;
-    }
-    .ppc-field .ppc-dash {
-      background: white;
-      padding: 0.2rem 1rem;
-      border-radius: 30px;
-      border: 1px dashed #3d705a;
-      min-width: 200px;
-      flex: 1;
-      color: #0b2f23;
-      font-size: 0.9rem;
-    }
-
-    /* mill allocation table */
-    .ppc-mill-section {
-      margin: 1.2rem 0 1rem;
-    }
-    .ppc-mill-title {
-      font-weight: 700;
-      color: #1f4a3c;
-      font-size: 1.1rem;
-      border-left: 6px solid #1f4a3c;
-      padding-left: 12px;
-      margin-bottom: 10px;
-    }
-    .ppc-mill-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,30,20,0.05);
-      border: 1px solid #b7cfc2;
-    }
-    .ppc-mill-table th {
-      background: #1f4a3c;
-      color: white;
-      font-weight: 600;
-      font-size: 0.85rem;
-      padding: 8px 6px;
-      text-align: left;
-    }
-    .ppc-mill-table td {
-      padding: 7px 8px;
-      border-bottom: 1px solid #cde0d5;
-      font-size: 0.88rem;
-    }
-    .ppc-mill-table tr:last-child td {
-      border-bottom: none;
-    }
-    .ppc-mill-table .ppc-total-row {
-      background: #e7f3ed;
-      font-weight: 600;
-      color: #043b27;
-    }
-
-    /* observations check area */
-    .ppc-obs-section {
-      background: #f3f9fc;
-      border-radius: 22px;
-      padding: 1rem 1.3rem 1rem 1.3rem;
-      border: 1px solid #adc6d3;
-      margin: 1.5rem 0 0.8rem;
-    }
-    .ppc-obs-header {
-      font-weight: 800;
-      color: #144d70;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 0.8rem;
-    }
-    .ppc-obs-header span {
-      background: #1f4a3c;
-      color: white;
-      padding: 0.2rem 1.3rem;
-      border-radius: 30px;
-      font-size: 0.8rem;
-    }
-
+    /*
+      Three-column observation grid — unique to PPC
+      (other pages use 2-col pair-grid)
+    */
     .ppc-obs-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.4rem 1.2rem;
+      gap: 0;
+      border: 1px solid var(--chk-rule);
+      border-radius: 4px;
+      overflow: hidden;
     }
 
     .ppc-obs-item {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.88rem;
-      border-bottom: 1px dotted #97b5c7;
-      padding: 0.2rem 0;
+      padding: 0.45rem 0.8rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      color: var(--chk-ink);
+      border-bottom: 1px solid var(--chk-rule);
+      border-right: 1px solid var(--chk-rule);
+      background: var(--chk-card);
+      transition: background 0.1s;
     }
+    /* remove right border on every 3rd item */
+    .ppc-obs-item:nth-child(3n) { border-right: none; }
+    /* remove bottom border on last row */
+    .ppc-obs-item:nth-last-child(-n+3) { border-bottom: none; }
+    .ppc-obs-item:nth-child(odd)  { background: rgba(13,27,42,0.02); }
+    .ppc-obs-item:hover           { background: rgba(200,57,10,0.03); }
+
     .ppc-obs-item input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: #1f4a3c;
-      flex-shrink: 0;
+      width: 14px; height: 14px;
+      accent-color: var(--chk-accent);
+      flex-shrink: 0; cursor: pointer;
+    }
+    .ppc-obs-item label {
+      cursor: pointer;
+      line-height: 1.3;
+      font-family: 'DM Sans', sans-serif;
     }
 
-    .ppc-foot {
-      margin-top: 1.5rem;
-      background: #e2ede5;
-      padding: 0.6rem 1.5rem;
-      border-radius: 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      font-size: 0.9rem;
-      color: #1f4a3c;
+    /* Mill allocation table total row highlight */
+    .ppc-total-row td {
+      background: rgba(13,27,42,0.05) !important;
+      font-weight: 700;
+      color: var(--chk-ink) !important;
     }
-    .ppc-stamp {
-      border: 2px dashed #1f4a3c;
-      background: white;
-      padding: 0.2rem 2rem;
-      border-radius: 30px;
-      font-weight: 600;
-      font-family: 'Courier New', monospace;
-    }
-    .ppc-tiny {
+
+    /* Legal note */
+    .ppc-legal-note {
+      font-size: 0.65rem;
+      color: var(--chk-ink-ghost);
       text-align: right;
-      font-size: 0.7rem;
-      color: #3f6a58;
-      margin-top: 0.2rem;
+      letter-spacing: 0.06em;
+      margin-top: 0.3rem;
     }
 
-    /* navigation tabs (not printed) */
-    .ppc-nav-links {
-      margin: 1rem auto 0.8rem;
-      max-width: 1100px;
-      padding: 0 0.5rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-    }
-    .ppc-nav-item {
-      background: #dbeafe;
-      border-radius: 40px;
-      padding: 0.35rem 1.3rem;
-      font-size: 0.9rem;
-      font-weight: 500;
-      border: 1px solid #7ca2c9;
-      color: #1a3c5e;
-      transition: 0.1s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-    }
-    .ppc-nav-item:hover {
-      background: #bed9ff;
-      border-color: #2b5880;
-    }
-    .ppc-nav-item.active {
-      background: #1f4a3c;
-      border-color: #0e3d2c;
-      color: white;
-    }
-
-    /* 🖨️ PRINT RULES – only card content, no nav, no header/footer */
+    /* ── PRINT overrides (PPC specific) ── */
     @media print {
-      @page {
-        size: A4;
-        margin: 0.3in;
-      }
-      body > :not(.ppc-verification-card):not(script) {
-        display: none !important;
-      }
-      body {
-        background: white !important;
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-      .ppc-verification-card {
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        border: none !important;
-        padding: 0.1rem 0.2rem !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        background: white !important;
-        font-size: 10.5pt !important;
-      }
-      .ppc-print-btn {
-        display: none !important;
-      }
-      .ppc-nav-links {
-        display: none !important;
-      }
-      #site-header, #site-footer, .gototop {
-        display: none !important;
-      }
-      .ppc-top {
-        margin-bottom: 0.2rem !important;
-      }
-      .ppc-details-grid {
-        padding: 0.3rem 0.6rem !important;
-        gap: 0.2rem 0.8rem !important;
-      }
-      .ppc-mill-table {
-        font-size: 9pt !important;
-      }
       .ppc-obs-grid {
-        grid-template-columns: repeat(3,1fr);
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .ppc-obs-item {
+        font-size: 7pt !important;
+        padding: 0.2rem 0.5rem !important;
       }
     }
 
-    /* mobile responsive */
-    @media (max-width: 650px) {
-      .ppc-details-grid { grid-template-columns: 1fr; }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
       .ppc-obs-grid { grid-template-columns: 1fr; }
+      .ppc-obs-item { border-right: none; }
+      .ppc-obs-item:nth-last-child(-n+3) { border-bottom: 1px solid var(--chk-rule); }
+      .ppc-obs-item:last-child           { border-bottom: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- placeholder for site header (will be hidden in print) -->
-  <div id="site-header"></div>
+<!-- COMMON HEADER -->
+<div id="site-header"></div>
 
-  <!-- ========== NAVIGATION TABS (other formats) ========== -->
-  <div class="ppc-nav-links">
-    <a href="/formats/petrolpumpchecklist.html" class="ppc-nav-item">⛽ Petrol pump</a>
-    <a href="/formats/lpgchecklist.html" class="ppc-nav-item">🔥 LPG checklist</a>
-    <a href="/formats/fpschecklist.html" class="ppc-nav-item">🍚 FPS checklist</a>
-    <a href="/formats/ppcchecklist.html" class="ppc-nav-item active">🌾 PPC verification (current)</a>
-  </div>
+<div class="chk-page-wrap">
 
-  <!-- MAIN CARD – PPC VERIFICATION (exactly the requested format) -->
-  <div class="ppc-verification-card" id="ppcPrintCard">
-    <div class="ppc-top">
-      <h1>🌾 PPC VERIFICATION <small>KMS 2024-25</small></h1>
-      <button class="ppc-print-btn" id="printPpcBtn">🖨️ PRINT / PDF</button>
-    </div>
+  <!-- NAV STRIP -->
+  <nav class="chk-nav-strip">
+    <a href="/formats/petrolpumpchecklist.html" class="chk-nav-item">⛽ Petrol Pump</a>
+    <a href="/formats/lpgchecklist.html"         class="chk-nav-item">🔥 LPG Checklist</a>
+    <a href="/formats/fpschecklist.html"         class="chk-nav-item">🍚 FPS Checklist</a>
+    <a href="/formats/ppcchecklist.html"         class="chk-nav-item chk-active">🌾 PPC Verification</a>
+  </nav>
 
-    <!-- 1-7 : particulars -->
-    <div class="ppc-details-grid">
-      <div class="ppc-field"><span class="ppc-label">1. Name of the PACS :</span><span class="ppc-dash">_________________________</span></div>
-      <div class="ppc-field"><span class="ppc-label">2. Date & time of verification :</span><span class="ppc-dash">_________________</span></div>
-      <div class="ppc-field"><span class="ppc-label">3. Secretary (Mob No.) :</span><span class="ppc-dash">_________________________</span></div>
-      <div class="ppc-field"><span class="ppc-label">4. DEO (Mob No.) :</span><span class="ppc-dash">_____________________________</span></div>
-      <div class="ppc-field"><span class="ppc-label">5. MNO (Mob No.) :</span><span class="ppc-dash">_____________________________</span></div>
-      <div class="ppc-field"><span class="ppc-label">6. Quality Analyst tagged :</span><span class="ppc-dash">_______________________</span></div>
-      <div class="ppc-field"><span class="ppc-label">7. No. farmers registered/verified :</span><span class="ppc-dash">_____________</span></div>
-      <div class="ppc-field"><span class="ppc-label">8. Progressive paddy procured :</span><span class="ppc-dash">_________________</span></div>
-      <div class="ppc-field"><span class="ppc-label">9. Farmers sold paddy :</span><span class="ppc-dash">___________________________</span></div>
-      <div class="ppc-field"><span class="ppc-label">10. Farmers yet to sell :</span><span class="ppc-dash">_________________________</span></div>
-      <div class="ppc-field"><span class="ppc-label">11. Programmed to get paddy on date :</span><span class="ppc-dash">__________</span></div>
-      <div class="ppc-field"><span class="ppc-label">12. Farmers brought paddy till verification :</span><span class="ppc-dash">_____</span></div>
-      <div class="ppc-field"><span class="ppc-label">13. Paddy purchased but unlifted :</span><span class="ppc-dash">_______________</span></div>
-      <div class="ppc-field"><span class="ppc-label">14. No. active tokens with quantity :</span><span class="ppc-dash">_____________</span></div>
-    </div>
+  <div class="chk-main-card" id="ppcPrintCard">
 
-    <!-- Mill allocation table (exact data from format) -->
-    <div class="ppc-mill-section">
-      <div class="ppc-mill-title">Name of the Mills Tagged, Target, Lifted & Balance (in Qtls)</div>
-      <table class="ppc-mill-table">
-        <thead><tr><th>Rice Mill</th><th>Target</th><th>Lifted</th><th>Balance</th></tr></thead>
-        <tbody>
-          <tr><td>ANNAPURNA PADDY PROCESSING PVT. LTD.(M051101)</td><td>3000.00</td><td>2621.07</td><td>378.93</td></tr>
-          <tr><td>MINERVA PADDY PROCESSING PVT. LTD(M051105)</td><td>9150.00</td><td>6303.09</td><td>2846.91</td></tr>
-          <tr><td>BIR BAJRANGBALI RICE MILL(M051104)</td><td>2750.00</td><td>2687.35</td><td>62.65</td></tr>
-          <tr><td>BHAGAWATI RICE MILL PRIVATE LIMITED GAINTALA(M051103)</td><td>4650.00</td><td>4426.82</td><td>223.18</td></tr>
-          <tr><td>SHREE SHANKAR RICE MILLS PVT. LTD(M051102)</td><td>4500.00</td><td>4275.60</td><td>224.40</td></tr>
-          <tr class="ppc-total-row"><td>Total</td><td>24050.00</td><td>20313.93</td><td>3736.07</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- OBSERVATIONS (all boolean checkboxes as per list) -->
-    <div class="ppc-obs-section">
-      <div class="ppc-obs-header">📋 OBSERVATIONS <span>tick where applicable</span></div>
-      <div class="ppc-obs-grid">
-        <div class="ppc-obs-item"><input type="checkbox" id="obs1"><label for="obs1">Transaction date present</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs2"><label for="obs2">Toilet installed</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs3"><label for="obs3">All equipment working</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs4"><label for="obs4">Permanent godown</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs5"><label for="obs5">Covered Pindi</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs6"><label for="obs6">Open cap storage space</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs7"><label for="obs7">Adequate Tarpaulin</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs8"><label for="obs8">Farmers' rest shed</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs9"><label for="obs9">Drinking water</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs10"><label for="obs10">All vehicles dispatched with VTS</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs11"><label for="obs11">Vendor receipts signed by farmers</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs12"><label for="obs12">SoLPC meetings held regularly</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs13"><label for="obs13">All records well maintained</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs14"><label for="obs14">Online paddy arrival maintained</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs15"><label for="obs15">Manual paddy arrival register</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs16"><label for="obs16">Paddy analysis register</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs17"><label for="obs17">Paddy rejections register</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs18"><label for="obs18">CCTV camera installed (No. ____)</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs19"><label for="obs19">CCTV storage (_____ days)</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs20"><label for="obs20">Cameras focused properly</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs21"><label for="obs21">Electricity / generator backup</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs22"><label for="obs22">Weighbridge calibration valid</label></div>
-        <div class="ppc-obs-item"><input type="checkbox" id="obs23"><label for="obs23">Fire extinguisher present</label></div>
+    <!-- MASTHEAD -->
+    <div class="chk-masthead">
+      <div class="chk-masthead-inner">
+        <div>
+          <div class="chk-masthead-title">PPC <em>Verification Report</em></div>
+          <div class="chk-masthead-subtitle">
+            <span>KMS 2024-25</span>
+            <span>Paddy Procurement</span>
+            <span>PACS Verification</span>
+          </div>
+        </div>
+        <div class="chk-action-group">
+          <!-- Share dropdown -->
+          <div class="chk-share-dropdown" id="ppcShareDropdown">
+            <button class="chk-share-main-btn" id="ppcShareBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+              Share
+            </button>
+            <div class="chk-share-menu" id="ppcShareMenu">
+              <a class="chk-share-option" id="ppcWaBtn" href="#" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.096.541 4.064 1.487 5.779L.057 23.057a.75.75 0 00.906.942l5.424-1.417A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.713 9.713 0 01-4.952-1.352l-.355-.21-3.676.96.983-3.584-.23-.368A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+                WhatsApp
+              </a>
+              <a class="chk-share-option" id="ppcTgBtn" href="#" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                Telegram
+              </a>
+            </div>
+          </div>
+          <button class="chk-print-btn" id="ppcPrintBtn">⎙ Print</button>
+        </div>
       </div>
+    </div><!-- /.chk-masthead -->
+
+    <div class="chk-card-body">
+
+      <!-- 01 PARTICULARS -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">01</div>
+        <div><div class="chk-sec-title">Particulars of PACS</div></div>
+      </div>
+      <div class="chk-details-grid">
+        <div class="chk-detail-row chk-full"><span class="chk-d-label">Name of the PACS</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Date &amp; Time of Verification</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Secretary (Mobile No.)</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">DEO (Mobile No.)</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">MNO (Mobile No.)</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Quality Analyst Tagged</span><span class="chk-d-line"></span></div>
+      </div>
+
+      <!-- 02 PROCUREMENT STATISTICS -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">02</div>
+        <div><div class="chk-sec-title">Procurement Statistics</div></div>
+        <div class="chk-sec-tag">🌾 KMS 2024-25</div>
+      </div>
+      <div class="chk-details-grid">
+        <div class="chk-detail-row"><span class="chk-d-label">No. of Farmers Registered / Verified</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Progressive Paddy Procured (Qtls)</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Farmers Sold Paddy</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Farmers Yet to Sell</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Programmed to Get Paddy on Date</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Farmers Brought Paddy till Verification</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Paddy Purchased but Unlifted (Qtls)</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">No. of Active Tokens with Quantity</span><span class="chk-d-line"></span></div>
+      </div>
+
+      <!-- 03 MILL ALLOCATION -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">03</div>
+        <div><div class="chk-sec-title">Mills Tagged — Target, Lifted &amp; Balance</div></div>
+        <div class="chk-sec-tag">Qtls</div>
+      </div>
+      <div class="chk-tbl-wrap">
+        <table class="chk-data-tbl">
+          <thead>
+            <tr>
+              <th style="text-align:left;">Rice Mill</th>
+              <th>Target</th>
+              <th>Lifted</th>
+              <th>Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ANNAPURNA PADDY PROCESSING PVT. LTD. (M051101)</td>
+              <td>3000.00</td><td>2621.07</td><td>378.93</td>
+            </tr>
+            <tr>
+              <td>MINERVA PADDY PROCESSING PVT. LTD (M051105)</td>
+              <td>9150.00</td><td>6303.09</td><td>2846.91</td>
+            </tr>
+            <tr>
+              <td>BIR BAJRANGBALI RICE MILL (M051104)</td>
+              <td>2750.00</td><td>2687.35</td><td>62.65</td>
+            </tr>
+            <tr>
+              <td>BHAGAWATI RICE MILL PRIVATE LIMITED GAINTALA (M051103)</td>
+              <td>4650.00</td><td>4426.82</td><td>223.18</td>
+            </tr>
+            <tr>
+              <td>SHREE SHANKAR RICE MILLS PVT. LTD (M051102)</td>
+              <td>4500.00</td><td>4275.60</td><td>224.40</td>
+            </tr>
+            <tr class="ppc-total-row">
+              <td><strong>Total</strong></td>
+              <td><strong>24050.00</strong></td>
+              <td><strong>20313.93</strong></td>
+              <td><strong>3736.07</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 04 OBSERVATIONS -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">04</div>
+        <div><div class="chk-sec-title">Observations</div></div>
+        <div class="chk-sec-tag">✔ Tick Applicable</div>
+      </div>
+      <div class="ppc-obs-grid">
+        <div class="ppc-obs-item"><input type="checkbox" id="obs1"><label for="obs1">Transaction Date Present</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs2"><label for="obs2">Toilet Installed</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs3"><label for="obs3">All Equipment Working</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs4"><label for="obs4">Permanent Godown</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs5"><label for="obs5">Covered Pindi</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs6"><label for="obs6">Open Cap Storage Space</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs7"><label for="obs7">Adequate Tarpaulin</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs8"><label for="obs8">Farmers' Rest Shed</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs9"><label for="obs9">Drinking Water Available</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs10"><label for="obs10">All Vehicles Dispatched with VTS</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs11"><label for="obs11">Vendor Receipts Signed by Farmers</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs12"><label for="obs12">SoLPC Meetings Held Regularly</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs13"><label for="obs13">All Records Well Maintained</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs14"><label for="obs14">Online Paddy Arrival Maintained</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs15"><label for="obs15">Manual Paddy Arrival Register</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs16"><label for="obs16">Paddy Analysis Register</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs17"><label for="obs17">Paddy Rejections Register</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs18"><label for="obs18">CCTV Camera Installed (No. ____)</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs19"><label for="obs19">CCTV Storage (_____ Days)</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs20"><label for="obs20">Cameras Focused Properly</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs21"><label for="obs21">Electricity / Generator Backup</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs22"><label for="obs22">Weighbridge Calibration Valid</label></div>
+        <div class="ppc-obs-item"><input type="checkbox" id="obs23"><label for="obs23">Fire Extinguisher Present</label></div>
+      </div>
+
+      <!-- REMARKS -->
+      <div class="chk-sec-head" style="margin-top:1.8rem;">
+        <div class="chk-sec-num">—</div>
+        <div><div class="chk-sec-title">Remarks / Observations</div></div>
+      </div>
+      <div class="chk-remarks-wrap">
+        <textarea rows="3" placeholder="Enter any additional observations or remarks here…"></textarea>
+      </div>
+
+      <!-- SIGNATURE -->
+      <div class="chk-sign-row">
+        <div class="chk-sign-block" style="min-width:280px;">
+          <div class="chk-sign-block-label">Signature of the Verifying Officer</div>
+          <div class="chk-sign-line"></div>
+        </div>
+      </div>
+
+      <div class="ppc-legal-note">*System generated report — valid with official stamp · KMS 2024-25</div>
+
+    </div><!-- /.chk-card-body -->
+
+    <div class="chk-card-footer">
+      <span class="chk-footer-note">KMS 2024-25 · PACS Verification · Paddy Procurement · VTS Tracking</span>
+      <span class="chk-footer-mark">PPC Verification</span>
     </div>
 
-    <!-- footer with inspector and date -->
-    <div class="ppc-foot">
-      <span>✅ Verified by (Inspector): _________________________</span>
-      <span class="ppc-stamp">📅 Date: ___________</span>
-    </div>
-    <div class="ppc-tiny">*System generated report – valid with official stamp</div>
-  </div>
-<!-- ========== NAVIGATION TABS (other formats) ========== -->
-  <div class="ppc-nav-links">
-    <a href="/formats/petrolpumpchecklist.html" class="ppc-nav-item">⛽ Petrol pump</a>
-    <a href="/formats/lpgchecklist.html" class="ppc-nav-item">🔥 LPG checklist</a>
-    <a href="/formats/fpschecklist.html" class="ppc-nav-item">🍚 FPS checklist</a>
-    <a href="/formats/ppcchecklist.html" class="ppc-nav-item active">🌾 PPC verification (current)</a>
-  </div>
-  <!-- site footer placeholder (hidden in print) -->
-  <div id="site-footer"></div>
-  <!-- go to top script -->
-  <script src="/assets/Scripts/gototop.js"></script>
+  </div><!-- /.chk-main-card -->
 
-  <!-- print trigger script -->
-  <script>
-    document.getElementById('printPpcBtn')?.addEventListener('click', function() {
-      window.print();
+  <!-- BOTTOM NAV STRIP -->
+  <nav class="chk-nav-strip" style="margin-top: 1.5rem;">
+    <a href="/formats/petrolpumpchecklist.html" class="chk-nav-item">⛽ Petrol Pump</a>
+    <a href="/formats/lpgchecklist.html"         class="chk-nav-item">🔥 LPG Checklist</a>
+    <a href="/formats/fpschecklist.html"         class="chk-nav-item">🍚 FPS Checklist</a>
+    <a href="/formats/ppcchecklist.html"         class="chk-nav-item chk-active">🌾 PPC Verification</a>
+  </nav>
+
+</div><!-- /.chk-page-wrap -->
+
+<!-- COMMON FOOTER -->
+<div id="site-footer"></div>
+
+<!-- Go to Top -->
+<script src="/assets/Scripts/gototop.js"></script>
+
+<script>
+  (function () {
+    // Print
+    const printBtn = document.getElementById('ppcPrintBtn');
+    if (printBtn) printBtn.addEventListener('click', () => window.print());
+
+    // Share dropdown
+    const shareDropdown = document.getElementById('ppcShareDropdown');
+    const shareBtn      = document.getElementById('ppcShareBtn');
+    const shareMenu     = document.getElementById('ppcShareMenu');
+
+    if (shareBtn && shareMenu) {
+      shareBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        shareMenu.classList.toggle('chk-show');
+      });
+      document.addEventListener('click', (e) => {
+        if (!shareDropdown.contains(e.target)) shareMenu.classList.remove('chk-show');
+      });
+    }
+
+    function getShareText() {
+      return encodeURIComponent(
+        '📋 PPC Verification Report · KMS 2024-25\n🔗 PACS · Paddy Procurement · VTS Tracking\n\n' +
+        window.location.href
+      );
+    }
+
+    const waBtn = document.getElementById('ppcWaBtn');
+    const tgBtn = document.getElementById('ppcTgBtn');
+
+    if (waBtn) waBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.open('https://wa.me/?text=' + getShareText(), '_blank', 'noopener');
+      shareMenu.classList.remove('chk-show');
     });
-  </script>
 
-  <!-- ensure navigation links are not printed (they already have display:none in @print) -->
-  <!-- also highlight current page -->
+    if (tgBtn) tgBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const url = 'https://t.me/share/url?url=' + encodeURIComponent(window.location.href) +
+                  '&text=' + encodeURIComponent('📋 PPC Verification Report · KMS 2024-25\n✅ PACS · Paddy Procurement · VTS Tracking');
+      window.open(url, '_blank', 'noopener');
+      shareMenu.classList.remove('chk-show');
+    });
+  })();
+</script>
+
 </body>
 </html>
