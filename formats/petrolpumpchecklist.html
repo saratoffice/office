@@ -2,556 +2,463 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Petrol Pump · HSD Renewal Check List</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Common CSS (global styles) – but we use isolated prefix -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Petrol Pump · HSD Renewal Checklist | EC Act</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+
+  <!-- Common CSS (global styles) -->
   <link rel="stylesheet" href="/style.css">
-  <!-- site components for header/footer etc. -->
-  <script src="/assets/Scripts/site-components.js" defer></script>  
 
+  <!-- ✅ SHARED checklist styles (nav, card, masthead, tables, grids, print…) -->
+  <link rel="stylesheet" href="/assets/css/checklist-common.css">
+
+  <!-- ✅ site components for header/footer -->
+  <script src="/assets/Scripts/site-components.js" defer></script>
+
+  <!-- ════════════════════════════════════════════════
+       PETROL-PUMP-SPECIFIC styles only.
+       Everything shared lives in checklist-common.css.
+  ════════════════════════════════════════════════ -->
   <style>
-    /* ----- global reset & background ----- */
-    body {
-      margin: 0;
-      background: #f5f9ff;
-      font-family: 'Segoe UI', Roboto, sans-serif;
-    }
-
-    /* 🧱 isolated card – prefix "pp-" (petrol pump) */
-    .pp-renewal-card {
-      all: initial;
-      display: block;
-      max-width: 1100px;
-      width: 100%;
-      background: white;
-      border-radius: 24px;
-      box-shadow: 0 12px 28px rgba(0,20,30,0.15);
-      padding: 1.2rem 1.5rem 0.8rem 1.5rem;
-      border: 1px solid #bdc9db;
-      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
-      line-height: normal;
-      color: initial;
-      margin: 1rem auto;
-      box-sizing: border-box;
-    }
-
-    .pp-renewal-card * {
-      all: revert;
-      box-sizing: border-box;
-    }
-
-    /* header */
-    .pp-top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 3px solid #1a3e5c;
-      padding-bottom: 0.4rem;
-      margin-bottom: 0.7rem;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .pp-top-row h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #1a3e5c;
-      letter-spacing: -0.5px;
-      margin: 0;
-    }
-
-    .pp-top-row h1 small {
-      font-size: 0.9rem;
-      font-weight: 400;
-      background: #e2eaf3;
-      color: #1d3f5e;
-      padding: 0.2rem 1rem;
-      border-radius: 40px;
-      margin-left: 8px;
-    }
-
-    .pp-print-btn {
-      background: #1a3e5c;
-      border: none;
-      color: white;
-      font-weight: 600;
-      font-size: 0.95rem;
-      padding: 0.45rem 1.8rem;
-      border-radius: 40px;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,35,60,0.2);
-      transition: 0.1s;
-      border: 1px solid #0f2d44;
-    }
-    .pp-print-btn:hover { background: #0f2d44; }
-
-    /* pump name line */
-    .pp-pump-name {
-      background: #e9eff7;
-      border-radius: 40px;
-      padding: 0.5rem 1.5rem;
-      margin-bottom: 1rem;
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #10324b;
-      border: 1px dashed #1f4970;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .pp-pump-name span { font-weight: 400; color: #2b4a6b; margin-right: 8px; }
-    .pp-pump-name u { font-weight: 700; margin-left: 6px; }
-
-    /* particulars grid */
-    .pp-particulars {
-      background: #f2f6fb;
-      padding: 0.8rem 1.2rem;
-      border-radius: 24px;
-      margin-bottom: 1rem;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.6rem 1.5rem;
-      border: 1px solid #cbd6e4;
-    }
-
-    .pp-part-item {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      font-size: 0.92rem;
-    }
-
-    .pp-part-item .pp-tag {
-      font-weight: 600;
-      color: #1a3e5c;
-      min-width: 110px;
-      font-size: 0.88rem;
-    }
-
-    .pp-part-item .pp-dash {
-      color: #3d5a78;
-      background: white;
-      padding: 0.2rem 0.7rem;
-      border-radius: 30px;
-      border: 1px dashed #6f8da8;
-      width: 100%;
-      max-width: 220px;
-      font-size: 0.88rem;
-    }
-
-    /* photo badge moved – but we keep simple, above docs is removed (no longer needed) */
-    /* (photo badge removed to reduce clutter – 100% one page) */
-
-    /* ---- THREE SECTIONS, EACH WITH 3 COLUMNS (total 9 cols, but we wrap per section) ---- */
-    .pp-section {
-      margin-bottom: 1.4rem;
-    }
-
-    .pp-section-header {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #1a3e5c;
-      border-bottom: 3px solid #1a3e5c;
-      padding-bottom: 0.1rem;
-      margin-bottom: 0.6rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .pp-section-header i { font-size: 1.5rem; }
-
-    /* three-column grid inside each section */
+    /*
+      Three-column checklist grid — unique to petrol pump
+      (LPG uses pair-grid / data-tbl; PP uses col-cards)
+    */
     .pp-three-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.8rem 0.9rem;
+      gap: 0.8rem 1rem;
+      margin-bottom: 0.5rem;
     }
 
-    /* column card */
+    /* individual column card inside the three-grid */
     .pp-col-card {
-      background: #f9fcff;
-      border-radius: 18px;
-      padding: 0.6rem 0.6rem;
-      border: 1px solid #cbdae9;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+      background: var(--chk-card);
+      border: 1px solid var(--chk-rule);
+      border-radius: 4px;
+      overflow: hidden;
       break-inside: avoid;
     }
 
     .pp-col-title {
+      background: rgba(13,27,42,0.05);
+      padding: 0.4rem 0.8rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
       font-weight: 700;
-      color: #1a3e5c;
-      border-bottom: 2px solid #9db9d6;
-      padding-bottom: 0.2rem;
-      margin-bottom: 0.5rem;
-      font-size: 0.96rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--chk-ink-mid);
+      border-bottom: 1px solid var(--chk-rule);
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
 
+    /* checklist rows inside each col-card */
     .pp-checklist {
       display: flex;
       flex-direction: column;
-      gap: 0.3rem;  /* tightened for print fit */
     }
 
     .pp-item-row {
       display: flex;
       align-items: flex-start;
-      gap: 6px;
-      padding: 0.1rem 0;
-      border-bottom: 1px dotted #cbd2dd;
-      font-size: 0.8rem;  /* smaller to fit */
+      gap: 7px;
+      padding: 0.42rem 0.8rem;
+      border-bottom: 1px solid var(--chk-rule);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      color: var(--chk-ink);
+      transition: background 0.1s;
     }
+    .pp-item-row:last-child { border-bottom: none; }
+    .pp-item-row:hover      { background: rgba(200,57,10,0.03); }
 
     .pp-item-row input[type="checkbox"] {
-      width: 14px;
-      height: 14px;
-      accent-color: #1a3e5c;
-      flex-shrink: 0;
-      margin-top: 2px;
+      width: 14px; height: 14px;
+      accent-color: var(--chk-accent);
+      flex-shrink: 0; margin-top: 2px; cursor: pointer;
     }
 
     .pp-item-icon {
       flex-shrink: 0;
       width: 1.2rem;
       text-align: center;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
+      line-height: 1.4;
     }
 
     .pp-item-text {
-      color: #152b3b;
-      line-height: 1.25;
       flex: 1;
+      line-height: 1.35;
+      color: var(--chk-ink);
     }
 
-    /* foot strip */
-    .pp-foot-strip {
-      margin-top: 0.8rem;
-      background: #eef2f6;
-      padding: 0.4rem 1.2rem;
-      border-radius: 40px;
+    /* pump name banner (below masthead, inside card-body) */
+    .pp-pump-banner {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      font-size: 0.82rem;
-      color: #1a3e5c;
-    }
-
-    .pp-stamp-line {
-      border: 2px dotted #1a3e5c;
-      padding: 0.2rem 1.2rem;
-      border-radius: 30px;
-      background: white;
-      font-weight: 600;
-      font-family: 'Courier New', monospace;
-      font-size: 0.75rem;
-    }
-
-    .pp-tiny { font-size: 0.6rem; color: #3e6280; text-align: right; margin-top: 2px; }
-
-    /* navigation links */
-    .pp-nav-links {
-      margin: 0.8rem auto 0.2rem;
-      max-width: 1000px;
-      padding: 0 0.5rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
-    }
-    .pp-nav-item {
-      background: #dbeafe;
-      border-radius: 40px;
-      padding: 0.3rem 1.2rem;
+      align-items: baseline;
+      gap: 10px;
+      background: rgba(13,27,42,0.03);
+      border: 1px solid var(--chk-rule);
+      border-radius: 4px;
+      padding: 0.55rem 1rem;
+      margin-bottom: 1rem;
+      font-family: 'DM Sans', sans-serif;
       font-size: 0.85rem;
-      font-weight: 500;
-      border: 1px solid #7ca2c9;
-      color: #1a3c5e;
-      transition: 0.1s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
+      font-weight: 600;
+      color: var(--chk-ink);
     }
-    .pp-nav-item:hover {
-      background: #bed9ff;
-      border-color: #2b5880;
+    .pp-pump-banner .pp-pump-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--chk-ink-soft);
+      white-space: nowrap;
     }
-    .pp-nav-item.active {
-      background: #1a3e5c;
-      border-color: #0f2d44;
-      color: white;
+    .pp-pump-banner .pp-pump-line {
+      flex: 1;
+      border-bottom: 1px dotted var(--chk-ink-ghost);
+      min-height: 18px;
     }
 
-    /* 🖨️ PRINT – fit one page A4 – fine tuned */
+    /* ── PRINT overrides (petrol-pump specific) ── */
     @media print {
-      @page {
-        size: A4;
-        margin: 0.2in;
-      }
-      body > :not(.pp-renewal-card):not(script) {
-        display: none !important;
-      }
-      body {
-        background: white !important;
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-      .pp-renewal-card {
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        border: none !important;
-        padding: 0.1rem 0.15rem !important;
-        max-width: 100% !important;
-        width: 100% !important;
-        margin: 0 !important;
-        background: white !important;
-        font-size: 8.5pt !important;
-      }
-      .pp-print-btn, .pp-nav-links, #site-header, #site-footer, .gototop {
-        display: none !important;
-      }
       .pp-three-grid {
-        gap: 0.2rem 0.3rem !important;
+        gap: 0.25rem 0.4rem !important;
       }
       .pp-col-card {
-        padding: 0.2rem 0.15rem !important;
-        border: 1px solid #aaa !important;
-      }
-      .pp-pump-name {
-        background: none;
-        border: 1px dashed #aaa;
-        padding: 0.1rem 0.8rem;
-        margin-bottom: 0.25rem;
-        font-size: 10pt;
-      }
-      .pp-foot-strip {
-        margin-top: 0.2rem;
-        padding: 0.1rem 0.6rem;
-      }
-      .pp-section {
-        margin-bottom: 0.4rem !important;
-      }
-      .pp-section-header {
-        font-size: 11pt !important;
-        margin-bottom: 0.2rem !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
       }
       .pp-item-row {
         font-size: 7.5pt !important;
-        border-bottom: 1px dotted #ccc !important;
+        padding: 0.18rem 0.5rem !important;
       }
       .pp-col-title {
-        font-size: 8.5pt !important;
+        font-size: 7.5pt !important;
+        padding: 0.2rem 0.5rem !important;
       }
-      .pp-item-icon {
-        font-size: 8pt !important;
-        width: 1rem;
-      }
-      .pp-tiny {
-        font-size: 6pt;
-      }
-      /* ensure exact fit: scale down line gaps */
-      .pp-checklist {
-        gap: 0.1rem !important;
+      .pp-pump-banner {
+        padding: 0.3rem 0.7rem !important;
+        margin-bottom: 0.4rem !important;
       }
     }
 
-    /* mobile */
-    @media screen and (max-width: 800px) {
-      .pp-three-grid { grid-template-columns: 1fr; }
-      .pp-particulars { grid-template-columns: 1fr; }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .pp-three-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
 
+<!-- COMMON HEADER -->
 <div id="site-header"></div>
 
-<!-- navigation tabs (reduced vertical) -->
-<div class="pp-nav-links">
-  <a href="/formats/petrolpumpchecklist.html" class="pp-nav-item active">⛽ Petrol pump (current)</a>
-  <a href="/formats/lpgchecklist.html" class="pp-nav-item">🔥 LPG checklist</a>
-  <a href="/formats/fpschecklist.html" class="pp-nav-item">🍚 FPS checklist</a>
-  <a href="/formats/ppcchecklist.html" class="pp-nav-item">🌾 PPC verification</a>
-</div>
+<div class="chk-page-wrap">
 
-<!-- MAIN CARD – 3 SECTIONS each with 3 columns, icons updated to match item names -->
-<div class="pp-renewal-card" id="petrolPumpCard">
-  <div class="pp-top-row">
-    <h1>⛽ HSD RENEWAL <small>checklist + facilities</small></h1>
-    <h3 style="font-weight:500; color:#1a3e5c;">Date: ________</h3>
-    <button class="pp-print-btn" id="printPetrolPump">📋 PRINT</button>
-  </div>
+  <!-- NAV STRIP -->
+  <nav class="chk-nav-strip">
+    <a href="/formats/petrolpumpchecklist.html" class="chk-nav-item chk-active">⛽ Petrol Pump</a>
+    <a href="/formats/lpgchecklist.html"         class="chk-nav-item">🔥 LPG Checklist</a>
+    <a href="/formats/fpschecklist.html"         class="chk-nav-item">🍚 FPS Checklist</a>
+    <a href="/formats/ppcchecklist.html"         class="chk-nav-item">🌾 PPC Verification</a>
+  </nav>
 
-  <!-- pump name line (mandatory) -->
-  <div class="pp-pump-name">
-    <span>⛽ Name of petrol pump:</span> <u>_________________________</u>
-  </div>
+  <div class="chk-main-card" id="petrolPumpCard">
 
-  <!-- particulars grid (two columns) -->
-  <div class="pp-particulars">
-    <div class="pp-part-item"><span class="pp-tag">WhatsApp/Mobile No.:</span><span class="pp-dash">_________________</span></div>
-    <div class="pp-part-item"><span class="pp-tag">Email ID :</span><span class="pp-dash">_________________</span></div>
-    <div class="pp-part-item"><span class="pp-tag">Police Station :</span><span class="pp-dash">_________________</span></div>
-    <div class="pp-part-item"><span class="pp-tag">Block :</span><span class="pp-dash">_________________</span></div>
-  </div>
+    <!-- MASTHEAD -->
+    <div class="chk-masthead">
+      <div class="chk-masthead-inner">
+        <div>
+          <div class="chk-masthead-title">HSD Renewal <em>Checklist</em></div>
+          <div class="chk-masthead-subtitle">
+            <span>Petrol Pump Inspection</span>
+            <span>EC Act</span>
+            <span>PESO · Legal Metrology</span>
+          </div>
+        </div>
+        <div class="chk-action-group">
+          <!-- Share dropdown -->
+          <div class="chk-share-dropdown" id="ppShareDropdown">
+            <button class="chk-share-main-btn" id="ppShareBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+              Share
+            </button>
+            <div class="chk-share-menu" id="ppShareMenu">
+              <a class="chk-share-option" id="ppWaBtn" href="#" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.096.541 4.064 1.487 5.779L.057 23.057a.75.75 0 00.906.942l5.424-1.417A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.713 9.713 0 01-4.952-1.352l-.355-.21-3.676.96.983-3.584-.23-.368A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+                WhatsApp
+              </a>
+              <a class="chk-share-option" id="ppTgBtn" href="#" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                Telegram
+              </a>
+            </div>
+          </div>
+          <button class="chk-print-btn" id="ppPrintBtn">⎙ Print</button>
+        </div>
+      </div>
+    </div><!-- /.chk-masthead -->
 
-  <!-- ========== SECTION 1: DOCUMENTS & LICENSES ========== -->
-  <div class="pp-section">
-    <div class="pp-section-header">
-      <span>📄 DOCUMENTS & LICENSES (Photocopy required)</span> 
+    <div class="chk-card-body">
+
+      <!-- PUMP NAME BANNER -->
+      <div class="pp-pump-banner">
+        <span class="pp-pump-label">⛽ Name of Petrol Pump</span>
+        <span class="pp-pump-line"></span>
+      </div>
+
+      <!-- 01 PARTICULARS -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">01</div>
+        <div><div class="chk-sec-title">Particulars of Dealer</div></div>
+      </div>
+      <div class="chk-details-grid">
+        <div class="chk-detail-row chk-full"><span class="chk-d-label">Dealer Name &amp; Address</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row chk-full"><span class="chk-d-label">Proprietor / Manager Name</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">WhatsApp / Mobile No.</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Email ID</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Date &amp; Time of Inspection</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Oil Marketing Company</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Police Station</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Block</span><span class="chk-d-line"></span></div>
+      </div>
+
+      <!-- 02 DOCUMENTS & LICENCES -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">02</div>
+        <div><div class="chk-sec-title">Documents &amp; Licences</div></div>
+        <div class="chk-sec-tag">📄 Photocopy Required</div>
+      </div>
+      <div class="pp-three-grid">
+
+        <!-- col A: Licences -->
+        <div class="pp-col-card">
+          <div class="pp-col-title">🔖 Licences</div>
+          <div class="pp-checklist">
+            <div class="pp-item-row"><input type="checkbox" id="d1"><span class="pp-item-icon">📄</span><label for="d1" class="pp-item-text">License – Both HSD &amp; Lubricants</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="d2"><span class="pp-item-icon">🗺️</span><label for="d2" class="pp-item-text">R.O.R. (Record of Rights) Plot / Khata</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="d3"><span class="pp-item-icon">🔥</span><label for="d3" class="pp-item-text">Fire Safety Certificate</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="d4"><span class="pp-item-icon">🧯</span><label for="d4" class="pp-item-text">Firefighting Equip. Bill (Expiry)</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="d5"><span class="pp-item-icon">💣</span><label for="d5" class="pp-item-text">Explosive + Storage Licence (PESO)</label></div>
+          </div>
+        </div>
+
+        <!-- col B: Identity & Tax -->
+        <div class="pp-col-card">
+          <div class="pp-col-title">🆔 Identity &amp; Tax</div>
+          <div class="pp-checklist">
+            <div class="pp-item-row"><input type="checkbox" id="d6"><span class="pp-item-icon">⚖️</span><label for="d6" class="pp-item-text">Legal Metrology (Pumps + Can)</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="d7"><span class="pp-item-icon">🏛️</span><label for="d7" class="pp-item-text">NOC – Collector &amp; Local Authority</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="d8"><span class="pp-item-icon">🤝</span><label for="d8" class="pp-item-text">Agreement with Oil Company</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="d9"><span class="pp-item-icon">📩</span><label for="d9" class="pp-item-text">Recommendation Letter – Oil Co.</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="d10"><span class="pp-item-icon">📋</span><label for="d10" class="pp-item-text">Appointment Letter (Pump)</label></div>
+          </div>
+        </div>
+
+        <!-- col C: Utility & Others -->
+        <div class="pp-col-card">
+          <div class="pp-col-title">⚡ Utility &amp; Others</div>
+          <div class="pp-checklist">
+            <div class="pp-item-row"><input type="checkbox" id="d11"><span class="pp-item-icon">🌡️</span><label for="d11" class="pp-item-text">Hydrometer &amp; Thermometer Calib.</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="d12"><span class="pp-item-icon">💡</span><label for="d12" class="pp-item-text">Power Supply Details (Last Bill)</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="d13"><span class="pp-item-icon">📄</span><label for="d13" class="pp-item-text">Insurance Documents</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="d14"><span class="pp-item-icon">🆔</span><label for="d14" class="pp-item-text">Aadhar, PAN &amp; GSTIN Copy</label></div>
+          </div>
+        </div>
+
+      </div><!-- /.pp-three-grid -->
+
+      <!-- 03 RECORDS & EQUIPMENT -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">03</div>
+        <div><div class="chk-sec-title">Records &amp; Equipment</div></div>
+      </div>
+      <div class="pp-three-grid">
+
+        <!-- col A: Registers / Logs -->
+        <div class="pp-col-card">
+          <div class="pp-col-title">📆 Registers / Logs</div>
+          <div class="pp-checklist">
+            <div class="pp-item-row"><input type="checkbox" id="e1"><span class="pp-item-icon">📊</span><label for="e1" class="pp-item-text">Stock Register (MS, HSD, Lubricants)</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="e2"><span class="pp-item-icon">⚖️</span><label for="e2" class="pp-item-text">Density Register</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="e3"><span class="pp-item-icon">📈</span><label for="e3" class="pp-item-text">Daily Sales Register (DSR)</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="e4"><span class="pp-item-icon">🧾</span><label for="e4" class="pp-item-text">Cash Memo / Invoice Copies</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="e5"><span class="pp-item-icon">🔍</span><label for="e5" class="pp-item-text">Inspection Register</label></div>
+          </div>
+        </div>
+
+        <!-- col B: Automation / Pastes -->
+        <div class="pp-col-card">
+          <div class="pp-col-title">⚙️ Automation / Pastes</div>
+          <div class="pp-checklist">
+            <div class="pp-item-row"><input type="checkbox" id="e6"><span class="pp-item-icon">⚡</span><label for="e6" class="pp-item-text">Lightning Arrestor Installed</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="e7"><span class="pp-item-icon">📊</span><label for="e7" class="pp-item-text">ATG (Automatic Tank Gauge)</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="e8"><span class="pp-item-icon">🔌</span><label for="e8" class="pp-item-text">UPS for Automation System</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="e9"><span class="pp-item-icon">💧</span><label for="e9" class="pp-item-text">Water Finding Paste</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="e10"><span class="pp-item-icon">⛽</span><label for="e10" class="pp-item-text">Fuel Finding Paste</label></div>
+          </div>
+        </div>
+
+        <!-- col C: Measuring Devices -->
+        <div class="pp-col-card">
+          <div class="pp-col-title">🧪 Measuring Devices</div>
+          <div class="pp-checklist">
+            <div class="pp-item-row"><input type="checkbox" id="e11"><span class="pp-item-icon">🌡️</span><label for="e11" class="pp-item-text">Calibrated Hydrometers &amp; Therm.</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="e12"><span class="pp-item-icon">📏</span><label for="e12" class="pp-item-text">Dip Rod / Gauge</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="e13"><span class="pp-item-icon">📊</span><label for="e13" class="pp-item-text">ASTM Conversion Chart</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="e14"><span class="pp-item-icon">🥛</span><label for="e14" class="pp-item-text">Measuring Cylinder (Glass)</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="e15"><span class="pp-item-icon">🧪</span><label for="e15" class="pp-item-text">5-Litre Calibrated Jar</label></div>
+          </div>
+        </div>
+
+      </div><!-- /.pp-three-grid -->
+
+      <!-- 04 ON-SITE FACILITIES -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">04</div>
+        <div><div class="chk-sec-title">On-Site Facilities</div></div>
+        <div class="chk-sec-tag">🧰 Physical Verification</div>
+      </div>
+      <div class="pp-three-grid">
+
+        <!-- col A: Amenities -->
+        <div class="pp-col-card">
+          <div class="pp-col-title">🚰 Amenities</div>
+          <div class="pp-checklist">
+            <div class="pp-item-row"><input type="checkbox" id="f1"><span class="pp-item-icon">📋</span><label for="f1" class="pp-item-text">Complaint / Suggestion Register</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f2"><span class="pp-item-icon">📜</span><label for="f2" class="pp-item-text">Citizen Charter Displayed</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f3"><span class="pp-item-icon">🧻</span><label for="f3" class="pp-item-text">Filter Paper (Quality Check)</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f4"><span class="pp-item-icon">🩹</span><label for="f4" class="pp-item-text">First Aid Kit (In Date)</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f5"><span class="pp-item-icon">📢</span><label for="f5" class="pp-item-text">Dealer Information Board</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f6"><span class="pp-item-icon">💰</span><label for="f6" class="pp-item-text">Stock, Price &amp; Density Board</label></div>
+          </div>
+        </div>
+
+        <!-- col B: Safety / Boards -->
+        <div class="pp-col-card">
+          <div class="pp-col-title">🚧 Safety / Boards</div>
+          <div class="pp-checklist">
+            <div class="pp-item-row"><input type="checkbox" id="f7"><span class="pp-item-icon">🏢</span><label for="f7" class="pp-item-text">Canopy / Top Ceiling</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f8"><span class="pp-item-icon">🚰</span><label for="f8" class="pp-item-text">Free Portable Water / Sanitation</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f9"><span class="pp-item-icon">🚻</span><label for="f9" class="pp-item-text">Free Toilet (Clean / Working)</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f10"><span class="pp-item-icon">🛞</span><label for="f10" class="pp-item-text">Free Air for Vehicles</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f11"><span class="pp-item-icon">🏷️</span><label for="f11" class="pp-item-text">Price Board (High Signage)</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f12"><span class="pp-item-icon">🚫</span><label for="f12" class="pp-item-text">"No fuel in plastic bottles" Board</label></div>
+          </div>
+        </div>
+
+        <!-- col C: Infrastructure -->
+        <div class="pp-col-card">
+          <div class="pp-col-title">🛠️ Infrastructure</div>
+          <div class="pp-checklist">
+            <div class="pp-item-row"><input type="checkbox" id="f13"><span class="pp-item-icon">🚭</span><label for="f13" class="pp-item-text">No Smoking Boards Displayed</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f14"><span class="pp-item-icon">💧</span><label for="f14" class="pp-item-text">Sump / Adequate Water</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f15"><span class="pp-item-icon">🧯</span><label for="f15" class="pp-item-text">Sand Buckets (Sufficient)</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f16"><span class="pp-item-icon">⚡</span><label for="f16" class="pp-item-text">Generator Set Available</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f17"><span class="pp-item-icon">💡</span><label for="f17" class="pp-item-text">Adequate Lighting Working</label></div>
+            <div class="pp-item-row"><input type="checkbox" id="f18"><span class="pp-item-icon">📞</span><label for="f18" class="pp-item-text">Toll-Free Number Displayed</label></div>
+          </div>
+        </div>
+
+      </div><!-- /.pp-three-grid -->
+
+      <!-- REMARKS -->
+      <div class="chk-sec-head" style="margin-top:1.8rem;">
+        <div class="chk-sec-num">—</div>
+        <div><div class="chk-sec-title">Remarks / Observations</div></div>
+      </div>
+      <div class="chk-remarks-wrap">
+        <textarea rows="3" placeholder="Enter any observations, violations, or remarks here…"></textarea>
+      </div>
+
+      <!-- SIGNATURE -->
+      <div class="chk-sign-row">
+        <div class="chk-sign-block" style="min-width:280px;">
+          <div class="chk-sign-block-label">Signature of the Inspector</div>
+          <div class="chk-sign-line"></div>
+        </div>
+      </div>
+
+    </div><!-- /.chk-card-body -->
+
+    <div class="chk-card-footer">
+      <span class="chk-footer-note">PESO · Fire NOC · Legal Metrology · EC Act · DSR Verification</span>
+      <span class="chk-footer-mark">HSD Renewal Inspection</span>
     </div>
-    <div class="pp-three-grid">
-      <!-- column 1/3 : Licenses -->
-      <div class="pp-col-card">
-        <div class="pp-col-title">🔖 Licenses</div>
-        <div class="pp-checklist">
-          <div class="pp-item-row"><input type="checkbox" id="d1"><span class="pp-item-icon">📄</span><label for="d1" class="pp-item-text">License – Both HSD & Lubricants</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="d3"><span class="pp-item-icon">🗺️</span><label for="d3" class="pp-item-text">R.O.R. (record of rights) Plot/Khata</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="d4"><span class="pp-item-icon">🔥</span><label for="d4" class="pp-item-text">Fire Safety Certificate</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="d5"><span class="pp-item-icon">🧯</span><label for="d5" class="pp-item-text">Firefighting equip. bill (expiry)</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="d6"><span class="pp-item-icon">💣</span><label for="d6" class="pp-item-text">Explosive + Storage Licence (PESO)</label></div>
-        </div>
-      </div>
-      <!-- column 2/3 : Identity & Tax -->
-      <div class="pp-col-card">
-        <div class="pp-col-title">🆔 Identity & Tax</div>
-        <div class="pp-checklist">
-          <div class="pp-item-row"><input type="checkbox" id="d8"><span class="pp-item-icon">⚖️</span><label for="d8" class="pp-item-text">Legal Metrology (pumps + can)</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="d9"><span class="pp-item-icon">🏛️</span><label for="d9" class="pp-item-text">NOC Collector & Local Authority</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="d10"><span class="pp-item-icon">🤝</span><label for="d10" class="pp-item-text">Agreement with Oil Company</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="d11"><span class="pp-item-icon">📩</span><label for="d11" class="pp-item-text">Recommendation letter – Oil Co.</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="d14"><span class="pp-item-icon">📋</span><label for="d14" class="pp-item-text">Appointment Letter (pump)</label></div>
-        </div>
-      </div>
-      <!-- column 3/3 : Utility & others -->
-      <div class="pp-col-card">
-        <div class="pp-col-title">⚡ Utility & others</div>
-        <div class="pp-checklist">
-          <div class="pp-item-row"><input type="checkbox" id="d12"><span class="pp-item-icon">🌡️</span><label for="d12" class="pp-item-text">Hydrometer & Thermometer Calib.</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="d13"><span class="pp-item-icon">💡</span><label for="d13" class="pp-item-text">Power supply details (last bill)</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="d16"><span class="pp-item-icon">📄</span><label for="d16" class="pp-item-text">Insurance documents</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="d7"><span class="pp-item-icon">🆔</span><label for="d7" class="pp-item-text">Aadhar, PAN & GSTIN copy</label></div>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- ========== SECTION 2: RECORDS & EQUIPMENT ========== -->
-  <div class="pp-section">
-    <div class="pp-section-header">
-      <span>📁 RECORDS & EQUIPMENT</span>
-    </div>
-    <div class="pp-three-grid">
-      <!-- col 1: registers & logs -->
-      <div class="pp-col-card">
-        <div class="pp-col-title">📆 Registers / Logs</div>
-        <div class="pp-checklist">
-          <div class="pp-item-row"><input type="checkbox" id="e1"><span class="pp-item-icon">📊</span><label for="e1" class="pp-item-text">Stock Register (MS, HSD, Lubricants)</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="e2"><span class="pp-item-icon">⚖️</span><label for="e2" class="pp-item-text">Density Register</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="e3"><span class="pp-item-icon">📈</span><label for="e3" class="pp-item-text">Daily Sales Register (DSR)</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="e4"><span class="pp-item-icon">🧾</span><label for="e4" class="pp-item-text">Cash Memo / Invoice copies</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="e5"><span class="pp-item-icon">🔍</span><label for="e5" class="pp-item-text">Inspection Register</label></div>
-        </div>
-      </div>
-      <!-- col 2: automation / pastes (icons updated) -->
-      <div class="pp-col-card">
-        <div class="pp-col-title">⚙️ Automation / pastes</div>
-         <div class="pp-checklist">
-          <div class="pp-item-row"><input type="checkbox" id="e7"><span class="pp-item-icon">⚡</span><label for="e7" class="pp-item-text">Lightning arrestor installed</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="e8"><span class="pp-item-icon">📊</span><label for="e8" class="pp-item-text">ATG (Automatic Tank Gauge)</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="e9"><span class="pp-item-icon">🔌</span><label for="e9" class="pp-item-text">UPS for automation system</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="e10"><span class="pp-item-icon">💧</span><label for="e10" class="pp-item-text">Water finding paste</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="e11"><span class="pp-item-icon">⛽</span><label for="e11" class="pp-item-text">Fuel finding paste</label></div>
-        </div>
-      </div>
-      <!-- col 3: measuring devices (icons updated) -->
-      <div class="pp-col-card">
-        <div class="pp-col-title">🧪 Measuring devices</div>
-        <div class="pp-checklist">
-          <div class="pp-item-row"><input type="checkbox" id="e12"><span class="pp-item-icon">🌡️</span><label for="e12" class="pp-item-text">Calibrated Hydrometers & Therm.</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="e13"><span class="pp-item-icon">📏</span><label for="e13" class="pp-item-text">Dip Rod / gauge</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="e14"><span class="pp-item-icon">📊</span><label for="e14" class="pp-item-text">ASTM Conversion Chart</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="e15"><span class="pp-item-icon">🥛</span><label for="e15" class="pp-item-text">Measuring Cylinder (glass)</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="e16"><span class="pp-item-icon">🧪</span><label for="e16" class="pp-item-text">5L Calibrated Jar</label></div>  
-        </div>
-      </div>
-    </div>
-  </div>
+  </div><!-- /.chk-main-card -->
 
-  <!-- ========== SECTION 3: ON‑SITE FACILITIES ========== -->
-  <div class="pp-section">
-    <div class="pp-section-header">
-      <span>🧰 ON‑SITE FACILITIES</span>
-    </div>
-    <div class="pp-three-grid">
-      <!-- col 1: basic amenities (icons contextual) -->
-      <div class="pp-col-card">
-        <div class="pp-col-title">🚰 Amenities</div>
-        <div class="pp-checklist">
-          <div class="pp-item-row"><input type="checkbox" id="f1"><span class="pp-item-icon">📋</span><label for="f1" class="pp-item-text">Complaint / suggestion Register</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f2"><span class="pp-item-icon">📜</span><label for="f2" class="pp-item-text">Citizen Charter displayed</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f3"><span class="pp-item-icon">🧻</span><label for="f3" class="pp-item-text">Filter paper (quality check)</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f4"><span class="pp-item-icon">🩹</span><label for="f4" class="pp-item-text">First Aid Kit (in date)</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f5"><span class="pp-item-icon">📢</span><label for="f5" class="pp-item-text">Dealer information board</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f6"><span class="pp-item-icon">💰</span><label for="f6" class="pp-item-text">Stock, Price & Density Board</label></div>
-        </div>
-      </div>
-      <!-- col 2: safety & signage (icons aligned) -->
-      <div class="pp-col-card">
-        <div class="pp-col-title">🚧 Safety / boards</div>
-        <div class="pp-checklist">
-          <div class="pp-item-row"><input type="checkbox" id="f7"><span class="pp-item-icon">🏢</span><label for="f7" class="pp-item-text">Canopy / Top Ceiling</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f8"><span class="pp-item-icon">🚰</span><label for="f8" class="pp-item-text">Free portable water / sanitation</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f9"><span class="pp-item-icon">🚻</span><label for="f9" class="pp-item-text">Free toilet (clean / working)</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f10"><span class="pp-item-icon">🛞</span><label for="f10" class="pp-item-text">Free air for vehicles</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f11"><span class="pp-item-icon">🏷️</span><label for="f11" class="pp-item-text">Price Board (High Signage)</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f12"><span class="pp-item-icon">🚫</span><label for="f12" class="pp-item-text">"No fuel in plastic bottles" board</label></div>
-        </div>
-      </div>
-      <!-- col 3: infra & equipment -->
-      <div class="pp-col-card">
-        <div class="pp-col-title">🛠️ Infrastructure</div>
-        <div class="pp-checklist">
-          <div class="pp-item-row"><input type="checkbox" id="f13"><span class="pp-item-icon">🚭</span><label for="f13" class="pp-item-text">No smoking boards displayed</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f14"><span class="pp-item-icon">💧</span><label for="f14" class="pp-item-text">Sump / adequate water</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f15"><span class="pp-item-icon">🧯</span><label for="f15" class="pp-item-text">Sand buckets (sufficient)</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f16"><span class="pp-item-icon">⚡</span><label for="f16" class="pp-item-text">Generator Set available</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f17"><span class="pp-item-icon">💡</span><label for="f17" class="pp-item-text">Adequate Lighting working</label></div>
-          <div class="pp-item-row"><input type="checkbox" id="f18"><span class="pp-item-icon">📞</span><label for="f18" class="pp-item-text">Toll‑free number displayed</label></div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- BOTTOM NAV STRIP -->
+  <nav class="chk-nav-strip" style="margin-top: 1.5rem;">
+    <a href="/formats/petrolpumpchecklist.html" class="chk-nav-item chk-active">⛽ Petrol Pump</a>
+    <a href="/formats/lpgchecklist.html"         class="chk-nav-item">🔥 LPG Checklist</a>
+    <a href="/formats/fpschecklist.html"         class="chk-nav-item">🍚 FPS Checklist</a>
+    <a href="/formats/ppcchecklist.html"         class="chk-nav-item">🌾 PPC Verification</a>
+  </nav>
 
-  <!-- footer strip -->
-  <div class="pp-foot-strip">
-    <span>✅ Verified by (Inspector): _________________</span>
-    <span class="pp-stamp-line">📅 Date: ___________</span>
-  </div>
-  <div class="pp-tiny">*System generated checklist – valid with official stamp</div>
-</div>
+</div><!-- /.chk-page-wrap -->
 
-<!-- bottom navigation (duplicate) less space -->
-<div class="pp-nav-links">
-  <a href="/formats/petrolpumpchecklist.html" class="pp-nav-item active">⛽ Petrol pump (current)</a>
-  <a href="/formats/lpgchecklist.html" class="pp-nav-item">🔥 LPG checklist</a>
-  <a href="/formats/fpschecklist.html" class="pp-nav-item">🍚 FPS checklist</a>
-  <a href="/formats/ppcchecklist.html" class="pp-nav-item">🌾 PPC verification</a>
-</div>
-
-<!-- print script -->
-<script>
-  document.getElementById('printPetrolPump')?.addEventListener('click', function() {
-    window.print();
-  });
-</script>
-
-<!-- FOOTER placeholder -->
+<!-- COMMON FOOTER -->
 <div id="site-footer"></div>
+
 <!-- Go to Top -->
 <script src="/assets/Scripts/gototop.js"></script>
+
+<script>
+  (function () {
+    // Print
+    const printBtn = document.getElementById('ppPrintBtn');
+    if (printBtn) printBtn.addEventListener('click', () => window.print());
+
+    // Share dropdown
+    const shareDropdown = document.getElementById('ppShareDropdown');
+    const shareBtn      = document.getElementById('ppShareBtn');
+    const shareMenu     = document.getElementById('ppShareMenu');
+
+    if (shareBtn && shareMenu) {
+      shareBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        shareMenu.classList.toggle('chk-show');
+      });
+      document.addEventListener('click', (e) => {
+        if (!shareDropdown.contains(e.target)) shareMenu.classList.remove('chk-show');
+      });
+    }
+
+    function getShareText() {
+      return encodeURIComponent(
+        '📋 Petrol Pump HSD Renewal Checklist\n🔗 PESO · EC Act · Legal Metrology\n\n' +
+        window.location.href
+      );
+    }
+
+    const waBtn = document.getElementById('ppWaBtn');
+    const tgBtn = document.getElementById('ppTgBtn');
+
+    if (waBtn) waBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.open('https://wa.me/?text=' + getShareText(), '_blank', 'noopener');
+      shareMenu.classList.remove('chk-show');
+    });
+
+    if (tgBtn) tgBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const url = 'https://t.me/share/url?url=' + encodeURIComponent(window.location.href) +
+                  '&text=' + encodeURIComponent('📋 Petrol Pump HSD Renewal Checklist\n✅ PESO · EC Act · Legal Metrology');
+      window.open(url, '_blank', 'noopener');
+      shareMenu.classList.remove('chk-show');
+    });
+  })();
+</script>
 
 </body>
 </html>
