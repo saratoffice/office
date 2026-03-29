@@ -2,1538 +2,595 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Income Tax Calculator FY 2025-26 (New Regime)</title>
-  <!-- Common CSS -->
-  <link rel="stylesheet" href="style.css">
-  <script src="assets/Scripts/site-components.js" defer></script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>LPG Distributor Inspection · Consolidated Safety (EC Act)</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/assets/Scripts/site-components.js" defer></script>
   <style>
-    /* =============================================
-       ALL STYLES SCOPED UNDER .tc-wrap
-       No conflicts with common header/footer CSS
-       ============================================= */
-
-    /* ---------- CSS Variables ---------- */
-    .tc-wrap {
-      --tc-ink:       #0f1623;
-      --tc-ink2:      #2c3a55;
-      --tc-ink3:      #6b7a99;
-      --tc-bg:        #f4f6fb;
-      --tc-surface:   #ffffff;
-      --tc-blue:      #2047d4;
-      --tc-blue-mid:  #3a5be8;
-      --tc-blue-lt:   #dde5ff;
-      --tc-green:     #0f9b6e;
-      --tc-green-lt:  #d6f5ec;
-      --tc-amber:     #d97706;
-      --tc-amber-lt:  #fef3c7;
-      --tc-red:       #dc2626;
-      --tc-red-lt:    #fee2e2;
-      --tc-gold:      #f5c518;
-      --tc-radius:    20px;
-      --tc-radius-sm: 12px;
-      --tc-radius-xs: 8px;
-      --tc-shadow:    0 4px 24px rgba(15,22,35,0.08);
-      --tc-shadow-lg: 0 16px 56px rgba(15,22,35,0.13);
-      --tc-font-head: 'Syne', sans-serif;
-      --tc-font-body: 'DM Sans', sans-serif;
-      /* Tooltip always on top of everything */
-      --tc-tooltip-z: 99999;
-    }
-
-    /* ---------- Wrap Reset ---------- */
-    .tc-wrap *,
-    .tc-wrap *::before,
-    .tc-wrap *::after {
-      box-sizing: border-box;
+    /* ----- global reset & background ----- */
+    body {
       margin: 0;
-      padding: 0;
+      background: #f0f4fa;
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
     }
 
-    .tc-wrap {
-      font-family: var(--tc-font-body);
-      color: var(--tc-ink);
-      background: var(--tc-bg);
-      padding: 40px 20px 60px;
-      position: relative;
+    /* 🧱 main card – LPG inspection professional */
+    .lpg-updated-card {
+      all: initial;
+      display: block;
+      max-width: 1100px;
+      width: 100%;
+      background: white;
+      border-radius: 32px;
+      box-shadow: 0 20px 35px rgba(0, 35, 55, 0.15);
+      padding: 1.6rem 2rem 1.2rem 2rem;
+      border: 1px solid #cbdde9;
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      line-height: 1.45;
+      color: #1a2c3f;
+      margin: 1.5rem auto;
+      box-sizing: border-box;
     }
 
-    /* ---------- Shell ---------- */
-    .tc-shell {
-      max-width: 1080px;
-      margin: 0 auto;
+    .lpg-updated-card * {
+      all: revert;
+      box-sizing: border-box;
     }
 
-    /* ---------- Hero Banner ---------- */
-    .tc-hero {
-      background: linear-gradient(135deg, #0f1d4a 0%, #1a3080 50%, #2047d4 100%);
-      border-radius: 28px;
-      padding: 44px 40px 40px;
-      margin-bottom: 32px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .tc-hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(90,130,255,0.18) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .tc-hero::after {
-      content: '₹';
-      position: absolute;
-      right: 40px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: var(--tc-font-head);
-      font-size: 160px;
-      font-weight: 800;
-      color: rgba(255,255,255,0.05);
-      line-height: 1;
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .tc-hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #a5c0ff;
-      font-family: var(--tc-font-body);
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      padding: 7px 16px;
-      border-radius: 50px;
-      margin-bottom: 18px;
-    }
-
-    .tc-hero-badge::before {
-      content: '';
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: #4ade80;
-      animation: tc-pulse 2s infinite;
-    }
-
-    @keyframes tc-pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.5; transform: scale(1.3); }
-    }
-
-    .tc-hero h1 {
-      font-family: var(--tc-font-head);
-      font-size: clamp(26px, 4vw, 42px);
-      font-weight: 800;
-      color: #ffffff;
-      letter-spacing: -0.5px;
-      line-height: 1.15;
-      margin-bottom: 10px;
-    }
-
-    .tc-hero p {
-      color: rgba(255,255,255,0.55);
-      font-size: 14px;
-    }
-
-    /* ---------- Employment Strip ---------- */
-    .tc-employ {
-      background: var(--tc-surface);
-      border-radius: var(--tc-radius);
-      padding: 18px 24px;
-      margin-bottom: 28px;
-      box-shadow: var(--tc-shadow);
+    /* header area */
+    .lpg2-top {
       display: flex;
-      flex-wrap: wrap;
+      justify-content: space-between;
       align-items: center;
-      gap: 16px;
-    }
-
-    .tc-employ-label {
-      font-family: var(--tc-font-head);
-      font-weight: 700;
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--tc-ink3);
-      white-space: nowrap;
-    }
-
-    .tc-employ-opts {
-      display: flex;
+      border-bottom: 4px solid #0047a0;
+      padding-bottom: 0.6rem;
+      margin-bottom: 1.5rem;
       flex-wrap: wrap;
       gap: 10px;
     }
-
-    .tc-radio-lbl {
+    .lpg2-top h1 {
+      font-size: 2rem;
+      font-weight: 750;
+      color: #003366;
+      margin: 0;
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 9px 20px;
-      border-radius: 50px;
-      border: 2px solid #e2e7f3;
-      background: #f7f9ff;
-      color: var(--tc-ink2);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .tc-radio-lbl:has(input:checked),
-    .tc-radio-lbl.tc-active {
-      background: var(--tc-blue);
-      border-color: var(--tc-blue);
-      color: #fff;
-      box-shadow: 0 4px 16px rgba(32,71,212,0.28);
-    }
-
-    .tc-radio-lbl input {
-      width: 15px; height: 15px;
-      accent-color: #fff;
-    }
-
-    /* ---------- Section Heading ---------- */
-    .tc-section-head {
-      font-family: var(--tc-font-head);
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--tc-ink);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      padding-bottom: 14px;
-      border-bottom: 2px solid #e8ecf8;
-    }
-
-    .tc-section-head .tc-icon-circle {
-      width: 36px; height: 36px;
-      border-radius: 10px;
-      background: var(--tc-blue-lt);
-      color: var(--tc-blue);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    /* ---------- Two-col grid ---------- */
-    .tc-grid2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-bottom: 24px;
-    }
-
-    /* ---------- Cards ---------- */
-    .tc-card {
-      background: var(--tc-surface);
-      border-radius: var(--tc-radius);
-      padding: 28px;
-      box-shadow: var(--tc-shadow);
-      border: 1px solid rgba(32,71,212,0.06);
-      position: relative; /* for tooltip context */
-    }
-
-    .tc-card:hover {
-      box-shadow: var(--tc-shadow-lg);
-      border-color: rgba(32,71,212,0.14);
-      transition: all 0.25s;
-    }
-
-    /* ---------- Input Rows ---------- */
-    .tc-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 11px 0;
-      border-bottom: 1px dashed #eaecf7;
-    }
-
-    .tc-row:last-of-type { border-bottom: none; }
-
-    .tc-row label {
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--tc-ink2);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex: 1;
-    }
-
-    .tc-input {
-      width: 148px;
-      padding: 9px 14px;
-      border: 2px solid #e2e7f3;
-      border-radius: var(--tc-radius-xs);
-      font-size: 14px;
-      font-family: var(--tc-font-body);
-      font-weight: 600;
-      text-align: right;
-      color: var(--tc-ink);
-      background: #f7f9ff;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .tc-input:focus {
-      outline: none;
-      border-color: var(--tc-blue);
-      box-shadow: 0 0 0 4px rgba(32,71,212,0.1);
-      background: #fff;
-    }
-
-    .tc-input:disabled {
-      background: #f0f2f8;
-      color: var(--tc-ink3);
-      cursor: not-allowed;
-    }
-
-    /* ---------- Total Row ---------- */
-    .tc-total-strip {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: linear-gradient(135deg, #e8f0ff, #dce7ff);
-      border: 2px solid var(--tc-blue-lt);
-      border-radius: var(--tc-radius-sm);
-      padding: 15px 20px;
-      margin-top: 20px;
-      font-weight: 700;
-      font-size: 15px;
-      color: var(--tc-ink);
-    }
-
-    .tc-total-strip .tc-val {
-      color: var(--tc-blue);
-      font-size: 18px;
-      font-family: var(--tc-font-head);
-    }
-
-    /* ---------- Info Pill (HP summary row) ---------- */
-    .tc-info-pill {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #f0f4ff;
-      border-left: 4px solid var(--tc-blue);
-      border-radius: var(--tc-radius-xs);
-      padding: 12px 16px;
-      margin-top: 14px;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--tc-ink2);
-    }
-
-    .tc-info-pill .tc-pill-val {
-      font-weight: 700;
-      color: var(--tc-blue);
-      background: #fff;
-      padding: 4px 14px;
-      border-radius: 50px;
-      font-size: 15px;
-    }
-
-    .tc-success-pill {
-      background: var(--tc-green-lt);
-      border-left-color: var(--tc-green);
-    }
-
-    .tc-success-pill .tc-pill-val { color: var(--tc-green); }
-
-    .tc-amber-pill {
-      background: var(--tc-amber-lt);
-      border-left-color: var(--tc-amber);
-    }
-
-    .tc-amber-pill .tc-pill-val { color: var(--tc-amber); }
-
-    .tc-std-note {
-      font-size: 12px;
-      margin-top: 8px;
-      color: var(--tc-ink3);
-    }
-
-    /* ---------- Net Taxable Card (full width) ---------- */
-    .tc-net-card {
-      background: linear-gradient(135deg, #0f1d4a, #2047d4);
-      border-radius: var(--tc-radius);
-      padding: 26px 30px;
-      margin-bottom: 28px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: #fff;
-      box-shadow: 0 12px 40px rgba(32,71,212,0.25);
-    }
-
-    .tc-net-label {
-      font-size: 15px;
-      font-weight: 500;
-      opacity: 0.75;
-      margin-bottom: 4px;
-    }
-
-    .tc-net-val {
-      font-family: var(--tc-font-head);
-      font-size: 30px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: #fff;
-    }
-
-    .tc-net-card .tc-info-i {
-      background: rgba(255,255,255,0.15);
-      color: #fff;
-    }
-
-    /* =============================================
-       TOOLTIP SYSTEM
-       Fixed position approach ensures it's always
-       visible above all other page content
-       ============================================= */
-
-    .tc-info-i {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: var(--tc-blue-lt);
-      color: var(--tc-blue);
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      flex-shrink: 0;
-      font-style: normal;
-      position: relative;
-      /* Each info icon creates its own stacking context */
-      isolation: isolate;
-    }
-
-    /* Tooltip bubble — absolutely positioned relative to the icon */
-    .tc-info-i .tc-tip {
-      visibility: hidden;
-      opacity: 0;
-      pointer-events: none;
-      position: absolute;
-      z-index: var(--tc-tooltip-z);   /* Always on top */
-      background: #fff;
-      border: 1.5px solid #d0d9f4;
-      border-radius: var(--tc-radius-sm);
-      box-shadow: 0 20px 60px rgba(15,22,35,0.22);
-      padding: 18px;
-      width: 300px;
-      font-size: 13px;
-      font-family: var(--tc-font-body);
-      font-weight: 400;
-      color: var(--tc-ink2);
-      line-height: 1.6;
-      text-align: left;
-      transition: opacity 0.18s ease, visibility 0.18s ease;
-      /* Default: drop below-right */
-      top: calc(100% + 10px);
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    /* Arrow */
-    .tc-info-i .tc-tip::before {
-      content: '';
-      position: absolute;
-      border: 8px solid transparent;
-      /* Default arrow: points up (tip appears below icon) */
-      top: -16px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-bottom-color: #d0d9f4;
-    }
-
-    .tc-info-i .tc-tip::after {
-      content: '';
-      position: absolute;
-      border: 7px solid transparent;
-      top: -13px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-bottom-color: #fff;
-    }
-
-    /* Modifier: tip-up — tooltip appears ABOVE the icon */
-    .tc-info-i.tc-tip-up .tc-tip {
-      top: auto;
-      bottom: calc(100% + 10px);
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .tc-info-i.tc-tip-up .tc-tip::before {
-      top: auto;
-      bottom: -16px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-bottom-color: transparent;
-      border-top-color: #d0d9f4;
-    }
-
-    .tc-info-i.tc-tip-up .tc-tip::after {
-      top: auto;
-      bottom: -13px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-bottom-color: transparent;
-      border-top-color: #fff;
-    }
-
-    /* Modifier: tip-right — tooltip shifts to align left edge */
-    .tc-info-i.tc-tip-right .tc-tip {
-      left: 0;
-      transform: none;
-    }
-
-    .tc-info-i.tc-tip-right .tc-tip::before,
-    .tc-info-i.tc-tip-right .tc-tip::after {
-      left: 14px;
-      transform: none;
-    }
-
-    /* Modifier: tip-left — tooltip shifts to align right edge */
-    .tc-info-i.tc-tip-left .tc-tip {
-      left: auto;
-      right: 0;
-      transform: none;
-    }
-
-    .tc-info-i.tc-tip-left .tc-tip::before,
-    .tc-info-i.tc-tip-left .tc-tip::after {
-      left: auto;
-      right: 14px;
-      transform: none;
-    }
-
-    /* Show on hover */
-    .tc-info-i:hover .tc-tip {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    /* Tooltip inner typography */
-    .tc-tip h4 {
-      font-family: var(--tc-font-head);
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--tc-blue);
-      margin-bottom: 10px;
-    }
-
-    .tc-tip ul, .tc-tip ol {
-      padding-left: 18px;
-      margin-bottom: 10px;
-    }
-
-    .tc-tip li { margin-bottom: 4px; }
-
-    .tc-tip table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .tc-tip td {
-      padding: 6px 4px;
-      border-bottom: 1px dashed #e8ecf5;
-      font-size: 12.5px;
-    }
-
-    .tc-tip td:last-child {
-      text-align: right;
-      font-weight: 600;
-      color: var(--tc-ink);
-    }
-
-    .tc-tip .tc-tip-note {
-      background: #fff8eb;
-      border-left: 3px solid var(--tc-amber);
-      border-radius: 6px;
-      padding: 10px 12px;
-      font-size: 12px;
-      color: var(--tc-amber);
-      margin-top: 10px;
-    }
-
-    /* ---------- Capital Gains Section ---------- */
-    .tc-cg-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-bottom: 28px;
-    }
-
-    .tc-cg-card {
-      background: var(--tc-surface);
-      border-radius: var(--tc-radius);
-      overflow: visible;
-      box-shadow: var(--tc-shadow);
-      border: 1px solid rgba(32,71,212,0.06);
-      position: relative;
-    }
-
-    .tc-cg-head {
-      background: var(--tc-ink);
-      color: #fff;
-      padding: 16px 18px;
-      font-family: var(--tc-font-head);
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      text-align: center;
-      border-radius: var(--tc-radius) var(--tc-radius) 0 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .tc-cg-rate {
-      display: inline-block;
-      background: var(--tc-gold);
-      color: #0f1623;
-      font-size: 12px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 50px;
-    }
-
-    .tc-cg-body {
-      padding: 0;
-    }
-
-    .tc-cg-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      border-bottom: 1px dashed #eaecf7;
-      font-size: 13px;
-    }
-
-    .tc-cg-row:last-child { border-bottom: none; }
-
-    .tc-cg-row .tc-cg-lbl { color: var(--tc-ink2); font-weight: 400; }
-
-    .tc-cg-row .tc-cg-val {
-      font-weight: 600;
-      color: var(--tc-ink);
-    }
-
-    .tc-cg-row.tc-cg-highlight {
-      background: #f0f4ff;
-    }
-
-    .tc-cg-row.tc-cg-highlight .tc-cg-val {
-      color: var(--tc-blue);
-      font-size: 16px;
-      font-family: var(--tc-font-head);
-    }
-
-    .tc-cg-input {
-      width: 90px;
-      padding: 7px 10px;
-      border: 2px solid #e2e7f3;
-      border-radius: var(--tc-radius-xs);
-      text-align: right;
-      font-size: 13px;
-      font-weight: 600;
-      font-family: var(--tc-font-body);
-      background: #f7f9ff;
-    }
-
-    .tc-cg-input:focus {
-      outline: none;
-      border-color: var(--tc-blue);
-      box-shadow: 0 0 0 3px rgba(32,71,212,0.1);
-    }
-
-    /* ---------- Tax Slabs Table ---------- */
-    .tc-slabs-wrap {
-      background: var(--tc-surface);
-      border-radius: var(--tc-radius);
-      overflow: hidden;
-      box-shadow: var(--tc-shadow);
-      margin-bottom: 28px;
-      border: 1px solid rgba(32,71,212,0.06);
-    }
-
-    .tc-slabs-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .tc-slabs-table thead th {
-      background: var(--tc-ink);
-      color: #fff;
-      font-family: var(--tc-font-head);
-      font-size: 13px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      padding: 16px 20px;
-      text-align: left;
-    }
-
-    .tc-slabs-table thead th:last-child { text-align: right; }
-
-    .tc-slabs-table tbody td {
-      padding: 14px 20px;
-      border-bottom: 1px solid #f0f2f8;
-      font-size: 14px;
-      color: var(--tc-ink2);
-    }
-
-    .tc-slabs-table tbody td:last-child {
-      text-align: right;
-      font-weight: 700;
-      color: var(--tc-ink);
-    }
-
-    .tc-slabs-table tbody tr:hover td { background: #f8f9ff; }
-
-    .tc-slabs-table .tc-rebate-row td {
-      background: #fff8eb;
-      color: var(--tc-amber);
-      font-weight: 600;
-    }
-
-    .tc-slabs-table .tc-rebate-row td:last-child {
-      color: var(--tc-amber);
-    }
-
-    /* ---------- Marginal Relief ---------- */
-    .tc-relief-box {
-      background: #fffbf0;
-      border: 2px solid #fde68a;
-      border-radius: var(--tc-radius);
-      padding: 24px;
-      margin-bottom: 28px;
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-    }
-
-    .tc-relief-icon {
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      background: var(--tc-amber-lt);
-      color: var(--tc-amber);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-    }
-
-    .tc-relief-body { flex: 1; }
-
-    .tc-relief-title {
-      font-family: var(--tc-font-head);
-      font-weight: 700;
-      font-size: 15px;
-      color: var(--tc-ink);
-      margin-bottom: 12px;
-    }
-
-    .tc-status-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 12px;
-      border-radius: 50px;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .tc-tag-yes { background: var(--tc-green-lt); color: var(--tc-green); }
-    .tc-tag-no  { background: var(--tc-red-lt);   color: var(--tc-red); }
-
-    .tc-relief-detail-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      flex-wrap: wrap;
       gap: 12px;
-      margin-top: 12px;
     }
-
-    .tc-relief-item {
-      background: #fff;
-      border-radius: var(--tc-radius-xs);
-      padding: 12px 14px;
-      text-align: center;
+    .lpg2-top h1 small {
+      font-size: 0.85rem;
+      font-weight: 500;
+      background: #e9eff7;
+      color: #004080;
+      padding: 0.25rem 1.2rem;
+      border-radius: 60px;
+      letter-spacing: 0.3px;
     }
-
-    .tc-relief-item-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--tc-ink3);
-      margin-bottom: 5px;
-    }
-
-    .tc-relief-item-val {
-      font-family: var(--tc-font-head);
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--tc-ink);
-    }
-
-    .tc-relief-saving {
-      grid-column: span 2;
-      background: var(--tc-ink);
-      color: #fff;
-      border-radius: var(--tc-radius-xs);
-      padding: 12px;
-      text-align: center;
-      font-size: 14px;
+    .lpg2-print-btn {
+      background: #003366;
+      border: none;
+      color: white;
       font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.5rem 2rem;
+      border-radius: 44px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: 0.15s;
+      border: 1px solid #00284d;
+    }
+    .lpg2-print-btn:hover { background: #001f3f; transform: scale(0.98); }
+
+    /* section headers */
+    .lpg2-section-title {
+      font-weight: 750;
+      font-size: 1.25rem;
+      color: #0047a0;
+      border-left: 8px solid #ff8c1a;
+      padding-left: 16px;
+      margin: 1.4rem 0 0.8rem 0;
+      background: linear-gradient(90deg, #f0f7ff, transparent);
     }
 
-    /* ---------- Summary ---------- */
-    .tc-summary {
-      background: linear-gradient(135deg, #0a1228 0%, #0f1d4a 60%, #1a3080 100%);
+    /* basic details grid – clean */
+    .lpg2-basic-grid {
+      background: #f8fafd;
       border-radius: 28px;
-      padding: 36px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .tc-summary::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 50% 70% at 90% 10%, rgba(90,130,255,0.15) 0%, transparent 60%);
-      pointer-events: none;
-    }
-
-    .tc-summary-title {
-      font-family: var(--tc-font-head);
-      font-size: 20px;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .tc-summary-grid {
+      padding: 1.1rem 1.6rem;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
+      gap: 0.8rem 2rem;
+      border: 1px solid #cfdfef;
+      margin-bottom: 1rem;
     }
-
-    .tc-s-item {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: var(--tc-radius-sm);
-      padding: 16px 18px;
-      backdrop-filter: blur(8px);
+    .lpg2-basic-item {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 6px;
+      font-size: 0.95rem;
     }
-
-    .tc-s-lbl {
-      font-size: 12px;
-      color: rgba(255,255,255,0.5);
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      margin-bottom: 6px;
-    }
-
-    .tc-s-val {
-      font-family: var(--tc-font-head);
-      font-size: 20px;
+    .lpg2-basic-item .lpg2-label {
       font-weight: 700;
-      color: #fff;
+      color: #003366;
+      min-width: 125px;
+    }
+    .lpg2-basic-item .lpg2-value {
+      background: transparent;
+      min-width: 170px;
+      color: #0f293f;
+      border-bottom: 1px dashed #b9cae0;
+      padding: 0 0 2px 0;
+      display: inline-block;
     }
 
-    .tc-summary-total {
-      grid-column: span 2;
-      background: linear-gradient(135deg, rgba(245,197,24,0.15), rgba(245,197,24,0.08));
-      border: 2px solid rgba(245,197,24,0.5);
-      border-radius: var(--tc-radius-sm);
-      padding: 22px 24px;
-      margin-top: 4px;
+    /* two‑column checklist */
+    .lpg2-check-two {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.4rem 1.5rem;
+    }
+    .lpg2-check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 0.3rem 0;
+      border-bottom: 1px dotted #cbdbe5;
+    }
+    .lpg2-check-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #0047a0;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .lpg2-check-item label {
+      font-size: 0.92rem;
+      line-height: 1.35;
+      color: #1e3a5f;
+    }
+
+    /* stock tables */
+    .lpg2-stock-detailed {
+      background: #f9fcff;
+      border-radius: 26px;
+      padding: 0.8rem 1.2rem 1rem;
+      margin: 0.6rem 0 0.9rem;
+      border: 1px solid #c3d6ec;
+    }
+    .lpg2-stock-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .lpg2-stock-table th {
+      background: #003366;
+      color: white;
+      font-weight: 600;
+      padding: 0.5rem 0.3rem;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+    .lpg2-stock-table td {
+      border: 1px solid #c4d3e8;
+      padding: 0.45rem 0.2rem;
+      text-align: center;
+      background: white;
+    }
+    .lpg2-stock-table td:first-child {
+      font-weight: 550;
+      background: #f0f6fe;
+    }
+    .lpg2-subhead {
+      font-weight: 700;
+      color: #004b8f;
+      margin: 0.9rem 0 0.4rem 0;
+      font-size: 1rem;
+      border-left: 5px solid #ff8c1a;
+      padding-left: 12px;
+    }
+
+    /* mini stats */
+    .lpg2-mini-stat {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem 2.8rem;
+      background: #f8fafd;
+      border-radius: 26px;
+      padding: 0.8rem 1.8rem;
+      border: 1px solid #c9daef;
+      margin: 0.7rem 0;
+    }
+    .lpg2-mini-stat strong {
+      color: #003366;
+      font-weight: 700;
+    }
+
+    /* ===== SAFETY SECTION (UPDATED: Merged Fire + Legal Metrology with inline fields) ===== */
+    .lpg2-safety-enhanced {
+      background: #eef4ea;
+      border-radius: 32px;
+      padding: 1.2rem 1.8rem 1.4rem 1.8rem;
+      margin: 1rem 0 1rem 0;
+      border: 1px solid #bdd1b0;
+      transition: all 0.1s;
+    }
+    .lpg2-safety-title {
+      font-weight: 800;
+      color: #1e6b3c;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #c3ddb5;
+      padding-bottom: 6px;
+    }
+    /* unified safety rows – clean and professional */
+    .lpg2-safety-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .lpg2-safety-card-row {
+      background: white;
+      border-radius: 28px;
+      padding: 0.7rem 1.3rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border: 1px solid #dde6e0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 1.2rem 2rem;
+    }
+    .lpg2-safety-card-row span {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 0.92rem;
+      flex-wrap: wrap;
+    }
+    .lpg2-safety-card-row .lpg2-label {
+      font-weight: 700;
+      color: #1f543b;
+      min-width: 140px;
+    }
+    .lpg2-safety-blank {
+      min-width: 170px;
+      display: inline-block;
+      border-bottom: 1.5px dashed #98b68b;
+      padding: 0 0 2px 0;
+      color: #2c4d32;
+      font-family: inherit;
+    }
+    /* legal metrology separate block inside same merged area */
+    .lpg2-legal-group {
+      background: white;
+      border-radius: 28px;
+      padding: 0.7rem 1.3rem;
+      border: 1px solid #dde6e0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.2rem 2.5rem;
+    }
+    .lpg2-legal-group span {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 0.92rem;
+    }
+
+    /* leakage and valve row */
+    .lpg2-leak-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem 2.5rem;
+      background: #fff7e8;
+      border-radius: 28px;
+      padding: 0.9rem 1.6rem;
+      border: 1px solid #f1daae;
+      margin: 0.5rem 0;
+    }
+    .lpg2-leak-grid span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* signature row */
+    .lpg2-sign-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background: #e5eff9;
+      padding: 0.7rem 1.8rem;
+      border-radius: 48px;
+      margin: 1.2rem 0 0.4rem;
+      font-weight: 500;
+      flex-wrap: wrap;
+    }
+    .lpg2-stamp {
+      border: 2px dotted #003366;
+      background: white;
+      padding: 0.3rem 1.8rem;
+      border-radius: 40px;
+      font-family: 'Courier New', monospace;
+      font-weight: 500;
+    }
+    hr { border: 0.5px solid #cbdbea; margin: 0.8rem 0; }
+
+    /* navigation links */
+    .lpg2-nav-links {
+      margin: 0.8rem auto 1rem;
+      max-width: 1100px;
+      padding: 0 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+    .lpg2-nav-item {
+      background: #e2ebf6;
+      border-radius: 60px;
+      padding: 0.4rem 1.4rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: 1px solid #9bb7d4;
+      color: #1f4970;
+      transition: 0.1s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .lpg2-nav-item:hover {
+      background: #cde0f5;
+      border-color: #2f6a9e;
+    }
+    .lpg2-nav-item.active {
+      background: #003366;
+      border-color: #00224d;
+      color: white;
     }
 
-    .tc-summary-total-lbl {
-      font-family: var(--tc-font-head);
-      font-size: 15px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.75);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    /* critical badges */
+    .lpg2-critical-badge {
+      background: #eef2f0;
+      border-radius: 30px;
+      padding: 0.2rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #135b2e;
     }
-
-    .tc-summary-total-val {
-      font-family: var(--tc-font-head);
-      font-size: 38px;
-      font-weight: 800;
-      color: var(--tc-gold);
-      letter-spacing: -1px;
+    @media print {
+      @page { size: A4; margin: 0.4in; }
+      body > :not(.lpg-updated-card):not(script) { display: none !important; }
+      body { background: white !important; margin: 0; padding: 0; }
+      .lpg-updated-card { box-shadow: none; border-radius: 0; border: none; padding: 0.1rem; max-width: 100%; margin: 0; font-size: 10.5pt; }
+      .lpg2-print-btn, .lpg2-nav-links, #site-header, #site-footer { display: none !important; }
+      .lpg2-safety-card-row, .lpg2-legal-group { break-inside: avoid; }
     }
-
-    /* ---------- Responsive ---------- */
-    @media (max-width: 900px) {
-      .tc-grid2,
-      .tc-cg-grid {
-        grid-template-columns: 1fr;
-        gap: 18px;
-      }
-
-      .tc-summary-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .tc-summary-total {
-        grid-column: span 1;
-        flex-direction: column;
-        gap: 8px;
-        text-align: center;
-      }
-
-      .tc-hero { padding: 30px 22px; }
-      .tc-hero::after { display: none; }
-
-      .tc-net-card {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-      }
-
-      /* Tooltip: force fixed-width on mobile */
-      .tc-info-i .tc-tip {
-        width: 240px;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .tc-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-      }
-
-      .tc-input { width: 100%; }
-      .tc-employ { flex-direction: column; align-items: flex-start; }
-      .tc-summary { padding: 24px 18px; }
+    @media screen and (max-width: 720px) {
+      .lpg-updated-card { padding: 1rem; }
+      .lpg2-basic-grid { grid-template-columns: 1fr; }
+      .lpg2-check-two { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <div id="site-header"></div>
 
-  <!-- =========================================
-       CALCULATOR ROOT — all styles scoped here
-       ========================================= -->
-  <div class="tc-wrap">
-    <div class="tc-shell">
+<div id="site-header"></div>
 
-      <!-- Hero -->
-      <div class="tc-hero">
-        <div class="tc-hero-badge">✦ FY 2025–26 &nbsp;|&nbsp; AY 2026–27</div>
-        <h1>Income Tax Calculator<br>New Tax Regime</h1>
-        <p>Accurate computation with slabs, rebates &amp; marginal relief</p>
+<!-- navigation tabs -->
+<div class="lpg2-nav-links">
+  <a href="/formats/petrolpumpchecklist.html" class="lpg2-nav-item">⛽ Petrol pump</a>
+  <a href="/formats/lpgchecklist.html" class="lpg2-nav-item active">🔥 LPG checklist (current)</a>
+  <a href="/formats/fpschecklist.html" class="lpg2-nav-item">🍚 FPS checklist</a>
+  <a href="/formats/ppcchecklist.html" class="lpg2-nav-item">🌾 PPC verification</a>
+</div>
+
+<!-- MAIN CARD – UPDATED with merged fire + legal metrology and single fields inside safety block -->
+<div class="lpg-updated-card" id="lpgPrintUpdated">
+
+  <div class="lpg2-top">
+    <h1>⛽ LPG DISTRIBUTOR INSPECTION <small>EC Act · LPG Order 2000</small></h1>
+    <button class="lpg2-print-btn" id="printLpgUpdated">🖨️ PRINT / PDF</button>
+  </div>
+
+  <!-- 1️⃣ BASIC DETAILS -->
+  <div class="lpg2-section-title">1️⃣ BASIC DETAILS OF DISTRIBUTOR</div>
+  <div class="lpg2-basic-grid">
+    <div class="lpg2-basic-item"><span class="lpg2-label">Distributor Name:</span><span class="lpg2-value"> </span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Proprietor/Manager:</span><span class="lpg2-value"> </span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Address:</span><span class="lpg2-value"> </span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Block Name:</span><span class="lpg2-value"> </span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Oil Marketing Company:</span><span class="lpg2-value"> </span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Distributor Code:</span><span class="lpg2-value"> </span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Agreement No.:</span><span class="lpg2-value"> </span></div>
+    <div class="lpg2-basic-item"><span class="lpg2-label">Date & Time of Inspection:</span><span class="lpg2-value"> </span></div>
+  </div>
+
+  <!-- 2️⃣ STOCK VERIFICATION -->
+  <div class="lpg2-section-title">2️⃣ STOCK VERIFICATION OF LPG CYLINDERS</div>
+  <div class="lpg2-stock-detailed">
+    <div class="lpg2-subhead">A. Filled Cylinders</div>
+    <table class="lpg2-stock-table">
+      <thead><tr><th>Type</th><th>Opening</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Physical</th><th>Difference</th></tr></thead>
+      <tbody>
+        <tr><td>14.2 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>19 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>5 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+    <div class="lpg2-subhead">B. Empty Cylinders</div>
+    <table class="lpg2-stock-table">
+      <thead><tr><th>Type</th><th>Opening</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Physical</th><th>Difference</th></tr></thead>
+      <tbody>
+        <tr><td>14.2 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>19 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>5 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+    <div class="lpg2-subhead">C. Defective / Damaged Cylinders</div>
+    <table class="lpg2-stock-table">
+      <thead><tr><th>Type</th><th>14.2 Kg</th><th>19 Kg</th><th>5 Kg</th></tr></thead>
+      <tbody><tr><td>Quantity</td><td></td><td></td><td></td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- 3️⃣ CONSUMER DATABASE -->
+  <div class="lpg2-section-title">3️⃣ CONSUMER DATABASE VERIFICATION</div>
+  <div class="lpg2-mini-stat">
+    <span><strong>Domestic (Normal):</strong> <span class="stat-line"> </span></span>
+    <span><strong>Ujjwala Consumers:</strong> <span class="stat-line"> </span></span>
+    <span><strong>Commercial Consumers:</strong> <span class="stat-line"> </span></span>
+  </div>
+  <div class="lpg2-mini-stat">
+    <span><strong>Active Domestic:</strong> <span class="stat-line"> </span></span>
+    <span><strong>Active Ujjwala:</strong> <span class="stat-line"> </span></span>
+    <span><strong>Active Commercial:</strong> <span class="stat-line"> </span></span>
+  </div>
+  <div class="lpg2-mini-stat">
+    <span><strong>Waiting List (Domestic):</strong> <span class="stat-line"> </span></span>
+    <span><strong>Waiting List (Ujjwala):</strong> <span class="stat-line"> </span></span>
+  </div>
+
+  <!-- 4️⃣ REFILL SUPPLY -->
+  <div class="lpg2-section-title">4️⃣ REFILL CYLINDER SUPPLY (LAST 3 MONTHS) – CATEGORY WISE</div>
+  <div class="lpg2-stock-detailed">
+    <table class="lpg2-stock-table">
+      <thead><tr><th rowspan="2">Month</th><th colspan="2">Domestic Cylinders Received</th><th colspan="2">Commercial Cylinders Received</th></tr>
+      <tr><th>14.2 Kg</th><th>5 Kg</th><th>19 Kg</th><th>other</th></tr></thead>
+      <tbody>
+        <tr><td>Month 1</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>Month 2</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>Month 3</td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5️⃣ SAFETY & CERTIFICATE COMPLIANCE (Fully merged: Fire safety + Legal metrology in one coherent section, with single fields) -->
+  <div class="lpg2-section-title">5️⃣ SAFETY & CERTIFICATE COMPLIANCE (Fire + Legal Metrology)</div>
+  <div class="lpg2-safety-enhanced">
+    <div class="lpg2-safety-title">🔥 FIRE SAFETY CERTIFICATE & INSPECTION DETAILS</div>
+    <div class="lpg2-safety-grid">
+      <!-- fire certificate row: certificate number, validity, inspection date -->
+      <div class="lpg2-safety-card-row">
+        <span><span class="lpg2-label">📄 Fire Safety Certificate No.:</span> <span class="lpg2-safety-blank"> </span></span>
+        <span><span class="lpg2-label">🗓️ Valid up to:</span> <span class="lpg2-safety-blank"> </span></span>
+        <span><span class="lpg2-label">🔍 Last Inspection date:</span> <span class="lpg2-safety-blank"> </span></span>
       </div>
-
-      <!-- Employment Type -->
-      <div class="tc-employ">
-        <span class="tc-employ-label">👤 Employment Type</span>
-        <div class="tc-employ-opts">
-          <label class="tc-radio-lbl">
-            <input type="radio" name="employment" value="salaried" checked onchange="calculateTax()"> Salaried
-          </label>
-          <label class="tc-radio-lbl">
-            <input type="radio" name="employment" value="business" onchange="calculateTax()"> Business
-          </label>
-          <label class="tc-radio-lbl">
-            <input type="radio" name="employment" value="pensioner" onchange="calculateTax()"> Pensioner
-          </label>
-        </div>
+      <!-- additional fire equipment / NOC fields optional but requested integrated -->
+      <div class="lpg2-safety-card-row">
+        <span><span class="lpg2-label">🧯 Fire NOC Reference (if any):</span> <span class="lpg2-safety-blank"> </span></span>
+        <span><span class="lpg2-label">🚨 Issuing Authority:</span> <span class="lpg2-safety-blank"> </span></span>
       </div>
+    </div>
 
-      <!-- Income + House Property Row -->
-      <div class="tc-grid2">
+    <div class="lpg2-safety-title" style="margin-top: 0.8rem;">⚖️ LEGAL METROLOGY (Weights & Measures)</div>
+    <div class="lpg2-legal-group">
+      <span><span class="lpg2-label">📏 Certified Weighing scale (Model/ID):</span> <span class="lpg2-safety-blank"> </span></span>
+      <span><span class="lpg2-label">⚙️ Certified Test weight set (Yes/No):</span> <span class="lpg2-safety-blank"> </span></span>
+      <span><span class="lpg2-label">⚖️ Spring balance for consumers (Yes/No):</span> <span class="lpg2-safety-blank"> </span></span>
+    </div>
+    <div class="lpg2-legal-group" style="margin-top: 0.5rem;">
+      <span><span class="lpg2-label">📅 Weighing scale verification due date:</span> <span class="lpg2-safety-blank"> </span></span>
+      <span><span class="lpg2-label">🔖 LMPC certificate available:</span> <span class="lpg2-safety-blank"> </span></span>
+    </div>
+    <!-- optional additional info to align with original single-line fields but merged elegantly -->
+    <div style="font-size: 0.8rem; margin-top: 0.8rem; background: #e0ebda; border-radius: 60px; padding: 0.2rem 1rem; display: inline-block; color: #2a6230;">✔️ Integrated certificate compliance (Fire NOC + Legal Metrology as per EC Act)</div>
+  </div>
 
-        <!-- Income Details -->
-        <div class="tc-card">
-          <div class="tc-section-head">
-            <span class="tc-icon-circle">💰</span>
-            Income Details
-            <i class="tc-info-i tc-tip-right" tabindex="0">i
-              <span class="tc-tip">
-                <h4>Income Details</h4>
-                <p>Enter all your income sources for the financial year. Rental income is used to compute House Property income separately.</p>
-              </span>
-            </i>
-          </div>
+  <!-- 6️⃣ VALVE / O‑RING & LEAKAGE VERIFICATION -->
+  <div class="lpg2-section-title">6️⃣ VALVE / O‑RING & LEAKAGE VERIFICATION</div>
+  <div class="lpg2-leak-grid">
+    <span><input type="checkbox"> O‑ring of each swapped cylinder checked</span>
+    <span><input type="checkbox"> Soap water / leak detector used</span>
+    <span><input type="checkbox"> No leakage at valve stem / joint</span>
+    <span><input type="checkbox"> Staff trained in leak detection</span>
+  </div>
 
-          <div class="tc-row">
-            <label>Gross Salary Income</label>
-            <input type="number" id="grossSalary" value="1228769" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input">
-          </div>
-          <div class="tc-row">
-            <label>Income from Other Sources</label>
-            <input type="number" id="otherSources" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input">
-          </div>
-          <div class="tc-row">
-            <label>Income from Interest</label>
-            <input type="number" id="interestIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input">
-          </div>
-          <div class="tc-row">
-            <label>Income from Dividends</label>
-            <input type="number" id="dividendIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input">
-          </div>
-          <div class="tc-row">
-            <label>Rental Income (Let-out Property)</label>
-            <input type="number" id="grossRent" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input">
-          </div>
+  <!-- 7️⃣ DELIVERY & DISTRIBUTION SYSTEM -->
+  <div class="lpg2-section-title">7️⃣ DELIVERY & DISTRIBUTION SYSTEM</div>
+  <div class="lpg2-check-two">
+    <div class="lpg2-check-item"><input type="checkbox"> Home delivery system available</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Delivery register maintained</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Delivery vehicles inspected</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Weighing machine available</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Electronic POS machine used</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Cash memo / invoice book maintained</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Godown stock register updated</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Electronic distribution records</div>
+  </div>
 
-          <div class="tc-total-strip">
-            <span>Total Income <small style="font-weight:400;font-size:12px;">(before deductions)</small></span>
-            <span class="tc-val" id="totalIncomeDisplay">₹0.00</span>
-          </div>
-        </div>
+  <!-- 8️⃣ ADDITIONAL SAFETY CHECKS -->
+  <div class="lpg2-section-title">8️⃣ ADDITIONAL SAFETY CHECKS AT GODOWN</div>
+  <div class="lpg2-check-two">
+    <div class="lpg2-check-item"><input type="checkbox"> No. of Fire extinguishers (DCP) available</div>
+    <div class="lpg2-check-item"><input type="checkbox"> No. of Fire extinguishers (CO₂) available</div>
+    <div class="lpg2-check-item"><input type="checkbox"> No. of filled Sand buckets available</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Proper ventilation in godown</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Emergency exit clear</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Electrical wiring insulated</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Flameproof electrical fittings</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Hydrostatic test record (cylinders)</div>
+  </div>
 
-        <!-- House Property -->
-        <div class="tc-card">
-          <div class="tc-section-head">
-            <span class="tc-icon-circle">🏠</span>
-            House Property Deductions
-            <i class="tc-info-i tc-tip-left" tabindex="0">i
-              <span class="tc-tip">
-                <h4>House Property Calculation</h4>
-                <table>
-                  <tr><td>Gross Annual Value (GAV)</td><td id="tooltipGAV">—</td></tr>
-                  <tr><td>Less: Municipal Taxes</td><td id="tooltipMunicipal">—</td></tr>
-                  <tr><td style="font-weight:700;">Net Annual Value (NAV)</td><td id="tooltipNAV" style="font-weight:700;">—</td></tr>
-                  <tr><td>Less: 30% Std Deduction on NAV</td><td id="tooltipStdDed">—</td></tr>
-                  <tr><td>Less: Interest on Let-Out</td><td id="tooltipInterest">—</td></tr>
-                  <tr><td style="font-weight:700;">Income from House Property</td><td id="tooltipHPIncome" style="font-weight:700;">—</td></tr>
-                </table>
-                <div class="tc-tip-note">⚠️ Loss from house property cannot be set off against salary or other income under the new regime.</div>
-              </span>
-            </i>
-          </div>
+  <!-- 9️⃣ RECORDS VERIFIED -->
+  <div class="lpg2-section-title">9️⃣ RECORDS VERIFIED</div>
+  <div class="lpg2-check-two">
+    <div class="lpg2-check-item"><input type="checkbox"> Stock Register</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Consumer Register</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Cash Memo / Invoice Book</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Delivery Register</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Godown Stock Register</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Electronic Distribution Records</div>
+    <div class="lpg2-check-item"><input type="checkbox"> Complaint register maintained</div>
+    <div class="lpg2-check-item"><input type="checkbox"> KYC records available</div>
+  </div>
 
-          <div class="tc-row">
-            <label>Municipal Taxes Paid</label>
-            <input type="number" id="municipalTaxes" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input">
-          </div>
-          <div class="tc-row">
-            <label>Interest on Let-Out Property</label>
-            <input type="number" id="letOutLoan" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input">
-          </div>
+  <!-- CRITICAL SAFETY STATUS (LPG specific) -->
+  <div style="font-weight: 800; font-size: 1rem; color: #003366; margin: 1rem 0 0.5rem 0;">🧯 CRITICAL SAFETY STATUS (LPG specific)</div>
+  <div style="display: flex; flex-wrap: wrap; gap: 0.8rem 1.5rem; background: #f2f4fc; border-radius: 36px; padding: 0.7rem 1.5rem;">
+    <span>⚠️ No smoking / No mobile signage <span class="lpg2-critical-badge">displayed</span></span>
+    <span>🧯 Fire extinguisher monthly check <span class="lpg2-critical-badge">up to date</span></span>
+    <span>📏 Hydrostatic test record <span class="lpg2-critical-badge">verified</span></span>
+    <span>🔧 Valve protection caps intact <span class="lpg2-critical-badge">OK</span></span>
+    <span>⚡ Flameproof fittings <span class="lpg2-critical-badge">compliant</span></span>
+    <span>🧪 Leak detection checklist <span class="lpg2-critical-badge">maintained</span></span>
+  </div>
 
-          <!-- Computed HP Income -->
-          <div class="tc-info-pill" style="margin-top:18px;">
-            <span style="display:flex;align-items:center;gap:6px;">
-              📊 House Property Income (Computed)
-              <i class="tc-info-i" style="background:#e8f0ff;color:var(--tc-blue);" tabindex="0">i
-                <span class="tc-tip tc-tip-left-inner">
-                  <strong>Loss cannot be set off</strong><br><br>
-                  Any loss from house property remains a loss and cannot reduce your salary or other income under the new regime.
-                </span>
-              </i>
-            </span>
-            <span class="tc-pill-val" id="hpIncomeSimple">₹0</span>
-          </div>
+  <!-- SIGNATURE ROW -->
+  <div class="lpg2-sign-row">
+    <span>✅ Inspecting Officer: _______________________</span>
+    <span class="lpg2-stamp">📅 Date: ___________</span>
+  </div>
+  <hr>
+  <div style="font-size:0.7rem; color:#3f6185; text-align:right; margin-top: 5px;">Safety integrated (Fire NOC + Legal Metrology) · O‑ring check · EC Act format</div>
+</div>
 
-          <!-- Taxable HP Income -->
-          <div class="tc-info-pill tc-success-pill">
-            <span style="display:flex;align-items:center;gap:6px;">
-              ✅ Taxable House Property Income
-              <i class="tc-info-i" style="background:var(--tc-green-lt);color:var(--tc-green);" tabindex="0">i
-                <span class="tc-tip" style="left:auto;right:0;transform:none;">
-                  <strong>Taxable HP Income</strong><br><br>
-                  Only positive house property income is added to taxable income. If the computed income is negative (loss), the taxable amount is ₹0.
-                </span>
-              </i>
-            </span>
-            <span class="tc-pill-val" id="taxableHPDisplay">₹0.00</span>
-          </div>
+<!-- bottom navigation -->
+<div class="lpg2-nav-links">
+  <a href="/formats/petrolpumpchecklist.html" class="lpg2-nav-item">⛽ Petrol pump</a>
+  <a href="/formats/lpgchecklist.html" class="lpg2-nav-item active">🔥 LPG checklist (current)</a>
+  <a href="/formats/fpschecklist.html" class="lpg2-nav-item">🍚 FPS checklist</a>
+  <a href="/formats/ppcchecklist.html" class="lpg2-nav-item">🌾 PPC verification</a>
+</div>
 
-          <!-- Standard Deduction -->
-          <div class="tc-info-pill tc-amber-pill" id="stdDeductionRow" style="margin-top:8px;">
-            <span style="display:flex;align-items:center;gap:6px;">
-              📌 Standard Deduction
-              <i class="tc-info-i" style="background:var(--tc-amber-lt);color:var(--tc-amber);" tabindex="0">i
-                <span class="tc-tip" style="left:auto;right:0;transform:none;">
-                  <strong>Standard Deduction u/s 16(ia)</strong><br><br>
-                  Flat ₹75,000 deduction, limited to actual salary income.<br>
-                  <em>If salary &lt; ₹75,000, deduction = salary amount.</em><br><br>
-                  Not applicable for Business / Profession income.
-                </span>
-              </i>
-            </span>
-            <span class="tc-pill-val" id="stdDeductionValue">₹75,000</span>
-          </div>
-          <p class="tc-std-note" id="stdDeductionStatus">✔️ Standard deduction applicable (salaried/pensioner)</p>
-        </div>
-      </div>
+<script>
+  document.getElementById('printLpgUpdated')?.addEventListener('click', function() {
+    window.print();
+  });
+</script>
 
-      <!-- Net Taxable Income -->
-      <div class="tc-net-card">
-        <div>
-          <div class="tc-net-label">Net Taxable Income (after all deductions)</div>
-          <div id="taxableIncomeDisplay" class="tc-net-val">₹0.00</div>
-        </div>
-        <i class="tc-info-i tc-tip-up tc-tip-left" tabindex="0">i
-          <span class="tc-tip">
-            <strong>Net Taxable Income</strong><br><br>
-            = Salary + Other Sources + Interest + Dividend<br>
-            − Standard Deduction<br>
-            + Taxable House Property Income (only if positive)<br><br>
-            <em>House property loss does NOT reduce other income.</em>
-          </span>
-        </i>
-      </div>
-
-      <!-- Capital Gains Section -->
-      <div class="tc-section-head" style="margin-bottom:18px;">
-        <span class="tc-icon-circle">📈</span>
-        Capital Gains &amp; Digital Assets
-        <i class="tc-info-i tc-tip-right" tabindex="0">i
-          <span class="tc-tip">
-            <h4>Capital Gains Tax Rates 2025–26</h4>
-            <ul>
-              <li><strong>STCG (20%):</strong> Assets held ≤24 months</li>
-              <li><strong>LTCG (12.5%):</strong> Assets held &gt;24 months, ₹1.25L exemption</li>
-              <li><strong>Digital Assets (30%):</strong> Crypto, NFTs — no exemption</li>
-            </ul>
-          </span>
-        </i>
-      </div>
-
-      <div class="tc-cg-grid">
-        <!-- STCG -->
-        <div class="tc-cg-card">
-          <div class="tc-cg-head">Short Term CG <span class="tc-cg-rate">20%</span></div>
-          <div class="tc-cg-body">
-            <div class="tc-cg-row">
-              <span class="tc-cg-lbl">Gain Amount</span>
-              <input type="number" id="stcgAmount" class="tc-cg-input" value="0" onchange="calculateTax()">
-            </div>
-            <div class="tc-cg-row">
-              <span class="tc-cg-lbl">Exemption</span>
-              <span class="tc-cg-val" id="stcgExemption">₹0.00</span>
-            </div>
-            <div class="tc-cg-row">
-              <span class="tc-cg-lbl">Taxable</span>
-              <span class="tc-cg-val" id="taxableSTCG">₹0.00</span>
-            </div>
-            <div class="tc-cg-row tc-cg-highlight">
-              <span class="tc-cg-lbl">Tax @ 20%</span>
-              <span class="tc-cg-val" id="stcgTaxAmount">₹0.00</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- LTCG -->
-        <div class="tc-cg-card">
-          <div class="tc-cg-head">Long Term CG <span class="tc-cg-rate">12.5%</span></div>
-          <div class="tc-cg-body">
-            <div class="tc-cg-row">
-              <span class="tc-cg-lbl">Gain Amount</span>
-              <input type="number" id="ltcgAmount" class="tc-cg-input" value="0" onchange="calculateTax()">
-            </div>
-            <div class="tc-cg-row">
-              <span class="tc-cg-lbl">Exemption (max ₹1.25L)</span>
-              <span class="tc-cg-val" id="ltcgExemption">₹0.00</span>
-            </div>
-            <div class="tc-cg-row">
-              <span class="tc-cg-lbl">Taxable</span>
-              <span class="tc-cg-val" id="taxableLTCG">₹0.00</span>
-            </div>
-            <div class="tc-cg-row tc-cg-highlight">
-              <span class="tc-cg-lbl">Tax @ 12.5%</span>
-              <span class="tc-cg-val" id="ltcgTaxAmount">₹0.00</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Digital Assets -->
-        <div class="tc-cg-card">
-          <div class="tc-cg-head">Digital Assets <span class="tc-cg-rate">30%</span></div>
-          <div class="tc-cg-body">
-            <div class="tc-cg-row">
-              <span class="tc-cg-lbl">Amount</span>
-              <input type="number" id="digitalAssetsAmount" class="tc-cg-input" value="0" onchange="calculateTax()">
-            </div>
-            <div class="tc-cg-row">
-              <span class="tc-cg-lbl">Exemption</span>
-              <span class="tc-cg-val" id="digitalExemption">₹0.00</span>
-            </div>
-            <div class="tc-cg-row">
-              <span class="tc-cg-lbl">Taxable</span>
-              <span class="tc-cg-val" id="taxableDigital">₹0.00</span>
-            </div>
-            <div class="tc-cg-row tc-cg-highlight">
-              <span class="tc-cg-lbl">Tax @ 30%</span>
-              <span class="tc-cg-val" id="digitalTaxAmount">₹0.00</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tax Slab Breakdown -->
-      <div class="tc-section-head" style="margin-bottom:16px;">
-        <span class="tc-icon-circle">📊</span>
-        Tax Slab Breakdown
-      </div>
-
-      <div class="tc-slabs-wrap" style="margin-bottom:28px;">
-        <table class="tc-slabs-table">
-          <thead>
-            <tr>
-              <th>Slab</th>
-              <th>Rate</th>
-              <th style="text-align:right;">Tax Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Up to ₹4,00,000</td><td>0%</td><td id="slab1">₹0.00</td></tr>
-            <tr><td>₹4,00,001 – ₹8,00,000</td><td>5%</td><td id="slab2">₹0.00</td></tr>
-            <tr><td>₹8,00,001 – ₹12,00,000</td><td>10%</td><td id="slab3">₹0.00</td></tr>
-            <tr><td>₹12,00,001 – ₹16,00,000</td><td>15%</td><td id="slab4">₹0.00</td></tr>
-            <tr><td>₹16,00,001 – ₹20,00,000</td><td>20%</td><td id="slab5">₹0.00</td></tr>
-            <tr><td>₹20,00,001 – ₹24,00,000</td><td>25%</td><td id="slab6">₹0.00</td></tr>
-            <tr><td>Above ₹24,00,000</td><td>30%</td><td id="slab7">₹0.00</td></tr>
-            <tr class="tc-rebate-row">
-              <td colspan="2">Rebate u/s 87A <small>(Up to ₹12L income — max ₹60,000)</small></td>
-              <td id="rebate">₹0.00</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Marginal Relief -->
-      <div class="tc-relief-box" id="marginalReliefInfo">
-        <div class="tc-relief-icon">🛡️</div>
-        <div class="tc-relief-body">
-          <div class="tc-relief-title" style="display:flex;align-items:center;gap:8px;">
-            Marginal Relief Analysis
-            <i class="tc-info-i tc-tip-right" tabindex="0">i
-              <span class="tc-tip">
-                <h4>What is Marginal Relief?</h4>
-                <p>When income is just above ₹12 lakh, tax is capped at <strong>(Income − ₹12,00,000)</strong> so you never pay more tax than your extra income.</p>
-                <br>
-                <strong>Example (₹12,10,000 income):</strong><br>
-                Normal tax: ₹61,500 → Relief tax: ₹10,000 only<br><br>
-                <em>Applicable for income: ₹12,00,001 – ₹12,75,000</em>
-              </span>
-            </i>
-          </div>
-          <div id="marginalReliefAmount"><!-- dynamic --></div>
-        </div>
-      </div>
-
-      <!-- Final Summary -->
-      <div class="tc-summary">
-        <div class="tc-summary-title">💰 Final Tax Summary</div>
-        <div class="tc-summary-grid">
-          <div class="tc-s-item">
-            <div class="tc-s-lbl">Total Income (Gross)</div>
-            <div class="tc-s-val" id="summaryTotalIncome">₹0</div>
-          </div>
-          <div class="tc-s-item">
-            <div class="tc-s-lbl">Taxable House Property Income</div>
-            <div class="tc-s-val" id="summaryHPIncome">₹0</div>
-          </div>
-          <div class="tc-s-item">
-            <div class="tc-s-lbl">Standard Deduction</div>
-            <div class="tc-s-val" id="summaryStdDeduction">₹75,000</div>
-          </div>
-          <div class="tc-s-item">
-            <div class="tc-s-lbl">Net Taxable Income</div>
-            <div class="tc-s-val" id="summaryNetTaxable">₹0</div>
-          </div>
-          <div class="tc-s-item">
-            <div class="tc-s-lbl">STCG Tax (20%)</div>
-            <div class="tc-s-val" id="summarySTCG">₹0</div>
-          </div>
-          <div class="tc-s-item">
-            <div class="tc-s-lbl">LTCG Tax (12.5%)</div>
-            <div class="tc-s-val" id="summaryLTCG">₹0</div>
-          </div>
-          <div class="tc-s-item">
-            <div class="tc-s-lbl">Digital Assets Tax (30%)</div>
-            <div class="tc-s-val" id="summaryDigital">₹0</div>
-          </div>
-          <div class="tc-s-item">
-            <div class="tc-s-lbl">Regular Income Tax</div>
-            <div class="tc-s-val" id="summaryRegularTax">₹0</div>
-          </div>
-          <div class="tc-s-item">
-            <div class="tc-s-lbl">Health &amp; Education Cess (4%)</div>
-            <div class="tc-s-val" id="summaryCess">₹0</div>
-          </div>
-          <div class="tc-summary-total">
-            <div class="tc-summary-total-lbl">⚡ Final Tax Payable</div>
-            <div class="tc-summary-total-val" id="summaryFinalTax">₹0</div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- end .tc-shell -->
-  </div><!-- end .tc-wrap -->
-
-  <div id="site-footer"></div>
-  <script src="/assets/Scripts/gototop.js"></script>
-
-  <!-- ============================================================
-       ORIGINAL JAVASCRIPT — UNCHANGED
-       ============================================================ -->
-  <script>
-    function calculateTax() {
-      const grossSalary = parseFloat(document.getElementById('grossSalary')?.value) || 0;
-      const otherSources = parseFloat(document.getElementById('otherSources')?.value) || 0;
-      const interestIncome = parseFloat(document.getElementById('interestIncome')?.value) || 0;
-      const dividendIncome = parseFloat(document.getElementById('dividendIncome')?.value) || 0;
-      const grossRent = parseFloat(document.getElementById('grossRent')?.value) || 0;
-
-      const employmentRadios = document.getElementsByName('employment');
-      let isSalariedOrPensioner = true;
-      for (let i = 0; i < employmentRadios.length; i++) {
-        if (employmentRadios[i].checked) {
-          isSalariedOrPensioner = (employmentRadios[i].value === 'salaried' || employmentRadios[i].value === 'pensioner');
-          break;
-        }
-      }
-
-      const municipalTaxes = parseFloat(document.getElementById('municipalTaxes')?.value) || 0;
-      const letOutLoan = parseFloat(document.getElementById('letOutLoan')?.value) || 0;
-
-      const stcgAmount = parseFloat(document.getElementById('stcgAmount')?.value) || 0;
-      const ltcgAmount = parseFloat(document.getElementById('ltcgAmount')?.value) || 0;
-      const digitalAssetsAmount = parseFloat(document.getElementById('digitalAssetsAmount')?.value) || 0;
-
-      const nav = grossRent - municipalTaxes;
-      const standardDeductionHP = nav > 0 ? nav * 0.30 : 0;
-      let hpIncome = nav - standardDeductionHP - letOutLoan;
-
-      const taxableHPIncome = hpIncome > 0 ? hpIncome : 0;
-
-      const totalIncome = grossSalary + otherSources + interestIncome + dividendIncome + grossRent;
-
-      let stdDeduction = 0;
-      if (isSalariedOrPensioner) {
-        stdDeduction = Math.min(grossSalary, 75000);
-      }
-
-      const otherIncome = grossSalary + otherSources + interestIncome + dividendIncome;
-      const netTaxableIncome = Math.max(0, otherIncome - stdDeduction + taxableHPIncome);
-
-      document.getElementById('totalIncomeDisplay').textContent = `₹${formatMoney(totalIncome)}`;
-      document.getElementById('hpIncomeSimple').textContent = `₹${formatMoney(hpIncome)}`;
-      document.getElementById('taxableHPDisplay').textContent = `₹${formatMoney(taxableHPIncome)}`;
-      document.getElementById('taxableIncomeDisplay').textContent = `₹${formatMoney(netTaxableIncome)}`;
-
-      document.getElementById('tooltipGAV').textContent = `₹${formatMoney(grossRent)}`;
-      document.getElementById('tooltipMunicipal').textContent = `₹${formatMoney(municipalTaxes)}`;
-      document.getElementById('tooltipNAV').textContent = `₹${formatMoney(nav)}`;
-      document.getElementById('tooltipStdDed').textContent = `₹${formatMoney(standardDeductionHP)}`;
-      document.getElementById('tooltipInterest').textContent = `₹${formatMoney(letOutLoan)}`;
-      document.getElementById('tooltipHPIncome').textContent = `₹${formatMoney(hpIncome)}`;
-
-      const stdDeductionSpan = document.getElementById('stdDeductionValue');
-      if (stdDeductionSpan) stdDeductionSpan.textContent = `₹${formatMoney(stdDeduction)}`;
-
-      const stdDeductionStatus = document.getElementById('stdDeductionStatus');
-      if (stdDeductionStatus) {
-        if (isSalariedOrPensioner) {
-          stdDeductionStatus.innerHTML = `✔️ Standard deduction applicable: ₹${formatMoney(stdDeduction)} (limited to salary)`;
-          stdDeductionStatus.style.color = '#0f9b6e';
-        } else {
-          stdDeductionStatus.innerHTML = '⚠️ Standard deduction not applicable (business/profession)';
-          stdDeductionStatus.style.color = '#d97706';
-        }
-      }
-
-      const ltcgExemption = Math.min(ltcgAmount, 125000);
-      const taxableLTCG = Math.max(0, ltcgAmount - ltcgExemption);
-      const ltcgTax = taxableLTCG * 0.125;
-
-      const taxableSTCG = stcgAmount;
-      const stcgTax = stcgAmount * 0.20;
-
-      const digitalTax = digitalAssetsAmount * 0.30;
-
-      document.getElementById('stcgExemption').textContent = `₹${formatMoney(0)}`;
-      document.getElementById('taxableSTCG').textContent = `₹${formatMoney(taxableSTCG)}`;
-      document.getElementById('stcgTaxAmount').textContent = `₹${formatMoney(stcgTax)}`;
-      document.getElementById('ltcgExemption').textContent = `₹${formatMoney(ltcgExemption)}`;
-      document.getElementById('taxableLTCG').textContent = `₹${formatMoney(taxableLTCG)}`;
-      document.getElementById('ltcgTaxAmount').textContent = `₹${formatMoney(ltcgTax)}`;
-      document.getElementById('digitalExemption').textContent = `₹${formatMoney(0)}`;
-      document.getElementById('taxableDigital').textContent = `₹${formatMoney(digitalAssetsAmount)}`;
-      document.getElementById('digitalTaxAmount').textContent = `₹${formatMoney(digitalTax)}`;
-
-      const totalCGTax = stcgTax + ltcgTax + digitalTax;
-
-      const regularTaxResult = calculateNewRegimeTax(netTaxableIncome);
-
-      updateSlabTable(regularTaxResult.breakdown);
-
-      document.getElementById('rebate').textContent = `₹${formatMoney(regularTaxResult.rebate)}`;
-
-      let finalRegularTax = regularTaxResult.tax;
-      let marginalReliefHTML = "";
-
-      const income = netTaxableIncome;
-      const taxBeforeRebate = regularTaxResult.tax + regularTaxResult.rebate;
-      const maxTaxUnderRelief = Math.max(0, income - 1200000);
-
-      if (income > 1200000 && income <= 1275000) {
-        if (taxBeforeRebate > maxTaxUnderRelief) {
-          finalRegularTax = maxTaxUnderRelief;
-          const savings = taxBeforeRebate - maxTaxUnderRelief;
-          marginalReliefHTML = `
-            <div>
-              <span class="tc-status-tag tc-tag-yes">✓ MARGINAL RELIEF APPLICABLE</span>
-              <div class="tc-relief-detail-grid">
-                <div class="tc-relief-item">
-                  <div class="tc-relief-item-label">Normal Tax</div>
-                  <div class="tc-relief-item-val">₹${formatMoney(taxBeforeRebate)}</div>
-                </div>
-                <div class="tc-relief-item">
-                  <div class="tc-relief-item-label">Tax with Relief</div>
-                  <div class="tc-relief-item-val">₹${formatMoney(maxTaxUnderRelief)}</div>
-                </div>
-                <div class="tc-relief-saving">💰 You Save: ₹${formatMoney(savings)}</div>
-              </div>
-              <p style="margin-top:10px;font-size:13px;color:#d97706;">Tax limited to Income − ₹12,00,000 = ₹${formatMoney(maxTaxUnderRelief)}</p>
-            </div>`;
-        } else {
-          finalRegularTax = taxBeforeRebate;
-          marginalReliefHTML = `
-            <div>
-              <span class="tc-status-tag tc-tag-no">✗ MARGINAL RELIEF NOT APPLICABLE</span>
-              <div class="tc-relief-detail-grid">
-                <div class="tc-relief-item">
-                  <div class="tc-relief-item-label">Normal Tax</div>
-                  <div class="tc-relief-item-val">₹${formatMoney(taxBeforeRebate)}</div>
-                </div>
-                <div class="tc-relief-item">
-                  <div class="tc-relief-item-label">Max Relief Tax</div>
-                  <div class="tc-relief-item-val">₹${formatMoney(maxTaxUnderRelief)}</div>
-                </div>
-              </div>
-              <p style="margin-top:10px;font-size:13px;color:#dc2626;">Normal tax is already ≤ (Income − ₹12,00,000)</p>
-            </div>`;
-        }
-      } else if (income <= 1200000) {
-        marginalReliefHTML = `
-          <div>
-            <span class="tc-status-tag tc-tag-no">✗ MARGINAL RELIEF NOT APPLICABLE</span>
-            <p style="margin-top:10px;font-size:13px;color:#6b7a99;">Income ₹${formatMoney(income)} is below the ₹12,00,000 threshold.<br>Full rebate u/s 87A: ₹${formatMoney(regularTaxResult.rebate)}</p>
-          </div>`;
-      } else {
-        finalRegularTax = taxBeforeRebate;
-        marginalReliefHTML = `
-          <div>
-            <span class="tc-status-tag tc-tag-no">✗ MARGINAL RELIEF NOT APPLICABLE</span>
-            <p style="margin-top:10px;font-size:13px;color:#6b7a99;">Income ₹${formatMoney(income)} is above ₹12,75,000 threshold.<br>Regular tax calculation applies.</p>
-          </div>`;
-      }
-
-      document.getElementById('marginalReliefAmount').innerHTML = marginalReliefHTML;
-
-      const totalTaxBeforeCess = finalRegularTax + totalCGTax;
-      const cessAmount = totalTaxBeforeCess * 0.04;
-      const finalTax = Math.ceil(totalTaxBeforeCess + cessAmount);
-
-      document.getElementById('summaryTotalIncome').textContent = `₹${formatMoney(totalIncome)}`;
-      document.getElementById('summaryHPIncome').textContent = `₹${formatMoney(taxableHPIncome)}`;
-      document.getElementById('summaryStdDeduction').textContent = `₹${formatMoney(stdDeduction)}`;
-      document.getElementById('summaryNetTaxable').textContent = `₹${formatMoney(netTaxableIncome)}`;
-      document.getElementById('summaryRegularTax').textContent = `₹${formatMoney(finalRegularTax)}`;
-      document.getElementById('summarySTCG').textContent = `₹${formatMoney(stcgTax)}`;
-      document.getElementById('summaryLTCG').textContent = `₹${formatMoney(ltcgTax)}`;
-      document.getElementById('summaryDigital').textContent = `₹${formatMoney(digitalTax)}`;
-      document.getElementById('summaryCess').textContent = `₹${formatMoney(cessAmount)}`;
-      document.getElementById('summaryFinalTax').textContent = `₹${formatMoney(finalTax)}`;
-    }
-
-    function calculateNewRegimeTax(income) {
-      let tax = 0;
-      let breakdown = { slab1:0, slab2:0, slab3:0, slab4:0, slab5:0, slab6:0, slab7:0, rebate:0 };
-
-      if (income > 2400000) {
-        breakdown.slab7 = (income - 2400000) * 0.30;
-        breakdown.slab6 = 400000 * 0.25;
-        breakdown.slab5 = 400000 * 0.20;
-        breakdown.slab4 = 400000 * 0.15;
-        breakdown.slab3 = 400000 * 0.10;
-        breakdown.slab2 = 400000 * 0.05;
-      } else if (income > 2000000) {
-        breakdown.slab6 = (income - 2000000) * 0.25;
-        breakdown.slab5 = 400000 * 0.20;
-        breakdown.slab4 = 400000 * 0.15;
-        breakdown.slab3 = 400000 * 0.10;
-        breakdown.slab2 = 400000 * 0.05;
-      } else if (income > 1600000) {
-        breakdown.slab5 = (income - 1600000) * 0.20;
-        breakdown.slab4 = 400000 * 0.15;
-        breakdown.slab3 = 400000 * 0.10;
-        breakdown.slab2 = 400000 * 0.05;
-      } else if (income > 1200000) {
-        breakdown.slab4 = (income - 1200000) * 0.15;
-        breakdown.slab3 = 400000 * 0.10;
-        breakdown.slab2 = 400000 * 0.05;
-      } else if (income > 800000) {
-        breakdown.slab3 = (income - 800000) * 0.10;
-        breakdown.slab2 = 400000 * 0.05;
-      } else if (income > 400000) {
-        breakdown.slab2 = (income - 400000) * 0.05;
-      }
-
-      tax = Object.values(breakdown).reduce((a, b) => a + b, 0);
-
-      if (income <= 1200000 && tax > 0) {
-        breakdown.rebate = Math.min(tax, 60000);
-        tax -= breakdown.rebate;
-      }
-
-      return { tax, rebate: breakdown.rebate, breakdown };
-    }
-
-    function updateSlabTable(breakdown) {
-      document.getElementById('slab1').textContent = `₹${formatMoney(breakdown.slab1 || 0)}`;
-      document.getElementById('slab2').textContent = `₹${formatMoney(breakdown.slab2 || 0)}`;
-      document.getElementById('slab3').textContent = `₹${formatMoney(breakdown.slab3 || 0)}`;
-      document.getElementById('slab4').textContent = `₹${formatMoney(breakdown.slab4 || 0)}`;
-      document.getElementById('slab5').textContent = `₹${formatMoney(breakdown.slab5 || 0)}`;
-      document.getElementById('slab6').textContent = `₹${formatMoney(breakdown.slab6 || 0)}`;
-      document.getElementById('slab7').textContent = `₹${formatMoney(breakdown.slab7 || 0)}`;
-    }
-
-    function formatMoney(amount) {
-      if (isNaN(amount) || amount === null) amount = 0;
-      return Math.round(amount).toLocaleString('en-IN', {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2
-      });
-    }
-
-    window.onload = function() { calculateTax(); };
-  </script>
+<div id="site-footer"></div>
+<script src="/assets/Scripts/gototop.js"></script>
 </body>
 </html>
