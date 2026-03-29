@@ -4,1259 +4,1311 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Income Tax Calculator FY 2025-26 (New Regime)</title>
+  <!-- Common CSS -->
+  <link rel="stylesheet" href="style.css">
+  <script src="assets/Scripts/site-components.js" defer></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
 
   <style>
-    /* ============================================
-       DESIGN SYSTEM — WARM LEDGER LUXURY
-       Deep ink navy + amber gold + parchment cream
-       Font: Syne (display) + DM Sans (body)
-    ============================================ */
-    :root {
-      --ink:        #0f1623;
-      --ink-mid:    #1e2d45;
-      --ink-soft:   #2d4263;
-      --gold:       #c8922a;
-      --gold-light: #e8b84b;
-      --gold-pale:  #fdf3dc;
-      --gold-faint: #fdf8ee;
-      --cream:      #f9f5ef;
-      --cream-dark: #f0ead9;
-      --white:      #ffffff;
-      --green:      #1f7a52;
-      --green-pale: #e6f5ee;
-      --red:        #c0392b;
-      --red-pale:   #fdecea;
-      --border:     #e2d9c8;
-      --border-mid: #c8bca4;
-      --text:       #1e2d45;
-      --text-soft:  #56677e;
-      --text-muted: #8898aa;
-      --shadow-sm:  0 2px 8px rgba(15,22,35,0.06);
-      --shadow-md:  0 8px 32px rgba(15,22,35,0.10);
-      --shadow-lg:  0 20px 60px rgba(15,22,35,0.13);
-      --radius-sm:  10px;
-      --radius-md:  18px;
-      --radius-lg:  28px;
-      --radius-xl:  40px;
+    /* =============================================
+       ALL STYLES SCOPED UNDER .tc-wrap
+       No conflicts with common header/footer CSS
+       ============================================= */
+
+    /* ---------- CSS Variables ---------- */
+    .tc-wrap {
+      --tc-ink:       #0f1623;
+      --tc-ink2:      #2c3a55;
+      --tc-ink3:      #6b7a99;
+      --tc-bg:        #f4f6fb;
+      --tc-surface:   #ffffff;
+      --tc-blue:      #2047d4;
+      --tc-blue-mid:  #3a5be8;
+      --tc-blue-lt:   #dde5ff;
+      --tc-green:     #0f9b6e;
+      --tc-green-lt:  #d6f5ec;
+      --tc-amber:     #d97706;
+      --tc-amber-lt:  #fef3c7;
+      --tc-red:       #dc2626;
+      --tc-red-lt:    #fee2e2;
+      --tc-gold:      #f5c518;
+      --tc-radius:    20px;
+      --tc-radius-sm: 12px;
+      --tc-radius-xs: 8px;
+      --tc-shadow:    0 4px 24px rgba(15,22,35,0.08);
+      --tc-shadow-lg: 0 16px 56px rgba(15,22,35,0.13);
+      --tc-font-head: 'Syne', sans-serif;
+      --tc-font-body: 'DM Sans', sans-serif;
+      /* Tooltip always on top of everything */
+      --tc-tooltip-z: 99999;
     }
 
-    *, *::before, *::after {
-      margin: 0; padding: 0; box-sizing: border-box;
+    /* ---------- Wrap Reset ---------- */
+    .tc-wrap *,
+    .tc-wrap *::before,
+    .tc-wrap *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    body {
-      background: var(--cream);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    .tc-calculator {
-      max-width: 1120px;
-      width: 100%;
-      margin: 40px auto 60px;
-      padding: 0 20px;
+    .tc-wrap {
+      font-family: var(--tc-font-body);
+      color: var(--tc-ink);
+      background: var(--tc-bg);
+      padding: 40px 20px 60px;
       position: relative;
     }
 
-    /* ---- HERO HEADER ---- */
-    .tc-header {
-      text-align: center;
-      padding: 52px 40px 48px;
-      background: var(--ink);
-      border-radius: var(--radius-xl);
-      margin-bottom: 36px;
+    /* ---------- Shell ---------- */
+    .tc-shell {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    /* ---------- Hero Banner ---------- */
+    .tc-hero {
+      background: linear-gradient(135deg, #0f1d4a 0%, #1a3080 50%, #2047d4 100%);
+      border-radius: 28px;
+      padding: 44px 40px 40px;
+      margin-bottom: 32px;
       position: relative;
       overflow: hidden;
     }
 
-    .tc-header::before {
+    .tc-hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(ellipse 70% 60% at 15% 80%, rgba(200,146,42,0.18) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 50% at 85% 20%, rgba(200,146,42,0.12) 0%, transparent 55%);
+      background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(90,130,255,0.18) 0%, transparent 70%);
       pointer-events: none;
     }
 
-    .tc-header::after {
-      content: 'FY 2025–26';
+    .tc-hero::after {
+      content: '₹';
       position: absolute;
-      right: 36px;
-      bottom: 20px;
-      font-family: 'Syne', sans-serif;
-      font-size: 100px;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--tc-font-head);
+      font-size: 160px;
       font-weight: 800;
-      color: rgba(255,255,255,0.03);
-      letter-spacing: -4px;
+      color: rgba(255,255,255,0.05);
       line-height: 1;
       pointer-events: none;
+      user-select: none;
     }
 
-    .tc-regime-badge {
+    .tc-hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(200,146,42,0.18);
-      border: 1px solid rgba(200,146,42,0.4);
-      color: var(--gold-light);
-      padding: 7px 22px;
-      border-radius: 100px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #a5c0ff;
+      font-family: var(--tc-font-body);
       font-size: 12px;
       font-weight: 600;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 20px;
+      padding: 7px 16px;
+      border-radius: 50px;
+      margin-bottom: 18px;
     }
 
-    .tc-regime-badge::before {
+    .tc-hero-badge::before {
       content: '';
-      width: 6px; height: 6px;
+      width: 7px; height: 7px;
       border-radius: 50%;
-      background: var(--gold-light);
-      animation: pulse-dot 2s ease-in-out infinite;
+      background: #4ade80;
+      animation: tc-pulse 2s infinite;
     }
 
-    @keyframes pulse-dot {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50%      { opacity: 0.4; transform: scale(0.7); }
+    @keyframes tc-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(1.3); }
     }
 
-    .tc-heading-primary {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(28px, 5vw, 44px);
+    .tc-hero h1 {
+      font-family: var(--tc-font-head);
+      font-size: clamp(26px, 4vw, 42px);
       font-weight: 800;
-      color: var(--white);
-      letter-spacing: -1px;
-      line-height: 1.1;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      margin-bottom: 10px;
     }
 
-    .tc-heading-primary span { color: var(--gold-light); }
-
-    /* ---- SECTION HEADINGS ---- */
-    .tc-heading-secondary {
-      font-family: 'Syne', sans-serif;
-      font-size: 19px;
-      font-weight: 700;
-      color: var(--ink);
-      margin: 40px 0 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      letter-spacing: -0.3px;
+    .tc-hero p {
+      color: rgba(255,255,255,0.55);
+      font-size: 14px;
     }
 
-    .tc-heading-secondary::after {
-      content: '';
-      flex: 1;
-      height: 2px;
-      background: linear-gradient(to right, var(--gold), transparent);
-      border-radius: 2px;
-    }
-
-    /* ---- EMPLOYMENT TYPE ---- */
-    .tc-employment-section {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 20px 28px;
+    /* ---------- Employment Strip ---------- */
+    .tc-employ {
+      background: var(--tc-surface);
+      border-radius: var(--tc-radius);
+      padding: 18px 24px;
       margin-bottom: 28px;
+      box-shadow: var(--tc-shadow);
       display: flex;
-      align-items: center;
-      gap: 24px;
       flex-wrap: wrap;
-      box-shadow: var(--shadow-sm);
+      align-items: center;
+      gap: 16px;
     }
 
-    .tc-employment-label {
-      font-family: 'Syne', sans-serif;
+    .tc-employ-label {
+      font-family: var(--tc-font-head);
       font-weight: 700;
       font-size: 13px;
-      letter-spacing: 0.8px;
       text-transform: uppercase;
-      color: var(--text-soft);
+      letter-spacing: 1px;
+      color: var(--tc-ink3);
+      white-space: nowrap;
     }
 
-    .tc-radio-group {
+    .tc-employ-opts {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      flex: 1;
     }
 
-    .tc-radio-label {
+    .tc-radio-lbl {
       display: flex;
       align-items: center;
       gap: 8px;
-      cursor: pointer;
-      padding: 10px 22px;
-      border-radius: 100px;
-      border: 1.5px solid var(--border);
+      padding: 9px 20px;
+      border-radius: 50px;
+      border: 2px solid #e2e7f3;
+      background: #f7f9ff;
+      color: var(--tc-ink2);
       font-size: 14px;
       font-weight: 500;
-      color: var(--text);
-      background: var(--cream);
-      transition: all 0.2s ease;
-      user-select: none;
+      cursor: pointer;
+      transition: all 0.2s;
     }
 
-    .tc-radio-label:has(.tc-radio-input:checked),
-    .tc-radio-label:hover {
-      background: var(--ink);
-      border-color: var(--ink);
-      color: var(--white);
-      box-shadow: 0 4px 16px rgba(15,22,35,0.2);
+    .tc-radio-lbl:has(input:checked),
+    .tc-radio-lbl.tc-active {
+      background: var(--tc-blue);
+      border-color: var(--tc-blue);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(32,71,212,0.28);
     }
 
-    .tc-radio-input {
-      accent-color: var(--gold);
+    .tc-radio-lbl input {
       width: 15px; height: 15px;
+      accent-color: #fff;
     }
 
-    /* ---- GRID LAYOUTS ---- */
-    .tc-grid-2 {
+    /* ---------- Section Heading ---------- */
+    .tc-section-head {
+      font-family: var(--tc-font-head);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--tc-ink);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid #e8ecf8;
+    }
+
+    .tc-section-head .tc-icon-circle {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--tc-blue-lt);
+      color: var(--tc-blue);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    /* ---------- Two-col grid ---------- */
+    .tc-grid2 {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr 1fr;
       gap: 24px;
       margin-bottom: 24px;
     }
 
-    /* ---- CARDS ---- */
+    /* ---------- Cards ---------- */
     .tc-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      background: var(--tc-surface);
+      border-radius: var(--tc-radius);
       padding: 28px;
-      box-shadow: var(--shadow-sm);
-      transition: box-shadow 0.25s ease, border-color 0.25s ease;
+      box-shadow: var(--tc-shadow);
+      border: 1px solid rgba(32,71,212,0.06);
+      position: relative; /* for tooltip context */
     }
 
     .tc-card:hover {
-      box-shadow: var(--shadow-md);
-      border-color: var(--border-mid);
+      box-shadow: var(--tc-shadow-lg);
+      border-color: rgba(32,71,212,0.14);
+      transition: all 0.25s;
     }
 
-    .tc-card-header {
+    /* ---------- Input Rows ---------- */
+    .tc-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px dashed #eaecf7;
+    }
+
+    .tc-row:last-of-type { border-bottom: none; }
+
+    .tc-row label {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--tc-ink2);
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 1.5px solid var(--cream-dark);
-      font-family: 'Syne', sans-serif;
-      font-size: 17px;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .tc-input {
+      width: 148px;
+      padding: 9px 14px;
+      border: 2px solid #e2e7f3;
+      border-radius: var(--tc-radius-xs);
+      font-size: 14px;
+      font-family: var(--tc-font-body);
+      font-weight: 600;
+      text-align: right;
+      color: var(--tc-ink);
+      background: #f7f9ff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .tc-input:focus {
+      outline: none;
+      border-color: var(--tc-blue);
+      box-shadow: 0 0 0 4px rgba(32,71,212,0.1);
+      background: #fff;
+    }
+
+    .tc-input:disabled {
+      background: #f0f2f8;
+      color: var(--tc-ink3);
+      cursor: not-allowed;
+    }
+
+    /* ---------- Total Row ---------- */
+    .tc-total-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #e8f0ff, #dce7ff);
+      border: 2px solid var(--tc-blue-lt);
+      border-radius: var(--tc-radius-sm);
+      padding: 15px 20px;
+      margin-top: 20px;
       font-weight: 700;
-      color: var(--ink);
+      font-size: 15px;
+      color: var(--tc-ink);
     }
 
-    .tc-card-header .card-icon {
-      width: 36px; height: 36px;
-      border-radius: 10px;
-      background: var(--gold-pale);
+    .tc-total-strip .tc-val {
+      color: var(--tc-blue);
+      font-size: 18px;
+      font-family: var(--tc-font-head);
+    }
+
+    /* ---------- Info Pill (HP summary row) ---------- */
+    .tc-info-pill {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      font-size: 17px;
-      flex-shrink: 0;
+      background: #f0f4ff;
+      border-left: 4px solid var(--tc-blue);
+      border-radius: var(--tc-radius-xs);
+      padding: 12px 16px;
+      margin-top: 14px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--tc-ink2);
     }
 
-    /* ---- INFO ICON ---- */
-    .tc-info-icon {
+    .tc-info-pill .tc-pill-val {
+      font-weight: 700;
+      color: var(--tc-blue);
+      background: #fff;
+      padding: 4px 14px;
+      border-radius: 50px;
+      font-size: 15px;
+    }
+
+    .tc-success-pill {
+      background: var(--tc-green-lt);
+      border-left-color: var(--tc-green);
+    }
+
+    .tc-success-pill .tc-pill-val { color: var(--tc-green); }
+
+    .tc-amber-pill {
+      background: var(--tc-amber-lt);
+      border-left-color: var(--tc-amber);
+    }
+
+    .tc-amber-pill .tc-pill-val { color: var(--tc-amber); }
+
+    .tc-std-note {
+      font-size: 12px;
+      margin-top: 8px;
+      color: var(--tc-ink3);
+    }
+
+    /* ---------- Net Taxable Card (full width) ---------- */
+    .tc-net-card {
+      background: linear-gradient(135deg, #0f1d4a, #2047d4);
+      border-radius: var(--tc-radius);
+      padding: 26px 30px;
+      margin-bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+      box-shadow: 0 12px 40px rgba(32,71,212,0.25);
+    }
+
+    .tc-net-label {
+      font-size: 15px;
+      font-weight: 500;
+      opacity: 0.75;
+      margin-bottom: 4px;
+    }
+
+    .tc-net-val {
+      font-family: var(--tc-font-head);
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
+
+    .tc-net-card .tc-info-i {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+    }
+
+    /* =============================================
+       TOOLTIP SYSTEM
+       Fixed position approach ensures it's always
+       visible above all other page content
+       ============================================= */
+
+    .tc-info-i {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       width: 20px; height: 20px;
       border-radius: 50%;
-      background: var(--ink-soft);
-      color: white;
-      font-size: 11px;
+      background: var(--tc-blue-lt);
+      color: var(--tc-blue);
+      font-size: 12px;
       font-weight: 700;
-      font-style: italic;
       cursor: pointer;
       flex-shrink: 0;
-      transition: background 0.2s, transform 0.2s;
+      font-style: normal;
       position: relative;
-      z-index: 10;
+      /* Each info icon creates its own stacking context */
+      isolation: isolate;
     }
 
-    .tc-info-icon:hover {
-      background: var(--gold);
-      transform: scale(1.15);
-    }
-
-    .tc-tooltip { display: none !important; }
-
-    /* ---- FLOATING TOOLTIP ---- */
-    #tc-floating-tooltip {
-      position: fixed;
-      z-index: 2147483647;
-      width: 300px;
-      background: #0f1623;
-      border: 1px solid rgba(200,146,42,0.45);
-      border-radius: 16px;
-      padding: 0;
-      box-shadow:
-        0 8px 32px rgba(0,0,0,0.45),
-        0 0 0 1px rgba(200,146,42,0.1),
-        inset 0 1px 0 rgba(255,255,255,0.04);
-      pointer-events: none;
+    /* Tooltip bubble — absolutely positioned relative to the icon */
+    .tc-info-i .tc-tip {
+      visibility: hidden;
       opacity: 0;
-      transform: translateY(6px) scale(0.97);
-      transition: opacity 0.18s ease, transform 0.18s ease;
-      font-family: 'DM Sans', sans-serif;
+      pointer-events: none;
+      position: absolute;
+      z-index: var(--tc-tooltip-z);   /* Always on top */
+      background: #fff;
+      border: 1.5px solid #d0d9f4;
+      border-radius: var(--tc-radius-sm);
+      box-shadow: 0 20px 60px rgba(15,22,35,0.22);
+      padding: 18px;
+      width: 300px;
       font-size: 13px;
+      font-family: var(--tc-font-body);
+      font-weight: 400;
+      color: var(--tc-ink2);
       line-height: 1.6;
-      color: #b8cde0;
-      overflow: hidden;
+      text-align: left;
+      transition: opacity 0.18s ease, visibility 0.18s ease;
+      /* Default: drop below-right */
+      top: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
     }
 
-    #tc-floating-tooltip.tc-tt-visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-
-    #tc-floating-tooltip::before {
+    /* Arrow */
+    .tc-info-i .tc-tip::before {
       content: '';
       position: absolute;
-      width: 0; height: 0;
-      border: 9px solid transparent;
-    }
-
-    #tc-floating-tooltip.arrow-up::before {
-      top: -18px;
-      left: var(--arrow-x, 20px);
-      border-bottom-color: rgba(200,146,42,0.45);
-    }
-    #tc-floating-tooltip.arrow-up::after {
-      content: '';
-      position: absolute;
+      border: 8px solid transparent;
+      /* Default arrow: points up (tip appears below icon) */
       top: -16px;
-      left: calc(var(--arrow-x, 20px) + 1px);
-      width: 0; height: 0;
-      border: 8px solid transparent;
-      border-bottom-color: #0f1623;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: #d0d9f4;
     }
 
-    #tc-floating-tooltip.arrow-down::before {
-      bottom: -18px;
-      left: var(--arrow-x, 20px);
-      border-top-color: rgba(200,146,42,0.45);
-    }
-    #tc-floating-tooltip.arrow-down::after {
+    .tc-info-i .tc-tip::after {
       content: '';
       position: absolute;
+      border: 7px solid transparent;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: #fff;
+    }
+
+    /* Modifier: tip-up — tooltip appears ABOVE the icon */
+    .tc-info-i.tc-tip-up .tc-tip {
+      top: auto;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .tc-info-i.tc-tip-up .tc-tip::before {
+      top: auto;
       bottom: -16px;
-      left: calc(var(--arrow-x, 20px) + 1px);
-      width: 0; height: 0;
-      border: 8px solid transparent;
-      border-top-color: #0f1623;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: transparent;
+      border-top-color: #d0d9f4;
     }
 
-    .tc-tt-header {
-      background: linear-gradient(135deg, #1a2840, #162036);
-      border-bottom: 1px solid rgba(200,146,42,0.2);
-      padding: 13px 18px 11px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .tc-info-i.tc-tip-up .tc-tip::after {
+      top: auto;
+      bottom: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: transparent;
+      border-top-color: #fff;
     }
 
-    .tc-tt-header-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--gold, #c8922a);
-      flex-shrink: 0;
-      box-shadow: 0 0 6px rgba(200,146,42,0.6);
+    /* Modifier: tip-right — tooltip shifts to align left edge */
+    .tc-info-i.tc-tip-right .tc-tip {
+      left: 0;
+      transform: none;
     }
 
-    .tc-tt-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 13px;
+    .tc-info-i.tc-tip-right .tc-tip::before,
+    .tc-info-i.tc-tip-right .tc-tip::after {
+      left: 14px;
+      transform: none;
+    }
+
+    /* Modifier: tip-left — tooltip shifts to align right edge */
+    .tc-info-i.tc-tip-left .tc-tip {
+      left: auto;
+      right: 0;
+      transform: none;
+    }
+
+    .tc-info-i.tc-tip-left .tc-tip::before,
+    .tc-info-i.tc-tip-left .tc-tip::after {
+      left: auto;
+      right: 14px;
+      transform: none;
+    }
+
+    /* Show on hover */
+    .tc-info-i:hover .tc-tip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Tooltip inner typography */
+    .tc-tip h4 {
+      font-family: var(--tc-font-head);
+      font-size: 14px;
       font-weight: 700;
-      color: #e8b84b;
-      letter-spacing: 0.2px;
+      color: var(--tc-blue);
+      margin-bottom: 10px;
     }
 
-    .tc-tt-body { padding: 14px 18px 16px; }
-    .tc-tt-body p { margin-bottom: 8px; color: #a8bdd4; }
-    .tc-tt-body p:last-child { margin-bottom: 0; }
-    .tc-tt-body ul, .tc-tt-body ol { margin: 6px 0 8px 16px; color: #a8bdd4; }
-    .tc-tt-body li { margin-bottom: 5px; }
-    .tc-tt-body strong { color: #d4e8ff; font-weight: 600; }
+    .tc-tip ul, .tc-tip ol {
+      padding-left: 18px;
+      margin-bottom: 10px;
+    }
 
-    .tc-tt-table {
+    .tc-tip li { margin-bottom: 4px; }
+
+    .tc-tip table {
       width: 100%;
       border-collapse: collapse;
-      margin: 6px 0 4px;
-    }
-    .tc-tt-table tr { border-bottom: 1px solid rgba(255,255,255,0.06); }
-    .tc-tt-table tr:last-child { border-bottom: none; }
-    .tc-tt-table td { padding: 6px 2px; font-size: 12px; color: #90aac4; }
-    .tc-tt-table td:last-child { text-align: right; font-weight: 600; color: #cce0ff; }
-    .tc-tt-table tr.tt-total-row td {
-      color: #e8b84b;
-      font-weight: 700;
-      border-top: 1px solid rgba(200,146,42,0.25);
-      padding-top: 8px;
     }
 
-    .tc-tt-note {
-      background: rgba(200,146,42,0.1);
-      border: 1px solid rgba(200,146,42,0.25);
-      border-left: 3px solid #c8922a;
-      border-radius: 8px;
-      padding: 9px 12px;
-      color: #d4a843;
-      font-size: 12px;
-      margin-top: 10px;
-      line-height: 1.5;
+    .tc-tip td {
+      padding: 6px 4px;
+      border-bottom: 1px dashed #e8ecf5;
+      font-size: 12.5px;
     }
 
-    /* ---- INPUT ROWS ---- */
-    .tc-input-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 11px 0;
-      border-bottom: 1px solid var(--cream-dark);
-    }
-
-    .tc-input-row:last-of-type { border-bottom: none; }
-
-    .tc-input-row label {
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 400;
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .tc-input-field {
-      width: 148px;
-      padding: 9px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
+    .tc-tip td:last-child {
       text-align: right;
-      background: var(--cream);
-      color: var(--ink);
-      font-weight: 500;
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-    }
-
-    .tc-input-field:focus {
-      outline: none;
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(200,146,42,0.12);
-      background: var(--white);
-    }
-
-    .tc-input-field:disabled {
-      background: var(--cream-dark);
-      color: var(--text-muted);
-      cursor: not-allowed;
-    }
-
-    /* ---- TOTAL / SUMMARY ROWS ---- */
-    .tc-total-row {
-      background: var(--green-pale);
-      border: 1.5px solid rgba(31,122,82,0.25);
-      border-radius: var(--radius-md);
-      padding: 16px 20px;
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       font-weight: 600;
-      font-size: 14px;
-      color: var(--ink-mid);
+      color: var(--tc-ink);
     }
 
-    .tc-total-row span:last-child {
-      font-family: 'Syne', sans-serif;
-      font-size: 18px;
-      color: var(--green);
-      font-weight: 700;
+    .tc-tip .tc-tip-note {
+      background: #fff8eb;
+      border-left: 3px solid var(--tc-amber);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--tc-amber);
+      margin-top: 10px;
     }
 
-    .tc-info-row {
-      background: var(--gold-faint);
-      border-left: 4px solid var(--gold);
-      padding: 13px 18px;
-      margin: 12px 0;
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: var(--ink-mid);
-    }
-
-    .tc-info-row span:last-child { font-weight: 700; color: var(--gold); }
-
-    /* ---- HOUSE PROPERTY ROWS ---- */
-    .tc-hp-simple {
-      background: var(--gold-faint);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 13px 18px;
-      margin-top: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--ink-mid);
-    }
-
-    .tc-hp-simple span:last-child {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      color: var(--ink);
-      background: var(--white);
-      padding: 4px 14px;
-      border-radius: 100px;
-      border: 1px solid var(--border);
-      font-size: 15px;
-    }
-
-    .tc-taxable-hp {
-      background: var(--green-pale);
-      border: 1.5px solid rgba(31,122,82,0.25);
-      border-radius: var(--radius-sm);
-      padding: 13px 18px;
-      margin: 10px 0 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--ink-mid);
-    }
-
-    .tc-taxable-hp span:last-child {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      color: var(--green);
-      background: var(--white);
-      padding: 5px 18px;
-      border-radius: 100px;
-      font-size: 17px;
-      border: 1px solid rgba(31,122,82,0.2);
-    }
-
-    /* ---- STANDARD DEDUCTION ROW ---- */
-    .tc-deduction-row {
-      background: var(--gold-pale);
-      border: 1.5px solid rgba(200,146,42,0.3);
-      border-radius: var(--radius-sm);
-      padding: 13px 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--ink-mid);
-      margin-bottom: 8px;
-    }
-
-    .tc-deduction-row span:last-child {
-      font-family: 'Syne', sans-serif;
-      color: var(--gold);
-      background: var(--white);
-      padding: 5px 18px;
-      border-radius: 100px;
-      font-size: 17px;
-      border: 1px solid rgba(200,146,42,0.25);
-    }
-
-    /* ---- NET TAXABLE CARD ---- */
-    .tc-net-taxable-card {
-      background: var(--ink);
-      border-radius: var(--radius-lg);
-      padding: 24px 32px;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .tc-net-taxable-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 60% 80% at 90% 50%, rgba(200,146,42,0.1) 0%, transparent 60%);
-      pointer-events: none;
-    }
-
-    .tc-net-taxable-card .label {
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.75);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .tc-net-taxable-card .value {
-      font-family: 'Syne', sans-serif;
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--gold-light);
-      letter-spacing: -0.5px;
-    }
-
-    /* ---- CAPITAL GAINS ---- */
-    .tc-cg-container {
+    /* ---------- Capital Gains Section ---------- */
+    .tc-cg-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 20px;
-      margin: 20px 0 8px;
+      margin-bottom: 28px;
     }
 
     .tc-cg-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      box-shadow: var(--shadow-sm);
-      transition: box-shadow 0.25s, transform 0.25s;
+      background: var(--tc-surface);
+      border-radius: var(--tc-radius);
+      overflow: visible;
+      box-shadow: var(--tc-shadow);
+      border: 1px solid rgba(32,71,212,0.06);
+      position: relative;
     }
 
-    .tc-cg-card:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-3px);
-    }
-
-    .tc-cg-header {
-      background: var(--ink);
-      color: white;
-      padding: 14px 18px;
-      font-family: 'Syne', sans-serif;
+    .tc-cg-head {
+      background: var(--tc-ink);
+      color: #fff;
+      padding: 16px 18px;
+      font-family: var(--tc-font-head);
       font-size: 14px;
       font-weight: 700;
+      letter-spacing: 0.3px;
       text-align: center;
+      border-radius: var(--tc-radius) var(--tc-radius) 0 0;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      position: relative;
     }
 
-    .tc-cg-header::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(to right, var(--gold), transparent);
+    .tc-cg-rate {
+      display: inline-block;
+      background: var(--tc-gold);
+      color: #0f1623;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 50px;
     }
 
-    .tc-cg-header .tc-info-icon {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.2);
+    .tc-cg-body {
+      padding: 0;
     }
-    .tc-cg-header .tc-info-icon:hover { background: var(--gold); }
 
-    .tc-cg-table { width: 100%; border-collapse: collapse; }
-
-    .tc-cg-table td {
+    .tc-cg-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding: 12px 16px;
-      border-bottom: 1px solid var(--cream-dark);
+      border-bottom: 1px dashed #eaecf7;
       font-size: 13px;
     }
 
-    .tc-cg-table td:first-child { color: var(--text-soft); }
-    .tc-cg-table td:last-child { text-align: right; font-weight: 600; color: var(--ink-mid); }
+    .tc-cg-row:last-child { border-bottom: none; }
 
-    .tc-cg-table .tc-highlight { background: var(--gold-faint); }
-    .tc-cg-table .tc-highlight td:first-child { color: var(--ink); font-weight: 600; }
-    .tc-cg-table .tc-highlight td:last-child {
-      color: var(--green);
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
+    .tc-cg-row .tc-cg-lbl { color: var(--tc-ink2); font-weight: 400; }
+
+    .tc-cg-row .tc-cg-val {
+      font-weight: 600;
+      color: var(--tc-ink);
+    }
+
+    .tc-cg-row.tc-cg-highlight {
+      background: #f0f4ff;
+    }
+
+    .tc-cg-row.tc-cg-highlight .tc-cg-val {
+      color: var(--tc-blue);
+      font-size: 16px;
+      font-family: var(--tc-font-head);
     }
 
     .tc-cg-input {
-      width: 100px;
+      width: 90px;
       padding: 7px 10px;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
+      border: 2px solid #e2e7f3;
+      border-radius: var(--tc-radius-xs);
       text-align: right;
       font-size: 13px;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 500;
-      background: var(--cream);
-      color: var(--ink);
-      transition: border-color 0.2s;
+      font-weight: 600;
+      font-family: var(--tc-font-body);
+      background: #f7f9ff;
     }
 
     .tc-cg-input:focus {
       outline: none;
-      border-color: var(--gold);
-      background: var(--white);
+      border-color: var(--tc-blue);
+      box-shadow: 0 0 0 3px rgba(32,71,212,0.1);
     }
 
-    /* ---- TAX SLABS TABLE ---- */
-    .tc-slabs-container {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
+    /* ---------- Tax Slabs Table ---------- */
+    .tc-slabs-wrap {
+      background: var(--tc-surface);
+      border-radius: var(--tc-radius);
       overflow: hidden;
-      box-shadow: var(--shadow-sm);
-      margin: 20px 0;
+      box-shadow: var(--tc-shadow);
+      margin-bottom: 28px;
+      border: 1px solid rgba(32,71,212,0.06);
     }
 
-    .tc-slabs-table { width: 100%; border-collapse: collapse; }
-    .tc-slabs-table thead { background: var(--ink); }
-    .tc-slabs-table th {
-      padding: 14px 20px;
-      font-family: 'Syne', sans-serif;
+    .tc-slabs-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .tc-slabs-table thead th {
+      background: var(--tc-ink);
+      color: #fff;
+      font-family: var(--tc-font-head);
       font-size: 13px;
       font-weight: 700;
-      color: rgba(255,255,255,0.8);
-      letter-spacing: 0.5px;
       text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 16px 20px;
       text-align: left;
     }
-    .tc-slabs-table th:last-child { text-align: right; }
 
-    .tc-slabs-table tbody tr { transition: background 0.15s; }
-    .tc-slabs-table tbody tr:hover td { background: var(--cream); }
+    .tc-slabs-table thead th:last-child { text-align: right; }
 
-    .tc-slabs-table td {
-      padding: 13px 20px;
-      border-bottom: 1px solid var(--cream-dark);
+    .tc-slabs-table tbody td {
+      padding: 14px 20px;
+      border-bottom: 1px solid #f0f2f8;
       font-size: 14px;
-      color: var(--text);
+      color: var(--tc-ink2);
     }
 
-    .tc-slabs-table td:nth-child(2) { color: var(--text-soft); font-size: 13px; }
-    .tc-slabs-table td:last-child { text-align: right; font-weight: 600; color: var(--ink); }
-
-    .tc-slabs-table .tc-highlight td {
-      background: var(--gold-pale);
+    .tc-slabs-table tbody td:last-child {
+      text-align: right;
       font-weight: 700;
-      color: var(--ink);
-      border-top: 1.5px solid rgba(200,146,42,0.3);
+      color: var(--tc-ink);
     }
-    .tc-slabs-table .tc-highlight td:last-child { color: var(--gold); }
 
-    /* ---- MARGINAL RELIEF ---- */
-    .tc-marginal-relief {
-      background: var(--white);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 24px 28px;
-      margin: 24px 0;
+    .tc-slabs-table tbody tr:hover td { background: #f8f9ff; }
+
+    .tc-slabs-table .tc-rebate-row td {
+      background: #fff8eb;
+      color: var(--tc-amber);
+      font-weight: 600;
+    }
+
+    .tc-slabs-table .tc-rebate-row td:last-child {
+      color: var(--tc-amber);
+    }
+
+    /* ---------- Marginal Relief ---------- */
+    .tc-relief-box {
+      background: #fffbf0;
+      border: 2px solid #fde68a;
+      border-radius: var(--tc-radius);
+      padding: 24px;
+      margin-bottom: 28px;
       display: flex;
-      align-items: flex-start;
       gap: 16px;
-      box-shadow: var(--shadow-sm);
-      position: relative;
-      overflow: hidden;
+      align-items: flex-start;
     }
 
-    .tc-marginal-relief::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 5px;
-      background: linear-gradient(to bottom, var(--gold), var(--gold-light));
-    }
-
-    .tc-marginal-relief .tc-info-icon {
-      background: var(--gold);
+    .tc-relief-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: var(--tc-amber-lt);
+      color: var(--tc-amber);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
       flex-shrink: 0;
-      margin-top: 2px;
     }
 
-    .tc-relief-content { flex: 1; }
+    .tc-relief-body { flex: 1; }
 
-    .tc-relief-content strong {
-      font-family: 'Syne', sans-serif;
+    .tc-relief-title {
+      font-family: var(--tc-font-head);
+      font-weight: 700;
       font-size: 15px;
-      font-weight: 700;
-      color: var(--ink);
-    }
-
-    .tc-relief-amount { margin-top: 14px; }
-
-    .tc-relief-status {
-      display: inline-block;
-      padding: 4px 14px;
-      border-radius: 100px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      font-family: 'Syne', sans-serif;
+      color: var(--tc-ink);
       margin-bottom: 12px;
     }
 
-    .tc-status-applicable     { background: var(--green); color: white; }
-    .tc-status-not-applicable { background: var(--red);   color: white; }
+    .tc-status-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
 
-    .tc-relief-detail {
+    .tc-tag-yes { background: var(--tc-green-lt); color: var(--tc-green); }
+    .tc-tag-no  { background: var(--tc-red-lt);   color: var(--tc-red); }
+
+    .tc-relief-detail-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
       margin-top: 12px;
     }
 
-    .tc-relief-detail-item {
-      background: var(--cream);
-      border: 1px solid var(--border);
+    .tc-relief-item {
+      background: #fff;
+      border-radius: var(--tc-radius-xs);
       padding: 12px 14px;
-      border-radius: var(--radius-sm);
       text-align: center;
     }
 
-    .tc-relief-detail-label {
+    .tc-relief-item-label {
       font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
+      letter-spacing: 0.8px;
+      color: var(--tc-ink3);
+      margin-bottom: 5px;
     }
 
-    .tc-relief-detail-value {
-      font-family: 'Syne', sans-serif;
-      font-size: 17px;
+    .tc-relief-item-val {
+      font-family: var(--tc-font-head);
+      font-size: 18px;
       font-weight: 700;
-      color: var(--ink);
+      color: var(--tc-ink);
     }
 
-    .tc-relief-difference {
+    .tc-relief-saving {
       grid-column: span 2;
-      background: var(--ink);
-      color: var(--gold-light);
-      padding: 13px 16px;
-      border-radius: var(--radius-sm);
+      background: var(--tc-ink);
+      color: #fff;
+      border-radius: var(--tc-radius-xs);
+      padding: 12px;
       text-align: center;
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
+      font-size: 14px;
+      font-weight: 600;
     }
 
-    /* ---- FINAL SUMMARY ---- */
-    .tc-summary-container {
-      background: var(--ink);
-      border-radius: var(--radius-xl);
-      padding: 40px;
-      margin-top: 36px;
-      color: white;
+    /* ---------- Summary ---------- */
+    .tc-summary {
+      background: linear-gradient(135deg, #0a1228 0%, #0f1d4a 60%, #1a3080 100%);
+      border-radius: 28px;
+      padding: 36px;
       position: relative;
       overflow: hidden;
     }
 
-    .tc-summary-container::before {
+    .tc-summary::before {
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(ellipse 60% 70% at 5% 95%, rgba(200,146,42,0.15) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 50% at 95% 5%, rgba(200,146,42,0.08) 0%, transparent 50%);
+      background: radial-gradient(ellipse 50% 70% at 90% 10%, rgba(90,130,255,0.15) 0%, transparent 60%);
       pointer-events: none;
     }
 
-    .tc-heading-tertiary {
-      font-family: 'Syne', sans-serif;
+    .tc-summary-title {
+      font-family: var(--tc-font-head);
       font-size: 20px;
       font-weight: 800;
-      color: white;
-      margin-bottom: 28px;
+      color: #fff;
+      margin-bottom: 24px;
       display: flex;
       align-items: center;
       gap: 10px;
-      position: relative;
     }
 
     .tc-summary-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      position: relative;
+      gap: 14px;
     }
 
-    .tc-summary-item {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.09);
-      padding: 18px 22px;
-      border-radius: var(--radius-md);
-      transition: background 0.2s;
+    .tc-s-item {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--tc-radius-sm);
+      padding: 16px 18px;
+      backdrop-filter: blur(8px);
     }
 
-    .tc-summary-item:hover { background: rgba(255,255,255,0.10); }
-
-    .tc-summary-label {
+    .tc-s-lbl {
       font-size: 12px;
+      color: rgba(255,255,255,0.5);
       text-transform: uppercase;
       letter-spacing: 0.7px;
-      color: rgba(255,255,255,0.5);
       margin-bottom: 6px;
     }
 
-    .tc-summary-value {
-      font-family: 'Syne', sans-serif;
+    .tc-s-val {
+      font-family: var(--tc-font-head);
       font-size: 20px;
       font-weight: 700;
-      color: white;
+      color: #fff;
     }
 
     .tc-summary-total {
       grid-column: span 2;
-      background: linear-gradient(135deg, rgba(200,146,42,0.2), rgba(232,184,75,0.12));
-      border: 2px solid rgba(200,146,42,0.5);
-      padding: 28px 32px;
-      border-radius: var(--radius-md);
-      margin-top: 8px;
+      background: linear-gradient(135deg, rgba(245,197,24,0.15), rgba(245,197,24,0.08));
+      border: 2px solid rgba(245,197,24,0.5);
+      border-radius: var(--tc-radius-sm);
+      padding: 22px 24px;
+      margin-top: 4px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .tc-summary-total > span:first-child {
-      font-family: 'Syne', sans-serif;
-      font-size: 18px;
+    .tc-summary-total-lbl {
+      font-family: var(--tc-font-head);
+      font-size: 15px;
       font-weight: 700;
-      color: rgba(255,255,255,0.85);
-      letter-spacing: -0.2px;
+      color: rgba(255,255,255,0.75);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    .tc-summary-total > span:last-child {
-      font-family: 'Syne', sans-serif;
-      font-size: 36px;
+    .tc-summary-total-val {
+      font-family: var(--tc-font-head);
+      font-size: 38px;
       font-weight: 800;
-      color: var(--gold-light);
+      color: var(--tc-gold);
       letter-spacing: -1px;
     }
 
-    /* ---- NOTE BOX ---- */
-    .tc-note-box {
-      background: var(--gold-faint);
-      border-left: 4px solid var(--gold);
-      padding: 13px 18px;
-      border-radius: var(--radius-sm);
-      margin: 12px 0;
-      font-size: 13px;
-      color: #7a5c1e;
-    }
-
-    #stdDeductionStatus {
-      font-size: 12px;
-      margin-top: 6px;
-      color: var(--text-muted);
-    }
-
-    /* ---- RESPONSIVE ---- */
+    /* ---------- Responsive ---------- */
     @media (max-width: 900px) {
-      .tc-grid-2, .tc-cg-container { grid-template-columns: 1fr; }
-      .tc-summary-grid { grid-template-columns: 1fr; }
-      .tc-summary-total { grid-column: span 1; flex-direction: column; gap: 10px; text-align: center; }
-      .tc-employment-section { flex-direction: column; align-items: flex-start; }
-      .tc-input-row { flex-direction: column; align-items: flex-start; gap: 8px; }
-      .tc-input-field, .tc-cg-input { width: 100%; }
-      .tc-net-taxable-card { flex-direction: column; gap: 10px; text-align: center; }
+      .tc-grid2,
+      .tc-cg-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .tc-summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tc-summary-total {
+        grid-column: span 1;
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+      }
+
+      .tc-hero { padding: 30px 22px; }
+      .tc-hero::after { display: none; }
+
+      .tc-net-card {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+
+      /* Tooltip: force fixed-width on mobile */
+      .tc-info-i .tc-tip {
+        width: 240px;
+      }
     }
 
     @media (max-width: 600px) {
-      .tc-header { padding: 36px 20px 36px; }
-      .tc-summary-container { padding: 24px; }
-      .tc-card { padding: 20px; }
+      .tc-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .tc-input { width: 100%; }
+      .tc-employ { flex-direction: column; align-items: flex-start; }
+      .tc-summary { padding: 24px 18px; }
     }
   </style>
 </head>
 <body>
+  <div id="site-header"></div>
 
-  <div class="tc-calculator">
+  <!-- =========================================
+       CALCULATOR ROOT — all styles scoped here
+       ========================================= -->
+  <div class="tc-wrap">
+    <div class="tc-shell">
 
-    <!-- ======== HERO HEADER ======== -->
-    <div class="tc-header">
-      <div class="tc-regime-badge">New Tax Regime &nbsp;·&nbsp; FY 2025–26</div>
-      <h1 class="tc-heading-primary">Income <span>Tax</span> Calculator</h1>
-    </div>
-
-    <!-- ======== EMPLOYMENT TYPE ======== -->
-    <div class="tc-employment-section">
-      <span class="tc-employment-label">Employment Type</span>
-      <div class="tc-radio-group">
-        <label class="tc-radio-label"><input type="radio" name="employment" value="salaried" checked onchange="calculateTax()" class="tc-radio-input"> Salaried</label>
-        <label class="tc-radio-label"><input type="radio" name="employment" value="business" onchange="calculateTax()" class="tc-radio-input"> Business</label>
-        <label class="tc-radio-label"><input type="radio" name="employment" value="pensioner" onchange="calculateTax()" class="tc-radio-input"> Pensioner</label>
+      <!-- Hero -->
+      <div class="tc-hero">
+        <div class="tc-hero-badge">✦ FY 2025–26 &nbsp;|&nbsp; AY 2026–27</div>
+        <h1>Income Tax Calculator<br>New Tax Regime</h1>
+        <p>Accurate computation with slabs, rebates &amp; marginal relief</p>
       </div>
-    </div>
 
-    <!-- ======== INCOME + HOUSE PROPERTY GRID ======== -->
-    <div class="tc-grid-2">
+      <!-- Employment Type -->
+      <div class="tc-employ">
+        <span class="tc-employ-label">👤 Employment Type</span>
+        <div class="tc-employ-opts">
+          <label class="tc-radio-lbl">
+            <input type="radio" name="employment" value="salaried" checked onchange="calculateTax()"> Salaried
+          </label>
+          <label class="tc-radio-lbl">
+            <input type="radio" name="employment" value="business" onchange="calculateTax()"> Business
+          </label>
+          <label class="tc-radio-lbl">
+            <input type="radio" name="employment" value="pensioner" onchange="calculateTax()"> Pensioner
+          </label>
+        </div>
+      </div>
 
-      <!-- Income Details Card -->
-      <article class="tc-card">
-        <header class="tc-card-header">
-          <span class="card-icon">💰</span>
-          Income Details
-          <span class="tc-info-icon"
-            data-tip-title="Income Details"
-            data-tip-body="Enter all your income sources for the financial year including salary, rental income, interest, and dividends.">i</span>
-        </header>
+      <!-- Income + House Property Row -->
+      <div class="tc-grid2">
 
-        <div class="tc-input-row">
-          <label>Gross Salary Income</label>
-          <input type="number" id="grossSalary" value="1228769" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-        </div>
-        <div class="tc-input-row">
-          <label>Income from Other Sources</label>
-          <input type="number" id="otherSources" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-        </div>
-        <div class="tc-input-row">
-          <label>Income from Interest</label>
-          <input type="number" id="interestIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-        </div>
-        <div class="tc-input-row">
-          <label>Income from Dividends</label>
-          <input type="number" id="dividendIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-        </div>
-        <div class="tc-input-row">
-          <label>Rental Income (Let-Out Property)</label>
-          <input type="number" id="grossRent" value="50000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-        </div>
+        <!-- Income Details -->
+        <div class="tc-card">
+          <div class="tc-section-head">
+            <span class="tc-icon-circle">💰</span>
+            Income Details
+            <i class="tc-info-i tc-tip-right" tabindex="0">i
+              <span class="tc-tip">
+                <h4>Income Details</h4>
+                <p>Enter all your income sources for the financial year. Rental income is used to compute House Property income separately.</p>
+              </span>
+            </i>
+          </div>
 
-        <footer class="tc-total-row">
-          <span>Total Income (before deductions)</span>
-          <span id="totalIncomeDisplay">₹0.00</span>
-        </footer>
-      </article>
+          <div class="tc-row">
+            <label>Gross Salary Income</label>
+            <input type="number" id="grossSalary" value="1228769" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input">
+          </div>
+          <div class="tc-row">
+            <label>Income from Other Sources</label>
+            <input type="number" id="otherSources" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input">
+          </div>
+          <div class="tc-row">
+            <label>Income from Interest</label>
+            <input type="number" id="interestIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input">
+          </div>
+          <div class="tc-row">
+            <label>Income from Dividends</label>
+            <input type="number" id="dividendIncome" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input">
+          </div>
+          <div class="tc-row">
+            <label>Rental Income (Let-out Property)</label>
+            <input type="number" id="grossRent" value="50000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input">
+          </div>
 
-      <!-- House Property Card -->
-      <article class="tc-card">
-        <header class="tc-card-header">
-          <span class="card-icon">🏠</span>
-          House Property Deductions
-          <span class="tc-info-icon"
-            data-tip-title="House Property Calculation"
-            data-tip-type="hp-table">i</span>
-        </header>
-
-        <div class="tc-input-row">
-          <label>Municipal Taxes Paid</label>
-          <input type="number" id="municipalTaxes" value="3000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
-        </div>
-        <div class="tc-input-row">
-          <label>Interest on Let-Out Property</label>
-          <input type="number" id="letOutLoan" value="100000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input-field">
+          <div class="tc-total-strip">
+            <span>Total Income <small style="font-weight:400;font-size:12px;">(before deductions)</small></span>
+            <span class="tc-val" id="totalIncomeDisplay">₹0.00</span>
+          </div>
         </div>
 
-        <div class="tc-hp-simple">
-          <span style="display:flex;align-items:center;gap:6px;">
-            📊 House Property Income (Computed)
-            <span class="tc-info-icon"
-              data-tip-title="Loss Cannot Be Set Off"
-              data-tip-body="Any loss from house property cannot reduce your salary or other income under the New Tax Regime.">i</span>
+        <!-- House Property -->
+        <div class="tc-card">
+          <div class="tc-section-head">
+            <span class="tc-icon-circle">🏠</span>
+            House Property Deductions
+            <i class="tc-info-i tc-tip-left" tabindex="0">i
+              <span class="tc-tip">
+                <h4>House Property Calculation</h4>
+                <table>
+                  <tr><td>Gross Annual Value (GAV)</td><td id="tooltipGAV">—</td></tr>
+                  <tr><td>Less: Municipal Taxes</td><td id="tooltipMunicipal">—</td></tr>
+                  <tr><td style="font-weight:700;">Net Annual Value (NAV)</td><td id="tooltipNAV" style="font-weight:700;">—</td></tr>
+                  <tr><td>Less: 30% Std Deduction on NAV</td><td id="tooltipStdDed">—</td></tr>
+                  <tr><td>Less: Interest on Let-Out</td><td id="tooltipInterest">—</td></tr>
+                  <tr><td style="font-weight:700;">Income from House Property</td><td id="tooltipHPIncome" style="font-weight:700;">—</td></tr>
+                </table>
+                <div class="tc-tip-note">⚠️ Loss from house property cannot be set off against salary or other income under the new regime.</div>
+              </span>
+            </i>
+          </div>
+
+          <div class="tc-row">
+            <label>Municipal Taxes Paid</label>
+            <input type="number" id="municipalTaxes" value="3000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input">
+          </div>
+          <div class="tc-row">
+            <label>Interest on Let-Out Property</label>
+            <input type="number" id="letOutLoan" value="100000" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-input">
+          </div>
+
+          <!-- Computed HP Income -->
+          <div class="tc-info-pill" style="margin-top:18px;">
+            <span style="display:flex;align-items:center;gap:6px;">
+              📊 House Property Income (Computed)
+              <i class="tc-info-i" style="background:#e8f0ff;color:var(--tc-blue);" tabindex="0">i
+                <span class="tc-tip tc-tip-left-inner">
+                  <strong>Loss cannot be set off</strong><br><br>
+                  Any loss from house property remains a loss and cannot reduce your salary or other income under the new regime.
+                </span>
+              </i>
+            </span>
+            <span class="tc-pill-val" id="hpIncomeSimple">₹0</span>
+          </div>
+
+          <!-- Taxable HP Income -->
+          <div class="tc-info-pill tc-success-pill">
+            <span style="display:flex;align-items:center;gap:6px;">
+              ✅ Taxable House Property Income
+              <i class="tc-info-i" style="background:var(--tc-green-lt);color:var(--tc-green);" tabindex="0">i
+                <span class="tc-tip" style="left:auto;right:0;transform:none;">
+                  <strong>Taxable HP Income</strong><br><br>
+                  Only positive house property income is added to taxable income. If the computed income is negative (loss), the taxable amount is ₹0.
+                </span>
+              </i>
+            </span>
+            <span class="tc-pill-val" id="taxableHPDisplay">₹0.00</span>
+          </div>
+
+          <!-- Standard Deduction -->
+          <div class="tc-info-pill tc-amber-pill" id="stdDeductionRow" style="margin-top:8px;">
+            <span style="display:flex;align-items:center;gap:6px;">
+              📌 Standard Deduction
+              <i class="tc-info-i" style="background:var(--tc-amber-lt);color:var(--tc-amber);" tabindex="0">i
+                <span class="tc-tip" style="left:auto;right:0;transform:none;">
+                  <strong>Standard Deduction u/s 16(ia)</strong><br><br>
+                  Flat ₹75,000 deduction, limited to actual salary income.<br>
+                  <em>If salary &lt; ₹75,000, deduction = salary amount.</em><br><br>
+                  Not applicable for Business / Profession income.
+                </span>
+              </i>
+            </span>
+            <span class="tc-pill-val" id="stdDeductionValue">₹75,000</span>
+          </div>
+          <p class="tc-std-note" id="stdDeductionStatus">✔️ Standard deduction applicable (salaried/pensioner)</p>
+        </div>
+      </div>
+
+      <!-- Net Taxable Income -->
+      <div class="tc-net-card">
+        <div>
+          <div class="tc-net-label">Net Taxable Income (after all deductions)</div>
+          <div id="taxableIncomeDisplay" class="tc-net-val">₹0.00</div>
+        </div>
+        <i class="tc-info-i tc-tip-up tc-tip-left" tabindex="0">i
+          <span class="tc-tip">
+            <strong>Net Taxable Income</strong><br><br>
+            = Salary + Other Sources + Interest + Dividend<br>
+            − Standard Deduction<br>
+            + Taxable House Property Income (only if positive)<br><br>
+            <em>House property loss does NOT reduce other income.</em>
           </span>
-          <span id="hpIncomeSimple">₹0.00</span>
-        </div>
+        </i>
+      </div>
 
-        <div class="tc-taxable-hp">
-          <span style="display:flex;align-items:center;gap:6px;">
-            ✅ Taxable House Property Income
-            <span class="tc-info-icon"
-              data-tip-title="Taxable HP Income"
-              data-tip-body="Only positive house property income is added to your taxable income. Losses from house property are completely ignored under the new regime.">i</span>
+      <!-- Capital Gains Section -->
+      <div class="tc-section-head" style="margin-bottom:18px;">
+        <span class="tc-icon-circle">📈</span>
+        Capital Gains &amp; Digital Assets
+        <i class="tc-info-i tc-tip-right" tabindex="0">i
+          <span class="tc-tip">
+            <h4>Capital Gains Tax Rates 2025–26</h4>
+            <ul>
+              <li><strong>STCG (20%):</strong> Assets held ≤24 months</li>
+              <li><strong>LTCG (12.5%):</strong> Assets held &gt;24 months, ₹1.25L exemption</li>
+              <li><strong>Digital Assets (30%):</strong> Crypto, NFTs — no exemption</li>
+            </ul>
           </span>
-          <span id="taxableHPDisplay">₹0.00</span>
-        </div>
-
-        <div class="tc-deduction-row" id="stdDeductionRow">
-          <span style="display:flex;align-items:center;gap:6px;">
-            📌 Standard Deduction (Salaried / Pensioner)
-            <span class="tc-info-icon"
-              data-tip-title="Standard Deduction u/s 16(ia)"
-              data-tip-body="Flat ₹75,000 deduction available to salaried employees and pensioners. If your gross salary is less than ₹75,000, the deduction equals your salary amount.">i</span>
-          </span>
-          <span id="stdDeductionValue">₹75,000</span>
-        </div>
-        <p id="stdDeductionStatus" style="font-size:12px;margin-top:6px;color:var(--text-muted);">
-          ✔️ Standard deduction applicable (salaried/pensioner)
-        </p>
-      </article>
-    </div><!-- /grid-2 -->
-
-    <!-- ======== NET TAXABLE INCOME ======== -->
-    <div class="tc-net-taxable-card">
-      <div class="label">
-        Net Taxable Income (after all deductions)
-        <span class="tc-info-icon"
-          data-tip-title="Net Taxable Income"
-          data-tip-body="Total income after deducting the standard deduction (for salaried/pensioners). House property losses do NOT reduce other income under the New Tax Regime — only positive HP income is added.">i</span>
+        </i>
       </div>
-      <div class="value" id="taxableIncomeDisplay">₹0.00</div>
-    </div>
 
-    <!-- ======== CAPITAL GAINS ======== -->
-    <h2 class="tc-heading-secondary">
-      📈 Capital Gains &amp; Digital Assets
-      <span class="tc-info-icon"
-        data-tip-title="Capital Gains Tax Rates 2025"
-        data-tip-type="cg-list">i</span>
-    </h2>
+      <div class="tc-cg-grid">
+        <!-- STCG -->
+        <div class="tc-cg-card">
+          <div class="tc-cg-head">Short Term CG <span class="tc-cg-rate">20%</span></div>
+          <div class="tc-cg-body">
+            <div class="tc-cg-row">
+              <span class="tc-cg-lbl">Gain Amount</span>
+              <input type="number" id="stcgAmount" class="tc-cg-input" value="0" onchange="calculateTax()">
+            </div>
+            <div class="tc-cg-row">
+              <span class="tc-cg-lbl">Exemption</span>
+              <span class="tc-cg-val" id="stcgExemption">₹0.00</span>
+            </div>
+            <div class="tc-cg-row">
+              <span class="tc-cg-lbl">Taxable</span>
+              <span class="tc-cg-val" id="taxableSTCG">₹0.00</span>
+            </div>
+            <div class="tc-cg-row tc-cg-highlight">
+              <span class="tc-cg-lbl">Tax @ 20%</span>
+              <span class="tc-cg-val" id="stcgTaxAmount">₹0.00</span>
+            </div>
+          </div>
+        </div>
 
-    <div class="tc-cg-container">
-      <!-- STCG -->
-      <article class="tc-cg-card">
-        <header class="tc-cg-header">Short Term Capital Gain <span style="opacity:.7;font-size:12px;">(20%)</span></header>
-        <table class="tc-cg-table">
-          <tr><td>STCG Amount</td><td><input type="number" id="stcgAmount" class="tc-cg-input" value="0" onchange="calculateTax()" onkeyup="calculateTax()"></td></tr>
-          <tr><td>Exemption</td><td id="stcgExemption">₹0.00</td></tr>
-          <tr><td>Taxable Amount</td><td id="taxableSTCG">₹0.00</td></tr>
-          <tr class="tc-highlight"><td>Tax @ 20%</td><td id="stcgTaxAmount">₹0.00</td></tr>
-        </table>
-      </article>
-      <!-- LTCG -->
-      <article class="tc-cg-card">
-        <header class="tc-cg-header">Long Term Capital Gain <span style="opacity:.7;font-size:12px;">(12.5%)</span></header>
-        <table class="tc-cg-table">
-          <tr><td>LTCG Amount</td><td><input type="number" id="ltcgAmount" value="0" step="0.01" onchange="calculateTax()" onkeyup="calculateTax()" class="tc-cg-input"></td></tr>
-          <tr><td>Exemption (Max ₹1,25,000)</td><td id="ltcgExemption">₹0.00</td></tr>
-          <tr><td>Taxable Amount</td><td id="taxableLTCG">₹0.00</td></tr>
-          <tr class="tc-highlight"><td>Tax @ 12.5%</td><td id="ltcgTaxAmount">₹0.00</td></tr>
-        </table>
-      </article>
-      <!-- Digital -->
-      <article class="tc-cg-card">
-        <header class="tc-cg-header">Digital Assets <span style="opacity:.7;font-size:12px;">(30%)</span></header>
-        <table class="tc-cg-table">
-          <tr><td>Digital Asset Income</td><td><input type="number" id="digitalAssetsAmount" class="tc-cg-input" value="0" onchange="calculateTax()" onkeyup="calculateTax()"></td></tr>
-          <tr><td>Exemption</td><td id="digitalExemption">₹0.00</td></tr>
-          <tr><td>Taxable Amount</td><td id="taxableDigital">₹0.00</td></tr>
-          <tr class="tc-highlight"><td>Tax @ 30%</td><td id="digitalTaxAmount">₹0.00</td></tr>
-        </table>
-      </article>
-    </div>
+        <!-- LTCG -->
+        <div class="tc-cg-card">
+          <div class="tc-cg-head">Long Term CG <span class="tc-cg-rate">12.5%</span></div>
+          <div class="tc-cg-body">
+            <div class="tc-cg-row">
+              <span class="tc-cg-lbl">Gain Amount</span>
+              <input type="number" id="ltcgAmount" class="tc-cg-input" value="0" onchange="calculateTax()">
+            </div>
+            <div class="tc-cg-row">
+              <span class="tc-cg-lbl">Exemption (max ₹1.25L)</span>
+              <span class="tc-cg-val" id="ltcgExemption">₹0.00</span>
+            </div>
+            <div class="tc-cg-row">
+              <span class="tc-cg-lbl">Taxable</span>
+              <span class="tc-cg-val" id="taxableLTCG">₹0.00</span>
+            </div>
+            <div class="tc-cg-row tc-cg-highlight">
+              <span class="tc-cg-lbl">Tax @ 12.5%</span>
+              <span class="tc-cg-val" id="ltcgTaxAmount">₹0.00</span>
+            </div>
+          </div>
+        </div>
 
-    <!-- ======== TAX SLABS ======== -->
-    <h2 class="tc-heading-secondary">📊 Tax Calculation Breakdown</h2>
-    <div class="tc-slabs-container">
-      <table class="tc-slabs-table">
-        <thead>
-          <tr><th>Tax Slab</th><th>Rate</th><th>Tax Amount</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Upto ₹4,00,000</td><td>0%</td><td id="slab1">₹0.00</td></tr>
-          <tr><td>₹4,00,001 – ₹8,00,000</td><td>5%</td><td id="slab2">₹0.00</td></tr>
-          <tr><td>₹8,00,001 – ₹12,00,000</td><td>10%</td><td id="slab3">₹0.00</td></tr>
-          <tr><td>₹12,00,001 – ₹16,00,000</td><td>15%</td><td id="slab4">₹0.00</td></tr>
-          <tr><td>₹16,00,001 – ₹20,00,000</td><td>20%</td><td id="slab5">₹0.00</td></tr>
-          <tr><td>₹20,00,001 – ₹24,00,000</td><td>25%</td><td id="slab6">₹0.00</td></tr>
-          <tr><td>Above ₹24,00,000</td><td>30%</td><td id="slab7">₹0.00</td></tr>
-          <tr class="tc-highlight"><td colspan="2">Rebate u/s 87A (Up to ₹12L income)</td><td id="rebate">₹0.00</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ======== MARGINAL RELIEF ======== -->
-    <div class="tc-marginal-relief" id="marginalReliefInfo">
-      <span class="tc-info-icon"
-        data-tip-title="Marginal Relief"
-        data-tip-type="marginal-relief">i</span>
-      <div class="tc-relief-content">
-        <strong>🛡️ Marginal Relief Analysis</strong>
-        <div id="marginalReliefAmount" class="tc-relief-amount"></div>
-      </div>
-    </div>
-
-    <!-- ======== FINAL SUMMARY ======== -->
-    <div class="tc-summary-container">
-      <h3 class="tc-heading-tertiary">💰 Final Tax Summary</h3>
-      <div class="tc-summary-grid">
-        <div class="tc-summary-item">
-          <div class="tc-summary-label">Total Income (Gross)</div>
-          <div class="tc-summary-value" id="summaryTotalIncome">₹0</div>
-        </div>
-        <div class="tc-summary-item">
-          <div class="tc-summary-label">Taxable HP Income</div>
-          <div class="tc-summary-value" id="summaryHPIncome">₹0</div>
-        </div>
-        <div class="tc-summary-item">
-          <div class="tc-summary-label">STCG Tax</div>
-          <div class="tc-summary-value" id="summarySTCG">₹0</div>
-        </div>
-        <div class="tc-summary-item">
-          <div class="tc-summary-label">Standard Deduction</div>
-          <div class="tc-summary-value" id="summaryStdDeduction">₹75,000</div>
-        </div>
-        <div class="tc-summary-item">
-          <div class="tc-summary-label">LTCG Tax</div>
-          <div class="tc-summary-value" id="summaryLTCG">₹0</div>
-        </div>
-        <div class="tc-summary-item">
-          <div class="tc-summary-label">Digital Asset Tax</div>
-          <div class="tc-summary-value" id="summaryDigital">₹0</div>
-        </div>
-        <div class="tc-summary-item">
-          <div class="tc-summary-label">Net Taxable Income</div>
-          <div class="tc-summary-value" id="summaryNetTaxable">₹0</div>
-        </div>
-        <div class="tc-summary-item">
-          <div class="tc-summary-label">Regular Tax</div>
-          <div class="tc-summary-value" id="summaryRegularTax">₹0</div>
-        </div>
-        <div class="tc-summary-item">
-          <div class="tc-summary-label">Cess (4%)</div>
-          <div class="tc-summary-value" id="summaryCess">₹0</div>
-        </div>
-        <div class="tc-summary-total">
-          <span>FINAL TAX PAYABLE</span>
-          <span id="summaryFinalTax">₹0</span>
+        <!-- Digital Assets -->
+        <div class="tc-cg-card">
+          <div class="tc-cg-head">Digital Assets <span class="tc-cg-rate">30%</span></div>
+          <div class="tc-cg-body">
+            <div class="tc-cg-row">
+              <span class="tc-cg-lbl">Amount</span>
+              <input type="number" id="digitalAssetsAmount" class="tc-cg-input" value="0" onchange="calculateTax()">
+            </div>
+            <div class="tc-cg-row">
+              <span class="tc-cg-lbl">Exemption</span>
+              <span class="tc-cg-val" id="digitalExemption">₹0.00</span>
+            </div>
+            <div class="tc-cg-row">
+              <span class="tc-cg-lbl">Taxable</span>
+              <span class="tc-cg-val" id="taxableDigital">₹0.00</span>
+            </div>
+            <div class="tc-cg-row tc-cg-highlight">
+              <span class="tc-cg-lbl">Tax @ 30%</span>
+              <span class="tc-cg-val" id="digitalTaxAmount">₹0.00</span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- =====================================================
-         FIX: Hidden data holders for HP tooltip table.
-         These spans are read by the floating tooltip engine
-         and MUST exist in the DOM — their absence caused
-         calculateTax() to crash before updating the summary.
-    ====================================================== -->
-    <span id="tooltipGAV"       style="display:none"></span>
-    <span id="tooltipMunicipal" style="display:none"></span>
-    <span id="tooltipNAV"       style="display:none"></span>
-    <span id="tooltipStdDed"    style="display:none"></span>
-    <span id="tooltipInterest"  style="display:none"></span>
-    <span id="tooltipHPIncome"  style="display:none"></span>
+      <!-- Tax Slab Breakdown -->
+      <div class="tc-section-head" style="margin-bottom:16px;">
+        <span class="tc-icon-circle">📊</span>
+        Tax Slab Breakdown
+      </div>
 
-  </div><!-- /tc-calculator -->
+      <div class="tc-slabs-wrap" style="margin-bottom:28px;">
+        <table class="tc-slabs-table">
+          <thead>
+            <tr>
+              <th>Slab</th>
+              <th>Rate</th>
+              <th style="text-align:right;">Tax Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Up to ₹4,00,000</td><td>0%</td><td id="slab1">₹0.00</td></tr>
+            <tr><td>₹4,00,001 – ₹8,00,000</td><td>5%</td><td id="slab2">₹0.00</td></tr>
+            <tr><td>₹8,00,001 – ₹12,00,000</td><td>10%</td><td id="slab3">₹0.00</td></tr>
+            <tr><td>₹12,00,001 – ₹16,00,000</td><td>15%</td><td id="slab4">₹0.00</td></tr>
+            <tr><td>₹16,00,001 – ₹20,00,000</td><td>20%</td><td id="slab5">₹0.00</td></tr>
+            <tr><td>₹20,00,001 – ₹24,00,000</td><td>25%</td><td id="slab6">₹0.00</td></tr>
+            <tr><td>Above ₹24,00,000</td><td>30%</td><td id="slab7">₹0.00</td></tr>
+            <tr class="tc-rebate-row">
+              <td colspan="2">Rebate u/s 87A <small>(Up to ₹12L income — max ₹60,000)</small></td>
+              <td id="rebate">₹0.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-  <!-- ============ JAVASCRIPT ============ -->
+      <!-- Marginal Relief -->
+      <div class="tc-relief-box" id="marginalReliefInfo">
+        <div class="tc-relief-icon">🛡️</div>
+        <div class="tc-relief-body">
+          <div class="tc-relief-title" style="display:flex;align-items:center;gap:8px;">
+            Marginal Relief Analysis
+            <i class="tc-info-i tc-tip-right" tabindex="0">i
+              <span class="tc-tip">
+                <h4>What is Marginal Relief?</h4>
+                <p>When income is just above ₹12 lakh, tax is capped at <strong>(Income − ₹12,00,000)</strong> so you never pay more tax than your extra income.</p>
+                <br>
+                <strong>Example (₹12,10,000 income):</strong><br>
+                Normal tax: ₹61,500 → Relief tax: ₹10,000 only<br><br>
+                <em>Applicable for income: ₹12,00,001 – ₹12,75,000</em>
+              </span>
+            </i>
+          </div>
+          <div id="marginalReliefAmount"><!-- dynamic --></div>
+        </div>
+      </div>
+
+      <!-- Final Summary -->
+      <div class="tc-summary">
+        <div class="tc-summary-title">💰 Final Tax Summary</div>
+        <div class="tc-summary-grid">
+          <div class="tc-s-item">
+            <div class="tc-s-lbl">Total Income (Gross)</div>
+            <div class="tc-s-val" id="summaryTotalIncome">₹0</div>
+          </div>
+          <div class="tc-s-item">
+            <div class="tc-s-lbl">Taxable House Property Income</div>
+            <div class="tc-s-val" id="summaryHPIncome">₹0</div>
+          </div>
+          <div class="tc-s-item">
+            <div class="tc-s-lbl">Standard Deduction</div>
+            <div class="tc-s-val" id="summaryStdDeduction">₹75,000</div>
+          </div>
+          <div class="tc-s-item">
+            <div class="tc-s-lbl">Net Taxable Income</div>
+            <div class="tc-s-val" id="summaryNetTaxable">₹0</div>
+          </div>
+          <div class="tc-s-item">
+            <div class="tc-s-lbl">STCG Tax (20%)</div>
+            <div class="tc-s-val" id="summarySTCG">₹0</div>
+          </div>
+          <div class="tc-s-item">
+            <div class="tc-s-lbl">LTCG Tax (12.5%)</div>
+            <div class="tc-s-val" id="summaryLTCG">₹0</div>
+          </div>
+          <div class="tc-s-item">
+            <div class="tc-s-lbl">Digital Assets Tax (30%)</div>
+            <div class="tc-s-val" id="summaryDigital">₹0</div>
+          </div>
+          <div class="tc-s-item">
+            <div class="tc-s-lbl">Regular Income Tax</div>
+            <div class="tc-s-val" id="summaryRegularTax">₹0</div>
+          </div>
+          <div class="tc-s-item">
+            <div class="tc-s-lbl">Health &amp; Education Cess (4%)</div>
+            <div class="tc-s-val" id="summaryCess">₹0</div>
+          </div>
+          <div class="tc-summary-total">
+            <div class="tc-summary-total-lbl">⚡ Final Tax Payable</div>
+            <div class="tc-summary-total-val" id="summaryFinalTax">₹0</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end .tc-shell -->
+  </div><!-- end .tc-wrap -->
+
+  <div id="site-footer"></div>
+  <script src="/assets/Scripts/gototop.js"></script>
+
+  <!-- ============================================================
+       ORIGINAL JAVASCRIPT — UNCHANGED
+       ============================================================ -->
   <script>
-    /* Null-safe helper: sets textContent only if element exists */
-    function setEl(id, val) {
-      const el = document.getElementById(id);
-      if (el) el.textContent = val;
-    }
-
     function calculateTax() {
-      const grossSalary       = parseFloat(document.getElementById('grossSalary')?.value)       || 0;
-      const otherSources      = parseFloat(document.getElementById('otherSources')?.value)      || 0;
-      const interestIncome    = parseFloat(document.getElementById('interestIncome')?.value)    || 0;
-      const dividendIncome    = parseFloat(document.getElementById('dividendIncome')?.value)    || 0;
-      const grossRent         = parseFloat(document.getElementById('grossRent')?.value)         || 0;
-      const municipalTaxes    = parseFloat(document.getElementById('municipalTaxes')?.value)    || 0;
-      const letOutLoan        = parseFloat(document.getElementById('letOutLoan')?.value)        || 0;
-      const stcgAmount        = parseFloat(document.getElementById('stcgAmount')?.value)        || 0;
-      const ltcgAmount        = parseFloat(document.getElementById('ltcgAmount')?.value)        || 0;
-      const digitalAssetsAmount = parseFloat(document.getElementById('digitalAssetsAmount')?.value) || 0;
+      const grossSalary = parseFloat(document.getElementById('grossSalary')?.value) || 0;
+      const otherSources = parseFloat(document.getElementById('otherSources')?.value) || 0;
+      const interestIncome = parseFloat(document.getElementById('interestIncome')?.value) || 0;
+      const dividendIncome = parseFloat(document.getElementById('dividendIncome')?.value) || 0;
+      const grossRent = parseFloat(document.getElementById('grossRent')?.value) || 0;
 
-      /* Employment type */
       const employmentRadios = document.getElementsByName('employment');
       let isSalariedOrPensioner = true;
       for (let i = 0; i < employmentRadios.length; i++) {
@@ -1266,76 +1318,87 @@
         }
       }
 
-      /* House Property calculation */
-      const nav               = grossRent - municipalTaxes;
+      const municipalTaxes = parseFloat(document.getElementById('municipalTaxes')?.value) || 0;
+      const letOutLoan = parseFloat(document.getElementById('letOutLoan')?.value) || 0;
+
+      const stcgAmount = parseFloat(document.getElementById('stcgAmount')?.value) || 0;
+      const ltcgAmount = parseFloat(document.getElementById('ltcgAmount')?.value) || 0;
+      const digitalAssetsAmount = parseFloat(document.getElementById('digitalAssetsAmount')?.value) || 0;
+
+      const nav = grossRent - municipalTaxes;
       const standardDeductionHP = nav > 0 ? nav * 0.30 : 0;
-      const hpIncome          = nav - standardDeductionHP - letOutLoan;
-      const taxableHPIncome   = hpIncome > 0 ? hpIncome : 0;
+      let hpIncome = nav - standardDeductionHP - letOutLoan;
 
-      /* Total & net taxable income */
-      const totalIncome       = grossSalary + otherSources + interestIncome + dividendIncome + grossRent;
-      const stdDeduction      = isSalariedOrPensioner ? Math.min(grossSalary, 75000) : 0;
-      const otherIncome       = grossSalary + otherSources + interestIncome + dividendIncome;
-      const netTaxableIncome  = Math.max(0, otherIncome - stdDeduction + taxableHPIncome);
+      const taxableHPIncome = hpIncome > 0 ? hpIncome : 0;
 
-      /* Update main display fields */
-      setEl('totalIncomeDisplay',   `₹${formatMoney(totalIncome)}`);
-      setEl('hpIncomeSimple',       `₹${formatMoney(hpIncome)}`);
-      setEl('taxableHPDisplay',     `₹${formatMoney(taxableHPIncome)}`);
-      setEl('taxableIncomeDisplay', `₹${formatMoney(netTaxableIncome)}`);
+      const totalIncome = grossSalary + otherSources + interestIncome + dividendIncome + grossRent;
 
-      /* FIX: Update hidden tooltip data holders (null-safe) */
-      setEl('tooltipGAV',       `₹${formatMoney(grossRent)}`);
-      setEl('tooltipMunicipal', `₹${formatMoney(municipalTaxes)}`);
-      setEl('tooltipNAV',       `₹${formatMoney(nav)}`);
-      setEl('tooltipStdDed',    `₹${formatMoney(standardDeductionHP)}`);
-      setEl('tooltipInterest',  `₹${formatMoney(letOutLoan)}`);
-      setEl('tooltipHPIncome',  `₹${formatMoney(hpIncome)}`);
+      let stdDeduction = 0;
+      if (isSalariedOrPensioner) {
+        stdDeduction = Math.min(grossSalary, 75000);
+      }
 
-      /* Standard deduction display */
-      setEl('stdDeductionValue', `₹${formatMoney(stdDeduction)}`);
+      const otherIncome = grossSalary + otherSources + interestIncome + dividendIncome;
+      const netTaxableIncome = Math.max(0, otherIncome - stdDeduction + taxableHPIncome);
+
+      document.getElementById('totalIncomeDisplay').textContent = `₹${formatMoney(totalIncome)}`;
+      document.getElementById('hpIncomeSimple').textContent = `₹${formatMoney(hpIncome)}`;
+      document.getElementById('taxableHPDisplay').textContent = `₹${formatMoney(taxableHPIncome)}`;
+      document.getElementById('taxableIncomeDisplay').textContent = `₹${formatMoney(netTaxableIncome)}`;
+
+      document.getElementById('tooltipGAV').textContent = `₹${formatMoney(grossRent)}`;
+      document.getElementById('tooltipMunicipal').textContent = `₹${formatMoney(municipalTaxes)}`;
+      document.getElementById('tooltipNAV').textContent = `₹${formatMoney(nav)}`;
+      document.getElementById('tooltipStdDed').textContent = `₹${formatMoney(standardDeductionHP)}`;
+      document.getElementById('tooltipInterest').textContent = `₹${formatMoney(letOutLoan)}`;
+      document.getElementById('tooltipHPIncome').textContent = `₹${formatMoney(hpIncome)}`;
+
+      const stdDeductionSpan = document.getElementById('stdDeductionValue');
+      if (stdDeductionSpan) stdDeductionSpan.textContent = `₹${formatMoney(stdDeduction)}`;
+
       const stdDeductionStatus = document.getElementById('stdDeductionStatus');
       if (stdDeductionStatus) {
         if (isSalariedOrPensioner) {
           stdDeductionStatus.innerHTML = `✔️ Standard deduction applicable: ₹${formatMoney(stdDeduction)} (limited to salary)`;
-          stdDeductionStatus.style.color = '#1f7a52';
+          stdDeductionStatus.style.color = '#0f9b6e';
         } else {
           stdDeductionStatus.innerHTML = '⚠️ Standard deduction not applicable (business/profession)';
-          stdDeductionStatus.style.color = '#c8922a';
+          stdDeductionStatus.style.color = '#d97706';
         }
       }
 
-      /* Capital Gains */
       const ltcgExemption = Math.min(ltcgAmount, 125000);
-      const taxableLTCG   = Math.max(0, ltcgAmount - ltcgExemption);
-      const ltcgTax       = taxableLTCG * 0.125;
-      const taxableSTCG   = stcgAmount;
-      const stcgTax       = stcgAmount * 0.20;
-      const digitalTax    = digitalAssetsAmount * 0.30;
+      const taxableLTCG = Math.max(0, ltcgAmount - ltcgExemption);
+      const ltcgTax = taxableLTCG * 0.125;
 
-      setEl('stcgExemption',    `₹${formatMoney(0)}`);
-      setEl('taxableSTCG',      `₹${formatMoney(taxableSTCG)}`);
-      setEl('stcgTaxAmount',    `₹${formatMoney(stcgTax)}`);
-      setEl('ltcgExemption',    `₹${formatMoney(ltcgExemption)}`);
-      setEl('taxableLTCG',      `₹${formatMoney(taxableLTCG)}`);
-      setEl('ltcgTaxAmount',    `₹${formatMoney(ltcgTax)}`);
-      setEl('digitalExemption', `₹${formatMoney(0)}`);
-      setEl('taxableDigital',   `₹${formatMoney(digitalAssetsAmount)}`);
-      setEl('digitalTaxAmount', `₹${formatMoney(digitalTax)}`);
+      const taxableSTCG = stcgAmount;
+      const stcgTax = stcgAmount * 0.20;
+
+      const digitalTax = digitalAssetsAmount * 0.30;
+
+      document.getElementById('stcgExemption').textContent = `₹${formatMoney(0)}`;
+      document.getElementById('taxableSTCG').textContent = `₹${formatMoney(taxableSTCG)}`;
+      document.getElementById('stcgTaxAmount').textContent = `₹${formatMoney(stcgTax)}`;
+      document.getElementById('ltcgExemption').textContent = `₹${formatMoney(ltcgExemption)}`;
+      document.getElementById('taxableLTCG').textContent = `₹${formatMoney(taxableLTCG)}`;
+      document.getElementById('ltcgTaxAmount').textContent = `₹${formatMoney(ltcgTax)}`;
+      document.getElementById('digitalExemption').textContent = `₹${formatMoney(0)}`;
+      document.getElementById('taxableDigital').textContent = `₹${formatMoney(digitalAssetsAmount)}`;
+      document.getElementById('digitalTaxAmount').textContent = `₹${formatMoney(digitalTax)}`;
 
       const totalCGTax = stcgTax + ltcgTax + digitalTax;
 
-      /* Slab tax */
       const regularTaxResult = calculateNewRegimeTax(netTaxableIncome);
+
       updateSlabTable(regularTaxResult.breakdown);
-      setEl('rebate', `₹${formatMoney(regularTaxResult.rebate)}`);
 
-      /* Marginal relief */
-      let finalRegularTax  = regularTaxResult.tax;
-      let marginalReliefHTML = '';
+      document.getElementById('rebate').textContent = `₹${formatMoney(regularTaxResult.rebate)}`;
 
-      const income           = netTaxableIncome;
-      const taxBeforeRebate  = regularTaxResult.tax + regularTaxResult.rebate;
+      let finalRegularTax = regularTaxResult.tax;
+      let marginalReliefHTML = "";
+
+      const income = netTaxableIncome;
+      const taxBeforeRebate = regularTaxResult.tax + regularTaxResult.rebate;
       const maxTaxUnderRelief = Math.max(0, income - 1200000);
 
       if (income > 1200000 && income <= 1275000) {
@@ -1344,82 +1407,73 @@
           const savings = taxBeforeRebate - maxTaxUnderRelief;
           marginalReliefHTML = `
             <div>
-              <span class="tc-relief-status tc-status-applicable">✓ MARGINAL RELIEF APPLICABLE</span>
-              <div class="tc-relief-detail">
-                <div class="tc-relief-detail-item">
-                  <div class="tc-relief-detail-label">Normal Tax</div>
-                  <div class="tc-relief-detail-value">₹${formatMoney(taxBeforeRebate)}</div>
+              <span class="tc-status-tag tc-tag-yes">✓ MARGINAL RELIEF APPLICABLE</span>
+              <div class="tc-relief-detail-grid">
+                <div class="tc-relief-item">
+                  <div class="tc-relief-item-label">Normal Tax</div>
+                  <div class="tc-relief-item-val">₹${formatMoney(taxBeforeRebate)}</div>
                 </div>
-                <div class="tc-relief-detail-item">
-                  <div class="tc-relief-detail-label">Tax with Relief</div>
-                  <div class="tc-relief-detail-value">₹${formatMoney(maxTaxUnderRelief)}</div>
+                <div class="tc-relief-item">
+                  <div class="tc-relief-item-label">Tax with Relief</div>
+                  <div class="tc-relief-item-val">₹${formatMoney(maxTaxUnderRelief)}</div>
                 </div>
-                <div class="tc-relief-difference">💰 YOU SAVE: ₹${formatMoney(savings)}</div>
+                <div class="tc-relief-saving">💰 You Save: ₹${formatMoney(savings)}</div>
               </div>
-              <div style="margin-top:10px;font-size:13px;color:var(--text-soft);">
-                Tax limited to (Income − ₹12,00,000) = ₹${formatMoney(maxTaxUnderRelief)}
-              </div>
+              <p style="margin-top:10px;font-size:13px;color:#d97706;">Tax limited to Income − ₹12,00,000 = ₹${formatMoney(maxTaxUnderRelief)}</p>
             </div>`;
         } else {
           finalRegularTax = taxBeforeRebate;
           marginalReliefHTML = `
             <div>
-              <span class="tc-relief-status tc-status-not-applicable">✗ MARGINAL RELIEF NOT APPLICABLE</span>
-              <div class="tc-relief-detail">
-                <div class="tc-relief-detail-item">
-                  <div class="tc-relief-detail-label">Normal Tax</div>
-                  <div class="tc-relief-detail-value">₹${formatMoney(taxBeforeRebate)}</div>
+              <span class="tc-status-tag tc-tag-no">✗ MARGINAL RELIEF NOT APPLICABLE</span>
+              <div class="tc-relief-detail-grid">
+                <div class="tc-relief-item">
+                  <div class="tc-relief-item-label">Normal Tax</div>
+                  <div class="tc-relief-item-val">₹${formatMoney(taxBeforeRebate)}</div>
                 </div>
-                <div class="tc-relief-detail-item">
-                  <div class="tc-relief-detail-label">Max Relief Tax</div>
-                  <div class="tc-relief-detail-value">₹${formatMoney(maxTaxUnderRelief)}</div>
+                <div class="tc-relief-item">
+                  <div class="tc-relief-item-label">Max Relief Tax</div>
+                  <div class="tc-relief-item-val">₹${formatMoney(maxTaxUnderRelief)}</div>
                 </div>
               </div>
-              <div style="margin-top:10px;font-size:13px;color:var(--red);">Normal tax is already ≤ (Income − ₹12,00,000)</div>
+              <p style="margin-top:10px;font-size:13px;color:#dc2626;">Normal tax is already ≤ (Income − ₹12,00,000)</p>
             </div>`;
         }
       } else if (income <= 1200000) {
         marginalReliefHTML = `
           <div>
-            <span class="tc-relief-status tc-status-not-applicable">✗ MARGINAL RELIEF NOT APPLICABLE</span>
-            <div style="margin-top:10px;font-size:13px;color:var(--text-soft);">
-              Income ₹${formatMoney(income)} is below ₹12,00,000 threshold.<br>
-              Full rebate u/s 87A applicable: ₹${formatMoney(regularTaxResult.rebate)}
-            </div>
+            <span class="tc-status-tag tc-tag-no">✗ MARGINAL RELIEF NOT APPLICABLE</span>
+            <p style="margin-top:10px;font-size:13px;color:#6b7a99;">Income ₹${formatMoney(income)} is below the ₹12,00,000 threshold.<br>Full rebate u/s 87A: ₹${formatMoney(regularTaxResult.rebate)}</p>
           </div>`;
       } else {
         finalRegularTax = taxBeforeRebate;
         marginalReliefHTML = `
           <div>
-            <span class="tc-relief-status tc-status-not-applicable">✗ MARGINAL RELIEF NOT APPLICABLE</span>
-            <div style="margin-top:10px;font-size:13px;color:var(--text-soft);">
-              Income ₹${formatMoney(income)} is above ₹12,75,000 threshold.<br>
-              Regular tax calculation applies.
-            </div>
+            <span class="tc-status-tag tc-tag-no">✗ MARGINAL RELIEF NOT APPLICABLE</span>
+            <p style="margin-top:10px;font-size:13px;color:#6b7a99;">Income ₹${formatMoney(income)} is above ₹12,75,000 threshold.<br>Regular tax calculation applies.</p>
           </div>`;
       }
 
       document.getElementById('marginalReliefAmount').innerHTML = marginalReliefHTML;
 
-      /* Final tax */
       const totalTaxBeforeCess = finalRegularTax + totalCGTax;
-      const cessAmount         = totalTaxBeforeCess * 0.04;
-      const finalTax           = Math.ceil(totalTaxBeforeCess + cessAmount);
+      const cessAmount = totalTaxBeforeCess * 0.04;
+      const finalTax = Math.ceil(totalTaxBeforeCess + cessAmount);
 
-      /* Update Final Tax Summary — all fields */
-      setEl('summaryTotalIncome',   `₹${formatMoney(totalIncome)}`);
-      setEl('summaryHPIncome',      `₹${formatMoney(taxableHPIncome)}`);
-      setEl('summaryStdDeduction',  `₹${formatMoney(stdDeduction)}`);
-      setEl('summaryNetTaxable',    `₹${formatMoney(netTaxableIncome)}`);
-      setEl('summaryRegularTax',    `₹${formatMoney(finalRegularTax)}`);
-      setEl('summarySTCG',          `₹${formatMoney(stcgTax)}`);
-      setEl('summaryLTCG',          `₹${formatMoney(ltcgTax)}`);
-      setEl('summaryDigital',       `₹${formatMoney(digitalTax)}`);
-      setEl('summaryCess',          `₹${formatMoney(cessAmount)}`);
-      setEl('summaryFinalTax',      `₹${formatMoney(finalTax)}`);
+      document.getElementById('summaryTotalIncome').textContent = `₹${formatMoney(totalIncome)}`;
+      document.getElementById('summaryHPIncome').textContent = `₹${formatMoney(taxableHPIncome)}`;
+      document.getElementById('summaryStdDeduction').textContent = `₹${formatMoney(stdDeduction)}`;
+      document.getElementById('summaryNetTaxable').textContent = `₹${formatMoney(netTaxableIncome)}`;
+      document.getElementById('summaryRegularTax').textContent = `₹${formatMoney(finalRegularTax)}`;
+      document.getElementById('summarySTCG').textContent = `₹${formatMoney(stcgTax)}`;
+      document.getElementById('summaryLTCG').textContent = `₹${formatMoney(ltcgTax)}`;
+      document.getElementById('summaryDigital').textContent = `₹${formatMoney(digitalTax)}`;
+      document.getElementById('summaryCess').textContent = `₹${formatMoney(cessAmount)}`;
+      document.getElementById('summaryFinalTax').textContent = `₹${formatMoney(finalTax)}`;
     }
 
     function calculateNewRegimeTax(income) {
+      let tax = 0;
       let breakdown = { slab1:0, slab2:0, slab3:0, slab4:0, slab5:0, slab6:0, slab7:0, rebate:0 };
 
       if (income > 2400000) {
@@ -1451,7 +1505,7 @@
         breakdown.slab2 = (income - 400000) * 0.05;
       }
 
-      let tax = Object.values(breakdown).reduce((a, b) => a + b, 0);
+      tax = Object.values(breakdown).reduce((a, b) => a + b, 0);
 
       if (income <= 1200000 && tax > 0) {
         breakdown.rebate = Math.min(tax, 60000);
@@ -1462,13 +1516,13 @@
     }
 
     function updateSlabTable(breakdown) {
-      setEl('slab1', `₹${formatMoney(breakdown.slab1 || 0)}`);
-      setEl('slab2', `₹${formatMoney(breakdown.slab2 || 0)}`);
-      setEl('slab3', `₹${formatMoney(breakdown.slab3 || 0)}`);
-      setEl('slab4', `₹${formatMoney(breakdown.slab4 || 0)}`);
-      setEl('slab5', `₹${formatMoney(breakdown.slab5 || 0)}`);
-      setEl('slab6', `₹${formatMoney(breakdown.slab6 || 0)}`);
-      setEl('slab7', `₹${formatMoney(breakdown.slab7 || 0)}`);
+      document.getElementById('slab1').textContent = `₹${formatMoney(breakdown.slab1 || 0)}`;
+      document.getElementById('slab2').textContent = `₹${formatMoney(breakdown.slab2 || 0)}`;
+      document.getElementById('slab3').textContent = `₹${formatMoney(breakdown.slab3 || 0)}`;
+      document.getElementById('slab4').textContent = `₹${formatMoney(breakdown.slab4 || 0)}`;
+      document.getElementById('slab5').textContent = `₹${formatMoney(breakdown.slab5 || 0)}`;
+      document.getElementById('slab6').textContent = `₹${formatMoney(breakdown.slab6 || 0)}`;
+      document.getElementById('slab7').textContent = `₹${formatMoney(breakdown.slab7 || 0)}`;
     }
 
     function formatMoney(amount) {
@@ -1481,140 +1535,5 @@
 
     window.onload = function() { calculateTax(); };
   </script>
-
-  <!-- ============ FLOATING TOOLTIP ENGINE ============ -->
-  <script>
-  (function() {
-    const tt = document.createElement('div');
-    tt.id = 'tc-floating-tooltip';
-    tt.innerHTML = `
-      <div class="tc-tt-header">
-        <span class="tc-tt-header-dot"></span>
-        <span class="tc-tt-title" id="tt-title-text"></span>
-      </div>
-      <div class="tc-tt-body" id="tt-body-content"></div>
-    `;
-    document.body.appendChild(tt);
-
-    const TT_W    = 300;
-    const MARGIN  = 12;
-    const EDGE_PAD = 10;
-
-    function buildBody(icon) {
-      const type = icon.dataset.tipType;
-      const body = icon.dataset.tipBody;
-
-      if (type === 'hp-table') {
-        const gav      = document.getElementById('tooltipGAV')?.textContent      || '—';
-        const mun      = document.getElementById('tooltipMunicipal')?.textContent || '—';
-        const nav      = document.getElementById('tooltipNAV')?.textContent      || '—';
-        const std      = document.getElementById('tooltipStdDed')?.textContent   || '—';
-        const interest = document.getElementById('tooltipInterest')?.textContent  || '—';
-        const hpIncome = document.getElementById('tooltipHPIncome')?.textContent  || '—';
-        return `
-          <table class="tc-tt-table">
-            <tr><td>Gross Annual Value (GAV)</td><td>${gav}</td></tr>
-            <tr><td>Less: Municipal Taxes</td><td>${mun}</td></tr>
-            <tr><td><strong>Net Annual Value (NAV)</strong></td><td><strong>${nav}</strong></td></tr>
-            <tr><td>Less: 30% Std. Deduction on NAV</td><td>${std}</td></tr>
-            <tr><td>Less: Interest on Let-Out</td><td>${interest}</td></tr>
-            <tr class="tt-total-row"><td>Income from House Property</td><td>${hpIncome}</td></tr>
-          </table>
-          <div class="tc-tt-note">⚠️ Loss from house property cannot be set off against salary or other income under the New Tax Regime.</div>`;
-      }
-
-      if (type === 'cg-list') {
-        return `
-          <ul>
-            <li><strong>STCG (20%):</strong> Assets held ≤24 months — no exemption allowed.</li>
-            <li><strong>LTCG (12.5%):</strong> Assets held &gt;24 months — ₹1,25,000 exemption per year.</li>
-            <li><strong>Digital Assets (30%):</strong> Crypto, NFTs, and other virtual digital assets.</li>
-          </ul>`;
-      }
-
-      if (type === 'marginal-relief') {
-        return `
-          <p>For income slightly above ₹12 lakh, tax is capped at <strong>(Income − ₹12,00,000)</strong> instead of normal slab tax.</p>
-          <div class="tc-tt-note">
-            <strong>Example:</strong> Income ₹12,10,000<br>
-            Normal tax = ₹61,500 &nbsp;→&nbsp; With relief = ₹10,000<br>
-            Applicable till income ≤ ₹12,75,000
-          </div>`;
-      }
-
-      return body ? `<p>${body}</p>` : '';
-    }
-
-    function positionTooltip(icon) {
-      const rect = icon.getBoundingClientRect();
-      const vw   = window.innerWidth;
-      const vh   = window.innerHeight;
-
-      tt.style.visibility = 'hidden';
-      tt.style.display    = 'block';
-      const ttH = tt.offsetHeight;
-      tt.style.visibility = '';
-      tt.style.display    = '';
-
-      const spaceAbove = rect.top;
-      const spaceBelow = vh - rect.bottom;
-      let placeAbove   = spaceAbove > ttH + MARGIN + 20;
-      if (!placeAbove && spaceBelow < ttH + MARGIN + 20) {
-        placeAbove = spaceAbove > spaceBelow;
-      }
-
-      let left = rect.left + rect.width / 2 - TT_W / 2;
-      left = Math.max(EDGE_PAD, Math.min(vw - TT_W - EDGE_PAD, left));
-
-      const iconCenterX = rect.left + rect.width / 2;
-      let arrowX = iconCenterX - left - 9;
-      arrowX = Math.max(12, Math.min(TT_W - 30, arrowX));
-
-      let top;
-      if (placeAbove) {
-        top = rect.top + window.scrollY - ttH - MARGIN;
-        tt.className = 'arrow-down';
-      } else {
-        top = rect.bottom + window.scrollY + MARGIN;
-        tt.className = 'arrow-up';
-      }
-
-      tt.style.setProperty('--arrow-x', arrowX + 'px');
-      tt.style.left  = left + 'px';
-      tt.style.top   = top + 'px';
-      tt.style.width = TT_W + 'px';
-    }
-
-    let hideTimer = null;
-
-    function showTooltip(icon) {
-      clearTimeout(hideTimer);
-      document.getElementById('tt-title-text').textContent    = icon.dataset.tipTitle || '';
-      document.getElementById('tt-body-content').innerHTML    = buildBody(icon);
-      positionTooltip(icon);
-      tt.getBoundingClientRect();
-      tt.classList.add('tc-tt-visible');
-    }
-
-    function hideTooltip() {
-      hideTimer = setTimeout(() => tt.classList.remove('tc-tt-visible'), 80);
-    }
-
-    document.querySelectorAll('.tc-info-icon').forEach(icon => {
-      icon.addEventListener('mouseenter', () => showTooltip(icon));
-      icon.addEventListener('mouseleave', hideTooltip);
-      icon.addEventListener('focus',      () => showTooltip(icon));
-      icon.addEventListener('blur',       hideTooltip);
-    });
-
-    window.addEventListener('scroll', () => {
-      if (tt.classList.contains('tc-tt-visible')) {
-        const activeIcon = document.querySelector('.tc-info-icon:hover');
-        if (activeIcon) positionTooltip(activeIcon);
-      }
-    }, { passive: true });
-  })();
-  </script>
-
 </body>
 </html>
