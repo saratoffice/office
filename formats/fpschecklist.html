@@ -2,467 +2,394 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>FPS Inspection · NFSA / TPDS (updated format)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Common CSS (global menu, footer) – but we use isolated prefix -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>FPS Inspection · NFSA / TPDS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+
+  <!-- Common CSS (global styles) -->
   <link rel="stylesheet" href="/style.css">
-  <!-- site components for header/footer etc. -->
+
+  <!-- ✅ SHARED checklist styles -->
+  <link rel="stylesheet" href="/assets/css/checklist-common.css">
+
+  <!-- ✅ site components for header/footer -->
   <script src="/assets/Scripts/site-components.js" defer></script>
 
+  <!-- ════════════════════════════════════════════
+       FPS-SPECIFIC styles only.
+       Everything shared lives in checklist-common.css.
+  ════════════════════════════════════════════ -->
   <style>
-    /* ----- global reset for body (only background) ----- */
-    body {
-      margin: 0;
-      background: #f5f9ff;
-      font-family: 'Segoe UI', Roboto, sans-serif;
+    /* Irregularities highlight box — unique to FPS */
+    .fps-alert-box {
+      background: rgba(200,57,10,0.05);
+      border: 1px solid rgba(200,57,10,0.25);
+      border-left: 4px solid var(--chk-accent);
+      border-radius: 4px;
+      padding: 0.7rem 1rem;
+      margin: 0.5rem 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.84rem;
+      color: var(--chk-ink);
     }
-
-    /* 🧱 FPS CARD – fully isolated with prefix "fps2-" to avoid style clash (but keep original fps-card if needed) */
-    .fps-updated-card {
-      all: initial;                    /* kill inheritance from outer css */
+    .fps-alert-box strong {
       display: block;
-      max-width: 1100px;
-      width: 100%;
-      background: #ffffff;
-      border-radius: 28px;
-      box-shadow: 0 16px 30px rgba(40, 70, 30, 0.2);
-      padding: 1.5rem 1.8rem 1rem 1.8rem;
-      border: 1px solid #c4d2b0;
-      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-      line-height: 1.4;
-      color: #1f3b2c;
-      margin: 1.2rem auto;
-      box-sizing: border-box;
-    }
-
-    .fps-updated-card * {
-      all: revert;
-      box-sizing: border-box;
-    }
-
-    /* header row */
-    .fps2-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 4px solid #4c7a3a;
-      padding-bottom: 0.5rem;
-      margin-bottom: 1.3rem;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .fps2-top h1 {
-      font-size: 2rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      color: #1f4f2b;
-      margin: 0;
-      letter-spacing: -0.3px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--chk-accent);
+      margin-bottom: 0.4rem;
+    }
+    .fps-alert-line {
+      border-bottom: 1px dotted var(--chk-ink-ghost);
+      min-height: 22px;
+      margin: 0.4rem 0;
     }
 
-    .fps2-top h1 small {
-      font-size: 0.9rem;
-      background: #d9e8cf;
-      color: #1f4f2b;
-      padding: 0.2rem 1.2rem;
-      border-radius: 40px;
-      font-weight: 500;
+    /* Conclusion banner — unique to FPS */
+    .fps-conclusion {
+      background: rgba(13,27,42,0.03);
+      border: 1px solid var(--chk-rule);
+      border-radius: 4px;
+      padding: 0.7rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.84rem;
+      font-style: italic;
+      color: var(--chk-ink-mid);
+      margin: 0.4rem 0;
     }
 
-    .fps2-print-btn {
-      background: #2f6b3a;
-      border: none;
-      color: white;
-      font-weight: 600;
-      font-size: 0.95rem;
-      padding: 0.45rem 2rem;
-      border-radius: 40px;
-      cursor: pointer;
-      box-shadow: 0 3px 8px rgba(30,70,20,0.3);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid #1d4523;
-      transition: 0.1s;
-    }
-    .fps2-print-btn:hover { background: #1f522a; }
-
-    /* section headings (like ppc but adapted) */
-    .fps2-section {
-      font-weight: 700;
-      font-size: 1.2rem;
-      color: #2d5f3a;
-      border-left: 10px solid #f3b83a;
-      padding-left: 15px;
-      margin: 1.2rem 0 0.6rem 0;
-      background: linear-gradient(to right, #f2f9ec, transparent);
+    /* Legal note at card footer */
+    .fps-legal-note {
+      font-size: 0.65rem;
+      color: var(--chk-ink-ghost);
+      text-align: right;
+      letter-spacing: 0.06em;
+      margin-top: 0.3rem;
     }
 
-    /* basic details grid – exactly as requested */
-    .fps2-basic-grid {
-      background: #f3f9ed;
-      border-radius: 28px;
-      padding: 1.1rem 1.5rem;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.8rem 1.8rem;
-      border: 1px solid #bdd6aa;
-      margin-bottom: 0.5rem;
-    }
-    .fps2-basic-item {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 4px 8px;
-      font-size: 0.96rem;
-    }
-    .fps2-label {
-      font-weight: 650;
-      color: #1d4f2a;
-      min-width: 110px;
-    }
-    .fps2-value {
-      background: white;
-      border-radius: 40px;
-      border: 1px dashed #719966;
-      padding: 0.15rem 1rem;
-      min-width: 150px;
-      color: #1a3a22;
-    }
-
-    /* two-col checklist (consistent) */
-    .fps2-two-col {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.3rem 1.2rem;
-      margin-bottom: 0.2rem;
-    }
-
-    .fps2-check-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-      border-bottom: 1px dotted #b1c7a3;
-      padding: 0.25rem 0;
-    }
-    .fps2-check-item input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: #2f6b3a;
-      flex-shrink: 0;
-    }
-
-    /* stock table (like mill table but with different cols) */
-    .fps2-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #f9fff7;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 2px 6px #d0dfc0;
-      margin: 0.6rem 0 0.8rem;
-      font-size: 0.85rem;
-    }
-    .fps2-table th {
-      background: #3b7846;
-      color: white;
-      font-weight: 600;
-      padding: 8px 3px;
-      text-align: center;
-      font-size: 0.8rem;
-      border-right: 1px solid #619b6d;
-    }
-    .fps2-table td {
-      border: 1px solid #b5cfaa;
-      padding: 6px 3px;
-      text-align: center;
-      background: white;
-    }
-
-    .fps2-remarks {
-      background: #fff9e0;
-      border-radius: 30px;
-      padding: 0.4rem 1.2rem;
-      margin: 0.5rem 0 0.3rem;
-      border: 1px solid #e6c55e;
-    }
-
-    /* irregular box */
-    .fps2-irregular-box {
-      background: #fef2e4;
-      border-radius: 26px;
-      padding: 0.8rem 1.4rem;
-      border-left: 10px solid #e05a2f;
-      margin: 0.5rem 0 0.5rem;
-    }
-
-    /* signature row */
-    .fps2-sign-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #ddecd4;
-      padding: 0.7rem 1.8rem;
-      border-radius: 40px;
-      margin: 1.2rem 0 0.5rem;
-      font-weight: 500;
-      flex-wrap: wrap;
-    }
-    .fps2-stamp {
-      border: 2px dotted #2f6b3a;
-      background: white;
-      padding: 0.3rem 2rem;
-      border-radius: 30px;
-      font-family: 'Courier New', monospace;
-    }
-
-    /* navigation tabs (like ppc) – added for consistency across formats */
-    .fps2-nav-links {
-      margin: 1rem auto 0.8rem;
-      max-width: 1100px;
-      padding: 0 0.5rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-    }
-    .fps2-nav-item {
-      background: #dbeafe;
-      border-radius: 40px;
-      padding: 0.35rem 1.3rem;
-      font-size: 0.9rem;
-      font-weight: 500;
-      border: 1px solid #7ca2c9;
-      color: #1a3c5e;
-      transition: 0.1s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-    }
-    .fps2-nav-item:hover {
-      background: #bed9ff;
-      border-color: #2b5880;
-    }
-    .fps2-nav-item.active {
-      background: #2f6b3a;
-      border-color: #0e3d2c;
-      color: white;
-    }
-
-    hr { border: 1px solid #bcd0ac; margin: 0.8rem 0; }
-
-    /* print rules – same strategy */
+    /* @print — FPS specific */
     @media print {
-      @page { size: A4; margin: 0.3in; }
-      body > :not(.fps-updated-card):not(script) {
-        display: none !important;
-      }
-      body {
-        background: white !important;
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-      .fps-updated-card {
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        border: none !important;
-        padding: 0.2rem !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        font-size: 10.5pt !important;
-      }
-      .fps2-print-btn {
-        display: none !important;
-      }
-      .fps2-nav-links {
-        display: none !important;
-      }
-      #site-header, #site-footer, .gototop {
-        display: none !important;
-      }
-    }
-
-    /* mobile responsive */
-    @media (max-width: 700px) {
-      .fps2-basic-grid { grid-template-columns: 1fr; }
-      .fps2-two-col { grid-template-columns: 1fr; }
+      .fps-alert-box { break-inside: avoid; }
     }
   </style>
 </head>
 <body>
 
-<!-- site header placeholder (hidden in print) -->
+<!-- COMMON HEADER -->
 <div id="site-header"></div>
 
-<!-- ========== NAVIGATION TABS (other formats) ========== -->
-<div class="fps2-nav-links">
-  <a href="/formats/petrolpumpchecklist.html" class="fps2-nav-item">⛽ Petrol pump</a>
-  <a href="/formats/lpgchecklist.html" class="fps2-nav-item">🔥 LPG checklist</a>
-  <a href="/formats/fpschecklist.html" class="fps2-nav-item active">🍚 FPS checklist (current)</a>
-  <a href="/formats/ppcchecklist.html" class="fps2-nav-item">🌾 PPC verification</a>
-</div>
+<div class="chk-page-wrap">
 
-<!-- MAIN CARD – FPS INSPECTION (updated exactly from the provided detail) -->
-<div class="fps-updated-card" id="fpsPrintCardUpdated">
+  <!-- NAV STRIP -->
+  <nav class="chk-nav-strip">
+    <a href="/formats/petrolpumpchecklist.html" class="chk-nav-item">⛽ Petrol Pump</a>
+    <a href="/formats/lpgchecklist.html"         class="chk-nav-item">🔥 LPG Checklist</a>
+    <a href="/formats/fpschecklist.html"         class="chk-nav-item chk-active">🍚 FPS Checklist</a>
+    <a href="/formats/ppcchecklist.html"         class="chk-nav-item">🌾 PPC Verification</a>
+  </nav>
 
-  <div class="fps2-top">
-    <h1>🍚 FAIR PRICE SHOP <small>NFSA 2013 / TPDS</small></h1>
-    <button class="fps2-print-btn" id="printFpsUpdated">🖨️ PRINT</button>
-  </div>
+  <div class="chk-main-card" id="fpsPrintCard">
 
-  <!-- 1️⃣ Basic Details -->
-  <div class="fps2-section">1️⃣ Basic Details</div>
-  <div class="fps2-basic-grid">
-    <div class="fps2-basic-item"><span class="fps2-label">Name of FPS:</span><span class="fps2-value">_________________________</span></div>
-    <div class="fps2-basic-item"><span class="fps2-label">FPS Code No.:</span><span class="fps2-value">_________________________</span></div>
-    <div class="fps2-basic-item"><span class="fps2-label">Name of Dealer:</span><span class="fps2-value">_________________________</span></div>
-    <div class="fps2-basic-item"><span class="fps2-label">Father/Spouse:</span><span class="fps2-value">_________________________</span></div>
-    <div class="fps2-basic-item"><span class="fps2-label">Address/GP/Block/District:</span><span class="fps2-value">_________________</span></div>
-    <div class="fps2-basic-item"><span class="fps2-label">Mobile No.:</span><span class="fps2-value">_________________________</span></div>
-    <div class="fps2-basic-item"><span class="fps2-label">Date & Time:</span><span class="fps2-value">_________________________</span></div>
-    <div class="fps2-basic-item"><span class="fps2-label">Type of Inspection:</span><span class="fps2-value">Routine / Surprise / Complaint</span></div>
-    <div class="fps2-basic-item"><span class="fps2-label">Inspecting Officer:</span><span class="fps2-value">_________________________</span></div>
-  </div>
+    <!-- MASTHEAD -->
+    <div class="chk-masthead">
+      <div class="chk-masthead-inner">
+        <div>
+          <div class="chk-masthead-title">Fair Price Shop <em>Inspection Report</em></div>
+          <div class="chk-masthead-subtitle">
+            <span>NFSA 2013</span>
+            <span>TPDS Control Orders</span>
+            <span>State PDS Guidelines</span>
+          </div>
+        </div>
+        <div class="chk-action-group">
+          <!-- Share dropdown -->
+          <div class="chk-share-dropdown" id="fpsShareDropdown">
+            <button class="chk-share-main-btn" id="fpsShareBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+              Share
+            </button>
+            <div class="chk-share-menu" id="fpsShareMenu">
+              <a class="chk-share-option" id="fpsWaBtn" href="#" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.096.541 4.064 1.487 5.779L.057 23.057a.75.75 0 00.906.942l5.424-1.417A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.713 9.713 0 01-4.952-1.352l-.355-.21-3.676.96.983-3.584-.23-.368A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+                WhatsApp
+              </a>
+              <a class="chk-share-option" id="fpsTgBtn" href="#" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                Telegram
+              </a>
+            </div>
+          </div>
+          <button class="chk-print-btn" id="fpsPrintBtn">⎙ Print</button>
+        </div>
+      </div>
+    </div><!-- /.chk-masthead -->
 
-  <!-- 2️⃣ Authorization & License Verification -->
-  <div class="fps2-section">2️⃣ Authorization & License Verification</div>
-  <div class="fps2-two-col">
-    <div class="fps2-check-item"><input type="checkbox"> Valid Authorization Order available</div>
-    <div class="fps2-check-item"><input type="checkbox"> Authorization validity verified</div>
-    <div class="fps2-check-item"><input type="checkbox"> Dealer agreement copy available</div>
-    <div class="fps2-check-item"><input type="checkbox"> Display board showing stock & price updated</div>
-    <div class="fps2-check-item"><input type="checkbox"> Beneficiary list displayed</div>
-    <div class="fps2-check-item"><input type="checkbox"> Working days & timing displayed</div>
-  </div>
-  <div class="fps2-remarks">Remarks: ______________________________________________________</div>
+    <div class="chk-card-body">
 
-  <!-- 3️⃣ Stock Position Verification -->
-  <div class="fps2-section">3️⃣ Stock Position Verification</div>
-  <table class="fps2-table">
-    <thead><tr><th>Commodity</th><th>Opening<br>Balance</th><th>Qty<br>Received</th><th>Qty<br>Distributed</th><th>Closing (Register)</th><th>Physical Stock</th><th>Variation</th></tr></thead>
-    <tbody>
-      <tr><td>Rice</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td></tr>
-      <tr><td>Wheat</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td></tr>
-      <tr><td>Sugar</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td></tr>
-      <tr><td>Kerosene</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td><td>_____</td></tr>
-    </tbody>
-  </table>
-  <div style="display:flex; gap:20px; flex-wrap:wrap; margin:6px 0 0;">
-    <div class="fps2-check-item"><input type="checkbox"> Variation within permissible limit</div>
-    <div class="fps2-check-item"><input type="checkbox"> Excess / Shortage detected</div>
-  </div>
-  <div style="margin:6px 0 0 12px;">Details of Variation: _________________________________________________________________</div>
+      <!-- 01 BASIC DETAILS -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">01</div>
+        <div><div class="chk-sec-title">Basic Details</div></div>
+      </div>
+      <div class="chk-details-grid">
+        <div class="chk-detail-row"><span class="chk-d-label">Name of FPS</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">FPS Code No.</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Name of Dealer</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Father / Spouse Name</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row chk-full"><span class="chk-d-label">Address / GP / Block / District</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Mobile No.</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Date &amp; Time of Inspection</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Type of Inspection</span><span class="chk-d-line"></span></div>
+        <div class="chk-detail-row"><span class="chk-d-label">Inspecting Officer</span><span class="chk-d-line"></span></div>
+      </div>
 
-  <!-- 4️⃣ Distribution & e‑POS Verification -->
-  <div class="fps2-section">4️⃣ Distribution & e-POS Verification</div>
-  <div class="fps2-two-col">
-    <div class="fps2-check-item"><input type="checkbox"> e-POS device functional</div>
-    <div class="fps2-check-item"><input type="checkbox"> Aadhaar authentication working</div>
-    <div class="fps2-check-item"><input type="checkbox"> Transaction receipts issued</div>
-    <div class="fps2-check-item"><input type="checkbox"> Biometric exception register maintained</div>
-    <div class="fps2-check-item"><input type="checkbox"> Offline transactions recorded properly</div>
-    <div class="fps2-check-item"><input type="checkbox"> Last distribution date verified</div>
-  </div>
+      <!-- 02 AUTHORIZATION & LICENCE -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">02</div>
+        <div><div class="chk-sec-title">Authorization &amp; Licence Verification</div></div>
+      </div>
+      <div class="chk-pair-grid">
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Valid Authorization Order Available</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Authorization Validity Verified</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Dealer Agreement Copy Available</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Display Board — Stock &amp; Price Updated</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Beneficiary List Displayed</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Working Days &amp; Timing Displayed</span></div>
+      </div>
+      <div class="chk-remarks-wrap" style="margin-top:0.6rem;">
+        <textarea rows="2" placeholder="Remarks on Authorization &amp; Licence…"></textarea>
+      </div>
 
-  <!-- 5️⃣ Records & Registers -->
-  <div class="fps2-section">5️⃣ Records & Registers</div>
-  <div class="fps2-two-col">
-    <div class="fps2-check-item"><input type="checkbox"> Stock Register updated daily</div>
-    <div class="fps2-check-item"><input type="checkbox"> Sale Register maintained</div>
-    <div class="fps2-check-item"><input type="checkbox"> Inspection Register available</div>
-    <div class="fps2-check-item"><input type="checkbox"> Complaint Register maintained</div>
-    <div class="fps2-check-item"><input type="checkbox"> Allocation orders filed properly</div>
-    <div class="fps2-check-item"><input type="checkbox"> Bank account details updated</div>
-  </div>
+      <!-- 03 STOCK POSITION -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">03</div>
+        <div><div class="chk-sec-title">Stock Position Verification</div></div>
+        <div class="chk-sec-tag">Physical Count</div>
+      </div>
+      <div class="chk-tbl-wrap">
+        <table class="chk-data-tbl">
+          <thead>
+            <tr>
+              <th>Commodity</th>
+              <th>Opening Balance</th>
+              <th>Qty Received</th>
+              <th>Qty Distributed</th>
+              <th>Closing (Register)</th>
+              <th>Physical Stock</th>
+              <th>Variation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Rice</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>Wheat</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>Sugar</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>Kerosene</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="chk-pair-grid" style="margin-top:0.5rem;">
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Variation Within Permissible Limit</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Excess / Shortage Detected</span></div>
+        <div class="chk-pair-row chk-full"><span class="chk-p-label">Details of Variation</span><span class="chk-p-line"></span></div>
+      </div>
 
-  <!-- 6️⃣ Storage & Infrastructure -->
-  <div class="fps2-section">6️⃣ Storage & Infrastructure</div>
-  <div class="fps2-two-col">
-    <div class="fps2-check-item"><input type="checkbox"> Commodities stored on raised (wooden) platform</div>
-    <div class="fps2-check-item"><input type="checkbox"> Commodities stored on Dunnage</div>
-    <div class="fps2-check-item"><input type="checkbox"> No moisture or rodent infestation</div>
-    <div class="fps2-check-item"><input type="checkbox"> Weighing scale functional & stamped</div>
-    <div class="fps2-check-item"><input type="checkbox"> Standard weights (for testing) available</div>
-    <div class="fps2-check-item"><input type="checkbox"> Cleanliness maintained</div>
-    <div class="fps2-check-item"><input type="checkbox"> Adequate lighting</div>
-    <div class="fps2-check-item"><input type="checkbox"> Fire extinguisher available</div>
-  </div>
+      <!-- 04 DISTRIBUTION & e-POS -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">04</div>
+        <div><div class="chk-sec-title">Distribution &amp; e-POS Verification</div></div>
+        <div class="chk-sec-tag">⚡ e-POS</div>
+      </div>
+      <div class="chk-pair-grid">
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">e-POS Device Functional</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Aadhaar Authentication Working</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Transaction Receipts Issued</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Biometric Exception Register Maintained</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Offline Transactions Recorded Properly</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Last Distribution Date Verified</span></div>
+      </div>
 
-  <!-- 7️⃣ Beneficiary Feedback -->
-  <div class="fps2-section">7️⃣ Beneficiary Feedback (Random Check)</div>
-  <div class="fps2-two-col">
-    <div class="fps2-check-item"><input type="checkbox"> Beneficiaries receiving full quantity</div>
-    <div class="fps2-check-item"><input type="checkbox"> No overcharging</div>
-    <div class="fps2-check-item"><input type="checkbox"> No diversion complaints</div>
-    <div class="fps2-check-item"><input type="checkbox"> Doorstep delivery (if applicable) followed</div>
-  </div>
-  <div class="fps2-remarks" style="margin-top:8px;">
-    Names of beneficiaries interacted: __________________________________________________
-  </div>
+      <!-- 05 RECORDS & REGISTERS -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">05</div>
+        <div><div class="chk-sec-title">Records &amp; Registers</div></div>
+      </div>
+      <div class="chk-pair-grid">
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Stock Register Updated Daily</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Sale Register Maintained</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Inspection Register Available</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Complaint Register Maintained</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Allocation Orders Filed Properly</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Bank Account Details Updated</span></div>
+      </div>
 
-  <!-- 8️⃣ Irregularities Observed -->
-  <div class="fps2-section">8️⃣ Irregularities Observed (If Any)</div>
-  <div class="fps2-two-col" style="margin-bottom:4px;">
-    <div class="fps2-check-item"><input type="checkbox"> Short delivery</div>
-    <div class="fps2-check-item"><input type="checkbox"> Overcharging</div>
-    <div class="fps2-check-item"><input type="checkbox"> Non-display of stock/price</div>
-    <div class="fps2-check-item"><input type="checkbox"> Diversion suspected</div>
-    <div class="fps2-check-item"><input type="checkbox"> Non-maintenance of records</div>
-    <div class="fps2-check-item"><input type="checkbox"> Unauthorized closure</div>
-    <div class="fps2-check-item"><input type="checkbox"> Bogus transactions</div>
-  </div>
-  <div class="fps2-irregular-box">
-    <strong>Details:</strong> _________________________________________________________________<br>
-    _________________________________________________________________________________
-  </div>
+      <!-- 06 STORAGE & INFRASTRUCTURE -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">06</div>
+        <div><div class="chk-sec-title">Storage &amp; Infrastructure</div></div>
+      </div>
+      <div class="chk-pair-grid">
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Commodities on Raised (Wooden) Platform</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Commodities Stored on Dunnage</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">No Moisture or Rodent Infestation</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Weighing Scale Functional &amp; Stamped</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Standard Test Weights Available</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Cleanliness Maintained</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Adequate Lighting</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Fire Extinguisher Available</span></div>
+      </div>
 
-  <!-- 9️⃣ Action Taken / Recommended -->
-  <div class="fps2-section">9️⃣ Action Taken / Recommended</div>
-  <div class="fps2-two-col" style="margin-bottom:8px;">
-    <div class="fps2-check-item"><input type="checkbox"> Instructions issued on spot</div>
-    <div class="fps2-check-item"><input type="checkbox"> Warning issued</div>
-    <div class="fps2-check-item"><input type="checkbox"> Show Cause Notice proposed</div>
-    <div class="fps2-check-item"><input type="checkbox"> Seizure recommended</div>
-    <div class="fps2-check-item"><input type="checkbox"> Suspension recommended</div>
-    <div class="fps2-check-item"><input type="checkbox"> Report to Licensing Authority</div>
-  </div>
+      <!-- 07 BENEFICIARY FEEDBACK -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">07</div>
+        <div><div class="chk-sec-title">Beneficiary Feedback</div></div>
+        <div class="chk-sec-tag">Random Check</div>
+      </div>
+      <div class="chk-pair-grid">
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Beneficiaries Receiving Full Quantity</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">No Overcharging</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">No Diversion Complaints</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Doorstep Delivery Followed (If Applicable)</span></div>
+        <div class="chk-pair-row chk-full"><span class="chk-p-label">Names of Beneficiaries Interacted</span><span class="chk-p-line"></span></div>
+      </div>
 
-  <!-- 🔟 Conclusion -->
-  <div class="fps2-section">🔟 Conclusion</div>
-  <div style="background:#eef5da; border-radius:28px; padding:0.8rem 1.3rem; font-style:italic;">
-    The inspection was conducted in presence of the dealer/representative and findings were explained.
-  </div>
+      <!-- 08 IRREGULARITIES -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">08</div>
+        <div><div class="chk-sec-title">Irregularities Observed</div></div>
+        <div class="chk-sec-tag" style="color:var(--chk-accent);border-color:var(--chk-accent);">⚠️ If Any</div>
+      </div>
+      <div class="chk-pair-grid">
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Short Delivery</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Overcharging</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Non-Display of Stock / Price</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Diversion Suspected</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Non-Maintenance of Records</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Unauthorized Closure</span></div>
+        <div class="chk-pair-row chk-full"><input type="checkbox"><span class="chk-p-label">Bogus Transactions</span></div>
+      </div>
+      <div class="fps-alert-box">
+        <strong>Details of Irregularities</strong>
+        <div class="fps-alert-line"></div>
+        <div class="fps-alert-line"></div>
+      </div>
 
-  <!-- signature & stamp -->
-  <div class="fps2-sign-row">
-    <span>👤 Inspecting Officer: _________________________</span>
-    <span class="fps2-stamp">📅 Date: ___________</span>
-  </div>
-  <hr>
-  <div style="font-size:0.7rem; color:#467545; text-align:right;">NFSA 2013 · TPDS Control Orders · State PDS Guidelines</div>
-</div>
-<!-- ========== NAVIGATION TABS (other formats) ========== -->
-<div class="fps2-nav-links">
-  <a href="/formats/petrolpumpchecklist.html" class="fps2-nav-item">⛽ Petrol pump</a>
-  <a href="/formats/lpgchecklist.html" class="fps2-nav-item">🔥 LPG checklist</a>
-  <a href="/formats/fpschecklist.html" class="fps2-nav-item active">🍚 FPS checklist (current)</a>
-  <a href="/formats/ppcchecklist.html" class="fps2-nav-item">🌾 PPC verification</a>
-</div>
-<!-- print trigger -->
-<script>
-  document.getElementById('printFpsUpdated')?.addEventListener('click', function() {
-    window.print();
-  });
-</script>
+      <!-- 09 ACTION TAKEN -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">09</div>
+        <div><div class="chk-sec-title">Action Taken / Recommended</div></div>
+      </div>
+      <div class="chk-pair-grid">
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Instructions Issued on Spot</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Warning Issued</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Show Cause Notice Proposed</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Seizure Recommended</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Suspension Recommended</span></div>
+        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Report to Licensing Authority</span></div>
+      </div>
 
-<!-- FOOTER placeholder -->
+      <!-- 10 CONCLUSION -->
+      <div class="chk-sec-head">
+        <div class="chk-sec-num">10</div>
+        <div><div class="chk-sec-title">Conclusion</div></div>
+      </div>
+      <div class="fps-conclusion">
+        The inspection was conducted in the presence of the dealer / representative and findings were explained.
+      </div>
+
+      <!-- REMARKS -->
+      <div class="chk-sec-head" style="margin-top:1.8rem;">
+        <div class="chk-sec-num">—</div>
+        <div><div class="chk-sec-title">Remarks / Observations</div></div>
+      </div>
+      <div class="chk-remarks-wrap">
+        <textarea rows="3" placeholder="Enter any additional observations or remarks here…"></textarea>
+      </div>
+
+      <!-- SIGNATURE -->
+      <div class="chk-sign-row">
+        <div class="chk-sign-block" style="min-width:280px;">
+          <div class="chk-sign-block-label">Signature of the Inspecting Officer</div>
+          <div class="chk-sign-line"></div>
+        </div>
+      </div>
+
+      <div class="fps-legal-note">NFSA 2013 · TPDS Control Orders · State PDS Guidelines</div>
+
+    </div><!-- /.chk-card-body -->
+
+    <div class="chk-card-footer">
+      <span class="chk-footer-note">NFSA 2013 · e-POS Verification · Beneficiary Feedback · Stock Reconciliation</span>
+      <span class="chk-footer-mark">FPS Inspection</span>
+    </div>
+
+  </div><!-- /.chk-main-card -->
+
+  <!-- BOTTOM NAV STRIP -->
+  <nav class="chk-nav-strip" style="margin-top: 1.5rem;">
+    <a href="/formats/petrolpumpchecklist.html" class="chk-nav-item">⛽ Petrol Pump</a>
+    <a href="/formats/lpgchecklist.html"         class="chk-nav-item">🔥 LPG Checklist</a>
+    <a href="/formats/fpschecklist.html"         class="chk-nav-item chk-active">🍚 FPS Checklist</a>
+    <a href="/formats/ppcchecklist.html"         class="chk-nav-item">🌾 PPC Verification</a>
+  </nav>
+
+</div><!-- /.chk-page-wrap -->
+
+<!-- COMMON FOOTER -->
 <div id="site-footer"></div>
+
 <!-- Go to Top -->
 <script src="/assets/Scripts/gototop.js"></script>
+
+<script>
+  (function () {
+    // Print
+    const printBtn = document.getElementById('fpsPrintBtn');
+    if (printBtn) printBtn.addEventListener('click', () => window.print());
+
+    // Share dropdown
+    const shareDropdown = document.getElementById('fpsShareDropdown');
+    const shareBtn      = document.getElementById('fpsShareBtn');
+    const shareMenu     = document.getElementById('fpsShareMenu');
+
+    if (shareBtn && shareMenu) {
+      shareBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        shareMenu.classList.toggle('chk-show');
+      });
+      document.addEventListener('click', (e) => {
+        if (!shareDropdown.contains(e.target)) shareMenu.classList.remove('chk-show');
+      });
+    }
+
+    function getShareText() {
+      return encodeURIComponent(
+        '📋 Fair Price Shop Inspection Report\n🔗 NFSA 2013 · TPDS · State PDS Guidelines\n\n' +
+        window.location.href
+      );
+    }
+
+    const waBtn = document.getElementById('fpsWaBtn');
+    const tgBtn = document.getElementById('fpsTgBtn');
+
+    if (waBtn) waBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.open('https://wa.me/?text=' + getShareText(), '_blank', 'noopener');
+      shareMenu.classList.remove('chk-show');
+    });
+
+    if (tgBtn) tgBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const url = 'https://t.me/share/url?url=' + encodeURIComponent(window.location.href) +
+                  '&text=' + encodeURIComponent('📋 Fair Price Shop Inspection Report\n✅ NFSA 2013 · TPDS · State PDS Guidelines');
+      window.open(url, '_blank', 'noopener');
+      shareMenu.classList.remove('chk-show');
+    });
+  })();
+</script>
 
 </body>
 </html>
