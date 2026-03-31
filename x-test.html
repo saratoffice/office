@@ -2,397 +2,1165 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>LPG Distributor Inspection | EC Act · LPG Order 2000</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <title>Acts, Rules, Orders | Sarat Office</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Papaparse for CSV parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <!-- DataTables & jQuery -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  
   <!-- Common CSS (menu, footer, global styles) -->
-  <link rel="stylesheet" href="/style.css">
-
-  <!-- ✅ SHARED checklist styles (nav, card, tables, grids, print…) -->
-  <link rel="stylesheet" href="/assets/css/checklist-common.css">
-
+  <link rel="stylesheet" href="style.css">
   <!-- ✅ IMPORTANT: site components for header/footer etc. -->
-  <script src="/assets/Scripts/site-components.js" defer></script>
-
-  <!-- ════════════════════════════════════════════════════
-       LPG-SPECIFIC overrides only — nothing that belongs
-       in checklist-common.css lives here anymore.
-  ════════════════════════════════════════════════════ -->
+  <script src="assets/Scripts/site-components.js" defer></script>
+  
   <style>
-    /* Re-expose the shared tokens under the legacy lpg- name
-       so any older inline references still resolve.
-       (Remove this block once all lpg- refs are renamed.) */
-    :root {
-      --lpg-ink:        var(--chk-ink);
-      --lpg-ink-mid:    var(--chk-ink-mid);
-      --lpg-ink-soft:   var(--chk-ink-soft);
-      --lpg-ink-ghost:  var(--chk-ink-ghost);
-      --lpg-page:       var(--chk-page);
-      --lpg-card:       var(--chk-card);
-      --lpg-rule:       var(--chk-rule);
-      --lpg-accent:     var(--chk-accent);
-      --lpg-accent-gold:var(--chk-accent-gold);
+    /* ================================
+   GUARD FILE – HERO SECTION
+   ================================ */
+
+.guard-hero {
+  /* Gradient background */
+  background: linear-gradient(
+      135deg,
+      rgba(65, 88, 208, 0.9) 0%,
+      rgba(200, 80, 192, 0.9) 46%,
+      rgba(255, 204, 112, 0.9) 100%
+    ),
+    url('data:image/svg+xml,...'); /* Optional subtle pattern */
+  padding: 40px 20px;
+  text-align: center;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.guard-hero-inner {
+  max-width: 1100px;
+  margin: auto;
+}
+
+/* Title */
+.guard-title {
+  font-size: 56px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #fff176;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+/* Subtitle */
+.guard-subtitle {
+  font-size: 26px;
+  color: #9adfff;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+
+/* ================================
+   SCROLL ANIMATION
+   ================================ */
+
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ================================
+   RESPONSIVE
+   ================================ */
+
+@media (max-width: 768px) {
+  .guard-title {
+    font-size: 38px;
+  }
+
+  .guard-subtitle {
+    font-size: 20px;
+  }
+
+  .guard-btn {
+    font-size: 16px;
+    padding: 12px 26px;
+  }
+}
+
+    /* ----- GLOBAL RESET ----- */
+    body {
+      margin: 0;
+      background: #f5f9ff;
+      font-family: 'Segoe UI', Roboto, sans-serif;
     }
 
-    /*
-      Add any styles that are truly unique to the LPG page here.
-      Example: a tbl-gap helper used only here.
-    */
-    .lpg-tbl-gap { margin-top: 1rem; }
+    /* ----- NAMESPACED WRAPPER – all custom CSS is scoped inside .sarat-docs ----- */
+    .sarat-docs {
+      display: block;
+      width: 100%;
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 20px 80px;
+      box-sizing: border-box;
+    }
+
+    /* ---- HORIZONTAL TABS – RECTANGULAR 3D STYLE (EXACTLY AS IMAGE) ---- */
+    .sarat-docs .tab-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      background: transparent;
+      padding: 25px 0;
+      margin: 20px 0 40px 0;
+      border-bottom: none;
+    }
+
+    .sarat-docs .tab-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 36px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: #1e3a5f;
+      background: #ffffff;
+      border: none;
+      border-radius: 0;
+      box-shadow: 
+        0 8px 0 #a0a0a0,
+        0 10px 15px rgba(0,0,0,0.2),
+        inset 0 -2px 0 rgba(0,0,0,0.05);
+      transition: all 0.15s ease;
+      cursor: pointer;
+      text-decoration: none;
+      text-transform: uppercase;
+      border: 1px solid #c0c0c0;
+      border-bottom: none;
+      min-width: 160px;
+    }
+
+    .sarat-docs .tab-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 10px 0 #7a7a7a,
+        0 15px 25px rgba(0,0,0,0.25),
+        inset 0 -2px 0 rgba(0,0,0,0.05);
+      background: #f0f7ff;
+      color: #003366;
+    }
+
+    .sarat-docs .tab-item.active {
+      background: #0066b3;
+      color: white !important;
+      box-shadow: 
+        0 8px 0 #00407a,
+        0 12px 20px rgba(0,102,179,0.35),
+        inset 0 -2px 0 rgba(0,0,0,0.15);
+      border-color: #005095;
+      border-bottom: none;
+      transform: translateY(0);
+    }
+
+    .sarat-docs .tab-item.active:hover {
+      background: #005095;
+      box-shadow: 
+        0 10px 0 #00355c,
+        0 18px 28px rgba(0,80,150,0.4);
+      transform: translateY(-3px);
+      color: white;
+    }
+
+    .sarat-docs .tab-divider {
+      display: none !important;
+    }
+
+    /* ----- CSV TABLE STYLES - 80% WIDTH AS REQUESTED ----- */
+    .sarat-docs .csv-tab-container {
+      overflow-x: auto;
+      padding: 20px 0 40px 0;
+      background: transparent;
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .sarat-docs .csv-table {
+      width: 80%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 16px;
+      min-width: 600px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow:
+        0 0 0 4px #e8f0fe,
+        0 8px 20px rgba(0, 80, 150, 0.2),
+        inset 0 0 6px rgba(0, 120, 210, 0.1);
+      margin: 0 auto;
+    }
+
+    .sarat-docs .csv-table thead {
+      background: linear-gradient(135deg, #0a1e3c, #13294b);
+    }
+
+    .sarat-docs .csv-table thead th {
+      color: #fff !important;
+      font-weight: 700;
+      text-align: center;
+      padding: 20px 18px;
+      letter-spacing: 0.8px;
+      font-size: 16px;
+      text-transform: uppercase;
+    }
+
+    .sarat-docs .csv-table td {
+      padding: 18px 20px;
+      border-bottom: 1px solid #d4e3f0;
+      vertical-align: middle;
+      background-color: white;
+      font-size: 15px;
+    }
+
+    .sarat-docs .csv-table td:nth-child(1) {
+      text-align: center;
+      font-weight: 600;
+      color: #0a2e4a;
+      width: 80px;
+    }
+
+    .sarat-docs .csv-table td:nth-child(2) {
+      text-align: left;
+      font-weight: 500;
+      color: #1e3a5f;
+    }
+
+    .sarat-docs .csv-table td:nth-child(3),
+    .sarat-docs .csv-table td:nth-child(4) {
+      text-align: center;
+      width: 140px;
+    }
+
+    .sarat-docs .csv-table tbody tr:hover {
+      background-color: #f0f9ff;
+      transition: background-color 0.15s;
+    }
+
+    .sarat-docs .download-btn,
+    .sarat-docs .share-btn {
+      min-width: 120px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+      box-shadow:
+        inset 0 -3px 0 rgba(0,0,0,0.15),
+        0 5px 12px rgba(0,0,0,0.12);
+      transform: translateY(0);
+      transition: all 0.2s ease;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .sarat-docs .download-btn {
+      background: linear-gradient(to bottom, #2e7d32, #1b5e20);
+    }
+
+    .sarat-docs .download-btn:hover {
+      background: linear-gradient(to bottom, #1b5e20, #0e4212);
+      transform: translateY(-2px);
+      box-shadow:
+        inset 0 -3px 0 rgba(0,0,0,0.2),
+        0 8px 18px rgba(46,125,50,0.4);
+    }
+
+    .sarat-docs .share-btn {
+      background: linear-gradient(to bottom, #1976d2, #0d47a1);
+    }
+
+    .sarat-docs .share-btn:hover {
+      background: linear-gradient(to bottom, #0d47a1, #062a5c);
+      transform: translateY(-2px);
+      box-shadow:
+        inset 0 -3px 0 rgba(0,0,0,0.2),
+        0 8px 18px rgba(25,118,210,0.4);
+    }
+    
+    /* ----- GOVT. CALENDARS TABLE - FIX COLUMN WIDTHS (AS IN IMAGE) ----- */
+    .sarat-docs #tab-Govt\ Calendars .csv-table {
+      width: 80%;
+      table-layout: fixed;
+    }
+
+    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(1),
+    .sarat-docs #tab-Govt\ Calendars .csv-table td:nth-child(1) {
+      width: 35% !important;
+      min-width: 220px !important;
+      text-align: left !important;
+      padding-left: 30px !important;
+    }
+
+    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(2),
+    .sarat-docs #tab-Govt\ Calendars .csv-table td:nth-child(2) {
+      width: 32.5% !important;
+      text-align: center !important;
+    }
+
+    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(3),
+    .sarat-docs #tab-Govt\ Calendars .csv-table td:nth-child(3) {
+      width: 32.5% !important;
+      text-align: center !important;
+    }
+
+    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(1) {
+      text-align: left !important;
+      padding-left: 30px !important;
+    }
+
+    .sarat-docs #tab-Govt\ Calendars .csv-table {
+      table-layout: fixed !important;
+    }
+    
+    /* ================================
+       AMENDMENT CHAIN PICTOGRAPHS STYLES
+       ================================ */
+    
+    /* Amendment Chain Container */
+    .amendment-chain {
+      display: inline-block;
+      width: 100%;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    
+    /* Parent Act Styling */
+    .parent-act {
+      font-weight: 700;
+      color: #1e3a5f;
+      background: #f0f7ff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 8px;
+      border-left: 4px solid #0066b3;
+    }
+    
+    /* Status Badge */
+    .act-status {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    
+    .act-status.current {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .act-status.amended {
+      background: #fff3cd;
+      color: #856404;
+    }
+    
+    .act-status.repealed {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
+    .act-status.new {
+      background: #cce5ff;
+      color: #004085;
+    }
+    
+    /* Amendment Tree Container */
+    .amendment-tree {
+      margin-top: 8px;
+      padding-left: 20px;
+      border-left: 2px dashed #cbd5e0;
+    }
+    
+    /* Individual Amendment Item */
+    .amendment-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      font-size: 13px;
+      color: #4a5568;
+    }
+    
+    .amendment-item .amendment-icon {
+      font-size: 16px;
+      min-width: 24px;
+    }
+    
+    .amendment-item .amendment-text {
+      flex: 1;
+    }
+    
+    .amendment-item .amendment-badge {
+      background: #fff3cd;
+      color: #856404;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+    
+    /* Tree Line Icons */
+    .tree-line {
+      font-family: monospace;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+    
+    /* Group Header for Related Acts */
+    .act-group-header {
+      background: #f1f5f9;
+      padding: 12px 16px;
+      margin: 20px 0 10px 0;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .act-group-icon {
+      font-size: 24px;
+    }
+    
+    /* Legend Styles */
+    .amendment-legend {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px 20px;
+      margin-bottom: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #334155;
+    }
+    
+    .legend-icon {
+      font-size: 18px;
+    }
+    
+    /* Amendment Alert Icon */
+    .amendment-alert {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #fff3cd;
+      color: #856404;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-left: 10px;
+      cursor: help;
+    }
+    
+    /* Replacement Arrow */
+    .replacement-arrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 5px;
+      padding: 4px 0;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .amendment-tree {
+        padding-left: 12px;
+      }
+      
+      .amendment-item {
+        flex-wrap: wrap;
+      }
+      
+      .amendment-legend {
+        font-size: 11px;
+        gap: 12px;
+      }
+    }
+    
+    /* fallback header/footer */
+    .fallback-header {
+      background: #0c1f33;
+      color: white;
+      padding: 18px 30px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .fallback-footer {
+      background: #0a1929;
+      color: #bbd6ff;
+      padding: 20px 30px;
+      text-align: center;
+    }
+
+    @media (max-width: 1200px) {
+      .sarat-docs {
+        padding: 20px 50px;
+      }
+      .sarat-docs .tab-item {
+        padding: 14px 28px;
+        min-width: 140px;
+        font-size: 1.1rem;
+      }
+      .sarat-docs .csv-table {
+        width: 90%;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .sarat-docs {
+        padding: 15px 20px;
+      }
+      .sarat-docs .tab-strip {
+        gap: 15px;
+      }
+      .sarat-docs .tab-item {
+        padding: 12px 20px;
+        min-width: 120px;
+        font-size: 1rem;
+      }
+      .sarat-docs .csv-table {
+        width: 95%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sarat-docs .csv-table {
+        width: 100%;
+      }
+    }
+
+    /* ================================
+       ALL FILES TAB STYLES (from provided code)
+    ================================ */
+    
+    /* Table Container */
+    .sara-table-container-v2 {
+      width: 100%;
+      max-width: 95vw;
+      overflow-x: auto;
+      background: #fefefe;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      margin: 20px auto;
+      box-sizing: border-box;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+                  0 10px 20px rgba(0, 0, 0, 0.15),
+                  0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Main Table Styling */
+    #saraCsvTableV2 {
+      width: 100% !important;
+      background: white;
+      color: black;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 14px;
+      border-collapse: collapse !important;
+      margin: 0 auto;
+      table-layout: auto;
+    }
+
+    #saraCsvTableV2 th,
+    #saraCsvTableV2 td {
+      padding: 12px 15px;
+      vertical-align: top;
+      text-align: left;
+      word-break: break-word;
+      white-space: normal;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #saraCsvTableV2 td[data-label="Download"],
+    #saraCsvTableV2 td[data-label="File Size"] {
+      text-align: right;
+      vertical-align: middle;
+    }
+
+    #saraCsvTableV2 thead tr th {
+      background-color: #101535 !important;
+      color: #ffffff !important;
+      font-weight: bold;
+      border-bottom: 2px solid #b20bb3 !important;
+      position: relative;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    #saraCsvTableV2 thead th.sorting:after,
+    #saraCsvTableV2 thead th.sorting_asc:after,
+    #saraCsvTableV2 thead th.sorting_desc:after {
+      content: "";
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+    }
+
+    #saraCsvTableV2 thead th.sorting:after {
+      content: "↕";
+      opacity: 0.5;
+    }
+
+    #saraCsvTableV2 thead th.sorting_asc:after {
+      content: "↑";
+    }
+
+    #saraCsvTableV2 thead th.sorting_desc:after {
+      content: "↓";
+    }
+
+    #saraCsvTableV2 tbody tr:hover td {
+      background-color: #707070 !important;
+      color: white;
+      transition: background 0.2s ease-in-out;
+    }
+
+    .sara-download-btn,
+    #saraCsvTableV2 td a button {
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: #ffffff !important;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: background 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .sara-download-btn:hover,
+    #saraCsvTableV2 td a button:hover {
+      background-color: #e615ed !important;
+      transform: translateY(-2px);
+      box-shadow: 0 3px 10px rgba(230, 21, 237, 0.4);
+    }
+
+    /* DataTables Wrapper Styles */
+    .dataTables_wrapper {
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .dataTables_wrapper .dataTables_filter {
+      float: right;
+      margin-bottom: 15px;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+      width: 300px !important;
+      padding: 8px 15px !important;
+      border: 1px solid #ccc !important;
+      border-radius: 6px !important;
+      margin-left: 10px;
+      font-size: 14px;
+    }
+
+    .dataTables_wrapper .dataTables_length {
+      float: left;
+      margin-bottom: 15px;
+    }
+
+    /* Subject column dynamic max-width with percentage */
+    #saraCsvTableV2 td[data-label="Subject"] {
+      max-width: 60%;
+      white-space: normal !important;
+      word-wrap: break-word !important;
+      overflow-wrap: break-word !important;
+      hyphens: auto;
+    }
+
+    /* S.N. column no wrap */
+    #saraCsvTableV2 td[data-label="S.N."],
+    #saraCsvTableV2 th:nth-child(1) {
+      white-space: nowrap !important;
+      max-width: 50px;
+    }
+
+    /* Force nowrap on these columns */
+    #saraCsvTableV2 td[data-label="Date"],
+    #saraCsvTableV2 td[data-label="Download"],
+    #saraCsvTableV2 td[data-label="Letter No."],
+    #saraCsvTableV2 td[data-label="File Size"] {
+      white-space: nowrap;
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+      padding: 8px 15px !important;
+      border-radius: 6px !important;
+      border: 1px solid #ccc !important;
+      font-size: 14px;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+      float: left;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+      float: right;
+      margin-top: 15px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+      padding: 8px 12px !important;
+      border: 1px solid #ddd !important;
+      margin: 0 2px !important;
+      border-radius: 4px !important;
+      transition: all 0.2s ease;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+      background: #00bbff !important;
+      color: white !important;
+      border-color: #00bbff !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+      background: #b20bb3 !important;
+      color: white !important;
+      border-color: #b20bb3 !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .sara-table-container-v2 {
+        padding: 10px;
+      }
+
+      #saraCsvTableV2,
+      #saraCsvTableV2 thead,
+      #saraCsvTableV2 tbody,
+      #saraCsvTableV2 th,
+      #saraCsvTableV2 td,
+      #saraCsvTableV2 tr {
+        display: block;
+        width: 100%;
+      }
+
+      #saraCsvTableV2 thead {
+        display: none;
+      }
+
+      #saraCsvTableV2 tr {
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 10px;
+        background: #fff;
+      }
+
+      #saraCsvTableV2 td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 10px;
+        font-size: 13px;
+        text-align: left !important;
+        border-bottom: none;
+      }
+
+      #saraCsvTableV2 td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #555;
+        flex: 1;
+        margin-right: 10px;
+      }
+
+      .dataTables_wrapper .dataTables_length,
+      .dataTables_wrapper .dataTables_filter,
+      .dataTables_wrapper .dataTables_info,
+      .dataTables_wrapper .dataTables_paginate {
+        float: none !important;
+        text-align: center !important;
+        width: 100% !important;
+        margin: 10px 0 !important;
+      }
+
+      .dataTables_wrapper .dataTables_filter input {
+        width: 100% !important;
+        margin: 10px 0 !important;
+      }
+
+      .dataTables_wrapper .dataTables_length select {
+        width: 100% !important;
+      }
+    }
   </style>
 </head>
 <body>
 
-<!-- COMMON HEADER -->
+<!-- HEADER -->
 <div id="site-header"></div>
 
-<div class="chk-page-wrap">
+<!-- MAIN DOCS COMPONENT -->
+<section class="guard-hero">
+  <div class="guard-hero-inner animate-on-scroll">
+    <h1 class="guard-title">GUARD FILE</h1>
+    <p class="guard-subtitle">
+      Government Letters and Guidelines Archive
+    </p>
+  </div>
+</section>
+<script src="assets/Scripts/Guardfile-animations.js"></script>
+  
+<div class="sarat-docs">
 
-  <nav class="chk-nav-strip">
-    <a href="/formats/petrolpumpchecklist.html" class="chk-nav-item">⛽ Petrol Pump</a>
-    <a href="/formats/lpgchecklist.html"         class="chk-nav-item chk-active">🔥 LPG Checklist</a>
-    <a href="/formats/fpschecklist.html"         class="chk-nav-item">🍚 FPS Checklist</a>
-    <a href="/formats/ppcchecklist.html"         class="chk-nav-item">🌾 PPC Verification</a>
-  </nav>
+  <!-- Amendment Chain Legend - VISUAL GUIDE FOR VISITORS -->
+  <div class="amendment-legend">
+    <div class="legend-item">
+      <span class="legend-icon">📜</span>
+      <span>Parent Act</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-icon">🟢</span>
+      <span>Currently in Force</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-icon">🟠</span>
+      <span>Has Amendments</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-icon">🔴</span>
+      <span>Repealed/Replaced</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-icon">📝</span>
+      <span>Amendment Act</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-icon">├──</span>
+      <span>Amendment Chain</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-icon">🔄</span>
+      <span>Replaced By</span>
+    </div>
+  </div>
 
-  <div class="chk-main-card" id="lpgPrint">
+  <!-- Horizontal tab strip -->
+  <div class="tab-strip" id="horizontalTabStrip">
+    <!-- All Files tab (active by default) -->
+    <button class="tab-item active" data-category="AllFiles">ALL FILES</button>
+    <button class="tab-item" data-category="Act">ACTS</button>
+    <button class="tab-item" data-category="Rules">RULES</button>
+    <button class="tab-item" data-category="Order">ORDERS</button>
+    <button class="tab-item" data-category="MSP">PADDY MSP</button>
+    <button class="tab-item" data-category="Procurement">PROC GUIDELINES</button>
+    <button class="tab-item" data-category="Food">FOOD POLICY</button>
+    <button class="tab-item" data-category="Misc">MISCELLANEOUS</button>
+    <button class="tab-item" data-category="Govt Calendars">GOVT. CALENDARS</button>
+  </div>
 
-    <!-- MASTHEAD -->
-    <div class="chk-masthead">
-      <div class="chk-masthead-inner">
-        <div>
-          <div class="chk-masthead-title">LPG Distributor <em>Inspection Report</em></div>
-          <div class="chk-masthead-subtitle">
-            <span>LPG Control Order, 2000</span>
-            <span>EC Act</span>
-            <span>Safety Integrated</span>
-          </div>
-        </div>
-        <div class="chk-action-group">
-          <div class="chk-share-dropdown" id="lpgShareDropdown">
-            <button class="chk-share-main-btn" id="lpgShareBtn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-              Share
-            </button>
-            <div class="chk-share-menu" id="lpgShareMenu">
-              <a class="chk-share-option" id="lpgWaBtn" href="#" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.096.541 4.064 1.487 5.779L.057 23.057a.75.75 0 00.906.942l5.424-1.417A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.713 9.713 0 01-4.952-1.352l-.355-.21-3.676.96.983-3.584-.23-.368A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
-                WhatsApp
-              </a>
-              <a class="chk-share-option" id="lpgTgBtn" href="#" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-                Telegram
-              </a>
-            </div>
-          </div>
-          <button class="chk-print-btn" id="lpgPrintBtn">⎙ Print</button>
-        </div>
+  <!-- Dynamic table area -->
+  <div id="dynamicTableArea">
+    <!-- All Files tab container -->
+    <div class="csv-tab-container" id="tab-AllFiles" style="display: block;">
+      <div class="csv-table-placeholder">
+        <!-- All Files table will be loaded here -->
       </div>
-    </div><!-- /.chk-masthead -->
-
-    <div class="chk-card-body">
-
-      <!-- 01 PARTICULARS -->
-      <div class="chk-sec-head">
-        <div class="chk-sec-num">01</div>
-        <div><div class="chk-sec-title">Particulars of Distributor</div></div>
-      </div>
-      <div class="chk-details-grid">
-        <div class="chk-detail-row chk-full"><span class="chk-d-label">Distributor Name &amp; Address</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row chk-full"><span class="chk-d-label">Proprietor Name &amp; Mobile No.</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row chk-full"><span class="chk-d-label">Manager Name &amp; Mobile No.</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row chk-full"><span class="chk-d-label">Date &amp; Time of Inspection</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row"><span class="chk-d-label">Godown Plot No.</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row"><span class="chk-d-label">Godown Khata No.</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row"><span class="chk-d-label">Mouza</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row"><span class="chk-d-label">Tahasil</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row"><span class="chk-d-label">Block Name</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row"><span class="chk-d-label">Police Station</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row"><span class="chk-d-label">Pin No.</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row"><span class="chk-d-label">Company's Base Depot</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row"><span class="chk-d-label">Distributor Code</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row"><span class="chk-d-label">Oil Marketing Company</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row"><span class="chk-d-label">Appointment No.</span><span class="chk-d-line"></span></div>
-        <div class="chk-detail-row"><span class="chk-d-label">Appointment Date</span><span class="chk-d-line"></span></div>
-      </div>
-
-      <!-- 02 CONSUMER PROFILE -->
-      <div class="chk-sec-head">
-        <div class="chk-sec-num">02</div>
-        <div><div class="chk-sec-title">Consumer Profile &amp; Coverage</div></div>
-      </div>
-      <div class="chk-pair-grid">
-        <div class="chk-pair-row"><span class="chk-p-label">Domestic (Normal)</span><span class="chk-p-line"></span></div>
-        <div class="chk-pair-row"><span class="chk-p-label">Active Domestic</span><span class="chk-p-line"></span></div>
-        <div class="chk-pair-row"><span class="chk-p-label">Ujjwala</span><span class="chk-p-line"></span></div>
-        <div class="chk-pair-row"><span class="chk-p-label">Active Ujjwala</span><span class="chk-p-line"></span></div>
-        <div class="chk-pair-row"><span class="chk-p-label">Commercial Consumers</span><span class="chk-p-line"></span></div>
-        <div class="chk-pair-row"><span class="chk-p-label">Active Commercial</span><span class="chk-p-line"></span></div>
-      </div>
-
-      <!-- 03 STOCK – FILLED -->
-      <div class="chk-sec-head">
-        <div class="chk-sec-num">03</div>
-        <div><div class="chk-sec-title">Stock Position – Filled Cylinders</div></div>
-        <div class="chk-sec-tag">Physical Count</div>
-      </div>
-      <div class="chk-tbl-wrap">
-        <table class="chk-data-tbl">
-          <thead><tr><th>Type</th><th>Opening</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Balance</th><th>Physical</th><th>Difference</th></tr></thead>
-          <tbody>
-            <tr><td>14.2 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>5 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>19 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>05 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- 04 STOCK – EMPTY -->
-      <div class="chk-sec-head">
-        <div class="chk-sec-num">04</div>
-        <div><div class="chk-sec-title">Stock Position – Empty Cylinders</div></div>
-        <div class="chk-sec-tag">Physical Count</div>
-      </div>
-      <div class="chk-tbl-wrap">
-        <table class="chk-data-tbl">
-          <thead><tr><th>Type</th><th>Opening</th><th>Receipt</th><th>Total</th><th>Issue</th><th>Balance</th><th>Physical</th><th>Difference</th></tr></thead>
-          <tbody>
-            <tr><td>14.2 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>5 Kg Domestic</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>19 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>05 Kg Commercial</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- 05 DEFECTIVE -->
-      <div class="chk-sec-head">
-        <div class="chk-sec-num">05</div>
-        <div><div class="chk-sec-title">Defective / Damaged Cylinders</div></div>
-      </div>
-      <div class="chk-tbl-wrap">
-        <table class="chk-data-tbl">
-          <thead>
-            <tr><th rowspan="2"> </th><th colspan="3">Domestic</th><th colspan="3">Commercial</th><th>Others</th></tr>
-            <tr><th>14.2 Kg</th><th>5 Kg</th><th>02 Kg</th><th>19 Kg</th><th>05 Kg</th><th>02 Kg</th><th></th></tr>
-          </thead>
-          <tbody>
-            <tr><td>No. of Cylinders</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>Action Taken on it</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- 06 LIFTING STATUS -->
-      <div class="chk-sec-head">
-        <div class="chk-sec-num">06</div>
-        <div><div class="chk-sec-title">Cylinder Lifting &amp; Supply Pattern — Last 3 Months</div></div>
-      </div>
-      <div class="chk-tbl-wrap">
-        <table class="chk-data-tbl">
-          <thead>
-            <tr><th rowspan="2">Month Name</th><th colspan="3">Domestic</th><th colspan="3">Commercial</th><th>Others</th></tr>
-            <tr><th>14.2 Kg</th><th>5 Kg</th><th>02 Kg</th><th>19 Kg</th><th>05 Kg</th><th>02 Kg</th><th></th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Jan-26</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>Feb-26</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>Mar-26</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- 07 STATUTORY LICENCES -->
-      <div class="chk-sec-head">
-        <div class="chk-sec-num">07</div>
-        <div><div class="chk-sec-title">Statutory Licences &amp; Certificates</div></div>
-        <div class="chk-sec-tag">🔥 Fire + Explosive</div>
-      </div>
-      <div class="chk-tbl-wrap">
-        <table class="chk-data-tbl">
-          <thead><tr><th>Particulars</th><th>Certificate No.</th><th>Valid Up To</th></tr></thead>
-          <tbody>
-            <tr><td>Fire Safety from Fire Officer</td><td></td><td></td></tr>
-            <tr><td>Explosive Certificate</td><td></td><td></td></tr>
-            <tr><td>Fire Extinguisher</td><td></td><td></td></tr>
-            <tr><td>Insurance Policy No.</td><td></td><td></td></tr>
-            <tr><td>Last Inspection by Company</td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- 08 LEGAL METROLOGY -->
-      <div class="chk-sec-head">
-        <div class="chk-sec-num">08</div>
-        <div><div class="chk-sec-title">Legal Metrology Status</div></div>
-        <div class="chk-sec-tag">⚖️ Weights &amp; Measures</div>
-      </div>
-      <div class="chk-tbl-wrap">
-        <table class="chk-data-tbl">
-          <thead><tr><th>Particulars</th><th>Details</th><th>Certificate No.</th><th>Valid Up To</th></tr></thead>
-          <tbody>
-            <tr><td>Weighing Scale</td><td></td><td></td><td></td></tr>
-            <tr><td>No. of Spring Balance</td><td></td><td></td><td></td></tr>
-            <tr><td>No. of Certified Test Weights</td><td></td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- 09 OTHER PARTICULARS AT OFFICE -->
-      <div class="chk-sec-head">
-        <div class="chk-sec-num">09</div>
-        <div><div class="chk-sec-title">Other Particulars at Office</div></div>
-      </div>
-      <div class="chk-pair-grid">
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Stock &amp; Price Declaration Board Displayed</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">List of Consumers Available</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Citizen's Charter Displayed</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">MRTP Notification Displayed</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Complaint Register Available</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Toll-free Number Displayed</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Books of Account Maintained</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Entries Updated &amp; Maintained Properly</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">POS Used</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Invoice Book Maintained</span></div>
-      </div>
-
-      <!-- 10 VEHICLE STATUS -->
-      <div class="chk-sec-head">
-        <div class="chk-sec-num">10</div>
-        <div><div class="chk-sec-title">Vehicle Status</div></div>
-      </div>
-      <div class="chk-pair-grid">
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Home Delivery Available</span></div>
-        <div class="chk-pair-row"><span class="chk-p-label">No. of Vehicles for Home Delivery</span><span class="chk-p-line"></span></div>
-        <div class="chk-pair-row chk-full"><span class="chk-p-label">Vehicle LPG Warning Signage</span><span class="chk-p-line"></span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Valve Leak Detector Available</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">O-ring Checker Available</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Vehicles Inspected</span></div>
-      </div>
-
-      <!-- 11 GODOWN INFRASTRUCTURE & SAFETY -->
-      <div class="chk-sec-head">
-        <div class="chk-sec-num">11</div>
-        <div><div class="chk-sec-title">Godown Infrastructure &amp; Safety</div></div>
-      </div>
-      <div class="chk-pair-grid">
-        <div class="chk-pair-row"><span class="chk-p-label">Approved Storage Capacity</span><span class="chk-p-line"></span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Boundary Wall &amp; Fencing Condition OK</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Cylinders Stored Vertically</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Proper Segregation of Cylinders Maintained</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Valve Leak Detector Available</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Updated Stock Register Available</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">O-ring Checker Available</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Delivery Register Maintained</span></div>
-      </div>
-
-      <!-- 12 FIRE & SAFETY COMPLIANCE -->
-      <div class="chk-sec-head">
-        <div class="chk-sec-num">12</div>
-        <div><div class="chk-sec-title">Fire &amp; Safety Compliance</div></div>
-        <div class="chk-sec-tag">🔥 Safety</div>
-      </div>
-      <div class="chk-pair-grid">
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">No Smoking Signage</span></div>
-        <div class="chk-pair-row"><span class="chk-p-label">No. of Fire Extinguishers Available</span><span class="chk-p-line"></span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">No Mobile Signage</span></div>
-        <div class="chk-pair-row"><span class="chk-p-label">No. of Sand Buckets (Filled) Available</span><span class="chk-p-line"></span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Proper Ventilation</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Fire Bucket Condition OK</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Emergency Exit Clear</span></div>
-        <div class="chk-pair-row"><input type="checkbox"><span class="chk-p-label">Electrical Wiring Insulated</span></div>
-      </div>
-
-      <!-- REMARKS -->
-      <div class="chk-sec-head" style="margin-top:1.8rem;">
-        <div class="chk-sec-num">—</div>
-        <div><div class="chk-sec-title">Remarks / Observations</div></div>
-      </div>
-      <div class="chk-remarks-wrap">
-        <textarea rows="3" placeholder="Enter any observations, violations, or remarks here…"></textarea>
-      </div>
-
-      <!-- SIGNATURE -->
-      <div class="chk-sign-row">
-        <div class="chk-sign-block" style="min-width:280px;">
-          <div class="chk-sign-block-label">Signature of the Officer</div>
-          <div class="chk-sign-line"></div>
-        </div>
-      </div>
-
-    </div><!-- /.chk-card-body -->
-
-    <div class="chk-card-footer">
-      <span class="chk-footer-note">Fire NOC · Legal Metrology · O-ring check · EC Act · LPG Control Order, 2000</span>
-      <span class="chk-footer-mark">LPG Inspection</span>
     </div>
 
-  </div><!-- /.chk-main-card -->
+    <!-- Other tab containers -->
+    <div class="csv-tab-container" id="tab-Act" style="display: none;">
+      <div class="csv-table-placeholder">Loading Acts...</div>
+    </div>
+    <div class="csv-tab-container" id="tab-Rules" style="display: none;">
+      <div class="csv-table-placeholder">Loading Rules...</div>
+    </div>
+    <div class="csv-tab-container" id="tab-Order" style="display: none;">
+      <div class="csv-table-placeholder">Loading Orders...</div>
+    </div>
+    <div class="csv-tab-container" id="tab-MSP" style="display: none;">
+      <div class="csv-table-placeholder">Loading Paddy MSP...</div>
+    </div>
+    <div class="csv-tab-container" id="tab-Procurement" style="display: none;">
+      <div class="csv-table-placeholder">Loading Proc Guidelines...</div>
+    </div>
+    <div class="csv-tab-container" id="tab-Food" style="display: none;">
+      <div class="csv-table-placeholder">Loading Food Policy...</div>
+    </div>
+    <div class="csv-tab-container" id="tab-Misc" style="display: none;">
+      <div class="csv-table-placeholder">Loading Miscellaneous...</div>
+    </div>
+    
+    <!-- GOVT. CALENDARS TAB -->
+    <div class="csv-tab-container" id="tab-Govt Calendars" style="display: none;">
+      <div class="csv-table-placeholder">Loading Govt. Calendars...</div>
+    </div>
+  </div>
 
-  <nav class="chk-nav-strip" style="margin-top: 1.5rem;">
-    <a href="/formats/petrolpumpchecklist.html" class="chk-nav-item">⛽ Petrol Pump</a>
-    <a href="/formats/lpgchecklist.html"         class="chk-nav-item chk-active">🔥 LPG Checklist</a>
-    <a href="/formats/fpschecklist.html"         class="chk-nav-item">🍚 FPS Checklist</a>
-    <a href="/formats/ppcchecklist.html"         class="chk-nav-item">🌾 PPC Verification</a>
-  </nav>
+</div>
 
-</div><!-- /.chk-page-wrap -->
-
-<!-- COMMON FOOTER -->
+<script src="https://cdn.jsdelivr.net/gh/saratoffice/Hosting@main/guard-file/file.js"></script>
+  
+<script src="/assets/Scripts/gototop.js"></script>
+<!-- FOOTER -->
 <div id="site-footer"></div>
 
-<!-- Go to Top -->
-<script src="/assets/Scripts/gototop.js"></script>
-
+<!-- Custom JavaScript to Transform Acts Table with Amendment Chain Pictographs -->
 <script>
-  (function () {
-    // Print
-    const printBtn = document.getElementById('lpgPrintBtn');
-    if (printBtn) printBtn.addEventListener('click', () => window.print());
-
-    // Share dropdown
-    const shareDropdown = document.getElementById('lpgShareDropdown');
-    const shareBtn      = document.getElementById('lpgShareBtn');
-    const shareMenu     = document.getElementById('lpgShareMenu');
-
-    if (shareBtn && shareMenu) {
-      shareBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        shareMenu.classList.toggle('chk-show');
-      });
-      document.addEventListener('click', (e) => {
-        if (!shareDropdown.contains(e.target)) shareMenu.classList.remove('chk-show');
-      });
-    }
-
-    function getShareText() {
-      return encodeURIComponent(
-        '📋 LPG Distributor Inspection Report\n🔗 LPG Control Order, 2000 · EC Act\n' +
-        '✅ Safety Integrated (Fire NOC + Legal Metrology)\n\n' + window.location.href
-      );
-    }
-
-    const waBtn = document.getElementById('lpgWaBtn');
-    const tgBtn = document.getElementById('lpgTgBtn');
-
-    if (waBtn) waBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.open('https://wa.me/?text=' + getShareText(), '_blank', 'noopener');
-      shareMenu.classList.remove('chk-show');
+  // This function adds amendment chain pictographs to the Acts table
+  // It will be called after the Acts table is loaded
+  function addAmendmentChainPictographs() {
+    // Wait for the Acts tab container to have content
+    const observer = new MutationObserver(function(mutations) {
+      const actsContainer = document.querySelector('#tab-Act .csv-table-placeholder');
+      if (actsContainer && actsContainer.innerHTML.trim() !== 'Loading Acts...') {
+        observer.disconnect();
+        transformActsTable();
+      }
     });
-
-    if (tgBtn) tgBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const url = 'https://t.me/share/url?url=' + encodeURIComponent(window.location.href) +
-                  '&text=' + encodeURIComponent('📋 LPG Distributor Inspection Report\n✅ LPG Control Order, 2000 · EC Act · Safety Integrated');
-      window.open(url, '_blank', 'noopener');
-      shareMenu.classList.remove('chk-show');
+    
+    observer.observe(document.querySelector('#tab-Act'), { childList: true, subtree: true });
+  }
+  
+  function transformActsTable() {
+    const actsContainer = document.querySelector('#tab-Act .csv-table');
+    if (!actsContainer) return;
+    
+    const rows = actsContainer.querySelectorAll('tbody tr');
+    
+    // Define amendment relationships based on your data
+    const amendmentMap = {
+      'The Indian Penal Code, 1860': {
+        status: 'repealed',
+        amendments: [],
+        replacedBy: 'The Bharatiya Nyaya Sanhita, 2023'
+      },
+      'The Bharatiya Nyaya Sanhita, 2023': {
+        status: 'new',
+        amendments: [],
+        replaces: 'The Indian Penal Code, 1860'
+      },
+      'The Code of Criminal Procedure 1973': {
+        status: 'repealed',
+        amendments: [],
+        replacedBy: 'The Bharatiya Nagarik Suraksha Sanhita Act No. 46 Dtd. 25.12.2023'
+      },
+      'The Bharatiya Nagarik Suraksha Sanhita Act No. 46 Dtd. 25.12.2023': {
+        status: 'new',
+        amendments: [],
+        replaces: 'The Code of Criminal Procedure 1973'
+      },
+      'The Indian Evidence Act 1972': {
+        status: 'repealed',
+        amendments: [],
+        replacedBy: 'The Bharatiya Sakshya Adhinivyam, 2023'
+      },
+      'The Bharatiya Sakshya Adhinivyam, 2023': {
+        status: 'new',
+        amendments: [],
+        replaces: 'The Indian Evidence Act 1972'
+      },
+      'The Consumer Protection Act 1986': {
+        status: 'repealed',
+        amendments: [],
+        replacedBy: 'The Consumer Protection Act 2019 No. 35 of 2019 Dtd. 09.08.2019'
+      },
+      'The Consumer Protection Act 2019 No. 35 of 2019 Dtd. 09.08.2019': {
+        status: 'current',
+        amendments: [],
+        replaces: 'The Consumer Protection Act 1986'
+      },
+      'The Essential Commodities Act 1955': {
+        status: 'amended',
+        amendments: [
+          { year: '2020', name: 'The Essential Commodities (Amendment) Act, 2020', type: 'amendment' },
+          { year: '2009', name: 'The Essential Commodities (Amendment) Act, 2009', type: 'amendment' }
+        ]
+      },
+      'The Essential Commodities (Amendment) Act, 2020': {
+        status: 'amending',
+        amends: 'The Essential Commodities Act 1955'
+      }
+    };
+    
+    rows.forEach(row => {
+      const subjectCell = row.cells[1];
+      if (!subjectCell) return;
+      
+      let actName = subjectCell.innerText.trim();
+      // Clean up act name for matching
+      actName = actName.split('📜')[0].trim();
+      
+      const actInfo = amendmentMap[actName];
+      
+      if (actInfo) {
+        // Create amendment chain HTML
+        let chainHTML = `<div class="amendment-chain">`;
+        
+        // Parent Act with status badge
+        let statusClass = '';
+        let statusIcon = '';
+        if (actInfo.status === 'current') {
+          statusClass = 'current';
+          statusIcon = '🟢';
+        } else if (actInfo.status === 'amended') {
+          statusClass = 'amended';
+          statusIcon = '🟠';
+        } else if (actInfo.status === 'repealed') {
+          statusClass = 'repealed';
+          statusIcon = '🔴';
+        } else if (actInfo.status === 'new') {
+          statusClass = 'new';
+          statusIcon = '🆕';
+        } else if (actInfo.status === 'amending') {
+          statusClass = 'amended';
+          statusIcon = '📝';
+        }
+        
+        chainHTML += `<div class="parent-act">${statusIcon} ${actName} <span class="act-status ${statusClass}">${actInfo.status.toUpperCase()}</span></div>`;
+        
+        // Check if this act is replaced by another
+        if (actInfo.replacedBy) {
+          chainHTML += `<div class="replacement-arrow">🔄 <strong>REPLACED BY:</strong> ${actInfo.replacedBy}</div>`;
+        }
+        
+        // Check if this act replaces another
+        if (actInfo.replaces) {
+          chainHTML += `<div class="replacement-arrow">✅ <strong>REPLACES:</strong> ${actInfo.replaces}</div>`;
+        }
+        
+        // Add amendment tree if exists
+        if (actInfo.amendments && actInfo.amendments.length > 0) {
+          chainHTML += `<div class="amendment-tree">`;
+          actInfo.amendments.forEach((amendment, index) => {
+            const isLast = index === actInfo.amendments.length - 1;
+            const lineChar = isLast ? '└──' : '├──';
+            chainHTML += `
+              <div class="amendment-item">
+                <span class="amendment-icon">${lineChar} 📝</span>
+                <span class="amendment-text"><strong>${amendment.name}</strong> <span class="amendment-badge">Amended ${amendment.year}</span></span>
+              </div>
+            `;
+          });
+          chainHTML += `</div>`;
+        }
+        
+        // Check if this is an amendment to another act
+        if (actInfo.amends) {
+          chainHTML += `<div class="amendment-tree">`;
+          chainHTML += `
+            <div class="amendment-item">
+              <span class="amendment-icon">├── 📜</span>
+              <span class="amendment-text">Amends: <strong>${actInfo.amends}</strong></span>
+            </div>
+          `;
+          chainHTML += `</div>`;
+        }
+        
+        chainHTML += `<div class="amendment-alert">⚠️ Click to view full amendment history</div>`;
+        chainHTML += `</div>`;
+        
+        // Replace the subject cell content with the amendment chain
+        subjectCell.innerHTML = chainHTML;
+        subjectCell.style.padding = '15px';
+        subjectCell.style.verticalAlign = 'top';
+      }
     });
-  })();
+  }
+  
+  // Also add amendment chain to the main table (All Files tab) for Act category items
+  function addToAllFilesTab() {
+    const observer = new MutationObserver(function(mutations) {
+      const allFilesTable = document.querySelector('#saraCsvTableV2');
+      if (allFilesTable && allFilesTable.rows.length > 1) {
+        observer.disconnect();
+        transformAllFilesTable();
+      }
+    });
+    
+    const allFilesContainer = document.querySelector('#tab-AllFiles');
+    if (allFilesContainer) {
+      observer.observe(allFilesContainer, { childList: true, subtree: true });
+    }
+  }
+  
+  function transformAllFilesTable() {
+    const table = document.querySelector('#saraCsvTableV2');
+    if (!table) return;
+    
+    const rows = table.querySelectorAll('tbody tr');
+    const actKeywords = ['Act', 'Sanhita', 'Code', 'Adhinivyam'];
+    
+    rows.forEach(row => {
+      const subjectCell = row.querySelector('td[data-label="Subject"]');
+      if (!subjectCell) return;
+      
+      const subjectText = subjectCell.innerText.trim();
+      const isAct = actKeywords.some(keyword => subjectText.includes(keyword));
+      
+      if (isAct && (subjectText.includes('Act') || subjectText.includes('Sanhita'))) {
+        // Add amendment alert icon to show this is an act with amendment history
+        const alertSpan = document.createElement('span');
+        alertSpan.className = 'amendment-alert';
+        alertSpan.innerHTML = ' ⚠️ Has Amendments';
+        alertSpan.style.marginLeft = '8px';
+        alertSpan.style.display = 'inline-block';
+        subjectCell.appendChild(alertSpan);
+      }
+    });
+  }
+  
+  // Initialize after page load
+  document.addEventListener('DOMContentLoaded', function() {
+    // Wait for tabs to be initialized by file.js
+    setTimeout(() => {
+      addAmendmentChainPictographs();
+      addToAllFilesTab();
+    }, 2000);
+  });
 </script>
 
 </body>
