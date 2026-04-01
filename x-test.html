@@ -2,870 +2,712 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Acts, Rules, Orders | Sarat Office</title>
+  <title>Contact Me | Sarat Office</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Papaparse for CSV parsing -->
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <!-- DataTables & jQuery -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  
   <!-- Common CSS (menu, footer, global styles) -->
   <link rel="stylesheet" href="style.css">
-  <!-- site components for header/footer etc. -->
   <script src="assets/Scripts/site-components.js" defer></script>
-  
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <style>
-    /* ================================
-       GUARD FILE – HERO SECTION
-       ================================ */
-    .guard-hero {
+    /* ============================================================
+       SARAT CONTACT PAGE — scoped with prefix "sc-" to avoid
+       conflicts with your global header/footer styles
+    ============================================================ */
+
+    :root {
+      --sc-ink:        #0e1a26;
+      --sc-ink-mid:    #1c3044;
+      --sc-ink-soft:   #3a5068;
+      --sc-ink-muted:  #5a7080;
+      --sc-gold:       #c9a96e;
+      --sc-gold-light: #e8d5b0;
+      --sc-surface:    #f5f0e8;
+      --sc-white:      #ffffff;
+      --sc-paper:      #faf8f4;
+      --sc-border:     #d8cfc0;
+      --sc-shadow-sm:  0 2px 12px rgba(14,26,38,0.08);
+      --sc-shadow-md:  0 8px 32px rgba(14,26,38,0.14);
+      --sc-shadow-lg:  0 24px 60px rgba(14,26,38,0.18);
+      --sc-radius:     20px;
+      --sc-font-display: 'Cormorant Garamond', Georgia, serif;
+      --sc-font-body:    'DM Sans', sans-serif;
+    }
+
+    /* ---------- RESET (scoped) ---------- */
+    .sc-wrap * { box-sizing: border-box; margin: 0; padding: 0; }
+    .sc-hero *  { box-sizing: border-box; }
+
+    /* =====================
+       HERO
+    ===================== */
+    .sc-hero {
+      position: relative;
+      min-height: 72vh;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      background-image: url("https://cdn.jsdelivr.net/gh/saratoffice/site-resources/assets/images/background/Blue-Gradient.png");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .sc-hero__overlay {
+      position: absolute;
+      inset: 0;
       background: linear-gradient(
-          135deg,
-          rgba(65, 88, 208, 0.9) 0%,
-          rgba(200, 80, 192, 0.9) 46%,
-          rgba(255, 204, 112, 0.9) 100%
-        );
-      padding: 40px 20px;
-      text-align: center;
-      color: #ffffff;
+        160deg,
+        rgba(8, 18, 30, 0.72) 0%,
+        rgba(14, 30, 50, 0.55) 50%,
+        rgba(20, 44, 68, 0.30) 100%
+      );
+    }
+
+    /* Decorative ruled lines */
+    .sc-hero__lines {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
       overflow: hidden;
     }
-
-    .guard-hero-inner {
-      max-width: 1100px;
-      margin: auto;
+    .sc-hero__lines::before,
+    .sc-hero__lines::after {
+      content: "";
+      position: absolute;
+      background: rgba(201, 169, 110, 0.18);
+    }
+    .sc-hero__lines::before {
+      width: 1px;
+      top: 0; bottom: 0;
+      left: 52%;
+    }
+    .sc-hero__lines::after {
+      height: 1px;
+      left: 0; right: 0;
+      top: 55%;
     }
 
-    .guard-title {
-      font-size: 56px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      color: #fff176;
-      margin-bottom: 20px;
+    .sc-hero__inner {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px 72px;
+    }
+
+    .sc-hero__eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .sc-hero__eyebrow span {
+      font-family: var(--sc-font-body);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--sc-gold);
+    }
+    .sc-hero__eyebrow::before {
+      content: "";
+      display: block;
+      width: 36px;
+      height: 1px;
+      background: var(--sc-gold);
+      flex-shrink: 0;
+    }
+
+    .sc-hero__title {
+      font-family: var(--sc-font-display);
+      font-size: clamp(4.5rem, 10vw, 10rem);
+      font-weight: 300;
+      line-height: 0.92;
+      color: var(--sc-white);
+      letter-spacing: -1px;
+    }
+    .sc-hero__title em {
+      font-style: italic;
+      color: var(--sc-gold-light);
+    }
+
+    .sc-hero__sub {
+      margin-top: 28px;
+      font-family: var(--sc-font-body);
+      font-size: 1rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0.5px;
+    }
+
+    /* scroll hint */
+    .sc-hero__scroll {
+      position: absolute;
+      right: 48px;
+      bottom: 72px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.5);
+      font-family: var(--sc-font-body);
+      font-size: 0.68rem;
+      letter-spacing: 2px;
       text-transform: uppercase;
     }
-
-    .guard-subtitle {
-      font-size: 26px;
-      color: #9adfff;
-      margin-bottom: 20px;
-      font-weight: 500;
-    }
-
-    .animate-on-scroll {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.9s ease, transform 0.9s ease;
-    }
-
-    .animate-on-scroll.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (max-width: 768px) {
-      .guard-title { font-size: 38px; }
-      .guard-subtitle { font-size: 20px; }
-      .guard-btn { font-size: 16px; padding: 12px 26px; }
-    }
-
-    /* ----- GLOBAL RESET ----- */
-    body {
-      margin: 0;
-      background: #f5f9ff;
-      font-family: 'Segoe UI', Roboto, sans-serif;
-    }
-
-    /* ----- NAMESPACED WRAPPER ----- */
-    .sarat-docs {
+    .sc-hero__scroll::after {
+      content: "";
       display: block;
-      width: 100%;
-      max-width: 1800px;
-      margin: 0 auto;
-      padding: 20px 80px;
-      box-sizing: border-box;
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+      animation: sc-scrollpulse 2s ease-in-out infinite;
+    }
+    @keyframes sc-scrollpulse {
+      0%,100% { opacity: 0.5; transform: scaleY(1); }
+      50%      { opacity: 1;   transform: scaleY(1.15); }
     }
 
-    /* ---- HORIZONTAL TABS ---- */
-    .sarat-docs .tab-strip {
+    /* =====================
+       PAGE WRAPPER
+    ===================== */
+    .sc-wrap {
+      background: var(--sc-paper);
+      font-family: var(--sc-font-body);
+      color: var(--sc-ink);
+    }
+
+    /* =====================
+       SECTION LABEL
+    ===================== */
+    .sc-section-label {
       display: flex;
-      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--sc-font-body);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: var(--sc-ink-soft);
+      margin-bottom: 40px;
+    }
+    .sc-section-label::before {
+      content: "";
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--sc-gold);
+    }
+
+    /* =====================
+       MAIN GRID LAYOUT
+    ===================== */
+    .sc-main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 100px 48px;
+    }
+
+    .sc-grid {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    /* =====================
+       INFO COLUMN
+    ===================== */
+    .sc-info {
+      position: sticky;
+      top: 32px;
+    }
+
+    .sc-info__heading {
+      font-family: var(--sc-font-display);
+      font-size: clamp(2.6rem, 4vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.08;
+      color: var(--sc-ink);
+      margin-bottom: 16px;
+    }
+    .sc-info__heading em {
+      font-style: italic;
+      color: var(--sc-ink-soft);
+    }
+
+    .sc-info__intro {
+      font-family: var(--sc-font-body);
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--sc-ink-soft);
+      margin-bottom: 48px;
+      border-left: 2px solid var(--sc-gold);
+      padding-left: 18px;
+    }
+
+    /* Info cards */
+    .sc-info__cards {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .sc-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 24px 28px;
+      background: var(--sc-white);
+      border: 1px solid var(--sc-border);
+      transition: background 0.25s, border-color 0.25s, transform 0.25s;
+      cursor: default;
+    }
+    .sc-card:first-child { border-radius: var(--sc-radius) var(--sc-radius) 0 0; }
+    .sc-card:last-child  { border-radius: 0 0 var(--sc-radius) var(--sc-radius); }
+
+    .sc-card:hover {
+      background: var(--sc-ink);
+      border-color: var(--sc-ink);
+      transform: translateX(6px);
+    }
+    .sc-card:hover .sc-card__icon   { background: var(--sc-gold); color: var(--sc-ink); }
+    .sc-card:hover .sc-card__label  { color: var(--sc-gold); }
+    .sc-card:hover .sc-card__value  { color: var(--sc-white); }
+    .sc-card:hover .sc-card__sub    { color: rgba(255,255,255,0.55); }
+
+    .sc-card__icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--sc-surface);
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 20px;
-      background: transparent;
-      padding: 25px 0;
-      margin: 20px 0 40px 0;
-      border-bottom: none;
+      font-size: 20px;
+      flex-shrink: 0;
+      transition: background 0.25s, color 0.25s;
     }
 
-    .sarat-docs .tab-item {
+    .sc-card__body { flex: 1; min-width: 0; }
+
+    .sc-card__label {
+      font-family: var(--sc-font-body);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--sc-ink-muted);
+      margin-bottom: 5px;
+      transition: color 0.25s;
+    }
+    .sc-card__value {
+      font-family: var(--sc-font-body);
+      font-size: 0.96rem;
+      font-weight: 500;
+      color: var(--sc-ink);
+      line-height: 1.5;
+      transition: color 0.25s;
+    }
+    .sc-card__sub {
+      font-size: 0.83rem;
+      font-weight: 300;
+      color: var(--sc-ink-muted);
+      margin-top: 3px;
+      transition: color 0.25s;
+    }
+
+    /* divider inside hours card */
+    .sc-card__divider {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--sc-border);
+      font-size: 0.82rem;
+      color: var(--sc-ink-muted);
+      font-weight: 300;
+      line-height: 1.6;
+    }
+    .sc-card:hover .sc-card__divider {
+      border-top-color: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.45);
+    }
+
+    /* =====================
+       FORM COLUMN
+    ===================== */
+    .sc-form-wrap {
+      background: var(--sc-white);
+      border: 1px solid var(--sc-border);
+      border-radius: 32px;
+      padding: 56px 52px;
+      box-shadow: var(--sc-shadow-md);
+    }
+
+    .sc-form-wrap__header {
+      margin-bottom: 44px;
+    }
+
+    .sc-form-wrap__title {
+      font-family: var(--sc-font-display);
+      font-size: clamp(2rem, 3vw, 3rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--sc-ink);
+      margin-bottom: 10px;
+    }
+    .sc-form-wrap__title em {
+      font-style: italic;
+      color: var(--sc-ink-soft);
+    }
+    .sc-form-wrap__tagline {
+      font-size: 0.9rem;
+      color: var(--sc-ink-muted);
+      font-weight: 300;
+    }
+
+    /* Row grid for name/email */
+    .sc-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .sc-field {
+      margin-bottom: 26px;
+    }
+
+    .sc-field label {
+      display: block;
+      font-family: var(--sc-font-body);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--sc-ink-mid);
+      margin-bottom: 10px;
+    }
+
+    .sc-field input,
+    .sc-field textarea,
+    .sc-field select {
+      width: 100%;
+      padding: 15px 20px;
+      border: 1.5px solid var(--sc-border);
+      border-radius: 14px;
+      background: var(--sc-paper);
+      font-family: var(--sc-font-body);
+      font-size: 0.97rem;
+      color: var(--sc-ink);
+      font-weight: 400;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .sc-field input::placeholder,
+    .sc-field textarea::placeholder {
+      color: var(--sc-ink-muted);
+      font-weight: 300;
+    }
+
+    .sc-field input:focus,
+    .sc-field textarea:focus,
+    .sc-field select:focus {
+      outline: none;
+      border-color: var(--sc-ink-mid);
+      background: var(--sc-white);
+      box-shadow: 0 0 0 4px rgba(14,26,38,0.07);
+    }
+
+    .sc-field textarea {
+      min-height: 140px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    /* custom select arrow */
+    .sc-field select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%233a5068' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 18px center;
+      cursor: pointer;
+    }
+
+    /* Submit button */
+    .sc-btn {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      padding: 16px 36px;
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      color: #1e3a5f;
-      background: #ffffff;
-      border: 1px solid #c0c0c0;
-      border-bottom: none;
-      border-radius: 0;
-      box-shadow: 
-        0 8px 0 #a0a0a0,
-        0 10px 15px rgba(0,0,0,0.2),
-        inset 0 -2px 0 rgba(0,0,0,0.05);
-      transition: all 0.15s ease;
-      cursor: pointer;
-      text-decoration: none;
+      gap: 12px;
+      background: var(--sc-ink);
+      color: var(--sc-white);
+      border: none;
+      padding: 17px 40px;
+      border-radius: 100px;
+      font-family: var(--sc-font-body);
+      font-size: 0.92rem;
+      font-weight: 600;
+      letter-spacing: 1px;
       text-transform: uppercase;
-      min-width: 160px;
+      cursor: pointer;
+      transition: background 0.22s, transform 0.18s, box-shadow 0.22s;
+      box-shadow: 0 12px 28px rgba(14,26,38,0.22);
     }
-
-    .sarat-docs .tab-item:hover {
-      transform: translateY(-4px);
-      box-shadow: 
-        0 10px 0 #7a7a7a,
-        0 15px 25px rgba(0,0,0,0.25),
-        inset 0 -2px 0 rgba(0,0,0,0.05);
-      background: #f0f7ff;
-      color: #003366;
-    }
-
-    .sarat-docs .tab-item.active {
-      background: #0066b3;
-      color: white !important;
-      box-shadow: 
-        0 8px 0 #00407a,
-        0 12px 20px rgba(0,102,179,0.35),
-        inset 0 -2px 0 rgba(0,0,0,0.15);
-      border-color: #005095;
-      border-bottom: none;
-      transform: translateY(0);
-    }
-
-    .sarat-docs .tab-item.active:hover {
-      background: #005095;
-      box-shadow: 
-        0 10px 0 #00355c,
-        0 18px 28px rgba(0,80,150,0.4);
+    .sc-btn:hover {
+      background: var(--sc-ink-mid);
       transform: translateY(-3px);
-      color: white;
+      box-shadow: 0 20px 40px rgba(14,26,38,0.3);
+    }
+    .sc-btn svg {
+      transition: transform 0.2s;
+    }
+    .sc-btn:hover svg {
+      transform: translateX(4px);
     }
 
-    .sarat-docs .tab-divider { display: none !important; }
-
-    /* ----- CSV TABLE STYLES ----- */
-    .sarat-docs .csv-tab-container {
-      overflow-x: auto;
-      padding: 20px 0 40px 0;
-      background: transparent;
-      margin-top: 10px;
-      display: flex;
-      justify-content: center;
+    .sc-form-footer {
+      margin-top: 18px;
+      font-size: 0.8rem;
+      color: var(--sc-ink-muted);
+      font-weight: 300;
     }
 
-    .sarat-docs .csv-table {
-      width: 80%;
-      border-collapse: separate;
-      border-spacing: 0;
-      font-family: 'Segoe UI', sans-serif;
-      font-size: 16px;
-      min-width: 600px;
-      border-radius: 8px;
+    /* =====================
+       MAP STRIP
+    ===================== */
+    .sc-map-section {
+      padding: 0 48px 80px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .sc-map-inner {
+      border-radius: 28px;
       overflow: hidden;
-      background: #ffffff;
-      box-shadow:
-        0 0 0 4px #e8f0fe,
-        0 8px 20px rgba(0, 80, 150, 0.2),
-        inset 0 0 6px rgba(0, 120, 210, 0.1);
-      margin: 0 auto;
-    }
-
-    .sarat-docs .csv-table thead {
-      background: linear-gradient(135deg, #0a1e3c, #13294b);
-    }
-
-    .sarat-docs .csv-table thead th {
-      color: #fff !important;
-      font-weight: 700;
-      text-align: center;
-      padding: 20px 18px;
-      letter-spacing: 0.8px;
-      font-size: 16px;
-      text-transform: uppercase;
-    }
-
-    .sarat-docs .csv-table td {
-      padding: 18px 20px;
-      border-bottom: 1px solid #d4e3f0;
-      vertical-align: middle;
-      background-color: white;
-      font-size: 15px;
-    }
-
-    .sarat-docs .csv-table td:nth-child(1) {
-      text-align: center;
-      font-weight: 600;
-      color: #0a2e4a;
-      width: 80px;
-    }
-
-    .sarat-docs .csv-table td:nth-child(2) {
-      text-align: left;
-      font-weight: 500;
-      color: #1e3a5f;
-    }
-
-    .sarat-docs .csv-table td:nth-child(3),
-    .sarat-docs .csv-table td:nth-child(4) {
-      text-align: center;
-      width: 140px;
-    }
-
-    .sarat-docs .csv-table tbody tr:hover {
-      background-color: #f0f9ff;
-      transition: background-color 0.15s;
-    }
-
-    .sarat-docs .download-btn,
-    .sarat-docs .share-btn {
-      min-width: 120px;
-      padding: 12px 20px;
-      font-size: 14px;
-      font-weight: 700;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      color: white;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-      box-shadow:
-        inset 0 -3px 0 rgba(0,0,0,0.15),
-        0 5px 12px rgba(0,0,0,0.12);
-      transform: translateY(0);
-      transition: all 0.2s ease;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-    }
-
-    .sarat-docs .download-btn {
-      background: linear-gradient(to bottom, #2e7d32, #1b5e20);
-    }
-
-    .sarat-docs .download-btn:hover {
-      background: linear-gradient(to bottom, #1b5e20, #0e4212);
-      transform: translateY(-2px);
-      box-shadow:
-        inset 0 -3px 0 rgba(0,0,0,0.2),
-        0 8px 18px rgba(46,125,50,0.4);
-    }
-
-    .sarat-docs .share-btn {
-      background: linear-gradient(to bottom, #1976d2, #0d47a1);
-    }
-
-    .sarat-docs .share-btn:hover {
-      background: linear-gradient(to bottom, #0d47a1, #062a5c);
-      transform: translateY(-2px);
-      box-shadow:
-        inset 0 -3px 0 rgba(0,0,0,0.2),
-        0 8px 18px rgba(25,118,210,0.4);
-    }
-    
-    /* ----- GOVT. CALENDARS TABLE ----- */
-    .sarat-docs #tab-Govt\ Calendars .csv-table {
-      width: 80%;
-      table-layout: fixed;
-    }
-
-    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(1),
-    .sarat-docs #tab-Govt\ Calendars .csv-table td:nth-child(1) {
-      width: 35% !important;
-      min-width: 220px !important;
-      text-align: left !important;
-      padding-left: 30px !important;
-    }
-
-    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(2),
-    .sarat-docs #tab-Govt\ Calendars .csv-table td:nth-child(2) {
-      width: 32.5% !important;
-      text-align: center !important;
-    }
-
-    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(3),
-    .sarat-docs #tab-Govt\ Calendars .csv-table td:nth-child(3) {
-      width: 32.5% !important;
-      text-align: center !important;
-    }
-
-    .sarat-docs #tab-Govt\ Calendars .csv-table th:nth-child(1) {
-      text-align: left !important;
-      padding-left: 30px !important;
-    }
-
-    .sarat-docs #tab-Govt\ Calendars .csv-table { table-layout: fixed !important; }
-
-    /* fallback header/footer */
-    .fallback-header {
-      background: #0c1f33;
-      color: white;
-      padding: 18px 30px;
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .fallback-footer {
-      background: #0a1929;
-      color: #bbd6ff;
-      padding: 20px 30px;
-      text-align: center;
-    }
-
-    /* ================================
-       ALL FILES TAB STYLES
-    ================================ */
-    .sara-table-container-v2 {
-      width: 100%;
-      max-width: 95vw;
-      overflow-x: auto;
-      background: #fefefe;
-      padding: 20px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      margin: 20px auto;
-      box-sizing: border-box;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1),
-                  0 10px 20px rgba(0,0,0,0.15),
-                  0 20px 40px rgba(0,0,0,0.2);
-    }
-
-    #saraCsvTableV2 {
-      width: 100% !important;
-      background: white;
-      color: black;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 14px;
-      border-collapse: collapse !important;
-      margin: 0 auto;
-      table-layout: auto;
-    }
-
-    #saraCsvTableV2 th,
-    #saraCsvTableV2 td {
-      padding: 12px 15px;
-      vertical-align: top;
-      text-align: left;
-      word-break: break-word;
-      white-space: normal;
-      border-bottom: 1px solid #ddd;
-    }
-
-    #saraCsvTableV2 td[data-label="Download"],
-    #saraCsvTableV2 td[data-label="File Size"] {
-      text-align: right;
-      vertical-align: middle;
-    }
-
-    #saraCsvTableV2 thead tr th {
-      background-color: #101535 !important;
-      color: #ffffff !important;
-      font-weight: bold;
-      border-bottom: 2px solid #b20bb3 !important;
+      box-shadow: var(--sc-shadow-lg);
+      border: 1px solid var(--sc-border);
       position: relative;
-      text-align: center;
-      vertical-align: middle;
     }
 
-    #saraCsvTableV2 thead th.sorting:after { content: "↕"; opacity: 0.5; }
-    #saraCsvTableV2 thead th.sorting_asc:after { content: "↑"; }
-    #saraCsvTableV2 thead th.sorting_desc:after { content: "↓"; }
-
-    #saraCsvTableV2 thead th.sorting:after,
-    #saraCsvTableV2 thead th.sorting_asc:after,
-    #saraCsvTableV2 thead th.sorting_desc:after {
-      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-    }
-
-    #saraCsvTableV2 tbody tr:hover td {
-      background-color: #707070 !important;
-      color: white;
-      transition: background 0.2s ease-in-out;
-    }
-
-    .sara-download-btn,
-    #saraCsvTableV2 td a button {
-      padding: 8px 16px;
-      background-color: #007bff;
-      color: #ffffff !important;
-      border: none;
-      border-radius: 6px;
+    .sc-map-badge {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      background: var(--sc-white);
+      border: 1px solid var(--sc-border);
+      border-radius: 100px;
+      padding: 9px 20px;
+      font-family: var(--sc-font-body);
+      font-size: 0.75rem;
       font-weight: 600;
-      transition: background 0.3s ease, transform 0.3s ease;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .sara-download-btn:hover,
-    #saraCsvTableV2 td a button:hover {
-      background-color: #e615ed !important;
-      transform: translateY(-2px);
-      box-shadow: 0 3px 10px rgba(230,21,237,0.4);
-    }
-
-    .dataTables_wrapper { width: 100%; margin: 0 auto; }
-    .dataTables_wrapper .dataTables_filter { float: right; margin-bottom: 15px; }
-    .dataTables_wrapper .dataTables_filter input {
-      width: 300px !important; padding: 8px 15px !important;
-      border: 1px solid #ccc !important; border-radius: 6px !important;
-      margin-left: 10px; font-size: 14px;
-    }
-    .dataTables_wrapper .dataTables_length { float: left; margin-bottom: 15px; }
-
-    #saraCsvTableV2 td[data-label="Subject"] {
-      max-width: 60%; white-space: normal !important;
-      word-wrap: break-word !important; overflow-wrap: break-word !important; hyphens: auto;
-    }
-    #saraCsvTableV2 td[data-label="S.N."],
-    #saraCsvTableV2 th:nth-child(1) { white-space: nowrap !important; max-width: 50px; }
-    #saraCsvTableV2 td[data-label="Date"],
-    #saraCsvTableV2 td[data-label="Download"],
-    #saraCsvTableV2 td[data-label="Letter No."],
-    #saraCsvTableV2 td[data-label="File Size"] { white-space: nowrap; }
-
-    .dataTables_wrapper .dataTables_length select {
-      padding: 8px 15px !important; border-radius: 6px !important;
-      border: 1px solid #ccc !important; font-size: 14px;
-    }
-    .dataTables_wrapper .dataTables_info { float: left; margin-top: 15px; font-size: 14px; }
-    .dataTables_wrapper .dataTables_paginate { float: right; margin-top: 15px; }
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
-      padding: 8px 12px !important; border: 1px solid #ddd !important;
-      margin: 0 2px !important; border-radius: 4px !important; transition: all 0.2s ease;
-    }
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-      background: #00bbff !important; color: white !important; border-color: #00bbff !important;
-    }
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-      background: #b20bb3 !important; color: white !important; border-color: #b20bb3 !important;
-    }
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
-      opacity: 0.5; cursor: not-allowed;
-    }
-
-    /* =========================================================
-       AMENDMENT CHAIN PICTOGRAPH – ACTS TAB ONLY
-       All classes are prefixed with .sarat-act- to avoid conflicts
-       ========================================================= */
-
-    /* Wrapper around the acts table */
-    .sarat-docs .sarat-act-wrap {
-      width: 82%;
-      margin: 0 auto;
-    }
-
-    /* The acts accordion table */
-    .sarat-docs .sarat-act-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      font-family: 'Segoe UI', sans-serif;
-      font-size: 15px;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #ffffff;
-      box-shadow:
-        0 0 0 4px #e8f0fe,
-        0 8px 20px rgba(0,80,150,0.2),
-        inset 0 0 6px rgba(0,120,210,0.1);
-    }
-
-    .sarat-docs .sarat-act-table thead {
-      background: linear-gradient(135deg, #0a1e3c, #13294b);
-    }
-
-    .sarat-docs .sarat-act-table thead th {
-      color: #fff !important;
-      font-weight: 700;
-      text-align: center;
-      padding: 18px 16px;
-      letter-spacing: 0.8px;
-      font-size: 15px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-    }
-
-    /* Parent act row */
-    .sarat-docs .sarat-act-table .sarat-act-parent-row {
-      cursor: pointer;
-      transition: background-color 0.15s ease;
-    }
-
-    .sarat-docs .sarat-act-table .sarat-act-parent-row:hover {
-      background-color: #eef6ff;
-    }
-
-    .sarat-docs .sarat-act-table .sarat-act-parent-row td {
-      padding: 16px 18px;
-      border-bottom: 1px solid #d4e3f0;
-      vertical-align: middle;
-      background-color: inherit;
-    }
-
-    /* Serial number cell */
-    .sarat-docs .sarat-act-table .sarat-act-sno {
-      text-align: center;
-      font-weight: 700;
-      color: #0a2e4a;
-      width: 60px;
-    }
-
-    /* Subject cell with pictograph chain */
-    .sarat-docs .sarat-act-table .sarat-act-subject-cell {
-      text-align: left;
-    }
-
-    /* Act name line */
-    .sarat-docs .sarat-act-name {
+      color: var(--sc-ink);
+      box-shadow: var(--sc-shadow-sm);
       display: flex;
       align-items: center;
       gap: 8px;
-      font-weight: 600;
-      color: #1e3a5f;
-      font-size: 15px;
     }
-
-    .sarat-docs .sarat-act-icon {
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    /* Badge showing amendment count */
-    .sarat-docs .sarat-act-amend-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #fff3e0;
-      border: 1px solid #ffb74d;
-      color: #e65100;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 12px;
-      letter-spacing: 0.3px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    /* Toggle chevron */
-    .sarat-docs .sarat-act-toggle {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 22px;
-      height: 22px;
-      background: #e3ecf7;
+    .sc-map-badge::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      font-size: 11px;
-      color: #0066b3;
+      background: #2ecc71;
       flex-shrink: 0;
-      transition: transform 0.25s ease, background 0.15s;
-      margin-left: 4px;
     }
 
-    .sarat-docs .sarat-act-parent-row.sarat-act-open .sarat-act-toggle {
-      transform: rotate(180deg);
-      background: #0066b3;
-      color: white;
-    }
-
-    /* Chain container (hidden by default) */
-    .sarat-docs .sarat-act-chain {
-      display: none;
-      padding: 4px 0 8px 36px;
-      margin-top: 6px;
-    }
-
-    .sarat-docs .sarat-act-parent-row.sarat-act-open + .sarat-act-amendment-rows .sarat-act-chain,
-    .sarat-docs .sarat-act-chain.sarat-act-chain-visible {
+    #map {
+      width: 100%;
+      height: 460px;
+      border: none;
       display: block;
+      background: #e9ecef;
     }
 
-    /* Each chain item line */
-    .sarat-docs .sarat-act-chain-item {
+    /* =====================
+       DIVIDER STRIP
+    ===================== */
+    .sc-divider {
+      max-width: 1280px;
+      margin: 0 auto 80px;
+      padding: 0 48px;
+    }
+    .sc-divider__line {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--sc-border), transparent);
+    }
+
+    /* =====================
+       BOTTOM AVAILABILITY BANNER
+    ===================== */
+    .sc-availability {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 48px 100px;
+    }
+
+    .sc-availability__inner {
+      background: var(--sc-ink);
+      border-radius: 28px;
+      padding: 52px 60px;
       display: flex;
-      align-items: flex-start;
-      gap: 6px;
-      font-size: 13px;
-      color: #444;
-      line-height: 1.4;
-      padding: 3px 0;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sc-availability__inner::before {
+      content: "";
+      position: absolute;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,169,110,0.12) 0%, transparent 70%);
+      top: -60px; right: -60px;
+      pointer-events: none;
+    }
+
+    .sc-availability__text { position: relative; }
+    .sc-availability__eyebrow {
+      font-family: var(--sc-font-body);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--sc-gold);
+      margin-bottom: 10px;
+    }
+    .sc-availability__heading {
+      font-family: var(--sc-font-display);
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      font-weight: 300;
+      color: var(--sc-white);
+      line-height: 1.15;
+    }
+    .sc-availability__heading em {
+      font-style: italic;
+      color: var(--sc-gold-light);
+    }
+
+    .sc-availability__actions {
+      display: flex;
+      gap: 16px;
+      flex-shrink: 0;
       position: relative;
     }
 
-    /* Tree connector lines using pseudo-elements */
-    .sarat-docs .sarat-act-chain-item::before {
-      content: '';
-      position: absolute;
-      left: -16px;
-      top: 0;
-      width: 1px;
-      height: 100%;
-      background: #c0cfe0;
-    }
-
-    .sarat-docs .sarat-act-chain-item:last-child::before {
-      height: 50%;
-    }
-
-    .sarat-docs .sarat-act-chain-item::after {
-      content: '';
-      position: absolute;
-      left: -16px;
-      top: 50%;
-      width: 14px;
-      height: 1px;
-      background: #c0cfe0;
-      transform: translateY(-50%);
-    }
-
-    .sarat-docs .sarat-act-chain-prefix {
-      font-family: monospace;
-      color: #8099b8;
-      font-size: 13px;
-      flex-shrink: 0;
-      user-select: none;
-    }
-
-    .sarat-docs .sarat-act-chain-icon {
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-
-    .sarat-docs .sarat-act-chain-label {
-      flex: 1;
-      color: #2c4a70;
+    .sc-btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--sc-white);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      padding: 15px 32px;
+      border-radius: 100px;
+      font-family: var(--sc-font-body);
+      font-size: 0.88rem;
       font-weight: 500;
-    }
-
-    /* Amendment status badges */
-    .sarat-docs .sarat-act-status-latest {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      background: #e8f5e9;
-      border: 1px solid #a5d6a7;
-      color: #2e7d32;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 1px 7px;
-      border-radius: 10px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .sarat-docs .sarat-act-status-old {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      background: #fff8e1;
-      border: 1px solid #ffe082;
-      color: #f57f17;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 1px 7px;
-      border-radius: 10px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .sarat-docs .sarat-act-status-original {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      background: #e3f2fd;
-      border: 1px solid #90caf9;
-      color: #0d47a1;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 1px 7px;
-      border-radius: 10px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    /* Mini download button inside chain */
-    .sarat-docs .sarat-act-chain-dl {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 10px;
-      font-size: 11px;
-      font-weight: 700;
-      color: white;
-      background: linear-gradient(to bottom, #2e7d32, #1b5e20);
-      border: none;
-      border-radius: 4px;
+      letter-spacing: 0.5px;
       cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
       text-decoration: none;
-      white-space: nowrap;
-      flex-shrink: 0;
-      box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15);
-      transition: all 0.15s ease;
+    }
+    .sc-btn-outline:hover {
+      border-color: var(--sc-gold);
+      background: rgba(201,169,110,0.1);
+      color: var(--sc-gold-light);
     }
 
-    .sarat-docs .sarat-act-chain-dl:hover {
-      background: linear-gradient(to bottom, #1b5e20, #0e4212);
-      transform: translateY(-1px);
+    .sc-btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--sc-gold);
+      color: var(--sc-ink);
+      border: none;
+      padding: 15px 32px;
+      border-radius: 100px;
+      font-family: var(--sc-font-body);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.18s;
+      text-decoration: none;
+    }
+    .sc-btn-gold:hover {
+      background: var(--sc-gold-light);
+      transform: translateY(-2px);
     }
 
-    /* Amendment expanded rows (the <tr> holding the chain) */
-    .sarat-docs .sarat-act-amendment-rows {
-      display: none;
+    /* =====================
+       ANIMATIONS
+    ===================== */
+    @keyframes sc-fadein {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .sarat-docs .sarat-act-amendment-rows.sarat-act-open {
-      display: table-row-group;
-    }
+    .sc-hero__eyebrow { animation: sc-fadein 0.7s ease both; animation-delay: 0.1s; }
+    .sc-hero__title   { animation: sc-fadein 0.8s ease both; animation-delay: 0.25s; }
+    .sc-hero__sub     { animation: sc-fadein 0.7s ease both; animation-delay: 0.45s; }
+    .sc-hero__scroll  { animation: sc-fadein 0.7s ease both; animation-delay: 0.65s; }
 
-    .sarat-docs .sarat-act-amendment-rows td {
-      padding: 0 18px 14px 18px;
-      background: #f7fbff;
-      border-bottom: 1px solid #d4e3f0;
-    }
-
-    /* Action buttons cell – stays aligned */
-    .sarat-docs .sarat-act-actions {
-      text-align: center;
-      white-space: nowrap;
-      width: 300px;
-    }
-
-    .sarat-docs .sarat-act-actions .download-btn,
-    .sarat-docs .sarat-act-actions .share-btn {
-      min-width: 110px;
-      padding: 10px 16px;
-      font-size: 13px;
-    }
-
-    /* No-amendments style (plain row, no toggle) */
-    .sarat-docs .sarat-act-table .sarat-act-parent-row.sarat-act-no-amend {
-      cursor: default;
-    }
-
-    .sarat-docs .sarat-act-table .sarat-act-parent-row.sarat-act-no-amend:hover {
-      background-color: #f8fbff;
-    }
-
-    /* Loading / empty state */
-    .sarat-docs .sarat-act-loading {
-      text-align: center;
-      padding: 40px 20px;
-      color: #5577aa;
-      font-size: 15px;
-    }
-
-    /* Responsive */
-    @media (max-width: 1200px) {
-      .sarat-docs { padding: 20px 50px; }
-      .sarat-docs .tab-item { padding: 14px 28px; min-width: 140px; font-size: 1.1rem; }
-      .sarat-docs .csv-table { width: 90%; }
-      .sarat-docs .sarat-act-wrap { width: 95%; }
-    }
-
-    @media (max-width: 900px) {
-      .sarat-docs { padding: 15px 20px; }
-      .sarat-docs .tab-strip { gap: 15px; }
-      .sarat-docs .tab-item { padding: 12px 20px; min-width: 120px; font-size: 1rem; }
-      .sarat-docs .csv-table { width: 95%; }
-      .sarat-docs .sarat-act-wrap { width: 100%; }
-      .sarat-docs .sarat-act-actions { width: auto; }
+    /* =====================
+       RESPONSIVE
+    ===================== */
+    @media (max-width: 1024px) {
+      .sc-grid { grid-template-columns: 1fr; gap: 48px; }
+      .sc-info { position: static; }
     }
 
     @media (max-width: 768px) {
-      .sarat-docs .csv-table { width: 100%; }
+      .sc-main  { padding: 70px 24px; }
+      .sc-map-section { padding: 0 24px 60px; }
+      .sc-divider { padding: 0 24px; }
+      .sc-availability { padding: 0 24px 70px; }
+      .sc-availability__inner { flex-direction: column; align-items: flex-start; padding: 36px 28px; }
+      .sc-form-wrap { padding: 36px 28px; border-radius: 24px; }
+      .sc-form-row  { grid-template-columns: 1fr; gap: 0; }
+      .sc-hero__inner { padding: 0 24px 56px; }
+      .sc-hero__scroll { display: none; }
+    }
 
-      /* Stack acts table on mobile */
-      .sarat-docs .sarat-act-table,
-      .sarat-docs .sarat-act-table thead,
-      .sarat-docs .sarat-act-table tbody,
-      .sarat-docs .sarat-act-table th,
-      .sarat-docs .sarat-act-table td,
-      .sarat-docs .sarat-act-table tr,
-      .sarat-docs .sarat-act-amendment-rows {
-        display: block !important;
-        width: 100% !important;
-      }
+    @media (max-width: 520px) {
+      .sc-hero__title { font-size: 3.6rem; }
+      .sc-main { padding: 50px 16px; }
+      .sc-map-section { padding: 0 16px 50px; }
+      .sc-availability { padding: 0 16px 60px; }
+      #map { height: 320px; }
+      .sc-availability__actions { flex-direction: column; width: 100%; }
+      .sc-btn-outline, .sc-btn-gold { justify-content: center; }
+    }
 
-      .sarat-docs .sarat-act-table thead { display: none !important; }
-
-      .sarat-docs .sarat-act-parent-row td {
-        display: flex !important;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 14px;
-      }
-
-      .sarat-docs .sarat-act-actions {
-        display: flex !important;
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: flex-end;
-      }
-
-      .sara-table-container-v2 { padding: 10px; }
-
-      #saraCsvTableV2,
-      #saraCsvTableV2 thead,
-      #saraCsvTableV2 tbody,
-      #saraCsvTableV2 th,
-      #saraCsvTableV2 td,
-      #saraCsvTableV2 tr { display: block; width: 100%; }
-
-      #saraCsvTableV2 thead { display: none; }
-
-      #saraCsvTableV2 tr {
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        padding: 10px;
-        background: #fff;
-      }
-
-      #saraCsvTableV2 td {
-        display: flex;
-        justify-content: space-between;
-        padding: 8px 10px;
-        font-size: 13px;
-        text-align: left !important;
-        border-bottom: none;
-      }
-
-      #saraCsvTableV2 td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        color: #555;
-        flex: 1;
-        margin-right: 10px;
-      }
-
-      .dataTables_wrapper .dataTables_length,
-      .dataTables_wrapper .dataTables_filter,
-      .dataTables_wrapper .dataTables_info,
-      .dataTables_wrapper .dataTables_paginate {
-        float: none !important;
-        text-align: center !important;
-        width: 100% !important;
-        margin: 10px 0 !important;
-      }
-
-      .dataTables_wrapper .dataTables_filter input,
-      .dataTables_wrapper .dataTables_length select {
-        width: 100% !important;
-        margin: 10px 0 !important;
-      }
+    /* map loading */
+    .sc-map-loading {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      background: rgba(255,255,255,0.92);
+      padding: 12px 28px;
+      border-radius: 100px;
+      font-family: var(--sc-font-body);
+      font-size: 0.85rem;
+      color: var(--sc-ink);
+      font-weight: 500;
+      box-shadow: var(--sc-shadow-sm);
+      z-index: 5;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -874,344 +716,242 @@
 <!-- HEADER -->
 <div id="site-header"></div>
 
-<!-- HERO -->
-<section class="guard-hero">
-  <div class="guard-hero-inner animate-on-scroll">
-    <h1 class="guard-title">GUARD FILE</h1>
-    <p class="guard-subtitle">Government Letters and Guidelines Archive</p>
-  </div>
-</section>
-<script src="assets/Scripts/Guardfile-animations.js"></script>
-  
-<div class="sarat-docs">
-
-  <!-- Horizontal tab strip -->
-  <div class="tab-strip" id="horizontalTabStrip">
-    <button class="tab-item active" data-category="AllFiles">ALL FILES</button>
-    <button class="tab-item" data-category="Act">ACTS</button>
-    <button class="tab-item" data-category="Rules">RULES</button>
-    <button class="tab-item" data-category="Order">ORDERS</button>
-    <button class="tab-item" data-category="MSP">PADDY MSP</button>
-    <button class="tab-item" data-category="Procurement">PROC GUIDELINES</button>
-    <button class="tab-item" data-category="Food">FOOD POLICY</button>
-    <button class="tab-item" data-category="Misc">MISCELLANEOUS</button>
-    <button class="tab-item" data-category="Govt Calendars">GOVT. CALENDARS</button>
-  </div>
-
-  <!-- Dynamic table area -->
-  <div id="dynamicTableArea">
-
-    <!-- All Files tab -->
-    <div class="csv-tab-container" id="tab-AllFiles" style="display: block;">
-      <div class="csv-table-placeholder"></div>
+<!-- ===== HERO ===== -->
+<section class="sc-hero">
+  <div class="sc-hero__overlay"></div>
+  <div class="sc-hero__lines"></div>
+  <div class="sc-hero__inner">
+    <div class="sc-hero__eyebrow">
+      <span>It's time to reach out</span>
     </div>
+    <h1 class="sc-hero__title">
+      Contact<br><em>Me</em>
+    </h1>
+    <p class="sc-hero__sub">Balangir, Odisha · India &nbsp;·&nbsp; contact@saratoffice.in</p>
+  </div>
+  <div class="sc-hero__scroll">Scroll</div>
+</section>
 
-    <!-- =====================================================
-         ACTS TAB — Amendment Chain Pictograph
-         ===================================================== -->
-    <div class="csv-tab-container" id="tab-Act" style="display: none;">
-      <div class="sarat-act-wrap">
-        <table class="sarat-act-table" id="sarat-acts-main-table">
-          <thead>
-            <tr>
-              <th style="width:60px;">S.NO.</th>
-              <th>SUBJECT</th>
-              <th style="width:300px;">DOWNLOAD / SHARE</th>
-            </tr>
-          </thead>
-          <tbody id="sarat-acts-tbody">
-            <tr>
-              <td colspan="3" class="sarat-act-loading">⏳ Loading Acts...</td>
-            </tr>
-          </tbody>
-        </table>
+<!-- ===== MAIN CONTENT ===== -->
+<div class="sc-wrap">
+  <main class="sc-main">
+    <div class="sc-section-label">Get in Touch</div>
+
+    <div class="sc-grid">
+
+      <!-- ——— LEFT: Info ——— -->
+      <aside class="sc-info">
+        <h2 class="sc-info__heading">Let's start a<br><em>conversation.</em></h2>
+        <p class="sc-info__intro">
+          Whether it's a project enquiry, a support question, or just
+          a hello — the office is here to listen and respond.
+        </p>
+
+        <div class="sc-info__cards">
+
+          <div class="sc-card">
+            <div class="sc-card__icon">📍</div>
+            <div class="sc-card__body">
+              <div class="sc-card__label">Office Address</div>
+              <div class="sc-card__value">Sarat Office, Balangir District</div>
+              <div class="sc-card__sub">Odisha, India</div>
+            </div>
+          </div>
+
+          <div class="sc-card">
+            <div class="sc-card__icon">📞</div>
+            <div class="sc-card__body">
+              <div class="sc-card__label">Phone</div>
+              <div class="sc-card__value">+91 82491 78888</div>
+              <div class="sc-card__sub">+91 6652 272444 (landline)</div>
+            </div>
+          </div>
+
+          <div class="sc-card">
+            <div class="sc-card__icon">✉️</div>
+            <div class="sc-card__body">
+              <div class="sc-card__label">Email</div>
+              <div class="sc-card__value">contact@saratoffice.in</div>
+              <div class="sc-card__sub">careers@saratoffice.in</div>
+            </div>
+          </div>
+
+          <div class="sc-card">
+            <div class="sc-card__icon">🕒</div>
+            <div class="sc-card__body">
+              <div class="sc-card__label">Office Hours</div>
+              <div class="sc-card__value">Monday – Friday &nbsp;·&nbsp; 10 AM – 5 PM</div>
+              <div class="sc-card__divider">Saturday & Sunday: Closed<br>Online replies may be delayed on weekends.</div>
+            </div>
+          </div>
+
+        </div>
+      </aside>
+
+      <!-- ——— RIGHT: Form ——— -->
+      <div class="sc-form-wrap">
+        <div class="sc-form-wrap__header">
+          <div class="sc-section-label" style="margin-bottom:18px;">Send a Message</div>
+          <h2 class="sc-form-wrap__title">We'll get back<br><em>to you soon.</em></h2>
+          <p class="sc-form-wrap__tagline">All fields are required. Expect a reply within 1–2 business days.</p>
+        </div>
+
+        <form id="sc-contactForm" onsubmit="event.preventDefault(); alert('Thank you! (Demo mode — form submission disabled)');">
+
+          <div class="sc-form-row">
+            <div class="sc-field">
+              <label for="sc-name">Full Name</label>
+              <input type="text" id="sc-name" placeholder="e.g. Aryan Padhi" required>
+            </div>
+            <div class="sc-field">
+              <label for="sc-email">Email Address</label>
+              <input type="email" id="sc-email" placeholder="hello@domain.com" required>
+            </div>
+          </div>
+
+          <div class="sc-field">
+            <label for="sc-subject">Subject / Topic</label>
+            <select id="sc-subject" required>
+              <option value="" disabled selected>Select a topic…</option>
+              <option>General Inquiry</option>
+              <option>Project Collaboration</option>
+              <option>Support Request</option>
+              <option>Career / Jobs</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="sc-field">
+            <label for="sc-message">Your Message</label>
+            <textarea id="sc-message" placeholder="Write your message here …" required></textarea>
+          </div>
+
+          <button class="sc-btn" type="submit">
+            Send Message
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <p class="sc-form-footer">Your information is kept private and never shared.</p>
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ===== DIVIDER ===== -->
+  <div class="sc-divider"><div class="sc-divider__line"></div></div>
+
+  <!-- ===== MAP ===== -->
+  <section class="sc-map-section">
+    <div class="sc-section-label">Find Us</div>
+    <div class="sc-map-inner">
+      <div class="sc-map-badge">Live Location</div>
+      <div id="map" style="min-height:400px; background:#f0f2f5; position:relative;">
+        <div class="sc-map-loading">Loading map…</div>
       </div>
     </div>
+  </section>
 
-    <!-- Other tabs (unchanged) -->
-    <div class="csv-tab-container" id="tab-Rules" style="display: none;">
-      <div class="csv-table-placeholder">Loading Rules...</div>
+  <!-- ===== AVAILABILITY BANNER ===== -->
+  <div class="sc-availability">
+    <div class="sc-availability__inner">
+      <div class="sc-availability__text">
+        <div class="sc-availability__eyebrow">We're Available</div>
+        <h3 class="sc-availability__heading">Ready to work<br><em>together?</em></h3>
+      </div>
+      <div class="sc-availability__actions">
+        <a href="mailto:contact@saratoffice.in" class="sc-btn-outline">
+          Email Directly
+        </a>
+        <a href="tel:+918249178888" class="sc-btn-gold">
+          📞 &nbsp;Call Now
+        </a>
+      </div>
     </div>
-    <div class="csv-tab-container" id="tab-Order" style="display: none;">
-      <div class="csv-table-placeholder">Loading Orders...</div>
-    </div>
-    <div class="csv-tab-container" id="tab-MSP" style="display: none;">
-      <div class="csv-table-placeholder">Loading Paddy MSP...</div>
-    </div>
-    <div class="csv-tab-container" id="tab-Procurement" style="display: none;">
-      <div class="csv-table-placeholder">Loading Proc Guidelines...</div>
-    </div>
-    <div class="csv-tab-container" id="tab-Food" style="display: none;">
-      <div class="csv-table-placeholder">Loading Food Policy...</div>
-    </div>
-    <div class="csv-tab-container" id="tab-Misc" style="display: none;">
-      <div class="csv-table-placeholder">Loading Miscellaneous...</div>
-    </div>
-    <div class="csv-tab-container" id="tab-Govt Calendars" style="display: none;">
-      <div class="csv-table-placeholder">Loading Govt. Calendars...</div>
-    </div>
+  </div>
 
-  </div><!-- /dynamicTableArea -->
-</div><!-- /sarat-docs -->
-
-<!-- =========================================================
-     AMENDMENT CHAIN PICTOGRAPH – JAVASCRIPT
-     
-     HOW YOUR GOOGLE SHEET / CSV SHOULD BE STRUCTURED:
-     
-     Columns needed for the Acts sheet:
-       S.N.          → serial number (only set on the PARENT row, leave blank for amendments)
-       Subject       → name of the act OR amendment
-       Year          → year of enactment / amendment (e.g. 2020)
-       Type          → "Act" for parent, "Amendment" for child rows
-       ParentAct     → (for Amendment rows) exact Subject text of the parent act
-       DownloadLink  → Google Drive direct download URL
-       ShareLink     → shareable URL
-     
-     The script groups rows: all "Amendment" rows whose ParentAct matches
-     a parent "Act" row are nested under it as the pictograph chain.
-     ========================================================= -->
-<script>
-(function () {
-  'use strict';
-
-  /* ── CONFIG: replace with your actual published CSV URL ── */
-  const ACTS_CSV_URL = 'YOUR_GOOGLE_SHEET_PUBLISHED_CSV_URL_FOR_ACTS_HERE';
-  /* ──────────────────────────────────────────────────────── */
-
-  /* Helper: make a Google Drive direct-download link */
-  function driveDirectLink(url) {
-    if (!url) return '#';
-    var m = url.match(/\/d\/([^/]+)/);
-    if (m) return 'https://drive.google.com/uc?export=download&id=' + m[1];
-    return url;
-  }
-
-  /* Helper: copy link to clipboard */
-  function copyLink(url, btn) {
-    if (navigator.clipboard && url && url !== '#') {
-      navigator.clipboard.writeText(url).then(function () {
-        var orig = btn.textContent;
-        btn.textContent = '✓ Copied!';
-        setTimeout(function () { btn.textContent = orig; }, 1800);
-      });
-    }
-  }
-
-  /* Build the pictograph chain HTML for a set of amendments */
-  function buildChain(amendments) {
-    if (!amendments || amendments.length === 0) return '';
-    var html = '<div class="sarat-act-chain sarat-act-chain-visible">';
-    amendments.forEach(function (amend, idx) {
-      var isLast = (idx === amendments.length - 1);
-      var prefix = isLast ? '└──' : '├──';
-      var yearNum = parseInt(amend.Year || amend.year || '', 10);
-      var latestYear = Math.max.apply(null, amendments.map(function(a){ return parseInt(a.Year || a.year || '0', 10); }));
-      var isLatest = (yearNum === latestYear);
-      var statusBadge = isLatest
-        ? '<span class="sarat-act-status-latest">🟢 LATEST</span>'
-        : '<span class="sarat-act-status-old">⚠️ OLDER</span>';
-      var label = (amend.Subject || amend.subject || 'Amendment') +
-                  (amend.Year || amend.year ? ' (' + (amend.Year || amend.year) + ')' : '');
-      var dlUrl = driveDirectLink(amend.DownloadLink || amend.downloadlink || amend['Download Link'] || '');
-      html += '<div class="sarat-act-chain-item">' +
-                '<span class="sarat-act-chain-prefix">' + prefix + '</span>' +
-                '<span class="sarat-act-chain-icon">📝</span>' +
-                '<span class="sarat-act-chain-label">' + label + '</span>' +
-                statusBadge +
-                (dlUrl !== '#' ? '<a href="' + dlUrl + '" target="_blank" class="sarat-act-chain-dl">⬇ PDF</a>' : '') +
-              '</div>';
-    });
-    html += '</div>';
-    return html;
-  }
-
-  /* Render the acts table */
-  function renderActsTable(rows) {
-    var tbody = document.getElementById('sarat-acts-tbody');
-    if (!tbody) return;
-
-    /* Separate parents and amendments */
-    var parents = [];
-    var amendMap = {};   /* key = parent act subject → array of amendment rows */
-
-    rows.forEach(function (row) {
-      var type = (row.Type || row.type || '').trim().toLowerCase();
-      if (type === 'amendment') {
-        var parentKey = (row.ParentAct || row.parentact || row['Parent Act'] || '').trim();
-        if (!amendMap[parentKey]) amendMap[parentKey] = [];
-        amendMap[parentKey].push(row);
-      } else {
-        parents.push(row);
-      }
-    });
-
-    /* Sort amendments newest-first within each parent */
-    Object.keys(amendMap).forEach(function (k) {
-      amendMap[k].sort(function (a, b) {
-        return parseInt(b.Year || b.year || '0', 10) - parseInt(a.Year || a.year || '0', 10);
-      });
-    });
-
-    if (parents.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="3" class="sarat-act-loading">No Acts found. Check your CSV column headers.</td></tr>';
-      return;
-    }
-
-    var html = '';
-    parents.forEach(function (act, idx) {
-      var sno        = act['S.N.'] || act['S.N'] || act['SN'] || act['sno'] || (idx + 1);
-      var subject    = act.Subject || act.subject || 'Untitled Act';
-      var dlLink     = driveDirectLink(act.DownloadLink || act.downloadlink || act['Download Link'] || '');
-      var shareLink  = act.ShareLink || act.sharelink || act['Share Link'] || dlLink;
-      var amendments = amendMap[subject.trim()] || [];
-      var hasAmends  = amendments.length > 0;
-      var rowId      = 'sarat-act-row-' + idx;
-      var amendId    = 'sarat-amend-rows-' + idx;
-
-      /* Amendment count badge */
-      var badge = hasAmends
-        ? '<span class="sarat-act-amend-badge">✏️ ' + amendments.length + ' amendment' + (amendments.length > 1 ? 's' : '') + '</span>'
-        : '';
-
-      /* Toggle chevron (only shown if there are amendments) */
-      var toggle = hasAmends
-        ? '<span class="sarat-act-toggle" aria-label="Toggle amendments">▼</span>'
-        : '';
-
-      /* Parent row */
-      html += '<tr class="sarat-act-parent-row' + (hasAmends ? '' : ' sarat-act-no-amend') + '" ' +
-                  (hasAmends ? 'id="' + rowId + '" data-amend-id="' + amendId + '"' : '') +
-              '>' +
-        '<td class="sarat-act-sno">' + sno + '</td>' +
-        '<td class="sarat-act-subject-cell">' +
-          '<div class="sarat-act-name">' +
-            '<span class="sarat-act-icon">📜</span>' +
-            '<span>' + subject + '</span>' +
-            badge +
-            toggle +
-          '</div>' +
-          (hasAmends ? buildChain(amendments) : '') +
-        '</td>' +
-        '<td class="sarat-act-actions">' +
-          (dlLink !== '#' ?
-            '<a href="' + dlLink + '" target="_blank" style="text-decoration:none;">' +
-              '<button class="download-btn">⬇ DOWNLOAD</button>' +
-            '</a> ' : '') +
-          '<button class="share-btn" data-share-url="' + shareLink + '">🔗 SHARE</button>' +
-        '</td>' +
-      '</tr>';
-    });
-
-    tbody.innerHTML = html;
-
-    /* Attach toggle click handlers */
-    tbody.querySelectorAll('.sarat-act-parent-row[data-amend-id]').forEach(function (row) {
-      row.addEventListener('click', function (e) {
-        /* Ignore clicks on the download/share buttons */
-        if (e.target.closest('.sarat-act-actions')) return;
-        row.classList.toggle('sarat-act-open');
-        /* Toggle chain visibility */
-        var chain = row.querySelector('.sarat-act-chain');
-        if (chain) {
-          chain.style.display = row.classList.contains('sarat-act-open') ? 'block' : 'none';
-        }
-      });
-    });
-
-    /* Share buttons – copy link */
-    tbody.querySelectorAll('.share-btn').forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        copyLink(btn.dataset.shareUrl, btn);
-      });
-    });
-
-    /* Collapse all chains initially */
-    tbody.querySelectorAll('.sarat-act-chain').forEach(function (c) {
-      c.style.display = 'none';
-    });
-  }
-
-  /* Fetch and parse the CSV when the Acts tab is first shown */
-  var actsLoaded = false;
-
-  function loadActsIfNeeded() {
-    if (actsLoaded) return;
-    actsLoaded = true;
-
-    /* --- DEMO DATA ---
-       Remove the block below and uncomment the PapaParse fetch
-       once you have replaced ACTS_CSV_URL with your real URL.
-    ------------------------------------------------------------ */
-    var demoRows = [
-      { 'S.N.': 1, Subject: 'Essential Commodities Act, 1955',    Year: '1955', Type: 'Act',       DownloadLink: '#', ShareLink: '#' },
-      { 'S.N.': '',Subject: 'Essential Commodities Act, 1955',    Year: '2020', Type: 'Amendment', ParentAct: 'Essential Commodities Act, 1955', DownloadLink: '#', ShareLink: '#' },
-      { 'S.N.': '',Subject: 'Essential Commodities Act, 1955',    Year: '2019', Type: 'Amendment', ParentAct: 'Essential Commodities Act, 1955', DownloadLink: '#', ShareLink: '#' },
-      { 'S.N.': 2, Subject: 'The Odisha Lokayukta Act, 2014',     Year: '2014', Type: 'Act',       DownloadLink: '#', ShareLink: '#' },
-      { 'S.N.': 3, Subject: 'The Consumer Protection Act, 2019',  Year: '2019', Type: 'Act',       DownloadLink: '#', ShareLink: '#' },
-      { 'S.N.': '',Subject: 'The Consumer Protection Act, 2019',  Year: '2022', Type: 'Amendment', ParentAct: 'The Consumer Protection Act, 2019', DownloadLink: '#', ShareLink: '#' },
-      { 'S.N.': 4, Subject: 'The National Food Security Act, 2013',Year:'2013', Type: 'Act',       DownloadLink: '#', ShareLink: '#' },
-      { 'S.N.': 5, Subject: 'Right to Information Act, 2005',     Year: '2005', Type: 'Act',       DownloadLink: '#', ShareLink: '#' },
-      { 'S.N.': '',Subject: 'Right to Information Act, 2005',     Year: '2019', Type: 'Amendment', ParentAct: 'Right to Information Act, 2005', DownloadLink: '#', ShareLink: '#' },
-      { 'S.N.': 6, Subject: 'The Income Tax Act, 1961',           Year: '1961', Type: 'Act',       DownloadLink: '#', ShareLink: '#' },
-    ];
-    renderActsTable(demoRows);
-
-    /* --- REAL DATA (uncomment this and remove demoRows block above) ---
-    if (!window.Papa) {
-      setTimeout(loadActsIfNeeded, 500);
-      actsLoaded = false;
-      return;
-    }
-    Papa.parse(ACTS_CSV_URL, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: function (results) {
-        renderActsTable(results.data);
-      },
-      error: function () {
-        document.getElementById('sarat-acts-tbody').innerHTML =
-          '<tr><td colspan="3" class="sarat-act-loading">⚠️ Could not load acts data. Please check the CSV URL.</td></tr>';
-      }
-    });
-    -------------------------------------------------------------------- */
-  }
-
-  /* Hook into the existing tab switching system */
-  document.addEventListener('DOMContentLoaded', function () {
-    var tabBtns = document.querySelectorAll('.sarat-docs .tab-item');
-
-    tabBtns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        /* Remove active from all */
-        tabBtns.forEach(function (b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-
-        /* Hide all panels */
-        document.querySelectorAll('.sarat-docs .csv-tab-container').forEach(function (p) {
-          p.style.display = 'none';
-        });
-
-        var cat = btn.getAttribute('data-category');
-        var panel = document.getElementById('tab-' + cat);
-        if (panel) panel.style.display = 'flex';
-
-        /* Load acts on first visit to Acts tab */
-        if (cat === 'Act') loadActsIfNeeded();
-      });
-    });
-  });
-
-})();
-</script>
-
-<script src="https://cdn.jsdelivr.net/gh/saratoffice/Hosting@main/guard-file/file.js"></script>
-<script src="/assets/Scripts/gototop.js"></script>
+</div><!-- /sc-wrap -->
 
 <!-- FOOTER -->
 <div id="site-footer"></div>
+
+<!-- Go to Top -->
+<script src="/assets/Scripts/gototop.js"></script>
+
+<!-- ===== MAP SCRIPT (same logic, new scoped vars) ===== -->
+<script>
+(function () {
+  window.MAP_CONFIG = {
+    GOOGLE_MAPS_API_KEY: 'AIzaSyBg1u41idNFQLOTM2tUR3R2tYdLou2X9Ys',
+    OFFICE_MAIN:  { lat: 20.691424, lng: 83.474194, title: "Sarat Office (Main)" },
+    OFFICE_ANNEX: { lat: 21.235850, lng: 86.632800, title: "Sarat Office (Annex)" },
+    MAP_OPTIONS:  { zoom: 8, mapTypeId: 'roadmap', gestureHandling: 'greedy' }
+  };
+
+  function loadConfig() {
+    const s = document.createElement('script');
+    s.src = '/config.map.js?v=' + Date.now();
+    s.onload = () => { loadMap(); };
+    s.onerror = () => {
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        console.warn('config.map.js not found — using fallback key.');
+      }
+      loadMap();
+    };
+    document.head.appendChild(s);
+  }
+
+  function loadMap() {
+    if (typeof google !== 'undefined') { initMap(); return; }
+    const s = document.createElement('script');
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${window.MAP_CONFIG.GOOGLE_MAPS_API_KEY}&callback=initMap`;
+    s.async = true; s.defer = true;
+    s.onerror = () => {
+      const m = document.getElementById('map');
+      if (m) m.innerHTML = '<div style="padding:60px;text-align:center;color:#721c24;font-family:sans-serif;">❌ Failed to load Google Maps</div>';
+    };
+    document.head.appendChild(s);
+  }
+
+  window.initMap = function () {
+    const cfg  = window.MAP_CONFIG;
+    const p1   = cfg.OFFICE_MAIN;
+    const p2   = cfg.OFFICE_ANNEX;
+    const map  = new google.maps.Map(document.getElementById('map'), {
+      zoom: cfg.MAP_OPTIONS.zoom,
+      center: { lat: (p1.lat + p2.lat) / 2, lng: (p1.lng + p2.lng) / 2 },
+      mapTypeId: cfg.MAP_OPTIONS.mapTypeId,
+      gestureHandling: cfg.MAP_OPTIONS.gestureHandling,
+      styles: [
+        { featureType: "all", elementType: "labels.text.fill",
+          stylers: [{ color: "#1c3044" }] },
+        { featureType: "water",
+          stylers: [{ color: "#c8d9e8" }] },
+        { featureType: "landscape",
+          stylers: [{ color: "#f5f0e8" }] },
+        { featureType: "road",
+          stylers: [{ color: "#e2d9ca" }] },
+        { featureType: "poi.park",
+          stylers: [{ color: "#d5e8c8" }] }
+      ]
+    });
+
+    [p1, p2].forEach(p => new google.maps.Marker({
+      position: { lat: p.lat, lng: p.lng },
+      map,
+      title: p.title
+    }));
+
+    const bounds = new google.maps.LatLngBounds();
+    bounds.extend({ lat: p1.lat, lng: p1.lng });
+    bounds.extend({ lat: p2.lat, lng: p2.lng });
+    map.fitBounds(bounds);
+  };
+
+  document.addEventListener('DOMContentLoaded', loadConfig);
+})();
+</script>
 
 </body>
 </html>
