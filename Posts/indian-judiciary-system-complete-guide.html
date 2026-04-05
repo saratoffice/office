@@ -30,281 +30,465 @@
   <meta name="blog:icon" content="fa-gavel">
   
   <style>
-    /* Light theme - Judicial System styling */
-    .judiciary-header {
-      background: linear-gradient(135deg, #0f172a, #312e81);
-      color: white;
-      padding: 2.5rem;
-      border-radius: 24px;
-      margin-bottom: 2rem;
+    /* ============================================================
+       JUDICIARY POST STYLES — prefixed ij- to avoid conflicts
+       ============================================================ */
+
+    /* ── Feature image — matches Legal Pleaders page ── */
+    .feature-image {
+      width: 100%;
+      height: 420px;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      margin: 2rem 0;
+    }
+    .feature-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .feature-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.55));
+      color: rgba(255,255,255,0.85);
+      font-size: 0.8rem;
+      padding: 1.5rem 1.25rem 0.85rem;
+    }
+
+    /* ── Two-column image grid — matches Legal Pleaders page ── */
+    .image-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.75rem 0;
+    }
+    .image-grid-2 .grid-item {
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    .image-grid-2 .grid-item img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+    .image-grid-2 .image-caption {
+      font-size: 0.78rem;
+      color: #64748b;
+      padding: 0.5rem 0.25rem 0;
       text-align: center;
-      border-bottom: 6px solid #fbbf24;
+    }
+
+    /* ── TOC — matches Legal Pleaders page ── */
+    .ij-toc {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .ij-toc h4 {
+      margin: 0 0 0.75rem;
+      font-size: 0.95rem;
+      color: #1e3a5f;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .ij-toc ol {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .ij-toc ol li {
+      margin-bottom: 0.3rem;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+    .ij-toc ol li a {
+      color: #0284c7;
+      text-decoration: none;
+    }
+    .ij-toc ol li a:hover { text-decoration: underline; }
+
+    /* ── Intro banner ── */
+    .ij-intro-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #312e81 100%);
+      border-radius: 20px;
+      padding: 2rem 2.25rem;
+      margin-bottom: 2.5rem;
+      border-left: 6px solid #fbbf24;
       position: relative;
       overflow: hidden;
     }
-    
-    .judiciary-header::before {
+    .ij-intro-banner::before {
       content: "⚖️";
-      font-size: 8rem;
+      font-size: 7rem;
       position: absolute;
-      right: 10px;
-      top: -20px;
-      opacity: 0.2;
-      transform: rotate(15deg);
+      right: 1.5rem;
+      top: -1rem;
+      opacity: 0.12;
+      transform: rotate(10deg);
+      line-height: 1;
     }
-    
-    .post-meta {
+    .ij-intro-banner h2 {
+      font-size: 1.35rem;
+      color: #fff;
+      margin: 0 0 0.65rem;
       display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-      color: #64748b;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .ij-intro-banner p {
+      color: #cbd5e1;
       font-size: 0.95rem;
-      margin: 1rem 0;
+      margin: 0 0 0.5rem;
+      line-height: 1.7;
     }
-    
-    .publish-date {
-      background: #f1f5f9;
-      padding: 0.3rem 1.5rem;
-      border-radius: 40px;
-      display: inline-block;
-      font-weight: 500;
-      margin-bottom: 1rem;
+    .ij-intro-banner p:last-child { margin-bottom: 0; }
+    .ij-intro-banner strong { color: #fde68a; }
+
+    /* ── Hierarchy pyramid ── */
+    .ij-pyramid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 2rem 0;
     }
-    
-    .hierarchy-container {
-      position: relative;
-      margin: 3rem 0;
-      padding: 2rem 0;
-    }
-    
-  .hierarchy-pyramid {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 2rem 0;
-  position: relative;
-}
-
-.hierarchy-pyramid .item {
-  width: 100%;
-  max-width: 400px;
-  padding: 1rem 2rem;
-  margin: 0.25rem 0;
-  background: white;
-  border-left: 4px solid transparent;
-  border-image: linear-gradient(180deg, #ff6b6b, #4ecdc4);
-  border-image-slice: 1;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  font-size: 1.1rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.hierarchy-pyramid .item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2));
-  transform: translateX(-100%);
-  transition: transform 0.5s ease;
-}
-
-.hierarchy-pyramid .item:hover::before {
-  transform: translateX(0);
-}
-    
-    .pyramid-level {
+    .ij-pyramid-level {
       display: flex;
       justify-content: center;
       gap: 1rem;
       flex-wrap: wrap;
+      width: 100%;
     }
-    
-    .pyramid-card {
-      background: #f8fafc;
-      padding: 1.5rem 2.5rem;
+    .ij-pyramid-connector {
+      width: 2px;
+      height: 28px;
+      background: #94a3b8;
+      margin: 0.35rem 0;
+    }
+    .ij-pcard {
+      padding: 1.25rem 2rem;
       border-radius: 16px;
       border: 2px solid #e2e8f0;
       text-align: center;
-      min-width: 200px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      min-width: 180px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    
-    .pyramid-card.supreme {
+    .ij-pcard:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.1);
+    }
+    .ij-pcard h3 { margin: 0.4rem 0 0.2rem; font-size: 1rem; }
+    .ij-pcard p  { margin: 0; font-size: 0.82rem; }
+    .ij-pcard--supreme {
       background: linear-gradient(135deg, #312e81, #4f46e5);
-      color: white;
-      border: none;
+      color: white; border: none;
     }
-    
-    .pyramid-card.high {
+    .ij-pcard--supreme p { color: #e0e7ff; }
+    .ij-pcard--high {
       background: linear-gradient(135deg, #1e3a5f, #2563eb);
-      color: white;
+      color: white; border: none;
     }
-    
-    .pyramid-card.district {
+    .ij-pcard--high p { color: #dbeafe; }
+    .ij-pcard--district {
       background: linear-gradient(135deg, #166534, #16a34a);
-      color: white;
+      color: white; border: none;
     }
-    
-    .pyramid-level-connector {
-      width: 2px;
-      height: 30px;
-      background: #94a3b8;
-      margin: 0.5rem 0;
-    }
-    
-    .court-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-      gap: 2rem;
-      margin: 2rem 0;
-    }
-    
-    .court-card {
-      background: white;
-      padding: 2rem;
-      border-radius: 20px;
-      border: 1px solid #e2e8f0;
-      border-left: 8px solid;
-      transition: transform 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-    
-    .court-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(79, 70, 229, 0.15);
-    }
-    
-    .court-card.supreme {
-      border-left-color: #4f46e5;
-    }
-    
-    .court-card.high {
-      border-left-color: #2563eb;
-    }
-    
-    .court-card.district {
-      border-left-color: #16a34a;
-    }
-    
-    .court-card.subordinate {
-      border-left-color: #f59e0b;
-    }
-    
-    .court-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
-    
-    .court-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-    
-    .court-location {
-      background: #f1f5f9;
-      padding: 0.2rem 1rem;
-      border-radius: 30px;
-      display: inline-block;
-      margin: 1rem 0;
-      font-size: 0.9rem;
-    }
-    
-    .statute-badge {
-      background: #1e293b;
-      color: white;
-      padding: 0.3rem 1rem;
-      border-radius: 30px;
-      font-size: 0.85rem;
-      display: inline-block;
-      margin: 0.2rem;
-    }
-    
-    .jurisdiction-box {
+    .ij-pcard--district p { color: #dcfce7; }
+    .ij-pcard--sub {
       background: #f8fafc;
-      padding: 2rem;
-      border-radius: 20px;
-      margin: 2rem 0;
-      border-left: 8px solid #f59e0b;
+      color: #1e293b;
     }
-    
-    .justice-stats {
+    .ij-pcard--sub p { color: #64748b; }
+
+    /* ── Stats row ── */
+    .ij-stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
-      margin: 2rem 0;
+      gap: 1.25rem;
+      margin: 1.5rem 0 2rem;
     }
-    
-    .stat-card {
+    .ij-stat {
       background: #f8fafc;
-      padding: 2rem;
+      padding: 1.5rem 1rem;
       border-radius: 16px;
       text-align: center;
       border-bottom: 4px solid #4f46e5;
     }
-    
-    .stat-number {
-      font-size: 2.5rem;
+    .ij-stat-num {
+      font-size: 2.2rem;
       font-weight: 800;
       color: #4f46e5;
+      line-height: 1;
     }
-    
-    .stat-label {
+    .ij-stat-lbl {
       color: #334155;
+      font-size: 0.85rem;
       font-weight: 500;
-      margin-top: 0.5rem;
+      margin-top: 0.4rem;
     }
-    
-    .timeline {
-      position: relative;
-      margin: 3rem 0;
-      padding: 2rem 0;
+
+    /* ── Court cards ── */
+    .ij-court-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0 2rem;
     }
-    
-    .timeline-item {
-      display: flex;
-      gap: 2rem;
-      margin: 2rem 0;
-      padding: 1.5rem;
+    .ij-court-card {
+      background: #fff;
+      padding: 1.75rem;
+      border-radius: 18px;
+      border: 1px solid #e2e8f0;
+      border-left: 6px solid #94a3b8;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .ij-court-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 28px rgba(79,70,229,0.12);
+    }
+    .ij-court-card--supreme { border-left-color: #4f46e5; }
+    .ij-court-card--high    { border-left-color: #2563eb; }
+    .ij-court-card--district{ border-left-color: #16a34a; }
+    .ij-court-card--sub     { border-left-color: #f59e0b; }
+    .ij-court-icon { font-size: 2rem; margin-bottom: 0.75rem; color: #475569; }
+    .ij-court-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0e1117;
+      margin-bottom: 0.75rem;
+    }
+    .ij-court-card p, .ij-court-card li {
+      font-size: 0.9rem;
+      color: #374151;
+      line-height: 1.65;
+    }
+    .ij-court-card ul { padding-left: 1.1rem; margin: 0.5rem 0 0; }
+    .ij-court-card h4 {
+      font-size: 0.88rem;
+      color: #1e293b;
+      margin: 1rem 0 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .ij-location {
+      background: #f1f5f9;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      display: inline-block;
+      font-size: 0.83rem;
+      color: #475569;
+      margin: 0.5rem 0 0.75rem;
+    }
+
+    /* ── Statute badge ── */
+    .ij-badge {
+      background: #1e293b;
+      color: #fff;
+      padding: 0.25rem 0.85rem;
+      border-radius: 30px;
+      font-size: 0.78rem;
+      display: inline-block;
+      margin: 0.2rem;
+    }
+
+    /* ── Jurisdiction box ── */
+    .ij-jurisdiction {
       background: #f8fafc;
-      border-radius: 16px;
-      border-left: 6px solid #4f46e5;
-    }
-    
-    .timeline-year {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #4f46e5;
-      min-width: 100px;
-    }
-    
-    .landmark-card {
-      background: #fef9c3;
-      padding: 1.5rem;
-      border-radius: 16px;
-      margin: 1rem 0;
+      padding: 1.75rem 2rem;
+      border-radius: 18px;
+      margin: 1.5rem 0 2rem;
       border-left: 6px solid #f59e0b;
     }
-    
+    .ij-jurisdiction h4 {
+      font-size: 1.05rem;
+      color: #1e293b;
+      margin: 0 0 1.25rem;
+    }
+    .ij-jur-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .ij-jur-item h5 {
+      font-size: 0.88rem;
+      color: #1e293b;
+      margin: 0 0 0.3rem;
+      font-weight: 700;
+    }
+    .ij-jur-item p {
+      font-size: 0.86rem;
+      color: #475569;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── Timeline ── */
+    .ij-timeline { margin: 1.5rem 0 2rem; }
+    .ij-tl-item {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: #f8fafc;
+      border-radius: 14px;
+      border-left: 5px solid #4f46e5;
+      margin-bottom: 0.85rem;
+      align-items: flex-start;
+    }
+    .ij-tl-year {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #4f46e5;
+      min-width: 80px;
+      line-height: 1.1;
+    }
+    .ij-tl-body h4 {
+      font-size: 0.95rem;
+      color: #1e293b;
+      margin: 0 0 0.2rem;
+    }
+    .ij-tl-body p {
+      font-size: 0.86rem;
+      color: #475569;
+      margin: 0;
+    }
+
+    /* ── Landmark cards ── */
+    .ij-landmark {
+      background: #fef9c3;
+      padding: 1.25rem 1.5rem;
+      border-radius: 14px;
+      margin-bottom: 0.85rem;
+      border-left: 5px solid #f59e0b;
+    }
+    .ij-landmark h4 {
+      font-size: 0.95rem;
+      color: #78350f;
+      margin: 0 0 0.35rem;
+    }
+    .ij-landmark p {
+      font-size: 0.88rem;
+      color: #92400e;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    /* ── Collegium / info box ── */
+    .ij-info-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+      margin: 1.5rem 0;
+    }
+    .ij-info-box h4 {
+      font-size: 1rem;
+      color: #1e293b;
+      margin: 0 0 0.75rem;
+    }
+    .ij-info-box p, .ij-info-box li {
+      font-size: 0.9rem;
+      color: #374151;
+      line-height: 1.68;
+    }
+
+    /* ── Danger box ── */
+    .ij-warn-box {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-left: 5px solid #ef4444;
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+      margin: 1.5rem 0;
+    }
+    .ij-warn-box h4 {
+      font-size: 1rem;
+      color: #7f1d1d;
+      margin: 0 0 0.65rem;
+    }
+    .ij-warn-box p { font-size: 0.9rem; color: #991b1b; margin: 0; }
+
+    /* ── Articles grid ── */
+    .ij-articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .ij-article-tile {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.1rem 1rem;
+      text-align: center;
+    }
+    .ij-article-tile p {
+      font-size: 0.83rem;
+      color: #475569;
+      margin: 0.5rem 0 0;
+    }
+
+    /* ── Summary panel ── */
+    .ij-summary {
+      background: #0e1117;
+      border-radius: 18px;
+      padding: 2rem;
+      margin: 2.5rem 0;
+    }
+    .ij-summary h3 {
+      color: #fff;
+      font-size: 1.2rem;
+      margin: 0 0 0.75rem;
+    }
+    .ij-summary p {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      line-height: 1.75;
+      margin: 0 0 1.25rem;
+    }
+    .ij-summary-badges { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .ij-sum-badge {
+      padding: 0.4rem 1.1rem;
+      border-radius: 30px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* ── Tags ── */
+    .ij-post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 2rem 0;
+    }
+    .ij-post-tag {
+      background: #e2e8f0;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      color: #475569;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* ── Responsive ── */
     @media (max-width: 768px) {
-      .justice-stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      
-      .timeline-item {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-      
-      .pyramid-card {
-        min-width: 150px;
-        padding: 1rem;
-      }
+      .ij-stats        { grid-template-columns: repeat(2, 1fr); }
+      .ij-court-grid   { grid-template-columns: 1fr; }
+      .image-grid-2    { grid-template-columns: 1fr; }
+      .feature-image   { height: 260px; }
+      .ij-tl-item      { flex-direction: column; gap: 0.4rem; }
     }
   </style>
 </head>
@@ -313,225 +497,250 @@
   <header id="site-header"></header>
 
   <section class="blog-post-section">
-    <!-- Back to blogs link -->
+
+    <!-- Back link -->
     <a href="../blogs.html" class="back-link">
       <i class="fas fa-arrow-left"></i> Back to all articles
     </a>
 
-    <!-- Post header -->
+    <!-- ── POST HEADER — matches Legal Pleaders page structure ── -->
     <div class="post-header">
-      <h1 class="post-title">The Indian Judiciary System</h1>
-      
+      <h1 class="post-title">The Indian Judiciary System: Structure, Hierarchy &amp; Legal Framework</h1>
       <div class="post-meta">
         <span><i class="fas fa-user"></i> Sarat Rout</span>
         <span><i class="fas fa-calendar"></i> January 22, 2015</span>
         <span><i class="fas fa-clock"></i> 12 min read</span>
         <span class="category-tag"><i class="fas fa-gavel"></i> Legal System</span>
       </div>
-      
-      <div class="publish-date">
-        <i class="fas fa-edit"></i> Post settings: Labels: Office, Law | Published on 22/01/2015
-      </div>
     </div>
 
-    <!-- Feature Image - Supreme Court -->
+    <!-- ── FEATURE IMAGE — matches Legal Pleaders page exactly ── -->
     <div class="feature-image">
-      <img src="/assets/images/other/Supreme-Court-India-banner.webp?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-           alt="Supreme Court of India" 
+      <img src="/assets/images/other/Supreme-Court-India-banner.webp"
+           alt="Supreme Court of India"
            loading="lazy">
       <div class="feature-caption">
-        <i class="fas fa-camera"></i> Supreme Court of India - Apex body of the Indian Judiciary System
+        <i class="fas fa-camera"></i> Supreme Court of India — apex body of the Indian Judiciary
       </div>
     </div>
-
-    <!-- Judiciary Header -->
-    <div class="judiciary-header">
-      <h2 style="color: white; font-size: 2.5rem;">⚖️ The Indian Judiciary System</h2>
-      <p style="color: #fde68a; font-size: 1.2rem;">Structure, Hierarchy, Powers and Constitutional Framework</p>
-    </div>
-
-    <!-- Table of Contents -->
-    <div id="table-of-contents"></div>
 
     <!-- Main content -->
     <div class="post-content">
-      <p class="intro-text">
-        The Indian Judiciary is a single integrated system of courts that administers both central and state laws. It functions as an independent and impartial branch of the government, ensuring justice and protecting the rights of citizens as enshrined in the Constitution of India.
-      </p>
 
-      <!-- Hierarchy Pyramid Visual -->
-      <h2>📊 Hierarchy of Indian Judiciary</h2>
-      
-      <div class="hierarchy-pyramid">
-        <div class="pyramid-level">
-          <div class="pyramid-card supreme">
-            <i class="fas fa-gavel" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-            <h3 style="color: white;">Supreme Court</h3>
-            <p style="color: #e0e7ff;">New Delhi</p>
+      <p style="line-height:1.78; color:#2b3141;">The Indian Judiciary is a single integrated system of courts that administers both central and state laws. It functions as an independent and impartial branch of government, ensuring justice and protecting the rights of citizens as enshrined in the <strong>Constitution of India</strong>. From the apex Supreme Court in New Delhi to village-level Nyaya Panchayats, the system forms a continuous chain of accountability and appeal.</p>
+
+      <p style="line-height:1.78; color:#2b3141;">This guide explains the structure, powers, constitutional basis, appointment process, and landmark evolution of each tier of the Indian judicial hierarchy.</p>
+
+      <!-- TOC -->
+      <div class="ij-toc">
+        <h4><i class="fas fa-list-ul"></i> Table of Contents</h4>
+        <ol>
+          <li><a href="#ij-framework">Regulatory Framework</a></li>
+          <li><a href="#ij-hierarchy">Hierarchy of the Indian Judiciary</a></li>
+          <li><a href="#ij-stats">Judicial Statistics at a Glance</a></li>
+          <li><a href="#ij-supreme">Supreme Court of India</a></li>
+          <li><a href="#ij-high">High Courts</a></li>
+          <li><a href="#ij-district">District &amp; Sessions Courts</a></li>
+          <li><a href="#ij-subordinate">Subordinate Courts &amp; Tribunals</a></li>
+          <li><a href="#ij-jurisdiction">Types of Jurisdiction</a></li>
+          <li><a href="#ij-timeline">Timeline: Evolution of the Indian Judiciary</a></li>
+          <li><a href="#ij-landmark">Landmark Supreme Court Judgments</a></li>
+          <li><a href="#ij-appointment">Appointment &amp; Removal of Judges</a></li>
+          <li><a href="#ij-articles">Constitutional Provisions</a></li>
+        </ol>
+      </div>
+
+
+      <!-- 1. Framework -->
+      <h2 id="ij-framework">1. Regulatory Framework</h2>
+
+      <div class="ij-intro-banner">
+        <h2><i class="fas fa-file-contract"></i> Constitutional Foundation</h2>
+        <p>The Indian Judiciary derives its authority from <strong>Parts V and VI</strong> of the Constitution of India, 1950. The Supreme Court is governed by <strong>Articles 124–147</strong>, High Courts by <strong>Articles 214–231</strong>, and District &amp; Subordinate Courts by <strong>Articles 233–235</strong>. The entire system operates on the twin pillars of independence from the executive and impartiality in adjudication.</p>
+        <p><i class="fas fa-gavel" style="color:#fde68a;margin-right:0.4rem;"></i> <strong>Key principle:</strong> The judiciary is the guardian of the Constitution and the ultimate arbiter of the rights of citizens against the State.</p>
+      </div>
+
+      <!-- Image grid -->
+      <div class="image-grid-2">
+        <div class="grid-item">
+          <img src="/assets/images/other/Supreme-Court-India-banner.webp"
+               alt="Supreme Court of India entrance"
+               loading="lazy">
+          <div class="image-caption">Supreme Court of India — established January 28, 1950, two days after the Republic</div>
+        </div>
+        <div class="grid-item">
+          <img src="/assets/images/other/Supreme-Court-India-banner.webp"
+               alt="High Court building"
+               loading="lazy">
+          <div class="image-caption">Calcutta High Court — oldest High Court in India, established 1862</div>
+        </div>
+      </div>
+
+
+      <!-- 2. Hierarchy -->
+      <h2 id="ij-hierarchy">2. Hierarchy of the Indian Judiciary</h2>
+
+      <div class="ij-pyramid">
+        <div class="ij-pyramid-level">
+          <div class="ij-pcard ij-pcard--supreme">
+            <i class="fas fa-gavel" style="font-size:1.8rem;"></i>
+            <h3>Supreme Court</h3>
+            <p>New Delhi</p>
           </div>
         </div>
-        
-        <div class="pyramid-level-connector"></div>
-        
-        <div class="pyramid-level">
-          <div class="pyramid-card high">
-            <i class="fas fa-building" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-            <h3 style="color: white;">High Courts</h3>
-            <p style="color: #dbeafe;">25 High Courts</p>
+        <div class="ij-pyramid-connector"></div>
+        <div class="ij-pyramid-level">
+          <div class="ij-pcard ij-pcard--high">
+            <i class="fas fa-building" style="font-size:1.8rem;"></i>
+            <h3>High Courts</h3>
+            <p>25 High Courts across India</p>
           </div>
         </div>
-        
-        <div class="pyramid-level-connector"></div>
-        
-        <div class="pyramid-level">
-          <div class="pyramid-card district">
-            <i class="fas fa-city" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-            <h3 style="color: white;">District & Sessions Courts</h3>
-            <p style="color: #dcfce7;">672 Districts</p>
+        <div class="ij-pyramid-connector"></div>
+        <div class="ij-pyramid-level">
+          <div class="ij-pcard ij-pcard--district">
+            <i class="fas fa-city" style="font-size:1.8rem;"></i>
+            <h3>District &amp; Sessions Courts</h3>
+            <p>672 Districts</p>
           </div>
         </div>
-        
-        <div class="pyramid-level-connector"></div>
-        
-        <div class="pyramid-level" style="gap: 2rem;">
-          <div class="pyramid-card subordinate">
-            <i class="fas fa-balance-scale" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+        <div class="ij-pyramid-connector"></div>
+        <div class="ij-pyramid-level" style="gap:1.25rem;">
+          <div class="ij-pcard ij-pcard--sub">
+            <i class="fas fa-balance-scale" style="font-size:1.5rem;color:#4f46e5;"></i>
             <h3>Magistrates</h3>
             <p>JMFC, MM, CJM</p>
           </div>
-          
-          <div class="pyramid-card subordinate">
-            <i class="fas fa-file-signature" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+          <div class="ij-pcard ij-pcard--sub">
+            <i class="fas fa-file-signature" style="font-size:1.5rem;color:#2563eb;"></i>
             <h3>Munsif Courts</h3>
             <p>Civil Judges</p>
           </div>
-          
-          <div class="pyramid-card subordinate">
-            <i class="fas fa-home" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+          <div class="ij-pcard ij-pcard--sub">
+            <i class="fas fa-home" style="font-size:1.5rem;color:#16a34a;"></i>
             <h3>Nyaya Panchayats</h3>
             <p>Village Level</p>
           </div>
         </div>
       </div>
 
-      <!-- Justice Statistics -->
-      <h2>📈 Judicial Statistics at a Glance</h2>
-      
-      <div class="justice-stats">
-        <div class="stat-card">
-          <div class="stat-number">1</div>
-          <div class="stat-label">Supreme Court</div>
+
+      <!-- 3. Stats -->
+      <h2 id="ij-stats">3. Judicial Statistics at a Glance</h2>
+
+      <div class="ij-stats">
+        <div class="ij-stat">
+          <div class="ij-stat-num">1</div>
+          <div class="ij-stat-lbl">Supreme Court</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-number">25</div>
-          <div class="stat-label">High Courts</div>
+        <div class="ij-stat">
+          <div class="ij-stat-num">25</div>
+          <div class="ij-stat-lbl">High Courts</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-number">672</div>
-          <div class="stat-label">District Courts</div>
+        <div class="ij-stat">
+          <div class="ij-stat-num">672</div>
+          <div class="ij-stat-lbl">District Courts</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-number">20,000+</div>
-          <div class="stat-label">Subordinate Courts</div>
+        <div class="ij-stat">
+          <div class="ij-stat-num">20,000+</div>
+          <div class="ij-stat-lbl">Subordinate Courts</div>
         </div>
       </div>
 
-      <!-- Supreme Court -->
-      <h2>🏛️ Supreme Court of India</h2>
-      
-      <div class="court-card supreme">
-        <div class="court-icon"><i class="fas fa-gavel"></i></div>
-        <div class="court-title">Supreme Court of India</div>
-        <div class="court-location"><i class="fas fa-map-marker-alt"></i> New Delhi</div>
-        
-        <p>The Supreme Court is the apex judicial body and the highest constitutional court. It was established on <strong>January 28, 1950</strong>, two days after India became a republic.</p>
-        
-        <h4>Key Features:</h4>
+
+      <!-- 4. Supreme Court -->
+      <h2 id="ij-supreme">4. Supreme Court of India</h2>
+
+      <div class="ij-court-card ij-court-card--supreme" style="margin-bottom:1.5rem;">
+        <div class="ij-court-icon"><i class="fas fa-gavel" style="color:#4f46e5;"></i></div>
+        <div class="ij-court-title">Supreme Court of India</div>
+        <span class="ij-location"><i class="fas fa-map-marker-alt"></i> New Delhi</span>
+        <p>The Supreme Court is the apex judicial body and the highest constitutional court. Established on <strong>January 28, 1950</strong>, two days after India became a Republic, it has 34 judges including the Chief Justice of India (CJI) and serves as the final court of appeal, the guardian of the Constitution, and the interpreter of all laws.</p>
+        <h4>Key Features</h4>
         <ul>
           <li><strong>Chief Justice of India (CJI):</strong> Head of the judiciary</li>
           <li><strong>Sanctioned Strength:</strong> 34 judges (including CJI)</li>
           <li><strong>Retirement Age:</strong> 65 years</li>
-          <li><strong>Original, Appellate and Advisory Jurisdiction</strong></li>
-          <li><strong>Guardian of the Constitution</strong> - Power of judicial review</li>
-          <li><strong>Court of Record</strong> - Its decisions are binding on all courts</li>
+          <li>Original, Appellate, and Advisory Jurisdiction</li>
+          <li>Power of judicial review — Guardian of the Constitution</li>
+          <li>Court of Record — decisions binding on all subordinate courts</li>
         </ul>
-        
-        <div style="margin-top: 1rem;">
-          <span class="statute-badge">Article 124-147</span>
-          <span class="statute-badge">Original Jurisdiction</span>
-          <span class="statute-badge">Appellate Jurisdiction</span>
-          <span class="statute-badge">Writ Jurisdiction</span>
+        <div style="margin-top:1rem;">
+          <span class="ij-badge">Articles 124–147</span>
+          <span class="ij-badge">Original Jurisdiction</span>
+          <span class="ij-badge">Appellate Jurisdiction</span>
+          <span class="ij-badge">Writ Jurisdiction — Art. 32</span>
+          <span class="ij-badge">Advisory Jurisdiction — Art. 143</span>
         </div>
       </div>
 
-      <!-- High Courts -->
-      <h2>🏛️ High Courts</h2>
-      
-      <div class="court-grid">
-        <div class="court-card high">
-          <div class="court-icon"><i class="fas fa-building"></i></div>
-          <div class="court-title">High Courts</div>
-          <p>India has <strong>25 High Courts</strong> with jurisdiction over one or more states. The Calcutta High Court is the oldest (established 1862).</p>
-          
-          <h4>Key Features:</h4>
+
+      <!-- 5. High Courts -->
+      <h2 id="ij-high">5. High Courts</h2>
+
+      <div class="ij-court-grid">
+        <div class="ij-court-card ij-court-card--high">
+          <div class="ij-court-icon"><i class="fas fa-building" style="color:#2563eb;"></i></div>
+          <div class="ij-court-title">High Courts — Overview</div>
+          <p>India has <strong>25 High Courts</strong> with jurisdiction over one or more states or Union Territories. Each is headed by a Chief Justice and exercises both original and appellate jurisdiction.</p>
+          <h4>Key Features</h4>
           <ul>
-            <li><strong>Judges:</strong> Chief Justice + other judges</li>
-            <li><strong>Retirement Age:</strong> 62 years</li>
-            <li><strong>Appellate and Original Jurisdiction</strong></li>
-            <li><strong>Superintendence over subordinate courts</strong></li>
-            <li><strong>Writ jurisdiction under Article 226</strong></li>
+            <li>Judges: Chief Justice + other judges; Retirement Age 62 years</li>
+            <li>Appellate and original jurisdiction in civil and criminal matters</li>
+            <li>Superintendence over all subordinate courts in the state</li>
+            <li>Writ jurisdiction under <strong>Article 226</strong> — wider than Supreme Court's Art. 32</li>
           </ul>
-          
-          <div style="margin-top: 1rem;">
-            <span class="statute-badge">Article 214-231</span>
-            <span class="statute-badge">Writ Jurisdiction</span>
+          <div style="margin-top:1rem;">
+            <span class="ij-badge">Articles 214–231</span>
+            <span class="ij-badge">Writ Jurisdiction</span>
           </div>
         </div>
-        
-        <div class="court-card high">
-          <div class="court-icon"><i class="fas fa-map-marked-alt"></i></div>
-          <div class="court-title">Major High Courts</div>
-          <ul style="margin-top: 1rem;">
-            <li><strong>Calcutta High Court:</strong> 1862 (Oldest)</li>
+
+        <div class="ij-court-card ij-court-card--high">
+          <div class="ij-court-icon"><i class="fas fa-map-marked-alt" style="color:#2563eb;"></i></div>
+          <div class="ij-court-title">Notable High Courts</div>
+          <ul>
+            <li><strong>Calcutta High Court:</strong> 1862 — oldest in India</li>
             <li><strong>Bombay High Court:</strong> 1862</li>
             <li><strong>Madras High Court:</strong> 1862</li>
-            <li><strong>Allahabad High Court:</strong> 1866 (Largest)</li>
+            <li><strong>Allahabad High Court:</strong> 1866 — largest in India</li>
             <li><strong>Delhi High Court:</strong> 1966</li>
+            <li><strong>Orissa High Court, Cuttack:</strong> 1948</li>
           </ul>
         </div>
       </div>
 
-      <!-- District Courts -->
-      <h2>🏛️ District & Sessions Courts</h2>
-      
-      <div class="court-card district">
-        <div class="court-icon"><i class="fas fa-city"></i></div>
-        <div class="court-title">District Courts</div>
-        <p>Each district has a District Court presided over by a <strong>District & Sessions Judge</strong>. These are the principal courts of original jurisdiction in civil and criminal matters.</p>
-        
-        <h4>Structure:</h4>
+
+      <!-- 6. District Courts -->
+      <h2 id="ij-district">6. District &amp; Sessions Courts</h2>
+
+      <div class="ij-court-card ij-court-card--district" style="margin-bottom:1.5rem;">
+        <div class="ij-court-icon"><i class="fas fa-city" style="color:#16a34a;"></i></div>
+        <div class="ij-court-title">District Courts</div>
+        <p>Each of India's 672 districts has a District Court presided over by a <strong>District &amp; Sessions Judge</strong> — the principal courts of original civil and criminal jurisdiction below the High Court.</p>
+        <h4>Structure</h4>
         <ul>
-          <li><strong>Civil Side:</strong> Civil Judge (Junior/Senior Division)</li>
-          <li><strong>Criminal Side:</strong> Judicial Magistrate (First Class/Second Class)</li>
-          <li><strong>Sessions Court:</strong> Tries serious criminal offences</li>
-          <li><strong>Chief Judicial Magistrate (CJM)</strong></li>
+          <li><strong>Civil Side:</strong> Civil Judge (Junior / Senior Division)</li>
+          <li><strong>Criminal Side:</strong> Judicial Magistrate First Class / Second Class</li>
+          <li><strong>Sessions Court:</strong> Tries serious criminal offences including those punishable with life imprisonment</li>
+          <li><strong>Chief Judicial Magistrate (CJM)</strong> — heads the Magistrate tier</li>
           <li><strong>Metropolitan Magistrates</strong> in metropolitan areas</li>
         </ul>
-        
-        <div style="margin-top: 1rem;">
-          <span class="statute-badge">Article 233-235</span>
-          <span class="statute-badge">CrPC, 1973</span>
-          <span class="statute-badge">CPC, 1908</span>
+        <div style="margin-top:1rem;">
+          <span class="ij-badge">Articles 233–235</span>
+          <span class="ij-badge">BNSS 2023</span>
+          <span class="ij-badge">CPC 1908</span>
         </div>
       </div>
 
-      <!-- Subordinate Courts -->
-      <h2>🏛️ Subordinate Courts</h2>
-      
-      <div class="court-grid">
-        <div class="court-card subordinate">
-          <div class="court-icon"><i class="fas fa-balance-scale"></i></div>
-          <div class="court-title">Civil Courts</div>
+
+      <!-- 7. Subordinate Courts -->
+      <h2 id="ij-subordinate">7. Subordinate Courts &amp; Tribunals</h2>
+
+      <div class="ij-court-grid">
+        <div class="ij-court-card ij-court-card--sub">
+          <div class="ij-court-icon"><i class="fas fa-balance-scale" style="color:#f59e0b;"></i></div>
+          <div class="ij-court-title">Civil Courts</div>
           <ul>
             <li>Court of District Judge</li>
             <li>Court of Additional District Judge</li>
@@ -540,10 +749,10 @@
             <li>Small Causes Courts</li>
           </ul>
         </div>
-        
-        <div class="court-card subordinate">
-          <div class="court-icon"><i class="fas fa-gavel"></i></div>
-          <div class="court-title">Criminal Courts</div>
+
+        <div class="ij-court-card ij-court-card--sub">
+          <div class="ij-court-icon"><i class="fas fa-gavel" style="color:#f59e0b;"></i></div>
+          <div class="ij-court-title">Criminal Courts</div>
           <ul>
             <li>Sessions Court</li>
             <li>Additional Sessions Court</li>
@@ -553,254 +762,251 @@
             <li>Metropolitan Magistrates</li>
           </ul>
         </div>
-        
-        <div class="court-card subordinate">
-          <div class="court-icon"><i class="fas fa-home"></i></div>
-          <div class="court-title">Village Courts</div>
+
+        <div class="ij-court-card ij-court-card--sub">
+          <div class="ij-court-icon"><i class="fas fa-home" style="color:#f59e0b;"></i></div>
+          <div class="ij-court-title">Village &amp; Alternative Dispute Forums</div>
           <ul>
             <li>Nyaya Panchayats</li>
             <li>Gram Nyayalayas (since 2008)</li>
             <li>Lok Adalats (Alternative Dispute Resolution)</li>
+            <li>Permanent Lok Adalats for public utility services</li>
           </ul>
         </div>
-        
-        <div class="court-card subordinate">
-          <div class="court-icon"><i class="fas fa-briefcase"></i></div>
-          <div class="court-title">Specialized Tribunals</div>
+
+        <div class="ij-court-card ij-court-card--sub">
+          <div class="ij-court-icon"><i class="fas fa-briefcase" style="color:#f59e0b;"></i></div>
+          <div class="ij-court-title">Specialised Tribunals</div>
           <ul>
             <li>Central Administrative Tribunal (CAT)</li>
             <li>Income Tax Appellate Tribunal (ITAT)</li>
             <li>Debt Recovery Tribunals (DRT)</li>
-            <li>Consumer Disputes Redressal Forums</li>
+            <li>Consumer Disputes Redressal Commissions</li>
             <li>National Green Tribunal (NGT)</li>
           </ul>
         </div>
       </div>
 
-      <!-- Jurisdiction Box -->
-      <div class="jurisdiction-box">
-        <h4><i class="fas fa-globe"></i> Types of Jurisdiction</h4>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
-          <div>
+
+      <!-- 8. Jurisdiction -->
+      <h2 id="ij-jurisdiction">8. Types of Jurisdiction</h2>
+
+      <div class="ij-jurisdiction">
+        <h4><i class="fas fa-globe" style="margin-right:0.5rem;color:#f59e0b;"></i> Jurisdictional Powers of Indian Courts</h4>
+        <div class="ij-jur-grid">
+          <div class="ij-jur-item">
             <h5>Original Jurisdiction</h5>
-            <p>Power to hear cases directly, first instance.</p>
+            <p>Power to hear cases at first instance, before any other court.</p>
           </div>
-          
-          <div>
+          <div class="ij-jur-item">
             <h5>Appellate Jurisdiction</h5>
-            <p>Power to hear appeals from lower courts.</p>
+            <p>Power to hear appeals from decisions of lower courts.</p>
           </div>
-          
-          <div>
+          <div class="ij-jur-item">
             <h5>Advisory Jurisdiction</h5>
-            <p>President can seek Supreme Court's opinion.</p>
+            <p>President may seek the Supreme Court's opinion under Article 143.</p>
           </div>
-          
-          <div>
+          <div class="ij-jur-item">
             <h5>Writ Jurisdiction</h5>
-            <p>Article 32 (SC) & 226 (HC) - Fundamental Rights.</p>
+            <p>Article 32 (Supreme Court) &amp; Article 226 (High Courts) — enforcement of fundamental rights.</p>
           </div>
-          
-          <div>
+          <div class="ij-jur-item">
             <h5>Revisory Jurisdiction</h5>
-            <p>Power to call for records from lower courts.</p>
+            <p>Power to call for records from lower courts and correct errors of law.</p>
           </div>
-          
-          <div>
+          <div class="ij-jur-item">
             <h5>Supervisory Jurisdiction</h5>
-            <p>High Courts supervise subordinate courts.</p>
+            <p>High Courts supervise all subordinate courts in the state under Article 227.</p>
           </div>
         </div>
       </div>
 
-      <!-- Timeline of Indian Judiciary -->
-      <h2>📅 Timeline: Evolution of Indian Judiciary</h2>
-      
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="timeline-year">1773</div>
-          <div>
+
+      <!-- 9. Timeline -->
+      <h2 id="ij-timeline">9. Timeline: Evolution of the Indian Judiciary</h2>
+
+      <div class="ij-timeline">
+        <div class="ij-tl-item">
+          <div class="ij-tl-year">1773</div>
+          <div class="ij-tl-body">
             <h4>Regulating Act</h4>
-            <p>Establishment of Supreme Court at Calcutta</p>
+            <p>Establishment of the Supreme Court at Calcutta under British rule.</p>
           </div>
         </div>
-        
-        <div class="timeline-item">
-          <div class="timeline-year">1862</div>
-          <div>
+        <div class="ij-tl-item">
+          <div class="ij-tl-year">1862</div>
+          <div class="ij-tl-body">
             <h4>High Courts Established</h4>
-            <p>Calcutta, Bombay, Madras High Courts</p>
+            <p>Calcutta, Bombay, and Madras High Courts established under the Indian High Courts Act.</p>
           </div>
         </div>
-        
-        <div class="timeline-item">
-          <div class="timeline-year">1935</div>
-          <div>
+        <div class="ij-tl-item">
+          <div class="ij-tl-year">1935</div>
+          <div class="ij-tl-body">
             <h4>Federal Court</h4>
-            <p>Established under Government of India Act, 1935</p>
+            <p>Federal Court of India established under the Government of India Act, 1935.</p>
           </div>
         </div>
-        
-        <div class="timeline-item">
-          <div class="timeline-year">1950</div>
-          <div>
+        <div class="ij-tl-item">
+          <div class="ij-tl-year">1950</div>
+          <div class="ij-tl-body">
             <h4>Supreme Court of India</h4>
-            <p>Established on January 28, 1950</p>
+            <p>Established on January 28, 1950, replacing the Federal Court.</p>
           </div>
         </div>
-        
-        <div class="timeline-item">
-          <div class="timeline-year">1973</div>
-          <div>
+        <div class="ij-tl-item">
+          <div class="ij-tl-year">1973</div>
+          <div class="ij-tl-body">
             <h4>CrPC, 1973</h4>
-            <p>Code of Criminal Procedure enacted</p>
+            <p>Code of Criminal Procedure enacted, restructuring the criminal court hierarchy.</p>
           </div>
         </div>
-        
-        <div class="timeline-item">
-          <div class="timeline-year">2008</div>
-          <div>
+        <div class="ij-tl-item">
+          <div class="ij-tl-year">2008</div>
+          <div class="ij-tl-body">
             <h4>Gram Nyayalayas Act</h4>
-            <p>Village level courts established</p>
+            <p>Village-level courts established to bring justice closer to rural communities.</p>
+          </div>
+        </div>
+        <div class="ij-tl-item">
+          <div class="ij-tl-year">2023</div>
+          <div class="ij-tl-body">
+            <h4>BNSS — Bharatiya Nagarik Suraksha Sanhita</h4>
+            <p>CrPC replaced by BNSS, 2023; modernising criminal procedure for the 21st century.</p>
           </div>
         </div>
       </div>
 
-      <!-- Landmark Judgments -->
-      <h2>📜 Landmark Supreme Court Judgments</h2>
-      
-      <div class="landmark-card">
+
+      <!-- 10. Landmark Judgments -->
+      <h2 id="ij-landmark">10. Landmark Supreme Court Judgments</h2>
+
+      <div class="ij-landmark">
         <h4>Kesavananda Bharati v. State of Kerala (1973)</h4>
-        <p>Established the <strong>Basic Structure Doctrine</strong> - Parliament cannot amend fundamental structure of Constitution.</p>
+        <p>Established the <strong>Basic Structure Doctrine</strong> — Parliament cannot amend the fundamental structure of the Constitution.</p>
       </div>
-      
-      <div class="landmark-card">
+      <div class="ij-landmark">
         <h4>Maneka Gandhi v. Union of India (1978)</h4>
-        <p>Expanded Article 21 - Right to life includes right to live with dignity.</p>
+        <p>Expanded Article 21 — the Right to Life includes the right to live with dignity; procedure must be fair, just, and reasonable.</p>
       </div>
-      
-      <div class="landmark-card">
+      <div class="ij-landmark">
         <h4>Minerva Mills v. Union of India (1980)</h4>
-        <p>Reaffirmed basic structure doctrine and limited Parliament's amendment power.</p>
+        <p>Reaffirmed the basic structure doctrine and held that judicial review is a basic feature of the Constitution.</p>
       </div>
-      
-      <div class="landmark-card">
+      <div class="ij-landmark">
         <h4>IR Coelho v. State of Tamil Nadu (2007)</h4>
-        <p>Judicial review of Ninth Schedule laws post-1973.</p>
+        <p>Held that laws placed in the Ninth Schedule after April 24, 1973, are subject to judicial review.</p>
       </div>
-      
-      <div class="landmark-card">
+      <div class="ij-landmark">
         <h4>Navtej Singh Johar v. Union of India (2018)</h4>
-        <p>Decriminalized Section 377, struck down part of IPC.</p>
+        <p>Decriminalised consensual same-sex relations among adults, striking down part of Section 377 IPC.</p>
       </div>
 
-      <!-- Appointment Process -->
-      <h2>👨‍⚖️ Appointment of Judges</h2>
-      
-      <div style="background: #f8fafc; padding: 2rem; border-radius: 16px; margin: 2rem 0;">
-        <h4>Collegium System</h4>
-        <p>Judges are appointed by the <strong>Collegium System</strong> (judges appointing judges) as per Supreme Court judgments, though the National Judicial Appointments Commission (NJAC) Act was struck down in 2015.</p>
-        
-        <div style="display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;">
+
+      <!-- 11. Appointment -->
+      <h2 id="ij-appointment">11. Appointment &amp; Removal of Judges</h2>
+
+      <div class="ij-info-box">
+        <h4><i class="fas fa-users" style="margin-right:0.45rem;color:#4f46e5;"></i> The Collegium System</h4>
+        <p>Judges are appointed through the <strong>Collegium System</strong> — a judge-led selection process evolved through three Supreme Court judgments (the "Three Judges Cases"). The National Judicial Appointments Commission (NJAC) Act, 2014 was struck down by the Supreme Court in 2015 as unconstitutional.</p>
+        <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:1rem;">
           <div>
-            <h5>Supreme Court Collegium</h5>
-            <ul>
-              <li>CJI + 4 senior-most judges</li>
+            <strong style="font-size:0.88rem;color:#1e293b;">Supreme Court Collegium</strong>
+            <ul style="margin:0.35rem 0 0;padding-left:1.1rem;">
+              <li style="font-size:0.88rem;color:#374151;">CJI + 4 senior-most judges</li>
             </ul>
           </div>
-          
           <div>
-            <h5>High Court Collegium</h5>
-            <ul>
-              <li>Chief Justice + 2 senior judges</li>
+            <strong style="font-size:0.88rem;color:#1e293b;">High Court Collegium</strong>
+            <ul style="margin:0.35rem 0 0;padding-left:1.1rem;">
+              <li style="font-size:0.88rem;color:#374151;">Chief Justice + 2 senior judges</li>
             </ul>
           </div>
         </div>
       </div>
 
-      <!-- Removal Process -->
-      <div style="background: #fef2f2; padding: 2rem; border-radius: 16px; margin: 2rem 0;">
-        <h4><i class="fas fa-exclamation-triangle" style="color: #dc2626;"></i> Removal of Judges (Impeachment)</h4>
-        <p>Judges can be removed only on grounds of <strong>proved misbehaviour or incapacity</strong> through a difficult impeachment process requiring special majority in Parliament.</p>
-        <p><span class="statute-badge">Article 124(4)</span> <span class="statute-badge">Judges Inquiry Act, 1968</span></p>
+      <div class="ij-warn-box">
+        <h4><i class="fas fa-exclamation-triangle" style="color:#dc2626;margin-right:0.4rem;"></i> Removal of Judges — Impeachment</h4>
+        <p>Judges can be removed only on grounds of <strong>proved misbehaviour or incapacity</strong> through an impeachment process requiring a special majority in both Houses of Parliament.</p>
+        <div style="margin-top:0.75rem;">
+          <span class="ij-badge">Article 124(4)</span>
+          <span class="ij-badge">Judges Inquiry Act, 1968</span>
+        </div>
       </div>
 
-      <!-- Constitutional Provisions -->
-      <h2>📚 Constitutional Provisions</h2>
-      
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
-        <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; text-align: center;">
-          <span class="statute-badge" style="background: #4f46e5;">Article 124-147</span>
+
+      <!-- 12. Constitutional Articles -->
+      <h2 id="ij-articles">12. Constitutional Provisions</h2>
+
+      <div class="ij-articles-grid">
+        <div class="ij-article-tile">
+          <span class="ij-badge" style="background:#4f46e5;">Articles 124–147</span>
           <p>Supreme Court</p>
         </div>
-        
-        <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; text-align: center;">
-          <span class="statute-badge" style="background: #2563eb;">Article 214-231</span>
+        <div class="ij-article-tile">
+          <span class="ij-badge" style="background:#2563eb;">Articles 214–231</span>
           <p>High Courts</p>
         </div>
-        
-        <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; text-align: center;">
-          <span class="statute-badge" style="background: #16a34a;">Article 233-235</span>
+        <div class="ij-article-tile">
+          <span class="ij-badge" style="background:#16a34a;">Articles 233–235</span>
           <p>District Courts</p>
         </div>
-        
-        <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; text-align: center;">
-          <span class="statute-badge" style="background: #f59e0b;">Article 32</span>
+        <div class="ij-article-tile">
+          <span class="ij-badge" style="background:#f59e0b;">Article 32</span>
           <p>Right to Constitutional Remedies</p>
         </div>
-      </div>
-
-      <!-- Conclusion -->
-      <div class="summary-box" style="margin-top: 2rem;">
-        <h3 style="color: white;">🎯 Conclusion</h3>
-        <p>The Indian Judiciary stands as an independent and integrated system ensuring justice for all citizens. With the Supreme Court at its apex, followed by High Courts and subordinate courts, it forms a robust framework for upholding the rule of law and protecting fundamental rights.</p>
-        
-        <div style="display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;">
-          <span class="info-badge" style="background: #4f46e5; color: white;">⚖️ Independent</span>
-          <span class="info-badge" style="background: #2563eb; color: white;">🏛️ Integrated</span>
-          <span class="info-badge" style="background: #16a34a; color: white;">📜 Constitutional</span>
-          <span class="info-badge" style="background: #f59e0b; color: white;">🔍 Judicial Review</span>
+        <div class="ij-article-tile">
+          <span class="ij-badge" style="background:#0891b2;">Article 226</span>
+          <p>High Court Writ Jurisdiction</p>
+        </div>
+        <div class="ij-article-tile">
+          <span class="ij-badge" style="background:#7c3aed;">Article 227</span>
+          <p>Supervisory Jurisdiction of High Courts</p>
+        </div>
+        <div class="ij-article-tile">
+          <span class="ij-badge" style="background:#be185d;">Article 143</span>
+          <p>Advisory Jurisdiction of Supreme Court</p>
+        </div>
+        <div class="ij-article-tile">
+          <span class="ij-badge" style="background:#0f766e;">Article 136</span>
+          <p>Special Leave Petition (SLP)</p>
         </div>
       </div>
-    </div>
+
+      <!-- Summary -->
+      <div class="ij-summary">
+        <h3>🎯 Conclusion</h3>
+        <p>The Indian Judiciary stands as an independent, integrated system built to ensure justice for every citizen. With the Supreme Court at its apex, backed by 25 High Courts and over 20,000 subordinate courts, the system forms a robust, constitutionally anchored framework for upholding the rule of law and protecting fundamental rights across a nation of 1.4 billion people.</p>
+        <div class="ij-summary-badges">
+          <span class="ij-sum-badge" style="background:#4f46e5;">⚖️ Independent</span>
+          <span class="ij-sum-badge" style="background:#2563eb;">🏛️ Integrated</span>
+          <span class="ij-sum-badge" style="background:#16a34a;">📜 Constitutional</span>
+          <span class="ij-sum-badge" style="background:#f59e0b; color:#1e1e1e;">🔍 Judicial Review</span>
+        </div>
+      </div>
+
+    </div><!-- /post-content -->
 
     <!-- Tags -->
-    <div class="post-tags">
-      <span class="post-tag"><i class="fas fa-tag"></i> Office</span>
-      <span class="post-tag"><i class="fas fa-tag"></i> Law</span>
-      <span class="post-tag"><i class="fas fa-tag"></i> Indian Judiciary</span>
-      <span class="post-tag"><i class="fas fa-tag"></i> Supreme Court</span>
-      <span class="post-tag"><i class="fas fa-tag"></i> High Court</span>
-      <span class="post-tag"><i class="fas fa-tag"></i> District Court</span>
-      <span class="post-tag"><i class="fas fa-tag"></i> Legal System</span>
-      <span class="post-tag"><i class="fas fa-tag"></i> Constitution</span>
-      <span class="post-tag"><i class="fas fa-tag"></i> Chief Justice</span>
+    <div class="ij-post-tags">
+      <span class="ij-post-tag"><i class="fas fa-tag"></i> Indian Judiciary</span>
+      <span class="ij-post-tag"><i class="fas fa-tag"></i> Supreme Court</span>
+      <span class="ij-post-tag"><i class="fas fa-tag"></i> High Court</span>
+      <span class="ij-post-tag"><i class="fas fa-tag"></i> District Court</span>
+      <span class="ij-post-tag"><i class="fas fa-tag"></i> Legal System</span>
+      <span class="ij-post-tag"><i class="fas fa-tag"></i> Constitution</span>
+      <span class="ij-post-tag"><i class="fas fa-tag"></i> Chief Justice</span>
+      <span class="ij-post-tag"><i class="fas fa-tag"></i> BNSS 2023</span>
+      <span class="ij-post-tag"><i class="fas fa-tag"></i> Collegium</span>
+      <span class="ij-post-tag"><i class="fas fa-tag"></i> Judicial Hierarchy</span>
     </div>
 
-    <!-- Share Section -->
-    <div class="share-section">
-      <div class="share-title">
-        <i class="fas fa-share-alt"></i> Share this article
-      </div>
-      <div class="share-buttons">
-        <a href="#" class="share-btn facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="share-btn twitter"><i class="fab fa-twitter"></i></a>
-        <a href="#" class="share-btn linkedin"><i class="fab fa-linkedin-in"></i></a>
-        <a href="#" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
-        <button id="print-post" class="share-btn" style="background: #64748b;"><i class="fas fa-print"></i></button>
-      </div>
-    </div>
+    <!-- Common post footer -->
+    <div id="post-footer-share-container"></div>
 
-    <!-- Back to blogs -->
-    <div style="text-align: center; margin: 3rem 0;">
-      <a href="../blogs.html" class="back-link" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
-        <i class="fas fa-arrow-left"></i> Back to all articles
-      </a>
-    </div>
   </section>
 
   <footer id="site-footer"></footer>
-  
+
 </body>
 </html>
