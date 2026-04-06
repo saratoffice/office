@@ -13,6 +13,12 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ── Prevent any child from causing horizontal overflow ── */
+    html, body {
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
     :root {
       --gold-50:  #fffdf0;
       --gold-100: #fef9d7;
@@ -62,18 +68,24 @@
 
     /* ── MASTHEAD ──────────────────────────────────── */
     .blogs-masthead {
+      /* Clamp width to viewport — fixes the horizontal scroll root cause */
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+
       background: linear-gradient(160deg, #fff8d0 0%, #ffeea0 45%, #ffd84a 100%);
       border-bottom: 3px solid var(--border-deep);
       padding: 4rem 2rem 3.2rem;
       text-align: center;
       position: relative;
-      overflow: hidden;
     }
 
     .blogs-masthead::before {
       content: '';
       position: absolute;
+      /* Use inset to keep the pseudo-element exactly inside the parent */
       inset: 0;
+      width: 100%;
       background: repeating-linear-gradient(
         45deg,
         transparent,
@@ -196,6 +208,7 @@
 
     .sort-controls {
       display: flex;
+      flex-wrap: wrap; /* allows wrapping on very small screens */
       border: 1.5px solid var(--border-gold);
       border-radius: 8px;
       overflow: hidden;
@@ -483,6 +496,7 @@
       align-items: center;
       gap: 0.45rem;
       margin: 1.5rem 0 1rem;
+      flex-wrap: wrap; /* prevents pagination from overflowing on small screens */
     }
 
     .page-btn {
@@ -530,14 +544,19 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ── RESPONSIVE ─────────────────────────────────── */
-    @media (max-width: 960px) { .blog-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 960px) {
+      .blog-grid { grid-template-columns: repeat(2,1fr); }
+    }
 
     @media (max-width: 620px) {
       .blog-grid { grid-template-columns: 1fr; }
       .toolbar { flex-direction: column; align-items: stretch; }
       .search-box { max-width: 100%; }
-      .sort-controls { margin-left: 0; }
+      .sort-controls { margin-left: 0; width: 100%; }
+      .sort-btn { flex: 1; justify-content: center; }
       .blogs-section { padding: 1.5rem 1rem 4rem; }
+      .blogs-masthead { padding: 2.5rem 1rem 2rem; }
+      .masthead-label .line { width: 28px; }
     }
   </style>
 </head>
