@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Excel Trick: Keep Abstract/Summary Row at Bottom When Sorting | Genus Blog</title>
-  
+  <title>Excel Trick: Keep Abstract/Summary Row at Bottom When Sorting</title>
+
   <!-- Common CSS -->
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../post-styles.css">
+
   <!-- Site components -->
   <script src="../assets/Scripts/site-components.js" defer></script>
-  <!-- Post Common JavaScript -->
   <script src="../assets/Scripts/post-common.js" defer></script>
-  
-  <!-- Font Awesome for icons -->
+
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  
-  <!-- Blog metadata for dynamic blogs.html -->
+
+  <!-- Blog metadata -->
   <meta name="blog:title" content="Excel Trick: Keeping the 'Abstract' Row at the Bottom When Sorting">
   <meta name="blog:excerpt" content="Learn how to keep your summary or abstract row fixed at the bottom of your Excel data range even after sorting. Simple trick using table formatting without headers.">
   <meta name="blog:category" content="technical">
-  <meta name="blog:tags" content="excel, excel-tips, data-sorting, excel-trick, spreadsheet, excel-tables, data-organization, excel-formulas, productivity, excel-hack">
+  <meta name="blog:tags" content="excel, excel-tips, data-sorting, excel-trick, spreadsheet, excel-tables, data-organization, productivity">
   <meta name="blog:author" content="Sarat Rout">
   <meta name="blog:date" content="2025-02-17">
   <meta name="blog:readTime" content="4">
@@ -28,466 +28,684 @@
   <meta name="blog:icon" content="fa-sort-amount-down">
 
   <style>
-    /* Additional styles for Excel tutorial */
-    .tutorial-hero {
+    /* ============================================================
+       EXCEL TRICK POST STYLES — prefixed xt- to avoid conflicts
+       ============================================================ */
+
+    :root {
+      --xt-blue:      #1e3a5f;
+      --xt-blue-mid:  #2563eb;
+      --xt-blue-lt:   #dbeafe;
+      --xt-green:     #166534;
+      --xt-green-lt:  #f0fdf4;
+      --xt-green-bd:  #86efac;
+      --xt-amber:     #92400e;
+      --xt-amber-lt:  #fef3c7;
+      --xt-red:       #b91c1c;
+      --xt-red-lt:    #fee2e2;
+      --xt-ink:       #0e1117;
+      --xt-ink-2:     #374151;
+      --xt-muted:     #64748b;
+      --xt-rule:      #e2e8f0;
+      --xt-paper:     #f8fafc;
+      --xt-mono:      'Courier New', monospace;
+    }
+
+    /* ── Feature image ── */
+    .feature-image {
+      width: 100%; height: 420px;
+      border-radius: 16px; overflow: hidden;
+      position: relative; margin: 2rem 0;
+    }
+    .feature-image img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .feature-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.55));
+      color: rgba(255,255,255,0.85); font-size: 0.8rem;
+      padding: 1.5rem 1.25rem 0.85rem;
+    }
+
+    /* ── Two-column image grid ── */
+    .image-grid-2 {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin: 1.75rem 0;
+    }
+    .image-grid-2 .grid-item { border-radius: 12px; overflow: hidden; }
+    .image-grid-2 .grid-item img {
+      width: 100%; height: 220px;
+      object-fit: cover; display: block;
+    }
+    .image-grid-2 .image-caption {
+      font-size: 0.78rem; color: #64748b;
+      padding: 0.5rem 0.25rem 0; text-align: center;
+    }
+
+    /* ── TOC ── */
+    .xt-toc {
+      background: var(--xt-paper); border: 1px solid var(--xt-rule);
+      border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.5rem 0 2rem;
+    }
+    .xt-toc h4 {
+      margin: 0 0 0.75rem; font-size: 0.95rem; color: var(--xt-blue);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .xt-toc ol { margin: 0; padding-left: 1.2rem; }
+    .xt-toc ol li { margin-bottom: 0.3rem; font-size: 0.88rem; line-height: 1.5; }
+    .xt-toc ol li a { color: #0284c7; text-decoration: none; }
+    .xt-toc ol li a:hover { text-decoration: underline; }
+
+    /* ── Intro banner ── */
+    .xt-intro-banner {
       background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-      border-radius: 24px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      color: white;
+      border-radius: 18px; padding: 1.75rem 2rem;
+      margin-bottom: 2.5rem; border-left: 6px solid #fbbf24;
+      position: relative; overflow: hidden;
+    }
+    .xt-intro-banner::before {
+      content: "⚡"; font-size: 6rem;
+      position: absolute; right: 1.5rem; top: -0.5rem;
+      opacity: 0.1; line-height: 1; pointer-events: none;
+    }
+    .xt-intro-banner h2 {
+      font-size: 1.3rem; color: #fff; margin: 0 0 0.6rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .xt-intro-banner p {
+      color: #bfdbfe; font-size: 0.93rem; margin: 0 0 0.5rem; line-height: 1.7;
+    }
+    .xt-intro-banner p:last-child { margin-bottom: 0; }
+    .xt-intro-banner strong { color: #fde68a; }
+
+    /* ── Callout boxes ── */
+    .xt-callout {
+      border-radius: 14px; padding: 1.15rem 1.4rem; margin: 1.25rem 0;
+      display: flex; gap: 0.85rem; align-items: flex-start;
+      font-size: 0.91rem; line-height: 1.72;
+    }
+    .xt-callout .xt-cl-icon {
+      flex-shrink: 0; width: 34px; height: 34px;
+      border-radius: 10px; display: grid; place-items: center;
+      font-size: 0.95rem; margin-top: 1px;
+    }
+    .xt-callout p { margin: 0; font-size: 0.9rem; }
+    .xt-callout strong { font-weight: 600; }
+    .xt-callout .xt-cl-label {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.11em;
+      text-transform: uppercase; margin-bottom: 0.4rem; display: block;
+    }
+    .xt-callout.green  { background: var(--xt-green-lt); border: 1px solid var(--xt-green-bd); color: #064e3b; }
+    .xt-callout.green  .xt-cl-icon { background: #a7f3d0; color: var(--xt-green); }
+    .xt-callout.green  .xt-cl-label { color: var(--xt-green); }
+    .xt-callout.blue   { background: var(--xt-blue-lt); border: 1px solid #bfdbfe; color: #1e40af; }
+    .xt-callout.blue   .xt-cl-icon { background: #bfdbfe; color: #1e40af; }
+    .xt-callout.blue   .xt-cl-label { color: var(--xt-blue); }
+    .xt-callout.amber  { background: var(--xt-amber-lt); border: 1px solid #fde68a; color: #78350f; }
+    .xt-callout.amber  .xt-cl-icon { background: #fde68a; color: #92400e; }
+    .xt-callout.amber  .xt-cl-label { color: #92400e; }
+    .xt-callout.red    { background: var(--xt-red-lt); border: 1px solid #fca5a5; color: #7f1d1d; }
+    .xt-callout.red    .xt-cl-icon { background: #fecaca; color: var(--xt-red); }
+    .xt-callout.red    .xt-cl-label { color: var(--xt-red); }
+    .xt-callout.dark   { background: var(--xt-ink); border: 1px solid #2d3748; color: #fff; }
+    .xt-callout.dark   .xt-cl-icon { background: rgba(255,255,255,0.1); color: #fff; }
+    .xt-callout.dark   .xt-cl-label { color: #fff; }
+    .xt-callout.dark   p { color: #fff; }
+    .xt-callout.dark   strong { color: #fff; }
+
+    /* ── Step cards ── */
+    .xt-step-card {
+      display: flex; gap: 1.5rem;
+      background: #fff; border-radius: 18px;
+      padding: 1.5rem; margin-bottom: 1.25rem;
+      border: 1px solid var(--xt-rule);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .xt-step-card:hover {
+      transform: translateX(6px);
+      box-shadow: 0 8px 24px rgba(37,99,235,0.1);
+    }
+    .xt-step-num {
+      background: var(--xt-blue-mid); color: #fff;
+      width: 46px; height: 46px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; font-weight: 800; flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+    }
+    .xt-step-body { flex: 1; }
+    .xt-step-body h3 {
+      font-size: 1rem; color: var(--xt-ink);
+      margin: 0 0 0.6rem;
+    }
+    .xt-step-body > p {
+      font-size: 0.9rem; color: var(--xt-ink-2);
+      line-height: 1.7; margin: 0 0 0.6rem;
+    }
+    .xt-step-body ol, .xt-step-body ul {
+      padding-left: 1.2rem; margin: 0.4rem 0 0;
+    }
+    .xt-step-body li {
+      font-size: 0.88rem; color: var(--xt-ink-2);
+      margin-bottom: 0.35rem; line-height: 1.6;
+    }
+
+    /* ── Keyboard shortcut badge ── */
+    .xt-kbd {
+      display: inline-block; background: var(--xt-ink);
+      color: #fbbf24; padding: 0.25rem 0.85rem;
+      border-radius: 8px; font-family: var(--xt-mono);
+      font-weight: 600; font-size: 0.82rem;
+      border: 1px solid #475569; margin: 0 0.2rem;
+    }
+
+    /* ── Excel grid visual ── */
+    .xt-excel-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px; background: #94a3b8;
+      border: 2px solid #64748b;
+      border-radius: 8px; overflow: hidden;
+      margin: 0.75rem 0; font-size: 0.82rem;
+      font-family: var(--xt-mono);
+    }
+    .xt-cell {
+      background: #fff; padding: 0.6rem 0.5rem;
       text-align: center;
     }
-    
-    .step-container {
-      margin: 2rem 0;
+    .xt-cell-hdr  { background: #1e293b; color: #fff; font-weight: 600; }
+    .xt-cell-abs  { background: #fef3c7; font-weight: 700; border: 2px solid #f59e0b; }
+    .xt-cell-abs2 { background: #fee2e2; font-weight: 700; border: 2px solid #ef4444; }
+
+    /* ── Before / After grid ── */
+    .xt-before-after {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.25rem; margin: 1.75rem 0;
     }
-    
-    .step-card {
-      display: flex;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-      background: white;
-      border-radius: 20px;
-      padding: 1.5rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-      border: 1px solid #e2e8f0;
-      transition: transform 0.2s ease;
+    .xt-ba-col {
+      border-radius: 16px; padding: 1.3rem;
     }
-    
-    .step-card:hover {
-      transform: translateX(10px);
-      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+    .xt-ba-col.before { background: var(--xt-red-lt); border: 1px solid #fca5a5; }
+    .xt-ba-col.after  { background: var(--xt-green-lt); border: 1px solid var(--xt-green-bd); }
+    .xt-ba-col h4 {
+      font-size: 0.9rem; margin: 0 0 0.75rem;
+      display: flex; align-items: center; gap: 0.4rem;
     }
-    
-    .step-number-badge {
-      background: #3b82f6;
-      color: white;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
+    .xt-ba-col.before h4 { color: var(--xt-red); }
+    .xt-ba-col.after  h4 { color: var(--xt-green); }
+    .xt-ba-col p { font-size: 0.83rem; margin: 0.65rem 0 0; line-height: 1.55; }
+    .xt-ba-col.before p { color: var(--xt-red); }
+    .xt-ba-col.after  p { color: var(--xt-green); }
+    .xt-sort-arrow {
+      text-align: center; font-size: 0.82rem;
+      color: var(--xt-muted); margin: 0.5rem 0;
       font-weight: 700;
-      flex-shrink: 0;
-      box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
     }
-    
-    .step-content {
-      flex: 1;
+
+    /* ── Quick reference table: scroll wrapper ── */
+    .xt-table-wrap {
+      width: 100%; overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 14px; border: 1px solid var(--xt-rule);
+      margin: 1.25rem 0;
     }
-    
-    .step-content h3 {
-      margin-top: 0;
-      color: #1e293b;
+    .xt-table-wrap table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.87rem; min-width: 340px;
     }
-    
-    .excel-visual {
-      background: #f8fafc;
-      border: 2px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-      font-family: 'Courier New', monospace;
+    .xt-table-wrap thead th {
+      background: var(--xt-ink); color: rgba(255,255,255,0.88);
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.75rem 1.1rem; text-align: left; white-space: nowrap;
     }
-    
-    .excel-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2px;
-      background: #cbd5e1;
-      border: 2px solid #94a3b8;
-      margin: 1rem 0;
+    .xt-table-wrap tbody tr:nth-child(even) td { background: var(--xt-paper); }
+    .xt-table-wrap tbody tr:nth-child(odd)  td { background: #fff; }
+    .xt-table-wrap td {
+      padding: 0.7rem 1.1rem; border-bottom: 1px solid var(--xt-rule);
+      color: var(--xt-ink-2); vertical-align: middle;
     }
-    
-    .excel-cell {
-      background: white;
-      padding: 0.8rem;
-      text-align: center;
-      font-size: 0.9rem;
+    .xt-table-wrap tr:last-child td { border-bottom: none; }
+    .xt-table-wrap td:first-child { font-weight: 600; color: var(--xt-ink); width: 35%; }
+
+    /* ── Formatting samples ── */
+    .xt-format-strip {
+      display: flex; flex-wrap: wrap; gap: 0.65rem; margin: 0.75rem 0;
     }
-    
-    .excel-header {
-      background: #1e293b;
-      color: white;
-      font-weight: 600;
+    .xt-format-pill {
+      padding: 0.4rem 1.1rem; border-radius: 30px;
+      font-size: 0.84rem; font-weight: 600;
     }
-    
-    .excel-abstract {
-      background: #fef3c7;
-      font-weight: 600;
-      border: 2px solid #f59e0b;
+
+    /* ── Why it works panel ── */
+    .xt-why-box {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e6f5ef 100%);
+      border: 1px solid #bfdbfe; border-radius: 18px;
+      padding: 1.75rem 2rem; margin: 1.5rem 0;
+      display: flex; align-items: flex-start; gap: 1.5rem;
     }
-    
-    .excel-table-border {
-      border: 3px solid #3b82f6;
-      border-radius: 8px;
-      padding: 2px;
-      background: #bfdbfe;
+    .xt-why-icon {
+      background: var(--xt-blue-mid); color: #fff;
+      width: 60px; height: 60px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; flex-shrink: 0;
     }
-    
-    .tip-box {
-      background: #e6f4ea;
-      border-left: 6px solid #34A853;
-      padding: 1.5rem;
-      border-radius: 0 16px 16px 0;
-      margin: 2rem 0;
+    .xt-why-body { flex: 1; }
+    .xt-why-body p {
+      font-size: 0.92rem; color: var(--xt-ink-2);
+      line-height: 1.75; margin: 0;
     }
-    
-    .warning-box {
-      background: #fff3cd;
-      border-left: 6px solid #ffc107;
-      padding: 1.2rem;
-      border-radius: 0 12px 12px 0;
-      margin: 1.5rem 0;
+
+    /* ── Summary panel ── */
+    .xt-summary {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 18px; padding: 2rem; margin: 2.5rem 0;
     }
-    
-    .keyboard-shortcut {
-      display: inline-block;
-      background: #1e293b;
-      color: #fbbf24;
-      padding: 0.3rem 1rem;
-      border-radius: 8px;
-      font-family: 'Courier New', monospace;
-      font-weight: 600;
-      margin: 0 0.2rem;
-      border: 1px solid #475569;
+    .xt-summary p {
+      color: rgba(255,255,255,0.82); font-size: 0.92rem;
+      line-height: 1.78; margin: 0;
     }
-    
-    .before-after {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin: 2rem 0;
+    .xt-summary strong { color: #6ee7b7; }
+
+    /* ── Post tags ── */
+    .xt-post-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 2rem 0; }
+    .xt-post-tag {
+      background: #e2e8f0; padding: 0.3rem 1rem; border-radius: 30px;
+      font-size: 0.85rem; color: #475569;
+      display: inline-flex; align-items: center; gap: 0.3rem;
     }
-    
-    .before-box {
-      background: #fee2e2;
-      border-radius: 16px;
-      padding: 1.2rem;
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .xt-before-after { grid-template-columns: 1fr; }
+      .image-grid-2    { grid-template-columns: 1fr; }
+      .feature-image   { height: 260px; }
+      .xt-why-box      { flex-direction: column; gap: 1rem; }
+      .xt-why-icon     { width: 48px; height: 48px; font-size: 1.3rem; }
     }
-    
-    .after-box {
-      background: #e6f4ea;
-      border-radius: 16px;
-      padding: 1.2rem;
-    }
-    
-    .badge-excel {
-      background: #1e6f3f;
-      color: white;
-      padding: 0.2rem 0.8rem;
-      border-radius: 30px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      display: inline-block;
-    }
+
+    .blog-post-section, .post-content { overflow-x: visible; }
   </style>
 </head>
 
 <body>
   <header id="site-header"></header>
 
-  <!-- Main blog post section -->
   <section class="blog-post-section">
-    <!-- Back to blogs link -->
+
     <a href="../blogs.html" class="back-link">
       <i class="fas fa-arrow-left"></i> Back to all articles
     </a>
 
-    <!-- Post header -->
+    <!-- ── POST HEADER ── -->
     <div class="post-header">
       <h1 class="post-title">Excel Trick: Keeping the "Abstract" Row at the Bottom of Your Data Range When Sorting</h1>
-      
       <div class="post-meta">
         <span><i class="fas fa-user"></i> Sarat Rout</span>
         <span><i class="fas fa-calendar"></i> February 17, 2025</span>
         <span><i class="fas fa-clock"></i> 4 min read</span>
-        <span class="category-tag"><i class="fas fa-tag"></i> Excel Tips</span>
+        <span class="category-tag"><i class="fas fa-table"></i> Excel Tips</span>
       </div>
     </div>
 
-    <!-- Hero Image -->
-    <div class="hero-image">
-      <img src="https://cdn.shopify.com/s/files/1/0381/7642/4068/files/How-to-add-Total-row-in-Excel-tables-02.png?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&h=450&q=80" 
-           alt="Excel spreadsheet with sorting"
+    <!-- ── FEATURE IMAGE ── -->
+    <div class="feature-image">
+      <img src="https://cdn.shopify.com/s/files/1/0381/7642/4068/files/How-to-add-Total-row-in-Excel-tables-02.png"
+           alt="Excel spreadsheet showing Total row at bottom of table"
            loading="lazy"
-           onerror="this.src='https://via.placeholder.com/1200x450?text=Excel+Sorting+Trick'">
-      <div class="hero-caption">
-        <i class="fas fa-camera"></i> Keep your summary row fixed at the bottom while sorting data
+           onerror="this.src='https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'">
+      <div class="feature-caption">
+        <i class="fas fa-camera"></i> Excel Tables support a built-in Total Row feature that stays fixed at the bottom — the same principle underpins this trick
       </div>
     </div>
 
     <!-- Main content -->
     <div class="post-content">
-      
-      <!-- INTRODUCTION -->
-      <div class="tutorial-hero">
-        <i class="fas fa-sort-amount-down-alt" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-        <h2 style="color: white; margin: 0 0 1rem 0;">The Problem: Abstract Row Gets Mixed Up</h2>
-        <p style="color: white; font-size: 1.1rem; max-width: 800px; margin: 0 auto;">If you work with large datasets in Excel, it's common to have an "Abstract" or summary row at the bottom of your data, which you want to stay fixed at the bottom of the table even when sorting your data. However, if you sort the entire range of data, the "Abstract" row can get mixed up within the data, causing confusion.</p>
+
+      <p style="line-height:1.78; color:#2b3141;">Anyone who manages large datasets in Excel has faced this frustration: you have a carefully crafted summary or "Abstract" row at the bottom of your table — totals, averages, or aggregate counts — and the moment you sort the data, that row gets shuffled into the middle of your dataset. This quick trick solves it permanently, using Excel's own Table architecture to tell the application that the abstract row belongs in a separate, non-sortable region.</p>
+
+      <!-- TOC -->
+      <div class="xt-toc">
+        <h4><i class="fas fa-list-ul"></i> Table of Contents</h4>
+        <ol>
+          <li><a href="#xt-s1">The Problem — Why Sorting Breaks Your Layout</a></li>
+          <li><a href="#xt-s2">Before &amp; After: What This Trick Achieves</a></li>
+          <li><a href="#xt-s3">Step-by-Step Solution (6 Steps)</a></li>
+          <li><a href="#xt-s4">Why It Works — The Excel Table Architecture</a></li>
+          <li><a href="#xt-s5">Alternative: The Total Row Method</a></li>
+          <li><a href="#xt-s6">Bonus — Visual Formatting for Your Abstract Row</a></li>
+          <li><a href="#xt-s7">Quick Reference Summary</a></li>
+        </ol>
       </div>
-      
-      <!-- VISUAL EXAMPLE OF THE PROBLEM -->
-      <div class="before-after">
-        <div class="before-box">
-          <h4 style="margin-top: 0; color: #b91c1c;"><i class="fas fa-times-circle"></i> Before: The Problem</h4>
-          <p>When you sort normally, the abstract row gets mixed in:</p>
-          <div class="excel-grid" style="grid-template-columns: repeat(3, 1fr);">
-            <div class="excel-cell excel-header">Product</div>
-            <div class="excel-cell excel-header">Sales</div>
-            <div class="excel-cell excel-header">Region</div>
-            
-            <div class="excel-cell">Apples</div>
-            <div class="excel-cell">100</div>
-            <div class="excel-cell">North</div>
-            
-            <div class="excel-cell">Bananas</div>
-            <div class="excel-cell">150</div>
-            <div class="excel-cell">South</div>
-            
-            <div class="excel-cell excel-abstract">TOTAL</div>
-            <div class="excel-cell excel-abstract">250</div>
-            <div class="excel-cell excel-abstract"></div>
-          </div>
-          <p style="margin-top: 1rem;">↓ <strong>After sorting A-Z</strong> ↓</p>
-          <div class="excel-grid" style="grid-template-columns: repeat(3, 1fr);">
-            <div class="excel-cell excel-header">Product</div>
-            <div class="excel-cell excel-header">Sales</div>
-            <div class="excel-cell excel-header">Region</div>
-            
-            <div class="excel-cell">Apples</div>
-            <div class="excel-cell">100</div>
-            <div class="excel-cell">North</div>
-            
-            <div class="excel-cell excel-abstract">TOTAL</div>  <!-- Abstract row moved up! -->
-            <div class="excel-cell excel-abstract">250</div>
-            <div class="excel-cell excel-abstract"></div>
-            
-            <div class="excel-cell">Bananas</div>
-            <div class="excel-cell">150</div>
-            <div class="excel-cell">South</div>
-          </div>
-          <p style="color: #b91c1c; margin-bottom: 0;"><i class="fas fa-exclamation-triangle"></i> Abstract row is now in the middle!</p>
+
+
+      <!-- 1. The Problem -->
+      <h2 id="xt-s1">1. The Problem — Why Sorting Breaks Your Layout</h2>
+
+      <div class="xt-intro-banner">
+        <h2><i class="fas fa-sort-amount-down-alt"></i> The Root Cause</h2>
+        <p>When you sort a range in Excel, the application treats every row in the selected range as a <strong>data row of equal rank</strong>. It has no built-in way to know that a particular row is a summary row that should stay put — unless you explicitly tell it so through Excel's Table structure.</p>
+        <p>The result: your <strong>TOTAL or Abstract row gets sorted alphabetically or numerically</strong> along with all other data rows, ending up somewhere in the middle of your dataset.</p>
+      </div>
+
+      <div class="image-grid-2">
+        <div class="grid-item">
+          <img src="https://cdn.shopify.com/s/files/1/0381/7642/4068/files/How-to-add-Total-row-in-Excel-tables-02.png"
+               alt="Excel Total Row feature" loading="lazy"
+               onerror="this.src='https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=600&h=400'">
+          <div class="image-caption">Excel's built-in Total Row (Table Design tab) — the feature this trick leverages</div>
         </div>
-        
-        <div class="after-box">
-          <h4 style="margin-top: 0; color: #137333;"><i class="fas fa-check-circle"></i> After: The Solution</h4>
-          <p>With this trick, abstract stays at bottom:</p>
-          <div class="excel-grid" style="grid-template-columns: repeat(3, 1fr);">
-            <div class="excel-cell excel-header">Product</div>
-            <div class="excel-cell excel-header">Sales</div>
-            <div class="excel-cell excel-header">Region</div>
-            
-            <div class="excel-cell">Apples</div>
-            <div class="excel-cell">100</div>
-            <div class="excel-cell">North</div>
-            
-            <div class="excel-cell">Bananas</div>
-            <div class="excel-cell">150</div>
-            <div class="excel-cell">South</div>
-            
-            <div class="excel-cell excel-abstract">TOTAL</div>
-            <div class="excel-cell excel-abstract">250</div>
-            <div class="excel-cell excel-abstract"></div>
-          </div>
-          <p style="margin-top: 1rem;">↓ <strong>After sorting A-Z</strong> ↓</p>
-          <div class="excel-grid" style="grid-template-columns: repeat(3, 1fr);">
-            <div class="excel-cell excel-header">Product</div>
-            <div class="excel-cell excel-header">Sales</div>
-            <div class="excel-cell excel-header">Region</div>
-            
-            <div class="excel-cell">Apples</div>
-            <div class="excel-cell">100</div>
-            <div class="excel-cell">North</div>
-            
-            <div class="excel-cell">Bananas</div>
-            <div class="excel-cell">150</div>
-            <div class="excel-cell">South</div>
-            
-            <div class="excel-cell excel-abstract">TOTAL</div>  <!-- Still at bottom! -->
-            <div class="excel-cell excel-abstract">250</div>
-            <div class="excel-cell excel-abstract"></div>
-          </div>
-          <p style="color: #137333; margin-bottom: 0;"><i class="fas fa-check-circle"></i> Abstract row stays fixed at bottom!</p>
+        <div class="grid-item">
+          <img src="https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=600&h=400"
+               alt="Data analysis spreadsheet" loading="lazy">
+          <div class="image-caption">Large datasets with summary rows are common in procurement, finance, and operations tracking</div>
         </div>
       </div>
-      
-      <!-- SOLUTION HEADER -->
-      <h2>The Solution: Convert the Abstract Row to a Table (Without Header)</h2>
-      
-      <p>Here's a simple Excel trick to fix this issue and ensure your "Abstract" row remains at the bottom while sorting the data.</p>
-      
-      <!-- STEP-BY-STEP GUIDE -->
-      <h3>Step-by-Step Guide:</h3>
-      
-      <div class="step-container">
-        <!-- STEP 1 -->
-        <div class="step-card">
-          <div class="step-number-badge">1</div>
-          <div class="step-content">
-            <h3>Select Your Data Range</h3>
-            <p>First, highlight the entire data range of the <strong>"Abstract" row</strong>, which is located at the bottom of your dataset.</p>
-            <div style="background: #f1f5f9; padding: 0.8rem; border-radius: 8px; display: inline-block;">
-              <span class="keyboard-shortcut">Click & Drag</span> to select the entire abstract row
-            </div>
+
+
+      <!-- 2. Before & After -->
+      <h2 id="xt-s2">2. Before &amp; After: What This Trick Achieves</h2>
+
+      <div class="xt-before-after">
+        <div class="xt-ba-col before">
+          <h4><i class="fas fa-times-circle"></i> Without the Trick</h4>
+          <div class="xt-excel-grid">
+            <div class="xt-cell xt-cell-hdr">Product</div>
+            <div class="xt-cell xt-cell-hdr">Sales</div>
+            <div class="xt-cell xt-cell-hdr">Region</div>
+            <div class="xt-cell">Apples</div>
+            <div class="xt-cell">100</div>
+            <div class="xt-cell">North</div>
+            <div class="xt-cell">Bananas</div>
+            <div class="xt-cell">150</div>
+            <div class="xt-cell">South</div>
+            <div class="xt-cell xt-cell-abs">TOTAL</div>
+            <div class="xt-cell xt-cell-abs">250</div>
+            <div class="xt-cell xt-cell-abs">—</div>
           </div>
-        </div>
-        
-        <!-- STEP 2 -->
-        <div class="step-card">
-          <div class="step-number-badge">2</div>
-          <div class="step-content">
-            <h3>Convert to a Table</h3>
-            <p>Press <span class="keyboard-shortcut">Ctrl + T</span> or go to the <strong>"Insert"</strong> tab and click on <strong>"Table"</strong>.</p>
-            <p>A window will pop up asking: <em>"Does your table have headers?"</em></p>
-            <div style="background: #fff3cd; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
-              <i class="fas fa-exclamation-circle" style="color: #856404;"></i> <strong>Important:</strong> Since your "Abstract" row is not part of the main data and does not have headers, <strong>leave the box unchecked</strong> and click "OK".
-            </div>
-            <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
-              <span class="badge-excel">✓ Headers: UNCHECKED</span>
-            </div>
+          <div class="xt-sort-arrow">↓ Sort A → Z ↓</div>
+          <div class="xt-excel-grid">
+            <div class="xt-cell xt-cell-hdr">Product</div>
+            <div class="xt-cell xt-cell-hdr">Sales</div>
+            <div class="xt-cell xt-cell-hdr">Region</div>
+            <div class="xt-cell">Apples</div>
+            <div class="xt-cell">100</div>
+            <div class="xt-cell">North</div>
+            <div class="xt-cell xt-cell-abs2">TOTAL</div>
+            <div class="xt-cell xt-cell-abs2">250</div>
+            <div class="xt-cell xt-cell-abs2">—</div>
+            <div class="xt-cell">Bananas</div>
+            <div class="xt-cell">150</div>
+            <div class="xt-cell">South</div>
           </div>
+          <p><i class="fas fa-exclamation-triangle"></i> Abstract row is now in the middle!</p>
         </div>
-        
-        <!-- STEP 3 -->
-        <div class="step-card">
-          <div class="step-number-badge">3</div>
-          <div class="step-content">
-            <h3>Remove Header from the Abstract Table</h3>
-            <p>After converting the abstract row to a table, you will see it has a header row automatically added.</p>
-            <p><strong>How to remove:</strong> Right-click on the header of the new table and choose <strong>"Table" → "Convert to Range"</strong> OR:</p>
-            <ol>
-              <li>Click anywhere in the table</li>
-              <li>Go to the <strong>"Table Design"</strong> tab</li>
-              <li>Uncheck <strong>"Header Row"</strong> in the Table Style Options group</li>
-            </ol>
-            <div class="excel-visual" style="padding: 0.5rem;">
-              <p style="margin: 0;"><span class="keyboard-shortcut">Table Design → Header Row</span> (uncheck)</p>
-            </div>
+
+        <div class="xt-ba-col after">
+          <h4><i class="fas fa-check-circle"></i> With the Trick</h4>
+          <div class="xt-excel-grid">
+            <div class="xt-cell xt-cell-hdr">Product</div>
+            <div class="xt-cell xt-cell-hdr">Sales</div>
+            <div class="xt-cell xt-cell-hdr">Region</div>
+            <div class="xt-cell">Apples</div>
+            <div class="xt-cell">100</div>
+            <div class="xt-cell">North</div>
+            <div class="xt-cell">Bananas</div>
+            <div class="xt-cell">150</div>
+            <div class="xt-cell">South</div>
+            <div class="xt-cell xt-cell-abs">TOTAL</div>
+            <div class="xt-cell xt-cell-abs">250</div>
+            <div class="xt-cell xt-cell-abs">—</div>
           </div>
-        </div>
-        
-        <!-- STEP 4 -->
-        <div class="step-card">
-          <div class="step-number-badge">4</div>
-          <div class="step-content">
-            <h3>Delete the Blank Row</h3>
-            <p>After removing the header, a blank row appears above the abstract row. <strong>Delete this blank row</strong> to clean up your spreadsheet.</p>
-            <div class="warning-box" style="margin: 0.5rem 0;">
-              <i class="fas fa-mouse-pointer"></i> Right-click on the row number → <strong>Delete</strong>
-            </div>
+          <div class="xt-sort-arrow">↓ Sort A → Z ↓</div>
+          <div class="xt-excel-grid">
+            <div class="xt-cell xt-cell-hdr">Product</div>
+            <div class="xt-cell xt-cell-hdr">Sales</div>
+            <div class="xt-cell xt-cell-hdr">Region</div>
+            <div class="xt-cell">Apples</div>
+            <div class="xt-cell">100</div>
+            <div class="xt-cell">North</div>
+            <div class="xt-cell">Bananas</div>
+            <div class="xt-cell">150</div>
+            <div class="xt-cell">South</div>
+            <div class="xt-cell xt-cell-abs">TOTAL</div>
+            <div class="xt-cell xt-cell-abs">250</div>
+            <div class="xt-cell xt-cell-abs">—</div>
           </div>
+          <p><i class="fas fa-check-circle"></i> Abstract row stays fixed at the bottom!</p>
         </div>
-        
-        <!-- STEP 5 -->
-        <div class="step-card">
-          <div class="step-number-badge">5</div>
-          <div class="step-content">
-            <h3>Move the Abstract Table (if needed)</h3>
-            <p>If necessary, move the abstract row table below your main dataset to ensure it's always at the bottom. You can do this by <strong>cutting the table</strong> (<span class="keyboard-shortcut">Ctrl + X</span>) and <strong>pasting it</strong> (<span class="keyboard-shortcut">Ctrl + V</span>) in the desired location.</p>
-          </div>
-        </div>
-        
-        <!-- STEP 6 -->
-        <div class="step-card">
-          <div class="step-number-badge">6</div>
-          <div class="step-content">
-            <h3>Sort Your Data</h3>
-            <p>Now, when you sort the rest of your data, the abstract row will <strong>stay fixed at the bottom</strong>.</p>
-            <div style="background: #e6f4ea; padding: 1rem; border-radius: 12px;">
-              <i class="fas fa-check-circle" style="color: #34A853;"></i> Excel recognizes that the abstract row is part of a separate table and will not include it in the sort range.
+      </div>
+
+
+      <!-- 3. Step-by-Step -->
+      <h2 id="xt-s3">3. Step-by-Step Solution (6 Steps)</h2>
+
+      <!-- Step 1 -->
+      <div class="xt-step-card">
+        <div class="xt-step-num">1</div>
+        <div class="xt-step-body">
+          <h3>Select Your Abstract Row</h3>
+          <p>Click on the row number of your Abstract or summary row to select the entire row, then drag across to include all columns in your data range. Make sure you select <strong>only the abstract row</strong> — not any part of the main data above it.</p>
+          <div class="xt-callout blue" style="margin-top:0.75rem;">
+            <div class="xt-cl-icon"><i class="fas fa-info-circle"></i></div>
+            <div>
+              <div class="xt-cl-label">Tip</div>
+              <p>If your abstract row spans the same columns as your main data, select exactly those cells — <strong>do not include the row header column</strong> if you have one.</p>
             </div>
           </div>
         </div>
       </div>
-      
-      <!-- WHY IT WORKS -->
-      <h2>Why It Works</h2>
-      
-      <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e6f4ea 100%); padding: 2rem; border-radius: 20px; margin: 2rem 0;">
-        <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-          <div style="background: #3b82f6; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
-            <i class="fas fa-magic"></i>
-          </div>
-          <div style="flex: 1;">
-            <p style="font-size: 1.1rem; margin: 0;">By converting the abstract row into its own table and removing the header, you tell Excel to treat it as a <strong>non-sortable range</strong>. This ensures that it will remain unaffected by any sorting actions on the main dataset, keeping it exactly where you need it.</p>
-          </div>
-        </div>
-      </div>
-      
-      <!-- BONUS TIP -->
-      <div class="tip-box">
-        <h3 style="margin-top: 0; color: #137333;"><i class="fas fa-gift"></i> Bonus Tip: Visual Enhancement</h3>
-        <p>You can also format the abstract row with different colors or borders to visually distinguish it from the rest of your data, making it even easier to spot.</p>
-        
-        <div style="background: white; border-radius: 12px; padding: 1rem; margin-top: 1rem;">
-          <p><strong>Formatting ideas:</strong></p>
-          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-            <span style="background: #fef3c7; padding: 0.5rem 1rem; border-radius: 30px;">Yellow background</span>
-            <span style="background: #dbeafe; padding: 0.5rem 1rem; border-radius: 30px;">Blue background</span>
-            <span style="background: #e6f4ea; padding: 0.5rem 1rem; border-radius: 30px;">Green background</span>
-            <span style="border: 2px solid #3b82f6; padding: 0.5rem 1rem; border-radius: 30px;">Bold border</span>
+
+      <!-- Step 2 -->
+      <div class="xt-step-card">
+        <div class="xt-step-num">2</div>
+        <div class="xt-step-body">
+          <h3>Convert the Abstract Row to a Table</h3>
+          <p>With the abstract row selected, press <span class="xt-kbd">Ctrl + T</span> (Windows) or <span class="xt-kbd">⌘ + T</span> (Mac), or go to <strong>Insert → Table</strong> on the ribbon.</p>
+          <p>A dialog box will appear: <em>"Where is the data for your table?"</em> — verify the range is correct, then look at the checkbox labelled <strong>"My table has headers"</strong>.</p>
+          <div class="xt-callout red" style="margin-top:0.75rem;">
+            <div class="xt-cl-icon"><i class="fas fa-times-circle"></i></div>
+            <div>
+              <div class="xt-cl-label">Critical — Leave Headers Unchecked</div>
+              <p>Since your abstract row contains summary values (not column headers), <strong>uncheck "My table has headers"</strong> before clicking OK. If you leave it checked, Excel will treat your first cell (e.g. "TOTAL") as a column header and add an unwanted row.</p>
+            </div>
           </div>
         </div>
       </div>
-      
-      <!-- QUICK REFERENCE SUMMARY -->
-      <div style="background: white; border-radius: 20px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin: 2rem 0;">
-        <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
-          <i class="fas fa-list-check" style="color: #3b82f6;"></i> Quick Reference Summary
-        </h3>
-        
-        <table style="width: 100%; border-collapse: collapse;">
-          <tr>
-            <td style="padding: 0.8rem; border-bottom: 1px solid #e2e8f0;"><span class="keyboard-shortcut">1</span></td>
-            <td style="padding: 0.8rem; border-bottom: 1px solid #e2e8f0;">Select abstract row</td>
-          </tr>
-          <tr>
-            <td style="padding: 0.8rem; border-bottom: 1px solid #e2e8f0;"><span class="keyboard-shortcut">Ctrl + T</span></td>
-            <td style="padding: 0.8rem; border-bottom: 1px solid #e2e8f0;">Convert to table (NO headers)</td>
-          </tr>
-          <tr>
-            <td style="padding: 0.8rem; border-bottom: 1px solid #e2e8f0;"><span class="keyboard-shortcut">Table Design</span></td>
-            <td style="padding: 0.8rem; border-bottom: 1px solid #e2e8f0;">Uncheck "Header Row"</td>
-          </tr>
-          <tr>
-            <td style="padding: 0.8rem; border-bottom: 1px solid #e2e8f0;"><span class="keyboard-shortcut">Delete</span></td>
-            <td style="padding: 0.8rem; border-bottom: 1px solid #e2e8f0;">Remove blank row above</td>
-          </tr>
-          <tr>
-            <td style="padding: 0.8rem;"><span class="keyboard-shortcut">Sort</span></td>
-            <td style="padding: 0.8rem;">Abstract row stays at bottom!</td>
-          </tr>
+
+      <!-- Step 3 -->
+      <div class="xt-step-card">
+        <div class="xt-step-num">3</div>
+        <div class="xt-step-body">
+          <h3>Remove the Auto-Generated Header Row</h3>
+          <p>Excel will have inserted an auto-generated header row above the abstract row (typically "Column1", "Column2", etc.). Remove it:</p>
+          <ol>
+            <li>Click anywhere inside the new table</li>
+            <li>Go to the <strong>Table Design</strong> tab (appears in the ribbon when a table is selected)</li>
+            <li>In the <strong>Table Style Options</strong> group, <strong>uncheck "Header Row"</strong></li>
+          </ol>
+          <p>The auto-generated header row disappears, leaving only your abstract row inside the table.</p>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="xt-step-card">
+        <div class="xt-step-num">4</div>
+        <div class="xt-step-body">
+          <h3>Delete the Blank Row (if present)</h3>
+          <p>After unchecking the Header Row, a blank row may remain above the abstract row. Right-click on that row number and choose <strong>Delete</strong> to remove it and close the gap between your main data and the abstract table.</p>
+          <div class="xt-callout amber">
+            <div class="xt-cl-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div>
+              <div class="xt-cl-label">Watch Out</div>
+              <p>Make sure you're deleting the blank row, not a row that contains data. Look at the row number carefully before deleting.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="xt-step-card">
+        <div class="xt-step-num">5</div>
+        <div class="xt-step-body">
+          <h3>Reposition the Abstract Table if Needed</h3>
+          <p>If the abstract table has moved out of position relative to your main data, cut it (<span class="xt-kbd">Ctrl + X</span>) and paste (<span class="xt-kbd">Ctrl + V</span>) it immediately below your main dataset — in the row directly beneath the last data row.</p>
+          <p>The abstract table is now a separate Excel object. It will not interfere with sorting operations on the main data range.</p>
+        </div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="xt-step-card">
+        <div class="xt-step-num">6</div>
+        <div class="xt-step-body">
+          <h3>Sort Your Main Data — Abstract Row Stays Put</h3>
+          <p>Select your main data range (excluding the abstract row table below it) and apply any sort you need — A→Z, Z→A, by number, by date, or multi-level. The abstract row will remain untouched at the bottom.</p>
+          <div class="xt-callout green">
+            <div class="xt-cl-icon"><i class="fas fa-check-circle"></i></div>
+            <div>
+              <div class="xt-cl-label">Result</div>
+              <p>Excel treats the abstract row as a <strong>separate table object</strong> and excludes it from any sort operation applied to the main data range above it.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- 4. Why it works -->
+      <h2 id="xt-s4">4. Why It Works — The Excel Table Architecture</h2>
+
+      <div class="xt-why-box">
+        <div class="xt-why-icon"><i class="fas fa-lightbulb"></i></div>
+        <div class="xt-why-body">
+          <p>In Excel, a <strong>Table</strong> (created via Ctrl+T or Insert → Table) is a structured, named object with its own data range, column headers, and optional Total Row. When you sort data in one Table, Excel's sort engine operates only within the boundaries of that Table — it does not cross into adjacent cells or other Tables.</p>
+          <p style="margin-top:0.75rem;">By converting the abstract row into its own mini-Table, you place it outside the sort domain of your main data. The two Tables sit adjacent to each other on the sheet but remain <strong>independently managed objects</strong>. Sorting the main Table never touches the abstract Table.</p>
+          <p style="margin-top:0.75rem;">This is the same architectural principle that underpins Excel's built-in <strong>Total Row</strong> feature (available under Table Design → Total Row) — the Total Row is always excluded from sort operations because it belongs to the Table's metadata, not its data rows.</p>
+        </div>
+      </div>
+
+
+      <!-- 5. Alternative method -->
+      <h2 id="xt-s5">5. Alternative: The Built-In Total Row Method</h2>
+
+      <p style="line-height:1.78; color:#2b3141;">If your abstract row contains standard aggregate functions (SUM, AVERAGE, COUNT, MAX, MIN), you can use Excel's native <strong>Total Row</strong> feature instead of the manual trick above — it achieves the same result with less setup:</p>
+
+      <div class="xt-step-card">
+        <div class="xt-step-num"><i class="fas fa-star" style="font-size:1.1rem;"></i></div>
+        <div class="xt-step-body">
+          <h3>Use Excel's Built-In Total Row</h3>
+          <ol>
+            <li>Convert your main data to a Table: <span class="xt-kbd">Ctrl + T</span></li>
+            <li>Click anywhere in the Table to activate the <strong>Table Design</strong> tab</li>
+            <li>In <strong>Table Style Options</strong>, check <strong>"Total Row"</strong></li>
+            <li>A Total Row appears at the bottom with a dropdown in each cell — select the aggregate function you need (Sum, Average, Count, etc.)</li>
+          </ol>
+          <div class="xt-callout green" style="margin-top:0.75rem;">
+            <div class="xt-cl-icon"><i class="fas fa-check-circle"></i></div>
+            <div>
+              <div class="xt-cl-label">Advantage</div>
+              <p>The Total Row is an integral part of the Table object and is <strong>permanently excluded from sorting</strong>. It also automatically recalculates when data is filtered or sorted, and the functions use <strong>SUBTOTAL()</strong> internally so they respond correctly to filtered views.</p>
+            </div>
+          </div>
+          <div class="xt-callout amber" style="margin-top:0.75rem;">
+            <div class="xt-cl-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div>
+              <div class="xt-cl-label">Limitation</div>
+              <p>The Total Row method only works if your abstract row needs standard aggregate calculations. If your summary row contains custom formulas, labels, or mixed content, the manual Table trick (Section 3) gives you more flexibility.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- 6. Formatting bonus -->
+      <h2 id="xt-s6">6. Bonus — Visual Formatting for Your Abstract Row</h2>
+
+      <div class="xt-callout green">
+        <div class="xt-cl-icon"><i class="fas fa-palette"></i></div>
+        <div>
+          <div class="xt-cl-label">Visual Tip</div>
+          <p>Format your abstract row distinctively so it's instantly recognisable as a summary row. Use cell fill colour, bold text, and a top border to separate it visually from the data rows above:</p>
+        </div>
+      </div>
+
+      <div class="xt-format-strip">
+        <span class="xt-format-pill" style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;">Yellow fill + bold</span>
+        <span class="xt-format-pill" style="background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe;">Blue fill + italic</span>
+        <span class="xt-format-pill" style="background:#dcfce7;color:#166534;border:1px solid #86efac;">Green fill + bold</span>
+        <span class="xt-format-pill" style="background:#f3f4f6;color:#1e293b;border:2px solid #3b82f6;">White + thick border</span>
+        <span class="xt-format-pill" style="background:#1e293b;color:#fbbf24;border:1px solid #475569;">Dark fill + yellow text</span>
+      </div>
+
+      <p style="line-height:1.78; color:#2b3141; margin-top:0.75rem;">A clear visual distinction not only improves readability but also serves as an instant reminder to other users that this row is a summary row — not a data row — reducing the risk of accidentally sorting or deleting it.</p>
+
+
+      <!-- 7. Quick Reference -->
+      <h2 id="xt-s7">7. Quick Reference Summary</h2>
+
+      <div class="xt-table-wrap">
+        <table>
+          <thead>
+            <tr><th>Action</th><th>Keyboard / Location</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Select abstract row</td>
+              <td>Click &amp; drag across the row cells</td>
+            </tr>
+            <tr>
+              <td>Convert to Table</td>
+              <td><span class="xt-kbd">Ctrl + T</span> → uncheck "My table has headers" → OK</td>
+            </tr>
+            <tr>
+              <td>Remove auto-header</td>
+              <td>Table Design tab → uncheck <strong>Header Row</strong></td>
+            </tr>
+            <tr>
+              <td>Delete blank row</td>
+              <td>Right-click row number → Delete</td>
+            </tr>
+            <tr>
+              <td>Reposition if needed</td>
+              <td><span class="xt-kbd">Ctrl + X</span> → paste below main data</td>
+            </tr>
+            <tr>
+              <td>Sort main data</td>
+              <td>Data tab → Sort, or <span class="xt-kbd">Alt + D + S</span> — abstract row unaffected</td>
+            </tr>
+            <tr>
+              <td>Alternative (standard aggregates)</td>
+              <td>Table Design tab → check <strong>Total Row</strong></td>
+            </tr>
+          </tbody>
         </table>
       </div>
-      
-      <!-- CONCLUSION -->
-      <h2>Conclusion</h2>
-      
-      <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; padding: 2rem; border-radius: 24px; margin: 3rem 0;">
-        <p style="color: white; font-size: 1.1rem; line-height: 1.7;">This simple Excel trick allows you to keep the "Abstract" or summary row at the bottom of your data range, even when sorting the rest of the dataset. By converting only the abstract row into a table format without headers, you can prevent it from getting mixed up with your data, improving the readability and organization of your spreadsheet.</p>    
+
+      <!-- Conclusion -->
+      <div class="xt-summary">
+        <p>This simple trick — converting your abstract or summary row into a separate headerless Table — leverages Excel's own object model to prevent the row from being included in sort operations on your main dataset. Whether you use the manual method (for custom formula rows) or the built-in Total Row feature (for standard aggregates), the result is the same: your summary row <strong>stays exactly where it belongs</strong>, every time you sort, without any manual intervention.</p>
       </div>
-      
-      <!-- TAGS -->
-      <div class="post-tags">
-        <span class="post-tag"><i class="fas fa-tag"></i> excel</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> excel-tips</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> data-sorting</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> excel-trick</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> spreadsheet</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> excel-tables</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> data-organization</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> productivity</span>
-      </div>
+
+    </div><!-- /post-content -->
+
+    <!-- Tags -->
+    <div class="xt-post-tags">
+      <span class="xt-post-tag"><i class="fas fa-tag"></i> excel</span>
+      <span class="xt-post-tag"><i class="fas fa-tag"></i> excel-tips</span>
+      <span class="xt-post-tag"><i class="fas fa-tag"></i> data-sorting</span>
+      <span class="xt-post-tag"><i class="fas fa-tag"></i> excel-trick</span>
+      <span class="xt-post-tag"><i class="fas fa-tag"></i> spreadsheet</span>
+      <span class="xt-post-tag"><i class="fas fa-tag"></i> excel-tables</span>
+      <span class="xt-post-tag"><i class="fas fa-tag"></i> data-organization</span>
+      <span class="xt-post-tag"><i class="fas fa-tag"></i> productivity</span>
+      <span class="xt-post-tag"><i class="fas fa-tag"></i> total-row</span>
     </div>
 
-<!-- Common Post Footer (Share + Back Button) -->
-<div id="post-footer-share-container"></div>
+    <!-- Common Post Footer -->
+    <div id="post-footer-share-container"></div>
+
   </section>
 
   <footer id="site-footer"></footer>
-
 </body>
 </html>
