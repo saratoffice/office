@@ -3,341 +3,925 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Excel Wildcard Characters: Complete Guide to Pattern Matching | Genus Blog</title>
-  
+  <title>Excel Wildcard Characters: Complete Guide to Pattern Matching | Blog</title>
+
   <!-- Common CSS -->
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../post-styles.css">
   <!-- Site components -->
   <script src="../assets/Scripts/site-components.js" defer></script>
-  <!-- Post Common JavaScript -->
   <script src="../assets/Scripts/post-common.js" defer></script>
-  
-  <!-- Font Awesome for icons -->
+
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  
-  <!-- Blog metadata for dynamic blogs.html -->
+
+  <!-- Blog metadata -->
   <meta name="blog:title" content="Excel Wildcard Characters: A Powerful Tool for Pattern Matching">
-  <meta name="blog:excerpt" content="Master Excel wildcard characters to perform advanced text searches. Learn how to use asterisk (*), question mark (?), and patterns for faster data filtering.">
+  <meta name="blog:excerpt" content="Master Excel's three wildcard characters — asterisk (*), question mark (?), and tilde (~) — with real formula examples across COUNTIF, SUMIF, VLOOKUP, XLOOKUP, MATCH, XMATCH, and SEARCH. Includes functions that support wildcards, limitations with numbers, and pro tips.">
   <meta name="blog:category" content="technical">
-  <meta name="blog:tags" content="excel, wildcards, excel-tips, data-analysis, pattern-matching, excel-formulas, search-functions, spreadsheet, microsoft-excel, data-filtering">
+  <meta name="blog:tags" content="excel, wildcards, excel-tips, data-analysis, pattern-matching, COUNTIF, SUMIF, VLOOKUP, XLOOKUP, MATCH, SEARCH, spreadsheet, microsoft-excel">
   <meta name="blog:author" content="Sarat Rout">
   <meta name="blog:date" content="2025-02-17">
-  <meta name="blog:readTime" content="6">
+  <meta name="blog:readTime" content="10">
   <meta name="blog:views" content="0">
   <meta name="blog:icon" content="fa-table">
 
+  <style>
+    /* ============================================================
+       POST-ONLY STYLES — all prefixed ew- to avoid conflicts
+    ============================================================ */
+
+    /* ── Feature image ──────────────────────────────────────── */
+    .feature-image {
+      width: 100%; height: 420px;
+      border-radius: 16px; overflow: hidden;
+      position: relative; margin: 2rem 0;
+    }
+    .feature-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .feature-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.55));
+      color: rgba(255,255,255,0.85); font-size: 0.8rem;
+      padding: 1.5rem 1.25rem 0.85rem;
+    }
+
+    /* ── Two-column image grid ──────────────────────────────── */
+    .image-grid-2 {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin: 1.75rem 0;
+    }
+    .image-grid-2 .grid-item { border-radius: 12px; overflow: hidden; }
+    .image-grid-2 .grid-item img { width: 100%; height: 220px; object-fit: cover; display: block; }
+    .image-grid-2 .image-caption { font-size: 0.78rem; color: #64748b; padding: 0.5rem 0.25rem 0; text-align: center; }
+
+    /* ── TOC ────────────────────────────────────────────────── */
+    .ew-toc {
+      background: #f8fafc; border: 1px solid #e2e8f0;
+      border-radius: 10px; padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .ew-toc h4 { margin: 0 0 0.75rem; font-size: 0.95rem; color: #0f5c2e; display: flex; align-items: center; gap: 0.5rem; }
+    .ew-toc ol { margin: 0; padding-left: 1.2rem; }
+    .ew-toc ol li { margin-bottom: 0.3rem; font-size: 0.88rem; line-height: 1.5; }
+    .ew-toc ol li a { color: #0284c7; text-decoration: none; }
+    .ew-toc ol li a:hover { text-decoration: underline; }
+
+    /* ── Hero intro banner ──────────────────────────────────── */
+    .ew-hero {
+      background: linear-gradient(135deg, #166534 0%, #15803d 100%);
+      border-radius: 20px; padding: 2rem 2.25rem;
+      margin: 1.5rem 0 2rem; color: #fff;
+      position: relative; overflow: hidden;
+    }
+    .ew-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(-55deg, transparent, transparent 22px, rgba(255,255,255,0.04) 22px, rgba(255,255,255,0.04) 23px);
+      pointer-events: none;
+    }
+    .ew-hero-icon { font-size: 2.2rem; color: #86efac; margin-bottom: 0.65rem; display: block; }
+    .ew-hero h2 { font-size: 1.35rem; color: #fff; margin: 0 0 0.6rem; font-weight: 800; }
+    .ew-hero p  { font-size: 0.9rem; color: rgba(255,255,255,0.75); line-height: 1.72; margin: 0.35rem 0; }
+    .ew-hero strong { color: #fff; }
+    .ew-hero-chips { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem; }
+    .ew-chip {
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 40px; padding: 0.35rem 1rem;
+      font-size: 1.1rem; font-weight: 900; color: #fbbf24;
+      font-family: 'Courier New', monospace;
+    }
+    .ew-chip span { font-size: 0.75rem; font-weight: 400; font-family: system-ui, sans-serif; color: rgba(255,255,255,0.65); margin-left: 0.4rem; vertical-align: middle; }
+
+    /* ── Quick-reference top table ──────────────────────────── */
+    .ew-ref-table {
+      border-radius: 14px; overflow: hidden;
+      border: 1px solid #e2e8f0; margin: 1.5rem 0;
+    }
+    .ew-ref-table table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .ew-ref-table thead th {
+      background: #1e293b; color: rgba(255,255,255,0.9);
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.09em;
+      text-transform: uppercase; padding: 0.8rem 1.1rem; text-align: left;
+    }
+    .ew-ref-table tbody tr:nth-child(even) td { background: #f8fafc; }
+    .ew-ref-table tbody tr:nth-child(odd) td  { background: #fff; }
+    .ew-ref-table td {
+      padding: 0.85rem 1.1rem; border-bottom: 1px solid #e2e8f0;
+      color: #374151; vertical-align: middle; line-height: 1.55;
+    }
+    .ew-ref-table tr:last-child td { border-bottom: none; }
+    .ew-ref-table td:first-child {
+      font-family: 'Courier New', monospace;
+      font-size: 1.4rem; font-weight: 900; color: #1e3a5f; text-align: center; width: 90px;
+    }
+    .ew-ref-table .ew-char-name { font-weight: 700; color: #1e3a5f; }
+
+    /* ── Wildcard character cards ───────────────────────────── */
+    .ew-wc-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border: 1px solid #e2e8f0; border-radius: 18px;
+      padding: 1.75rem; margin: 1.75rem 0;
+    }
+    .ew-wc-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.1rem; }
+    .ew-wc-symbol {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.6rem; font-weight: 900;
+      font-family: 'Courier New', monospace; flex-shrink: 0;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+    .ew-wc-head h3 { font-size: 1rem; font-weight: 800; color: #1e293b; margin: 0; }
+    .ew-wc-head p  { font-size: 0.82rem; color: #64748b; margin: 0.2rem 0 0; }
+    .ew-wc-card > p { font-size: 0.9rem; line-height: 1.72; color: #334155; margin: 0 0 1rem; }
+    .ew-example {
+      background: #fff; border-radius: 10px; padding: 1.1rem 1.25rem;
+      border-left: 4px solid #3b82f6; margin-top: 0.5rem;
+    }
+    .ew-example .ew-ex-label { font-weight: 700; font-size: 0.82rem; color: #1e293b; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .ew-example code { font-family: 'Courier New', monospace; font-size: 1rem; font-weight: 700; color: #1e3a5f; }
+    .ew-matches { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.65rem; }
+    .ew-match {
+      padding: 0.25rem 0.85rem; border-radius: 30px;
+      font-size: 0.85rem; font-weight: 600;
+      font-family: 'Courier New', monospace;
+    }
+    .ew-match.yes { background: #dbeafe; color: #1e40af; }
+    .ew-match.yes::before { content: '✓ '; }
+    .ew-match.no  { background: #fee2e2; color: #b91c1c; }
+    .ew-match.no::before  { content: '✗ '; }
+    .ew-match.purple { background: #ede9fe; color: #5b21b6; }
+    .ew-match.purple::before { content: '✓ '; }
+    .ew-match.green  { background: #d1fae5; color: #065f46; }
+    .ew-match.green::before  { content: '✓ '; }
+    .ew-match.amber  { background: #fef3c7; color: #92400e; }
+    .ew-match.amber::before  { content: '✓ '; }
+    .ew-match.pink   { background: #fce7f3; color: #9d174d; }
+    .ew-match.pink::before   { content: '✓ '; }
+
+    /* ── Pattern combo table ────────────────────────────────── */
+    .ew-pattern-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem; margin: 1.25rem 0;
+    }
+    .ew-pattern-card {
+      background: #fff; border: 1px solid #e2e8f0;
+      border-radius: 12px; padding: 1.1rem 1.25rem;
+    }
+    .ew-pattern-card .ew-pat { font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: 800; color: #1e3a5f; margin-bottom: 0.3rem; }
+    .ew-pattern-card .ew-pat-desc { font-size: 0.82rem; color: #475569; margin: 0 0 0.5rem; line-height: 1.5; }
+    .ew-pattern-card .ew-pat-ex { font-size: 0.8rem; color: #64748b; font-style: italic; }
+
+    /* ── Function support table ─────────────────────────────── */
+    .ew-fn-wrap {
+      border-radius: 14px; overflow: hidden;
+      border: 1px solid #e2e8f0; margin: 1.5rem 0; overflow-x: auto;
+    }
+    .ew-fn-wrap table { width: 100%; border-collapse: collapse; font-size: 0.86rem; min-width: 560px; }
+    .ew-fn-wrap thead th {
+      background: #1e293b; color: rgba(255,255,255,0.9);
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.09em;
+      text-transform: uppercase; padding: 0.8rem 1.1rem; text-align: left;
+    }
+    .ew-fn-wrap tbody tr:nth-child(even) td { background: #f8fafc; }
+    .ew-fn-wrap tbody tr:nth-child(odd) td  { background: #fff; }
+    .ew-fn-wrap td {
+      padding: 0.7rem 1.1rem; border-bottom: 1px solid #e2e8f0;
+      color: #374151; vertical-align: top; line-height: 1.55;
+    }
+    .ew-fn-wrap tr:last-child td { border-bottom: none; }
+    .ew-fn-wrap td:first-child { font-family: 'Courier New', monospace; font-weight: 700; color: #1e3a5f; white-space: nowrap; }
+    .ew-fn-wrap td code { font-family: 'Courier New', monospace; background: #f1f5f9; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.85rem; color: #0f172a; }
+    .ew-yes { color: #16a34a; font-weight: 700; }
+    .ew-no  { color: #dc2626; font-weight: 700; }
+
+    /* ── Application cards ──────────────────────────────────── */
+    .ew-app-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem; margin: 1.25rem 0;
+    }
+    .ew-app-card {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+      padding: 1.1rem 1.25rem;
+    }
+    .ew-app-card i { font-size: 1.2rem; margin-right: 0.4rem; }
+    .ew-app-card strong { color: #1e293b; font-size: 0.9rem; }
+    .ew-app-card p { font-size: 0.83rem; color: #475569; margin: 0.35rem 0 0; line-height: 1.55; }
+
+    /* ── Highlight / warn / tip boxes ──────────────────────── */
+    .ew-tip {
+      background: #eff6ff; border: 1px solid #bfdbfe;
+      border-radius: 12px; padding: 1.25rem 1.5rem; margin: 1.5rem 0;
+    }
+    .ew-tip h4 { color: #1e40af; font-size: 0.9rem; font-weight: 700; margin: 0 0 0.65rem; display: flex; align-items: center; gap: 0.4rem; }
+    .ew-tip ul { margin: 0; padding-left: 1.2rem; }
+    .ew-tip ul li { font-size: 0.9rem; color: #1e3a8a; line-height: 1.7; margin-bottom: 0.4rem; }
+    .ew-tip ul li code { background: #dbeafe; padding: 0.1rem 0.4rem; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 0.88rem; }
+
+    .ew-warn {
+      background: #fff5f5; border: 1px solid #fecaca;
+      border-left: 5px solid #ef4444;
+      border-radius: 0 12px 12px 0; padding: 1.1rem 1.4rem; margin: 1.25rem 0;
+      font-size: 0.9rem; color: #374151; line-height: 1.65;
+    }
+    .ew-warn i { color: #ef4444; margin-right: 0.4rem; }
+    .ew-warn strong { color: #b91c1c; }
+
+    .ew-green {
+      background: #f0fdf4; border-left: 5px solid #16a34a;
+      border-radius: 0 12px 12px 0; padding: 1.1rem 1.4rem; margin: 1.25rem 0;
+      font-size: 0.9rem; color: #14532d; line-height: 1.7;
+    }
+    .ew-green i { color: #16a34a; margin-right: 0.4rem; }
+
+    /* ── Dark summary ───────────────────────────────────────── */
+    .ew-dark {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 20px; padding: 2rem; margin: 2rem 0; color: #fff;
+    }
+    .ew-dark h3 { color: #fff; text-align: center; margin: 0 0 1.4rem; font-size: 1.1rem; }
+    .ew-dark-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 1rem; margin-bottom: 1.25rem;
+    }
+    .ew-dark-item {
+      background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 10px; padding: 1rem; text-align: center;
+    }
+    .ew-dark-item .ew-di-sym { font-size: 1.4rem; font-weight: 900; color: #fbbf24; font-family: 'Courier New', monospace; display: block; margin-bottom: 0.25rem; }
+    .ew-dark-item p { color: rgba(255,255,255,0.75); font-size: 0.82rem; margin: 0; line-height: 1.5; }
+
+    /* ── Closing ────────────────────────────────────────────── */
+    .ew-closing {
+      background: #f1f5f9; border-radius: 16px;
+      padding: 1.75rem 2rem; margin: 2.5rem 0;
+    }
+    .ew-closing p { font-size: 0.92rem; line-height: 1.78; color: #2b3141; margin: 0; }
+    .ew-closing strong { color: #0e1117; }
+
+    /* ── Tags ───────────────────────────────────────────────── */
+    .ew-post-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 2rem 0; }
+    .ew-post-tag { background: #e2e8f0; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.85rem; color: #475569; display: inline-flex; align-items: center; gap: 0.3rem; }
+
+    @media(max-width:600px){
+      .feature-image { height: 260px; }
+      .image-grid-2  { grid-template-columns: 1fr; }
+      .ew-pattern-grid { grid-template-columns: 1fr; }
+      .ew-app-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
 </head>
 
 <body>
   <header id="site-header"></header>
 
-  <!-- Main blog post section -->
   <section class="blog-post-section">
-    <!-- Back to blogs link -->
+
     <a href="../blogs.html" class="back-link">
       <i class="fas fa-arrow-left"></i> Back to all articles
     </a>
 
-    <!-- Post header -->
+    <!-- ── POST HEADER ────────────────────────────────────────── -->
     <div class="post-header">
       <h1 class="post-title">Excel Wildcard Characters: A Powerful Tool for Pattern Matching</h1>
-      
+      <p style="font-size:1.05rem; color:#475569; margin:0.4rem 0 0;">Master <code style="background:#f1f5f9; padding:0.1rem 0.5rem; border-radius:5px; font-size:0.95rem;">*</code>, <code style="background:#f1f5f9; padding:0.1rem 0.5rem; border-radius:5px; font-size:0.95rem;">?</code>, and <code style="background:#f1f5f9; padding:0.1rem 0.5rem; border-radius:5px; font-size:0.95rem;">~</code> with real formula examples — COUNTIF, SUMIF, VLOOKUP, XLOOKUP, MATCH, XMATCH &amp; more</p>
       <div class="post-meta">
         <span><i class="fas fa-user"></i> Sarat Rout</span>
         <span><i class="fas fa-calendar"></i> February 17, 2025</span>
-        <span><i class="fas fa-clock"></i> 6 min read</span>
-        <span class="category-tag"><i class="fas fa-tag"></i> Excel Tips</span>
+        <span><i class="fas fa-clock"></i> 10 min read</span>
+        <span class="category-tag"><i class="fas fa-table"></i> Excel Tips</span>
       </div>
     </div>
 
-    <!-- Hero Image -->
-    <div class="hero-image">
-      <img src="https://wallstreetmojocms.recurpro.in/uploads/Wildcard_in_Excel_d1f09a4d3b.jpg?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&h=450&q=80" 
-           alt="Excel spreadsheet with data"
+    <!-- ── FEATURE IMAGE ─────────────────────────────────────── -->
+    <div class="feature-image">
+      <img src="https://wallstreetmojocms.recurpro.in/uploads/Wildcard_in_Excel_d1f09a4d3b.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+           alt="Excel spreadsheet showing wildcard pattern matching"
            loading="lazy"
-           onerror="this.src='https://via.placeholder.com/1200x450?text=Excel+Wildcards+Guide'">
-      <div class="hero-caption">
-        <i class="fas fa-camera"></i> Master Excel wildcards for faster data analysis
+           onerror="this.src='https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=1260&h=750&fit=crop'">
+      <div class="feature-caption">
+        <i class="fas fa-camera"></i> Excel wildcard characters — *, ?, and ~ — the three pattern-matching symbols every Excel user should master
       </div>
     </div>
 
-    <!-- Main content -->
+    <!-- ── MAIN CONTENT ──────────────────────────────────────── -->
     <div class="post-content">
-      
-      <!-- INTRO SECTION -->
-      <h2>Introduction to Excel Wildcards</h2>
-      
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">Wildcards in Excel allow you to perform advanced text searches by matching specific patterns. These symbols make it easy to find text that meets certain criteria, especially when you don't know the exact content but have a general idea of what you're looking for. Whether you're filtering large datasets, using VLOOKUP with partial matches, or creating dynamic formulas, wildcards are indispensable tools for any Excel user.</p>
-      
-      <!-- ===== NEW SECTION: What Are Wildcards in Excel? ===== -->
-      <h2>What Are Wildcards in Excel?</h2>
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">
-        Wildcards are special characters used to represent one or more unknown characters in text searches. 
-        According to <strong>Microsoft Support</strong>, Excel supports three wildcard characters:
-      </p>
 
-      <!-- official table (matching page style) -->
-      <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 2rem 0;">
-        <table style="width: 100%; border-collapse: collapse;">
-          <thead style="background: #1e293b; color: white;">
+      <p style="line-height:1.78; color:#2b3141;">Wildcards in Microsoft Excel are special characters that act as placeholders — letting you search, filter, count, sum, and look up data when you don't know the exact text. Whether you're cleaning messy datasets, performing partial-match lookups, or building dynamic reports, Excel's three wildcard characters are indispensable tools. This guide covers everything you need to know — how each wildcard works, which functions support them, real formula examples, and critical limitations to avoid.</p>
+
+      <!-- TOC -->
+      <div class="ew-toc">
+        <h4><i class="fas fa-list-ul"></i> Table of Contents</h4>
+        <ol>
+          <li><a href="#ew-s1">What Are Wildcard Characters?</a></li>
+          <li><a href="#ew-s2">The Three Wildcards — Quick Reference</a></li>
+          <li><a href="#ew-s3">Asterisk (*) — Any Number of Characters</a></li>
+          <li><a href="#ew-s4">Question Mark (?) — Exactly One Character</a></li>
+          <li><a href="#ew-s5">Tilde (~) — Escape Character for Literal Wildcards</a></li>
+          <li><a href="#ew-s6">Combining Wildcards — Advanced Patterns</a></li>
+          <li><a href="#ew-s7">Excel Functions That Support Wildcards</a></li>
+          <li><a href="#ew-s8">Real Formula Examples</a></li>
+          <li><a href="#ew-s9">Where Else to Use Wildcards</a></li>
+          <li><a href="#ew-s10">Limitations — What Wildcards Cannot Do</a></li>
+          <li><a href="#ew-s11">Pro Tips and Common Mistakes</a></li>
+        </ol>
+      </div>
+
+      <!-- SECTION 1 -->
+      <h2 id="ew-s1">1. What Are Wildcard Characters?</h2>
+
+      <div class="ew-hero">
+        <span class="ew-hero-icon"><i class="fas fa-table"></i></span>
+        <h2>Excel Wildcards — The Pattern Matching Toolkit</h2>
+        <p>A <strong>wildcard</strong> is a special character that substitutes for one or more unknown characters in a text search. Think of it as a "joker" — it can represent any value in the position where it appears. According to <strong>Microsoft Support</strong> and Exceljet, Excel supports exactly three wildcard characters — and all three work together to give you flexible, powerful pattern matching across formulas, filters, and Find &amp; Replace.</p>
+        <p>Wildcards are active by default in Excel's Find &amp; Replace dialog and are supported in a specific set of functions. They are <strong>not case-sensitive</strong> — searching for <em>apple*</em> will match "apple", "Apple", and "APPLE" alike.</p>
+        <div class="ew-hero-chips">
+          <span class="ew-chip">* <span>Any number of characters</span></span>
+          <span class="ew-chip">? <span>Exactly one character</span></span>
+          <span class="ew-chip">~ <span>Escape — treat * or ? as literal</span></span>
+        </div>
+      </div>
+
+      <!-- Image Grid -->
+      <div class="image-grid-2">
+        <div class="grid-item">
+          <img src="https://wallstreetmojocms.recurpro.in/uploads/Wildcard_in_Excel_d1f09a4d3b.jpg?auto=compress&w=800&h=450"
+               alt="Asterisk wildcard in Excel COUNTIF formula"
+               loading="lazy"
+               onerror="this.src='https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&h=450&fit=crop'">
+          <div class="image-caption">Asterisk (*) wildcard used in a COUNTIF formula — counts cells matching a partial text pattern</div>
+        </div>
+        <div class="grid-item">
+          <img src="https://wallstreetmojocms.recurpro.in/uploads/Wildcard_in_Excel_d1f09a4d3b.jpg?auto=compress&w=800&h=450"
+               alt="VLOOKUP with wildcard partial match"
+               loading="lazy"
+               onerror="this.src='https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&h=450&fit=crop'">
+          <div class="image-caption">VLOOKUP with asterisk wildcard — perform partial-match lookups when you only know part of the entry</div>
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <h2 id="ew-s2">2. The Three Wildcards — Quick Reference</h2>
+
+      <div class="ew-ref-table">
+        <table>
+          <thead>
             <tr>
-              <th style="padding: 1rem; text-align: left;">Wildcard</th>
-              <th style="padding: 1rem; text-align: left;">Meaning</th>
+              <th>Symbol</th>
+              <th>Name</th>
+              <th>What It Matches</th>
+              <th>Example Pattern</th>
+              <th>Matches</th>
+              <th>Does Not Match</th>
             </tr>
           </thead>
           <tbody>
-            <tr style="border-bottom: 1px solid #e2e8f0;">
-              <td style="padding: 1rem; font-weight: 600; font-size: 1.2rem;">*</td>
-              <td style="padding: 1rem;">Represents any number of characters</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #e2e8f0;">
-              <td style="padding: 1rem; font-weight: 600; font-size: 1.2rem;">?</td>
-              <td style="padding: 1rem;">Represents a single character</td>
+            <tr>
+              <td>*</td>
+              <td><span class="ew-char-name">Asterisk</span></td>
+              <td>Any number of characters, including zero</td>
+              <td><code>ch*</code></td>
+              <td>Charles, check, chess, ch</td>
+              <td>(nothing — * matches even zero chars)</td>
             </tr>
             <tr>
-              <td style="padding: 1rem; font-weight: 600; font-size: 1.2rem;">~</td>
-              <td style="padding: 1rem;">Used to search for actual * or ? characters</td>
+              <td>?</td>
+              <td><span class="ew-char-name">Question Mark</span></td>
+              <td>Exactly one character — any character</td>
+              <td><code>b?g</code></td>
+              <td>bag, beg, big, bog, bug</td>
+              <td>bg (0 chars), baag (2 chars between b&g)</td>
+            </tr>
+            <tr>
+              <td>~</td>
+              <td><span class="ew-char-name">Tilde</span></td>
+              <td>Escape — forces * or ? to be treated as a literal character</td>
+              <td><code>pivot~*</code></td>
+              <td>pivot* (literal asterisk)</td>
+              <td>pivot table, pivoting (those are wildcard matches)</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">
-        Wildcards in <strong>Microsoft Excel</strong> are special characters that help you search, filter, and analyze data 
-        when you don’t know the exact text. Excel supports three wildcard characters: the asterisk (*), which represents any 
-        number of characters; the question mark (?), which represents a single character; and the tilde (~), which is used to 
-        search for the actual * or ? symbols in data. Wildcards can be used in functions such as <code>COUNTIF</code>, 
-        <code>SUMIF</code>, <code>VLOOKUP</code>, and in Find & Replace or Filters to perform flexible text matching. 
-        They are especially useful when working with large datasets that contain partial matches, spelling variations, 
-        or inconsistent entries. By using wildcards effectively, users can make data searching faster, smarter, and more efficient.
-      </p>
-      <!-- ===== END NEW SECTION ===== -->
+      <!-- SECTION 3 -->
+      <h2 id="ew-s3">3. Asterisk (*) — Any Number of Characters</h2>
 
-      <!-- Main Wildcard Guide -->
-      <h2>Common Wildcard Characters and Their Uses</h2>
-      
-      <!-- ASTERISK CARD -->
-      <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 20px; padding: 1.8rem; margin: 2rem 0; border: 1px solid #e2e8f0;">
-        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-          <div style="background: #3b82f6; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; font-weight: bold; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);">*</div>
+      <div class="ew-wc-card">
+        <div class="ew-wc-head">
+          <div class="ew-wc-symbol" style="background:#3b82f6;">*</div>
           <div>
-            <h3 style="margin: 0; color: #1e293b;">Asterisk (*)</h3>
-            <p style="margin: 0.3rem 0 0 0; color: #64748b;">Matches any number of characters (including zero)</p>
+            <h3>Asterisk (*)</h3>
+            <p>Matches any number of characters — including zero characters</p>
           </div>
         </div>
-        
-        <p style="font-size: 1rem; line-height: 1.6; color: #334155;">The asterisk matches any number of characters, including none. It's useful for finding text where you only know part of the string or when the content before or after a specific word can vary.</p>
-        
-        <div style="background: white; border-radius: 12px; padding: 1.2rem; margin-top: 1.2rem; border-left: 4px solid #3b82f6;">
-          <p style="margin: 0; font-weight: 600; color: #1e293b;"><i class="fas fa-search" style="color: #3b82f6; margin-right: 0.5rem;"></i>Example:</p>
-          <p style="margin: 0.5rem 0 0 1.5rem; font-family: monospace; font-size: 1.1rem;"><strong>*tion</strong> will match any text that ends with "tion"</p>
-          <div style="margin-top: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
-            <span style="background: #dbeafe; color: #1e40af; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ action</span>
-            <span style="background: #dbeafe; color: #1e40af; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ caution</span>
-            <span style="background: #dbeafe; color: #1e40af; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ station</span>
-            <span style="background: #dbeafe; color: #1e40af; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ education</span>
+        <p>The asterisk is the most powerful and flexible wildcard. It represents <strong>zero or more characters</strong> in any position. Place it at the start, end, or both sides of your search text to match different patterns. Because it matches zero characters, <code>Lemon*</code> also matches the word "Lemon" itself — not just words starting with "Lemon".</p>
+
+        <div class="ew-example" style="border-left-color:#3b82f6;">
+          <div class="ew-ex-label"><i class="fas fa-search" style="color:#3b82f6;"></i> Pattern: <code>*tion</code> — matches any text ending with "tion"</div>
+          <div class="ew-matches">
+            <span class="ew-match yes">action</span>
+            <span class="ew-match yes">caution</span>
+            <span class="ew-match yes">education</span>
+            <span class="ew-match yes">station</span>
+            <span class="ew-match yes">tion</span>
+            <span class="ew-match no">tional</span>
+          </div>
+        </div>
+
+        <div class="ew-example" style="border-left-color:#3b82f6; margin-top:0.75rem;">
+          <div class="ew-ex-label"><i class="fas fa-search" style="color:#3b82f6;"></i> Pattern: <code>*apple*</code> — matches any text containing "apple" anywhere</div>
+          <div class="ew-matches">
+            <span class="ew-match yes">apple</span>
+            <span class="ew-match yes">green apple</span>
+            <span class="ew-match yes">pineapple</span>
+            <span class="ew-match yes">apple juice</span>
+            <span class="ew-match no">aple</span>
+          </div>
+        </div>
+
+        <div class="ew-example" style="border-left-color:#3b82f6; margin-top:0.75rem;">
+          <div class="ew-ex-label"><i class="fas fa-search" style="color:#3b82f6;"></i> Pattern: <code>L*n</code> — starts with L, ends with n, anything between</div>
+          <div class="ew-matches">
+            <span class="ew-match yes">Lemon</span>
+            <span class="ew-match yes">Loan</span>
+            <span class="ew-match yes">Learn</span>
+            <span class="ew-match yes">Ln</span>
+            <span class="ew-match no">Lemon juice</span>
           </div>
         </div>
       </div>
-      
-      <!-- QUESTION MARK CARD -->
-      <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 20px; padding: 1.8rem; margin: 2rem 0; border: 1px solid #e2e8f0;">
-        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-          <div style="background: #8b5cf6; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; font-weight: bold; box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3);">?</div>
+
+      <!-- SECTION 4 -->
+      <h2 id="ew-s4">4. Question Mark (?) — Exactly One Character</h2>
+
+      <div class="ew-wc-card">
+        <div class="ew-wc-head">
+          <div class="ew-wc-symbol" style="background:#8b5cf6;">?</div>
           <div>
-            <h3 style="margin: 0; color: #1e293b;">Question Mark (?)</h3>
-            <p style="margin: 0.3rem 0 0 0; color: #64748b;">Matches any single character</p>
+            <h3>Question Mark (?)</h3>
+            <p>Matches exactly one character — any single character</p>
           </div>
         </div>
-        
-        <p style="font-size: 1rem; line-height: 1.6; color: #334155;">The question mark matches any single character. This can be helpful when you know the structure of the word but need to account for variations in a single character position.</p>
-        
-        <div style="background: white; border-radius: 12px; padding: 1.2rem; margin-top: 1.2rem; border-left: 4px solid #8b5cf6;">
-          <p style="margin: 0; font-weight: 600; color: #1e293b;"><i class="fas fa-search" style="color: #8b5cf6; margin-right: 0.5rem;"></i>Example:</p>
-          <p style="margin: 0.5rem 0 0 1.5rem; font-family: monospace; font-size: 1.1rem;"><strong>b?g</strong> will match any 3-letter word starting with 'b' and ending with 'g'</p>
-          <div style="margin-top: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
-            <span style="background: #ede9fe; color: #5b21b6; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ bag</span>
-            <span style="background: #ede9fe; color: #5b21b6; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ beg</span>
-            <span style="background: #ede9fe; color: #5b21b6; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ big</span>
-            <span style="background: #ede9fe; color: #5b21b6; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ bog</span>
-            <span style="background: #ede9fe; color: #5b21b6; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ bug</span>
+        <p>The question mark is more precise than the asterisk — it matches <strong>exactly one character</strong>, no more, no less. Each <code>?</code> in your pattern accounts for exactly one character position. Use it when you know the structure of the text but need to account for variation in specific positions — such as unknown middle initials, single-digit codes, or spelling variants.</p>
+
+        <div class="ew-example" style="border-left-color:#8b5cf6;">
+          <div class="ew-ex-label"><i class="fas fa-search" style="color:#8b5cf6;"></i> Pattern: <code>b?g</code> — three-letter words starting with b, ending with g</div>
+          <div class="ew-matches">
+            <span class="ew-match purple">bag</span>
+            <span class="ew-match purple">beg</span>
+            <span class="ew-match purple">big</span>
+            <span class="ew-match purple">bog</span>
+            <span class="ew-match purple">bug</span>
+            <span class="ew-match no">bg (0 between)</span>
+            <span class="ew-match no">baag (2 between)</span>
+          </div>
+        </div>
+
+        <div class="ew-example" style="border-left-color:#8b5cf6; margin-top:0.75rem;">
+          <div class="ew-ex-label"><i class="fas fa-search" style="color:#8b5cf6;"></i> Pattern: <code>pri?e</code> — five-letter words matching the structure</div>
+          <div class="ew-matches">
+            <span class="ew-match purple">price</span>
+            <span class="ew-match purple">pride</span>
+            <span class="ew-match purple">prize</span>
+            <span class="ew-match no">prise (but pri<em>s</em>e — still matches actually)</span>
+          </div>
+        </div>
+
+        <div class="ew-example" style="border-left-color:#8b5cf6; margin-top:0.75rem;">
+          <div class="ew-ex-label"><i class="fas fa-search" style="color:#8b5cf6;"></i> Pattern: <code>???</code> — any text that is exactly three characters long</div>
+          <div class="ew-matches">
+            <span class="ew-match purple">cat</span>
+            <span class="ew-match purple">dog</span>
+            <span class="ew-match purple">car</span>
+            <span class="ew-match purple">ABC</span>
+            <span class="ew-match no">at (2 chars)</span>
+            <span class="ew-match no">cats (4 chars)</span>
+          </div>
+        </div>
+
+        <div class="ew-example" style="border-left-color:#8b5cf6; margin-top:0.75rem;">
+          <div class="ew-ex-label"><i class="fas fa-search" style="color:#8b5cf6;"></i> Pattern: <code>???-???</code> — two groups of exactly 3 characters separated by a hyphen</div>
+          <div class="ew-matches">
+            <span class="ew-match purple">ABC-DEF</span>
+            <span class="ew-match purple">123-456</span>
+            <span class="ew-match purple">IN-001 (no — 2 before hyphen)</span>
           </div>
         </div>
       </div>
-      
-      <!-- DOUBLE QUESTION MARKS CARD -->
-      <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 20px; padding: 1.8rem; margin: 2rem 0; border: 1px solid #e2e8f0;">
-        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-          <div style="background: #10b981; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold; box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);">??</div>
+
+      <!-- SECTION 5 -->
+      <h2 id="ew-s5">5. Tilde (~) — Escape Character for Literal Wildcards</h2>
+
+      <div class="ew-wc-card">
+        <div class="ew-wc-head">
+          <div class="ew-wc-symbol" style="background:#f59e0b;">~</div>
           <div>
-            <h3 style="margin: 0; color: #1e293b;">Double Question Marks (??)</h3>
-            <p style="margin: 0.3rem 0 0 0; color: #64748b;">Matches exactly two characters</p>
+            <h3>Tilde (~)</h3>
+            <p>Escape character — cancels the wildcard meaning of * or ?</p>
           </div>
         </div>
-        
-        <p style="font-size: 1rem; line-height: 1.6; color: #334155;">Similar to the single question mark, but it specifically matches exactly two characters in that position.</p>
-        
-        <div style="background: white; border-radius: 12px; padding: 1.2rem; margin-top: 1.2rem; border-left: 4px solid #10b981;">
-          <p style="margin: 0; font-weight: 600; color: #1e293b;"><i class="fas fa-search" style="color: #10b981; margin-right: 0.5rem;"></i>Example:</p>
-          <p style="margin: 0.5rem 0 0 1.5rem; font-family: monospace; font-size: 1.1rem;"><strong>??o</strong> will match words where exactly two characters come before "o"</p>
-          <div style="margin-top: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
-            <span style="background: #d1fae5; color: #065f46; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ ago</span>
-            <span style="background: #d1fae5; color: #065f46; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ ego</span>
-            <span style="background: #d1fae5; color: #065f46; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ bio</span>
-            <span style="background: #d1fae5; color: #065f46; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ too</span>
-            <span style="background: #d1fae5; color: #065f46; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ zoo</span>
+        <p>The tilde is the "anti-wildcard." It is placed <strong>immediately before</strong> an asterisk, question mark, or another tilde to tell Excel to treat that next character as a <em>literal</em> character — not a wildcard. This is essential when your actual data contains asterisks or question marks (e.g., product codes, invoice numbers, formula strings).</p>
+
+        <div class="ew-example" style="border-left-color:#f59e0b;">
+          <div class="ew-ex-label"><i class="fas fa-search" style="color:#f59e0b;"></i> Tilde escape sequences</div>
+          <div style="overflow-x:auto; margin-top:0.5rem;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.86rem;">
+              <thead>
+                <tr style="background:#fef3c7;">
+                  <th style="padding:0.5rem 0.85rem; text-align:left; color:#92400e; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.06em;">Pattern</th>
+                  <th style="padding:0.5rem 0.85rem; text-align:left; color:#92400e; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.06em;">Searches For</th>
+                  <th style="padding:0.5rem 0.85rem; text-align:left; color:#92400e; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.06em;">Example Match</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid #e2e8f0;">
+                  <td style="padding:0.6rem 0.85rem; font-family:'Courier New',monospace; font-weight:700; color:#1e3a5f;">~*</td>
+                  <td style="padding:0.6rem 0.85rem; color:#374151;">A literal asterisk character</td>
+                  <td style="padding:0.6rem 0.85rem; color:#374151; font-family:'Courier New',monospace;">5*3 = 15</td>
+                </tr>
+                <tr style="border-bottom:1px solid #e2e8f0;">
+                  <td style="padding:0.6rem 0.85rem; font-family:'Courier New',monospace; font-weight:700; color:#1e3a5f;">~?</td>
+                  <td style="padding:0.6rem 0.85rem; color:#374151;">A literal question mark character</td>
+                  <td style="padding:0.6rem 0.85rem; color:#374151; font-family:'Courier New',monospace;">How are you?</td>
+                </tr>
+                <tr>
+                  <td style="padding:0.6rem 0.85rem; font-family:'Courier New',monospace; font-weight:700; color:#1e3a5f;">~~</td>
+                  <td style="padding:0.6rem 0.85rem; color:#374151;">A literal tilde character</td>
+                  <td style="padding:0.6rem 0.85rem; color:#374151; font-family:'Courier New',monospace;">~discount</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
-      </div>
-      
-      <!-- EXACT LENGTH MATCH CARD (updated with tilde mention) -->
-      <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 20px; padding: 1.8rem; margin: 2rem 0; border: 1px solid #e2e8f0;">
-        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-          <div style="background: #f59e0b; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold; box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.3);">???</div>
-          <div>
-            <h3 style="margin: 0; color: #1e293b;">Exact Length Match (??? or more)</h3>
-            <p style="margin: 0.3rem 0 0 0; color: #64748b;">Matches exact number of characters</p>
+
+        <div class="ew-example" style="border-left-color:#f59e0b; margin-top:0.75rem;">
+          <div class="ew-ex-label"><i class="fas fa-search" style="color:#f59e0b;"></i> Pattern: <code>pivot~*</code> — finds "pivot*" literally, not "pivot table"</div>
+          <div class="ew-matches">
+            <span class="ew-match amber">pivot*</span>
+            <span class="ew-match no">pivot table</span>
+            <span class="ew-match no">pivoting</span>
           </div>
         </div>
-        
-        <p style="font-size: 1rem; line-height: 1.6; color: #334155;">The number of question marks corresponds to the exact number of characters that must be matched. Using three question marks (???) will match only words that are exactly three characters long.</p>
-        
-        <div style="background: white; border-radius: 12px; padding: 1.2rem; margin-top: 1.2rem; border-left: 4px solid #f59e0b;">
-          <p style="margin: 0; font-weight: 600; color: #1e293b;"><i class="fas fa-search" style="color: #f59e0b; margin-right: 0.5rem;"></i>Example:</p>
-          <p style="margin: 0.5rem 0 0 1.5rem; font-family: monospace; font-size: 1.1rem;"><strong>???</strong> will match any three-letter words</p>
-          <div style="margin-top: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
-            <span style="background: #fef3c7; color: #92400e; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ cat</span>
-            <span style="background: #fef3c7; color: #92400e; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ dog</span>
-            <span style="background: #fef3c7; color: #92400e; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ car</span>
-            <span style="background: #fef3c7; color: #92400e; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ bus</span>
-            <span style="background: #fef3c7; color: #92400e; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ pen</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- CONTAINING SPECIFIC TEXT CARD (tilde context) -->
-      <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 20px; padding: 1.8rem; margin: 2rem 0; border: 1px solid #e2e8f0;">
-        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-          <div style="background: #ec4899; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold; box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.3);">SK</div>
-          <div>
-            <h3 style="margin: 0; color: #1e293b;">Containing Specific Text (SK)</h3>
-            <p style="margin: 0.3rem 0 0 0; color: #64748b;">Matches text containing specific character sequences</p>
-          </div>
-        </div>
-        
-        <p style="font-size: 1rem; line-height: 1.6; color: #334155;">Using wildcards around specific text finds any word containing that sequence. For example, using "*SK*" would match any word that contains the sequence "SK".</p>
-        
-        <div style="background: white; border-radius: 12px; padding: 1.2rem; margin-top: 1.2rem; border-left: 4px solid #ec4899;">
-          <p style="margin: 0; font-weight: 600; color: #1e293b;"><i class="fas fa-search" style="color: #ec4899; margin-right: 0.5rem;"></i>Example:</p>
-          <p style="margin: 0.5rem 0 0 1.5rem; font-family: monospace; font-size: 1.1rem;"><strong>*SK*</strong> will match any word containing "SK"</p>
-          <div style="margin-top: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
-            <span style="background: #fce7f3; color: #9d174d; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ whiskey</span>
-            <span style="background: #fce7f3; color: #9d174d; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ husky</span>
-            <span style="background: #fce7f3; color: #9d174d; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ masking</span>
-            <span style="background: #fce7f3; color: #9d174d; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ Basket</span>
-            <span style="background: #fce7f3; color: #9d174d; padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.9rem;">✓ risky</span>
+
+        <div class="ew-example" style="border-left-color:#f59e0b; margin-top:0.75rem;">
+          <div class="ew-ex-label"><i class="fas fa-search" style="color:#f59e0b;"></i> Pattern: <code>Aus~*</code> — finds "Aus*" literally</div>
+          <div class="ew-matches">
+            <span class="ew-match amber">Aus*</span>
+            <span class="ew-match no">Australia</span>
+            <span class="ew-match no">Austria</span>
           </div>
         </div>
       </div>
-      
-      <!-- Practical Applications Section -->
-      <h2>Where to Use Wildcards in Excel</h2>
-      
-      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 2rem 0;">
-        <div style="background: white; padding: 1.2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
-          <i class="fas fa-filter" style="color: #3b82f6; font-size: 1.2rem; margin-right: 0.5rem;"></i>
-          <strong>Filter Data:</strong> Use in search/filter boxes
+
+      <!-- SECTION 6 -->
+      <h2 id="ew-s6">6. Combining Wildcards — Advanced Patterns</h2>
+
+      <p style="line-height:1.78; color:#2b3141;">Wildcards can be freely combined with each other and with regular text to create precise, powerful search patterns:</p>
+
+      <div class="ew-pattern-grid">
+        <div class="ew-pattern-card">
+          <div class="ew-pat">*e?n*</div>
+          <div class="ew-pat-desc">Contains 'e', then any one character, then 'n', with anything before or after</div>
+          <div class="ew-pat-ex">Matches: learn, screen, even, open</div>
         </div>
-        <div style="background: white; padding: 1.2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
-          <i class="fas fa-search" style="color: #8b5cf6; font-size: 1.2rem; margin-right: 0.5rem;"></i>
-          <strong>Find & Replace:</strong> Pattern-based replacements
+        <div class="ew-pattern-card">
+          <div class="ew-pat">J* Smith</div>
+          <div class="ew-pat-desc">Starts with J (first name), then a space, then ends with Smith</div>
+          <div class="ew-pat-ex">Matches: John Smith, Jane Smith, J. Smith</div>
         </div>
-        <div style="background: white; padding: 1.2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
-          <i class="fas fa-function" style="color: #10b981; font-size: 1.2rem; margin-right: 0.5rem;"></i>
-          <strong>Formulas:</strong> VLOOKUP, MATCH, COUNTIF with wildcards
+        <div class="ew-pattern-card">
+          <div class="ew-pat">*@*.com</div>
+          <div class="ew-pat-desc">Anything before @, domain, ends in .com — loose email pattern</div>
+          <div class="ew-pat-ex">Matches: user@gmail.com, a@b.com</div>
         </div>
-        <div style="background: white; padding: 1.2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
-          <i class="fas fa-edit" style="color: #f59e0b; font-size: 1.2rem; margin-right: 0.5rem;"></i>
-          <strong>Conditional Formatting:</strong> Highlight patterns
+        <div class="ew-pattern-card">
+          <div class="ew-pat">IN-???</div>
+          <div class="ew-pat-desc">Starts with IN-, followed by exactly three characters</div>
+          <div class="ew-pat-ex">Matches: IN-001, IN-ABC, IN-123</div>
+        </div>
+        <div class="ew-pattern-card">
+          <div class="ew-pat">????-????</div>
+          <div class="ew-pat-desc">Two groups of exactly four characters separated by a hyphen</div>
+          <div class="ew-pat-ex">Matches: ABCD-1234, TEST-CODE</div>
+        </div>
+        <div class="ew-pattern-card">
+          <div class="ew-pat">*~**</div>
+          <div class="ew-pat-desc">Contains a literal asterisk anywhere in the text</div>
+          <div class="ew-pat-ex">Matches: 5*3, price*, note*</div>
         </div>
       </div>
-      
-      <!-- Formula Examples Table -->
-      <h3>Common Excel Functions with Wildcards</h3>
-      
-      <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 2rem 0;">
-        <table style="width: 100%; border-collapse: collapse;">
-          <thead style="background: #1e293b; color: white;">
+
+      <!-- SECTION 7 -->
+      <h2 id="ew-s7">7. Excel Functions That Support Wildcards</h2>
+
+      <p style="line-height:1.78; color:#2b3141;">Not all Excel functions accept wildcard characters. The following table lists all functions that officially support wildcards, along with those that do not — which is a common source of confusion:</p>
+
+      <div class="ew-fn-wrap">
+        <table>
+          <thead>
             <tr>
-              <th style="padding: 1rem; text-align: left;">Function</th>
-              <th style="padding: 1rem; text-align: left;">Example</th>
-              <th style="padding: 1rem; text-align: left;">Result</th>
+              <th>Function</th>
+              <th>Wildcards?</th>
+              <th>Example Formula</th>
+              <th>What It Does</th>
             </tr>
           </thead>
           <tbody>
-            <tr style="border-bottom: 1px solid #e2e8f0;">
-              <td style="padding: 1rem;"><code>COUNTIF</code></td>
-              <td style="padding: 1rem;"><code>=COUNTIF(A:A,"*tion")</code></td>
-              <td style="padding: 1rem;">Counts cells ending with "tion"</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #e2e8f0;">
-              <td style="padding: 1rem;"><code>VLOOKUP</code></td>
-              <td style="padding: 1rem;"><code>=VLOOKUP("*"&D1&"*",A:B,2,0)</code></td>
-              <td style="padding: 1rem;">Finds partial match from cell D1</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #e2e8f0;">
-              <td style="padding: 1rem;"><code>MATCH</code></td>
-              <td style="padding: 1rem;"><code>=MATCH("b?g",A:A,0)</code></td>
-              <td style="padding: 1rem;">Finds position of "bag","beg",etc.</td>
+            <tr>
+              <td>COUNTIF / COUNTIFS</td>
+              <td><span class="ew-yes">✓ Yes</span></td>
+              <td><code>=COUNTIF(A:A,"*tion")</code></td>
+              <td>Counts cells where text ends with "tion"</td>
             </tr>
             <tr>
-              <td style="padding: 1rem;"><code>SEARCH</code></td>
-              <td style="padding: 1rem;"><code>=SEARCH("SK",A1)>0</code></td>
-              <td style="padding: 1rem;">TRUE if cell contains "SK"</td>
+              <td>SUMIF / SUMIFS</td>
+              <td><span class="ew-yes">✓ Yes</span></td>
+              <td><code>=SUMIF(A:A,"*apple*",B:B)</code></td>
+              <td>Sums col B where col A contains "apple"</td>
+            </tr>
+            <tr>
+              <td>AVERAGEIF / AVERAGEIFS</td>
+              <td><span class="ew-yes">✓ Yes</span></td>
+              <td><code>=AVERAGEIF(A:A,"Pro*",B:B)</code></td>
+              <td>Averages col B where col A starts with "Pro"</td>
+            </tr>
+            <tr>
+              <td>VLOOKUP</td>
+              <td><span class="ew-yes">✓ Yes</span></td>
+              <td><code>=VLOOKUP("*"&D1&"*",A:B,2,0)</code></td>
+              <td>Partial-match lookup using cell D1 as search term</td>
+            </tr>
+            <tr>
+              <td>HLOOKUP</td>
+              <td><span class="ew-yes">✓ Yes</span></td>
+              <td><code>=HLOOKUP("Jan*",A1:Z2,2,0)</code></td>
+              <td>Horizontal lookup matching text starting with "Jan"</td>
+            </tr>
+            <tr>
+              <td>XLOOKUP</td>
+              <td><span class="ew-yes">✓ Yes (match_mode=2)</span></td>
+              <td><code>=XLOOKUP("*Adams",A:A,C:C,"Not found",2)</code></td>
+              <td>Finds any entry ending with "Adams"; match_mode 2 enables wildcards</td>
+            </tr>
+            <tr>
+              <td>MATCH</td>
+              <td><span class="ew-yes">✓ Yes</span></td>
+              <td><code>=MATCH("b?g",A:A,0)</code></td>
+              <td>Returns position of first match for pattern</td>
+            </tr>
+            <tr>
+              <td>XMATCH</td>
+              <td><span class="ew-yes">✓ Yes (match_mode=2)</span></td>
+              <td><code>=XMATCH("*Smith",A:A,2)</code></td>
+              <td>Modern MATCH — supports wildcard matching with match_mode=2</td>
+            </tr>
+            <tr>
+              <td>SEARCH</td>
+              <td><span class="ew-yes">✓ Yes</span></td>
+              <td><code>=SEARCH("ap*le",A1)</code></td>
+              <td>Case-insensitive; returns position of pattern match</td>
+            </tr>
+            <tr>
+              <td>MAXIFS / MINIFS</td>
+              <td><span class="ew-yes">✓ Yes</span></td>
+              <td><code>=MAXIFS(B:B,A:A,"Pro*")</code></td>
+              <td>Max/Min of col B where col A matches pattern</td>
+            </tr>
+            <tr>
+              <td>IF</td>
+              <td><span class="ew-no">✗ No</span></td>
+              <td><code>=IF(COUNTIF(A1,"Amy*"),"Yes","No")</code></td>
+              <td>IF doesn't support wildcards — use COUNTIF as a workaround</td>
+            </tr>
+            <tr>
+              <td>FIND</td>
+              <td><span class="ew-no">✗ No</span></td>
+              <td>Use SEARCH instead</td>
+              <td>FIND is case-sensitive and does not support wildcards at all</td>
             </tr>
           </tbody>
         </table>
       </div>
-      
-      <!-- Tips Box (enriched with tilde and case info) -->
-      <div style="background: #eff6ff; border-radius: 16px; padding: 1.5rem; margin: 2rem 0; border: 1px solid #bfdbfe;">
-        <h4 style="margin-top: 0; color: #1e40af; display: flex; align-items: center; gap: 0.5rem;">
-          <i class="fas fa-lightbulb" style="color: #fbbf24;"></i> Pro Tips
-        </h4>
-        <ul style="margin-bottom: 0;">
-          <li><strong>Search for actual wildcards:</strong> Use tilde (~) before *, ?, or ~ to find them literally. Example: <code>~*</code> finds asterisk character, <code>~~</code> finds a tilde.</li>
-          <li><strong>Case insensitive:</strong> Wildcard searches in Excel are not case-sensitive.</li>
-          <li><strong>Combine patterns:</strong> Use <code>*e?n*</code> to find words with 'e', any char, 'n' anywhere.</li>
-          <li><strong>Wildcards with tilde:</strong> To search for a question mark, use <code>~?</code>; for an asterisk, use <code>~*</code>.</li>
+
+      <div class="ew-green">
+        <i class="fas fa-info-circle"></i> <strong>XLOOKUP and XMATCH note:</strong> Unlike VLOOKUP and MATCH — which automatically recognise wildcards — XLOOKUP and XMATCH require you to explicitly set <code>match_mode = 2</code> (wildcard match) in the formula. Without this, wildcards are treated as literal characters.
+      </div>
+
+      <!-- SECTION 8 -->
+      <h2 id="ew-s8">8. Real Formula Examples</h2>
+
+      <div class="ew-fn-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Task</th>
+              <th>Formula</th>
+              <th>How It Works</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Count cells ending with "tion"</td>
+              <td><code>=COUNTIF(A:A,"*tion")</code></td>
+              <td>* matches any characters before "tion"</td>
+            </tr>
+            <tr>
+              <td>Count cells that are exactly 7 chars</td>
+              <td><code>=COUNTIF(A:A,"???????")</code></td>
+              <td>Seven ? marks — each matches exactly one character</td>
+            </tr>
+            <tr>
+              <td>Count non-blank text cells</td>
+              <td><code>=COUNTIF(A:A,"*")</code></td>
+              <td>* matches any text; blank cells and numbers are excluded</td>
+            </tr>
+            <tr>
+              <td>Sum sales for products starting with "Pro"</td>
+              <td><code>=SUMIF(A:A,"Pro*",B:B)</code></td>
+              <td>Matches "Product A", "Pro-Series", "Pro Max" etc.</td>
+            </tr>
+            <tr>
+              <td>Lookup by partial name from cell D1</td>
+              <td><code>=VLOOKUP("*"&amp;D1&amp;"*",A:B,2,0)</code></td>
+              <td>Ampersand joins wildcards with cell value for flexible lookup</td>
+            </tr>
+            <tr>
+              <td>XLOOKUP — find entry ending with "Adams"</td>
+              <td><code>=XLOOKUP("*Adams",A:A,C:C,"Not found",2)</code></td>
+              <td>match_mode=2 enables wildcard matching in XLOOKUP</td>
+            </tr>
+            <tr>
+              <td>IF with wildcard (workaround)</td>
+              <td><code>=IF(COUNTIF(A1,"Amy*"),"Yes","No")</code></td>
+              <td>COUNTIF returns 1 (true) or 0 (false) — IF acts on that result</td>
+            </tr>
+            <tr>
+              <td>Find literal asterisk in data</td>
+              <td><code>=COUNTIF(A:A,"*~**")</code></td>
+              <td>~* tells Excel the middle * is literal; outer * match surrounding text</td>
+            </tr>
+            <tr>
+              <td>Match position of pattern</td>
+              <td><code>=MATCH("b?g",A:A,0)</code></td>
+              <td>Returns row position of first match for bag/beg/big/bog/bug</td>
+            </tr>
+            <tr>
+              <td>Average of entries starting with "Pf"</td>
+              <td><code>=AVERAGEIF(A:A,"Pf*",B:B)</code></td>
+              <td>Matches Pfizer, Pfaff, etc. and averages corresponding B values</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SECTION 9 -->
+      <h2 id="ew-s9">9. Where Else to Use Wildcards</h2>
+
+      <div class="ew-app-grid">
+        <div class="ew-app-card">
+          <i class="fas fa-filter" style="color:#3b82f6;"></i>
+          <strong>Filter Drop-down</strong>
+          <p>Type wildcard patterns in the column filter search box — e.g. <code>A*</code> shows only entries starting with A.</p>
+        </div>
+        <div class="ew-app-card">
+          <i class="fas fa-search" style="color:#8b5cf6;"></i>
+          <strong>Find &amp; Replace</strong>
+          <p>Wildcards are active by default in Find &amp; Replace (Ctrl+H). <code>jo*</code> finds Jon, John, Joanna, Joshua simultaneously.</p>
+        </div>
+        <div class="ew-app-card">
+          <i class="fas fa-palette" style="color:#f59e0b;"></i>
+          <strong>Conditional Formatting</strong>
+          <p>Use <code>=COUNTIF(A1,"G*")</code> as a formula rule to highlight all cells starting with "G" automatically.</p>
+        </div>
+        <div class="ew-app-card">
+          <i class="fas fa-table" style="color:#10b981;"></i>
+          <strong>PivotTable Filters</strong>
+          <p>Wildcard patterns work in label filters inside PivotTables — filter fields by partial text matches.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 10 -->
+      <h2 id="ew-s10">10. Limitations — What Wildcards Cannot Do</h2>
+
+      <div class="ew-warn">
+        <i class="fas fa-exclamation-triangle"></i> <strong>Wildcards only work with text — not numbers.</strong> Excel stores numbers in a binary format optimised for calculations, not as text strings. If you try <code>=COUNTIF(A:A,"4*")</code> on a column of numbers, it will return 0. To apply wildcards to numbers, first convert them using the <strong>TEXT() function</strong> or by formatting cells as text, then use your wildcard formula.
+      </div>
+
+      <div class="ew-fn-wrap" style="margin-top:1rem;">
+        <table>
+          <thead>
+            <tr><th>Limitation</th><th>Details</th><th>Workaround</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Numbers</td>
+              <td>Wildcards don't match numeric cells — only text</td>
+              <td>Convert to text: <code>=COUNTIF(TEXT(A:A,"0"),"4*")</code> or use SEARCH with ISNUMBER</td>
+            </tr>
+            <tr>
+              <td>IF function</td>
+              <td>IF() does not directly support wildcards</td>
+              <td>Use <code>=IF(COUNTIF(A1,"Amy*"),"Yes","No")</code></td>
+            </tr>
+            <tr>
+              <td>FIND function</td>
+              <td>FIND is case-sensitive and does not support wildcards</td>
+              <td>Use SEARCH instead — it is case-insensitive and supports wildcards</td>
+            </tr>
+            <tr>
+              <td>XLOOKUP / XMATCH</td>
+              <td>Wildcards are not enabled by default in these functions</td>
+              <td>Set match_mode argument to 2 explicitly</td>
+            </tr>
+            <tr>
+              <td>False positives</td>
+              <td><code>*Smith*</code> also matches "Smithson", "Blacksmith", "Goldsmith"</td>
+              <td>Use more specific patterns: e.g. <code>" Smith"</code> with a leading space if it's a last name</td>
+            </tr>
+            <tr>
+              <td>Dates</td>
+              <td>Wildcards don't match date-formatted cells directly</td>
+              <td>Use TEXT() to convert dates to strings first, then apply wildcards</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SECTION 11 -->
+      <h2 id="ew-s11">11. Pro Tips and Common Mistakes</h2>
+
+      <div class="ew-tip">
+        <h4><i class="fas fa-lightbulb" style="color:#fbbf24;"></i> Pro Tips</h4>
+        <ul>
+          <li><strong>Wildcards are not case-sensitive.</strong> <code>*apple*</code> matches "apple", "Apple", "APPLE" — no need for separate patterns.</li>
+          <li><strong>Combine with ampersand (&amp;) for dynamic patterns.</strong> <code>"*"&amp;A1&amp;"*"</code> builds a wildcard pattern from a cell value — use in VLOOKUP, COUNTIF, SUMIF.</li>
+          <li><strong>Count all text cells:</strong> <code>=COUNTIF(A:A,"*")</code> counts every non-blank text cell (ignores numbers and blanks).</li>
+          <li><strong>Escape when your data contains wildcards.</strong> If a product code is "Part*A", use <code>Part~*A</code> to find it literally.</li>
+          <li><strong>To find a literal tilde:</strong> Use <code>~~</code> — two tildes mean "a literal tilde character."</li>
+          <li><strong>SEARCH supports wildcards; FIND does not.</strong> Always use SEARCH for pattern-based partial text checks.</li>
+          <li><strong>Design patterns carefully.</strong> Broad patterns like <code>*A*</code> may match far more cells than intended — be as specific as the data allows.</li>
         </ul>
       </div>
-      
-      <!-- Conclusion -->
-      <h2>Conclusion</h2>
-      
-      <p class="MsoNormal" style="line-height: 150%; text-align: justify;">With these wildcard characters, you can streamline your data searches, filter large datasets, and make your work in Excel faster and more efficient. Whether you're cleaning data, performing analysis, or building dynamic reports, mastering wildcards will significantly enhance your Excel productivity.</p>
-      
-     
-      <!-- Tags section -->
-      <div class="post-tags">
-        <span class="post-tag"><i class="fas fa-tag"></i> excel</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> wildcards</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> excel-tips</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> data-analysis</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> pattern-matching</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> excel-formulas</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> spreadsheet</span>
-        <span class="post-tag"><i class="fas fa-tag"></i> data-filtering</span>
+
+      <!-- Dark summary -->
+      <div class="ew-dark">
+        <h3>Quick Cheat Sheet — Excel Wildcards at a Glance</h3>
+        <div class="ew-dark-grid">
+          <div class="ew-dark-item">
+            <span class="ew-di-sym">*</span>
+            <p>Any number of chars (including zero) — most flexible wildcard</p>
+          </div>
+          <div class="ew-dark-item">
+            <span class="ew-di-sym">?</span>
+            <p>Exactly one character — use for fixed-length patterns and code formats</p>
+          </div>
+          <div class="ew-dark-item">
+            <span class="ew-di-sym">~</span>
+            <p>Escape — places before * or ? to treat them as literal characters</p>
+          </div>
+          <div class="ew-dark-item">
+            <span class="ew-di-sym">~~</span>
+            <p>Searches for a literal tilde (~) in the data</p>
+          </div>
+          <div class="ew-dark-item">
+            <span class="ew-di-sym">✓</span>
+            <p>Supported by: COUNTIF/S, SUMIF/S, AVERAGEIF/S, VLOOKUP, HLOOKUP, XLOOKUP (mode 2), MATCH, XMATCH (mode 2), SEARCH, MAXIFS, MINIFS</p>
+          </div>
+          <div class="ew-dark-item">
+            <span class="ew-di-sym">✗</span>
+            <p>Not supported by: IF, FIND, EXACT, or any formula operating directly on numbers</p>
+          </div>
+        </div>
       </div>
+
+      <!-- Closing -->
+      <div class="ew-closing">
+        <p><strong>In summary:</strong> Excel's three wildcard characters — the asterisk (<code>*</code>), question mark (<code>?</code>), and tilde (<code>~</code>) — are among the most useful tools in any Excel user's toolkit. Whether you're counting entries that follow a pattern, summing values by partial category, performing partial-match lookups with VLOOKUP or XLOOKUP, or cleaning inconsistent data with Find &amp; Replace, mastering wildcards will make your work significantly faster and more flexible. The key things to remember: wildcards only work with text (not numbers directly), the IF function needs a COUNTIF workaround, XLOOKUP and XMATCH require <code>match_mode = 2</code>, and the tilde is your escape hatch whenever your actual data contains wildcard characters.</p>
+      </div>
+
+    </div><!-- /post-content -->
+
+    <!-- Tags -->
+    <div class="ew-post-tags">
+      <span class="ew-post-tag"><i class="fas fa-tag"></i> Excel</span>
+      <span class="ew-post-tag"><i class="fas fa-tag"></i> Wildcards</span>
+      <span class="ew-post-tag"><i class="fas fa-tag"></i> COUNTIF</span>
+      <span class="ew-post-tag"><i class="fas fa-tag"></i> SUMIF</span>
+      <span class="ew-post-tag"><i class="fas fa-tag"></i> VLOOKUP</span>
+      <span class="ew-post-tag"><i class="fas fa-tag"></i> XLOOKUP</span>
+      <span class="ew-post-tag"><i class="fas fa-tag"></i> MATCH / XMATCH</span>
+      <span class="ew-post-tag"><i class="fas fa-tag"></i> SEARCH</span>
+      <span class="ew-post-tag"><i class="fas fa-tag"></i> Pattern Matching</span>
+      <span class="ew-post-tag"><i class="fas fa-tag"></i> Data Analysis</span>
+      <span class="ew-post-tag"><i class="fas fa-tag"></i> Excel Tips</span>
+      <span class="ew-post-tag"><i class="fas fa-tag"></i> Microsoft Excel</span>
     </div>
 
-  <!-- Common Post Footer (Share + Back Button) -->
-<div id="post-footer-share-container"></div>
+    <!-- Common post footer -->
+    <div id="post-footer-share-container"></div>
+
   </section>
 
   <footer id="site-footer"></footer>
-
-
 </body>
 </html>
