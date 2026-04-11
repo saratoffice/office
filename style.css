@@ -1490,13 +1490,47 @@ body.header-minimized {
     font-size: 0.8rem;
   }
 }
- ol.custom {
-    list-style-type: none;
+.paren-list,
+.paren-list ul,
+.paren-list ol {
+    list-style: none;
     padding-left: 0;
-  }
-  ol.custom li {
-    counter-increment: step-counter;
-  }
-  ol.custom li::before {
-    content: "(" counter(step-counter, lower-alpha) ") ";
-  }
+    margin-left: 0;
+}
+
+/* Main (a), (b), (c) */
+.paren-list {
+    counter-reset: main;
+}
+
+.paren-list > li {
+    counter-increment: main;
+    margin-bottom: 10px;
+}
+
+.paren-list > li::before {
+    content: "(" counter(main, lower-alpha) ") ";
+    font-weight: bold;
+}
+
+/* Sub (i), (ii), (iii) */
+.paren-list ol {
+    counter-reset: sub;
+    margin-top: 5px;
+}
+
+.paren-list ol > li {
+    counter-increment: sub;
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
+
+.paren-list ol > li::before {
+    content: "(" counter(sub, lower-roman) ") ";
+    font-weight: bold;
+}
+
+/* Inner normal text indent */
+.paren-list ul li {
+    margin-left: 20px;
+}
