@@ -1022,8 +1022,7 @@ body.header-minimized {
 /* =============================================
        EC ARTICLE — LIST STYLES
        ============================================= */
- 
-    /* Reset nested lists */
+  /* Reset nested lists */
     .ec-article ol,
     .ec-article ul {
       margin: 0;
@@ -1149,14 +1148,15 @@ body.header-minimized {
       color: #555;
     }
  
-    /* ── Paren list: (1)(2) → (i)(ii) ── */
+    /* ── Paren list: (1) → 1) → i. ── */
     .ec-article .paren-list,
-    .ec-article .paren-list ul,
     .ec-article .paren-list ol {
       list-style: none;
       padding-left: 0;
       margin-left: 0;
     }
+ 
+    /* Level 1: (1) (2) (3) */
     .ec-article .paren-list {
       counter-reset: paren-main;
       margin: 1rem 0;
@@ -1164,7 +1164,7 @@ body.header-minimized {
     .ec-article .paren-list > li {
       counter-increment: paren-main;
       position: relative;
-      padding-left: 2.25rem;
+      padding-left: 2.5rem;
       margin-bottom: 0.85rem;
       font-size: 17px;
       line-height: 1.8;
@@ -1176,31 +1176,48 @@ body.header-minimized {
       font-weight: 600;
       color: #555;
     }
-    .ec-article .paren-list ol {
+ 
+    /* Level 2: 1) 2) 3) */
+    .ec-article .paren-list > li > ol {
       counter-reset: paren-sub;
-      margin-top: 0.5rem;
-      margin-bottom: 0.25rem;
+      margin: 0.5rem 0 0.25rem 0;
     }
-    .ec-article .paren-list ol > li {
+    .ec-article .paren-list > li > ol > li {
       counter-increment: paren-sub;
       position: relative;
       padding-left: 2.25rem;
       margin-left: 1.25rem;
-      margin-bottom: 0.45rem;
+      margin-bottom: 0.5rem;
       font-size: 16px;
       line-height: 1.75;
     }
-    .ec-article .paren-list ol > li::before {
-      content: "(" counter(paren-sub, lower-roman) ")";
+    .ec-article .paren-list > li > ol > li::before {
+      content: counter(paren-sub) ")";
       position: absolute;
       left: 0;
       color: #555;
+      font-weight: 500;
     }
-    .ec-article .paren-list ul li {
+ 
+    /* Level 3: i. ii. iii. */
+    .ec-article .paren-list > li > ol > li > ol {
+      counter-reset: paren-third;
+      margin: 0.4rem 0 0.2rem 0;
+    }
+    .ec-article .paren-list > li > ol > li > ol > li {
+      counter-increment: paren-third;
+      position: relative;
+      padding-left: 2.25rem;
       margin-left: 1.25rem;
       margin-bottom: 0.4rem;
-      font-size: 16px;
-      line-height: 1.75;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .ec-article .paren-list > li > ol > li > ol > li::before {
+      content: counter(paren-third, lower-roman) ".";
+      position: absolute;
+      left: 0;
+      color: #777;
     }
  
     /* ── Alpha paren list: (a)(b) → (i)(ii) ── */
