@@ -949,64 +949,125 @@ body.header-minimized {
 /* =================================
    ARTICLE / ACT CONTENT
    ================================= */
+/* ── Base Container ── */
 .container.ec-article {
-  max-width: 1100px;
-  margin: auto;
-  background: #ffffff;
-  padding: 40px;
-  font-family: "Georgia", "Times New Roman", serif;
-  color: #111;
-  line-height: 1.7;
+  max-width: 1060px;
+  margin: 0 auto;
+  background: var(--paper);
+  padding: 60px 64px;
+  font-family: 'Source Serif 4', 'Georgia', serif;
+  color: var(--ink);
+  line-height: 1.8;
+  position: relative;
 }
 
+
+
+/* ── Links ── */
 .ec-article a {
-  color: #0b3c5d;
+  color: var(--navy-light);
   text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.2s ease;
+  border-bottom: 1px solid var(--gold-light);
+  transition: color 0.2s, border-color 0.2s;
 }
-
 .ec-article a:hover {
-  border-bottom-color: #0b3c5d;
+  color: var(--gold);
+  border-bottom-color: var(--gold);
 }
 
+/* ── H1 — Act Title ── */
 .ec-article h1 {
+  font-family: 'Playfair Display', serif;
   text-align: center;
-  font-size: 2.4rem;
-  margin-bottom: 10px;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--navy);
+  letter-spacing: 0.04em;
+  margin: 0 0 8px;
+  line-height: 1.25;
+  text-transform: uppercase;
 }
 
+/* Golden rule under H1 */
+.ec-article h1::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+  margin: 14px auto 0;
+  border-radius: 2px;
+}
+
+/* ── H2 — Section Headings ── */
 .ec-article h2 {
-  background-color: #101535;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--navy);
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
   color: #fff;
-  padding: 8px 12px;
-  font-weight: bold;
-  margin: 20px 0 10px;
-  border-left: 6px solid #ffeb3b;
+  padding: 11px 18px 11px 20px;
+  margin: 36px 0 16px;
+  border-left: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.01em;
 }
 
+/* Gold accent bar on H2 */
+.ec-article h2::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--gold-light), var(--gold));
+  border-radius: var(--radius) 0 0 var(--radius);
+}
+
+/* Shimmer line on H2 */
+.ec-article h2::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05));
+  pointer-events: none;
+}
+
+/* ── H3 ── */
 .ec-article h3 {
-  margin-top: 25px;
-  font-size: 1.35rem;
-  color: #123;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--navy-mid);
+  margin: 28px 0 10px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid var(--gold-light);
+  display: inline-block;
 }
 
+/* ── H4 ── */
 .ec-article h4 {
-  margin-top: 18px;
-  font-size: 1.15rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 18px 0 8px;
+  font-style: italic;
 }
 
-/* =================================
-   PARAGRAPHS
-   ================================= */
+/* ── Paragraphs ── */
 .ec-article p {
   margin: 10px 0;
   text-align: justify;
-  font-size: 18px;
-  line-height: 1.8;
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--ink);
+  font-weight: 400;
 }
 
-/* First paragraph after headings — no indent */
 .ec-article h1 + p,
 .ec-article h2 + p,
 .ec-article h3 + p,
@@ -1014,533 +1075,329 @@ body.header-minimized {
   text-indent: 0;
 }
 
-/* Indent subsequent paragraphs */
 .ec-article p + p {
   text-indent: 2em;
 }
 
-/* =================================
-   LISTS — TRUE NESTED INDENTATION
-   ================================= */
+.ec-article p:not(:first-of-type) {
+  text-indent: 2em;
+}
 
-/* Base: all lists use padding-left for indentation,
-   list-style-position: outside so markers sit in the gutter */
-.ec-article ol,
-.ec-article ul {
-  margin: 12px 0;
-  padding-left: 2em;
+/* ── Strong / Bold inline ── */
+.ec-article strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ── Lists ── */
+.ec-article > ol {
+  margin: 16px 0 16px 38px;
+  padding-left: 0;
+  list-style-type: decimal;
   list-style-position: outside;
 }
 
-/* Level 1 list items */
-.ec-article ol > li,
-.ec-article ul > li {
-  font-size: 18px;
-  line-height: 1.75;
-  margin-bottom: 8px;
-  padding-left: 0.25em;
-}
-
-/* Level 2 — nested sub-list */
-.ec-article ol ol,
-.ec-article ul ul,
-.ec-article ol ul,
-.ec-article ul ol {
-  margin: 6px 0 6px 0;
-  padding-left: 2em;   /* stacks on top of parent's 2em = 4em total */
-}
-
-/* Level 2 list items */
-.ec-article ol ol > li,
-.ec-article ul ul > li,
-.ec-article ol ul > li,
-.ec-article ul ol > li {
-  font-size: 17px;
-  line-height: 1.7;
-  margin-bottom: 6px;
-}
-
-/* Level 3 — sub-sub-list */
-.ec-article ol ol ol,
-.ec-article ul ul ul,
-.ec-article ol ul ol,
-.ec-article ul ol ul {
-  padding-left: 2em;   /* stacks = 6em total from article edge */
-}
-
-/* Level 3 list items */
-.ec-article ol ol ol > li,
-.ec-article ul ul ul > li {
-  font-size: 16px;
-  line-height: 1.7;
-  margin-bottom: 4px;
-}
-
-/* =================================
-   LIST MARKER TYPES
-   ================================= */
-
-/* Ordered: 1, 2, 3 → a, b, c → i, ii, iii */
-.ec-article ol                { list-style-type: decimal; }
-.ec-article ol ol             { list-style-type: lower-alpha; }
-.ec-article ol ol ol          { list-style-type: lower-roman; }
-
-/* HTML type attribute overrides */
-.ec-article ol[type="1"]      { list-style-type: decimal; }
-.ec-article ol[type="a"]      { list-style-type: lower-alpha; }
-.ec-article ol[type="A"]      { list-style-type: upper-alpha; }
-.ec-article ol[type="i"]      { list-style-type: lower-roman; }
-.ec-article ol[type="I"]      { list-style-type: upper-roman; }
-
-/* Unordered: disc → circle → square */
-.ec-article ul                { list-style-type: disc; }
-.ec-article ul ul             { list-style-type: circle; }
-.ec-article ul ul ul          { list-style-type: square; }
-
-/* =================================
-   CUSTOM COUNTER LISTS (manual)
-   ================================= */
-
-/* Numbered list using counter */
-.ec-article .numbered-list {
-  margin: 15px 0;
-  padding-left: 0;
-  list-style: none;
-  counter-reset: numbered-counter;
-}
-
-.ec-article .numbered-list > li {
-  counter-increment: numbered-counter;
-  font-size: 18px;
-  line-height: 1.7;
+.ec-article > ol > li {
   margin-bottom: 12px;
-  position: relative;
-  padding-left: 2.2em;
-}
-
-.ec-article .numbered-list > li::before {
-  content: counter(numbered-counter) ".";
-  position: absolute;
-  left: 0;
-  font-weight: bold;
-  color: #101535;
-}
-
-/* Letter subpoints */
-.ec-article .letter-list {
-  margin: 8px 0;
-  padding-left: 0;
-  list-style: none;
-  counter-reset: letter-counter;
-}
-
-.ec-article .letter-list > li {
-  counter-increment: letter-counter;
-  font-size: 17px;
-  line-height: 1.7;
-  margin-bottom: 8px;
-  position: relative;
-  padding-left: 2em;
-}
-
-.ec-article .letter-list > li::before {
-  content: counter(letter-counter, lower-alpha) ".";
-  position: absolute;
-  left: 0;
-  font-weight: bold;
-  color: #101535;
-}
-
-/* =================================
-   3D STYLISH TABLES
-   ================================= */
-.ec-article table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin: 25px 0;
   font-size: 16px;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.15), 0 3px 6px rgba(0,0,0,0.1);
-  border-radius: 12px;
-  overflow: hidden;
-  background: white;
-  transform: perspective(1px) translateZ(0);
-  transition: all 0.3s ease;
+  line-height: 1.85;
+  padding-left: 8px;
+  color: var(--ink);
 }
 
-.ec-article table:hover {
-  box-shadow: 0 15px 30px rgba(0,0,0,0.2), 0 5px 10px rgba(0,0,0,0.15);
+.ec-article ol ol {
+  margin: 8px 0 8px 28px;
+  list-style-type: lower-alpha;
+}
+
+.ec-article ol ol > li {
+  margin-bottom: 7px;
+  font-size: 16px;
+  padding-left: 5px;
+}
+
+.ec-article ol ol ol {
+  margin: 5px 0 5px 28px;
+  list-style-type: lower-roman;
+}
+
+.ec-article ol[type="a"]  { list-style-type: lower-alpha; }
+.ec-article ol[type="i"]  { list-style-type: lower-roman; }
+.ec-article ol[type="1"]  { list-style-type: decimal; }
+
+.ec-article ul {
+  margin: 10px 0 10px 36px;
+  list-style-type: none;
+  list-style-position: outside;
+}
+
+.ec-article ul > li {
+  margin-bottom: 7px;
+  font-size: 16px;
+  line-height: 1.85;
+  padding-left: 4px;
+  color: var(--ink);
+  position: relative;
+}
+
+/* Custom bullet — gold diamond */
+.ec-article ul > li::before {
+  content: '◆';
+  color: var(--gold);
+  font-size: 0.5em;
+  position: absolute;
+  left: -20px;
+  top: 6px;
+}
+
+.ec-article ul ul {
+  margin: 5px 0 5px 26px;
+  list-style-type: none;
+}
+
+.ec-article ul ul > li::before {
+  content: '–';
+  color: var(--ink-light);
+  font-size: 0.85em;
+  left: -18px;
+  top: 3px;
+}
+
+.ec-article ul ul ul > li::before {
+  content: '·';
+  left: -14px;
+}
+
+/* ── Section Card (div.section) ── */
+.ec-article .section {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+
+.ec-article .section:hover {
+  box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
 
-.ec-article thead {
-  position: relative;
-  z-index: 2;
+.ec-article .section h3 {
+  margin-top: 0;
+  font-size: 1rem;
+  border-bottom-color: var(--border);
+  color: var(--navy);
 }
 
-.ec-article th {
-  background: linear-gradient(145deg, #1a237e 0%, #283593 50%, #1a237e 100%);
-  color: #fff;
-  font-weight: 600;
-  text-align: center;
-  padding: 16px 12px;
-  font-size: 1.1em;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  border-right: 1px solid rgba(255,255,255,0.2);
-  border-bottom: 3px solid #ffeb3b;
-  position: relative;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
-}
-
-.ec-article th:last-child {
-  border-right: none;
-}
-
-.ec-article th::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
-}
-
-.ec-article td {
-  padding: 14px 12px;
-  border-right: 1px solid #e0e0e0;
-  border-bottom: 1px solid #e0e0e0;
-  background: white;
-  color: #333;
-  vertical-align: top;
-  transition: background-color 0.2s ease;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
-}
-
-.ec-article td:last-child {
-  border-right: none;
-}
-
-/* Zebra striping */
-.ec-article tbody tr:nth-child(even) td {
-  background: linear-gradient(180deg, #f8f9fa 0%, #f1f3f4 100%);
-}
-
-.ec-article tbody tr:nth-child(odd) td {
-  background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
-}
-
-/* Row hover */
-.ec-article tbody tr:hover td {
-  background: linear-gradient(180deg, #fff9e6 0%, #fff3d4 100%);
-  cursor: default;
-  border-bottom-color: #ffeb3b;
-}
-
-/* First column emphasis */
-.ec-article tbody td:first-child {
-  font-weight: 500;
-  color: #1a237e;
-  border-left: 3px solid transparent;
-}
-
-.ec-article tbody tr:hover td:first-child {
-  border-left-color: #ffeb3b;
-}
-
-/* Table caption */
-.ec-article table caption {
-  font-size: 1.1em;
-  margin: 10px 0;
-  padding: 12px;
-  background: linear-gradient(145deg, #f5f5f5 0%, #e8e8e8 100%);
-  border-radius: 8px;
-  font-weight: 500;
-  color: #1a237e;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  border-left: 4px solid #ffeb3b;
-}
-
-/* Responsive table container */
-.ec-article .table-responsive {
+/* ── Table ── */
+.table-responsive {
   width: 100%;
   overflow-x: auto;
-  margin: 20px 0;
-  border-radius: 12px;
-  box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+  margin: 28px 0;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 6px rgba(11,31,58,0.06), 0 12px 32px rgba(11,31,58,0.10);
 }
 
-/* Table color themes */
-.ec-article .table-primary th {
-  background: linear-gradient(145deg, #0b3c5d 0%, #1e4b6e 50%, #0b3c5d 100%);
-}
-
-.ec-article .table-success th {
-  background: linear-gradient(145deg, #2e7d32 0%, #3c8f40 50%, #2e7d32 100%);
-}
-
-.ec-article .table-warning th {
-  background: linear-gradient(145deg, #b26a00 0%, #c67c00 50%, #b26a00 100%);
-}
-
-.ec-article .table-danger th {
-  background: linear-gradient(145deg, #a71d2a 0%, #b82130 50%, #a71d2a 100%);
-}
-
-/* Compact table */
-.ec-article .table-compact td,
-.ec-article .table-compact th {
-  padding: 8px 10px;
+.ec-article-table {
+  width: 100%;
+  border-collapse: collapse;
   font-size: 14px;
+  font-family: 'Source Serif 4', serif;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
-.ec-article .table-compact {
-  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+/* ── Header ── */
+.ec-article-table thead tr {
+  background: var(--navy);
+  border-bottom: 3px solid var(--gold);
 }
 
-/* Simple striped */
-.ec-article .table-simple-striped tbody tr:nth-child(even) td {
-  background: #f5f5f5;
+.ec-article-table thead th {
+  color: #fff;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 13.5px;
+  text-align: left;
+  padding: 15px 18px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  position: relative;
 }
 
-.ec-article .table-simple-striped tbody tr:nth-child(odd) td {
-  background: #ffffff;
+/* Vertical divider between header cells */
+.ec-article-table thead th + th {
+  border-left: 1px solid rgba(255,255,255,0.12);
 }
 
-/* Borderless */
-.ec-article .table-borderless td,
-.ec-article .table-borderless th {
-  border: none;
+/* Gold pip on first header cell */
+.ec-article-table thead th:first-child::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 14px;
+  background: var(--gold);
+  border-radius: 2px;
+  margin-right: 10px;
+  vertical-align: middle;
 }
 
-.ec-article .table-borderless td {
-  border-bottom: 1px solid #e0e0e0;
+/* ── Body rows ── */
+.ec-article-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
 }
 
-.ec-article .table-borderless tbody tr:last-child td {
+.ec-article-table tbody tr:last-child {
   border-bottom: none;
 }
 
-/* =================================
-   READING ENHANCEMENTS
-   ================================= */
-.ec-article blockquote {
-  margin: 20px 40px;
-  padding-left: 20px;
-  border-left: 4px solid #ffeb3b;
-  font-style: italic;
-  color: #333;
-  font-size: 17px;
-}
-
-.ec-article img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 20px auto;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.ec-article figcaption {
-  text-align: center;
-  font-size: 14px;
-  color: #666;
-  margin-top: 5px;
-  font-style: italic;
-}
-
-.ec-article section,
-.ec-article .section {
-  margin-bottom: 30px;
-}
-
-/* Code blocks */
-.ec-article pre,
-.ec-article code {
-  font-family: 'Courier New', monospace;
-  background: #f5f5f5;
-  border-radius: 3px;
-}
-
-.ec-article code {
-  padding: 2px 4px;
-  font-size: 16px;
-}
-
-.ec-article pre {
-  padding: 15px;
-  overflow-x: auto;
-  line-height: 1.5;
-  font-size: 15px;
-  border-left: 3px solid #ffeb3b;
-}
-
-/* =================================
-   SECTION CARD
-   ================================= */
-.section {
+.ec-article-table tbody tr:nth-child(odd) td {
   background: #ffffff;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
-/* =================================
-   RESPONSIVE — TABLET
-   ================================= */
-@media (max-width: 768px) {
-  .container.ec-article {
-    padding: 20px;
-  }
-
-  .ec-article p {
-    font-size: 16px;
-  }
-
-  .ec-article h1 {
-    font-size: 2rem;
-  }
-
-  .ec-article blockquote {
-    margin: 15px 20px;
-  }
-
-  /* Tighten indent on tablet */
-  .ec-article ol,
-  .ec-article ul {
-    padding-left: 1.5em;
-  }
-
-  .ec-article ol ol,
-  .ec-article ul ul,
-  .ec-article ol ul,
-  .ec-article ul ol {
-    padding-left: 1.5em;
-  }
-
-  .ec-article ol > li,
-  .ec-article ul > li {
-    font-size: 16px;
-  }
-
-  .ec-article ol ol > li,
-  .ec-article ul ul > li {
-    font-size: 15px;
-  }
-
-  .ec-article ol ol ol > li,
-  .ec-article ul ul ul > li {
-    font-size: 14px;
-  }
-
-  /* Table responsive */
-  .ec-article table {
-    font-size: 14px;
-  }
-
-  .ec-article th,
-  .ec-article td {
-    padding: 10px 8px;
-  }
-
-  .ec-article th {
-    font-size: 1em;
-  }
-
-  .ec-article .table-compact td,
-  .ec-article .table-compact th {
-    padding: 6px 8px;
-    font-size: 13px;
-  }
+.ec-article-table tbody tr:nth-child(even) td {
+  background: var(--paper-alt);
 }
 
-/* =================================
-   RESPONSIVE — MOBILE
-   ================================= */
-@media (max-width: 480px) {
-  .ec-article ol,
-  .ec-article ul {
-    padding-left: 1.25em;
-  }
-
-  .ec-article ol ol,
-  .ec-article ul ul,
-  .ec-article ol ul,
-  .ec-article ul ol {
-    padding-left: 1.25em;
-  }
-
-  .ec-article th,
-  .ec-article td {
-    padding: 8px 6px;
-    font-size: 13px;
-  }
-
-  .ec-article th {
-    font-size: 0.9em;
-  }
-
-  .ec-article table caption {
-    font-size: 1em;
-    padding: 8px;
-  }
+.ec-article-table tbody tr:hover td {
+  background: var(--gold-pale);
 }
 
-/* =================================
-   ARTICLE IMAGE CONTAINER
-   ================================= */
+.ec-article-table tbody td {
+  padding: 13px 18px;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.75;
+  vertical-align: top;
+}
+
+/* First column: slightly bolder, navy tint */
+.ec-article-table tbody td:first-child {
+  font-weight: 500;
+  color: var(--navy-mid);
+  border-right: 1px solid var(--border);
+  min-width: 200px;
+}
+
+/* Accent left border on hover for first column */
+.ec-article-table tbody tr:hover td:first-child {
+  box-shadow: inset 3px 0 0 var(--gold);
+}
+
+/* ── Blockquote ── */
+.ec-article blockquote {
+  margin: 22px 0 22px 24px;
+  padding: 16px 20px 16px 24px;
+  border-left: 4px solid var(--gold);
+  background: var(--gold-pale);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-style: italic;
+  color: var(--ink-muted);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+/* ── Article Image ── */
+.ec-article-image {
+  margin: 28px 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+}
+
 .ec-article-image img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
   display: block;
   transition: transform 0.5s ease;
 }
 
 @media (hover: hover) {
   .ec-article-image:hover img {
-    transform: scale(1.02);
+    transform: scale(1.015);
   }
 }
 
-.ec-article-image .feature-caption {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-  color: white;
-  padding: 2rem 2rem 1rem;
-  font-size: 0.9rem;
-  font-style: italic;
+/* ── Code ── */
+.ec-article pre,
+.ec-article code {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  background: var(--paper-alt);
+  border-radius: var(--radius);
+}
+
+.ec-article code {
+  padding: 2px 5px;
+  font-size: 13px;
+  border: 1px solid var(--border);
+}
+
+.ec-article pre {
+  padding: 16px 18px;
+  overflow-x: auto;
+  line-height: 1.6;
+  font-size: 13px;
+  border-left: 3px solid var(--gold);
+}
+
+/* ── Section-link styling ── */
+a.section-link {
+  font-weight: 600;
+  color: var(--navy-light);
+  border-bottom: 1px dashed var(--gold-light);
+}
+
+a.section-link:hover {
+  color: var(--gold);
+  border-bottom-style: solid;
+}
+
+/* ── Metadata badges (Department / Ministry) ── */
+.ec-article > ul:first-of-type li,
+.ec-article h2:nth-of-type(1) + ul li,
+.ec-article h2:nth-of-type(2) + ul li {
+  font-size: 14px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .container.ec-article {
+    padding: 40px 32px;
+  }
 }
 
 @media (max-width: 768px) {
-  .ec-article-image {
-    height: 320px;
-    border-radius: 18px;
+  .container.ec-article {
+    padding: 28px 18px;
   }
 
-  .ec-article-image .feature-caption {
-    padding: 1.5rem;
-    font-size: 0.85rem;
-  }
+  .ec-article h1  { font-size: 1.65rem; }
+  .ec-article h2  { font-size: 1.05rem; padding: 9px 14px 9px 16px; }
+  .ec-article h3  { font-size: 0.98rem; }
+
+  .ec-article p,
+  .ec-article li  { font-size: 15px; }
+
+  .ec-article blockquote { margin: 16px 0 16px 12px; font-size: 15px; }
+  .ec-article ol, .ec-article ul { margin-left: 18px; }
+  .ec-article ol ol, .ec-article ul ul { margin-left: 14px; }
+
+  .ec-article-table { font-size: 14px; }
+  .ec-article-table th, .ec-article-table td { padding: 10px 12px; font-size: 14px; }
 }
 
 @media (max-width: 480px) {
-  .ec-article-image {
-    height: 240px;
-    border-radius: 14px;
+  .ec-article-table th, .ec-article-table td {
+    padding: 8px 10px;
+    font-size: 13px;
   }
-
-  .ec-article-image .feature-caption {
-    padding: 1rem;
-    font-size: 0.8rem;
-  }
+  .ec-article h1 { font-size: 1.4rem; }
+  .ec-article p, .ec-article li { font-size: 14.5px; }
 }
