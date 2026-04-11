@@ -1020,131 +1020,120 @@ body.header-minimized {
   text-indent: 2em;
 }
 
-/* ========================================
-   CSS for UL, OL, and LI tags only
-   (for legal provision document styling)
-   ======================================== */
-
-/* Base list styles - remove default padding/margin where needed */
-ul, ol {
-    margin: 0.75rem 0 0.75rem 1.5rem;
-    padding-left: 0.25rem;
+/* Main numbered list styling - 1, 2, 3 */
+.ec-article > ol {
+  margin: 15px 0 15px 40px;
+  padding-left: 0;
+  list-style-type: decimal;
+  list-style-position: outside;
 }
 
-/* Nested lists get extra spacing & structure */
-ul ul, ol ol, ul ol, ol ul {
-    margin: 0.4rem 0 0.4rem 1.2rem;
+.ec-article > ol > li {
+  margin-bottom: 12px;
+  font-size: 18px;
+  line-height: 1.7;
+  padding-left: 10px;
 }
 
-/* --- UNORDERED LISTS (bullets) --- */
-ul {
-    list-style-type: disc;
+/* Subpoint list - a, b, c */
+.ec-article ol ol {
+  margin: 8px 0 8px 30px;
+  list-style-type: lower-alpha;
 }
 
-ul ul {
-    list-style-type: circle;
+.ec-article ol ol > li {
+  margin-bottom: 8px;
+  font-size: 17px;
+  padding-left: 5px;
 }
 
-ul ul ul {
-    list-style-type: square;
+/* Third level - i, ii, iii */
+.ec-article ol ol ol {
+  margin: 5px 0 5px 30px;
+  list-style-type: lower-roman;
 }
 
-/* custom bullet color & spacing */
-ul li {
-    margin-bottom: 0.45rem;
-    line-height: 1.5;
-    color: #1a2c3e;
-    font-weight: 450;
-    padding-left: 0.2rem;
+/* Ensure HTML type attribute works (IMPORTANT FIX) */
+.ec-article ol[type="a"] {
+  list-style-type: lower-alpha;
 }
 
-/* --- ORDERED LISTS (numbered / legal style) --- */
-ol {
-    list-style-type: decimal;
-    list-style-position: outside;
+.ec-article ol[type="i"] {
+  list-style-type: lower-roman;
 }
 
-/* nested ordered lists: lower-alpha, then roman */
-ol ol {
-    list-style-type: lower-alpha;
+.ec-article ol[type="1"] {
+  list-style-type: decimal;
 }
 
-ol ol ol {
-    list-style-type: lower-roman;
+/* Unordered list styling */
+.ec-article ul {
+  margin: 10px 0 10px 40px;
+  list-style-type: disc;
+  list-style-position: outside;
 }
 
-/* special case: for legal clauses that might use nested counters */
-ol li {
-    margin-bottom: 0.5rem;
-    line-height: 1.55;
-    color: #1f2f3a;
-    font-weight: 450;
+.ec-article ul > li {
+  margin-bottom: 6px;
+  font-size: 18px;
+  line-height: 1.7;
+  padding-left: 5px;
 }
 
-/* --- list item hover (subtle) for readability --- */
-li:hover {
-    background-color: rgba(244, 185, 66, 0.08);
-    transition: background-color 0.12s ease;
-    border-radius: 8px;
+/* Nested unordered lists */
+.ec-article ul ul {
+  margin: 5px 0 5px 30px;
+  list-style-type: circle;
 }
 
-/* spacing between multiple list items */
-li + li {
-    margin-top: 0.2rem;
+.ec-article ul ul ul {
+  list-style-type: square;
 }
 
-/* make list markers a bit more elegant */
-li::marker {
-    color: #2c7a6e;    /* muted teal for bullet/number markers */
-    font-weight: 600;
+/* Manual numbering system (optional use) */
+.ec-article .numbered-list {
+  margin: 15px 0 15px 40px;
+  list-style: none;
+  counter-reset: numbered-counter;
 }
 
-/* ordered list markers get a subtle boldness */
-ol > li::marker {
-    font-weight: 600;
-    color: #1e5f6e;
+.ec-article .numbered-list > li {
+  counter-increment: numbered-counter;
+  margin-bottom: 12px;
+  font-size: 18px;
+  line-height: 1.7;
+  position: relative;
+  padding-left: 30px;
 }
 
-/* For lists that contain inline code or bold text — maintain alignment */
-li strong, li b {
-    color: #0b3b4f;
+.ec-article .numbered-list > li:before {
+  content: counter(numbered-counter) ". ";
+  position: absolute;
+  left: 0;
+  font-weight: bold;
 }
 
-/* when lists are inside a provision block (padding friendly) */
-.provision-block ul, 
-.provision-block ol {
-    margin-top: 0.4rem;
-    margin-bottom: 0.5rem;
+/* Letter subpoints (alternative clean method) */
+.ec-article .letter-list {
+  margin: 8px 0 8px 40px;
+  list-style: none;
+  counter-reset: letter-counter;
 }
 
-/* additional spacing for readability if lists appear consecutively */
-ul + ul, 
-ol + ol, 
-ul + ol, 
-ol + ul {
-    margin-top: 0.25rem;
+.ec-article .letter-list > li {
+  counter-increment: letter-counter;
+  margin-bottom: 8px;
+  font-size: 17px;
+  position: relative;
+  padding-left: 30px;
 }
 
-/* make the first level list items slightly more prominent */
-:is(ul, ol) > li {
-    font-size: 1rem;
+.ec-article .letter-list > li:before {
+  content: counter(letter-counter, lower-alpha) ". ";
+  position: absolute;
+  left: 0;
 }
 
-/* fine-tune for responsive (mobile) */
-@media (max-width: 640px) {
-    ul, ol {
-        margin-left: 1.2rem;
-    }
-    li {
-        margin-bottom: 0.5rem;
-    }
-}
-
-/* custom style for "nested legal subclauses" using roman/alpha */
-ol[type="a"] li, 
-.legal-subclause {
-    list-style-type: lower-alpha;
-}
 /* =================================
    3D STYLISH TABLES
    ================================= */
