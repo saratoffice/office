@@ -1020,162 +1020,185 @@ body.header-minimized {
   text-indent: 2em;
 }
 
-/* Main numbered list styling - 1, 2, 3 */
-.ec-article > ol {
-  margin: 15px 0 15px 40px;
-  padding-left: 0;
+/* =============================================
+   EC ARTICLE — LIST STYLES (UPGRADED)
+   No duplicate markers. Proper line gaps.
+   ============================================= */
+
+/* Reset nested lists to prevent inherited margin bleed */
+.ec-article ol,
+.ec-article ul {
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Level 1: 1. 2. 3. ── */
+.ec-article > ol,
+.ec-article ol[type="1"] {
+  margin: 1rem 0 1rem 2rem;
+  padding-left: 0.25rem;
   list-style-type: decimal;
   list-style-position: outside;
 }
-
 .ec-article > ol > li {
-  margin-bottom: 12px;
-  font-size: 18px;
-  line-height: 1.7;
-  padding-left: 10px;
-}
-
-/* Subpoint list - a, b, c */
-.ec-article ol ol {
-  margin: 8px 0 8px 30px;
-  list-style-type: lower-alpha;
-}
-
-.ec-article ol ol > li {
-  margin-bottom: 8px;
+  margin-bottom: 1rem;
   font-size: 17px;
-  padding-left: 5px;
+  line-height: 1.8;
+  padding-left: 0.5rem;
 }
+.ec-article > ol > li:last-child { margin-bottom: 0; }
 
-/* Third level - i, ii, iii */
-.ec-article ol ol ol {
-  margin: 5px 0 5px 30px;
-  list-style-type: lower-roman;
-}
-
-/* Ensure HTML type attribute works (IMPORTANT FIX) */
+/* ── Level 2: a. b. c. ── */
+.ec-article ol ol,
 .ec-article ol[type="a"] {
   list-style-type: lower-alpha;
+  margin: 0.6rem 0 0.4rem 1.75rem;
+  padding-left: 0.25rem;
+  list-style-position: outside;
 }
+.ec-article ol ol > li {
+  margin-bottom: 0.55rem;
+  font-size: 16px;
+  line-height: 1.75;
+  padding-left: 0.4rem;
+}
+.ec-article ol ol > li:last-child { margin-bottom: 0; }
 
+/* ── Level 3: i. ii. iii. ── */
+.ec-article ol ol ol,
 .ec-article ol[type="i"] {
   list-style-type: lower-roman;
+  margin: 0.5rem 0 0.3rem 1.5rem;
+  padding-left: 0.25rem;
+  list-style-position: outside;
+}
+.ec-article ol ol ol > li {
+  margin-bottom: 0.45rem;
+  font-size: 15px;
+  line-height: 1.7;
+  padding-left: 0.3rem;
 }
 
-.ec-article ol[type="1"] {
-  list-style-type: decimal;
-}
-
-/* Unordered list styling */
+/* ── Unordered: disc → circle → square ── */
 .ec-article ul {
-  margin: 10px 0 10px 40px;
+  margin: 0.75rem 0 0.75rem 1.75rem;
+  padding-left: 0.25rem;
   list-style-type: disc;
   list-style-position: outside;
 }
-
 .ec-article ul > li {
-  margin-bottom: 6px;
-  font-size: 18px;
-  line-height: 1.7;
-  padding-left: 5px;
+  margin-bottom: 0.55rem;
+  font-size: 17px;
+  line-height: 1.8;
+  padding-left: 0.4rem;
 }
+.ec-article ul > li:last-child { margin-bottom: 0; }
 
-/* Nested unordered lists */
 .ec-article ul ul {
-  margin: 5px 0 5px 30px;
   list-style-type: circle;
+  margin: 0.4rem 0 0.25rem 1.5rem;
 }
+.ec-article ul ul > li { font-size: 16px; margin-bottom: 0.4rem; }
 
 .ec-article ul ul ul {
   list-style-type: square;
+  margin-left: 1.25rem;
 }
+.ec-article ul ul ul > li { font-size: 15px; }
 
-/* Manual numbering system (optional use) */
+/* ── Custom counter: numbered-list ── */
 .ec-article .numbered-list {
-  margin: 15px 0 15px 40px;
+  margin: 1rem 0;
+  padding-left: 0;
   list-style: none;
   counter-reset: numbered-counter;
 }
-
 .ec-article .numbered-list > li {
   counter-increment: numbered-counter;
-  margin-bottom: 12px;
-  font-size: 18px;
-  line-height: 1.7;
   position: relative;
-  padding-left: 30px;
+  padding-left: 2rem;
+  margin-bottom: 1rem;
+  font-size: 17px;
+  line-height: 1.8;
 }
-
-.ec-article .numbered-list > li:before {
-  content: counter(numbered-counter) ". ";
+.ec-article .numbered-list > li::before {
+  content: counter(numbered-counter) ".";
   position: absolute;
   left: 0;
-  font-weight: bold;
+  font-weight: 500;
 }
 
-/* Letter subpoints (alternative clean method) */
+/* ── Custom counter: letter-list ── */
 .ec-article .letter-list {
-  margin: 8px 0 8px 40px;
+  margin: 0.6rem 0 0.6rem 1.5rem;
+  padding-left: 0;
   list-style: none;
   counter-reset: letter-counter;
 }
-
 .ec-article .letter-list > li {
   counter-increment: letter-counter;
-  margin-bottom: 8px;
-  font-size: 17px;
   position: relative;
-  padding-left: 30px;
+  padding-left: 2rem;
+  margin-bottom: 0.55rem;
+  font-size: 16px;
+  line-height: 1.75;
 }
-
-.ec-article .letter-list > li:before {
-  content: counter(letter-counter, lower-alpha) ". ";
+.ec-article .letter-list > li::before {
+  content: counter(letter-counter, lower-alpha) ".";
   position: absolute;
   left: 0;
 }
-.paren-list,
-.paren-list ul,
-.paren-list ol {
-    list-style: none;
-    padding-left: 0;
-    margin-left: 0;
-}
 
-/* Main (a), (b), (c) */
-.paren-list {
-    counter-reset: main;
+/* ── Paren list: (a)(b) → (i)(ii) ── */
+.ec-article .paren-list,
+.ec-article .paren-list ul,
+.ec-article .paren-list ol {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
 }
-
-.paren-list > li {
-    counter-increment: main;
-    margin-bottom: 10px;
+.ec-article .paren-list {
+  counter-reset: paren-main;
+  margin: 1rem 0;
 }
-
-.paren-list > li::before {
-    content: "(" counter(main, lower-alpha) ") ";
-    font-weight: bold;
+.ec-article .paren-list > li {
+  counter-increment: paren-main;
+  position: relative;
+  padding-left: 2.25rem;
+  margin-bottom: 0.85rem;
+  font-size: 17px;
+  line-height: 1.8;
 }
-
-/* Sub (i), (ii), (iii) */
-.paren-list ol {
-    counter-reset: sub;
-    margin-top: 5px;
+.ec-article .paren-list > li::before {
+  content: "(" counter(paren-main, lower-alpha) ")";
+  position: absolute;
+  left: 0;
+  font-weight: 500;
 }
-
-.paren-list ol > li {
-    counter-increment: sub;
-    margin-left: 20px;
-    margin-bottom: 5px;
+.ec-article .paren-list ol {
+  counter-reset: paren-sub;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
 }
-
-.paren-list ol > li::before {
-    content: "(" counter(sub, lower-roman) ") ";
-    font-weight: bold;
+.ec-article .paren-list ol > li {
+  counter-increment: paren-sub;
+  position: relative;
+  padding-left: 2.25rem;
+  margin-left: 1.25rem;
+  margin-bottom: 0.45rem;
+  font-size: 16px;
+  line-height: 1.75;
 }
-
-/* Inner normal text indent */
-.paren-list ul li {
-    margin-left: 20px;
+.ec-article .paren-list ol > li::before {
+  content: "(" counter(paren-sub, lower-roman) ")";
+  position: absolute;
+  left: 0;
+}
+.ec-article .paren-list ul li {
+  margin-left: 1.25rem;
+  margin-bottom: 0.4rem;
+  font-size: 16px;
+  line-height: 1.75;
 }
 /* =================================
    3D STYLISH TABLES
