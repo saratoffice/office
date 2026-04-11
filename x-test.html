@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="//style.css">
   <!-- Upgraded article styles -->
   <link rel="stylesheet" href="ec-article-upgraded.css">
-  <style>/* =================================
+  <style>
+   /* =================================
    ARTICLE / ACT CONTENT — UPGRADED
    Design: Legal Editorial — Deep Navy + Gold Accent
    Fonts: Playfair Display + Source Serif 4
@@ -21,19 +22,19 @@
   --ink:        #0f1923;
   --ink-muted:  #3a4553;
   --ink-light:  #6b7989;
-  --paper:      #fdfaf4;
-  --paper-alt:  #f5f1e8;
+  --paper:      #ffffff;
+  --paper-alt:  #f7f8fa;
   --gold:       #c8973a;
   --gold-light: #f0c96e;
-  --gold-pale:  #fef6e4;
+  --gold-pale:  #fffbf2;
   --navy:       #0b1f3a;
   --navy-mid:   #163359;
   --navy-light: #1e4a7c;
   --accent-red: #9b2335;
-  --border:     #d9cdb8;
-  --shadow-sm:  0 2px 8px rgba(11,31,58,0.08);
-  --shadow-md:  0 6px 24px rgba(11,31,58,0.12);
-  --shadow-lg:  0 16px 48px rgba(11,31,58,0.18);
+  --border:     #e2e6eb;
+  --shadow-sm:  0 2px 8px rgba(11,31,58,0.07);
+  --shadow-md:  0 6px 24px rgba(11,31,58,0.10);
+  --shadow-lg:  0 12px 40px rgba(11,31,58,0.13);
   --radius:     6px;
   --radius-lg:  12px;
 }
@@ -50,16 +51,7 @@
   position: relative;
 }
 
-/* Subtle paper texture via pseudo-element */
-.container.ec-article::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  z-index: 0;
-  opacity: 0.4;
-}
+
 
 /* ── Links ── */
 .ec-article a {
@@ -163,7 +155,7 @@
   font-size: 14px;
   line-height: 1.9;
   color: var(--ink);
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .ec-article h1 + p,
@@ -291,52 +283,73 @@
 }
 
 /* ── Table ── */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin: 28px 0;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 6px rgba(11,31,58,0.06), 0 12px 32px rgba(11,31,58,0.10);
+}
+
 .ec-article-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin: 0;
-  font-size: 13.5px;
+  border-collapse: collapse;
+  font-size: 14px;
   font-family: 'Source Serif 4', serif;
-  box-shadow: var(--shadow-lg);
+  background: #fff;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: #fff;
+}
+
+/* ── Header ── */
+.ec-article-table thead tr {
+  background: var(--navy);
+  border-bottom: 3px solid var(--gold);
 }
 
 .ec-article-table thead th {
-  background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 100%);
   color: #fff;
   font-family: 'Playfair Display', serif;
   font-weight: 700;
-  font-size: 0.95rem;
-  text-align: center;
-  padding: 16px 14px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  border-right: 1px solid rgba(255,255,255,0.15);
-  border-bottom: 3px solid var(--gold);
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-}
-
-.ec-article-table thead th:last-child {
-  border-right: none;
-}
-
-.ec-article-table tbody td {
-  padding: 14px 14px;
-  border-right: 1px solid #e8e4d8;
-  border-bottom: 1px solid #e8e4d8;
-  background: #fff;
-  color: var(--ink);
-  vertical-align: top;
   font-size: 13.5px;
-  line-height: 1.75;
-  transition: background 0.18s;
+  text-align: left;
+  padding: 15px 18px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  position: relative;
 }
 
-.ec-article-table tbody td:last-child { border-right: none; }
-.ec-article-table tbody tr:last-child td { border-bottom: none; }
+/* Vertical divider between header cells */
+.ec-article-table thead th + th {
+  border-left: 1px solid rgba(255,255,255,0.12);
+}
+
+/* Gold pip on first header cell */
+.ec-article-table thead th:first-child::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 14px;
+  background: var(--gold);
+  border-radius: 2px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+/* ── Body rows ── */
+.ec-article-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.ec-article-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.ec-article-table tbody tr:nth-child(odd) td {
+  background: #ffffff;
+}
 
 .ec-article-table tbody tr:nth-child(even) td {
   background: var(--paper-alt);
@@ -346,23 +359,25 @@
   background: var(--gold-pale);
 }
 
+.ec-article-table tbody td {
+  padding: 13px 18px;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.75;
+  vertical-align: top;
+}
+
+/* First column: slightly bolder, navy tint */
 .ec-article-table tbody td:first-child {
   font-weight: 500;
   color: var(--navy-mid);
-  border-left: 3px solid transparent;
+  border-right: 1px solid var(--border);
+  min-width: 200px;
 }
 
+/* Accent left border on hover for first column */
 .ec-article-table tbody tr:hover td:first-child {
-  border-left-color: var(--gold);
-}
-
-/* Responsive table wrapper */
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-  margin: 24px 0;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: inset 3px 0 0 var(--gold);
 }
 
 /* ── Blockquote ── */
@@ -464,17 +479,18 @@ a.section-link:hover {
   .ec-article ol, .ec-article ul { margin-left: 18px; }
   .ec-article ol ol, .ec-article ul ul { margin-left: 14px; }
 
-  .ec-article-table { font-size: 12.5px; }
-  .ec-article-table th, .ec-article-table td { padding: 10px 8px; }
+  .ec-article-table { font-size: 13px; }
+  .ec-article-table th, .ec-article-table td { padding: 10px 12px; font-size: 13px; }
 }
 
 @media (max-width: 480px) {
   .ec-article-table th, .ec-article-table td {
-    padding: 8px 6px;
-    font-size: 12px;
+    padding: 8px 10px;
+    font-size: 12.5px;
   }
   .ec-article h1 { font-size: 1.4rem; }
-}</style>
+}
+  </style>
 </head>
 <body>
 
