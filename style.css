@@ -942,22 +942,21 @@ body {
 body.header-minimized {
   padding-top: var(--header-minimized-height);
 }
-
-
-
 /* =================================
    ARTICLE / ACT CONTENT
    ================================= */
 .container.ec-article {
   max-width: 1100px;
-  margin: auto;
+  margin: 0 auto;
   background: #ffffff;
-  padding: 40px;
+  padding: clamp(20px, 4vw, 40px);
   font-family: "Georgia", "Times New Roman", serif;
   color: #111;
-  line-height: 1.7;
+  line-height: 1.8;
+  border-radius: 8px;
 }
 
+/* Links */
 .ec-article a {
   color: #0b3c5d;
   text-decoration: none;
@@ -969,10 +968,12 @@ body.header-minimized {
   border-bottom-color: #0b3c5d;
 }
 
+/* Headings */
 .ec-article h1 {
   text-align: center;
-  font-size: 2.4rem;
-  margin-bottom: 10px;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  margin-bottom: 12px;
+  line-height: 1.3;
 }
 
 .ec-article h2 {
@@ -980,29 +981,33 @@ body.header-minimized {
   color: #000;
   padding: 8px 12px;
   font-weight: bold;
-  margin: 20px 0 10px;
+  margin: 24px 0 12px;
   border-left: 6px solid #000;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
 }
 
 .ec-article h3 {
-  margin-top: 25px;
-  font-size: 1.35rem;
+  margin-top: 22px;
+  font-size: clamp(0.95rem, 2vw, 1.2rem);
   color: #123;
 }
 
 .ec-article h4 {
-  margin-top: 18px;
-  font-size: 1.15rem;
+  margin-top: 16px;
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
 }
 
+/* Paragraphs — 14px as requested */
 .ec-article p {
   margin: 10px 0;
   text-align: justify;
-  font-size: 18px;
-  line-height: 1.8;
+  font-size: 14px;
+  line-height: 1.85;
+  hyphens: auto;
+  word-break: break-word;
 }
 
-/* First paragraph after headings gets no indent */
+/* First paragraph after headings: no indent */
 .ec-article h1 + p,
 .ec-article h2 + p,
 .ec-article h3 + p,
@@ -1010,79 +1015,69 @@ body.header-minimized {
   text-indent: 0;
 }
 
-/* Indent subsequent paragraphs */
+/* Subsequent paragraphs: indent */
 .ec-article p + p {
   text-indent: 2em;
 }
 
-/* Alternative: Indent all paragraphs except first child */
-.ec-article p:not(:first-of-type) {
-  text-indent: 2em;
-}
+/* =================================
+   LISTS
+   ================================= */
 
-/* Main numbered list styling - 1, 2, 3 */
+/* Main numbered list — decimal */
 .ec-article > ol {
-  margin: 15px 0 15px 40px;
+  margin: 14px 0 14px 30px;
   padding-left: 0;
   list-style-type: decimal;
   list-style-position: outside;
 }
 
 .ec-article > ol > li {
-  margin-bottom: 12px;
-  font-size: 18px;
-  line-height: 1.7;
-  padding-left: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 1.75;
+  padding-left: 6px;
 }
 
-/* Subpoint list - a, b, c */
+/* Sub-list — alpha */
 .ec-article ol ol {
-  margin: 8px 0 8px 30px;
+  margin: 6px 0 6px 24px;
   list-style-type: lower-alpha;
 }
 
 .ec-article ol ol > li {
-  margin-bottom: 8px;
-  font-size: 17px;
-  padding-left: 5px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  padding-left: 4px;
 }
 
-/* Third level - i, ii, iii */
+/* Third level — roman */
 .ec-article ol ol ol {
-  margin: 5px 0 5px 30px;
+  margin: 4px 0 4px 24px;
   list-style-type: lower-roman;
 }
 
-/* Ensure HTML type attribute works (IMPORTANT FIX) */
-.ec-article ol[type="a"] {
-  list-style-type: lower-alpha;
-}
+/* Override via HTML type attribute */
+.ec-article ol[type="a"] { list-style-type: lower-alpha; }
+.ec-article ol[type="i"] { list-style-type: lower-roman; }
+.ec-article ol[type="1"] { list-style-type: decimal; }
 
-.ec-article ol[type="i"] {
-  list-style-type: lower-roman;
-}
-
-.ec-article ol[type="1"] {
-  list-style-type: decimal;
-}
-
-/* Unordered list styling */
+/* Unordered lists */
 .ec-article ul {
-  margin: 10px 0 10px 40px;
+  margin: 10px 0 10px 30px;
   list-style-type: disc;
   list-style-position: outside;
 }
 
 .ec-article ul > li {
-  margin-bottom: 6px;
-  font-size: 18px;
-  line-height: 1.7;
-  padding-left: 5px;
+  margin-bottom: 5px;
+  font-size: 14px;
+  line-height: 1.75;
+  padding-left: 4px;
 }
 
-/* Nested unordered lists */
 .ec-article ul ul {
-  margin: 5px 0 5px 30px;
+  margin: 4px 0 4px 22px;
   list-style-type: circle;
 }
 
@@ -1090,45 +1085,45 @@ body.header-minimized {
   list-style-type: square;
 }
 
-/* Manual numbering system (optional use) */
+/* Counter-based numbered list */
 .ec-article .numbered-list {
-  margin: 15px 0 15px 40px;
+  margin: 14px 0 14px 30px;
   list-style: none;
   counter-reset: numbered-counter;
 }
 
 .ec-article .numbered-list > li {
   counter-increment: numbered-counter;
-  margin-bottom: 12px;
-  font-size: 18px;
-  line-height: 1.7;
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 1.75;
   position: relative;
-  padding-left: 30px;
+  padding-left: 28px;
 }
 
-.ec-article .numbered-list > li:before {
+.ec-article .numbered-list > li::before {
   content: counter(numbered-counter) ". ";
   position: absolute;
   left: 0;
   font-weight: bold;
 }
 
-/* Letter subpoints (alternative clean method) */
+/* Counter-based alpha list */
 .ec-article .letter-list {
-  margin: 8px 0 8px 40px;
+  margin: 8px 0 8px 30px;
   list-style: none;
   counter-reset: letter-counter;
 }
 
 .ec-article .letter-list > li {
   counter-increment: letter-counter;
-  margin-bottom: 8px;
-  font-size: 17px;
+  margin-bottom: 6px;
+  font-size: 14px;
   position: relative;
-  padding-left: 30px;
+  padding-left: 28px;
 }
 
-.ec-article .letter-list > li:before {
+.ec-article .letter-list > li::before {
   content: counter(letter-counter, lower-alpha) ". ";
   position: absolute;
   left: 0;
@@ -1137,50 +1132,55 @@ body.header-minimized {
 /* =================================
    3D STYLISH TABLES
    ================================= */
+.ec-article .table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0;
+  border-radius: 12px;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
 .ec-article table {
   width: 100%;
+  min-width: 400px;
   border-collapse: separate;
   border-spacing: 0;
-  margin: 25px 0;
-  font-size: 16px;
+  margin: 24px 0;
+  font-size: 13px;
   font-family: 'Segoe UI', Arial, sans-serif;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.15), 0 3px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   overflow: hidden;
   background: white;
-  transform: perspective(1px) translateZ(0);
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .ec-article table:hover {
-  box-shadow: 0 15px 30px rgba(0,0,0,0.2), 0 5px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18), 0 4px 8px rgba(0, 0, 0, 0.12);
   transform: translateY(-2px);
 }
 
-.ec-article thead {
-  position: relative;
-  z-index: 2;
-}
+.ec-article thead { position: relative; z-index: 2; }
 
 .ec-article th {
   background: linear-gradient(145deg, #1a237e 0%, #283593 50%, #1a237e 100%);
   color: #fff;
   font-weight: 600;
   text-align: center;
-  padding: 16px 12px;
-  font-size: 1.1em;
-  letter-spacing: 0.5px;
+  padding: 13px 10px;
+  font-size: 0.85em;
+  letter-spacing: 0.4px;
   text-transform: uppercase;
-  border-right: 1px solid rgba(255,255,255,0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
   border-bottom: 3px solid #ffeb3b;
   position: relative;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
 }
 
-.ec-article th:last-child {
-  border-right: none;
-}
+.ec-article th:last-child { border-right: none; }
 
 .ec-article th::after {
   content: '';
@@ -1189,25 +1189,26 @@ body.header-minimized {
   left: 0;
   width: 100%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
 }
 
 .ec-article td {
-  padding: 14px 12px;
+  padding: 11px 10px;
   border-right: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0;
   background: white;
   color: #333;
   vertical-align: top;
   transition: background-color 0.2s ease;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  line-height: 1.5;
+  word-break: break-word;
 }
 
-.ec-article td:last-child {
-  border-right: none;
-}
+.ec-article td:last-child { border-right: none; }
 
-/* Zebra striping with 3D effect */
+/* Zebra striping */
 .ec-article tbody tr:nth-child(even) td {
   background: linear-gradient(180deg, #f8f9fa 0%, #f1f3f4 100%);
 }
@@ -1216,14 +1217,14 @@ body.header-minimized {
   background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
 }
 
-/* Row hover effect */
+/* Row hover */
 .ec-article tbody tr:hover td {
   background: linear-gradient(180deg, #fff9e6 0%, #fff3d4 100%);
-  cursor: default;
   border-bottom-color: #ffeb3b;
+  cursor: default;
 }
 
-/* First column styling for emphasis */
+/* First column emphasis */
 .ec-article tbody td:first-child {
   font-weight: 500;
   color: #1a237e;
@@ -1234,30 +1235,21 @@ body.header-minimized {
   border-left-color: #ffeb3b;
 }
 
-/* Table caption styling */
+/* Table caption */
 .ec-article table caption {
-  font-size: 1.1em;
+  font-size: 0.95em;
   margin: 10px 0;
-  padding: 12px;
+  padding: 10px 12px;
   background: linear-gradient(145deg, #f5f5f5 0%, #e8e8e8 100%);
   border-radius: 8px;
   font-weight: 500;
   color: #1a237e;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-left: 4px solid #ffeb3b;
 }
 
-/* Responsive table container for mobile */
-.ec-article .table-responsive {
-  width: 100%;
-  overflow-x: auto;
-  margin: 20px 0;
-  border-radius: 12px;
-  box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
-}
-
-/* Different table color themes */
+/* Table color themes */
 .ec-article .table-primary th {
   background: linear-gradient(145deg, #0b3c5d 0%, #1e4b6e 50%, #0b3c5d 100%);
 }
@@ -1277,45 +1269,36 @@ body.header-minimized {
 /* Compact table variant */
 .ec-article .table-compact td,
 .ec-article .table-compact th {
-  padding: 8px 10px;
-  font-size: 14px;
+  padding: 7px 8px;
+  font-size: 12px;
 }
 
 .ec-article .table-compact {
-  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Striped variant without gradient */
-.ec-article .table-simple-striped tbody tr:nth-child(even) td {
-  background: #f5f5f5;
-}
+/* Simple striped variant */
+.ec-article .table-simple-striped tbody tr:nth-child(even) td { background: #f5f5f5; }
+.ec-article .table-simple-striped tbody tr:nth-child(odd) td  { background: #ffffff; }
 
-.ec-article .table-simple-striped tbody tr:nth-child(odd) td {
-  background: #ffffff;
-}
-
-/* Borderless table variant */
+/* Borderless variant */
 .ec-article .table-borderless td,
-.ec-article .table-borderless th {
-  border: none;
-}
+.ec-article .table-borderless th { border: none; }
+.ec-article .table-borderless td { border-bottom: 1px solid #e0e0e0; }
+.ec-article .table-borderless tbody tr:last-child td { border-bottom: none; }
 
-.ec-article .table-borderless td {
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.ec-article .table-borderless tbody tr:last-child td {
-  border-bottom: none;
-}
-
-/* Reading enhancements */
+/* =================================
+   READING ENHANCEMENTS
+   ================================= */
 .ec-article blockquote {
-  margin: 20px 40px;
-  padding-left: 20px;
+  margin: 20px 30px;
+  padding: 14px 20px;
   border-left: 4px solid #ffeb3b;
   font-style: italic;
-  color: #333;
-  font-size: 17px;
+  color: #444;
+  font-size: 14px;
+  background: #fffde7;
+  border-radius: 0 6px 6px 0;
 }
 
 .ec-article img {
@@ -1323,25 +1306,29 @@ body.header-minimized {
   height: auto;
   display: block;
   margin: 20px auto;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .ec-article figcaption {
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
-  margin-top: 5px;
+  margin-top: 6px;
   font-style: italic;
 }
 
-/* Better spacing between sections */
+/* Section spacing */
 .ec-article section,
 .ec-article .section {
-  margin-bottom: 30px;
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-/* Improve code block readability */
+/* Code blocks */
 .ec-article pre,
 .ec-article code {
   font-family: 'Courier New', monospace;
@@ -1350,93 +1337,28 @@ body.header-minimized {
 }
 
 .ec-article code {
-  padding: 2px 4px;
-  font-size: 16px;
+  padding: 2px 5px;
+  font-size: 13px;
 }
 
 .ec-article pre {
-  padding: 15px;
+  padding: 14px;
   overflow-x: auto;
   line-height: 1.5;
-  font-size: 15px;
+  font-size: 13px;
   border-left: 3px solid #ffeb3b;
+  border-radius: 0 4px 4px 0;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .container.ec-article {
-    padding: 20px;
-  }
-  
-  .ec-article p,
-  .ec-article li {
-    font-size: 16px;
-  }
-  
-  .ec-article h1 {
-    font-size: 2rem;
-  }
-  
-  .ec-article blockquote {
-    margin: 15px 20px;
-  }
-  
-  .ec-article ol,
-  .ec-article ul {
-    margin-left: 20px;
-  }
-  
-  .ec-article ol ol,
-  .ec-article ul ul {
-    margin-left: 15px;
-  }
-  
-  /* Table responsive adjustments */
-  .ec-article table {
-    font-size: 14px;
-  }
-  
-  .ec-article th,
-  .ec-article td {
-    padding: 10px 8px;
-  }
-  
-  .ec-article th {
-    font-size: 1em;
-  }
-  
-  .ec-article .table-compact td,
-  .ec-article .table-compact th {
-    padding: 6px 8px;
-    font-size: 13px;
-  }
-}
-.section {
-            background: #ffffff;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-        }
-/* Small mobile adjustments */
-@media (max-width: 480px) {
-  .ec-article th,
-  .ec-article td {
-    padding: 8px 6px;
-    font-size: 13px;
-  }
-  
-  .ec-article th {
-    font-size: 0.9em;
-  }
-  
-  .ec-article table caption {
-    font-size: 1em;
-    padding: 8px;
-  }
+/* =================================
+   ARTICLE IMAGE
+   ================================= */
+.ec-article-image {
+  overflow: hidden;
+  border-radius: 12px;
+  position: relative;
 }
 
-/* ---------- Article Image Container ---------- */
 .ec-article-image img {
   width: 100%;
   height: 100%;
@@ -1445,48 +1367,162 @@ body.header-minimized {
   transition: transform 0.5s ease;
 }
 
-/* Hover zoom (desktop only) */
 @media (hover: hover) {
- .ec-article-image:hover img {
+  .ec-article-image:hover img {
     transform: scale(1.02);
   }
 }
 
-/* ---------- Caption ---------- */
 .ec-article-image .feature-caption {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
   color: white;
   padding: 2rem 2rem 1rem;
-  font-size: 0.9rem;
+  font-size: 13px;
   font-style: italic;
 }
 
-/* ---------- Tablet ---------- */
-@media (max-width: 768px) {
-  .ec-article-image {
-    height: 320px;
-    border-radius: 18px;
+/* =================================
+   RESPONSIVE — TABLET (≤ 900px)
+   ================================= */
+@media (max-width: 900px) {
+  .ec-article table {
+    min-width: 300px;
+    font-size: 12px;
   }
 
-  .ec-article-image .feature-caption {
-    padding: 1.5rem;
-    font-size: 0.85rem;
+  .ec-article th,
+  .ec-article td {
+    padding: 9px 8px;
   }
 }
 
-/* ---------- Mobile ---------- */
-@media (max-width: 480px) {
+/* =================================
+   RESPONSIVE — MOBILE (≤ 768px)
+   ================================= */
+@media (max-width: 768px) {
+  .container.ec-article {
+    padding: 16px;
+    border-radius: 0;
+  }
+
+  .ec-article p,
+  .ec-article li {
+    font-size: 14px;
+  }
+
+  .ec-article h1 {
+    font-size: 1.5rem;
+  }
+
+  .ec-article h2 {
+    font-size: 1rem;
+    padding: 7px 10px;
+  }
+
+  .ec-article blockquote {
+    margin: 14px 10px;
+    font-size: 13px;
+  }
+
+  .ec-article ol,
+  .ec-article ul {
+    margin-left: 18px;
+  }
+
+  .ec-article ol ol,
+  .ec-article ul ul {
+    margin-left: 14px;
+  }
+
+  .ec-article table {
+    font-size: 12px;
+    min-width: 280px;
+  }
+
+  .ec-article th,
+  .ec-article td {
+    padding: 9px 7px;
+  }
+
+  .ec-article th {
+    font-size: 0.78em;
+    white-space: normal;
+  }
+
   .ec-article-image {
-    height: 240px;
-    border-radius: 14px;
+    border-radius: 10px;
   }
 
   .ec-article-image .feature-caption {
-    padding: 1rem;
-    font-size: 0.8rem;
+    padding: 1.2rem;
+    font-size: 12px;
+  }
+}
+
+/* =================================
+   RESPONSIVE — SMALL MOBILE (≤ 480px)
+   ================================= */
+@media (max-width: 480px) {
+  .container.ec-article {
+    padding: 12px;
+  }
+
+  .ec-article p,
+  .ec-article li {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .ec-article h1 {
+    font-size: 1.3rem;
+  }
+
+  .ec-article h2 {
+    font-size: 0.95rem;
+  }
+
+  .ec-article th,
+  .ec-article td {
+    padding: 7px 5px;
+    font-size: 11px;
+  }
+
+  .ec-article th {
+    font-size: 0.72em;
+    letter-spacing: 0;
+  }
+
+  .ec-article table caption {
+    font-size: 0.85em;
+    padding: 7px 8px;
+  }
+
+  .ec-article .table-compact td,
+  .ec-article .table-compact th {
+    padding: 5px 6px;
+    font-size: 11px;
+  }
+
+  .ec-article-image {
+    border-radius: 8px;
+  }
+
+  .ec-article-image .feature-caption {
+    padding: 0.8rem;
+    font-size: 11px;
+  }
+
+  .ec-article blockquote {
+    margin: 12px 4px;
+    padding: 10px 14px;
+  }
+
+  .ec-article ol,
+  .ec-article ul {
+    margin-left: 14px;
   }
 }
