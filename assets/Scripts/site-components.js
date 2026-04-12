@@ -339,3 +339,10 @@ const SiteComponents = (function () {
 document.addEventListener('DOMContentLoaded', () => {
   SiteComponents.init();
 });
+
+  // JS Toggle (inline — paste near </body> or in your script file) 
+document.querySelectorAll('.ec-article-image').forEach(function(box) {
+  box.addEventListener('click', function() {
+    box.classList.toggle('expanded');
+  });
+});
