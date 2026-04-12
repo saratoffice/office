@@ -1681,19 +1681,68 @@ body.header-minimized {
 }
 
 /* ---------- Article Image Container ---------- */
+.ec-article-image {
+  position: relative;
+  width: 100%;
+  height: 240px;           /* compact default */
+  overflow: hidden;
+  border-radius: 14px;
+  cursor: zoom-in;
+  transition: height 0.45s ease, border-radius 0.45s ease;
+}
+
+/* Expanded state — full image visible */
+.ec-article-image.expanded {
+  height: auto;
+  max-height: 100vh;
+  overflow: visible;
+  cursor: zoom-out;
+  border-radius: 10px;
+}
+
 .ec-article-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.5s ease;
+  transition: transform 0.45s ease, height 0.45s ease, object-fit 0s 0.45s;
 }
 
-/* Hover zoom (desktop only) */
+/* When expanded, show the full image naturally */
+.ec-article-image.expanded img {
+  height: auto;
+  object-fit: unset;
+  transform: none !important;
+}
+
+/* Hover zoom — desktop only, only when NOT expanded */
 @media (hover: hover) {
- .ec-article-image:hover img {
-    transform: scale(1.02);
+  .ec-article-image:not(.expanded):hover img {
+    transform: scale(1.03);
   }
+}
+
+/* Expand hint badge */
+.ec-article-image::after {
+  content: "🔍 Click to expand";
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 11px;
+  font-style: normal;
+  padding: 4px 10px;
+  border-radius: 20px;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.ec-article-image.expanded::after {
+  content: "✕ Click to collapse";
+  background: rgba(0, 0, 0, 0.45);
 }
 
 /* ---------- Caption ---------- */
@@ -1702,35 +1751,50 @@ body.header-minimized {
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-  color: white;
-  padding: 2rem 2rem 1rem;
-  font-size: 0.9rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.78), transparent);
+  color: #fff;
+  padding: 2rem 1.5rem 1rem;
+  font-size: 13px;
   font-style: italic;
+  border-radius: 0 0 14px 14px;
+  transition: border-radius 0.45s ease;
+  pointer-events: none;
+}
+
+.ec-article-image.expanded .feature-caption {
+  border-radius: 0 0 10px 10px;
 }
 
 /* ---------- Tablet ---------- */
 @media (max-width: 768px) {
   .ec-article-image {
-    height: 320px;
-    border-radius: 18px;
+    height: 200px;
+    border-radius: 12px;
   }
 
   .ec-article-image .feature-caption {
-    padding: 1.5rem;
-    font-size: 0.85rem;
+    padding: 1.4rem 1.2rem 0.9rem;
+    font-size: 12.5px;
   }
 }
 
 /* ---------- Mobile ---------- */
 @media (max-width: 480px) {
   .ec-article-image {
-    height: 240px;
-    border-radius: 14px;
+    height: 160px;
+    border-radius: 10px;
   }
 
   .ec-article-image .feature-caption {
     padding: 1rem;
-    font-size: 0.8rem;
+    font-size: 12px;
+  }
+
+  .ec-article-image::after {
+    font-size: 10.5px;
+    padding: 3px 8px;
   }
 }
+
+
+-------------------------------------------------------------------------- */
