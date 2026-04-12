@@ -1022,61 +1022,74 @@ body.header-minimized {
 /* =============================================
        EC ARTICLE — LIST STYLES
        ============================================= */
-  /* Reset nested lists */
+  
+    /* ==============================================
+       EC ARTICLE — COMPLETE LIST STYLE SYSTEM
+       ============================================== */
+ 
+    /* Global reset — prevents inherited margin bleed on nested lists */
     .ec-article ol,
     .ec-article ul {
       margin: 0;
       padding: 0;
     }
  
-    /* ── Level 1: 1. 2. 3. ── */
-    .ec-article > ol,
-    .ec-article ol[type="1"] {
-      margin: 1rem 0 1rem 2rem;
+    /* ────────────────────────────────────────────
+       A. NATIVE ORDERED  <ol>
+       1.  →  a.  →  i.
+    ──────────────────────────────────────────── */
+    .ec-article > ol {
+      margin: 0.9rem 0 0.9rem 2rem;
       padding-left: 0.25rem;
       list-style-type: decimal;
       list-style-position: outside;
     }
     .ec-article > ol > li {
-      margin-bottom: 1rem;
+      margin-bottom: 0.9rem;
       font-size: 17px;
       line-height: 1.8;
       padding-left: 0.5rem;
     }
     .ec-article > ol > li:last-child { margin-bottom: 0; }
  
-    /* ── Level 2: a. b. c. ── */
-    .ec-article ol ol,
-    .ec-article ol[type="a"] {
+    .ec-article ol ol {
       list-style-type: lower-alpha;
-      margin: 0.6rem 0 0.4rem 1.75rem;
+      margin: 0.55rem 0 0.35rem 1.75rem;
       padding-left: 0.25rem;
       list-style-position: outside;
     }
     .ec-article ol ol > li {
-      margin-bottom: 0.55rem;
+      margin-bottom: 0.5rem;
       font-size: 16px;
       line-height: 1.75;
       padding-left: 0.4rem;
     }
     .ec-article ol ol > li:last-child { margin-bottom: 0; }
  
-    /* ── Level 3: i. ii. iii. ── */
-    .ec-article ol ol ol,
-    .ec-article ol[type="i"] {
+    .ec-article ol ol ol {
       list-style-type: lower-roman;
-      margin: 0.5rem 0 0.3rem 1.5rem;
+      margin: 0.45rem 0 0.25rem 1.5rem;
       padding-left: 0.25rem;
       list-style-position: outside;
     }
     .ec-article ol ol ol > li {
-      margin-bottom: 0.45rem;
+      margin-bottom: 0.4rem;
       font-size: 15px;
       line-height: 1.7;
       padding-left: 0.3rem;
     }
  
-    /* ── Unordered: disc → circle → square ── */
+    /* [type] overrides for manual level control */
+    .ec-article ol[type="1"] { list-style-type: decimal; }
+    .ec-article ol[type="a"] { list-style-type: lower-alpha; }
+    .ec-article ol[type="A"] { list-style-type: upper-alpha; }
+    .ec-article ol[type="i"] { list-style-type: lower-roman; }
+    .ec-article ol[type="I"] { list-style-type: upper-roman; }
+ 
+    /* ────────────────────────────────────────────
+       B. NATIVE UNORDERED  <ul>
+       •  →  ○  →  ▪
+    ──────────────────────────────────────────── */
     .ec-article ul {
       margin: 0.75rem 0 0.75rem 1.75rem;
       padding-left: 0.25rem;
@@ -1084,194 +1097,258 @@ body.header-minimized {
       list-style-position: outside;
     }
     .ec-article ul > li {
-      margin-bottom: 0.55rem;
+      margin-bottom: 0.5rem;
       font-size: 17px;
       line-height: 1.8;
       padding-left: 0.4rem;
     }
     .ec-article ul > li:last-child { margin-bottom: 0; }
- 
     .ec-article ul ul {
       list-style-type: circle;
       margin: 0.4rem 0 0.25rem 1.5rem;
     }
     .ec-article ul ul > li { font-size: 16px; margin-bottom: 0.4rem; }
- 
     .ec-article ul ul ul {
       list-style-type: square;
       margin-left: 1.25rem;
     }
     .ec-article ul ul ul > li { font-size: 15px; }
  
-    /* ── Custom counter: .numbered-list ── */
+    /* ────────────────────────────────────────────
+       C. .numbered-list    →   1.  2.  3.
+    ──────────────────────────────────────────── */
     .ec-article .numbered-list {
-      margin: 1rem 0;
-      padding-left: 0;
-      list-style: none;
-      counter-reset: numbered-counter;
+      list-style: none; padding-left: 0;
+      margin: 0.9rem 0; counter-reset: num-c;
     }
     .ec-article .numbered-list > li {
-      counter-increment: numbered-counter;
-      position: relative;
-      padding-left: 2rem;
-      margin-bottom: 1rem;
-      font-size: 17px;
-      line-height: 1.8;
+      counter-increment: num-c;
+      position: relative; padding-left: 2.1rem;
+      margin-bottom: 0.9rem; font-size: 17px; line-height: 1.8;
     }
+    .ec-article .numbered-list > li:last-child { margin-bottom: 0; }
     .ec-article .numbered-list > li::before {
-      content: counter(numbered-counter) ".";
-      position: absolute;
-      left: 0;
-      font-weight: 600;
-      color: #555;
+      content: counter(num-c) ".";
+      position: absolute; left: 0; font-weight: 700; color: #444;
     }
  
-    /* ── Custom counter: .letter-list ── */
+    /* ────────────────────────────────────────────
+       D. .letter-list    →   a.  b.  c.
+    ──────────────────────────────────────────── */
     .ec-article .letter-list {
-      margin: 0.6rem 0 0.6rem 1.5rem;
-      padding-left: 0;
-      list-style: none;
-      counter-reset: letter-counter;
+      list-style: none; padding-left: 0;
+      margin: 0.55rem 0 0.55rem 1.5rem; counter-reset: let-c;
     }
     .ec-article .letter-list > li {
-      counter-increment: letter-counter;
-      position: relative;
-      padding-left: 2rem;
-      margin-bottom: 0.55rem;
-      font-size: 16px;
-      line-height: 1.75;
+      counter-increment: let-c;
+      position: relative; padding-left: 2rem;
+      margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
     }
+    .ec-article .letter-list > li:last-child { margin-bottom: 0; }
     .ec-article .letter-list > li::before {
-      content: counter(letter-counter, lower-alpha) ".";
-      position: absolute;
-      left: 0;
-      color: #555;
+      content: counter(let-c, lower-alpha) ".";
+      position: absolute; left: 0; color: #555;
     }
  
-    /* ── Paren list: (1) → 1) → i. ── */
-    .ec-article .paren-list,
-    .ec-article .paren-list ol {
-      list-style: none;
-      padding-left: 0;
-      margin-left: 0;
+    /* ────────────────────────────────────────────
+       E. .upper-letter-list    →   A.  B.  C.
+    ──────────────────────────────────────────── */
+    .ec-article .upper-letter-list {
+      list-style: none; padding-left: 0;
+      margin: 0.55rem 0 0.55rem 1.5rem; counter-reset: ulet-c;
+    }
+    .ec-article .upper-letter-list > li {
+      counter-increment: ulet-c;
+      position: relative; padding-left: 2rem;
+      margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
+    }
+    .ec-article .upper-letter-list > li:last-child { margin-bottom: 0; }
+    .ec-article .upper-letter-list > li::before {
+      content: counter(ulet-c, upper-alpha) ".";
+      position: absolute; left: 0; color: #555;
     }
  
-    /* Level 1: (1) (2) (3) */
-    .ec-article .paren-list {
-      counter-reset: paren-main;
-      margin: 1rem 0;
+    /* ────────────────────────────────────────────
+       F. .roman-list    →   i.  ii.  iii.
+    ──────────────────────────────────────────── */
+    .ec-article .roman-list {
+      list-style: none; padding-left: 0;
+      margin: 0.55rem 0 0.55rem 1.5rem; counter-reset: rom-c;
     }
-    .ec-article .paren-list > li {
-      counter-increment: paren-main;
-      position: relative;
-      padding-left: 2.5rem;
-      margin-bottom: 0.85rem;
-      font-size: 17px;
-      line-height: 1.8;
+    .ec-article .roman-list > li {
+      counter-increment: rom-c;
+      position: relative; padding-left: 2.25rem;
+      margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
     }
-    .ec-article .paren-list > li::before {
-      content: "(" counter(paren-main) ")";
-      position: absolute;
-      left: 0;
-      font-weight: 600;
-      color: #555;
+    .ec-article .roman-list > li:last-child { margin-bottom: 0; }
+    .ec-article .roman-list > li::before {
+      content: counter(rom-c, lower-roman) ".";
+      position: absolute; left: 0; color: #555;
     }
  
-    /* Level 2: 1) 2) 3) */
-    .ec-article .paren-list > li > ol {
-      counter-reset: paren-sub;
-      margin: 0.5rem 0 0.25rem 0;
+    /* ────────────────────────────────────────────
+       G. .upper-roman-list    →   I.  II.  III.
+    ──────────────────────────────────────────── */
+    .ec-article .upper-roman-list {
+      list-style: none; padding-left: 0;
+      margin: 0.55rem 0 0.55rem 1.5rem; counter-reset: urom-c;
     }
-    .ec-article .paren-list > li > ol > li {
-      counter-increment: paren-sub;
-      position: relative;
-      padding-left: 2.25rem;
-      margin-left: 1.25rem;
-      margin-bottom: 0.5rem;
-      font-size: 16px;
-      line-height: 1.75;
+    .ec-article .upper-roman-list > li {
+      counter-increment: urom-c;
+      position: relative; padding-left: 2.5rem;
+      margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
     }
-    .ec-article .paren-list > li > ol > li::before {
-      content: counter(paren-sub) ")";
-      position: absolute;
-      left: 0;
-      color: #555;
-      font-weight: 500;
+    .ec-article .upper-roman-list > li:last-child { margin-bottom: 0; }
+    .ec-article .upper-roman-list > li::before {
+      content: counter(urom-c, upper-roman) ".";
+      position: absolute; left: 0; color: #555;
     }
  
-    /* Level 3: i. ii. iii. */
-    .ec-article .paren-list > li > ol > li > ol {
-      counter-reset: paren-third;
-      margin: 0.4rem 0 0.2rem 0;
+    /* ────────────────────────────────────────────
+       H. .paren-num-list    →   (1)  →  1)  →  i.
+    ──────────────────────────────────────────── */
+    .ec-article .paren-num-list,
+    .ec-article .paren-num-list ol { list-style: none; padding-left: 0; margin-left: 0; }
+ 
+    .ec-article .paren-num-list { counter-reset: pn1; margin: 0.9rem 0; }
+    .ec-article .paren-num-list > li {
+      counter-increment: pn1; position: relative;
+      padding-left: 2.5rem; margin-bottom: 0.85rem; font-size: 17px; line-height: 1.8;
     }
-    .ec-article .paren-list > li > ol > li > ol > li {
-      counter-increment: paren-third;
-      position: relative;
-      padding-left: 2.25rem;
-      margin-left: 1.25rem;
-      margin-bottom: 0.4rem;
-      font-size: 15px;
-      line-height: 1.7;
+    .ec-article .paren-num-list > li:last-child { margin-bottom: 0; }
+    .ec-article .paren-num-list > li::before {
+      content: "(" counter(pn1) ")"; position: absolute; left: 0; font-weight: 700; color: #444;
     }
-    .ec-article .paren-list > li > ol > li > ol > li::before {
-      content: counter(paren-third, lower-roman) ".";
-      position: absolute;
-      left: 0;
-      color: #777;
+    .ec-article .paren-num-list > li > ol { counter-reset: pn2; margin: 0.5rem 0 0.25rem 0; }
+    .ec-article .paren-num-list > li > ol > li {
+      counter-increment: pn2; position: relative;
+      padding-left: 2.1rem; margin-left: 1.25rem; margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
+    }
+    .ec-article .paren-num-list > li > ol > li::before {
+      content: counter(pn2) ")"; position: absolute; left: 0; font-weight: 600; color: #555;
+    }
+    .ec-article .paren-num-list > li > ol > li > ol { counter-reset: pn3; margin: 0.4rem 0 0.2rem 0; }
+    .ec-article .paren-num-list > li > ol > li > ol > li {
+      counter-increment: pn3; position: relative;
+      padding-left: 2rem; margin-left: 1.25rem; margin-bottom: 0.4rem; font-size: 15px; line-height: 1.7;
+    }
+    .ec-article .paren-num-list > li > ol > li > ol > li::before {
+      content: counter(pn3, lower-roman) "."; position: absolute; left: 0; color: #777;
     }
  
-    /* ── Alpha paren list: (a)(b) → (i)(ii) ── */
-    .ec-article .alpha-paren-list,
-    .ec-article .alpha-paren-list ul,
-    .ec-article .alpha-paren-list ol {
-      list-style: none;
-      padding-left: 0;
-      margin-left: 0;
+    /* ────────────────────────────────────────────
+       I. .paren-alpha-list    →   (a)  →  (i)  →  1.
+    ──────────────────────────────────────────── */
+    .ec-article .paren-alpha-list,
+    .ec-article .paren-alpha-list ol { list-style: none; padding-left: 0; margin-left: 0; }
+ 
+    .ec-article .paren-alpha-list { counter-reset: pa1; margin: 0.9rem 0; }
+    .ec-article .paren-alpha-list > li {
+      counter-increment: pa1; position: relative;
+      padding-left: 2.5rem; margin-bottom: 0.85rem; font-size: 17px; line-height: 1.8;
     }
-    .ec-article .alpha-paren-list {
-      counter-reset: alpha-main;
-      margin: 1rem 0;
+    .ec-article .paren-alpha-list > li:last-child { margin-bottom: 0; }
+    .ec-article .paren-alpha-list > li::before {
+      content: "(" counter(pa1, lower-alpha) ")"; position: absolute; left: 0; font-weight: 700; color: #444;
     }
-    .ec-article .alpha-paren-list > li {
-      counter-increment: alpha-main;
-      position: relative;
-      padding-left: 2.25rem;
-      margin-bottom: 0.85rem;
-      font-size: 17px;
-      line-height: 1.8;
+    .ec-article .paren-alpha-list > li > ol { counter-reset: pa2; margin: 0.5rem 0 0.25rem 0; }
+    .ec-article .paren-alpha-list > li > ol > li {
+      counter-increment: pa2; position: relative;
+      padding-left: 2.25rem; margin-left: 1.25rem; margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
     }
-    .ec-article .alpha-paren-list > li::before {
-      content: "(" counter(alpha-main, lower-alpha) ")";
-      position: absolute;
-      left: 0;
-      font-weight: 600;
-      color: #555;
+    .ec-article .paren-alpha-list > li > ol > li::before {
+      content: "(" counter(pa2, lower-roman) ")"; position: absolute; left: 0; font-weight: 600; color: #555;
     }
-    .ec-article .alpha-paren-list ol {
-      counter-reset: alpha-sub;
-      margin-top: 0.5rem;
-      margin-bottom: 0.25rem;
+    .ec-article .paren-alpha-list > li > ol > li > ol { counter-reset: pa3; margin: 0.4rem 0 0.2rem 0; }
+    .ec-article .paren-alpha-list > li > ol > li > ol > li {
+      counter-increment: pa3; position: relative;
+      padding-left: 2rem; margin-left: 1.25rem; margin-bottom: 0.4rem; font-size: 15px; line-height: 1.7;
     }
-    .ec-article .alpha-paren-list ol > li {
-      counter-increment: alpha-sub;
-      position: relative;
-      padding-left: 2.25rem;
-      margin-left: 1.25rem;
-      margin-bottom: 0.45rem;
-      font-size: 16px;
-      line-height: 1.75;
+    .ec-article .paren-alpha-list > li > ol > li > ol > li::before {
+      content: counter(pa3) "."; position: absolute; left: 0; color: #777;
     }
-    .ec-article .alpha-paren-list ol > li::before {
-      content: "(" counter(alpha-sub, lower-roman) ")";
-      position: absolute;
-      left: 0;
-      color: #555;
+ 
+    /* ────────────────────────────────────────────
+       J. .paren-roman-list    →   (i)  →  1)  →  a.
+    ──────────────────────────────────────────── */
+    .ec-article .paren-roman-list,
+    .ec-article .paren-roman-list ol { list-style: none; padding-left: 0; margin-left: 0; }
+ 
+    .ec-article .paren-roman-list { counter-reset: pr1; margin: 0.9rem 0; }
+    .ec-article .paren-roman-list > li {
+      counter-increment: pr1; position: relative;
+      padding-left: 2.75rem; margin-bottom: 0.85rem; font-size: 17px; line-height: 1.8;
     }
-    .ec-article .alpha-paren-list ul li {
-      margin-left: 1.25rem;
-      margin-bottom: 0.4rem;
-      font-size: 16px;
-      line-height: 1.75;
+    .ec-article .paren-roman-list > li:last-child { margin-bottom: 0; }
+    .ec-article .paren-roman-list > li::before {
+      content: "(" counter(pr1, lower-roman) ")"; position: absolute; left: 0; font-weight: 700; color: #444;
+    }
+    .ec-article .paren-roman-list > li > ol { counter-reset: pr2; margin: 0.5rem 0 0.25rem 0; }
+    .ec-article .paren-roman-list > li > ol > li {
+      counter-increment: pr2; position: relative;
+      padding-left: 2.1rem; margin-left: 1.25rem; margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
+    }
+    .ec-article .paren-roman-list > li > ol > li::before {
+      content: counter(pr2) ")"; position: absolute; left: 0; font-weight: 600; color: #555;
+    }
+    .ec-article .paren-roman-list > li > ol > li > ol { counter-reset: pr3; margin: 0.4rem 0 0.2rem 0; }
+    .ec-article .paren-roman-list > li > ol > li > ol > li {
+      counter-increment: pr3; position: relative;
+      padding-left: 2rem; margin-left: 1.25rem; margin-bottom: 0.4rem; font-size: 15px; line-height: 1.7;
+    }
+    .ec-article .paren-roman-list > li > ol > li > ol > li::before {
+      content: counter(pr3, lower-alpha) "."; position: absolute; left: 0; color: #777;
+    }
+ 
+    /* ────────────────────────────────────────────
+       K. .mixed-list    →   1.  →  (a)  →  (i)
+    ──────────────────────────────────────────── */
+    .ec-article .mixed-list,
+    .ec-article .mixed-list ol { list-style: none; padding-left: 0; margin-left: 0; }
+ 
+    .ec-article .mixed-list { counter-reset: mx1; margin: 0.9rem 0; }
+    .ec-article .mixed-list > li {
+      counter-increment: mx1; position: relative;
+      padding-left: 2.1rem; margin-bottom: 0.85rem; font-size: 17px; line-height: 1.8;
+    }
+    .ec-article .mixed-list > li:last-child { margin-bottom: 0; }
+    .ec-article .mixed-list > li::before {
+      content: counter(mx1) "."; position: absolute; left: 0; font-weight: 700; color: #444;
+    }
+    .ec-article .mixed-list > li > ol { counter-reset: mx2; margin: 0.5rem 0 0.25rem 0; }
+    .ec-article .mixed-list > li > ol > li {
+      counter-increment: mx2; position: relative;
+      padding-left: 2.5rem; margin-left: 1.25rem; margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
+    }
+    .ec-article .mixed-list > li > ol > li::before {
+      content: "(" counter(mx2, lower-alpha) ")"; position: absolute; left: 0; font-weight: 600; color: #555;
+    }
+    .ec-article .mixed-list > li > ol > li > ol { counter-reset: mx3; margin: 0.4rem 0 0.2rem 0; }
+    .ec-article .mixed-list > li > ol > li > ol > li {
+      counter-increment: mx3; position: relative;
+      padding-left: 2.5rem; margin-left: 1.25rem; margin-bottom: 0.4rem; font-size: 15px; line-height: 1.7;
+    }
+    .ec-article .mixed-list > li > ol > li > ol > li::before {
+      content: "(" counter(mx3, lower-roman) ")"; position: absolute; left: 0; color: #777;
+    }
+ 
+    /* ────────────────────────────────────────────
+       L. .paren-roman-only    →   (i)  (ii)  (iii)
+          Single-level, no nesting
+    ──────────────────────────────────────────── */
+    .ec-article .paren-roman-only {
+      list-style: none; padding-left: 0;
+      margin: 0.9rem 0; counter-reset: pro-c;
+    }
+    .ec-article .paren-roman-only > li {
+      counter-increment: pro-c;
+      position: relative; padding-left: 2.75rem;
+      margin-bottom: 0.85rem; font-size: 17px; line-height: 1.8;
+    }
+    .ec-article .paren-roman-only > li:last-child { margin-bottom: 0; }
+    .ec-article .paren-roman-only > li::before {
+      content: "(" counter(pro-c, lower-roman) ")";
+      position: absolute; left: 0; font-weight: 700; color: #444;
     }
 /* =================================
    3D STYLISH TABLES
