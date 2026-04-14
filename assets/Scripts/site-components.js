@@ -346,3 +346,19 @@ document.querySelectorAll('.ec-article-image').forEach(function(box) {
     box.classList.toggle('expanded');
   });
 });
+ // JS image will pop up on click link
+function openModal() {
+    document.getElementById("myModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("myModal").style.display = "none";
+}
+
+// Optional: close when clicking outside image
+window.onclick = function(event) {
+    let modal = document.getElementById("myModal");
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
