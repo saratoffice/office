@@ -15,6 +15,11 @@
   
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <!-- Premium Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   
   <!-- Blog metadata for dynamic blogs.html -->
   <meta name="blog:title" content="Case Analysis: Fine under Section 6A(1) of Essential Commodities Act, 1955: Vehicle Value vs. Goods Value – Supreme Court Judgment">
@@ -28,294 +33,943 @@
   <meta name="blog:icon" content="fa-truck">
 
   <style>
-    /* Additional styles for legal case analysis */
-    .case-header {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      border-radius: 24px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      color: white;
+    /* ============================================================
+       DESIGN TOKENS — EDITORIAL LAW REVIEW AESTHETIC
+       Dark navy + aged parchment + crimson accent
+    ============================================================ */
+    :root {
+      --ink:        #0d1117;
+      --ink-soft:   #1e2736;
+      --ink-muted:  #374151;
+      --parchment:  #faf8f4;
+      --parchment-2:#f3efe8;
+      --parchment-3:#ebe5d8;
+      --crimson:    #9b1c1c;
+      --crimson-lt: #dc2626;
+      --crimson-bg: #fff5f5;
+      --gold:       #b45309;
+      --gold-lt:    #d97706;
+      --gold-bg:    #fffbeb;
+      --sapphire:   #1e40af;
+      --sapphire-lt:#3b82f6;
+      --sapphire-bg:#eff6ff;
+      --emerald:    #065f46;
+      --emerald-lt: #059669;
+      --emerald-bg: #ecfdf5;
+      --border:     #ddd8ce;
+      --border-dark:#c8c2b4;
+
+      --ff-display: 'Playfair Display', Georgia, serif;
+      --ff-body:    'Source Serif 4', Georgia, serif;
+      --ff-mono:    'JetBrains Mono', 'Courier New', monospace;
+
+      --shadow-sm:  0 1px 4px rgba(13,17,23,0.06);
+      --shadow-md:  0 4px 16px rgba(13,17,23,0.09);
+      --shadow-lg:  0 12px 40px rgba(13,17,23,0.13);
+
+      --radius-sm:  8px;
+      --radius-md:  14px;
+      --radius-lg:  22px;
+      --radius-xl:  32px;
     }
-    
-    /* ALL TEXT INSIDE CASE HEADER IS WHITE */
+
+    /* ============================================================
+       PAGE SCOPE — apply only within .post-content & .post-header
+    ============================================================ */
+    body {
+      font-family: var(--ff-body);
+      background: var(--parchment);
+      color: var(--ink);
+    }
+
+    /* ---------- OVERRIDES on the blog post wrapper ---------- */
+    .blog-post-section {
+      background: var(--parchment);
+      max-width: 880px;
+    }
+
+    /* ---------- POST TITLE + META ---------- */
+    .post-header .post-title {
+      font-family: var(--ff-display);
+      font-size: clamp(1.7rem, 4vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+
+    .post-header p {
+      font-family: var(--ff-body);
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--ink-muted);
+    }
+
+    .post-meta {
+      font-family: var(--ff-body);
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+      letter-spacing: 0.02em;
+    }
+
+    .category-tag {
+      background: var(--ink);
+      color: #fff;
+      padding: 0.25rem 0.9rem;
+      border-radius: 30px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- HERO IMAGE ---------- */
+    .hero-image {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: relative;
+      box-shadow: var(--shadow-lg);
+      border: 3px solid var(--border-dark);
+    }
+
+    .hero-caption {
+      font-family: var(--ff-body);
+      font-size: 0.82rem;
+      font-style: italic;
+      color: rgba(255,255,255,0.85);
+      background: linear-gradient(transparent, rgba(0,0,0,0.55));
+      padding: 2.5rem 1.2rem 0.9rem;
+    }
+
+    /* ---------- GLOBAL PARAGRAPH RULE ---------- */
+    .post-content p {
+      font-family: var(--ff-body);
+      font-size: 1.05rem;
+      line-height: 1.82;
+      color: var(--ink-muted);
+    }
+
+    .post-content h2 {
+      font-family: var(--ff-display);
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 2.8rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--parchment-3);
+      letter-spacing: -0.01em;
+    }
+
+    .post-content h3 {
+      font-family: var(--ff-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    /* ============================================================
+       CASE HEADER BANNER
+    ============================================================ */
+    .case-header {
+      background: var(--ink);
+      border-radius: var(--radius-lg);
+      padding: 2.4rem 2.2rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .case-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          -45deg,
+          transparent,
+          transparent 24px,
+          rgba(255,255,255,0.018) 24px,
+          rgba(255,255,255,0.018) 25px
+        );
+      pointer-events: none;
+    }
+
+    .case-header::after {
+      content: '§';
+      position: absolute;
+      right: -0.1rem;
+      bottom: -2.5rem;
+      font-family: var(--ff-display);
+      font-size: 14rem;
+      font-weight: 900;
+      color: rgba(255,255,255,0.03);
+      line-height: 1;
+      pointer-events: none;
+    }
+
     .case-header,
-    .case-header h1,
     .case-header h2,
     .case-header h3,
     .case-header p,
-    .case-header div,
     .case-header span,
-    .case-header .case-meta-item,
+    .case-header div,
     .case-header .case-meta-label,
     .case-header .case-meta-value {
-      color: white !important;
+      color: #f0ebe0 !important;
     }
-    
+
+    .case-header .sub-intro {
+      font-size: 1.05rem !important;
+      line-height: 1.78 !important;
+      color: #c8bfa8 !important;
+    }
+
+    .case-header .sub-intro strong {
+      color: #f0ebe0 !important;
+    }
+
     .case-meta-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1rem;
-      margin: 1.5rem 0;
+      margin: 1.8rem 0 0;
     }
-    
+
     .case-meta-item {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 1rem;
-      border-radius: 12px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 1.1rem 1rem;
+      border-radius: var(--radius-md);
+      text-align: center;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s;
+    }
+
+    .case-meta-item:hover {
+      background: rgba(255,255,255,0.11);
+    }
+
+    .case-meta-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.6;
+      font-family: var(--ff-body);
+    }
+
+    .case-meta-value {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 0.35rem;
+      font-family: var(--ff-display);
+    }
+
+    .court-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--crimson);
+      color: #fff !important;
+      padding: 0.35rem 1.1rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ============================================================
+       SECTION CARD
+    ============================================================ */
+    .section-card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin: 1.8rem 0;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .section-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--gold), var(--gold-lt));
+      border-radius: 4px 0 0 4px;
+    }
+
+    /* ============================================================
+       TIMELINE
+    ============================================================ */
+    .timeline {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 1.2rem;
+      align-items: flex-start;
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      padding: 1.2rem 1.4rem;
+      border-radius: var(--radius-md);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .timeline-item:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateX(3px);
+    }
+
+    .timeline-year {
+      background: var(--ink);
+      color: #f0ebe0;
+      padding: 0.45rem 0.9rem;
+      border-radius: 30px;
+      font-family: var(--ff-mono);
+      font-size: 0.78rem;
+      font-weight: 500;
+      min-width: 82px;
+      text-align: center;
+      flex-shrink: 0;
+      letter-spacing: 0.02em;
+      align-self: flex-start;
+      margin-top: 0.15rem;
+    }
+
+    .timeline-item p {
+      margin: 0;
+      font-size: 1.05rem !important;
+    }
+
+    .amount-highlight {
+      font-family: var(--ff-mono);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--crimson);
+      background: var(--crimson-bg);
+      padding: 0.1rem 0.5rem;
+      border-radius: 5px;
+    }
+
+    /* ============================================================
+       LEGAL QUESTION CALLOUT
+    ============================================================ */
+    .legal-question {
+      background: var(--gold-bg);
+      border: 2px solid var(--gold);
+      border-radius: var(--radius-md);
+      padding: 1.6rem 1.8rem;
+      margin: 2.5rem 0;
+      position: relative;
+    }
+
+    .legal-question::before {
+      content: '?';
+      position: absolute;
+      top: -0.9rem;
+      left: 1.6rem;
+      background: var(--gold);
+      color: #fff;
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--ff-display);
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1.8rem;
       text-align: center;
     }
-    
-    .case-meta-label {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      opacity: 0.8;
-    }
-    
-    .case-meta-value {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-top: 0.3rem;
-    }
-    
-    .court-badge {
-      display: inline-block;
-      background: #3b82f6;
-      color: white;
-      padding: 0.3rem 1rem;
-      border-radius: 30px;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-    
-    .section-card {
-      background: white;
-      border-radius: 20px;
-      padding: 1.8rem;
-      margin: 2rem 0;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-      border: 1px solid #e2e8f0;
-    }
-    
-    .legal-question {
-      background: #fef3c7;
-      border-left: 6px solid #f59e0b;
-      padding: 1.5rem;
-      border-radius: 0 16px 16px 0;
-      margin: 2rem 0;
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-    
+
     .legal-question p {
-      color: #92400e;
+      font-family: var(--ff-display);
+      font-size: 1.12rem !important;
+      font-weight: 600;
+      color: var(--gold) !important;
       margin: 0;
+      line-height: 1.55;
+      font-style: italic;
     }
-    
+
+    /* ============================================================
+       STATUTE BOX
+    ============================================================ */
+    .statute-box {
+      background: var(--ink);
+      border-radius: var(--radius-md);
+      padding: 1.8rem 2rem;
+      margin: 1.8rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .statute-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 60px,
+        rgba(255,255,255,0.015) 60px,
+        rgba(255,255,255,0.015) 61px
+      );
+    }
+
+    .statute-box p,
+    .statute-box strong {
+      color: #c8bfa8;
+      font-family: var(--ff-body);
+      font-size: 1.05rem !important;
+      position: relative;
+      z-index: 1;
+    }
+
+    .statute-box strong {
+      color: #f0ebe0;
+    }
+
+    .provison-highlight {
+      background: rgba(180, 83, 9, 0.18);
+      border: 1px solid rgba(180, 83, 9, 0.35);
+      padding: 1rem 1.2rem;
+      border-radius: var(--radius-sm);
+      margin: 1rem 0 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .provison-highlight p {
+      color: #f5d98b !important;
+      margin: 0;
+      font-style: italic;
+    }
+
+    /* ============================================================
+       COMPARISON BOXES
+    ============================================================ */
     .comparison-box {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+      gap: 1.4rem;
       margin: 2rem 0;
     }
 
-    @media (max-width: 640px) {
-      .comparison-box {
-        grid-template-columns: 1fr;
-      }
-      .case-meta-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    
-    .vehicle-value-box {
-      background: #fee2e2;
-      border-left: 6px solid #dc2626;
-      padding: 1.5rem;
-      border-radius: 0 16px 16px 0;
-    }
-    
-    .vehicle-value-box p, .vehicle-value-box li {
-      color: #7f1d1d;
-    }
-    
+    .vehicle-value-box,
     .goods-value-box {
-      background: #dbeafe;
-      border-left: 6px solid #2563eb;
-      padding: 1.5rem;
-      border-radius: 0 16px 16px 0;
+      border-radius: var(--radius-md);
+      padding: 1.6rem;
+      border: 1.5px solid;
     }
-    
-    .goods-value-box p, .goods-value-box li {
+
+    .vehicle-value-box {
+      background: var(--crimson-bg);
+      border-color: var(--crimson);
+    }
+
+    .goods-value-box {
+      background: var(--sapphire-bg);
+      border-color: var(--sapphire);
+    }
+
+    .vehicle-value-box h3 {
+      margin-top: 0;
+      color: var(--crimson) !important;
+      font-family: var(--ff-display);
+      font-size: 1.08rem;
+      border-bottom: 1px solid rgba(155, 28, 28, 0.2);
+      padding-bottom: 0.6rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .goods-value-box h3 {
+      margin-top: 0;
+      color: var(--sapphire) !important;
+      font-family: var(--ff-display);
+      font-size: 1.08rem;
+      border-bottom: 1px solid rgba(30, 64, 175, 0.2);
+      padding-bottom: 0.6rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .vehicle-value-box p,
+    .vehicle-value-box li {
+      color: #7f1d1d;
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .goods-value-box p,
+    .goods-value-box li {
       color: #1e40af;
+      font-size: 1.05rem;
+      line-height: 1.7;
     }
-    
-    .statute-box {
-      background: #f1f5f9;
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-      border: 1px solid #cbd5e1;
-      font-family: 'Courier New', monospace;
+
+    .vehicle-value-box ul,
+    .goods-value-box ul {
+      padding-left: 1.2rem;
+      margin: 0.4rem 0 0;
     }
-    
-    .provison-highlight {
-      background: #fef3c7;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      font-weight: 600;
-      margin: 1rem 0;
-    }
-    
-    .timeline {
-      position: relative;
-      padding: 1rem 0;
-      margin: 2rem 0;
-    }
-    
-    .timeline-item {
-      display: flex;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-      background: white;
-      padding: 1.2rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      border: 1px solid #e2e8f0;
-    }
-    
-    .timeline-year {
-      background: #3b82f6;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 30px;
-      font-weight: 600;
-      min-width: 80px;
-      text-align: center;
-    }
-    
-    .amount-highlight {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #b91c1c;
-    }
-    
+
+    .vehicle-value-box li::marker { color: var(--crimson); }
+    .goods-value-box li::marker  { color: var(--sapphire); }
+
+    /* ============================================================
+       SUPREME COURT HOLDING
+    ============================================================ */
     .supreme-court-box {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      border-radius: 20px;
-      padding: 1.8rem;
-      margin: 2rem 0;
+      background: var(--ink-soft);
+      border-radius: var(--radius-lg);
+      padding: 2.2rem;
+      margin: 2.5rem 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
     }
-    
-    /* ALL TEXT INSIDE SUPREME COURT BOX IS WHITE */
+
+    .supreme-court-box::after {
+      content: '"';
+      position: absolute;
+      right: 1rem;
+      bottom: -3rem;
+      font-family: var(--ff-display);
+      font-size: 18rem;
+      line-height: 1;
+      color: rgba(255,255,255,0.025);
+      pointer-events: none;
+    }
+
     .supreme-court-box,
     .supreme-court-box h3,
     .supreme-court-box h4,
     .supreme-court-box p,
-    .supreme-court-box div,
-    .supreme-court-box ul,
     .supreme-court-box li,
     .supreme-court-box strong {
-      color: white !important;
-    }
-    
-    .reasoning-list {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 1.2rem;
-      border-radius: 16px;
-      margin: 1rem 0;
-    }
-    
-    .distinction-box {
-      background: #e6f4ea;
-      border-left: 6px solid #34A853;
-      padding: 1.2rem;
-      border-radius: 0 12px 12px 0;
-      margin: 1.5rem 0;
-    }
-    
-    .distinction-box p {
-      color: #064e3b;
-    }
-    
-    .final-decision {
-      background: #fee2e2;
-      border-left: 6px solid #dc2626;
-      padding: 1.5rem;
-      border-radius: 0 16px 16px 0;
-      margin: 2rem 0;
-    }
-    
-    .final-decision p, .final-decision li {
-      color: #7f1d1d;
-    }
-    
-    .takeaway-box {
-      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-      padding: 2rem;
-      border-radius: 24px;
-      margin: 3rem 0;
-    }
-    
-    .key-point {
-      display: inline-block;
-      background: #3b82f6;
-      color: white;
-      padding: 0.3rem 1rem;
-      border-radius: 30px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin: 0.2rem;
+      color: #e8e2d5 !important;
     }
 
-    /* ── TABLE WRAPPER — horizontal scroll only for the table ── */
+    .supreme-court-box h3 {
+      font-family: var(--ff-display);
+      margin-top: 0;
+      font-size: 1.35rem;
+      letter-spacing: -0.01em;
+    }
+
+    .supreme-court-box .sc-intro {
+      font-size: 1.05rem !important;
+      color: #b0a898 !important;
+      line-height: 1.78 !important;
+    }
+
+    .reasoning-list {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.09);
+      padding: 1.4rem 1.6rem;
+      border-radius: var(--radius-md);
+      margin: 1.2rem 0 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .reasoning-list ul {
+      margin: 0;
+      padding-left: 1.3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .reasoning-list li {
+      font-size: 1.05rem !important;
+      line-height: 1.7 !important;
+    }
+
+    .reasoning-list li::marker {
+      color: var(--gold-lt);
+    }
+
+    /* ============================================================
+       DISTINCTION BOX
+    ============================================================ */
+    .distinction-box {
+      background: var(--emerald-bg);
+      border: 1.5px solid var(--emerald-lt);
+      border-radius: var(--radius-md);
+      padding: 1.5rem 1.7rem;
+      margin: 1.8rem 0;
+    }
+
+    .distinction-box p {
+      color: var(--emerald) !important;
+      font-size: 1.05rem !important;
+      margin: 0;
+      line-height: 1.75;
+    }
+
+    .distinction-box p + p {
+      margin-top: 0.8rem;
+    }
+
+    .distinction-box strong {
+      color: var(--emerald);
+    }
+
+    /* ============================================================
+       FINAL DECISION
+    ============================================================ */
+    .final-decision {
+      background: var(--crimson-bg);
+      border: 1.5px solid var(--crimson);
+      border-radius: var(--radius-md);
+      padding: 1.8rem 2rem;
+      margin: 2rem 0;
+    }
+
+    .final-decision h3 {
+      margin-top: 0;
+      font-family: var(--ff-display);
+      color: var(--crimson) !important;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .final-decision h3::before {
+      content: '⚖';
+      font-size: 1.1rem;
+    }
+
+    .final-decision p,
+    .final-decision li {
+      color: #7f1d1d;
+      font-size: 1.05rem;
+      line-height: 1.75;
+    }
+
+    .final-decision ul {
+      padding-left: 1.3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .final-decision li::marker {
+      color: var(--crimson);
+    }
+
+    /* ============================================================
+       CASE SUMMARY TABLE
+    ============================================================ */
     .case-table-wrapper {
       width: 100%;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
       margin: 2rem 0;
+      border: 1px solid var(--border);
     }
 
     .case-summary-table {
       width: 100%;
-      min-width: 580px; /* triggers scroll before columns collapse */
+      min-width: 600px;
       border-collapse: collapse;
-      background: white;
+      background: #fff;
+      font-family: var(--ff-body);
     }
 
     .case-summary-table thead {
-      background: #1e293b;
-      color: white;
+      background: var(--ink);
     }
 
     .case-summary-table thead th {
-      padding: 1rem;
+      padding: 1rem 1.2rem;
       text-align: left;
-      font-size: 0.88rem;
+      font-size: 0.78rem;
       font-weight: 600;
+      color: #c8bfa8;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
       white-space: nowrap;
     }
 
     .case-summary-table tbody tr:nth-child(even) {
-      background: #f8fafc;
+      background: var(--parchment);
     }
 
     .case-summary-table tbody tr:nth-child(odd) {
-      background: white;
+      background: #fff;
     }
 
     .case-summary-table td {
-      padding: 1rem;
-      border-bottom: 1px solid #e2e8f0;
-      color: #374151;
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--ink-muted);
       vertical-align: top;
-      font-size: 0.92rem;
+      font-size: 1.05rem;
+      line-height: 1.55;
     }
 
     .case-summary-table tbody tr:hover {
-      background: #f0f4f8;
+      background: var(--parchment-2);
+    }
+
+    .case-summary-table td strong {
+      color: var(--ink);
+      font-family: var(--ff-mono);
+      font-size: 0.88rem;
+    }
+
+    /* ============================================================
+       KEY TAKEAWAY
+    ============================================================ */
+    .takeaway-box {
+      background: linear-gradient(135deg, var(--ink) 0%, var(--ink-soft) 100%);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+      margin: 3rem 0 2rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .takeaway-box::before {
+      content: '💡';
+      position: absolute;
+      right: 2rem;
+      top: 1.5rem;
+      font-size: 4rem;
+      opacity: 0.12;
+      pointer-events: none;
+    }
+
+    .takeaway-box h3 {
+      font-family: var(--ff-display);
+      color: #f0ebe0 !important;
+      font-size: 1.3rem;
+      margin: 0 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .takeaway-box h3 i {
+      color: var(--gold-lt);
+    }
+
+    .takeaway-box .takeaway-text {
+      font-size: 1.15rem !important;
+      color: #c8bfa8 !important;
+      line-height: 1.8 !important;
+    }
+
+    .takeaway-box .takeaway-text strong {
+      color: #f5d98b !important;
+    }
+
+    .key-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .key-point {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: #e8e2d5 !important;
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      font-family: var(--ff-body);
+      transition: background 0.2s;
+    }
+
+    .key-point:hover {
+      background: rgba(255,255,255,0.14);
+    }
+
+    /* ============================================================
+       CLOSING QUOTE
+    ============================================================ */
+    .closing-quote {
+      background: var(--parchment-2);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      padding: 2rem 2.4rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .closing-quote::before {
+      content: '\201C';
+      position: absolute;
+      top: -0.4rem;
+      left: 1.2rem;
+      font-family: var(--ff-display);
+      font-size: 5rem;
+      color: var(--border-dark);
+      line-height: 1;
+    }
+
+    .closing-quote blockquote {
+      margin: 0;
+      font-family: var(--ff-display);
+      font-style: italic;
+      font-size: 1.12rem;
+      line-height: 1.7;
+      color: var(--ink-muted);
+      padding-left: 0.5rem;
+    }
+
+    .closing-quote cite {
+      display: block;
+      margin-top: 1rem;
+      text-align: right;
+      font-family: var(--ff-body);
+      font-size: 0.88rem;
+      color: var(--gold);
+      font-style: normal;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    /* ============================================================
+       TAGS
+    ============================================================ */
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 2rem 0;
+    }
+
+    .post-tag {
+      background: var(--parchment-2);
+      border: 1px solid var(--border);
+      color: var(--ink-muted);
+      padding: 0.3rem 0.85rem;
+      border-radius: 30px;
+      font-size: 0.78rem;
+      font-family: var(--ff-body);
+      letter-spacing: 0.04em;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+
+    .post-tag:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #f0ebe0;
+    }
+
+    /* ============================================================
+       SHARE SECTION
+    ============================================================ */
+    .share-section {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+
+    .share-title {
+      font-family: var(--ff-display);
+      font-size: 1rem;
+      color: var(--ink-muted);
+    }
+
+    .share-buttons {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .share-btn {
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.85rem;
+      transition: transform 0.18s, opacity 0.18s;
+      text-decoration: none;
+    }
+
+    .share-btn:hover { transform: scale(1.12); opacity: 0.88; }
+    .share-btn.facebook  { background: #1877f2; }
+    .share-btn.twitter   { background: #1da1f2; }
+    .share-btn.linkedin  { background: #0077b5; }
+    .share-btn.whatsapp  { background: #25d366; }
+
+    /* ============================================================
+       BACK LINK
+    ============================================================ */
+    .back-link {
+      font-family: var(--ff-body);
+      font-size: 0.9rem;
+      color: var(--ink-muted);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      background: #fff;
+      transition: background 0.18s, color 0.18s, border-color 0.18s;
+    }
+
+    .back-link:hover {
+      background: var(--ink);
+      color: #f0ebe0;
+      border-color: var(--ink);
+    }
+
+    /* ============================================================
+       ENTRANCE ANIMATIONS
+    ============================================================ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .post-header  { animation: fadeUp 0.55s ease both; }
+    .hero-image   { animation: fadeUp 0.55s 0.1s ease both; }
+    .case-header  { animation: fadeUp 0.55s 0.18s ease both; }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 640px) {
+      .comparison-box   { grid-template-columns: 1fr; }
+      .case-meta-grid   { grid-template-columns: 1fr 1fr; }
+      .case-header      { padding: 1.6rem 1.3rem; }
+      .supreme-court-box{ padding: 1.6rem; }
+      .takeaway-box     { padding: 1.8rem 1.4rem; }
     }
   </style>
 </head>
@@ -332,14 +986,14 @@
 
     <!-- Post header -->
     <div class="post-header">
-      <h1 class="post-title">Fine under Section 6A(1) of Essential Commodities Act, 1955 - LPG Distributor Case: Karnataka High Court</h1>
-      <p style="font-size: 1.1rem; color: #475569; margin: 0.5rem 0 0 0;">Should it be based on the value of the vehicle or the value of the goods being transported? – Supreme Court Clarifies</p>
+      <h1 class="post-title">Fine under Section 6A(1) of Essential Commodities Act, 1955 — Vehicle Value vs. Goods Value</h1>
+      <p style="font-size: 1.1rem; color: #475569; margin: 0.5rem 0 0 0; font-style: italic;">Should the fine be based on the value of the vehicle or the value of the goods being transported? — Supreme Court Clarifies</p>
       
       <div class="post-meta">
         <span><i class="fas fa-user"></i> Sarat Rout</span>
         <span><i class="fas fa-calendar"></i> February 17, 2025</span>
         <span><i class="fas fa-clock"></i> 7 min read</span>
-        <span class="category-tag"><i class="fas fa-tag"></i> Supreme Court Judgment</span>
+        <span class="category-tag"><i class="fas fa-gavel"></i> Supreme Court Judgment</span>
       </div>
     </div>
 
@@ -350,215 +1004,206 @@
            loading="lazy"
            onerror="this.src='https://via.placeholder.com/1200x450?text=Supreme+Court+Judgment'">
       <div class="hero-caption">
-        <i class="fas fa-camera"></i> Supreme Court of India – Essential Commodities Act Interpretation
+        <i class="fas fa-camera"></i> Supreme Court of India — Essential Commodities Act, 1955: Interpretation of Section 6A(1)
       </div>
     </div>
 
     <!-- Main content -->
     <div class="post-content">
       
-      <!-- INTRODUCTION -->
+      <!-- ── CASE HEADER BANNER ─────────────────────────────── -->
       <div class="case-header">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
-          <h2 style="color: white; margin: 0;">Fine under Section 6A(1) of Essential Commodities Act, 1955</h2>
-          <span class="court-badge">Supreme Court of India</span>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.2rem;">
+          <h2 style="margin: 0; font-size: 1.4rem; line-height: 1.3;">Fine in Lieu of Confiscation under Section 6A(1)<br><span style="font-weight: 400; font-style: italic; opacity: 0.75; font-size: 1.05rem;">Essential Commodities Act, 1955</span></h2>
+          <span class="court-badge"><i class="fas fa-landmark"></i> Supreme Court of India</span>
         </div>
         
-        <p style="font-size: 1.1rem;">This case is about whether a person whose vehicle was seized for illegally transporting essential commodities (like cement or paddy) can get it back by paying a fine. The important question is — <strong>should that fine be based on the value of the vehicle or the value of the goods being transported?</strong></p>
+        <p class="sub-intro">This case concerns whether a person whose vehicle was seized for illegally transporting essential commodities — such as cement or paddy — can secure its release by paying a fine, and critically, <strong>whether that fine should be pegged to the market value of the vehicle or the market value of the goods being transported.</strong></p>
         
         <div class="case-meta-grid">
           <div class="case-meta-item">
             <div class="case-meta-label">First Appeal</div>
-            <div class="case-meta-value">C.A. No. 3214 of 1989</div>
+            <div class="case-meta-value">C.A. No. 3214 / 1989</div>
           </div>
           <div class="case-meta-item">
             <div class="case-meta-label">Second Appeals</div>
-            <div class="case-meta-value">C.A. Nos. 5074-75 of 1989</div>
+            <div class="case-meta-value">C.A. Nos. 5074–75 / 1989</div>
           </div>
           <div class="case-meta-item">
-            <div class="case-meta-label">Year</div>
-            <div class="case-meta-value">1983-1989</div>
+            <div class="case-meta-label">Period Covered</div>
+            <div class="case-meta-value">1983 – 1989</div>
           </div>
         </div>
       </div>
-      
-      <!-- BACKGROUND OF FIRST APPEAL -->
-      <h2>Background of the First Appeal (C.A. No. 3214 of 1989)</h2>
-      
+
+      <!-- ── FIRST APPEAL BACKGROUND ────────────────────────── -->
+      <h2>Background — First Appeal (C.A. No. 3214 of 1989)</h2>
+
       <div class="section-card">
         <div class="timeline">
           <div class="timeline-item">
             <div class="timeline-year">1983</div>
             <div>
-              <p style="margin: 0;">In 1983, the police in <strong>Dakshina Kannada district</strong> stopped a mini lorry (called a Matador) that was carrying <strong>44 bags of cement</strong>. The government started legal action to confiscate the vehicle under the Essential Commodities Act.</p>
+              <p>Police in <strong>Dakshina Kannada district, Karnataka</strong> intercepted a mini lorry — commonly called a <em>Matador</em> — carrying <strong>44 bags of cement</strong>. Cement was at the time a notified essential commodity under the Essential Commodities Act, 1955, and its movement was subject to licensing controls. The authorities initiated proceedings to confiscate both the cement and the vehicle.</p>
             </div>
           </div>
-          
           <div class="timeline-item">
-            <div class="timeline-year">During Case</div>
+            <div class="timeline-year">Interim</div>
             <div>
-              <p style="margin: 0;">While the case was still going on, the owner asked for the vehicle to be returned temporarily. The Deputy Commissioner allowed this on the condition that the owner provide a bank guarantee of <span class="amount-highlight">₹1 lakh</span>.</p>
+              <p>While confiscation proceedings were pending, the vehicle owner applied for interim custody of the lorry. The <strong>Deputy Commissioner</strong> agreed to release it provisionally but imposed a condition: the owner must furnish a <strong>bank guarantee of <span class="amount-highlight">₹1,00,000</span></strong> — an amount broadly reflecting the vehicle's market value.</p>
             </div>
           </div>
         </div>
       </div>
-      
-      <!-- HIGH COURT DECISION IN FIRST CASE -->
-      <h2>High Court Decision in First Case</h2>
-      
+
+      <!-- ── HIGH COURT — FIRST CASE ────────────────────────── -->
+      <h2>Karnataka High Court — First Case</h2>
+
       <div class="section-card">
-        <p>The vehicle owner challenged the ₹1 lakh guarantee in the <strong>Karnataka High Court</strong>, saying it was too high. The High Court Judge said that the fine should not be more than the value of the goods (cement) being carried, not the vehicle itself. Based on this, the Court reduced the bank guarantee to only <span class="amount-highlight">₹500</span>.</p>
-        
-        <p>When the State appealed this order, a <strong>Division Bench (two judges)</strong> of the High Court dismissed the appeal and supported the single judge's decision.</p>
+        <p>The vehicle owner challenged the ₹1 lakh guarantee before the <strong>Karnataka High Court</strong>, contending it was disproportionately high. A single judge held that under the second proviso to Section 6A(1), any fine imposed in lieu of confiscation of a vehicle could not exceed the market price of the <em>goods</em> being transported — i.e., the cement — not the vehicle itself. On that reading, the guarantee was slashed to a nominal <span class="amount-highlight">₹500</span>.</p>
+        <p>The State appealed, but a <strong>Division Bench (two judges)</strong> of the High Court upheld the single judge's order and confirmed the reduced figure.</p>
       </div>
-      
-      <!-- BACKGROUND OF SECOND APPEALS -->
-      <h2>Background of the Second Appeals (C.A. Nos. 5074-75 of 1989)</h2>
-      
+
+      <!-- ── SECOND APPEALS BACKGROUND ────────────────────────── -->
+      <h2>Background — Second Appeals (C.A. Nos. 5074–75 of 1989)</h2>
+
       <div class="section-card">
-        <p>In a similar case, two transport vehicles carrying paddy were seized for breaking food control orders. The Deputy Commissioner asked for <span class="amount-highlight">₹3 lakhs bank guarantee</span> for releasing each vehicle.</p>
-        
-        <p>The vehicle owners filed writ petitions in the High Court. The High Court reduced the guarantee to <span class="amount-highlight">₹10,000 each</span>, following its earlier decision in the Matador case.</p>
+        <p>In a separate but factually similar matter, two transport vehicles were caught carrying <strong>paddy</strong> in violation of food control orders issued under the Act. The Deputy Commissioner directed that each vehicle would be released only upon deposit of a bank guarantee of <span class="amount-highlight">₹3,00,000</span> per vehicle.</p>
+        <p>The owners filed writ petitions before the High Court. Following its earlier ruling in the Matador case, the High Court reduced the guarantee to <span class="amount-highlight">₹10,000 each</span>, again applying the "goods value" interpretation of the second proviso.</p>
       </div>
-      
-      <!-- THE MAIN LEGAL QUESTION -->
+
+      <!-- ── THE LEGAL QUESTION ────────────────────────────────── -->
       <div class="legal-question">
-        <p><i class="fas fa-question-circle"></i> The Main Legal Question: Should the fine in lieu of confiscation of a vehicle be based on the market value of the vehicle or the value of the essential commodity (like cement or paddy) that was being transported?</p>
+        <p>The Central Legal Question: Should the fine imposed in lieu of confiscation of a transport vehicle under Section 6A(1) of the Essential Commodities Act, 1955, be calculated with reference to the market value of the <em>vehicle</em>, or with reference to the market price of the <em>essential commodity</em> it was carrying?</p>
       </div>
-      
-      <!-- WHAT THE LAW SAYS -->
-      <h2>What the Law Says – Section 6A(1)</h2>
-      
+
+      <!-- ── WHAT THE LAW SAYS ──────────────────────────────────── -->
+      <h2>What the Law Says — Section 6A(1)</h2>
+
       <div class="statute-box">
-        <p><strong>Section 6A of the Essential Commodities Act, 1955</strong> allows authorities to seize and confiscate both the essential goods and the vehicle used to transport them if rules are broken.</p>
-        
+        <p><strong>Section 6A of the Essential Commodities Act, 1955</strong> empowers authorised officers to seize and confiscate both the essential commodity itself and any vehicle, vessel or animal used to transport it when an order under the Act has been contravened.</p>
         <div class="provison-highlight">
-          <p><i class="fas fa-gavel"></i> <strong>Second Proviso (special clause)</strong> in that section says that if the vehicle is used for hire, the owner can get it back by paying a fine not more than the market price at the time of seizure of the essential commodity.</p>
+          <p><strong>Second Proviso to Section 6A(1)</strong> — Where the vehicle seized is used for hire or reward (i.e., a commercial carrier), the vehicle owner may avoid confiscation by paying a fine. The proviso states that such fine shall not exceed the market price of the essential commodity at the time of seizure. This wording became the crux of the dispute.</p>
         </div>
       </div>
-      
-      <!-- CONFUSION IN INTERPRETATION -->
-      <h2>Confusion in Interpretation</h2>
-      
-      <p>The confusion comes from the wording: does it mean the fine should match the value of the goods or the value of the vehicle? The High Court thought it referred to the goods' price. But the Supreme Court said this interpretation doesn't fit the overall purpose of the Act.</p>
-      
-      <!-- COMPARISON: VEHICLE VALUE vs GOODS VALUE -->
+
+      <!-- ── CONFUSION IN INTERPRETATION ────────────────────── -->
+      <h2>The Interpretive Controversy</h2>
+
+      <p>The central ambiguity lay in whether the phrase "market price of the essential commodity" in the second proviso set a <em>ceiling on the fine</em> by reference to the goods, or whether — read in the context of the whole provision — it was simply intended to reflect that the fine should be proportionate to the vehicle's own value. The High Court took the former, textual reading. The Supreme Court disagreed.</p>
+
+      <!-- ── COMPARISON BOXES ──────────────────────────────────── -->
       <div class="comparison-box">
         <div class="vehicle-value-box">
-          <h3 style="margin-top: 0; color: #b91c1c;"><i class="fas fa-truck"></i> Vehicle Value</h3>
-          <p><strong>Supreme Court's Interpretation:</strong></p>
+          <h3><i class="fas fa-truck"></i>&ensp;Vehicle Value — Supreme Court</h3>
+          <p><strong>Correct interpretation:</strong></p>
           <ul>
-            <li>The vehicle is the thing being confiscated — so it makes sense to base the fine on its value</li>
-            <li>If value of goods is very low, fine would be too small and not discourage illegal activity</li>
-            <li>If goods are expensive and vehicle cheap, fine would be unfairly high</li>
+            <li>The vehicle is the subject of confiscation, so the fine substituting that confiscation should logically track the vehicle's worth.</li>
+            <li>If goods are low in value, a goods-linked fine would be trivially small and fail to deter illegal use of the vehicle.</li>
+            <li>Conversely, where goods are very valuable but the vehicle is cheap, tying the fine to goods value would impose a disproportionate burden on the vehicle owner.</li>
           </ul>
         </div>
-        
         <div class="goods-value-box">
-          <h3 style="margin-top: 0; color: #1e40af;"><i class="fas fa-box"></i> Goods Value</h3>
-          <p><strong>High Court's Interpretation:</strong></p>
+          <h3><i class="fas fa-box-open"></i>&ensp;Goods Value — High Court</h3>
+          <p><strong>Rejected interpretation:</strong></p>
           <ul>
-            <li>Fine should not exceed value of goods being carried</li>
-            <li>Based on literal reading of second proviso</li>
-            <li>Followed in both Matador and paddy cases</li>
+            <li>Fine should not exceed the market value of the essential commodity being transported.</li>
+            <li>Based on a plain, literal reading of the second proviso's text.</li>
+            <li>Applied consistently in both the Matador (cement) case and the paddy transport cases.</li>
           </ul>
         </div>
       </div>
-      
-      <!-- SUPREME COURT'S REASONING -->
+
+      <!-- ── SUPREME COURT REASONING ─────────────────────────── -->
       <div class="supreme-court-box">
-        <h3 style="color: white; margin-top: 0;"><i class="fas fa-gavel"></i> Supreme Court's Reasoning</h3>
-        
-        <p>The Supreme Court said that the fine should be based on the <strong>value of the vehicle</strong>, not the goods. Here's why:</p>
-        
+        <h3><i class="fas fa-gavel"></i>&ensp;Supreme Court's Reasoning</h3>
+        <p class="sc-intro">The Supreme Court overruled the High Court and held that the fine in lieu of confiscation must be pegged to the <strong>market value of the vehicle</strong>. The Court's reasoning rested on three principal pillars:</p>
         <div class="reasoning-list">
-          <ul style="margin-bottom: 0;">
-            <li>The vehicle is the thing being confiscated — so it makes sense to base the fine on its value.</li>
-            <li>If the value of goods is very low, the fine would be too small and not discourage illegal activity.</li>
-            <li>On the other hand, if the goods are expensive and the vehicle is cheap, the fine would be unfairly high.</li>
+          <ul>
+            <li><strong>Subject of confiscation:</strong> Because it is the vehicle — not the commodity — that is being confiscated, the fine that substitutes the confiscation must be linked to what is actually forfeited. To measure the penalty by the goods' value introduces an incoherence into the scheme of the provision.</li>
+            <li><strong>Deterrence and proportionality:</strong> A fine tied to goods value may, in practice, be either grossly inadequate (when goods are cheap) or unjustly punitive (when goods are expensive relative to the vehicle). Vehicle value provides a stable, rational benchmark.</li>
+            <li><strong>Purposive construction:</strong> The Act aims to prevent violations of essential commodity controls. Allowing owners to secure release of expensive vehicles for a token fine based on low-value goods would hollow out that objective.</li>
           </ul>
         </div>
       </div>
-      
-      <!-- DIFFERENCE FROM CUSTOMS ACT -->
-      <h2>Difference from Customs Act</h2>
-      
+
+      <!-- ── DISTINCTION FROM CUSTOMS ACT ──────────────────── -->
+      <h2>Distinction from the Customs Act</h2>
+
       <div class="distinction-box">
-        <p>The High Court had compared this law with the <strong>Customs Act</strong>, which has a similar clause. But the Supreme Court said the comparison doesn't apply here.</p>
-        
-        <p style="margin-bottom: 0;">The Customs Act <strong>clearly says</strong> the fine should match the value of smuggled goods. But the Essential Commodities Act is <strong>not worded the same way</strong>, and so, it should be read differently.</p>
+        <p>The High Court had drawn support from an analogous provision in the <strong>Customs Act, 1962</strong>, which also allows payment of a fine in lieu of confiscation of a vehicle used to smuggle goods.</p>
+        <p>The Supreme Court declined to apply that parallel. The Customs Act <strong>expressly and unambiguously</strong> links the fine to the value of the smuggled goods. The Essential Commodities Act uses different language and operates within a distinct statutory framework. The two provisions cannot be read interchangeably, and importing the Customs Act's construction into Section 6A would amount to rewriting the latter.</p>
       </div>
-      
-      <!-- FINAL DECISION -->
+
+      <!-- ── FINAL DECISION ─────────────────────────────────── -->
       <h2>Final Decision of the Supreme Court</h2>
-      
+
       <div class="final-decision">
-        <h3 style="margin-top: 0; color: #b91c1c;">The Supreme Court decided that:</h3>
-        
-        <ul style="font-size: 1.1rem;">
-          <li>The fine in lieu of confiscation must be based on the <strong>market price of the vehicle</strong>, not the essential commodity.</li>
-          <li>The High Court's orders (reducing the fine based on the goods' value) were wrong and are now <strong>set aside</strong>.</li>
-          <li>But since the vehicles were already released long ago, the Court said <strong>no further action needs to be taken</strong>.</li>
-          <li><strong>No cost or penalty</strong> was imposed on anyone.</li>
+        <h3>The Supreme Court held as follows:</h3>
+        <ul>
+          <li>The fine imposable in lieu of confiscation of a vehicle under Section 6A(1) of the Essential Commodities Act, 1955, must be based on the <strong>market price of the vehicle</strong> — not the essential commodity transported.</li>
+          <li>Both impugned orders of the Karnataka High Court — which had reduced the bank guarantees by applying the "goods value" test — were <strong>set aside as legally erroneous</strong>.</li>
+          <li>However, since the vehicles had been released long before the Supreme Court heard the matter, the Court held that <strong>no further consequential directions</strong> needed to be issued.</li>
+          <li><strong>No costs</strong> were imposed on either party.</li>
         </ul>
       </div>
-      
-      <!-- SUMMARY TABLE — wrapped for horizontal scroll on mobile -->
-      <h2>Case Summary</h2>
+
+      <!-- ── CASE SUMMARY TABLE ─────────────────────────────── -->
+      <h2>Case Summary at a Glance</h2>
 
       <div class="case-table-wrapper">
         <table class="case-summary-table">
           <thead>
             <tr>
-              <th>Case</th>
+              <th>Case Reference</th>
               <th>Goods Seized</th>
               <th>Original Guarantee</th>
-              <th>High Court Reduced</th>
+              <th>HC Reduced To</th>
               <th>Supreme Court Ruling</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td><strong>C.A. No. 3214/1989</strong></td>
-              <td>44 bags Cement</td>
+              <td>44 bags of Cement</td>
               <td>₹1,00,000</td>
               <td>₹500</td>
-              <td>Based on vehicle value (set aside)</td>
+              <td>Vehicle value governs; HC order set aside</td>
             </tr>
             <tr>
-              <td><strong>C.A. Nos. 5074-75/1989</strong></td>
+              <td><strong>C.A. Nos. 5074–75/1989</strong></td>
               <td>Paddy (two vehicles)</td>
               <td>₹3,00,000 each</td>
               <td>₹10,000 each</td>
-              <td>Based on vehicle value (set aside)</td>
+              <td>Vehicle value governs; HC order set aside</td>
             </tr>
           </tbody>
         </table>
       </div>
-      
-      <!-- KEY TAKEAWAY -->
+
+      <!-- ── KEY TAKEAWAY ────────────────────────────────────── -->
       <div class="takeaway-box">
-        <h3 style="margin-top: 0;"><i class="fas fa-lightbulb"></i> Key Takeaway</h3>
-        
-        <p style="font-size: 1.2rem;">If a vehicle is seized under the Essential Commodities Act, the owner can get it back by paying a fine. <strong>That fine should be based on how much the vehicle is worth — not the value of the goods it was carrying.</strong></p>
-        
-        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem;">
+        <h3><i class="fas fa-lightbulb"></i>&ensp;Key Takeaway</h3>
+        <p class="takeaway-text">When a vehicle is seized under the Essential Commodities Act for transporting controlled goods without authorisation, the owner can obtain its release by paying a fine. Under the Supreme Court's authoritative ruling, <strong>that fine must be computed by reference to the market value of the vehicle itself — not the market price of the goods it was carrying.</strong> This interpretation ensures that the penalty is both proportionate and effective as a deterrent.</p>
+        <div class="key-tags">
           <span class="key-point">Fine based on vehicle value</span>
-          <span class="key-point">Not on goods value</span>
-          <span class="key-point">Section 6A(1) interpretation</span>
+          <span class="key-point">Not goods value</span>
+          <span class="key-point">Section 6A(1) ECA 1955</span>
           <span class="key-point">Supreme Court ruling</span>
-          <span class="key-point">Deters illegal transport</span>
           <span class="key-point">Proportional penalty</span>
+          <span class="key-point">Deterrence rationale</span>
         </div>
       </div>
-      
-      <!-- CONCLUSION -->
-      <div style="background: #f1f5f9; padding: 1.5rem; border-radius: 16px; margin: 2rem 0;">
-        <p style="margin: 0; font-style: italic;">"The fine in lieu of confiscation must be based on the market price of the vehicle, not the essential commodity. Interpreting it otherwise would defeat the purpose of the Act and lead to disproportionate penalties."</p>
-        <p style="margin-top: 0.5rem; text-align: right;">— Supreme Court of India</p>
+
+      <!-- ── CLOSING QUOTE ──────────────────────────────────── -->
+      <div class="closing-quote">
+        <blockquote>
+          "The fine in lieu of confiscation must be based on the market price of the vehicle, not the essential commodity. Interpreting it otherwise would defeat the purpose of the Act and lead to disproportionate penalties."
+        </blockquote>
+        <cite>— Supreme Court of India</cite>
       </div>
-      
-      <!-- Tags section -->
+
+      <!-- Tags -->
       <div class="post-tags">
         <span class="post-tag"><i class="fas fa-tag"></i> essential-commodities-act</span>
         <span class="post-tag"><i class="fas fa-tag"></i> section-6a</span>
@@ -575,20 +1220,20 @@
     <!-- Share section -->
     <div class="share-section">
       <div class="share-title">
-        <i class="fas fa-share-alt"></i> Share this article
+        <i class="fas fa-share-alt"></i>&ensp;Share this article
       </div>
       <div class="share-buttons">
-        <a href="#" class="share-btn facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="share-btn twitter"><i class="fab fa-twitter"></i></a>
-        <a href="#" class="share-btn linkedin"><i class="fab fa-linkedin-in"></i></a>
-        <a href="#" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
+        <a href="#" class="share-btn facebook"  aria-label="Share on Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="share-btn twitter"   aria-label="Share on Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="share-btn linkedin"  aria-label="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="share-btn whatsapp"  aria-label="Share on WhatsApp"><i class="fab fa-whatsapp"></i></a>
       </div>
     </div>
 
     <!-- Back to blogs -->
     <div style="text-align: center; margin: 3rem 0;">
-      <a href="../blogs.html" class="back-link" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
-        <i class="fas fa-arrow-left"></i> Back to all articles
+      <a href="../blogs.html" class="back-link" style="font-size: 1rem; padding: 0.7rem 2rem;">
+        <i class="fas fa-arrow-left"></i>&ensp;Back to all articles
       </a>
     </div>
   </section>
