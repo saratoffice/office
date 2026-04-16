@@ -366,23 +366,35 @@ window.onclick = function(event) {
     }
 }
 /* ── TOC expand / collapse ── */
-  (function () {
-    var btn = document.getElementById('tocToggleBtn');
-    var body = document.getElementById('tocBody');
-    var arrow = document.getElementById('tocArrow');
-    var label = document.getElementById('tocToggleText');
-    var open = true;
+/* ── TOC toggle ── */
+function toggleTOC() {
+  const body = document.getElementById('toc-body');
+  const btn = document.getElementById('toc-btn');
+  body.classList.toggle('collapsed');
+  btn.textContent = body.classList.contains('collapsed') ? 'Expand ▼' : 'Collapse ▲';
+}
 
-    function toggle() {
-      open = !open;
-      body.classList.toggle('collapsed', !open);
-      arrow.classList.toggle('collapsed', !open);
-      label.textContent = open ? 'Collapse' : 'Expand';
-      btn.setAttribute('aria-expanded', open);
+/* ── Smooth scroll for TOC links ── */
+document.querySelectorAll('.toc-list a').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  });
+});
 
-    btn.addEventListener('click', toggle);
-    btn.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-    });
-  })();
+/* ── Highlight active section in TOC ── */
+const sections = document.querySelectorAll('section[id]');
+const tocLinks = document.querySelectorAll('.toc-list a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(l => l.style.fontWeight = '');
+      const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+      if (active) active.style.fontWeight = '700';
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+sections.forEach(s => observer.observe(s));
