@@ -25,110 +25,6 @@
       font-size: 1.05rem;
     }
 
-    /* ── TOC container ── */
-    .act-toc {
-      background: #f0f4ff;
-      border: 1px solid #c5cae9;
-      border-left: 5px solid #1a237e;
-      border-radius: 0 10px 10px 0;
-      padding: 0;
-      margin-bottom: 32px;
-      overflow: hidden;
-    }
-
-    /* ── TOC header / toggle button ── */
-    .act-toc-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 20px;
-      cursor: pointer;
-      user-select: none;
-      background: #e8eeff;
-      border-bottom: 1px solid transparent;
-      transition: background 0.2s;
-    }
-    .act-toc-header:hover { background: #dce4ff; }
-
-    .act-toc-title {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      color: #1a237e;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 0;
-    }
-    .act-toc-title::before {
-      content: "§";
-      font-size: 18px;
-      color: #3949ab;
-    }
-
-    .act-toc-toggle {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: #3949ab;
-      font-weight: 600;
-      font-family: "Segoe UI", sans-serif;
-    }
-    .act-toc-arrow {
-      display: inline-block;
-      width: 0; height: 0;
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-top: 6px solid #3949ab;
-      transition: transform 0.3s ease;
-    }
-    .act-toc-arrow.collapsed { transform: rotate(-90deg); }
-
-    /* ── TOC body (collapsible) ── */
-    .act-toc-body {
-      padding: 16px 20px 18px;
-      border-top: 1px solid #c5cae9;
-      transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.3s ease;
-      max-height: 2000px;
-      opacity: 1;
-      overflow: hidden;
-    }
-    .act-toc-body.collapsed {
-      max-height: 0;
-      opacity: 0;
-      padding-top: 0;
-      padding-bottom: 0;
-    }
-
-    .act-toc ol {
-      margin: 0 0 0 1.2rem !important;
-      padding: 0 !important;
-      list-style: decimal !important;
-      columns: 2;
-      column-gap: 24px;
-    }
-    .act-toc ol li {
-      font-size: 13px !important;
-      margin-bottom: 5px !important;
-      break-inside: avoid;
-      color: #333;
-      font-family: "Segoe UI", sans-serif;
-    }
-    .act-toc ol li a {
-      color: #1a237e;
-      text-decoration: none;
-      border-bottom: none;
-      transition: color 0.2s;
-    }
-    .act-toc ol li a:hover {
-      color: #3949ab;
-      text-decoration: underline;
-    }
-    @media (max-width: 600px) {
-      .act-toc ol { columns: 1; }
-    }
 
     /* ── Hero ── */
     .act-hero {
@@ -318,44 +214,67 @@
     </div>
   </div>
 
-  <!-- TABLE OF CONTENTS -->
-  <div class="act-toc" id="actToc">
-    <div class="act-toc-header" id="tocToggleBtn" role="button" aria-expanded="true" aria-controls="tocBody" tabindex="0">
-      <div class="act-toc-title">Table of Contents</div>
-      <div class="act-toc-toggle">
-        <span id="tocToggleText">Collapse</span>
-        <span class="act-toc-arrow" id="tocArrow"></span>
-      </div>
+  <!-- ══ TABLE OF CONTENTS ══ -->
+<div class="toc-wrapper" id="toc">
+  <div class="toc-header" onclick="toggleTOC()">
+    <div class="toc-header-left">
+      <div class="toc-icon">§</div>
+      <span class="toc-title-text">Table of Contents</span>
     </div>
-    <div class="act-toc-body" id="tocBody">
-      <ol>
-        <li><a href="#s1">Short Title, Extent &amp; Commencement</a></li>
-        <li><a href="#s2">Definitions</a></li>
-        <li><a href="#s3">Application of Indian Contract Act</a></li>
-        <li><a href="#s4">Definition of Partnership, Partner, Firm</a></li>
-        <li><a href="#s5">Partnership Not Created by Status</a></li>
-        <li><a href="#s6">Mode of Determining Existence of Partnership</a></li>
-        <li><a href="#s7">Partnership at Will</a></li>
-        <li><a href="#s8">Particular Partnership</a></li>
-        <li><a href="#s9">General Duties of Partners</a></li>
-        <li><a href="#s10">Duty to Indemnify for Loss by Fraud</a></li>
-        <li><a href="#s11">Rights and Duties by Contract</a></li>
-        <li><a href="#s12">Conduct of Business</a></li>
-        <li><a href="#s13">Mutual Rights and Liabilities</a></li>
-        <li><a href="#s14">Property of the Firm</a></li>
-        <li><a href="#s15">Application of Firm's Property</a></li>
-        <li><a href="#s16">Personal Profits Earned by Partners</a></li>
-        <li><a href="#s17">Rights &amp; Duties After Changes</a></li>
-        <li><a href="#s18">Partner as Agent of the Firm</a></li>
-        <li><a href="#s19">Implied Authority of Partner</a></li>
-        <li><a href="#s20">Extension / Restriction of Authority</a></li>
-        <li><a href="#s21">Partner's Authority in Emergency</a></li>
-        <li><a href="#s22">Mode of Doing Act to Bind Firm</a></li>
-        <li><a href="#s23">Effect of Admissions by a Partner</a></li>
-        <li><a href="#s24">Effect of Notice to Acting Partner</a></li>
-      </ol>
-    </div>
+    <button class="toc-toggle-btn" id="toc-btn">Collapse ▲</button>
   </div>
+  <div class="toc-body" id="toc-body">
+
+    <div class="toc-chapter">
+      <div class="toc-chapter-title">Chapter I — Preliminary &amp; General</div>
+      <ul class="toc-list">
+        <li><a href="#s1"><span class="toc-num">1</span>Short Title, Extent &amp; Commencement</a></li>
+        <li><a href="#s2"><span class="toc-num">2</span>Definitions</a></li>
+        <li><a href="#s3"><span class="toc-num">3</span>Application of Indian Contract Act</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-chapter">
+      <div class="toc-chapter-title">Chapter II — Nature &amp; Determination of Partnership</div>
+      <ul class="toc-list">
+        <li><a href="#s4"><span class="toc-num">4</span>Definition of Partnership, Partner, Firm</a></li>
+        <li><a href="#s5"><span class="toc-num">5</span>Partnership Not Created by Status</a></li>
+        <li><a href="#s6"><span class="toc-num">6</span>Mode of Determining Existence of Partnership</a></li>
+        <li><a href="#s7"><span class="toc-num">7</span>Partnership at Will</a></li>
+        <li><a href="#s8"><span class="toc-num">8</span>Particular Partnership</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-chapter">
+      <div class="toc-chapter-title">Chapter III — Rights, Duties &amp; Liabilities of Partners</div>
+      <ul class="toc-list">
+        <li><a href="#s9"><span class="toc-num">9</span>General Duties of Partners</a></li>
+        <li><a href="#s10"><span class="toc-num">10</span>Duty to Indemnify for Loss by Fraud</a></li>
+        <li><a href="#s11"><span class="toc-num">11</span>Rights and Duties by Contract</a></li>
+        <li><a href="#s12"><span class="toc-num">12</span>Conduct of Business</a></li>
+        <li><a href="#s13"><span class="toc-num">13</span>Mutual Rights and Liabilities</a></li>
+        <li><a href="#s14"><span class="toc-num">14</span>Property of the Firm</a></li>
+        <li><a href="#s15"><span class="toc-num">15</span>Application of Firm's Property</a></li>
+        <li><a href="#s16"><span class="toc-num">16</span>Personal Profits Earned by Partners</a></li>
+        <li><a href="#s17"><span class="toc-num">17</span>Rights &amp; Duties After Changes</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-chapter">
+      <div class="toc-chapter-title">Chapter IV — Authority of Partners</div>
+      <ul class="toc-list">
+        <li><a href="#s18"><span class="toc-num">18</span>Partner as Agent of the Firm</a></li>
+        <li><a href="#s19"><span class="toc-num">19</span>Implied Authority of Partner</a></li>
+        <li><a href="#s20"><span class="toc-num">20</span>Extension / Restriction of Authority</a></li>
+        <li><a href="#s21"><span class="toc-num">21</span>Partner's Authority in Emergency</a></li>
+        <li><a href="#s22"><span class="toc-num">22</span>Mode of Doing Act to Bind Firm</a></li>
+        <li><a href="#s23"><span class="toc-num">23</span>Effect of Admissions by a Partner</a></li>
+        <li><a href="#s24"><span class="toc-num">24</span>Effect of Notice to Acting Partner</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
 
   <!-- ═══════════════════════════════════
        CHAPTER I — PRELIMINARY
@@ -566,7 +485,5 @@
 <div id="site-footer"></div>
 <script src="/assets/Scripts/gototop.js"></script>
 
-
-  
 </body>
 </html>
