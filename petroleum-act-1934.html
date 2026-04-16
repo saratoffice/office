@@ -75,42 +75,96 @@
     }
  
     /* ── TOC ── */
+     /* ── TOC container ── */
     .act-toc {
       background: #f0f4ff;
       border: 1px solid #c5cae9;
       border-left: 5px solid #1a237e;
       border-radius: 0 10px 10px 0;
-      padding: 20px 24px;
+      padding: 0;
       margin-bottom: 32px;
+      overflow: hidden;
     }
+
+    /* ── TOC header / toggle button ── */
+    .act-toc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      cursor: pointer;
+      user-select: none;
+      background: #e8eeff;
+      border-bottom: 1px solid transparent;
+      transition: background 0.2s;
+    }
+    .act-toc-header:hover { background: #dce4ff; }
+
     .act-toc-title {
       font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.8px;
       text-transform: uppercase;
       color: #1a237e;
-      margin-bottom: 14px;
       display: flex;
       align-items: center;
       gap: 8px;
+      margin: 0;
     }
     .act-toc-title::before {
       content: "§";
       font-size: 18px;
       color: #3949ab;
     }
+
+    .act-toc-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #3949ab;
+      font-weight: 600;
+      font-family: "Segoe UI", sans-serif;
+    }
+    .act-toc-arrow {
+      display: inline-block;
+      width: 0; height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid #3949ab;
+      transition: transform 0.3s ease;
+    }
+    .act-toc-arrow.collapsed { transform: rotate(-90deg); }
+
+    /* ── TOC body (collapsible) ── */
+    .act-toc-body {
+      padding: 16px 20px 18px;
+      border-top: 1px solid #c5cae9;
+      transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.3s ease;
+      max-height: 2000px;
+      opacity: 1;
+      overflow: hidden;
+    }
+    .act-toc-body.collapsed {
+      max-height: 0;
+      opacity: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
     .act-toc ol {
       margin: 0 0 0 1.2rem !important;
       padding: 0 !important;
       list-style: decimal !important;
       columns: 2;
-      column-gap: 20px;
+      column-gap: 24px;
     }
     .act-toc ol li {
       font-size: 13px !important;
-      margin-bottom: 4px !important;
+      margin-bottom: 5px !important;
       break-inside: avoid;
       color: #333;
+      font-family: "Segoe UI", sans-serif;
     }
     .act-toc ol li a {
       color: #1a237e;
@@ -125,7 +179,6 @@
     @media (max-width: 600px) {
       .act-toc ol { columns: 1; }
     }
- 
     /* ── Section styling ── */
     .ec-article section {
       scroll-margin-top: 140px;
