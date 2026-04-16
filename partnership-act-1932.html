@@ -4,204 +4,599 @@
   <meta charset="UTF-8">
   <title>Indian Partnership Act, 1932 - Complete Summary | Sarat Office</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Common CSS (menu, footer, global styles) -->
   <link rel="stylesheet" href="style.css">
-  <!-- ✅ IMPORTANT: site components for header/footer etc. -->
   <script src="assets/Scripts/site-components.js" defer></script>
+
+  <style>
+    /* ── Reading progress bar ── */
+    .act-progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ffeb3b, #f57f17);
+      z-index: 9999;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ── Article body text ── */
+    .ec-article p,
+    .ec-article li {
+      font-size: 1.05rem;
+    }
+
+    /* ── TOC container ── */
+    .act-toc {
+      background: #f0f4ff;
+      border: 1px solid #c5cae9;
+      border-left: 5px solid #1a237e;
+      border-radius: 0 10px 10px 0;
+      padding: 0;
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+
+    /* ── TOC header / toggle button ── */
+    .act-toc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      cursor: pointer;
+      user-select: none;
+      background: #e8eeff;
+      border-bottom: 1px solid transparent;
+      transition: background 0.2s;
+    }
+    .act-toc-header:hover { background: #dce4ff; }
+
+    .act-toc-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: #1a237e;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+    }
+    .act-toc-title::before {
+      content: "§";
+      font-size: 18px;
+      color: #3949ab;
+    }
+
+    .act-toc-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #3949ab;
+      font-weight: 600;
+      font-family: "Segoe UI", sans-serif;
+    }
+    .act-toc-arrow {
+      display: inline-block;
+      width: 0; height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid #3949ab;
+      transition: transform 0.3s ease;
+    }
+    .act-toc-arrow.collapsed { transform: rotate(-90deg); }
+
+    /* ── TOC body (collapsible) ── */
+    .act-toc-body {
+      padding: 16px 20px 18px;
+      border-top: 1px solid #c5cae9;
+      transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.3s ease;
+      max-height: 2000px;
+      opacity: 1;
+      overflow: hidden;
+    }
+    .act-toc-body.collapsed {
+      max-height: 0;
+      opacity: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .act-toc ol {
+      margin: 0 0 0 1.2rem !important;
+      padding: 0 !important;
+      list-style: decimal !important;
+      columns: 2;
+      column-gap: 24px;
+    }
+    .act-toc ol li {
+      font-size: 13px !important;
+      margin-bottom: 5px !important;
+      break-inside: avoid;
+      color: #333;
+      font-family: "Segoe UI", sans-serif;
+    }
+    .act-toc ol li a {
+      color: #1a237e;
+      text-decoration: none;
+      border-bottom: none;
+      transition: color 0.2s;
+    }
+    .act-toc ol li a:hover {
+      color: #3949ab;
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      .act-toc ol { columns: 1; }
+    }
+
+    /* ── Hero ── */
+    .act-hero {
+      background: linear-gradient(135deg, #101535 0%, #1a237e 60%, #283593 100%);
+      color: #fff;
+      padding: 40px 40px 32px;
+      margin: -40px -40px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .act-hero::before {
+      content: "";
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(255,235,59,0.07);
+    }
+    .act-hero::after {
+      content: "";
+      position: absolute;
+      bottom: -40px; left: -40px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+    .act-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,235,59,0.18);
+      border: 1px solid rgba(255,235,59,0.4);
+      color: #ffeb3b;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+      font-family: "Segoe UI", sans-serif;
+    }
+    .act-hero h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 10px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      text-align: left;
+      letter-spacing: 0;
+    }
+    .act-hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .act-hero-pill {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.85);
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-family: "Segoe UI", sans-serif;
+    }
+    .act-hero-pill strong { color: #ffeb3b; }
+
+    @media (max-width: 768px) {
+      .act-hero { padding: 28px 20px 24px; margin: -20px -20px 28px; }
+      .act-hero h1 { font-size: 1.45rem; }
+    }
+
+    /* ── Smooth scroll offset for fixed header ── */
+    .ec-article section {
+      scroll-margin-top: 150px;
+      border-bottom: 1px solid #f0f0f0;
+      padding-bottom: 8px;
+      margin-bottom: 28px;
+    }
+    .ec-article section:last-of-type { border-bottom: none; }
+
+    /* ── Section number badge ── */
+    .ec-article h2 {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: nowrap;
+    }
+    .sec-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffeb3b;
+      color: #101535;
+      font-size: 11px;
+      font-weight: 800;
+      min-width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      margin-right: 10px;
+      flex-shrink: 0;
+      padding: 0 6px;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    /* ── Note callouts ── */
+    .act-note {
+      background: #e8f4fd;
+      border-left: 5px solid #1976d2;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 20px 0;
+      font-size: 1.05rem;
+      color: #1a237e;
+      font-family: "Segoe UI", sans-serif;
+    }
+    .act-note strong { color: #0d47a1; }
+
+    /* ── End badge ── */
+    .act-end {
+      text-align: center;
+      padding: 32px 0 16px;
+      border-top: 2px solid #e5e7eb;
+      margin-top: 32px;
+    }
+    .act-end-badge {
+      display: inline-block;
+      background: #101535;
+      color: #ffeb3b;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 8px 28px;
+      border-radius: 24px;
+      text-transform: uppercase;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    /* ── Chapter divider ── */
+    .chapter-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 36px 0 6px;
+      font-family: "Segoe UI", sans-serif;
+    }
+    .chapter-label::before,
+    .chapter-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #c5cae9;
+    }
+    .chapter-label span {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #3949ab;
+      background: #eef2ff;
+      padding: 3px 12px;
+      border-radius: 12px;
+      border: 1px solid #c5cae9;
+      white-space: nowrap;
+    }
+  </style>
 </head>
 <body>
 
+<div class="act-progress-bar" id="progressBar"></div>
 <div id="site-header"></div>
 
-
 <!-- CONTENT -->
- <div class="container ec-article">
-        <h1>The Indian Partnership Act, 1932</h1>
+<div class="container ec-article">
 
-        <h2>1. Short Title, Extent, and Commencement</h2>
-        <p>(1) This section states that the Act is called the Indian Partnership Act, 1932.</p>
-        <p>(2) It extends to the entire territory of India, meaning it applies to all regions of the country. However, some sections might not apply in specific areas unless stated otherwise.</p>
-        <p>(3) The Act came into force on October 1, 1932. However, Section 69 of the Act came into force a year later, on October 1, 1933.</p>
+  <!-- HERO -->
+  <div class="act-hero">
+    <div class="act-hero-badge">&#9878; Indian Law</div>
+    <h1>The Indian Partnership Act, 1932</h1>
+    <p style="color:rgba(255,255,255,0.75); font-size:1rem; margin:0; font-family:'Segoe UI',sans-serif;">A complete section-by-section summary of the Act governing partnership firms in India.</p>
+    <div class="act-hero-meta">
+      <span class="act-hero-pill"><strong>Enacted:</strong> 1932</span>
+      <span class="act-hero-pill"><strong>In Force:</strong> 1 October 1932</span>
+      <span class="act-hero-pill"><strong>Extent:</strong> Whole of India</span>
+      <span class="act-hero-pill"><strong>Sections Covered:</strong> 1 – 24</span>
+    </div>
+  </div>
 
-        <h2>2. Definitions</h2>
-        <p>This section defines certain key terms used throughout the Act:</p>
-        <ol>
-            <li>
-                <strong>"Act of a Firm":</strong> Refers to any action or inaction that results in a legal right being created or violated, enforceable by or against the firm. For example, if a partner makes a contract or decision on behalf of the firm, it counts as an act of the firm.
-            </li>
-            <li>
-                <strong>"Business":</strong> This includes any form of trade, occupation, or profession. Basically, it refers to any kind of work done for profit.
-            </li>
-            <li>
-                <strong>"Prescribed":</strong> This term refers to anything that is laid down or decided by rules made under this Act. For example, the Act may authorize the creation of additional rules to be followed.
-            </li>
-            <li>
-                <strong>"Third Party":</strong> A third party is any individual or entity that is not a partner in the firm, meaning anyone who isn't involved in the internal workings or decision-making of the partnership.
-            </li>
-            <li>
-                <strong>Definitions from Indian Contract Act, 1872:</strong> If any term is used in the Indian Partnership Act, but it is not defined within this Act, it should have the meaning ascribed to it in the Indian Contract Act, 1872.
-            </li>
-        </ol>
+  <!-- TABLE OF CONTENTS -->
+  <div class="act-toc" id="actToc">
+    <div class="act-toc-header" id="tocToggleBtn" role="button" aria-expanded="true" aria-controls="tocBody" tabindex="0">
+      <div class="act-toc-title">Table of Contents</div>
+      <div class="act-toc-toggle">
+        <span id="tocToggleText">Collapse</span>
+        <span class="act-toc-arrow" id="tocArrow"></span>
+      </div>
+    </div>
+    <div class="act-toc-body" id="tocBody">
+      <ol>
+        <li><a href="#s1">Short Title, Extent &amp; Commencement</a></li>
+        <li><a href="#s2">Definitions</a></li>
+        <li><a href="#s3">Application of Indian Contract Act</a></li>
+        <li><a href="#s4">Definition of Partnership, Partner, Firm</a></li>
+        <li><a href="#s5">Partnership Not Created by Status</a></li>
+        <li><a href="#s6">Mode of Determining Existence of Partnership</a></li>
+        <li><a href="#s7">Partnership at Will</a></li>
+        <li><a href="#s8">Particular Partnership</a></li>
+        <li><a href="#s9">General Duties of Partners</a></li>
+        <li><a href="#s10">Duty to Indemnify for Loss by Fraud</a></li>
+        <li><a href="#s11">Rights and Duties by Contract</a></li>
+        <li><a href="#s12">Conduct of Business</a></li>
+        <li><a href="#s13">Mutual Rights and Liabilities</a></li>
+        <li><a href="#s14">Property of the Firm</a></li>
+        <li><a href="#s15">Application of Firm's Property</a></li>
+        <li><a href="#s16">Personal Profits Earned by Partners</a></li>
+        <li><a href="#s17">Rights &amp; Duties After Changes</a></li>
+        <li><a href="#s18">Partner as Agent of the Firm</a></li>
+        <li><a href="#s19">Implied Authority of Partner</a></li>
+        <li><a href="#s20">Extension / Restriction of Authority</a></li>
+        <li><a href="#s21">Partner's Authority in Emergency</a></li>
+        <li><a href="#s22">Mode of Doing Act to Bind Firm</a></li>
+        <li><a href="#s23">Effect of Admissions by a Partner</a></li>
+        <li><a href="#s24">Effect of Notice to Acting Partner</a></li>
+      </ol>
+    </div>
+  </div>
 
-        <h2>3. Application of Provisions of the Indian Contract Act, 1872</h2>
+  <!-- ═══════════════════════════════════
+       CHAPTER I — PRELIMINARY
+  ════════════════════════════════════ -->
+  <div class="chapter-label"><span>Chapter I — Preliminary</span></div>
+
+  <section id="s1">
+    <h2><span class="sec-num">§1</span> Short Title, Extent, and Commencement</h2>
+    <p>(1) This section states that the Act is called the <strong>Indian Partnership Act, 1932</strong>.</p>
+    <p>(2) It extends to the entire territory of India, meaning it applies to all regions of the country. However, some sections might not apply in specific areas unless stated otherwise.</p>
+    <p>(3) The Act came into force on <strong>October 1, 1932</strong>. However, Section 69 of the Act came into force a year later, on October 1, 1933.</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="sec-num">§2</span> Definitions</h2>
+    <p>This section defines certain key terms used throughout the Act:</p>
+    <ol>
+      <li><strong>"Act of a Firm":</strong> Refers to any action or inaction that results in a legal right being created or violated, enforceable by or against the firm. For example, if a partner makes a contract or decision on behalf of the firm, it counts as an act of the firm.</li>
+      <li><strong>"Business":</strong> This includes any form of trade, occupation, or profession — basically any kind of work done for profit.</li>
+      <li><strong>"Prescribed":</strong> Refers to anything laid down by rules made under this Act.</li>
+      <li><strong>"Third Party":</strong> Any individual or entity that is not a partner in the firm.</li>
+      <li><strong>Definitions from Indian Contract Act, 1872:</strong> Terms used in this Act but not defined herein carry the meaning ascribed in the Indian Contract Act, 1872.</li>
+    </ol>
+  </section>
+
+  <section id="s3">
+    <h2><span class="sec-num">§3</span> Application of Provisions of the Indian Contract Act, 1872</h2>
+    <div class="act-note">
+      <strong>Key Rule:</strong> The Indian Contract Act, 1872 applies to firms <em>unless</em> its provisions are inconsistent with this Act. Where there is any conflict, the Partnership Act takes precedence.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       CHAPTER II — NATURE OF PARTNERSHIP
+  ════════════════════════════════════ -->
+  <div class="chapter-label"><span>Chapter II — Nature of Partnership</span></div>
+
+  <section id="s4">
+    <h2><span class="sec-num">§4</span> Definition of "Partnership", "Partner", "Firm", and "Firm Name"</h2>
+    <ul>
+      <li><strong>Partnership:</strong> A relationship between persons who have agreed to share the profits of a business carried on by all or any of them acting for all.</li>
+      <li><strong>Partner:</strong> An individual who is part of a partnership, actively involved or sharing in profits and losses.</li>
+      <li><strong>Firm:</strong> The collective name for all partners — the legal entity that carries out the business.</li>
+      <li><strong>Firm Name:</strong> The name under which the firm operates and is known to the outside world.</li>
+    </ul>
+  </section>
+
+  <section id="s5">
+    <h2><span class="sec-num">§5</span> Partnership Not Created by Status</h2>
+    <p>A partnership is formed by a <strong>contract</strong> between individuals, not by their social status. Members of a Hindu Undivided Family (HUF) or married couples sharing a family business are <em>not</em> automatically considered partners unless a formal partnership agreement is in place.</p>
+  </section>
+
+  <section id="s6">
+    <h2><span class="sec-num">§6</span> Mode of Determining Existence of Partnership</h2>
+    <p>To decide whether a partnership exists, the <em>real relationship</em> between the parties is examined based on all facts and actions.</p>
+    <ul>
+      <li><strong>Explanation 1:</strong> Merely sharing profits or returns from jointly owned property does not make individuals partners.</li>
+      <li><strong>Explanation 2:</strong> Receiving a share of profits does not automatically create partnership. This includes:
         <ul>
-            <li>This section clarifies that the Indian Contract Act, 1872, applies to firms unless its provisions are inconsistent with the Indian Partnership Act, 1932. This means if any provision in the Indian Contract Act conflicts with a provision in the Partnership Act, the latter will take precedence.</li>
+          <li>A lender receiving interest linked to profits,</li>
+          <li>A servant or agent receiving a profit-linked salary,</li>
+          <li>A widow or child receiving a profit-linked annuity after a partner's death, or</li>
+          <li>A previous owner receiving payments for the sale of goodwill.</li>
         </ul>
+      </li>
+    </ul>
+  </section>
 
-        <h2>4. Definition of "Partnership", "Partner", "Firm", and "Firm Name"</h2>
-        <ul>
-            <li><strong>Partnership:</strong> This is defined as a relationship between people who have agreed to share the profits of a business that is carried on by all or any of them on behalf of everyone. It's a relationship formed by mutual consent.</li>
-            <li><strong>Partner:</strong> An individual who is part of a partnership, either actively involved in the business or sharing in the profits (or losses) of the business.</li>
-            <li><strong>Firm:</strong> The collective name for all partners involved in the partnership. It's the legal entity that carries out the business.</li>
-            <li><strong>Firm Name:</strong> This is the name under which the firm operates. It's the identity of the business to the outside world.</li>
-        </ul>
+  <section id="s7">
+    <h2><span class="sec-num">§7</span> Partnership at Will</h2>
+    <p>A <strong>Partnership at Will</strong> arises when the partnership has no defined duration or specific end-date. Any partner may dissolve it at any time by giving notice, and it continues indefinitely until such notice is given.</p>
+  </section>
 
-        <h2>5. Partnership Not Created by Status</h2>
-        <ul>
-            <li>A partnership is formed by a contract between individuals, not by their social status.</li>
-            <li>For example, people who are members of a Hindu Undivided Family (HUF) or a married couple involved in a family business are not automatically considered partners unless there is a formal partnership agreement in place.</li>
-        </ul>
+  <section id="s8">
+    <h2><span class="sec-num">§8</span> Particular Partnership</h2>
+    <p>A <strong>Particular Partnership</strong> is formed for a specific venture or undertaking — not for an ongoing business. Once that project or venture is completed, the partnership terminates unless the partners agree to continue.</p>
+  </section>
 
-        <h2>6. Mode of Determining Existence of Partnership</h2>
-        <ul>
-            <li>To decide whether a partnership exists, the real relationship between the individuals involved is examined based on all facts and actions.</li>
-            <li><strong>Explanation 1:</strong> Simply sharing profits or returns from a common property does not make individuals partners. For instance, people who share the profits of a property they jointly own are not automatically partners.</li>
-            <li><strong>Explanation 2:</strong> Receiving a share of the profits or payment that varies with the business's earnings doesn't automatically make someone a partner. This includes:
-                <ul>
-                    <li>A lender receiving interest,</li>
-                    <li>A servant or agent receiving a salary,</li>
-                    <li>A widow or child receiving an annuity after the death of a partner, or</li>
-                    <li>A previous owner receiving money for the sale of the business's goodwill or part of it.</li>
-                </ul>
-            </li>
-        </ul>
+  <!-- ═══════════════════════════════════
+       CHAPTER III — PARTNERS INTER SE
+  ════════════════════════════════════ -->
+  <div class="chapter-label"><span>Chapter III — Relations of Partners to One Another</span></div>
 
-        <h2>7. Partnership at Will</h2>
-        <ul>
-            <li>A Partnership at Will occurs when the partnership has no defined duration or specific agreement about when it should end. In this case, any partner can dissolve the partnership at any time, and it will continue indefinitely until one of the partners decides to end it.</li>
-        </ul>
+  <section id="s9">
+    <h2><span class="sec-num">§9</span> General Duties of Partners</h2>
+    <ul>
+      <li><strong>Carry on the business for common advantage:</strong> The business must be run for the benefit of all partners.</li>
+      <li><strong>Be just and faithful:</strong> Partners must act honestly and fairly toward each other without deception.</li>
+      <li><strong>Render true accounts and full information:</strong> Partners must maintain accurate records and share all relevant business information when requested by any partner or their legal representative.</li>
+    </ul>
+  </section>
 
-        <h2>8. Particular Partnership</h2>
-        <ul>
-            <li>A Particular Partnership is a partnership where the partners come together for a specific venture or undertaking. This means they form a partnership for a particular business or project, not for an ongoing business.</li>
-        </ul>
+  <section id="s10">
+    <h2><span class="sec-num">§10</span> Duty to Indemnify for Loss Caused by Fraud</h2>
+    <p>A partner must compensate the firm for any losses caused by their <strong>fraudulent actions or dishonesty</strong> while conducting the firm's business. For example, if a partner misappropriates funds or misleads customers, they are liable to reimburse the firm fully.</p>
+  </section>
 
-        <h2>Chapter III: Relations of Partners to One Another</h2>
+  <section id="s11">
+    <h2><span class="sec-num">§11</span> Determination of Rights and Duties by Contract Between Partners</h2>
+    <p>(1) The rights and duties of partners can be determined by agreement — expressed or implied through conduct. The terms can be modified with the consent of all partners, explicitly or by implied course of dealing.</p>
+    <p>(2) Notwithstanding Section 27 of the Indian Contract Act (dealing with restraint of trade), partners may agree that a partner shall <em>not</em> carry on any business other than that of the firm during the continuance of the partnership.</p>
+  </section>
 
-        <h3>9. General Duties of Partners</h3>
-        <ul>
-            <li><strong>General Duties:</strong> Partners have certain obligations towards each other, such as:
-                <ul>
-                    <li><strong>Carrying on the business for the common advantage:</strong> The business must be run for the benefit of all the partners, aiming to maximize the firm's success.</li>
-                    <li><strong>Being just and faithful:</strong> Partners must act honestly and fairly toward each other, without trying to deceive or harm any partner.</li>
-                    <li><strong>Rendering true accounts and full information:</strong> Partners are required to keep accurate records and share all relevant details of the business, especially when requested by any partner or their legal representative.</li>
-                </ul>
-            </li>
-        </ul>
+  <section id="s12">
+    <h2><span class="sec-num">§12</span> The Conduct of the Business</h2>
+    <p>(a) Every partner has the right to participate in the conduct and management of the business.</p>
+    <p>(b) Every partner is obligated to diligently attend to their duties in the business.</p>
+    <p>(c) Differences regarding ordinary matters may be resolved by a <strong>majority decision</strong>, but each partner must have the opportunity to voice their opinion. No change to the nature of the business can be made without the consent of <em>all</em> partners.</p>
+    <p>(d) Every partner has the right to inspect and copy the books of the firm at any time.</p>
+  </section>
 
-        <h3>10. Duty to Indemnify for Loss Caused by Fraud</h3>
-        <ul>
-            <li>A partner must compensate the firm for any losses caused by their fraudulent actions or dishonesty while conducting the firm's business. For example, if a partner steals from the business or misleads customers, they are responsible for reimbursing the firm for the loss.</li>
-        </ul>
+  <section id="s13">
+    <h2><span class="sec-num">§13</span> Mutual Rights and Liabilities</h2>
+    <p>(a) A partner is <em>not</em> entitled to remuneration for taking part in the business, unless otherwise agreed.</p>
+    <p>(b) Partners are entitled to <strong>equal shares</strong> in the profits and must equally bear losses, unless otherwise agreed.</p>
+    <p>(c) Interest on capital contributed is payable only out of profits, unless otherwise agreed.</p>
+    <p>(d) If a partner advances money beyond their agreed capital, they are entitled to interest at <strong>6% per annum</strong>.</p>
+    <p>(e) The firm must indemnify a partner for payments and liabilities incurred:</p>
+    <ul>
+      <li>(i) In the regular course of business, or</li>
+      <li>(ii) In emergencies, while taking necessary steps to protect the firm from loss.</li>
+    </ul>
+    <p>(f) A partner must indemnify the firm for any loss caused by their <strong>wilful neglect or misconduct</strong>.</p>
+  </section>
 
-        <h3>11. Determination of Rights and Duties of Partners by Contract Between Partners</h3>
-        <p>(1) The rights and duties of partners in a firm can be determined by an agreement (contract) between them. This contract can be either expressed (written) or implied through the partners' actions or course of dealing. The terms of the contract can also be changed or modified with the consent of all the partners, and this consent can either be explicitly stated or implied through their actions over time.</p>
-        <p>(2) Despite Section 27 of the Indian Contract Act, 1872, which generally deals with agreements in restraint of trade, this section allows partners to agree that one of them will not carry out any business outside of the partnership business while they are still a partner. This means a partner can be contractually bound not to compete with the firm during the partnership.</p>
+  <section id="s14">
+    <h2><span class="sec-num">§14</span> The Property of the Firm</h2>
+    <ul>
+      <li>All property brought into the business or acquired for the business, including <strong>goodwill</strong>, constitutes firm property.</li>
+      <li>Any property acquired using firm money is automatically firm property, unless there is a contrary intention.</li>
+    </ul>
+  </section>
 
-        <h3>12. The Conduct of the Business</h3>
-        <p>(a) Every partner has the right to participate in the conduct and management of the business.</p>
-        <p>(b) Every partner is obligated to diligently attend to their duties in the business.</p>
-        <p>(c) If there are disagreements regarding ordinary matters related to the business, these can be resolved by a majority of the partners. However, every partner should have the opportunity to voice their opinion before a decision is made. No partner can change the nature of the business without the consent of all partners.</p>
-        <p>(d) Every partner has the right to access the firm's books and records. They can inspect and copy the books of the firm to stay informed about its operations.</p>
+  <section id="s15">
+    <h2><span class="sec-num">§15</span> Application of the Property of the Firm</h2>
+    <p>The property of the firm must be used <strong>solely for the purposes of the business</strong>. Individual partners cannot use it for personal gain unless otherwise agreed in the contract.</p>
+  </section>
 
-        <h3>13. Mutual Rights and Liabilities</h3>
-        <p>(a) A partner is not entitled to receive remuneration (salary) for their participation in the business unless agreed upon.</p>
-        <p>(b) Partners are entitled to an equal share in the profits of the firm and must equally contribute to any losses sustained by the firm.</p>
-        <p>(c) If a partner is entitled to interest on the capital they have invested in the firm, this interest is only payable out of the firm's profits.</p>
-        <p>(d) If a partner invests money in the firm beyond the agreed capital, they are entitled to interest on the extra amount at a rate of 6% per annum.</p>
-        <p>(e) The firm must indemnify a partner (compensate them) for any payments or liabilities incurred while conducting the business:</p>
-        <ul>
-            <li>(i) If the partner is acting in the regular course of business.</li>
-            <li>(ii) In emergencies, if the partner is taking necessary actions to prevent a loss for the firm, just as any prudent person would in similar circumstances.</li>
-        </ul>
-        <p>(f) A partner must indemnify the firm for any loss caused by their willful neglect or misconduct while conducting the firm's business.</p>
+  <section id="s16">
+    <h2><span class="sec-num">§16</span> Personal Profits Earned by Partners</h2>
+    <p>(a) If a partner derives any personal profit from a transaction of the firm or from use of the firm's property or name, they must <strong>account for and pay that profit to the firm</strong>.</p>
+    <p>(b) If a partner carries on a business of the same nature as and competing with the firm, they must account for and pay to the firm all profits earned from that competing business.</p>
+  </section>
 
-        <h3>14. The Property of the Firm</h3>
-        <ul>
-            <li>The property of the firm includes:
-                <ul>
-                    <li>Property and rights brought into the business or acquired for the business by any means (purchase, gifts, etc.).</li>
-                    <li>Goodwill, which refers to the business's reputation and customer relationships.</li>
-                </ul>
-            </li>
-            <li>Any property acquired using money belonging to the firm is automatically considered property of the firm, unless there is an intention to the contrary.</li>
-        </ul>
+  <section id="s17">
+    <h2><span class="sec-num">§17</span> Rights and Duties After Changes in the Firm</h2>
+    <p>(a) After a change in the firm's constitution (e.g., addition or retirement of a partner), the rights and duties in the reconstituted firm remain the same unless otherwise agreed.</p>
+    <p>(b) If the firm continues beyond its originally fixed term, it becomes a partnership at will with the same rights and duties.</p>
+    <p>(c) If the firm undertakes new ventures beyond its original specific object, the same rights and duties apply to the new ventures unless otherwise agreed.</p>
+  </section>
 
-        <h3>15. Application of the Property of the Firm</h3>
-        <ul>
-            <li>The property of the firm must be used solely for the purposes of the business. It cannot be used by individual partners for personal gain unless agreed otherwise in the contract.</li>
-        </ul>
+  <!-- ═══════════════════════════════════
+       CHAPTER IV — PARTNERS & THIRD PARTIES
+  ════════════════════════════════════ -->
+  <div class="chapter-label"><span>Chapter IV — Relations of Partners to Third Parties</span></div>
 
-        <h3>16. Personal Profits Earned by Partners</h3>
-        <p>(a) If a partner earns any personal profits from a transaction related to the firm or from using the firm's property or name, they must account for that profit and pay it to the firm.</p>
-        <p>(b) If a partner runs a business that is similar to and competes with the firm's business, they must account for and pay to the firm any profits made from that competing business.</p>
+  <section id="s18">
+    <h2><span class="sec-num">§18</span> Partner to be Agent of the Firm</h2>
+    <p>A partner acts as an <strong>agent of the firm</strong> for the purposes of the firm's business. Their actions in the usual course of business legally bind the firm and all other partners.</p>
+  </section>
 
-        <h3>17. Rights and Duties of Partners After Changes in the Firm</h3>
-        <p>(a) If there is a change in the constitution of the firm (e.g., adding or removing partners), the rights and duties of the partners in the reconstituted firm remain the same as they were before the change unless otherwise agreed.</p>
-        <p>(b) If a firm operates beyond the term it was initially set up for (i.e., it continues its business after the fixed term), the rights and duties of the partners continue in the same way as before, subject to the provisions of a partnership at will.</p>
-        <p>(c) If the firm was originally created to carry out certain specific ventures (like a particular project), and the firm undertakes new ventures, the partners' rights and duties for these new ventures are the same as those for the original ventures unless agreed otherwise.</p>
+  <section id="s19">
+    <h2><span class="sec-num">§19</span> Implied Authority of Partner as Agent of the Firm</h2>
+    <p>(1) A partner has implied authority to bind the firm by acts done in the usual course of business — signing contracts, making purchases, etc.</p>
+    <p>(2) Without the express consent of the other partners, a partner <em>cannot</em>:</p>
+    <ul>
+      <li>Submit a dispute to arbitration,</li>
+      <li>Open a bank account in the firm's name on personal terms,</li>
+      <li>Compromise or relinquish any claim of the firm,</li>
+      <li>Withdraw a lawsuit filed on behalf of the firm,</li>
+      <li>Acquire or transfer immovable property on behalf of the firm, or</li>
+      <li>Enter into a partnership on behalf of the firm.</li>
+    </ul>
+  </section>
 
-        <h2>Chapter IV: Relations of Partners to Third Parties</h2>
+  <section id="s20">
+    <h2><span class="sec-num">§20</span> Extension and Restriction of Partner's Implied Authority</h2>
+    <p>Partners may, by contract, <strong>extend or limit</strong> the implied authority of any individual partner. However, if a restricted partner acts beyond their authority and the third party is unaware of the restriction, the firm may still be bound by that partner's action.</p>
+  </section>
 
-        <h3>18. Partner to be Agent of the Firm</h3>
-        <ul>
-            <li>A partner acts as an agent of the firm for the purposes of the firm's business. This means that a partner can bind the firm legally through their actions, as long as these actions are in line with the business's usual operations.</li>
-        </ul>
+  <section id="s21">
+    <h2><span class="sec-num">§21</span> Partner's Authority in an Emergency</h2>
+    <p>In an emergency, a partner may take all <strong>reasonable necessary actions</strong> to protect the firm from loss. Such acts, done in good faith, will bind the firm even if they exceed the partner's usual implied authority.</p>
+  </section>
 
-        <h3>19. Implied Authority of Partner as Agent of the Firm</h3>
-        <p>(1) A partner has implied authority to bind the firm by carrying out acts related to the business in the normal course. For example, signing contracts or making business decisions that are typical for the business.</p>
-        <p>(2) However, there are certain actions that a partner cannot do without the express consent of the other partners. These include:</p>
-        <ul>
-            <li>Submitting a dispute to arbitration,</li>
-            <li>Opening a personal bank account in the firm's name,</li>
-            <li>Compromising a claim or relinquishing part of a claim,</li>
-            <li>Withdrawing a lawsuit,</li>
-            <li>Acquiring or transferring immovable property (land, buildings) on behalf of the firm, and</li>
-            <li>Entering into a partnership on behalf of the firm.</li>
-        </ul>
+  <section id="s22">
+    <h2><span class="sec-num">§22</span> Mode of Doing Act to Bind Firm</h2>
+    <p>For an act to legally bind the firm, it must be done <strong>in the firm's name</strong> or in a manner that clearly implies the act is on behalf of the firm — ensuring third parties know they are dealing with the firm, not merely an individual.</p>
+  </section>
 
-        <h3>20. Extension and Restriction of Partner's Implied Authority</h3>
-        <ul>
-            <li>The partners can, by contract, extend or limit the implied authority of any individual partner. However, if a partner acts beyond their authority and the third party is unaware of the restriction, the firm may still be bound by the partner's actions.</li>
-        </ul>
+  <section id="s23">
+    <h2><span class="sec-num">§23</span> Effect of Admissions by a Partner</h2>
+    <p>Any <strong>admission or statement</strong> made by a partner about the firm's affairs in the ordinary course of business is treated as evidence against the firm. The firm cannot deny liability on the basis that it was the partner's personal statement.</p>
+  </section>
 
-        <h3>21. Partner's Authority in an Emergency</h3>
-        <ul>
-            <li>In emergency situations, a partner can take all reasonable actions to protect the firm from loss. These actions, taken in good faith and with prudence, will bind the firm, even if they go beyond the partner's usual authority.</li>
-        </ul>
+  <section id="s24">
+    <h2><span class="sec-num">§24</span> Effect of Notice to Acting Partner</h2>
+    <p>If a partner who regularly acts on behalf of the firm receives a <strong>notice or acquires knowledge</strong> relevant to the firm's business, that notice is treated as received by the firm — <em>except</em> when the partner is committing fraud against the firm.</p>
+  </section>
 
-        <h3>22. Mode of Doing Act to Bind Firm</h3>
-        <ul>
-            <li>For an act to bind the firm legally, it must be done in the firm's name or in a way that clearly implies the act is on behalf of the firm. This ensures that the third parties understand they are dealing with the firm, not an individual partner.</li>
-        </ul>
+  <!-- END BADGE -->
+  <div class="act-end">
+    <div class="act-end-badge">— End of Summary: Sections 1–24 —</div>
+  </div>
 
-        <h3>23. Effect of Admissions by a Partner</h3>
-        <ul>
-            <li>Any admission or statement made by a partner regarding the firm's affairs is considered evidence against the firm. This applies as long as the admission is made in the ordinary course of business.</li>
-        </ul>
+</div><!-- /ec-article -->
 
-        <h3>24. Effect of Notice to Acting Partner</h3>
-        <ul>
-            <li>If a partner who regularly acts on behalf of the firm receives a notice or information about the firm's business, that notice is considered to have been received by the firm. This rule applies unless the partner is committing fraud against the firm or if they are acting with the firm's consent.</li>
-        </ul>
-    
-    <strong>THE END</strong>
-
-</div>
-  <!-- FOOTER -->
 <div id="site-footer"></div>
+<script src="/assets/Scripts/gototop.js"></script>
 
- <!-- Go to Top -->
-  <script src="/assets/Scripts/gototop.js"></script>
+<script>
+  /* ── Reading progress bar ── */
+  window.addEventListener('scroll', function () {
+    var el = document.documentElement;
+    var scrollTop = el.scrollTop || document.body.scrollTop;
+    var scrollHeight = el.scrollHeight - el.clientHeight;
+    var pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+    document.getElementById('progressBar').style.width = pct + '%';
+  });
+
+  /* ── TOC expand / collapse ── */
+  (function () {
+    var btn = document.getElementById('tocToggleBtn');
+    var body = document.getElementById('tocBody');
+    var arrow = document.getElementById('tocArrow');
+    var label = document.getElementById('tocToggleText');
+    var open = true;
+
+    function toggle() {
+      open = !open;
+      body.classList.toggle('collapsed', !open);
+      arrow.classList.toggle('collapsed', !open);
+      label.textContent = open ? 'Collapse' : 'Expand';
+      btn.setAttribute('aria-expanded', open);
+    }
+
+    btn.addEventListener('click', toggle);
+    btn.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  })();
+</script>
 </body>
 </html>
