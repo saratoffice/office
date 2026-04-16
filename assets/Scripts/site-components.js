@@ -365,3 +365,24 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
+/* ── TOC expand / collapse ── */
+  (function () {
+    var btn = document.getElementById('tocToggleBtn');
+    var body = document.getElementById('tocBody');
+    var arrow = document.getElementById('tocArrow');
+    var label = document.getElementById('tocToggleText');
+    var open = true;
+
+    function toggle() {
+      open = !open;
+      body.classList.toggle('collapsed', !open);
+      arrow.classList.toggle('collapsed', !open);
+      label.textContent = open ? 'Collapse' : 'Expand';
+      btn.setAttribute('aria-expanded', open);
+    }
+
+    btn.addEventListener('click', toggle);
+    btn.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  })();
