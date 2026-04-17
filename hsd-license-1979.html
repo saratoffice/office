@@ -4,277 +4,839 @@
   <meta charset="UTF-8">
   <title>Sarat Office | HSD License</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Common CSS (menu, footer, global styles) -->
   <link rel="stylesheet" href="style.css">
-  <!-- ✅ IMPORTANT: site components for header/footer etc. -->
   <script src="assets/Scripts/site-components.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--primary:#6a00ff;--secondary:#7ff7f2;--dark:#1f2937;--light:#f9fafb;--text:#333;--border:#e5e7eb}
-body{font-family:"Segoe UI",system-ui,sans-serif;background:#f3f4f6;padding:24px 12px}
-.container.ec-article{margin:auto;background:#fff;padding:40px;font-family:"Georgia","Times New Roman",serif;color:#111;line-height:1.7}
-.ec-article h1{text-align:center;font-size:2rem;margin-bottom:10px}
-.ec-article h2{background:#101535;color:#fff;padding:8px 12px;font-weight:bold;margin:20px 0 10px;border-left:6px solid #ffeb3b;font-size:1.2rem}
-.ec-article h3{margin-top:25px;font-size:1.2rem;color:#123;font-weight:bold}
-.ec-article p{margin:10px 0;text-align:justify;font-size:17px;line-height:1.8}
-.ec-article p+p{text-indent:2em}
-.ec-article h2+p,.ec-article h3+p{text-indent:0}
-.ec-article section{margin-bottom:20px}
-.ec-article hr{border:none;border-top:2px solid #e5e7eb;margin:20px 0}
+    /* ── Reading Progress Bar ── */
+    #read-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #c9961a, #ffeb3b, #c9961a);
+      z-index: 99999;
+      width: 0%;
+      transition: width 0.15s linear;
+    }
 
-/* Ordered lists */
-.ec-article ol{margin:0.9rem 0 0.9rem 2rem;padding-left:0.25rem;list-style-position:outside}
-.ec-article ol>li{margin-bottom:0.9rem;font-size:17px;line-height:1.8;padding-left:0.5rem}
-.ec-article ol[type="i"]{list-style-type:lower-roman}
-.ec-article ol[type="a"]{list-style-type:lower-alpha}
-.ec-article ol[type="I"]{list-style-type:upper-roman}
-.ec-article ol ol{margin:0.55rem 0 0.35rem 1.75rem;padding-left:0.25rem;list-style-position:outside}
-.ec-article ol ol>li{margin-bottom:0.5rem;font-size:16px;line-height:1.75;padding-left:0.4rem}
+    /* ── Root vars ── */
+    :root {
+      --navy: #0f1535;
+      --rule-blue: #1a237e;
+      --rule-blue-mid: #283593;
+      --gold: #c9961a;
+      --gold-light: #f5e9c8;
+      --gold-pale: #fdf8ee;
+      --border-subtle: #e8e0d0;
+      --bg-warm: #fdfaf4;
+    }
 
-/* Tables */
-.ec-article table{width:100%;border-collapse:separate;border-spacing:0;margin:20px 0;font-size:15px;font-family:"Segoe UI",Arial,sans-serif;box-shadow:0 8px 20px rgba(0,0,0,0.12);border-radius:10px;overflow:hidden;background:white}
-.ec-article th{background:linear-gradient(145deg,#1a237e 0%,#283593 50%,#1a237e 100%);color:#fff;font-weight:600;text-align:center;padding:14px 10px;font-size:0.95em;letter-spacing:0.5px;text-transform:uppercase;border-right:1px solid rgba(255,255,255,0.2);border-bottom:3px solid #ffeb3b;text-shadow:1px 1px 2px rgba(0,0,0,0.3)}
-.ec-article th:last-child{border-right:none}
-.ec-article td{padding:12px 10px;border-right:1px solid #e0e0e0;border-bottom:1px solid #e0e0e0;background:white;color:#333;vertical-align:top}
-.ec-article td:last-child{border-right:none}
-.ec-article tbody tr:nth-child(even) td{background:#f8f9fa}
-.ec-article tbody tr:hover td{background:#fff9e6}
-.ec-article tbody td:first-child{font-weight:500;color:#1a237e}
+    /* ── Article wrapper ── */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Notification box */
-.ec-article .notification{background:#fffbea;border-left:5px solid #ffeb3b;padding:14px 18px;margin:20px 0;border-radius:0 8px 8px 0;font-size:16px;color:#555;font-family:"Segoe UI",sans-serif}
-.ec-article .notification strong{color:#1a237e}
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: #f0f0f0;
+    }
 
-/* Gazette header */
-.ec-article .gazette-header{background:#f7f7f7;border:1px solid #ddd;border-radius:8px;padding:16px 20px;margin-bottom:24px;font-family:"Segoe UI",sans-serif;font-size:14px;color:#555;line-height:1.7}
-.ec-article .gazette-header p{font-size:14px;text-indent:0;margin:0}
+    .container.ec-article {
+      max-width: 1060px;
+      margin: 40px auto 60px;
+      background: var(--bg-warm);
+      font-family: 'EB Garamond', Georgia, serif;
+      color: #111;
+      line-height: 1.7;
+      border-radius: 6px;
+      box-shadow: 0 4px 40px rgba(26,35,126,0.1);
+      overflow: hidden;
+    }
 
-/* Section label badge */
-.ec-article .section-badge{display:inline-block;background:#101535;color:#ffeb3b;font-family:"Segoe UI",sans-serif;font-size:12px;font-weight:700;padding:2px 10px;border-radius:4px;letter-spacing:0.5px;margin-bottom:6px;text-transform:uppercase}
+    /* ── HERO ── */
+    .doc-hero {
+      background: linear-gradient(155deg, #0a0f2e 0%, #1a237e 55%, #283593 100%);
+      padding: 56px 52px 48px;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+    }
+    .doc-hero::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent, transparent 38px,
+        rgba(255,235,59,0.03) 38px, rgba(255,235,59,0.03) 39px
+      );
+    }
+    .doc-hero::after {
+      content: "";
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #c9961a 0%, #ffeb3b 50%, #c9961a 100%);
+    }
+    /* Decorative circles */
+    .doc-hero-deco1 {
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      background: rgba(255,235,59,0.05);
+      pointer-events: none;
+    }
+    .doc-hero-deco2 {
+      position: absolute;
+      bottom: -40px; left: 30px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.03);
+      pointer-events: none;
+    }
 
-/* Form sections */
-.ec-article .form-section{border:1px solid #ddd;border-radius:10px;padding:20px 24px;margin:20px 0;background:#fafafa}
-.ec-article .form-section h3{margin-top:0;border-bottom:2px solid #ffeb3b;padding-bottom:8px;margin-bottom:14px}
-.ec-article .form-line{border-bottom:1px dotted #999;margin:10px 0;height:1.8em;display:block}
-.ec-article .form-field{font-family:"Segoe UI",sans-serif;font-size:15px;color:#333;margin:8px 0}
-.ec-article .form-field span{border-bottom:1px dotted #999;min-width:120px;display:inline-block}
+    .doc-hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,235,59,0.15);
+      border: 1px solid rgba(255,235,59,0.35);
+      color: #ffeb3b;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+    .doc-hero-eyebrow::before { content: "⚡"; font-size: 12px; }
 
-/* END badge */
-.ec-article .end-badge{text-align:center;margin-top:32px;padding-top:20px;border-top:2px solid #e5e7eb}
-.ec-article .end-badge span{background:#101535;color:#ffeb3b;font-family:"Segoe UI",sans-serif;font-size:13px;font-weight:700;padding:6px 24px;border-radius:20px;letter-spacing:1px}
-</style>
+    .doc-hero h1 {
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.25;
+      margin: 0 0 10px;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.4);
+      max-width: 700px;
+    }
+
+    .doc-hero-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      color: rgba(255,255,255,0.6);
+      font-style: italic;
+      margin-bottom: 26px;
+    }
+
+    .doc-hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .doc-pill {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11.5px;
+      font-weight: 500;
+      padding: 4px 13px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.78);
+    }
+    .doc-pill strong { color: #ffeb3b; font-weight: 600; }
+
+    @media (max-width: 768px) {
+      .doc-hero { padding: 36px 20px 40px; }
+      .doc-hero h1 { font-size: 1.55rem; }
+    }
+
+    /* ── Gazette notice ── */
+    .article-body {
+      padding: 36px 52px 56px;
+    }
+    @media (max-width: 768px) { .article-body { padding: 24px 18px 40px; } }
+
+    .gazette-notice {
+      background: #fff;
+      border: 1px solid var(--border-subtle);
+      border-left: 5px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 20px;
+      margin-bottom: 28px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      color: #555;
+      line-height: 1.65;
+    }
+    .gazette-notice strong { color: var(--rule-blue); }
+
+    /* ── TABLE OF CONTENTS ── */
+    .toc-wrapper {
+      background: #fff;
+      border: 1px solid var(--border-subtle);
+      border-top: 4px solid var(--gold);
+      border-radius: 0 0 10px 10px;
+      margin: 0 0 38px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(26,35,126,0.06);
+    }
+    .toc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 20px;
+      background: var(--gold-pale);
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      user-select: none;
+    }
+    .toc-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .toc-icon {
+      width: 28px; height: 28px;
+      background: var(--rule-blue);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; color: #ffeb3b;
+      flex-shrink: 0;
+    }
+    .toc-title-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--rule-blue);
+    }
+    .toc-toggle-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gold);
+      background: none;
+      border: 1px solid var(--gold);
+      border-radius: 20px;
+      padding: 3px 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+    }
+    .toc-toggle-btn:hover { background: var(--gold); color: #fff; }
+
+    .toc-body {
+      padding: 18px 22px 22px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0 22px;
+    }
+    .toc-body.collapsed { display: none; }
+
+    .toc-group { margin-bottom: 16px; break-inside: avoid; }
+    .toc-group-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding: 3px 0;
+      margin-bottom: 6px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .toc-list { list-style: none; padding: 0; margin: 0; }
+    .toc-list li { margin-bottom: 2px; }
+    .toc-list a {
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px;
+      color: #2d3561;
+      text-decoration: none;
+      padding: 3px 6px;
+      border-radius: 4px;
+      transition: all 0.17s;
+      line-height: 1.45;
+      border-bottom: none;
+    }
+    .toc-list a:hover { background: var(--gold-light); color: var(--rule-blue); }
+    .toc-num {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--gold);
+      background: var(--gold-pale);
+      border-radius: 3px;
+      padding: 1px 5px;
+      flex-shrink: 0;
+      letter-spacing: 0.2px;
+    }
+
+    @media (max-width: 860px) { .toc-body { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .toc-body { grid-template-columns: 1fr; padding: 14px; } }
+
+    /* ── Section headings ── */
+    .ec-article section {
+      scroll-margin-top: 120px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 10px;
+      margin-bottom: 28px;
+    }
+    .ec-article section:last-of-type { border-bottom: none; }
+
+    .ec-article h2 {
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(100deg, var(--rule-blue) 0%, var(--rule-blue-mid) 100%);
+      color: #fff;
+      padding: 11px 18px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-left: 5px solid #ffeb3b;
+      border-radius: 0 8px 8px 0;
+      margin: 32px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.1px;
+      scroll-margin-top: 120px;
+    }
+    .clause-num {
+      background: rgba(255,235,59,0.22);
+      border: 1px solid rgba(255,235,59,0.45);
+      color: #ffeb3b;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.4px;
+      flex-shrink: 0;
+    }
+
+    .ec-article h3 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--rule-blue);
+      padding: 9px 14px;
+      background: linear-gradient(100deg, #eef2ff 0%, #f5f7ff 100%);
+      border-left: 4px solid #7986cb;
+      border-radius: 0 8px 8px 0;
+      margin: 24px 0 12px;
+      scroll-margin-top: 120px;
+    }
+
+    .ec-article p {
+      font-family: 'EB Garamond', Georgia, serif;
+      margin: 10px 0;
+      text-align: justify;
+      font-size: 17px;
+      line-height: 1.85;
+    }
+    .ec-article p + p { text-indent: 1.8em; }
+    .ec-article h2 + p,
+    .ec-article h3 + p { text-indent: 0; }
+
+    /* Lists */
+    .ec-article ol {
+      margin: 0.9rem 0 0.9rem 2rem;
+      padding-left: 0.25rem;
+      list-style-position: outside;
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 17px;
+    }
+    .ec-article ol > li { margin-bottom: 0.75rem; line-height: 1.8; padding-left: 0.4rem; }
+    .ec-article ol[type="i"] { list-style-type: lower-roman; }
+    .ec-article ol[type="a"] { list-style-type: lower-alpha; }
+    .ec-article ol[type="I"] { list-style-type: upper-roman; }
+    .ec-article ol ol { margin: 0.45rem 0 0.3rem 1.75rem; font-size: 16px; }
+    .ec-article ol ol > li { margin-bottom: 0.45rem; }
+
+    /* Tables */
+    .ec-article table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 20px 0;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      background: white;
+    }
+    .ec-article th {
+      background: linear-gradient(145deg, #1a237e 0%, #283593 50%, #1a237e 100%);
+      color: #fff;
+      font-weight: 600;
+      text-align: center;
+      padding: 14px 10px;
+      font-size: 0.88em;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      border-right: 1px solid rgba(255,255,255,0.2);
+      border-bottom: 3px solid #ffeb3b;
+    }
+    .ec-article th:last-child { border-right: none; }
+    .ec-article td {
+      padding: 12px 12px;
+      border-right: 1px solid #e0e0e0;
+      border-bottom: 1px solid #e0e0e0;
+      background: white;
+      color: #333;
+      vertical-align: top;
+    }
+    .ec-article td:last-child { border-right: none; }
+    .ec-article tbody tr:nth-child(even) td { background: #f8f9fa; }
+    .ec-article tbody tr:hover td { background: #fff9e6; }
+    .ec-article tbody td:first-child { font-weight: 600; color: var(--rule-blue); }
+
+    /* Notification / blockquote */
+    .doc-notification {
+      background: #fffbea;
+      border-left: 5px solid #ffeb3b;
+      padding: 14px 20px;
+      margin: 22px 0;
+      border-radius: 0 8px 8px 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.7;
+    }
+    .doc-notification strong { color: var(--rule-blue); }
+
+    blockquote {
+      margin: 12px 0 12px 20px;
+      padding: 10px 16px;
+      border-left: 4px solid var(--gold);
+      background: var(--gold-pale);
+      border-radius: 0 6px 6px 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14.5px;
+      color: #444;
+      line-height: 1.65;
+    }
+
+    /* Section badge */
+    .section-badge {
+      display: inline-block;
+      background: var(--navy);
+      color: #ffeb3b;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 11px;
+      border-radius: 4px;
+      letter-spacing: 0.7px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    /* Form sections */
+    .form-section {
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 22px 26px;
+      margin: 24px 0;
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(26,35,126,0.05);
+    }
+    .form-section h3 {
+      margin-top: 0 !important;
+      border-bottom: 2px solid #ffeb3b;
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+    }
+    .form-line {
+      border-bottom: 1px dotted #999;
+      margin: 10px 0;
+      height: 1.8em;
+      display: block;
+    }
+    .form-field {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14.5px;
+      color: #333;
+      margin: 8px 0;
+    }
+    .form-field span {
+      border-bottom: 1px dotted #999;
+      min-width: 120px;
+      display: inline-block;
+    }
+
+    hr { border: none; border-top: 2px solid var(--border-subtle); margin: 30px 0; }
+
+    /* End badge */
+    .end-badge {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 2px solid var(--border-subtle);
+    }
+    .end-badge span {
+      background: var(--navy);
+      color: #ffeb3b;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 28px;
+      border-radius: 20px;
+      letter-spacing: 1.5px;
+    }
+
+    /* Back to top */
+    #btt {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      width: 44px; height: 44px;
+      background: var(--rule-blue);
+      border: 2px solid #ffeb3b;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 18px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 9999;
+      box-shadow: 0 4px 16px rgba(26,35,126,0.3);
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+    #btt:hover { background: #ffeb3b; color: var(--rule-blue); }
+    #btt.visible { display: flex; }
+  </style>
 </head>
 <body>
-
+<div id="read-progress"></div>
 <div id="site-header"></div>
 
-
-<!-- CONTENT -->
+<main>
 <div class="container ec-article" style="margin-top: 100px;">
 
-  <h2>The Orissa High Speed Diesel (Dealers' Licensing) Order, 1979</h2>
-
-  <div class="gazette-header">
-    <p>Published vide Notification No. <strong>S.R.O. No. 29/80</strong>, Orissa Gazette Extraordinary No. 47, dated <strong>18.01.1980</strong></p>
+  <!-- ══ HERO ══ -->
+  <div class="doc-hero">
+    <div class="doc-hero-deco1"></div>
+    <div class="doc-hero-deco2"></div>
+    <div class="doc-hero-eyebrow">Essential Commodities Act, 1955</div>
+    <h1>The Orissa High Speed Diesel<br>(Dealers' Licensing) Order, 1979</h1>
+    <p class="doc-hero-sub">State Government of Orissa — Petroleum Products Regulation</p>
+    <div class="doc-hero-pills">
+      <span class="doc-pill"><strong>Notification:</strong> S.R.O. No. 29/80</span>
+      <span class="doc-pill"><strong>Gazette:</strong> Orissa Gazette Extraordinary No. 47</span>
+      <span class="doc-pill"><strong>Date:</strong> 18.01.1980</span>
+      <span class="doc-pill"><strong>Extent:</strong> Whole State of Orissa</span>
+    </div>
   </div>
 
-  <div class="notification">
-    <strong>S.R.O. No. 29/80.</strong> — In exercise of the powers conferred by Section 3 of the Essential Commodities Act, 1955 (10 of 1955), read with the Notifications of the Government of India in the Ministry of Industry and Civil Supplies (Department of Civil Supplies and Co-operation) No. S.O. No. 681 (E), dated the 30th November 1974, published in the Gazette of India Extraordinary (Part II, Section 3, Sub-section (1), dated the 30th November, 1974) the State Government do hereby make the following Order, namely:
-  </div>
+  <!-- ══ ARTICLE BODY ══ -->
+  <div class="article-body">
 
-  <section>
-    <h3>1. Short title, extent and commencement.</h3>
-    <ol type="i">
-      <li>This order may be called the <em>Orissa High Speed Diesel (Dealers' Licensing) Order, 1979.</em></li>
-      <li>It shall extend to the whole of the State of Orissa.</li>
-      <li>It shall come into force on the date of its publication in the Official Gazette.</li>
-    </ol>
-  </section>
+    <!-- Gazette notice -->
+    <div class="gazette-notice">
+      <strong>S.R.O. No. 29/80.</strong> — In exercise of the powers conferred by Section 3 of the Essential Commodities Act, 1955 (10 of 1955), read with the Notifications of the Government of India in the Ministry of Industry and Civil Supplies (Department of Civil Supplies and Co-operation) No. S.O. No. 681(E), dated the 30th November 1974, published in the Gazette of India Extraordinary (Part II, Section 3, Sub-section (1), dated the 30th November, 1974), the State Government do hereby make the following Order, namely:
+    </div>
 
-  <section>
-    <h3>2. Definitions.</h3>
-    <p>In this Order, unless the context otherwise requires —</p>
-    <ol type="a">
-      <li><strong>"Collector"</strong> means the Collector of the District;</li>
-      <li><strong>"Dealer"</strong> in relation to a retail outlet means a person who carries on business of purchase, sale or storage for the purpose of sale of high speed diesel and includes his representative or agent;</li>
-      <li><strong>"Declared price"</strong> means the price fixed by an Oil Company at which high speed diesel shall be sold by a dealer at any filling station;</li>
-      <li><strong>"Form"</strong> means a Form appended to this Order;</li>
-      <li><strong>"Licensing Authority"</strong> means the Collectors within their respective jurisdictions and the State Government for the entire State;</li>
-      <li><strong>"Oil Companies"</strong> means Indian Oil Corporation, Hindustan Petroleum Corporation, Hindustan Petroleum Corporation (Visakha Marketing Unit), Bharat Petroleum Corporation, [The Indo Burma Petroleum Company Ltd.];</li>
-      <li><strong>"retail outlet"</strong> means a filling station in which one or more dispensing pumps have been provided and where high speed diesel is sold in retail to consumers.</li>
-    </ol>
-  </section>
+    <!-- ══ TABLE OF CONTENTS ══ -->
+    <div class="toc-wrapper" id="toc">
+      <div class="toc-header" onclick="toggleTOC()">
+        <div class="toc-header-left">
+          <div class="toc-icon">§</div>
+          <span class="toc-title-text">Table of Contents</span>
+        </div>
+        <button class="toc-toggle-btn" id="toc-btn">Collapse ▲</button>
+      </div>
 
-  <section>
-    <h3>3. High Speed Diesel not to be sold without licence.</h3>
-    <p>No person shall carry on business as a dealer within the State of Orissa except under and in accordance with the terms and conditions of a licence granted in that behalf by the Licensing Authority in Form I.</p>
-  </section>
+      <div class="toc-body" id="toc-body">
 
-  <section>
-    <h3>4. Application for grant or renewal of licence.</h3>
-    <ol>
-      <li>Any application for grant or renewal of licence under this Order shall be made in Form II duly recommended by the respective Oil Companies.</li>
-      <li>Every licence granted under this order shall, unless revoked or expired, be valid for a period of one year or more but not exceeding five years ending on the 31st day of March and may be renewed for a period of one year or more but not exceeding five years at a time on an application within thirty days before the date of expiry of such licence.</li>
-    </ol>
+        <div class="toc-group">
+          <div class="toc-group-title">Order Clauses</div>
+          <ul class="toc-list">
+            <li><a href="#cl1"><span class="toc-num">1</span>Short Title, Extent &amp; Commencement</a></li>
+            <li><a href="#cl2"><span class="toc-num">2</span>Definitions</a></li>
+            <li><a href="#cl3"><span class="toc-num">3</span>Licence Required to Sell HSD</a></li>
+            <li><a href="#cl4"><span class="toc-num">4</span>Application for Grant or Renewal</a></li>
+            <li><a href="#cl5"><span class="toc-num">5</span>Separate Licence per Retail Outlet</a></li>
+            <li><a href="#cl6"><span class="toc-num">6</span>Sale of High Speed Diesel</a></li>
+            <li><a href="#cl7"><span class="toc-num">7</span>Cancellation &amp; Suspension</a></li>
+            <li><a href="#cl8"><span class="toc-num">8</span>Power of Entry, Search &amp; Seizure</a></li>
+            <li><a href="#cl9"><span class="toc-num">9</span>Exemption of HSD</a></li>
+          </ul>
+        </div>
 
-    <p><em><strong>Explanation</strong> — "Year" means the financial year commencing on the 1st day of April.</em></p>
+        <div class="toc-group">
+          <div class="toc-group-title">Key Definitions (Clause 2)</div>
+          <ul class="toc-list">
+            <li><a href="#def-collector"><span class="toc-num">a</span>Collector</a></li>
+            <li><a href="#def-dealer"><span class="toc-num">b</span>Dealer</a></li>
+            <li><a href="#def-declaredprice"><span class="toc-num">c</span>Declared Price</a></li>
+            <li><a href="#def-licensingauthority"><span class="toc-num">e</span>Licensing Authority</a></li>
+            <li><a href="#def-oilcompanies"><span class="toc-num">f</span>Oil Companies</a></li>
+            <li><a href="#def-retailoutlet"><span class="toc-num">g</span>Retail Outlet</a></li>
+          </ul>
+        </div>
 
-    <ol start="3">
-      <li>
-        <ol type="i">
-          <li>The fees chargeable in respect of each licence for a period of one year or less or per year shall be as specified below:</li>
-        </ol>
+        <div class="toc-group">
+          <div class="toc-group-title">Forms</div>
+          <ul class="toc-list">
+            <li><a href="#form1"><span class="toc-num">I</span>Licence — Grant to Dealer</a></li>
+            <li><a href="#form2"><span class="toc-num">II</span>Application for Licence</a></li>
+            <li><a href="#form3"><span class="toc-num">III</span>Consumer Cards for HSD Sale</a></li>
+          </ul>
+          <div class="toc-group-title" style="margin-top:14px">Fee Schedule</div>
+          <ul class="toc-list">
+            <li><a href="#fees"><span class="toc-num">₹</span>Licence Fees Table</a></li>
+          </ul>
+        </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Purpose</th>
-              <th>Fee</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>For issue of licence</td><td>Rs. 5,000.00</td></tr>
-            <tr><td>For renewal of licence</td><td>Rs. 2,000.00</td></tr>
-            <tr><td>For issue of duplicate licence</td><td>Rs. 1,000.00</td></tr>
-          </tbody>
-        </table>
+      </div>
+    </div><!-- /toc-wrapper -->
 
-        <ol type="i" start="2">
-          <li>Existing licences are valid till the 31st December, 1984. On application by the licensees for renewal the licences shall be renewed till the 31st March, 1985 on payment of a fee equal to one-fourth of the fee prescribed under Sub-clause (3)(i) above.</li>
-        </ol>
-      </li>
+    <!-- ══ CLAUSE 1 ══ -->
+    <section id="cl1">
+      <h2><span class="clause-num">Clause 1</span>Short Title, Extent and Commencement</h2>
+      <ol type="i">
+        <li>This order may be called the <em>Orissa High Speed Diesel (Dealers' Licensing) Order, 1979.</em></li>
+        <li>It shall extend to the whole of the State of Orissa.</li>
+        <li>It shall come into force on the date of its publication in the Official Gazette.</li>
+      </ol>
+    </section>
 
-      <li>The fees specified in Sub-clause (3) shall be deposited in Government Treasury to the credit of the State Government through a Treasury Challan and the Treasury Challan shall be submitted with the application for grant or renewal of licence.</li>
+    <!-- ══ CLAUSE 2 ══ -->
+    <section id="cl2">
+      <h2><span class="clause-num">Clause 2</span>Definitions</h2>
+      <p>In this Order, unless the context otherwise requires —</p>
+      <ol type="a">
+        <li id="def-collector"><strong>"Collector"</strong> means the Collector of the District;</li>
+        <li id="def-dealer"><strong>"Dealer"</strong> in relation to a retail outlet means a person who carries on business of purchase, sale or storage for the purpose of sale of high speed diesel and includes his representative or agent;</li>
+        <li id="def-declaredprice"><strong>"Declared price"</strong> means the price fixed by an Oil Company at which high speed diesel shall be sold by a dealer at any filling station;</li>
+        <li><strong>"Form"</strong> means a Form appended to this Order;</li>
+        <li id="def-licensingauthority"><strong>"Licensing Authority"</strong> means the Collectors within their respective jurisdictions and the State Government for the entire State;</li>
+        <li id="def-oilcompanies"><strong>"Oil Companies"</strong> means Indian Oil Corporation, Hindustan Petroleum Corporation, Hindustan Petroleum Corporation (Visakha Marketing Unit), Bharat Petroleum Corporation, The Indo Burma Petroleum Company Ltd.;</li>
+        <li id="def-retailoutlet"><strong>"retail outlet"</strong> means a filling station in which one or more dispensing pumps have been provided and where high speed diesel is sold in retail to consumers.</li>
+      </ol>
+    </section>
 
-      <li>The holder of the licence shall immediately obtain from the Licensing Authority a duplicate licence if the original issued to him is lost, destroyed or defaced.</li>
-    </ol>
-  </section>
+    <!-- ══ CLAUSE 3 ══ -->
+    <section id="cl3">
+      <h2><span class="clause-num">Clause 3</span>High Speed Diesel Not to be Sold Without Licence</h2>
+      <p>No person shall carry on business as a dealer within the State of Orissa except under and in accordance with the terms and conditions of a licence granted in that behalf by the Licensing Authority in <strong>Form I</strong>.</p>
+    </section>
 
-  <section>
-    <h3>5. Separate licence shall be obtained by the dealer for each retail outlet.</h3>
-    <p>A separate licence shall be obtained by the dealer for each retail outlet operated by him.</p>
-  </section>
+    <!-- ══ CLAUSE 4 ══ -->
+    <section id="cl4">
+      <h2><span class="clause-num">Clause 4</span>Application for Grant or Renewal of Licence</h2>
+      <ol>
+        <li>Any application for grant or renewal of licence under this Order shall be made in <strong>Form II</strong> duly recommended by the respective Oil Companies.</li>
+        <li>Every licence granted under this order shall, unless revoked or expired, be valid for a period of one year or more but not exceeding five years ending on the <strong>31st day of March</strong> and may be renewed for a period of one year or more but not exceeding five years at a time on an application within thirty days before the date of expiry of such licence.</li>
+      </ol>
+      <p><em><strong>Explanation</strong> — "Year" means the financial year commencing on the 1st day of April.</em></p>
+      <ol start="3">
+        <li id="fees">
+          <ol type="i">
+            <li>The fees chargeable in respect of each licence for a period of one year or less or per year shall be as specified below:</li>
+          </ol>
+          <table>
+            <thead>
+              <tr>
+                <th>Purpose</th>
+                <th>Fee</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>For issue of licence</td><td>Rs. 5,000.00</td></tr>
+              <tr><td>For renewal of licence</td><td>Rs. 2,000.00</td></tr>
+              <tr><td>For issue of duplicate licence</td><td>Rs. 1,000.00</td></tr>
+            </tbody>
+          </table>
+          <ol type="i" start="2">
+            <li>Existing licences are valid till the <strong>31st December, 1984</strong>. On application by the licensees for renewal the licences shall be renewed till the <strong>31st March, 1985</strong> on payment of a fee equal to one-fourth of the fee prescribed under Sub-clause (3)(i) above.</li>
+          </ol>
+        </li>
+        <li>The fees specified in Sub-clause (3) shall be deposited in Government Treasury to the credit of the State Government through a <strong>Treasury Challan</strong> and the Treasury Challan shall be submitted with the application for grant or renewal of licence.</li>
+        <li>The holder of the licence shall immediately obtain from the Licensing Authority a duplicate licence if the original issued to him is lost, destroyed or defaced.</li>
+      </ol>
+    </section>
 
-  <section>
-    <h3>5A.</h3>
-    <p>* * *</p>
-  </section>
+    <!-- ══ CLAUSE 5 ══ -->
+    <section id="cl5">
+      <h2><span class="clause-num">Clause 5</span>Separate Licence Shall be Obtained by the Dealer for Each Retail Outlet</h2>
+      <p>A separate licence shall be obtained by the dealer for each retail outlet operated by him.</p>
+    </section>
 
-  <section>
-    <h3>6. Sale of high speed diesel.</h3>
-    <p>The Dealers [if so directed by the Collector] shall sell high speed diesel to the customers not exceeding quantities mentioned in the cards in Form III issued by the Licensing Authority or any other officer authorised by him in that behalf.</p>
-  </section>
+    <!-- ══ CLAUSE 6 ══ -->
+    <section id="cl6">
+      <h2><span class="clause-num">Clause 6</span>Sale of High Speed Diesel</h2>
+      <p>The Dealers [if so directed by the Collector] shall sell high speed diesel to the customers not exceeding quantities mentioned in the cards in <strong>Form III</strong> issued by the Licensing Authority or any other officer authorised by him in that behalf.</p>
+    </section>
 
-  <section>
-    <h3>7. Cancellation and suspension of licence.</h3>
-    <p>Any dealer to whom a licence has been granted and who contravenes any of the provisions of this Order or any of the conditions of the said licence shall, without prejudice to any other action that may be taken against him under any other law for the time being in force, be liable to have his licence cancelled or suspended by the licensing authority:</p>
-    <blockquote>
-      <strong>Provided</strong> that no order cancelling or suspending the licence shall be made without giving the dealer an opportunity of being heard:
-    </blockquote>
-    <blockquote>
-      <strong>Provided further</strong> that where the Order cancelling or suspending a licence is passed by the Licensing Authority other than the State Government, the aggrieved person may, within thirty days from the date of the communication of the said Order appeal to the State Government whose decision in such appeal shall be final.
-    </blockquote>
-  </section>
+    <!-- ══ CLAUSE 7 ══ -->
+    <section id="cl7">
+      <h2><span class="clause-num">Clause 7</span>Cancellation and Suspension of Licence</h2>
+      <p>Any dealer to whom a licence has been granted and who contravenes any of the provisions of this Order or any of the conditions of the said licence shall, without prejudice to any other action that may be taken against him under any other law for the time being in force, be liable to have his licence cancelled or suspended by the licensing authority:</p>
+      <blockquote>
+        <strong>Provided</strong> that no order cancelling or suspending the licence shall be made without giving the dealer an opportunity of being heard.
+      </blockquote>
+      <blockquote>
+        <strong>Provided further</strong> that where the Order cancelling or suspending a licence is passed by the Licensing Authority other than the State Government, the aggrieved person may, within <strong>thirty days</strong> from the date of the communication of the said Order, appeal to the State Government whose decision in such appeal shall be final.
+      </blockquote>
+    </section>
 
-  <section>
-    <h3>8. Power of entry, search, seizure, etc.</h3>
-    <p><strong>(1)</strong> For the effective enforcement of the provisions of this Order, any officer not below the rank of Inspector of Supplies authorised by the State Government in this behalf or a police officer of or above the rank of Sub-Inspector may, when he has reason to believe that a contravention of this order has been, is being or is about to be committed, enter and search the retail outlet; interrogate any person and seize high speed diesel including the containers in respect of which he has reason to believe that the contravention has been, is being or is about to be committed.</p>
-    <p><strong>(2)</strong> The provisions of Section 100 of the Code of Criminal Procedure, 1973 (2 of 1974), relating to search and seizure shall, so far as may be, apply to searches and seizures under this Clause.</p>
-  </section>
+    <!-- ══ CLAUSE 8 ══ -->
+    <section id="cl8">
+      <h2><span class="clause-num">Clause 8</span>Power of Entry, Search, Seizure, etc.</h2>
+      <p><strong>(1)</strong> For the effective enforcement of the provisions of this Order, any officer not below the rank of Inspector of Supplies authorised by the State Government in this behalf or a police officer of or above the rank of Sub-Inspector may, when he has reason to believe that a contravention of this order has been, is being or is about to be committed, enter and search the retail outlet; interrogate any person and seize high speed diesel including the containers in respect of which he has reason to believe that the contravention has been, is being or is about to be committed.</p>
+      <p><strong>(2)</strong> The provisions of Section 100 of the Code of Criminal Procedure, 1973 (2 of 1974), relating to search and seizure shall, so far as may be, apply to searches and seizures under this Clause.</p>
+    </section>
 
-  <section>
-    <h3>9. Exemption of High Speed Diesel.</h3>
-    <p>Notwithstanding anything contained in the Orissa Petroleum Products (Sale by Dealers) Order, 1979 but save as provided in this Order, the provisions of the said Order shall not apply to High Speed Diesel.</p>
-  </section>
+    <!-- ══ CLAUSE 9 ══ -->
+    <section id="cl9">
+      <h2><span class="clause-num">Clause 9</span>Exemption of High Speed Diesel</h2>
+      <p>Notwithstanding anything contained in the Orissa Petroleum Products (Sale by Dealers) Order, 1979 but save as provided in this Order, the provisions of the said Order shall not apply to High Speed Diesel.</p>
+    </section>
 
-  <hr>
+    <hr>
 
-  <!-- FORM I -->
-  <div class="form-section">
-    <div class="section-badge">Form - I</div>
-    <h3>[See Clause 3] — Licence granted to a dealer</h3>
-    <p class="form-field">No. <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
-    <ol>
-      <li>Subject to the provisions of the Orissa High Speed Diesel (Dealers' Licensing) Order, 1979 and to the terms and conditions of this licence, <span class="form-line"></span> is/are hereby authorised to deal in High Speed Diesel.</li>
-      <li>The licensee shall carry the aforesaid business at the following place namely:<br>Place: <span class="form-line"></span></li>
-      <li>The licensee shall not store High Speed Diesel in any place other than the place mentioned in para 2.</li>
-      <li>The licensee shall maintain a register of daily account showing correctly all transactions of High Speed Diesel. It shall show:
-        <ol type="a">
-          <li>the opening stock on each day;</li>
-          <li>the quantities received on each day showing the name of the supplier;</li>
-          <li>quantities sold on each day showing the name of the consumer and vehicle No.;</li>
-          <li>the closing stock on each day.</li>
-        </ol>
-      </li>
-      <li>The licensee shall report the stock position of High Speed Diesel every week to the Licensing Authority with detailed statement of sales indicating the name of the consumer, vehicle No., Card No. and quantity sold.</li>
-      <li>The licensee shall issue to every consumer a correct receipt indicating the name of the consumer, vehicle Regd. No., date of transaction, the quantity sold, the rate at which sold and the total amount charged and shall keep a duplicate of the same for inspection on demand by Licensing Authority or any other officer authorised by him.</li>
-      <li>The licensee shall not sell High Speed Diesel at prices other than that fixed by the Oil Company.</li>
-      <li>The licensee shall give all facilities at all reasonable time to any officer authorised by the State Government or the Licensing Authority for the inspection of the accounts and stocks in his possession.</li>
-      <li>The licensee shall not have in his possession or under his control any diesel in excess of the quantity revealed in his account and if any such excess quantity is not properly accounted for by the licensee, it shall be liable to seizure.</li>
-      <li>Contravention of any of the conditions of this licence whether by the licensee or his agent or servant or by any person who can reasonably be presumed to have been acting on his behalf will render the licence liable to cancellation or suspension.</li>
-      <li>The licensee shall comply with any direction that may be given to him under the order in writing by the Licensing Authority.</li>
-    </ol>
-    <p style="margin-top:20px;font-family:'Segoe UI',sans-serif;font-size:15px">Signature of the Licensing Authority<br><span class="form-line" style="width:200px;display:inline-block"></span></p>
-    <p class="form-field">Date: <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
-  </div>
+    <!-- ══ FORM I ══ -->
+    <div class="form-section" id="form1">
+      <div class="section-badge">Form — I</div>
+      <h3>[See Clause 3] — Licence Granted to a Dealer</h3>
+      <p class="form-field">No. <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+      <ol>
+        <li>Subject to the provisions of the Orissa High Speed Diesel (Dealers' Licensing) Order, 1979 and to the terms and conditions of this licence, <span class="form-line"></span> is/are hereby authorised to deal in High Speed Diesel.</li>
+        <li>The licensee shall carry the aforesaid business at the following place namely:<br>Place: <span class="form-line"></span></li>
+        <li>The licensee shall not store High Speed Diesel in any place other than the place mentioned in para 2.</li>
+        <li>The licensee shall maintain a register of daily account showing correctly all transactions of High Speed Diesel. It shall show:
+          <ol type="a">
+            <li>the opening stock on each day;</li>
+            <li>the quantities received on each day showing the name of the supplier;</li>
+            <li>quantities sold on each day showing the name of the consumer and vehicle No.;</li>
+            <li>the closing stock on each day.</li>
+          </ol>
+        </li>
+        <li>The licensee shall report the stock position of High Speed Diesel every week to the Licensing Authority with detailed statement of sales indicating the name of the consumer, vehicle No., Card No. and quantity sold.</li>
+        <li>The licensee shall issue to every consumer a correct receipt indicating the name of the consumer, vehicle Regd. No., date of transaction, the quantity sold, the rate at which sold and the total amount charged and shall keep a duplicate of the same for inspection on demand.</li>
+        <li>The licensee shall not sell High Speed Diesel at prices other than that fixed by the Oil Company.</li>
+        <li>The licensee shall give all facilities at all reasonable time to any officer authorised by the State Government or the Licensing Authority for the inspection of the accounts and stocks in his possession.</li>
+        <li>The licensee shall not have in his possession or under his control any diesel in excess of the quantity revealed in his account and if any such excess quantity is not properly accounted for by the licensee, it shall be liable to seizure.</li>
+        <li>Contravention of any of the conditions of this licence whether by the licensee or his agent or servant or by any person who can reasonably be presumed to have been acting on his behalf will render the licence liable to cancellation or suspension.</li>
+        <li>The licensee shall comply with any direction that may be given to him under the order in writing by the Licensing Authority.</li>
+      </ol>
+      <p style="margin-top:20px;font-family:'DM Sans',sans-serif;font-size:14.5px">Signature of the Licensing Authority<br><span class="form-line" style="width:200px;display:inline-block"></span></p>
+      <p class="form-field">Date: <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+    </div>
 
-  <!-- FORM II -->
-  <div class="form-section">
-    <div class="section-badge">Form - II</div>
-    <h3>[See Clause 4] — Application for Licence as a dealer in High Speed Diesel</h3>
-    <ol>
-      <li class="form-field">Applicant's name and address: <span style="width:250px">&nbsp;</span></li>
-      <li class="form-field">The name of the Oil Company appointing the Dealer: <span style="width:180px">&nbsp;</span></li>
-      <li class="form-field">Applicant's place of business: <span style="width:220px">&nbsp;</span></li>
-      <li class="form-field">How long the applicant dealing in High Speed Diesel: <span style="width:150px">&nbsp;</span></li>
-      <li class="form-field">Quantity of High Speed Diesel handled by the applicant during the preceding year (quantity be specified in KL.): <span style="width:120px">&nbsp;</span></li>
-    </ol>
-    <p>I declare that the following quantities of High Speed Diesel for sale are in my possession this day, and are held at places noted against them —</p>
-    <p class="form-field">Name of place: <span style="width:180px">&nbsp;</span></p>
-    <p class="form-field">Stocks: <span style="width:240px">&nbsp;</span></p>
-    <p class="form-field">Quantity: <span style="width:180px">&nbsp;</span></p>
-    <p>I hereby certify that to the best of my knowledge the particulars given in this application are true and correct.</p>
-    <p class="form-field" style="margin-top:16px">Date: <span style="width:120px">&nbsp;</span> &nbsp;&nbsp;&nbsp; Place: <span style="width:120px">&nbsp;</span></p>
-    <p style="font-family:'Segoe UI',sans-serif;font-size:15px;margin-top:12px">Signature of the applicant<br><span class="form-line" style="width:200px;display:inline-block"></span></p>
-  </div>
+    <!-- ══ FORM II ══ -->
+    <div class="form-section" id="form2">
+      <div class="section-badge">Form — II</div>
+      <h3>[See Clause 4] — Application for Licence as a Dealer in High Speed Diesel</h3>
+      <ol>
+        <li class="form-field">Applicant's name and address: <span style="width:250px">&nbsp;</span></li>
+        <li class="form-field">The name of the Oil Company appointing the Dealer: <span style="width:180px">&nbsp;</span></li>
+        <li class="form-field">Applicant's place of business: <span style="width:220px">&nbsp;</span></li>
+        <li class="form-field">How long the applicant has been dealing in High Speed Diesel: <span style="width:130px">&nbsp;</span></li>
+        <li class="form-field">Quantity of High Speed Diesel handled by the applicant during the preceding year (quantity in KL.): <span style="width:100px">&nbsp;</span></li>
+      </ol>
+      <p>I declare that the following quantities of High Speed Diesel for sale are in my possession this day, and are held at places noted against them —</p>
+      <p class="form-field">Name of place: <span style="width:180px">&nbsp;</span></p>
+      <p class="form-field">Stocks: <span style="width:240px">&nbsp;</span></p>
+      <p class="form-field">Quantity: <span style="width:180px">&nbsp;</span></p>
+      <p>I hereby certify that to the best of my knowledge the particulars given in this application are true and correct.</p>
+      <p class="form-field" style="margin-top:16px">Date: <span style="width:110px">&nbsp;</span> &nbsp;&nbsp;&nbsp; Place: <span style="width:110px">&nbsp;</span></p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:14.5px;margin-top:14px">Signature of the applicant<br><span class="form-line" style="width:200px;display:inline-block"></span></p>
+    </div>
 
-  <!-- FORM III -->
-  <div class="form-section">
-    <div class="section-badge">Form - III</div>
-    <h3>[See Clause 6] — Consumer cards for sale of High Speed Diesel</h3>
-    <p class="form-field">Card No.: <span style="width:140px">&nbsp;</span></p>
-    <p class="form-field">Name and address of the dealer of the concerned Oil Companies: <span style="width:200px">&nbsp;</span></p>
-    <p class="form-field">Name of the Consumer with Regn. Certificate No. of the vehicle: <span style="width:200px">&nbsp;</span></p>
-    <p class="form-field">Monthly quota of High Speed Diesel to be supplied by the dealer: <span style="width:150px">&nbsp;</span></p>
+    <!-- ══ FORM III ══ -->
+    <div class="form-section" id="form3">
+      <div class="section-badge">Form — III</div>
+      <h3>[See Clause 6] — Consumer Cards for Sale of High Speed Diesel</h3>
+      <p class="form-field">Card No.: <span style="width:140px">&nbsp;</span></p>
+      <p class="form-field">Name and address of the dealer of the concerned Oil Companies: <span style="width:200px">&nbsp;</span></p>
+      <p class="form-field">Name of the Consumer with Regn. Certificate No. of the vehicle: <span style="width:200px">&nbsp;</span></p>
+      <p class="form-field">Monthly quota of High Speed Diesel to be supplied by the dealer: <span style="width:150px">&nbsp;</span></p>
+      <table style="margin-top:16px">
+        <thead>
+          <tr>
+            <th>Date of Issue</th>
+            <th>Signature of Dealer</th>
+            <th>Signature of Consumer</th>
+            <th>Details of Sales / Qty Sold</th>
+            <th>Designation &amp; Signature of Issuing Authority</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+          <tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+          <tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        </tbody>
+      </table>
+      <p class="form-field" style="margin-top:16px">Date: <span style="width:120px">&nbsp;</span></p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:14.5px;margin-top:10px">Signature of the Dealer<br><span class="form-line" style="width:200px;display:inline-block"></span></p>
+    </div>
 
-    <table style="margin-top:16px">
-      <thead>
-        <tr>
-          <th>Date of issue of the Card</th>
-          <th>Signature of the Dealer</th>
-          <th>Signature of the Consumer</th>
-          <th>Details of Sales / Quantity Sold</th>
-          <th>Designation and Signature of the Issuing Authority</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-        <tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-        <tr><td style="height:40px">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-      </tbody>
-    </table>
+    <div class="end-badge"><span>— THE END —</span></div>
 
-    <p class="form-field" style="margin-top:16px">Date: <span style="width:120px">&nbsp;</span></p>
-    <p style="font-family:'Segoe UI',sans-serif;font-size:15px;margin-top:8px">Signature of the Dealer<br><span class="form-line" style="width:200px;display:inline-block"></span></p>
-  </div>
+  </div><!-- /article-body -->
+</div><!-- /container -->
+</main>
 
-  <div class="end-badge"><span>— THE END —</span></div>
-
-</div>
-  <!-- FOOTER -->
 <div id="site-footer"></div>
+<a href="#" id="btt" title="Back to top">↑</a>
+<script src="/assets/Scripts/gototop.js"></script>
 
- <!-- Go to Top -->
-  <script src="/assets/Scripts/gototop.js"></script>
+<script>
+  /* Reading progress */
+  const bar = document.getElementById('read-progress');
+  const btt = document.getElementById('btt');
+  window.addEventListener('scroll', () => {
+    const el = document.documentElement;
+    bar.style.width = (el.scrollTop / (el.scrollHeight - el.clientHeight) * 100) + '%';
+    el.scrollTop > 400 ? btt.classList.add('visible') : btt.classList.remove('visible');
+  });
+
+  /* TOC toggle */
+  function toggleTOC() {
+    const body = document.getElementById('toc-body');
+    const btn  = document.getElementById('toc-btn');
+    body.classList.toggle('collapsed');
+    btn.textContent = body.classList.contains('collapsed') ? 'Expand ▼' : 'Collapse ▲';
+  }
+
+  /* Smooth scroll */
+  document.querySelectorAll('.toc-list a').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+
+  /* Active TOC highlight */
+  const sections = document.querySelectorAll('section[id], .form-section[id]');
+  const tocLinks = document.querySelectorAll('.toc-list a');
+  new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(l => l.style.fontWeight = '');
+        const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+        if (active) active.style.fontWeight = '700';
+      }
+    });
+  }, { rootMargin: '-25% 0px -65% 0px' }).observe && sections.forEach(s =>
+    new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(l => l.style.fontWeight = '');
+          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.style.fontWeight = '700';
+        }
+      });
+    }, { rootMargin: '-25% 0px -65% 0px' }).observe(s)
+  );
+</script>
 </body>
 </html>
