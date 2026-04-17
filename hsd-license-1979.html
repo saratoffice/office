@@ -8,7 +8,6 @@
   <script src="assets/Scripts/site-components.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  
   <style>
     /* ── Reading Progress Bar ── */
     #read-progress {
@@ -790,54 +789,5 @@
 <a href="#" id="btt" title="Back to top">↑</a>
 <script src="/assets/Scripts/gototop.js"></script>
 
-<script>
-  /* Reading progress */
-  const bar = document.getElementById('read-progress');
-  const btt = document.getElementById('btt');
-  window.addEventListener('scroll', () => {
-    const el = document.documentElement;
-    bar.style.width = (el.scrollTop / (el.scrollHeight - el.clientHeight) * 100) + '%';
-    el.scrollTop > 400 ? btt.classList.add('visible') : btt.classList.remove('visible');
-  });
-
-  /* TOC toggle */
-  function toggleTOC() {
-    const body = document.getElementById('toc-body');
-    const btn  = document.getElementById('toc-btn');
-    body.classList.toggle('collapsed');
-    btn.textContent = body.classList.contains('collapsed') ? 'Expand ▼' : 'Collapse ▲';
-  }
-
-  /* Smooth scroll */
-  document.querySelectorAll('.toc-list a').forEach(a => {
-    a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-    });
-  });
-
-  /* Active TOC highlight */
-  const sections = document.querySelectorAll('section[id], .form-section[id]');
-  const tocLinks = document.querySelectorAll('.toc-list a');
-  new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        tocLinks.forEach(l => l.style.fontWeight = '');
-        const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
-        if (active) active.style.fontWeight = '700';
-      }
-    });
-  }, { rootMargin: '-25% 0px -65% 0px' }).observe && sections.forEach(s =>
-    new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          tocLinks.forEach(l => l.style.fontWeight = '');
-          const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
-          if (active) active.style.fontWeight = '700';
-        }
-      });
-    }, { rootMargin: '-25% 0px -65% 0px' }).observe(s)
-  );
-</script>
 </body>
 </html>
