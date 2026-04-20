@@ -4,95 +4,96 @@
   <meta charset="UTF-8">
   <title>Petroleum Act 1934 | Sarat Office</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <!-- Common CSS (menu, footer, global styles) -->
   <link rel="stylesheet" href="style.css">
-  <!-- ✅ IMPORTANT: site components for header/footer etc. -->
   <script src="assets/Scripts/site-components.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    /* ── Page Variables ── */
+    /* ── Variables ── */
     :root {
-      --ink: #1a1a2e;
-      --ink-mid: #2d3561;
-      --ink-light: #4a5568;
       --gold: #c9961a;
       --gold-light: #f5e9c8;
       --gold-pale: #fdf8ee;
       --rule-blue: #1a237e;
       --rule-blue-mid: #283593;
-      --accent-red: #b71c1c;
+      --navy: #0f1535;
       --border-subtle: #e8e0d0;
       --bg-warm: #fdfaf4;
     }
-    /* ── RESET & BASE ── */
-    * { 
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box; 
+
+    /* ── Reading progress bar ── */
+    #progressBar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #c9961a, #ffeb3b, #c9961a);
+      z-index: 99999;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ── Prevent horizontal scroll from hero breakout ── */
+    html, body {
+      overflow-x: hidden;
     }
 
     body {
       background: #f1f5f9;
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.5;
-      verflow-x: hidden;
+      font-family: 'DM Sans', system-ui, sans-serif;
     }
 
-    /* Import clean font */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
-
-    /* ══ ARTICLE WRAPPER (simulates content container with padding/max-width) ══ */
+    /* ── Page wrapper — no overflow:hidden, just max-width ── */
     .ec-article {
-      max-width: 1200px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 0;
-      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.05);
-      position: relative;
-      /* no overflow hidden — hero will naturally break out because it's not constrained inside this wrapper */
+      max-width: 1100px;
+      margin: 40px auto 60px;
+      background: var(--bg-warm);
+      border-radius: 6px;
+      box-shadow: 0 4px 40px rgba(26,35,126,0.08);
+      /* no overflow:hidden — hero uses position:relative on <body> */
     }
 
+    /* ── FULL-WIDTH HERO ── */
     /* 
-      🔥 FULL-WIDTH HERO 🔥
-      - Spans entire viewport width, ignores .ec-article max-width/padding
-      - Uses negative margin + viewport-relative width technique
-      - Preserves all decorative pseudo-elements and badge styling
+      Technique: hero sits outside .ec-article, directly in <main>.
+      No negative-margin hack needed — no scrollbar side-effect.
     */
     .act-hero {
-         background: linear-gradient(160deg, #0f1535 0%, #1a237e 55%, #283593 100%);
-      padding: 52px 5vw 44px;          /* responsive side padding */
+      background: linear-gradient(160deg, #0a0f2e 0%, #1a237e 55%, #283593 100%);
+      padding: 56px 5vw 48px;
       position: relative;
       overflow: hidden;
- 
-      /* Breakout of .container without scrollbar */
-      width: 100vw;
-      left: 50%;
-      transform: translateX(-50%);
- 
-      /* All text centred */
       text-align: center;
+      /* Full viewport width naturally — it's a direct child of <main> */
+      width: 100%;
     }
-
-    /* DECORATIVE CIRCLES (pseudo-elements) — updated to match original intent */
-    /* First circle: top-right decorative orb */
+    /* Diagonal stripe texture */
     .act-hero::before {
-          content: "";
-          position: absolute; inset: 0;
-          background: repeating-linear-gradient(
-            -45deg,
-            transparent,
-            transparent 40px,
-            rgba(255,235,59,0.025) 40px,
-            rgba(255,235,59,0.025) 41px
-          );
-          pointer-events: none;
-        }
-    /* Second circle: bottom-left orb */
+      content: "";
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        -45deg, transparent, transparent 38px,
+        rgba(255,235,59,0.03) 38px, rgba(255,235,59,0.03) 39px
+      );
+      pointer-events: none;
+    }
+    /* Gold bottom line */
     .act-hero::after {
       content: "";
       position: absolute;
       bottom: 0; left: 0; right: 0;
       height: 4px;
       background: linear-gradient(90deg, #c9961a 0%, #ffeb3b 50%, #c9961a 100%);
+    }
+    /* Decorative orbs */
+    .hero-orb1 {
+      position: absolute; top: -60px; right: -60px;
+      width: 280px; height: 280px; border-radius: 50%;
+      background: rgba(255,235,59,0.05); pointer-events: none;
+    }
+    .hero-orb2 {
+      position: absolute; bottom: -50px; left: 20px;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: rgba(255,255,255,0.03); pointer-events: none;
     }
 
     .act-hero-badge {
@@ -104,222 +105,280 @@
       color: #ffeb3b;
       font-size: 11px;
       font-weight: 700;
-      letter-spacing: 1.2px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      padding: 4px 12px;
+      padding: 5px 14px;
       border-radius: 20px;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
+      font-family: 'DM Sans', sans-serif;
     }
     .act-hero h1 {
-      font-size: 2rem;
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 2.2rem;
       font-weight: 700;
       color: #fff;
       margin: 0 0 10px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+      line-height: 1.2;
     }
     .act-hero > p {
-      color: rgba(255,255,255,0.75);
-      font-size: 15px;
+      color: rgba(255,255,255,0.68);
+      font-size: 14px;
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'DM Sans', sans-serif;
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto;
     }
     .act-hero-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-      justify-content: center;   /* pills centred */
+      gap: 8px;
+      margin-top: 22px;
+      justify-content: center;
     }
     .act-hero-pill {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.82);
+      font-family: 'DM Sans', sans-serif;
       font-size: 12px;
-      padding: 4px 12px;
+      padding: 4px 13px;
       border-radius: 20px;
     }
-    .act-hero-pill strong {
-      color: #ffeb3b;
+    .act-hero-pill strong { color: #ffeb3b; font-weight: 600; }
+
+    @media (max-width: 768px) {
+      .act-hero { padding: 36px 20px 40px; }
+      .act-hero h1 { font-size: 1.6rem; }
     }
 
-    /* Hero responsive */
-    @media (max-width: 768px) {
-      .act-hero {
-        padding: 32px 20px 28px;
-      }
-      .act-hero h1 { font-size: 1.5rem; }
+    /* ── Article inner padding ── */
+    .article-body {
+      padding: 36px 48px 56px;
+    }
+    @media (max-width: 768px) { .article-body { padding: 22px 18px 40px; } }
+
+    /* ── Section badge (chapter header) ── */
+    .section-badge {
+      display: inline-block;
+      background: var(--navy);
+      color: #ffeb3b;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      margin: 28px 0 8px;
+      text-transform: uppercase;
     }
 
     /* ── TOC ── */
-    .act-toc {
-      background: #f0f4ff;
-      border: 1px solid #c5cae9;
-      border-left: 5px solid #1a237e;
-      border-radius: 0 10px 10px 0;
-      padding: 0;
-      margin-bottom: 32px;
+    .toc-wrapper {
+      background: #fff;
+      border: 1px solid var(--border-subtle);
+      border-top: 4px solid var(--gold);
+      border-radius: 0 0 10px 10px;
+      margin: 0 0 36px;
       overflow: hidden;
+      box-shadow: 0 4px 18px rgba(26,35,126,0.05);
     }
-    .act-toc-header {
+    .toc-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 20px;
+      padding: 13px 20px;
+      background: var(--gold-pale);
+      border-bottom: 1px solid var(--border-subtle);
       cursor: pointer;
       user-select: none;
-      background: #e8eeff;
-      border-bottom: 1px solid transparent;
-      transition: background 0.2s;
     }
-    .act-toc-header:hover { background: #dce4ff; }
-    .act-toc-title {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      color: #1a237e;
+    .toc-header-left { display: flex; align-items: center; gap: 10px; }
+    .toc-icon {
+      width: 28px; height: 28px;
+      background: var(--rule-blue);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; color: #ffeb3b; flex-shrink: 0;
+    }
+    .toc-title-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px; font-weight: 700;
+      letter-spacing: 1.2px; text-transform: uppercase;
+      color: var(--rule-blue);
+    }
+    .toc-toggle-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 600;
+      color: var(--gold); background: none;
+      border: 1px solid var(--gold);
+      border-radius: 20px; padding: 3px 11px;
+      cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px;
+    }
+    .toc-toggle-btn:hover { background: var(--gold); color: #fff; }
+
+    .toc-body {
+      padding: 18px 22px 22px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0 22px;
+      align-items: stretch;
+    }
+    .toc-body.collapsed { display: none; }
+
+    .toc-chapter {
+      background: #fafafa;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 12px 14px;
       display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 0;
+      flex-direction: column;
     }
-    .act-toc-title::before {
-      content: "§";
-      font-size: 18px;
-      color: #3949ab;
+    .toc-chapter-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--gold); padding: 3px 0;
+      margin-bottom: 7px;
+      border-bottom: 1px solid var(--border-subtle);
     }
-    .act-toc-toggle {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: #3949ab;
-      font-weight: 600;
-      font-family: "Segoe UI", sans-serif;
+    .toc-list { list-style: none; padding: 0; margin: 0; flex: 1; }
+    .toc-list li { margin-bottom: 2px; }
+    .toc-list a {
+      display: flex; align-items: baseline; gap: 7px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; color: #2d3561;
+      text-decoration: none; padding: 3px 5px;
+      border-radius: 4px; transition: all 0.17s;
+      line-height: 1.4;
     }
-    .act-toc-arrow {
-      display: inline-block;
-      width: 0; height: 0;
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-top: 6px solid #3949ab;
-      transition: transform 0.3s ease;
-    }
-    .act-toc-arrow.collapsed { transform: rotate(-90deg); }
-    .act-toc-body {
-      padding: 16px 20px 18px;
-      border-top: 1px solid #c5cae9;
-      transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.3s ease;
-      max-height: 2000px;
-      opacity: 1;
-      overflow: hidden;
-    }
-    .act-toc-body.collapsed {
-      max-height: 0;
-      opacity: 0;
-      padding-top: 0;
-      padding-bottom: 0;
-    }
-    .act-toc ol {
-      margin: 0 0 0 1.2rem !important;
-      padding: 0 !important;
-      list-style: decimal !important;
-      columns: 2;
-      column-gap: 24px;
-    }
-    .act-toc ol li {
-      font-size: 13px !important;
-      margin-bottom: 5px !important;
-      break-inside: avoid;
-      color: #333;
-      font-family: "Segoe UI", sans-serif;
-    }
-    .act-toc ol li a {
-      color: #1a237e;
-      text-decoration: none;
-      border-bottom: none;
-      transition: color 0.2s;
-    }
-    .act-toc ol li a:hover {
-      color: #3949ab;
-      text-decoration: underline;
-    }
-    @media (max-width: 600px) {
-      .act-toc ol { columns: 1; }
+    .toc-list a:hover { background: var(--gold-light); color: var(--rule-blue); }
+    .toc-num {
+      font-size: 9.5px; font-weight: 700;
+      color: var(--gold); background: var(--gold-pale);
+      border-radius: 3px; padding: 1px 5px;
+      flex-shrink: 0;
     }
 
-    /* ── Section styling ── */
+    @media (max-width: 860px) { .toc-body { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 520px) { .toc-body { grid-template-columns: 1fr; padding: 14px; } }
+
+    /* ── Sections ── */
     .ec-article section {
-      scroll-margin-top: 140px;
-      border-bottom: 1px solid #f0f0f0;
-      padding-bottom: 8px;
+      scroll-margin-top: 120px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 10px;
       margin-bottom: 28px;
     }
-    .ec-article section:last-of-type {
-      border-bottom: none;
-    }
+    .ec-article section:last-of-type { border-bottom: none; }
 
-    /* ── Section number badge on h2 ── */
+    /* ── Headings ── */
     .ec-article h2 {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      flex-wrap: nowrap;
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(100deg, var(--rule-blue) 0%, var(--rule-blue-mid) 100%);
+      color: #fff;
+      padding: 11px 18px;
+      font-size: 1rem; font-weight: 600;
+      border-left: 5px solid #ffeb3b;
+      border-radius: 0 8px 8px 0;
+      margin: 28px 0 14px;
+      display: flex; align-items: center; gap: 10px;
+      scroll-margin-top: 120px;
     }
     .sec-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: #ffeb3b;
-      color: #101535;
-      font-size: 11px;
-      font-weight: 800;
-      min-width: 28px;
-      height: 28px;
-      border-radius: 4px;
-      margin-right: 10px;
-      flex-shrink: 0;
-      padding: 0 6px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: rgba(255,235,59,0.22);
+      border: 1px solid rgba(255,235,59,0.45);
+      color: #ffeb3b;
+      font-size: 11px; font-weight: 800;
+      min-width: 26px; height: 26px;
+      border-radius: 4px; padding: 0 6px;
+      flex-shrink: 0; letter-spacing: 0.3px;
     }
 
-    /* ── Info callout box ── */
+    /* ── Body text ── */
+    .ec-article p,
+    .ec-article li {
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: #222;
+    }
+    .ec-article p { margin: 10px 0; text-align: justify; }
+    .ec-article p + p { text-indent: 1.5em; }
+    .ec-article h2 + p { text-indent: 0; }
+
+    /* ── Lists ── */
+    .ec-article ol,
+    .ec-article ul {
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 1.05rem;
+      margin: 0.8rem 0 0.8rem 2rem;
+      padding-left: 0.25rem;
+    }
+    .ec-article ol > li,
+    .ec-article ul > li {
+      margin-bottom: 0.6rem;
+      line-height: 1.8;
+      padding-left: 0.3rem;
+    }
+    .ec-article ol[type="a"] { list-style-type: lower-alpha; }
+    .ec-article ol ol { margin: 0.4rem 0 0.3rem 1.5rem; }
+    .ec-article ol ol > li { font-size: 1rem; }
+
+    /* Custom list classes (from original) */
+    .mixed-list { list-style: decimal; }
+    .numbered-list { list-style: decimal; }
+    .upper-letter-list { list-style: upper-alpha; }
+
+    /* ── Callout boxes ── */
     .act-note {
       background: #e8f4fd;
       border-left: 5px solid #1976d2;
       border-radius: 0 8px 8px 0;
-      padding: 14px 18px;
-      margin: 20px 0;
-      font-size: 1.05rem;
+      padding: 13px 18px;
+      margin: 18px 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14.5px;
       color: #1a237e;
-      font-family: "Segoe UI", sans-serif;
+      line-height: 1.65;
     }
     .act-note strong { color: #0d47a1; }
 
-    /* ── Warning/penalty callout ── */
     .act-penalty {
       background: #fff3e0;
       border-left: 5px solid #e65100;
       border-radius: 0 8px 8px 0;
-      padding: 14px 18px;
-      margin: 20px 0;
-      font-size: 1.05rem;
-      font-family: "Segoe UI", sans-serif;
+      padding: 13px 18px;
+      margin: 14px 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14.5px;
+      line-height: 1.65;
     }
     .act-penalty-title {
-      font-weight: 700;
-      color: #bf360c;
-      font-size: 13px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      margin-bottom: 8px;
+      font-weight: 700; color: #bf360c;
+      font-size: 12px; letter-spacing: 0.6px;
+      text-transform: uppercase; margin-bottom: 6px;
     }
+
+    .notification {
+      background: #fffbea;
+      border-left: 5px solid #ffeb3b;
+      padding: 13px 18px;
+      margin: 18px 0;
+      border-radius: 0 8px 8px 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14.5px; color: #555; line-height: 1.65;
+    }
+    .notification strong { color: var(--rule-blue); }
 
     /* ── Definition grid ── */
     .definition-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 10px;
-      margin: 16px 0;
+      margin: 14px 0;
     }
     .def-item {
       background: #fafafa;
@@ -329,601 +388,598 @@
       padding: 12px 16px;
     }
     .def-term {
-      font-weight: 700;
-      color: #1a237e;
-      font-size: 1.05rem;
-      font-family: "Segoe UI", sans-serif;
-      margin-bottom: 4px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700; color: var(--rule-blue);
+      font-size: 0.95rem; margin-bottom: 4px;
     }
     .def-body {
-      font-size: 1.05rem;
-      color: #444;
-      line-height: 1.65;
-      text-indent: 0 !important;
-      margin: 0 !important;
-      font-family: "Segoe UI", sans-serif;
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 1.05rem; color: #444;
+      line-height: 1.65; margin: 0; text-indent: 0 !important;
     }
 
-    /* ── Flash-point visual tag ── */
+    /* Flash-point tags */
     .flash-tag {
       display: inline-block;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 2px 9px;
-      border-radius: 12px;
-      margin-left: 6px;
-      vertical-align: middle;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 700;
+      padding: 2px 9px; border-radius: 12px;
+      margin-left: 6px; vertical-align: middle;
     }
     .flash-a { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
     .flash-b { background: #fff8e1; color: #e65100; border: 1px solid #ffcc80; }
     .flash-c { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
 
-    /* ── End section ── */
+    /* ── End badge ── */
     .act-end {
       text-align: center;
-      padding: 32px 0 16px;
-      border-top: 2px solid #e5e7eb;
+      padding: 32px 0 18px;
+      border-top: 2px solid var(--border-subtle);
       margin-top: 32px;
     }
     .act-end-badge {
       display: inline-block;
-      background: #101535;
-      color: #ffeb3b;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      padding: 8px 28px;
-      border-radius: 24px;
-      text-transform: uppercase;
+      background: var(--navy); color: #ffeb3b;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 1.8px; padding: 8px 28px;
+      border-radius: 24px; text-transform: uppercase;
     }
 
-    /* ── Sticky section progress indicator ── */
-    .act-progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #ffeb3b, #f57f17);
-      z-index: 9999;
-      width: 0%;
-      transition: width 0.1s linear;
+    /* ── Back to top ── */
+    #btt {
+      position: fixed; bottom: 28px; right: 28px;
+      width: 44px; height: 44px;
+      background: var(--rule-blue); border: 2px solid #ffeb3b;
+      border-radius: 50%; color: #fff; font-size: 18px;
+      display: none; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 9999;
+      box-shadow: 0 4px 16px rgba(26,35,126,0.3);
+      transition: background 0.2s; text-decoration: none;
     }
-
-    /* ══ BODY TEXT: 1.05rem throughout ec-article ══ */
-    .ec-article p,
-    .ec-article li,
-    .ec-article .notification {
-      font-size: 1.05rem;
-      line-height: 1.85;
-    }
+    #btt:hover { background: #ffeb3b; color: var(--rule-blue); }
+    #btt.visible { display: flex; }
   </style>
 </head>
 <body>
+<div id="progressBar"></div>
 <div id="site-header"></div>
 
-<!-- Reading progress bar -->
-<div class="act-progress-bar" id="progressBar"></div>
-
-<!-- Main Content -->
 <main>
-<div class="container ec-article">
 
-  <!-- ══ HERO BANNER — full width, all text centred ══ -->
+  <!-- ══ HERO — direct child of <main>, naturally full-width, no scrollbar ══ -->
   <div class="act-hero">
+    <div class="hero-orb1"></div>
+    <div class="hero-orb2"></div>
     <div class="act-hero-badge">Central Legislation</div>
     <h1>The Petroleum Act, 1934</h1>
     <p>An Act to consolidate and amend the law relating to the import, transport, storage, production, refining and blending of petroleum.</p>
     <div class="act-hero-meta">
       <span class="act-hero-pill"><strong>Act No.</strong> 30 of 1934</span>
       <span class="act-hero-pill"><strong>Enacted:</strong> 1934</span>
-      <span class="act-hero-pill"><strong>Chapters:</strong> I – III</span>
+      <span class="act-hero-pill"><strong>Chapters:</strong> I – IV</span>
       <span class="act-hero-pill"><strong>Sections:</strong> 1 – 32</span>
       <span class="act-hero-pill"><strong>Authority:</strong> Parliament of India</span>
     </div>
   </div>
 
-  <!-- ══ TABLE OF CONTENTS ══ -->
-  <div class="toc-wrapper" id="toc">
-    <div class="toc-header" onclick="toggleTOC()">
-      <div class="toc-header-left">
-        <div class="toc-icon">§</div>
-        <span class="toc-title-text">Table of Contents</span>
-      </div>
-      <button class="toc-toggle-btn" id="toc-btn">Collapse ▲</button>
-    </div>
-    <div class="toc-body" id="toc-body">
+  <!-- ══ ARTICLE CARD ══ -->
+  <div class="ec-article">
+    <div class="article-body">
 
-      <div class="toc-chapter">
-        <div class="toc-chapter-title">Chapter I — Preliminary &amp; General</div>
-        <ul class="toc-list">
-          <li><a href="#s2"><span class="toc-num">2</span>Definitions</a></li>
-          <li><a href="#s3"><span class="toc-num">3</span>Import, Transport &amp; Storage</a></li>
-          <li><a href="#s4"><span class="toc-num">4</span>Rules for Import/Transport/Storage</a></li>
-          <li><a href="#s5"><span class="toc-num">5</span>Production, Refining &amp; Blending</a></li>
-          <li><a href="#s6"><span class="toc-num">6</span>Warning on Receptacles (Class A)</a></li>
-          <li><a href="#s7"><span class="toc-num">7</span>No Licence for Class B/C (Small Qty)</a></li>
-          <li><a href="#s8"><span class="toc-num">8</span>No Licence for Class A (Small Qty)</a></li>
-          <li><a href="#s9"><span class="toc-num">9</span>Exemptions for Motor Conveyances</a></li>
-          <li><a href="#s10"><span class="toc-num">10</span>No Licence for Railways (Carrier)</a></li>
-          <li><a href="#s11"><span class="toc-num">11</span>Exemption for Heavy Oils</a></li>
-          <li><a href="#s12"><span class="toc-num">12</span>General Power of Exemption</a></li>
-        </ul>
-      </div>
+      <!-- ══ TABLE OF CONTENTS ══ -->
+      <div class="toc-wrapper" id="toc">
+        <div class="toc-header" onclick="toggleTOC()">
+          <div class="toc-header-left">
+            <div class="toc-icon">§</div>
+            <span class="toc-title-text">Table of Contents</span>
+          </div>
+          <button class="toc-toggle-btn" id="toc-btn">Collapse ▲</button>
+        </div>
+        <div class="toc-body" id="toc-body">
 
-      <div class="toc-chapter">
-        <div class="toc-chapter-title">Chapter II — Inspection &amp; Testing</div>
-        <ul class="toc-list">
-          <li><a href="#s13"><span class="toc-num">13</span>Inspection of Places</a></li>
-          <li><a href="#s14"><span class="toc-num">14</span>Inspection &amp; Sampling</a></li>
-          <li><a href="#s15"><span class="toc-num">15</span>Standard Test Apparatus</a></li>
-          <li><a href="#s16"><span class="toc-num">16</span>Certification of Test Apparatus</a></li>
-          <li><a href="#s17"><span class="toc-num">17</span>Testing Officers</a></li>
-          <li><a href="#s18"><span class="toc-num">18</span>Manner of Test</a></li>
-          <li><a href="#s19"><span class="toc-num">19</span>Certificate of Testing</a></li>
-          <li><a href="#s20"><span class="toc-num">20</span>Right to Require Re-Test</a></li>
-          <li><a href="#s21"><span class="toc-num">21</span>Rules Regarding Tests</a></li>
-          <li><a href="#s22"><span class="toc-num">22</span>Special Rules for Viscous Petroleum</a></li>
-        </ul>
-      </div>
+          <div class="toc-chapter">
+            <div class="toc-chapter-title">Chapter I — Preliminary &amp; General</div>
+            <ul class="toc-list">
+              <li><a href="#s2"><span class="toc-num">§ 2</span>Definitions</a></li>
+              <li><a href="#s3"><span class="toc-num">§ 3</span>Import, Transport &amp; Storage</a></li>
+              <li><a href="#s4"><span class="toc-num">§ 4</span>Rules for Import / Transport / Storage</a></li>
+              <li><a href="#s5"><span class="toc-num">§ 5</span>Production, Refining &amp; Blending</a></li>
+              <li><a href="#s6"><span class="toc-num">§ 6</span>Warning on Receptacles (Class A)</a></li>
+              <li><a href="#s7"><span class="toc-num">§ 7</span>No Licence for Class B/C (Small Qty)</a></li>
+              <li><a href="#s8"><span class="toc-num">§ 8</span>No Licence for Class A (Small Qty)</a></li>
+              <li><a href="#s9"><span class="toc-num">§ 9</span>Exemptions for Motor Conveyances</a></li>
+              <li><a href="#s10"><span class="toc-num">§ 10</span>No Licence for Railways (Carrier)</a></li>
+              <li><a href="#s11"><span class="toc-num">§ 11</span>Exemption for Heavy Oils</a></li>
+              <li><a href="#s12"><span class="toc-num">§ 12</span>General Power of Exemption</a></li>
+            </ul>
+          </div>
 
-      <div class="toc-chapter">
-        <div class="toc-chapter-title">Chapter III — Offences, Penalties &amp; Enforcement</div>
-        <ul class="toc-list">
-          <li><a href="#s23"><span class="toc-num">23</span>General Penalty</a></li>
-          <li><a href="#s24"><span class="toc-num">24</span>Confiscation</a></li>
-          <li><a href="#s25"><span class="toc-num">25</span>Jurisdiction</a></li>
-          <li><a href="#s26"><span class="toc-num">26</span>Power of Entry &amp; Search</a></li>
-          <li><a href="#s27"><span class="toc-num">27</span>Notice of Accidents</a></li>
-          <li><a href="#s28"><span class="toc-num">28</span>Inquiries into Serious Accidents</a></li>
-        </ul>
-        <div class="toc-chapter-title" style="margin-top:10px;">Chapter IV — Rule-Making &amp; Miscellaneous</div>
-        <ul class="toc-list">
-          <li><a href="#s29"><span class="toc-num">29</span>Provisions Relating to Rules</a></li>
-          <li><a href="#s30"><span class="toc-num">30</span>Power to Apply Act to Other Substances</a></li>
-          <li><a href="#s31"><span class="toc-num">31</span>Local Authorities &amp; Petroleum</a></li>
-          <li><a href="#s32"><span class="toc-num">32</span>Repeals</a></li>
-        </ul>
-      </div>
+          <div class="toc-chapter">
+            <div class="toc-chapter-title">Chapter II — Inspection &amp; Testing</div>
+            <ul class="toc-list">
+              <li><a href="#s13"><span class="toc-num">§ 13</span>Inspection of Places</a></li>
+              <li><a href="#s14"><span class="toc-num">§ 14</span>Inspection &amp; Sampling</a></li>
+              <li><a href="#s15"><span class="toc-num">§ 15</span>Standard Test Apparatus</a></li>
+              <li><a href="#s16"><span class="toc-num">§ 16</span>Certification of Test Apparatus</a></li>
+              <li><a href="#s17"><span class="toc-num">§ 17</span>Testing Officers</a></li>
+              <li><a href="#s18"><span class="toc-num">§ 18</span>Manner of Test</a></li>
+              <li><a href="#s19"><span class="toc-num">§ 19</span>Certificate of Testing</a></li>
+              <li><a href="#s20"><span class="toc-num">§ 20</span>Right to Require Re-Test</a></li>
+              <li><a href="#s21"><span class="toc-num">§ 21</span>Rules Regarding Tests</a></li>
+              <li><a href="#s22"><span class="toc-num">§ 22</span>Special Rules for Viscous Petroleum</a></li>
+            </ul>
+          </div>
 
-    </div>
-  </div>
+          <div class="toc-chapter">
+            <div class="toc-chapter-title">Chapter III — Offences, Penalties &amp; Enforcement</div>
+            <ul class="toc-list">
+              <li><a href="#s23"><span class="toc-num">§ 23</span>General Penalty</a></li>
+              <li><a href="#s24"><span class="toc-num">§ 24</span>Confiscation</a></li>
+              <li><a href="#s25"><span class="toc-num">§ 25</span>Jurisdiction</a></li>
+              <li><a href="#s26"><span class="toc-num">§ 26</span>Power of Entry &amp; Search</a></li>
+              <li><a href="#s27"><span class="toc-num">§ 27</span>Notice of Accidents</a></li>
+              <li><a href="#s28"><span class="toc-num">§ 28</span>Inquiries into Serious Accidents</a></li>
+            </ul>
+            <div class="toc-chapter-title" style="margin-top:12px;">Chapter IV — Rule-Making &amp; Misc.</div>
+            <ul class="toc-list">
+              <li><a href="#s29"><span class="toc-num">§ 29</span>Provisions Relating to Rules</a></li>
+              <li><a href="#s30"><span class="toc-num">§ 30</span>Power to Apply Act to Other Substances</a></li>
+              <li><a href="#s31"><span class="toc-num">§ 31</span>Local Authorities &amp; Petroleum</a></li>
+              <li><a href="#s32"><span class="toc-num">§ 32</span>Repeals</a></li>
+            </ul>
+          </div>
 
-  <!-- CHAPTER I -->
-  <div class="section-badge">Chapter I — Preliminary</div>
+        </div>
+      </div><!-- /toc-wrapper -->
 
-  <section id="s1">
-    <h2><span class="sec-num">1</span>Title, Scope, and Start Date</h2>
-    <ol class="mixed-list">
-      <li>This law is called the <strong>Petroleum Act, 1934</strong>.</li>
-      <li>It applies to the entire country of India.</li>
-      <li>The law will start on a date that the Central Government decides and announces in the Official Gazette.</li>
-    </ol>
-  </section>
+      <!-- ══ CHAPTER I ══ -->
+      <div class="section-badge">Chapter I — Preliminary</div>
 
-  <section id="s2">
-    <h2><span class="sec-num">2</span>Definitions</h2>
-    <p>In this Act, unless there is anything repugnant in the subject or context:</p>
+      <section id="s1">
+        <h2><span class="sec-num">1</span>Title, Scope, and Start Date</h2>
+        <ol class="mixed-list">
+          <li>This law is called the <strong>Petroleum Act, 1934</strong>.</li>
+          <li>It applies to the entire country of India.</li>
+          <li>The law will start on a date that the Central Government decides and announces in the Official Gazette.</li>
+        </ol>
+      </section>
 
-    <div class="definition-grid">
-      <div class="def-item">
-        <div class="def-term">"Petroleum"</div>
-        <p class="def-body">Any liquid hydrocarbon or mixture of hydrocarbons, and any inflammable mixture (liquid, viscous, or solid) containing any liquid hydrocarbon.</p>
-      </div>
-      <div class="def-item">
-        <div class="def-term">"Petroleum Class A" <span class="flash-tag flash-a">Flash-point &lt; 23°C</span></div>
-        <p class="def-body">Petroleum having a flash-point below twenty-three degrees Centigrade.</p>
-      </div>
-      <div class="def-item">
-        <div class="def-term">"Petroleum Class B" <span class="flash-tag flash-b">23°C – &lt;65°C</span></div>
-        <p class="def-body">Petroleum having a flash-point of twenty-three degrees Centigrade and above but below sixty-five degrees Centigrade.</p>
-      </div>
-      <div class="def-item">
-        <div class="def-term">"Petroleum Class C" <span class="flash-tag flash-c">65°C – &lt;93°C</span></div>
-        <p class="def-body">Petroleum having a flash-point of sixty-five degrees Centigrade and above but below ninety-three degrees Centigrade.</p>
-      </div>
-      <div class="def-item">
-        <div class="def-term">"Flash-point"</div>
-        <p class="def-body">The lowest temperature at which petroleum yields a vapour that will give a momentary flash when ignited, determined in accordance with the provisions of Chapter II and rules made thereunder.</p>
-      </div>
-      <div class="def-item">
-        <div class="def-term">"To transport petroleum"</div>
-        <p class="def-body">To move petroleum from one place to another in India, including moving it across a territory which is not part of India.</p>
-      </div>
-      <div class="def-item">
-        <div class="def-term">"To import petroleum"</div>
-        <p class="def-body">To bring it into India by land, sea, or air, otherwise than during the course of transport.</p>
-      </div>
-      <div class="def-item">
-        <div class="def-term">"To store petroleum"</div>
-        <p class="def-body">To keep it in any one place, but does not include any detention occurring during the ordinary course of transport.</p>
-      </div>
-      <div class="def-item">
-        <div class="def-term">"Motor conveyance"</div>
-        <p class="def-body">Any vehicle, vessel, or aircraft used for transporting persons, animals, or goods by land, water, or air, in which petroleum is used to generate motive power.</p>
-      </div>
-      <div class="def-item">
-        <div class="def-term">"Prescribed"</div>
-        <p class="def-body">Prescribed by rules made under this Act.</p>
-      </div>
-    </div>
-  </section>
+      <section id="s2">
+        <h2><span class="sec-num">2</span>Definitions</h2>
+        <p>In this Act, unless there is anything repugnant in the subject or context:</p>
+        <div class="definition-grid">
+          <div class="def-item">
+            <div class="def-term">"Petroleum"</div>
+            <p class="def-body">Any liquid hydrocarbon or mixture of hydrocarbons, and any inflammable mixture (liquid, viscous, or solid) containing any liquid hydrocarbon.</p>
+          </div>
+          <div class="def-item">
+            <div class="def-term">"Petroleum Class A" <span class="flash-tag flash-a">Flash-point &lt; 23°C</span></div>
+            <p class="def-body">Petroleum having a flash-point below twenty-three degrees Centigrade.</p>
+          </div>
+          <div class="def-item">
+            <div class="def-term">"Petroleum Class B" <span class="flash-tag flash-b">23°C – &lt;65°C</span></div>
+            <p class="def-body">Petroleum having a flash-point of twenty-three degrees Centigrade and above but below sixty-five degrees Centigrade.</p>
+          </div>
+          <div class="def-item">
+            <div class="def-term">"Petroleum Class C" <span class="flash-tag flash-c">65°C – &lt;93°C</span></div>
+            <p class="def-body">Petroleum having a flash-point of sixty-five degrees Centigrade and above but below ninety-three degrees Centigrade.</p>
+          </div>
+          <div class="def-item">
+            <div class="def-term">"Flash-point"</div>
+            <p class="def-body">The lowest temperature at which petroleum yields a vapour that will give a momentary flash when ignited, determined in accordance with the provisions of Chapter II and rules made thereunder.</p>
+          </div>
+          <div class="def-item">
+            <div class="def-term">"To transport petroleum"</div>
+            <p class="def-body">To move petroleum from one place to another in India, including moving it across a territory which is not part of India.</p>
+          </div>
+          <div class="def-item">
+            <div class="def-term">"To import petroleum"</div>
+            <p class="def-body">To bring it into India by land, sea, or air, otherwise than during the course of transport.</p>
+          </div>
+          <div class="def-item">
+            <div class="def-term">"To store petroleum"</div>
+            <p class="def-body">To keep it in any one place, but does not include any detention occurring during the ordinary course of transport.</p>
+          </div>
+          <div class="def-item">
+            <div class="def-term">"Motor conveyance"</div>
+            <p class="def-body">Any vehicle, vessel, or aircraft used for transporting persons, animals, or goods by land, water, or air, in which petroleum is used to generate motive power.</p>
+          </div>
+          <div class="def-item">
+            <div class="def-term">"Prescribed"</div>
+            <p class="def-body">Prescribed by rules made under this Act.</p>
+          </div>
+        </div>
+      </section>
 
-  <!-- CHAPTER II header badge -->
-  <div class="section-badge" style="margin-top:8px;">Chapter II — Import, Transport, Storage, Production, Refining &amp; Blending</div>
+      <!-- ══ CHAPTER II ══ -->
+      <div class="section-badge" style="margin-top:8px;">Chapter II — Import, Transport, Storage, Production, Refining &amp; Blending</div>
 
-  <section id="s3">
-    <h2><span class="sec-num">3</span>Import, Transport, and Storage of Petroleum</h2>
-    <div class="act-note">
-      <strong>Licence Required:</strong> No person may import, transport, or store any petroleum except in accordance with the rules made under Section 4, and no person may import Petroleum Class A, or transport or store any petroleum, without holding a valid licence.
-    </div>
-    <ol class="mixed-list">
-      <li>No person shall import, transport, or store any petroleum except in accordance with the rules made under Section 4.</li>
-      <li>No person shall import Petroleum Class A, or transport or store any petroleum, unless they hold a licence granted in accordance with the rules made under Section 4.</li>
-    </ol>
-  </section>
+      <section id="s3">
+        <h2><span class="sec-num">3</span>Import, Transport, and Storage of Petroleum</h2>
+        <div class="act-note">
+          <strong>Licence Required:</strong> No person may import, transport, or store any petroleum except in accordance with the rules made under Section 4, and no person may import Petroleum Class A, or transport or store any petroleum, without holding a valid licence.
+        </div>
+        <ol class="mixed-list">
+          <li>No person shall import, transport, or store any petroleum except in accordance with the rules made under Section 4.</li>
+          <li>No person shall import Petroleum Class A, or transport or store any petroleum, unless they hold a licence granted in accordance with the rules made under Section 4.</li>
+        </ol>
+      </section>
 
-  <section id="s4">
-    <h2><span class="sec-num">4</span>Rules for the Import, Transport, and Storage of Petroleum</h2>
-    <p>The Central Government may make rules for the following matters:</p>
-    <ol class="upper-letter-list">
-      <li>Prescribing the places where petroleum may be imported and prohibiting import elsewhere.</li>
-      <li>Regulating the import of petroleum.</li>
-      <li>Prescribing time limits for licence applications for importing Petroleum Class A, and the disposal or confiscation of petroleum where licences are refused or not applied for.</li>
-      <li>Regulating the transport of petroleum.</li>
-      <li>Prescribing the nature, material, and condition of containers and pipelines used for transporting petroleum.</li>
-      <li>Prescribing the places and conditions under which petroleum may be stored.</li>
-      <li>Prescribing the type, location, and condition of containers used for storing petroleum.</li>
-      <li>Prescribing the form, conditions, authorities, procedures, and fees for licences related to importing, transporting, or storing petroleum.</li>
-      <li>Specifying whether the consignor, consignee, or carrier must obtain a licence in particular transport cases.</li>
-      <li>Providing for combined licences for importing, transporting, and storing petroleum, or for any two of these activities.</li>
-      <li>Deciding the amount of any poisonous substance that can be mixed with petroleum, and banning the import, transport, or storage of petroleum if the amount of a specified poisonous substance is too high.</li>
-      <li>Making any other rules needed to properly control the import, transport, and storage of petroleum, including charging fees for services related to these activities.</li>
-    </ol>
-  </section>
+      <section id="s4">
+        <h2><span class="sec-num">4</span>Rules for the Import, Transport, and Storage of Petroleum</h2>
+        <p>The Central Government may make rules for the following matters:</p>
+        <ol class="upper-letter-list">
+          <li>Prescribing the places where petroleum may be imported and prohibiting import elsewhere.</li>
+          <li>Regulating the import of petroleum.</li>
+          <li>Prescribing time limits for licence applications for importing Petroleum Class A, and the disposal or confiscation of petroleum where licences are refused or not applied for.</li>
+          <li>Regulating the transport of petroleum.</li>
+          <li>Prescribing the nature, material, and condition of containers and pipelines used for transporting petroleum.</li>
+          <li>Prescribing the places and conditions under which petroleum may be stored.</li>
+          <li>Prescribing the type, location, and condition of containers used for storing petroleum.</li>
+          <li>Prescribing the form, conditions, authorities, procedures, and fees for licences related to importing, transporting, or storing petroleum.</li>
+          <li>Specifying whether the consignor, consignee, or carrier must obtain a licence in particular transport cases.</li>
+          <li>Providing for combined licences for importing, transporting, and storing petroleum, or for any two of these activities.</li>
+          <li>Deciding the amount of any poisonous substance that can be mixed with petroleum, and banning the import, transport, or storage of petroleum if the amount of a specified poisonous substance is too high.</li>
+          <li>Making any other rules needed to properly control the import, transport, and storage of petroleum, including charging fees for services related to these activities.</li>
+        </ol>
+      </section>
 
-  <section id="s5">
-    <h2><span class="sec-num">5</span>Production, Refining, and Blending of Petroleum</h2>
-    <ol class="mixed-list">
-      <li>No one is allowed to produce, refine, or blend petroleum unless they follow the rules made under sub-section (2).</li>
-      <li>The Central Government can make rules about:
+      <section id="s5">
+        <h2><span class="sec-num">5</span>Production, Refining, and Blending of Petroleum</h2>
+        <ol class="mixed-list">
+          <li>No one is allowed to produce, refine, or blend petroleum unless they follow the rules made under sub-section (2).</li>
+          <li>The Central Government can make rules about:
+            <ol>
+              <li>Setting the conditions under which petroleum can be produced, refined, or blended.</li>
+              <li>Regulating how petroleum is removed from places where it is produced, refined, or blended. The government can also prevent the storage or removal of any petroleum (except Petroleum Class A) unless it has passed the required tests.</li>
+            </ol>
+          </li>
+        </ol>
+      </section>
+
+      <section id="s6">
+        <h2><span class="sec-num">6</span>Warning on Receptacles Containing Petroleum Class A</h2>
+        <p>All containers holding Petroleum Class A must have a clear warning label stamped, embossed, painted, or printed on the container itself (or if not possible, placed nearby), including the words <strong>"Petrol"</strong> or <strong>"Motor Spirit"</strong>, or another clear label to indicate that the petroleum is dangerous.</p>
+        <p>However, this rule does <strong>not</strong> apply to:</p>
+        <ol class="upper-letter-list">
+          <li>Small containers (less than 10 litres) of Petroleum Class A that are securely sealed, made of glass, stoneware, or metal, and not meant for sale.</li>
+          <li>A fuel tank in a motor vehicle or attached to an engine, if the petroleum is used to power the vehicle or engine.</li>
+          <li>A pipeline used to transport petroleum.</li>
+          <li>Any tank that is completely underground.</li>
+          <li>Any other type of container or receptacle that the Central Government may decide to exempt through an official notice in the Gazette.</li>
+        </ol>
+      </section>
+
+      <section id="s7">
+        <h2><span class="sec-num">7</span>No Licence Needed for Transport or Storage of Limited Quantities of Petroleum Class B or Class C</h2>
+        <p>Even though the law generally requires a licence, you do <strong>not</strong> need a licence if:</p>
+        <ol class="mixed-list">
+          <li>For <strong>Petroleum Class B:</strong>
+            <ul>
+              <li>The total amount you have at one place is 2,500 litres or less.</li>
+              <li>None of it is stored in a container that holds more than 1,000 litres.</li>
+            </ul>
+          </li>
+          <li>For <strong>Petroleum Class C:</strong>
+            <ul>
+              <li>The total amount you have at one place is 45,000 litres or less.</li>
+              <li>The petroleum is transported or stored according to the rules in Section 4.</li>
+            </ul>
+          </li>
+        </ol>
+      </section>
+
+      <section id="s8">
+        <h2><span class="sec-num">8</span>No Licence Needed for Small Quantities of Petroleum Class A</h2>
+        <ol class="mixed-list">
+          <li>A person does not need a licence to import, transport, or store Petroleum Class A if it is not intended for sale, and the total amount does not exceed <strong>30 litres</strong>.</li>
+          <li>Any Petroleum Class A kept without a licence must be stored in securely sealed containers made of glass, stoneware, or metal:
+            <ul>
+              <li>For glass or stoneware containers: capacity must not be more than <strong>1 litre</strong>.</li>
+              <li>For metal containers: capacity must not be more than <strong>25 litres</strong>.</li>
+            </ul>
+          </li>
+        </ol>
+      </section>
+
+      <section id="s9">
+        <h2><span class="sec-num">9</span>Exemptions for Motor Conveyances and Stationary Engines</h2>
         <ol>
-          <li>Setting the conditions under which petroleum can be produced, refined, or blended.</li>
-          <li>Regulating how petroleum is removed from places where it is produced, refined, or blended. The government can also prevent the storage or removal of any petroleum (except Petroleum Class A) unless it has passed the required tests.</li>
+          <li>The owner of a motor vehicle or a stationary internal combustion engine does not need a licence for:
+            <ol type="a">
+              <li>The import, transport, or storage of petroleum in the fuel tank of the vehicle or engine.</li>
+              <li>Transporting or storing Petroleum Class A not exceeding <strong>100 litres</strong> in addition to the amount in the fuel tank, used to power the vehicle or engine.</li>
+            </ol>
+          </li>
         </ol>
-      </li>
-    </ol>
-  </section>
-
-  <section id="s6">
-    <h2><span class="sec-num">6</span>Warning on Receptacles Containing Petroleum Class A</h2>
-    <p>All containers holding Petroleum Class A must have a clear warning label stamped, embossed, painted, or printed on the container itself (or if not possible, placed nearby), including the words <strong>"Petrol"</strong> or <strong>"Motor Spirit"</strong>, or another clear label to indicate that the petroleum is dangerous.</p>
-    <p>However, this rule does <strong>not</strong> apply to:</p>
-    <ol class="upper-letter-list">
-      <li>Small containers (less than 10 litres) of Petroleum Class A that are securely sealed, made of glass, stoneware, or metal, and not meant for sale.</li>
-      <li>A fuel tank in a motor vehicle or attached to an engine, if the petroleum is used to power the vehicle or engine.</li>
-      <li>A pipeline used to transport petroleum.</li>
-      <li>Any tank that is completely underground.</li>
-      <li>Any other type of container or receptacle that the Central Government may decide to exempt through an official notice in the Gazette.</li>
-    </ol>
-  </section>
-
-  <section id="s7">
-    <h2><span class="sec-num">7</span>No Licence Needed for Transport or Storage of Limited Quantities of Petroleum Class B or Class C</h2>
-    <p>Even though the law generally requires a licence, you do <strong>not</strong> need a licence if:</p>
-    <ol class="mixed-list">
-      <li>For <strong>Petroleum Class B:</strong>
-        <ul>
-          <li>The total amount you have at one place is 2,500 litres or less.</li>
-          <li>None of it is stored in a container that holds more than 1,000 litres.</li>
-        </ul>
-      </li>
-      <li>For <strong>Petroleum Class C:</strong>
-        <ul>
-          <li>The total amount you have at one place is 45,000 litres or less.</li>
-          <li>The petroleum is transported or stored according to the rules in Section 4.</li>
-        </ul>
-      </li>
-    </ol>
-  </section>
-
-  <section id="s8">
-    <h2><span class="sec-num">8</span>No Licence Needed for Small Quantities of Petroleum Class A</h2>
-    <ol class="mixed-list">
-      <li>A person does not need a licence to import, transport, or store Petroleum Class A if it is not intended for sale, and the total amount does not exceed <strong>30 litres</strong>.</li>
-      <li>Any Petroleum Class A kept without a licence must be stored in securely sealed containers made of glass, stoneware, or metal:
-        <ul>
-          <li>For glass or stoneware containers: capacity must not be more than <strong>1 litre</strong>.</li>
-          <li>For metal containers: capacity must not be more than <strong>25 litres</strong>.</li>
-        </ul>
-      </li>
-    </ol>
-  </section>
-
-  <section id="s9">
-    <h2><span class="sec-num">9</span>Exemptions for Motor Conveyances and Stationary Engines</h2>
-    <ol>
-      <li>The owner of a motor vehicle or a stationary internal combustion engine does not need a licence for:
-        <ol type="a">
-          <li>The import, transport, or storage of petroleum in the fuel tank of the vehicle or engine.</li>
-          <li>Transporting or storing Petroleum Class A not exceeding <strong>100 litres</strong> in addition to the amount in the fuel tank, used to power the vehicle or engine.</li>
+        <div class="act-note">
+          The total amount of Petroleum Class A stored without a licence under clause (b) cannot exceed 100 litres, even if the owner has more than one vehicle or engine.
+        </div>
+        <ol start="2">
+          <li>If Petroleum Class A is stored or transported without a licence under clause (b):
+            <ul>
+              <li>It must be stored safely as described in Section 8(2).</li>
+              <li>If the amount exceeds 30 litres, it must be stored in a separate, isolated place not connected to any area where people live, work, or gather.</li>
+            </ul>
+          </li>
         </ol>
-      </li>
-    </ol>
-    <div class="act-note">
-      The total amount of Petroleum Class A stored without a licence under clause (b) cannot exceed 100 litres, even if the owner has more than one vehicle or engine.
-    </div>
-    <ol start="2">
-      <li>If Petroleum Class A is stored or transported without a licence under clause (b):
-        <ul>
-          <li>It must be stored safely as described in Section 8(2).</li>
-          <li>If the amount exceeds 30 litres, it must be stored in a separate, isolated place not connected to any area where people live, work, or gather.</li>
-        </ul>
-      </li>
-    </ol>
-  </section>
+      </section>
 
-  <section id="s10">
-    <h2><span class="sec-num">10</span>No Licence Needed for Railways Acting as Carrier</h2>
-    <p>A railway administration (as defined in the Indian Railways Act, 1890) does not need a licence to import or transport petroleum when acting as a carrier (i.e., transporting petroleum for others).</p>
-  </section>
+      <section id="s10">
+        <h2><span class="sec-num">10</span>No Licence Needed for Railways Acting as Carrier</h2>
+        <p>A railway administration (as defined in the Indian Railways Act, 1890) does not need a licence to import or transport petroleum when acting as a carrier (i.e., transporting petroleum for others).</p>
+      </section>
 
-  <section id="s11">
-    <h2><span class="sec-num">11</span>Exemption for Heavy Oils</h2>
-    <p>The rules in this chapter do not apply to any petroleum that has a flash-point of <strong>93°C or higher</strong>.</p>
-  </section>
+      <section id="s11">
+        <h2><span class="sec-num">11</span>Exemption for Heavy Oils</h2>
+        <p>The rules in this chapter do not apply to any petroleum that has a flash-point of <strong>93°C or higher</strong>.</p>
+      </section>
 
-  <section id="s12">
-    <h2><span class="sec-num">12</span>General Power of Exemption</h2>
-    <p>The Central Government can, by official notification, exempt any specific petroleum from all or some of the rules in this chapter.</p>
-  </section>
+      <section id="s12">
+        <h2><span class="sec-num">12</span>General Power of Exemption</h2>
+        <p>The Central Government can, by official notification, exempt any specific petroleum from all or some of the rules in this chapter.</p>
+      </section>
 
-  <section id="s13">
-    <h2><span class="sec-num">13</span>Inspection of Places</h2>
-    <ol class="mixed-list">
-      <li>The Central Government can appoint an officer (either by name or position) to inspect places where petroleum is being imported, stored, produced, refined, blended, or transported. The officer will check if containers, equipment, and procedures follow the rules in this chapter.</li>
-      <li>The Central Government can also make rules to decide how these inspections should be carried out.</li>
-    </ol>
-  </section>
-
-  <section id="s14">
-    <h2><span class="sec-num">14</span>Inspection and Sampling of Petroleum</h2>
-    <ol class="mixed-list">
-      <li>The Central Government may authorize an officer to enter any premises where petroleum is being imported, transported, stored, produced, refined, or blended, and to inspect and take samples for testing purposes.</li>
-      <li>The Central Government may establish rules to regulate:
-        <ol type="a">
-          <li>The process for taking samples of petroleum for testing.</li>
-          <li>The circumstances under which payment will be made for the value of the samples taken.</li>
-          <li>The general procedures for officers exercising the powers outlined in this section.</li>
+      <section id="s13">
+        <h2><span class="sec-num">13</span>Inspection of Places</h2>
+        <ol class="mixed-list">
+          <li>The Central Government can appoint an officer (either by name or position) to inspect places where petroleum is being imported, stored, produced, refined, blended, or transported. The officer will check if containers, equipment, and procedures follow the rules in this chapter.</li>
+          <li>The Central Government can also make rules to decide how these inspections should be carried out.</li>
         </ol>
-      </li>
-    </ol>
-  </section>
+      </section>
 
-  <!-- CHAPTER III header badge -->
-  <div class="section-badge" style="margin-top:8px;">Chapter III — Testing of Petroleum</div>
-
-  <section id="s15">
-    <h2><span class="sec-num">15</span>Standard Test Apparatus</h2>
-    <ol class="mixed-list">
-      <li>A standard apparatus for testing the flashpoint of petroleum will be kept with an officer appointed by the Central Government, as announced in the Official Gazette.</li>
-      <li>The apparatus will be labelled <em>"Standard Test Apparatus"</em>, checked and updated as needed, per rules under Section 21.</li>
-      <li>The Standard Test Apparatus will be available for inspection by anyone upon payment of the required fee, at reasonable times.</li>
-    </ol>
-  </section>
-
-  <section id="s16">
-    <h2><span class="sec-num">16</span>Certification of Other Test Apparatus</h2>
-    <ol class="mixed-list">
-      <li>Upon payment of the required fee, the officer appointed under Section 15 will compare any apparatus used to test flash-point with the Standard Test Apparatus.</li>
-      <li>If the apparatus agrees with the Standard Test Apparatus within allowed limits, the officer will:
-        <ul>
-          <li>Engrave a special number and the date of comparison on the apparatus.</li>
-          <li>Issue a certificate confirming the apparatus meets the required standards, including any corrections needed.</li>
-        </ul>
-      </li>
-      <li>The certificate issued under this section will be valid for a period decided by the rules.</li>
-      <li>The certificate will be considered proof that the apparatus meets the required standards, unless proven otherwise, for as long as the certificate is valid.</li>
-      <li>The officer will maintain a register of all certificates issued under this section.</li>
-    </ol>
-  </section>
-
-  <section id="s17">
-    <h2><span class="sec-num">17</span>Testing Officers</h2>
-    <p>The Central Government can appoint any officer (by name or position) to test petroleum samples taken under this Act or submitted by any person, and to issue certificates based on the test results.</p>
-  </section>
-
-  <section id="s18">
-    <h2><span class="sec-num">18</span>Manner of Test</h2>
-    <p>All tests on petroleum must be done using a test apparatus that has a valid certificate under Section 16. The officer must consider any corrections specified in the certificate and follow the rules set out in Section 21.</p>
-  </section>
-
-  <section id="s19">
-    <h2><span class="sec-num">19</span>Certificate of Testing</h2>
-    <ol class="mixed-list">
-      <li>After testing petroleum samples, the testing officer will issue a certificate stating whether the petroleum is Petroleum Class A, Class B, or Class C. For Class B or Class C, the certificate will also state the flash-point.</li>
-      <li>The officer must provide a certified copy to the person who requested it, for a fee. This copy can be used as evidence in court.</li>
-      <li>A certificate issued under this section is admissible as evidence in any legal proceedings and is considered conclusive proof of the class (and flash-point for Class B or Class C), unless proven otherwise.</li>
-    </ol>
-  </section>
-
-  <section id="s20">
-    <h2><span class="sec-num">20</span>Right to Require Re-Test</h2>
-    <ol class="mixed-list">
-      <li>If the owner of the petroleum (or their agent) is not satisfied with the results of a test, they can ask for a re-test within <strong>seven days</strong> of receiving the test result.</li>
-      <li>The owner or their agent must apply to the officer appointed under Section 14 and pay the required fee. Fresh samples will be taken and tested in the presence of the owner, their agent, or a person they choose.</li>
-      <li>If the re-test shows the original test was wrong, the testing officer will:
-        <ul>
-          <li>Cancel the original certificate issued under Section 19.</li>
-          <li>Issue a new certificate with the correct results.</li>
-          <li>Provide a free certified copy of the new certificate.</li>
-        </ul>
-      </li>
-    </ol>
-  </section>
-
-  <section id="s21">
-    <h2><span class="sec-num">21</span>Power to Make Rules Regarding Tests</h2>
-    <p>The Central Government can create rules about the following:</p>
-    <ol class="numbered-list">
-      <li>Setting standards for how the Standard Test Apparatus should be specified, checked, corrected, and replaced.</li>
-      <li>Deciding the fee for inspecting the Standard Test Apparatus.</li>
-      <li>Regulating the process for comparing other test equipment with the Standard Test Apparatus.</li>
-      <li>Setting the format for certificates issued for compared test equipment, and determining how long these certificates are valid.</li>
-      <li>Deciding how the register of certificates for test apparatus should be maintained.</li>
-      <li>Deciding the fees for comparing other test equipment with the Standard Test Apparatus.</li>
-      <li>Regulating how testing officers should carry out petroleum tests, including how to handle multiple samples from the same lot and acceptable temperature variations.</li>
-      <li>Setting the format for certificates of petroleum tests and deciding the fees for issuing them.</li>
-      <li>If test results suggest petroleum quality may not be consistent, requiring division into sub-lots and averaging results.</li>
-      <li>Setting fees for re-tests under Section 20 and deciding when these fees should be refunded.</li>
-      <li>Setting rules for how officers should perform all duties related to testing petroleum.</li>
-    </ol>
-  </section>
-
-  <section id="s22">
-    <h2><span class="sec-num">22</span>Special Rules for Testing Viscous or Solid Forms of Petroleum</h2>
-    <p>The Central Government can create special rules for testing forms of petroleum that are:</p>
-    <ul>
-      <li>Viscous (thick or sticky),</li>
-      <li>Solid, or</li>
-      <li>Contain sediment or thickening ingredients.</li>
-    </ul>
-    <p>These special rules can change or add to the existing rules under this Chapter or under Section 21.</p>
-  </section>
-
-  <!-- CHAPTER IV: Miscellaneous -->
-  <div class="section-badge" style="margin-top:8px;">Chapter IV — Miscellaneous</div>
-
-  <section id="s23">
-    <h2><span class="sec-num">23</span>General Penalty for Offences under this Act</h2>
-    <ol class="mixed-list">
-      <li>Anyone who commits any of the following offences can be punished:
-        <ol>
-          <li>Breaks any rule in Chapter I or any related rules.</li>
-          <li>Breaks any rule made under Section 4 or Section 5.</li>
-          <li>A licence holder or person in charge who breaks or allows others to break any licence condition.</li>
-          <li>A person in charge who refuses to show equipment during an inspection, or fails to assist the inspector.</li>
-          <li>Anyone who refuses to show petroleum, give assistance, or let the inspector take samples during an inspection.</li>
-          <li>Anyone required by Section 27 to report an accident who fails to do so.</li>
+      <section id="s14">
+        <h2><span class="sec-num">14</span>Inspection and Sampling of Petroleum</h2>
+        <ol class="mixed-list">
+          <li>The Central Government may authorize an officer to enter any premises where petroleum is being imported, transported, stored, produced, refined, or blended, and to inspect and take samples for testing purposes.</li>
+          <li>The Central Government may establish rules to regulate:
+            <ol type="a">
+              <li>The process for taking samples of petroleum for testing.</li>
+              <li>The circumstances under which payment will be made for the value of the samples taken.</li>
+              <li>The general procedures for officers exercising the powers outlined in this section.</li>
+            </ol>
+          </li>
         </ol>
-      </li>
-    </ol>
-    <div class="act-penalty">
-      <div class="act-penalty-title">⚠ Punishment — First Offence</div>
-      Simple imprisonment for up to <strong>one month</strong>, or a fine of up to <strong>₹1,000</strong>, or both.
-    </div>
-    <div class="act-penalty">
-      <div class="act-penalty-title">⚠ Punishment — Subsequent Offence</div>
-      Simple imprisonment for up to <strong>three months</strong>, or a fine of up to <strong>₹5,000</strong>, or both.
-    </div>
-  </section>
+      </section>
 
-  <section id="s24">
-    <h2><span class="sec-num">24</span>Confiscation of Petroleum and Receptacles</h2>
-    <ol class="mixed-list">
-      <li>If someone is convicted of an offence under Section 23 (clauses (a), (b), or (c)), the Magistrate can order:
-        <ol type="a">
-          <li>The petroleum involved in the offence be confiscated, or</li>
-          <li>If the person was caught handling more petroleum than allowed, the entire amount may be confiscated.</li>
+      <!-- ══ CHAPTER III ══ -->
+      <div class="section-badge" style="margin-top:8px;">Chapter III — Testing of Petroleum</div>
+
+      <section id="s15">
+        <h2><span class="sec-num">15</span>Standard Test Apparatus</h2>
+        <ol class="mixed-list">
+          <li>A standard apparatus for testing the flashpoint of petroleum will be kept with an officer appointed by the Central Government, as announced in the Official Gazette.</li>
+          <li>The apparatus will be labelled <em>"Standard Test Apparatus"</em>, checked and updated as needed, per rules under Section 21.</li>
+          <li>The Standard Test Apparatus will be available for inspection by anyone upon payment of the required fee, at reasonable times.</li>
         </ol>
-        Along with the petroleum, the containers (receptacles) used to store it can also be taken away.
-      </li>
-      <li>The High Court can also use this power to confiscate petroleum and receptacles if it is reviewing or hearing an appeal about the case.</li>
-    </ol>
-  </section>
+      </section>
 
-  <section id="s25">
-    <h2><span class="sec-num">25</span>Jurisdiction</h2>
-    <p>Offences under this Act will be tried in different courts based on the location:</p>
-    <ul>
-      <li>In Presidency towns: by a <strong>Presidency Magistrate</strong>.</li>
-      <li>Outside Presidency towns: by a <strong>Magistrate of the first class</strong>, or a Magistrate of the second class specially authorized by the Central Government.</li>
-    </ul>
-  </section>
+      <section id="s16">
+        <h2><span class="sec-num">16</span>Certification of Other Test Apparatus</h2>
+        <ol class="mixed-list">
+          <li>Upon payment of the required fee, the officer appointed under Section 15 will compare any apparatus used to test flash-point with the Standard Test Apparatus.</li>
+          <li>If the apparatus agrees with the Standard Test Apparatus within allowed limits, the officer will:
+            <ul>
+              <li>Engrave a special number and the date of comparison on the apparatus.</li>
+              <li>Issue a certificate confirming the apparatus meets the required standards, including any corrections needed.</li>
+            </ul>
+          </li>
+          <li>The certificate issued under this section will be valid for a period decided by the rules.</li>
+          <li>The certificate will be considered proof that the apparatus meets the required standards, unless proven otherwise, for as long as the certificate is valid.</li>
+          <li>The officer will maintain a register of all certificates issued under this section.</li>
+        </ol>
+      </section>
 
-  <section id="s26">
-    <h2><span class="sec-num">26</span>Power of Entry and Search</h2>
-    <ol class="numbered-list">
-      <li>The Central Government can authorize an officer to enter and search any place if the officer believes that petroleum is being handled illegally. The officer can seize, detain, or remove any petroleum if an offence has been committed.</li>
-      <li>The rules for conducting searches, as stated in the Code of Criminal Procedure, 1973, will apply to searches done by officers authorized under this section.</li>
-      <li>The Central Government can make rules to guide authorized officers on how to conduct searches, consistent with the Code of Criminal Procedure.</li>
-    </ol>
-  </section>
+      <section id="s17">
+        <h2><span class="sec-num">17</span>Testing Officers</h2>
+        <p>The Central Government can appoint any officer (by name or position) to test petroleum samples taken under this Act or submitted by any person, and to issue certificates based on the test results.</p>
+      </section>
 
-  <section id="s27">
-    <h2><span class="sec-num">27</span>Notice of Accidents with Petroleum</h2>
-    <ol class="numbered-list">
-      <li>If an accident involving petroleum (such as an explosion or fire caused by the ignition of petroleum or its vapours) results in loss of human life, serious injury to people or property, the person in charge of the place (or person in charge of the vehicle or vessel carrying petroleum) must <strong>immediately</strong> report the accident.</li>
-      <li>The report should be made within a prescribed time to:
+      <section id="s18">
+        <h2><span class="sec-num">18</span>Manner of Test</h2>
+        <p>All tests on petroleum must be done using a test apparatus that has a valid certificate under Section 16. The officer must consider any corrections specified in the certificate and follow the rules set out in Section 21.</p>
+      </section>
+
+      <section id="s19">
+        <h2><span class="sec-num">19</span>Certificate of Testing</h2>
+        <ol class="mixed-list">
+          <li>After testing petroleum samples, the testing officer will issue a certificate stating whether the petroleum is Petroleum Class A, Class B, or Class C. For Class B or Class C, the certificate will also state the flash-point.</li>
+          <li>The officer must provide a certified copy to the person who requested it, for a fee. This copy can be used as evidence in court.</li>
+          <li>A certificate issued under this section is admissible as evidence in any legal proceedings and is considered conclusive proof of the class (and flash-point for Class B or Class C), unless proven otherwise.</li>
+        </ol>
+      </section>
+
+      <section id="s20">
+        <h2><span class="sec-num">20</span>Right to Require Re-Test</h2>
+        <ol class="mixed-list">
+          <li>If the owner of the petroleum (or their agent) is not satisfied with the results of a test, they can ask for a re-test within <strong>seven days</strong> of receiving the test result.</li>
+          <li>The owner or their agent must apply to the officer appointed under Section 14 and pay the required fee. Fresh samples will be taken and tested in the presence of the owner, their agent, or a person they choose.</li>
+          <li>If the re-test shows the original test was wrong, the testing officer will:
+            <ul>
+              <li>Cancel the original certificate issued under Section 19.</li>
+              <li>Issue a new certificate with the correct results.</li>
+              <li>Provide a free certified copy of the new certificate.</li>
+            </ul>
+          </li>
+        </ol>
+      </section>
+
+      <section id="s21">
+        <h2><span class="sec-num">21</span>Power to Make Rules Regarding Tests</h2>
+        <p>The Central Government can create rules about the following:</p>
+        <ol class="numbered-list">
+          <li>Setting standards for how the Standard Test Apparatus should be specified, checked, corrected, and replaced.</li>
+          <li>Deciding the fee for inspecting the Standard Test Apparatus.</li>
+          <li>Regulating the process for comparing other test equipment with the Standard Test Apparatus.</li>
+          <li>Setting the format for certificates issued for compared test equipment, and determining how long these certificates are valid.</li>
+          <li>Deciding how the register of certificates for test apparatus should be maintained.</li>
+          <li>Deciding the fees for comparing other test equipment with the Standard Test Apparatus.</li>
+          <li>Regulating how testing officers should carry out petroleum tests, including how to handle multiple samples from the same lot and acceptable temperature variations.</li>
+          <li>Setting the format for certificates of petroleum tests and deciding the fees for issuing them.</li>
+          <li>If test results suggest petroleum quality may not be consistent, requiring division into sub-lots and averaging results.</li>
+          <li>Setting fees for re-tests under Section 20 and deciding when these fees should be refunded.</li>
+          <li>Setting rules for how officers should perform all duties related to testing petroleum.</li>
+        </ol>
+      </section>
+
+      <section id="s22">
+        <h2><span class="sec-num">22</span>Special Rules for Testing Viscous or Solid Forms of Petroleum</h2>
+        <p>The Central Government can create special rules for testing forms of petroleum that are:</p>
         <ul>
-          <li>The nearest Magistrate,</li>
-          <li>The officer in charge of the nearest police station,</li>
-          <li>The Chief Controller of Explosives.</li>
+          <li>Viscous (thick or sticky),</li>
+          <li>Solid, or</li>
+          <li>Contain sediment or thickening ingredients.</li>
         </ul>
-      </li>
-    </ol>
-  </section>
+        <p>These special rules can change or add to the existing rules under this Chapter or under Section 21.</p>
+      </section>
 
-  <section id="s28">
-    <h2><span class="sec-num">28</span>Inquiries into Serious Accidents with Petroleum</h2>
-    <ol class="numbered-list">
-      <li>If a person is killed in an accident caused by the ignition of petroleum or petroleum vapour, the Magistrate must hold an inquiry under Section 176 of the Code of Criminal Procedure, 1973, unless the Coroners Act, 1871 applies.</li>
-      <li>If an accident results in serious injury to people or property (but no one is killed), the Magistrate may still hold an inquiry to investigate the cause.</li>
-      <li>A Commissioner of Police is also considered a Magistrate for the purpose of holding such an inquiry.</li>
-      <li>The results of these inquiries must be submitted to the Central Government, Chief Controller of Explosives, and the State Government as soon as possible.</li>
-    </ol>
-  </section>
+      <!-- ══ CHAPTER IV ══ -->
+      <div class="section-badge" style="margin-top:8px;">Chapter IV — Miscellaneous</div>
 
-  <section id="s29">
-    <h2><span class="sec-num">29</span>Provisions Relating to Rules</h2>
-    <ol class="mixed-list">
-      <li>When making rules under this Act, the Central Government can:
-        <ol>
-          <li>Include provisions to protect the public from risks related to the import, transport, storage, production, refining, or blending of petroleum.</li>
-          <li>Make special rules for certain states or places based on their unique circumstances.</li>
+      <section id="s23">
+        <h2><span class="sec-num">23</span>General Penalty for Offences under this Act</h2>
+        <ol class="mixed-list">
+          <li>Anyone who commits any of the following offences can be punished:
+            <ol>
+              <li>Breaks any rule in Chapter I or any related rules.</li>
+              <li>Breaks any rule made under Section 4 or Section 5.</li>
+              <li>A licence holder or person in charge who breaks or allows others to break any licence condition.</li>
+              <li>A person in charge who refuses to show equipment during an inspection, or fails to assist the inspector.</li>
+              <li>Anyone who refuses to show petroleum, give assistance, or let the inspector take samples during an inspection.</li>
+              <li>Anyone required by Section 27 to report an accident who fails to do so.</li>
+            </ol>
+          </li>
         </ol>
-      </li>
-      <li>Any rule made under this Act must first be published publicly before it can be finalized.</li>
-      <li>All rules made under this Act must be published in the Official Gazette.</li>
-      <li>After being made, the rules must be presented to both Houses of Parliament while they are in session for <strong>30 days</strong>. If both Houses agree to change or cancel the rule within that time, the rule will only take effect in the changed form, or not at all. However, any actions taken under the rule before this change will still be valid.</li>
-    </ol>
-  </section>
+        <div class="act-penalty">
+          <div class="act-penalty-title">⚠ Punishment — First Offence</div>
+          Simple imprisonment for up to <strong>one month</strong>, or a fine of up to <strong>₹1,000</strong>, or both.
+        </div>
+        <div class="act-penalty">
+          <div class="act-penalty-title">⚠ Punishment — Subsequent Offence</div>
+          Simple imprisonment for up to <strong>three months</strong>, or a fine of up to <strong>₹5,000</strong>, or both.
+        </div>
+      </section>
 
-  <section id="s30">
-    <h2><span class="sec-num">30</span>Power to Apply Act to Other Substances</h2>
-    <div class="notification">
-      <strong>Repealed:</strong> This section has been repealed by the Inflammable Substances Act, 1952 (Section 7).
-    </div>
-  </section>
+      <section id="s24">
+        <h2><span class="sec-num">24</span>Confiscation of Petroleum and Receptacles</h2>
+        <ol class="mixed-list">
+          <li>If someone is convicted of an offence under Section 23 (clauses (a), (b), or (c)), the Magistrate can order:
+            <ol type="a">
+              <li>The petroleum involved in the offence be confiscated, or</li>
+              <li>If the person was caught handling more petroleum than allowed, the entire amount may be confiscated.</li>
+            </ol>
+            Along with the petroleum, the containers (receptacles) used to store it can also be taken away.
+          </li>
+          <li>The High Court can also use this power to confiscate petroleum and receptacles if it is reviewing or hearing an appeal about the case.</li>
+        </ol>
+      </section>
 
-  <section id="s31">
-    <h2><span class="sec-num">31</span>Power to Limit Powers of Local Authorities over Petroleum</h2>
-    <p>If any law gives powers to local authorities regarding the transport or storage of petroleum, the Central Government can, through a notification in the Official Gazette:</p>
-    <ol class="upper-letter-list">
-      <li>Limit how the law applies in those areas, or</li>
-      <li>Restrict how local authorities can use these powers in ways the Government thinks are necessary.</li>
-    </ol>
-  </section>
+      <section id="s25">
+        <h2><span class="sec-num">25</span>Jurisdiction</h2>
+        <p>Offences under this Act will be tried in different courts based on the location:</p>
+        <ul>
+          <li>In Presidency towns: by a <strong>Presidency Magistrate</strong>.</li>
+          <li>Outside Presidency towns: by a <strong>Magistrate of the first class</strong>, or a Magistrate of the second class specially authorized by the Central Government.</li>
+        </ul>
+      </section>
 
-  <section id="s32">
-    <h2><span class="sec-num">32</span>Repeals</h2>
-    <div class="notification">
-      <strong>Repealed:</strong> This section has been repealed by the Repealing Act, 1938 (Section 2 and the Schedule). The Schedule lists the enactments that have been repealed.
-    </div>
-  </section>
+      <section id="s26">
+        <h2><span class="sec-num">26</span>Power of Entry and Search</h2>
+        <ol class="numbered-list">
+          <li>The Central Government can authorize an officer to enter and search any place if the officer believes that petroleum is being handled illegally. The officer can seize, detain, or remove any petroleum if an offence has been committed.</li>
+          <li>The rules for conducting searches, as stated in the Code of Criminal Procedure, 1973, will apply to searches done by officers authorized under this section.</li>
+          <li>The Central Government can make rules to guide authorized officers on how to conduct searches, consistent with the Code of Criminal Procedure.</li>
+        </ol>
+      </section>
 
-  <div class="act-end">
-    <div class="act-end-badge">— End of Act —</div>
-    <p style="font-size:13px;color:#888;margin-top:14px;font-family:'Segoe UI',sans-serif;">The Petroleum Act, 1934 &nbsp;|&nbsp; Act No. 30 of 1934</p>
-  </div>
+      <section id="s27">
+        <h2><span class="sec-num">27</span>Notice of Accidents with Petroleum</h2>
+        <ol class="numbered-list">
+          <li>If an accident involving petroleum (such as an explosion or fire caused by the ignition of petroleum or its vapours) results in loss of human life, serious injury to people or property, the person in charge of the place (or person in charge of the vehicle or vessel carrying petroleum) must <strong>immediately</strong> report the accident.</li>
+          <li>The report should be made within a prescribed time to:
+            <ul>
+              <li>The nearest Magistrate,</li>
+              <li>The officer in charge of the nearest police station,</li>
+              <li>The Chief Controller of Explosives.</li>
+            </ul>
+          </li>
+        </ol>
+      </section>
 
-</div>
+      <section id="s28">
+        <h2><span class="sec-num">28</span>Inquiries into Serious Accidents with Petroleum</h2>
+        <ol class="numbered-list">
+          <li>If a person is killed in an accident caused by the ignition of petroleum or petroleum vapour, the Magistrate must hold an inquiry under Section 176 of the Code of Criminal Procedure, 1973, unless the Coroners Act, 1871 applies.</li>
+          <li>If an accident results in serious injury to people or property (but no one is killed), the Magistrate may still hold an inquiry to investigate the cause.</li>
+          <li>A Commissioner of Police is also considered a Magistrate for the purpose of holding such an inquiry.</li>
+          <li>The results of these inquiries must be submitted to the Central Government, Chief Controller of Explosives, and the State Government as soon as possible.</li>
+        </ol>
+      </section>
+
+      <section id="s29">
+        <h2><span class="sec-num">29</span>Provisions Relating to Rules</h2>
+        <ol class="mixed-list">
+          <li>When making rules under this Act, the Central Government can:
+            <ol>
+              <li>Include provisions to protect the public from risks related to the import, transport, storage, production, refining, or blending of petroleum.</li>
+              <li>Make special rules for certain states or places based on their unique circumstances.</li>
+            </ol>
+          </li>
+          <li>Any rule made under this Act must first be published publicly before it can be finalized.</li>
+          <li>All rules made under this Act must be published in the Official Gazette.</li>
+          <li>After being made, the rules must be presented to both Houses of Parliament while they are in session for <strong>30 days</strong>. If both Houses agree to change or cancel the rule within that time, the rule will only take effect in the changed form, or not at all. However, any actions taken under the rule before this change will still be valid.</li>
+        </ol>
+      </section>
+
+      <section id="s30">
+        <h2><span class="sec-num">30</span>Power to Apply Act to Other Substances</h2>
+        <div class="notification">
+          <strong>Repealed:</strong> This section has been repealed by the Inflammable Substances Act, 1952 (Section 7).
+        </div>
+      </section>
+
+      <section id="s31">
+        <h2><span class="sec-num">31</span>Power to Limit Powers of Local Authorities over Petroleum</h2>
+        <p>If any law gives powers to local authorities regarding the transport or storage of petroleum, the Central Government can, through a notification in the Official Gazette:</p>
+        <ol class="upper-letter-list">
+          <li>Limit how the law applies in those areas, or</li>
+          <li>Restrict how local authorities can use these powers in ways the Government thinks are necessary.</li>
+        </ol>
+      </section>
+
+      <section id="s32">
+        <h2><span class="sec-num">32</span>Repeals</h2>
+        <div class="notification">
+          <strong>Repealed:</strong> This section has been repealed by the Repealing Act, 1938 (Section 2 and the Schedule). The Schedule lists the enactments that have been repealed.
+        </div>
+      </section>
+
+      <div class="act-end">
+        <div class="act-end-badge">— End of Act —</div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:13px;color:#888;margin-top:14px;">The Petroleum Act, 1934 &nbsp;|&nbsp; Act No. 30 of 1934</p>
+      </div>
+
+    </div><!-- /article-body -->
+  </div><!-- /ec-article -->
 </main>
 
 <div id="site-footer"></div>
+<a href="#" id="btt" title="Back to top">↑</a>
 <script src="/assets/Scripts/gototop.js"></script>
 
 <script>
-  /* ── TOC toggle (uses your existing toggleTOC from site-components or inline) ── */
+  /* Reading progress */
+  const bar = document.getElementById('progressBar');
+  const btt = document.getElementById('btt');
+  window.addEventListener('scroll', () => {
+    const el = document.documentElement;
+    const pct = el.scrollTop / (el.scrollHeight - el.clientHeight) * 100;
+    if (bar) bar.style.width = pct + '%';
+    el.scrollTop > 400 ? btt.classList.add('visible') : btt.classList.remove('visible');
+  });
+
+  /* TOC toggle */
   function toggleTOC() {
     const body = document.getElementById('toc-body');
     const btn  = document.getElementById('toc-btn');
@@ -931,23 +987,11 @@
     btn.textContent = body.classList.contains('collapsed') ? 'Expand ▼' : 'Collapse ▲';
   }
 
-  /* ── Reading progress bar ── */
-  window.addEventListener('scroll', function() {
-    var bar       = document.getElementById('progressBar');
-    var scrollTop = window.scrollY || document.documentElement.scrollTop;
-    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    var pct       = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-    if (bar) bar.style.width = pct + '%';
-  });
-
-  /* ── Smooth scroll for TOC links ── */
-  document.querySelectorAll('.toc-list a').forEach(function(a) {
-    a.addEventListener('click', function(e) {
-      var target = document.querySelector(a.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+  /* Smooth scroll */
+  document.querySelectorAll('.toc-list a').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     });
   });
 </script>
