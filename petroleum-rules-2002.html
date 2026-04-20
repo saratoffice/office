@@ -9,6 +9,11 @@
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
+    /* ── Prevent horizontal scrollbar from breakout technique ── */
+    html, body {
+      overflow-x: hidden;
+    }
+
     /* ── Reading Progress Bar ── */
     #read-progress {
       position: fixed;
@@ -43,7 +48,7 @@
       padding: 0;
       border-radius: 4px;
       box-shadow: 0 2px 40px rgba(26,35,126,0.08);
-      overflow: hidden;
+      overflow: visible; /* changed from hidden so breakout works */
     }
 
     /* ── Inner padding wrapper ── */
@@ -52,12 +57,23 @@
     }
     @media (max-width: 768px) { .article-body { padding: 24px 20px 40px; } }
 
-    /* ── Document Header ── */
+    /* ══════════════════════════════════════
+       MASTHEAD — full viewport width,
+       no horizontal scrollbar
+    ══════════════════════════════════════ */
     .doc-masthead {
       background: linear-gradient(160deg, #0f1535 0%, #1a237e 55%, #283593 100%);
-      padding: 52px 52px 44px;
+      padding: 52px 5vw 44px;          /* responsive side padding */
       position: relative;
       overflow: hidden;
+
+      /* Breakout of .container without scrollbar */
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+
+      /* All text centred */
+      text-align: center;
     }
     .doc-masthead::before {
       content: "";
@@ -69,6 +85,7 @@
         rgba(255,235,59,0.025) 40px,
         rgba(255,235,59,0.025) 41px
       );
+      pointer-events: none;
     }
     .doc-masthead::after {
       content: "";
@@ -77,9 +94,12 @@
       height: 4px;
       background: linear-gradient(90deg, #c9961a 0%, #ffeb3b 50%, #c9961a 100%);
     }
+
+    /* Ministry seal — centred */
     .doc-ministry-seal {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 12px;
       margin-bottom: 20px;
     }
@@ -99,6 +119,7 @@
       text-transform: uppercase;
       color: rgba(255,235,59,0.85);
     }
+
     .doc-masthead h1 {
       font-family: 'EB Garamond', Georgia, serif;
       font-size: 2rem;
@@ -107,14 +128,14 @@
       letter-spacing: 0.5px;
       margin: 0 0 8px;
       text-shadow: 0 2px 12px rgba(0,0,0,0.4);
-      text-align: left;
+      text-align: center;
     }
     .doc-masthead .subtitle {
       font-family: 'DM Sans', sans-serif;
       font-size: 13px;
       color: rgba(255,255,255,0.65);
       font-style: italic;
-      text-align: left;
+      text-align: center;
       margin-bottom: 24px;
     }
     .doc-meta-pills {
@@ -122,6 +143,7 @@
       flex-wrap: wrap;
       gap: 8px;
       margin-top: 18px;
+      justify-content: center;        /* pills centred */
     }
     .doc-pill {
       font-family: 'DM Sans', sans-serif;
@@ -134,12 +156,11 @@
       color: rgba(255,255,255,0.8);
     }
     .doc-pill strong { color: #ffeb3b; font-weight: 600; }
+
     @media (max-width: 768px) {
-      .doc-masthead { padding: 32px 20px 36px; }
+      .doc-masthead { padding: 32px 5vw 36px; }
       .doc-masthead h1 { font-size: 1.5rem; }
     }
-
-  
 
     /* ── Part / Chapter Dividers ── */
     .part-divider {
@@ -233,11 +254,18 @@
       gap: 10px;
     }
 
+    /* ══ BODY TEXT: 1.05rem throughout ══ */
+    .ec-article p,
+    .ec-article li,
+    .article-body p,
+    .article-body li {
+      font-size: 1.05rem;
+      line-height: 1.88;
+    }
+
     /* ── Paragraphs ── */
     .ec-article p {
       font-family: 'EB Garamond', Georgia, serif;
-      font-size: 17.5px;
-      line-height: 1.9;
       color: #222;
       margin: 12px 0;
       text-align: justify;
@@ -252,8 +280,7 @@
     .ec-article ul,
     .ec-article ol {
       font-family: 'EB Garamond', Georgia, serif;
-      font-size: 17px;
-      line-height: 1.85;
+      line-height: 1.88;
     }
     .ec-article > ul,
     .ec-article > ol,
@@ -278,7 +305,7 @@
       padding: 13px 18px;
       margin: 20px 0;
       font-family: 'DM Sans', sans-serif;
-      font-size: 14.5px;
+      font-size: 1.05rem;
       color: #1a237e;
     }
     .rule-note strong { color: #0d47a1; }
@@ -325,6 +352,15 @@
     }
     #btt:hover { background: #ffeb3b; color: var(--rule-blue); }
     #btt.visible { display: flex; }
+
+    /* ── TOC CSS vars fallback (if style.css not loaded) ── */
+    :root {
+      --border-subtle: #e8e0d0;
+      --gold: #b8860b;
+      --gold-pale: #fffde7;
+      --gold-light: #fff9c4;
+      --ink-mid: #444;
+    }
   </style>
 </head>
 <body>
@@ -334,11 +370,14 @@
 <main>
 <div class="container ec-article">
 
-  <!-- ══ MASTHEAD ══ -->
+  <!-- ══ MASTHEAD — full viewport width, text centred ══ -->
   <div class="doc-masthead">
-    
+    <div class="doc-ministry-seal">
+      <div class="seal-emblem">⚖️</div>
+      <span class="seal-text">Ministry of Petroleum &amp; Natural Gas</span>
+    </div>
     <h1>The Petroleum Rules, 2002</h1>
-    <p class="subtitle">Notification — Ministry of Petroleum &amp; Natural Gas </p>
+    <p class="subtitle">Notification — Ministry of Petroleum &amp; Natural Gas</p>
     <div class="doc-meta-pills">
       <span class="doc-pill"><strong>Act:</strong> The Petroleum Act, 1934</span>
       <span class="doc-pill"><strong>Rules:</strong> Petroleum Rules, 2002</span>
@@ -384,7 +423,7 @@
         </div>
 
         <div class="toc-chapter">
-          <div class="toc-chapter-title" style="margin-top:14px;">Chapter III — Transport</div>
+          <div class="toc-chapter-title">Chapter III — Transport</div>
           <ul class="toc-list">
             <li><a href="#r28"><span class="toc-num">28</span>Leaky Receptacles</a></li>
             <li><a href="#r29"><span class="toc-num">29</span>Loading of Containers</a></li>
@@ -392,7 +431,7 @@
             <li><a href="#r31"><span class="toc-num">31</span>Smoking Prohibition</a></li>
             <li><a href="#r32"><span class="toc-num">32</span>Loading at Night</a></li>
           </ul>
-           <div class="toc-chapter-title">Part IV — Transport by Vehicle</div>
+          <div class="toc-chapter-title" style="margin-top:10px;">Part IV — Transport by Vehicle</div>
           <ul class="toc-list">
             <li><a href="#r62"><span class="toc-num">62</span>Application</a></li>
             <li><a href="#r63"><span class="toc-num">63</span>Tank Vehicles</a></li>
@@ -403,21 +442,18 @@
             <li><a href="#r68"><span class="toc-num">68</span>Composite Vehicles</a></li>
             <li><a href="#r69"><span class="toc-num">69</span>Other Articles Prohibited</a></li>
             <li><a href="#r70"><span class="toc-num">70</span>Vehicle Engines</a></li>
-            
           </ul>
         </div>
 
         <div class="toc-chapter">
-         
-          <div class="toc-chapter-title">Part IV — Transport by Vehicle</div>
+          <div class="toc-chapter-title">Part IV (cont.) — Transport by Vehicle</div>
           <ul class="toc-list">
-           
             <li><a href="#r71"><span class="toc-num">71</span>Electrical Installation</a></li>
             <li><a href="#r72"><span class="toc-num">72</span>Fire Extinguishers</a></li>
             <li><a href="#r73"><span class="toc-num">73</span>Constant Attendance</a></li>
             <li><a href="#r74"><span class="toc-num">74</span>Prohibition on Parking</a></li>
           </ul>
-          <div class="toc-chapter-title" style="margin-top:14px;">Chapter V &amp; VII — Storage &amp; Licences</div>
+          <div class="toc-chapter-title" style="margin-top:10px;">Chapter V &amp; VII — Storage &amp; Licences</div>
           <ul class="toc-list">
             <li><a href="#r116"><span class="toc-num">116</span>Licence for Storage</a></li>
             <li><a href="#r117"><span class="toc-num">117</span>Fire Safety</a></li>
@@ -711,7 +747,7 @@
     </div>
 
     <section id="r28">
-      <h3 id="r28">Rule 28 — Restriction on Leaky Receptacles</h3>
+      <h3>Rule 28 — Restriction on Leaky Receptacles</h3>
       <ul><li>No leaky tank or container that contains petroleum is allowed to be tendered for transport.</li></ul>
     </section>
 
@@ -1191,6 +1227,35 @@
 <a href="#" id="btt" title="Back to top">↑</a>
 <script src="/assets/Scripts/gototop.js"></script>
 
+<script>
+  /* ── Reading progress bar ── */
+  window.addEventListener('scroll', function () {
+    var bar = document.getElementById('read-progress');
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    if (bar) bar.style.width = pct + '%';
+  });
 
+  /* ── Back to top button ── */
+  window.addEventListener('scroll', function () {
+    var btn = document.getElementById('btt');
+    if (btn) {
+      if (window.scrollY > 300) btn.classList.add('visible');
+      else btn.classList.remove('visible');
+    }
+  });
+
+  /* ── Smooth scroll for TOC links ── */
+  document.querySelectorAll('.toc-list a').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
 </body>
 </html>
