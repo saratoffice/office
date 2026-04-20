@@ -8,111 +8,193 @@
   <script src="assets/Scripts/site-components.js" defer></script>
 
   <style>
-    /* ── Reading progress bar ── */
-    .act-progress-bar {
-      position: fixed;
-      top: 0; left: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #ffeb3b, #f57f17);
-      z-index: 9999;
-      width: 0%;
-      transition: width 0.1s linear;
+  /* ---------- RESET / BASE ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    /* ── Article body text ── */
+    body {
+      background: #f6f9fc;
+      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', sans-serif;
+      line-height: 1.5;
+      color: #1e293b;
+    }
+
+    /* reading progress bar */
+    .act-progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #ffd966, #f57f17, #ffb300);
+      z-index: 10000;
+      width: 0%;
+      transition: width 0.08s linear;
+      box-shadow: 0 0 3px rgba(0,0,0,0.2);
+    }
+
+    /* container (max-width, centered) */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 40px 60px;
+      background: transparent;
+    }
+
+    /* article body text enhancements */
     .ec-article p,
     .ec-article li {
       font-size: 1.05rem;
+      line-height: 1.55;
     }
 
-
-    /* ── Hero ── */
+    /* ----- FULL WIDTH HERO (no container restrictions) ----- */
     .act-hero {
-      background: linear-gradient(135deg, #101535 0%, #1a237e 60%, #283593 100%);
-      color: #fff;
-      padding: 40px 40px 32px;
-      margin: -40px -40px 36px;
+      width: 100vw;
       position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      background: linear-gradient(115deg, #0b1120 0%, #111827 45%, #1e293b 100%);
+      color: #fff;
+      padding: 60px 20px 52px;
       overflow: hidden;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+      border-bottom: 1px solid rgba(255,235,59,0.25);
     }
+
+    /* inner content wrapper to align with container text */
+    .act-hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* decorative blobs */
     .act-hero::before {
       content: "";
       position: absolute;
-      top: -60px; right: -60px;
-      width: 240px; height: 240px;
+      top: -80px;
+      right: -80px;
+      width: 320px;
+      height: 320px;
       border-radius: 50%;
-      background: rgba(255,235,59,0.07);
+      background: radial-gradient(circle, rgba(255,235,59,0.12), rgba(255,152,0,0.02));
+      pointer-events: none;
     }
     .act-hero::after {
       content: "";
       position: absolute;
-      bottom: -40px; left: -40px;
-      width: 180px; height: 180px;
+      bottom: -50px;
+      left: -70px;
+      width: 260px;
+      height: 260px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.04);
+      background: radial-gradient(circle, rgba(79, 114, 255, 0.12), transparent 70%);
+      pointer-events: none;
     }
+
     .act-hero-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       background: rgba(255,235,59,0.18);
-      border: 1px solid rgba(255,235,59,0.4);
-      color: #ffeb3b;
+      backdrop-filter: blur(2px);
+      border: 1px solid rgba(255,235,59,0.45);
+      color: #ffecb3;
       font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1.2px;
+      font-weight: 800;
+      letter-spacing: 1.4px;
       text-transform: uppercase;
-      padding: 4px 12px;
-      border-radius: 20px;
-      margin-bottom: 14px;
-      font-family: "Segoe UI", sans-serif;
+      padding: 5px 14px;
+      border-radius: 40px;
+      margin-bottom: 20px;
+      font-family: 'Segoe UI', sans-serif;
     }
+
     .act-hero h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #fff;
-      margin: 0 0 10px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      text-align: left;
-      letter-spacing: 0;
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin: 0 0 16px 0;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #ffffff, #ffecb3);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
+
+    .act-hero p {
+      font-size: 1.1rem;
+      color: rgba(255,255,245,0.85);
+      max-width: 720px;
+      margin-bottom: 0;
+    }
+
     .act-hero-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
+      gap: 12px;
+      margin-top: 24px;
     }
+
     .act-hero-pill {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(4px);
       border: 1px solid rgba(255,255,255,0.2);
-      color: rgba(255,255,255,0.85);
+      color: #f1f5f9;
       font-size: 12px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-family: "Segoe UI", sans-serif;
+      padding: 5px 14px;
+      border-radius: 40px;
+      font-weight: 500;
     }
-    .act-hero-pill strong { color: #ffeb3b; }
+
+    .act-hero-pill strong {
+      color: #ffdf6e;
+      font-weight: 700;
+    }
 
     @media (max-width: 768px) {
-      .act-hero { padding: 28px 20px 24px; margin: -20px -20px 28px; }
-      .act-hero h1 { font-size: 1.45rem; }
+      .container {
+        padding: 20px 20px 40px;
+      }
+      .act-hero {
+        padding: 40px 16px 36px;
+      }
+      .act-hero h1 {
+        font-size: 1.85rem;
+      }
+      .act-hero p {
+        font-size: 1rem;
+      }
     }
 
-    /* ── Smooth scroll offset for fixed header ── */
+    /* section spacing & scroll margin (fixed header simulation) */
     .ec-article section {
-      scroll-margin-top: 150px;
-      border-bottom: 1px solid #f0f0f0;
-      padding-bottom: 8px;
-      margin-bottom: 28px;
+      scroll-margin-top: 100px;
+      border-bottom: 1px solid #e9edf2;
+      padding-bottom: 12px;
+      margin-bottom: 32px;
     }
-    .ec-article section:last-of-type { border-bottom: none; }
+    .ec-article section:last-of-type {
+      border-bottom: none;
+    }
 
-    /* ── Section number badge ── */
+    /* section numbers */
     .ec-article h2 {
       display: flex;
       align-items: center;
       gap: 0;
-      flex-wrap: nowrap;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #0f172a;
     }
     .sec-num {
       display: inline-flex;
@@ -120,76 +202,201 @@
       justify-content: center;
       background: #ffeb3b;
       color: #101535;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 800;
-      min-width: 28px;
-      height: 28px;
-      border-radius: 4px;
-      margin-right: 10px;
-      flex-shrink: 0;
-      padding: 0 6px;
-      font-family: "Segoe UI", sans-serif;
+      min-width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      margin-right: 12px;
+      padding: 0 8px;
+      font-family: 'Segoe UI', monospace;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
-    /* ── Note callouts ── */
+    /* note callout */
     .act-note {
-      background: #e8f4fd;
-      border-left: 5px solid #1976d2;
-      border-radius: 0 8px 8px 0;
-      padding: 14px 18px;
-      margin: 20px 0;
-      font-size: 1.05rem;
-      color: #1a237e;
-      font-family: "Segoe UI", sans-serif;
+      background: #eef2ff;
+      border-left: 5px solid #1e40af;
+      border-radius: 0 12px 12px 0;
+      padding: 14px 20px;
+      margin: 24px 0;
+      font-size: 1rem;
+      color: #0c2b5e;
     }
-    .act-note strong { color: #0d47a1; }
-
-    /* ── End badge ── */
-    .act-end {
-      text-align: center;
-      padding: 32px 0 16px;
-      border-top: 2px solid #e5e7eb;
-      margin-top: 32px;
-    }
-    .act-end-badge {
-      display: inline-block;
-      background: #101535;
-      color: #ffeb3b;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      padding: 8px 28px;
-      border-radius: 24px;
-      text-transform: uppercase;
-      font-family: "Segoe UI", sans-serif;
+    .act-note strong {
+      color: #0f3b7a;
     }
 
-    /* ── Chapter divider ── */
+    /* chapter divider */
     .chapter-label {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin: 36px 0 6px;
-      font-family: "Segoe UI", sans-serif;
+      margin: 44px 0 20px 0;
     }
     .chapter-label::before,
     .chapter-label::after {
       content: "";
       flex: 1;
       height: 1px;
-      background: #c5cae9;
+      background: #cbd5e1;
     }
     .chapter-label span {
-      font-size: 11px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 800;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: #3949ab;
+      color: #1e3a8a;
       background: #eef2ff;
-      padding: 3px 12px;
-      border-radius: 12px;
-      border: 1px solid #c5cae9;
+      padding: 4px 14px;
+      border-radius: 24px;
+      border: 1px solid #b9c8ff;
       white-space: nowrap;
+    }
+
+    /* end badge */
+    .act-end {
+      text-align: center;
+      padding: 42px 0 20px;
+      border-top: 2px solid #e2e8f0;
+      margin-top: 40px;
+    }
+    .act-end-badge {
+      display: inline-block;
+      background: #0f172a;
+      color: #ffeb3b;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      padding: 8px 32px;
+      border-radius: 40px;
+      text-transform: uppercase;
+    }
+
+    /* ----- TABLE OF CONTENTS (modern styled) ----- */
+    .toc-wrapper {
+      background: #ffffff;
+      border-radius: 28px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.02);
+      margin: 36px 0 48px;
+      border: 1px solid #eef2f6;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    .toc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 28px;
+      background: #fafcff;
+      cursor: pointer;
+      border-bottom: 1px solid #edf2f7;
+      transition: background 0.2s;
+    }
+    .toc-header:hover {
+      background: #f5f9ff;
+    }
+    .toc-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .toc-icon {
+      font-size: 22px;
+      font-weight: 800;
+      background: #ffeb3b;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      color: #101535;
+    }
+    .toc-title-text {
+      font-weight: 700;
+      font-size: 1.2rem;
+      letter-spacing: -0.2px;
+      color: #0c4e6e;
+    }
+    .toc-toggle-btn {
+      background: none;
+      border: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #2563eb;
+      cursor: pointer;
+      background: #eef2ff;
+      padding: 6px 14px;
+      border-radius: 40px;
+      transition: 0.2s;
+    }
+    .toc-body {
+      padding: 20px 28px;
+      transition: max-height 0.35s ease-out;
+      max-height: 800px;
+      overflow-y: auto;
+    }
+    .toc-body.collapsed {
+      max-height: 0;
+      padding: 0 28px;
+      overflow: hidden;
+    }
+    .toc-chapter {
+      margin-bottom: 18px;
+    }
+    .toc-chapter-title {
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #475569;
+      margin: 12px 0 6px 0;
+    }
+    .toc-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      margin-bottom: 8px;
+    }
+    .toc-list li {
+      width: auto;
+      min-width: 200px;
+    }
+    .toc-list a {
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #1e293b;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 0;
+      transition: 0.15s;
+      border-bottom: 1px solid transparent;
+    }
+    .toc-list a:hover {
+      color: #d97706;
+      border-bottom-color: #ffb347;
+    }
+    .toc-num {
+      background: #eef2ff;
+      font-weight: 700;
+      font-size: 0.7rem;
+      padding: 0px 6px;
+      border-radius: 20px;
+      color: #1e40af;
+    }
+
+    @media (max-width: 700px) {
+      .toc-list {
+        flex-direction: column;
+        gap: 4px;
+      }
+      .toc-list li {
+        min-width: auto;
+      }
     }
   </style>
 </head>
