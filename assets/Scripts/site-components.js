@@ -290,13 +290,56 @@ const SiteComponents = (function () {
   }
 
   // NEW: Function to initialize go to top button
-   /* Smooth scroll */
-  document.querySelectorAll('.toc-list a').forEach(a => {
-    a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-    });
-  });
+  function initGoToTopButton() {
+    const goTopBtn = document.getElementById('goTopBtn');
+    
+    if (goTopBtn) {
+      window.onscroll = function() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+          goTopBtn.style.display = "block";
+        } else {
+          goTopBtn.style.display = "none";
+        }
+      };
+      
+      goTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
+  }
+
+  return {
+    init: async function () {
+      try {
+        await Promise.all([
+          loadTemplate(config.headerUrl, 'site-header'),
+          loadTemplate(config.footerUrl, 'site-footer')
+        ]);
+        
+        // Initialize all features after templates are loaded
+        setTimeout(() => {
+          initScrollBehavior();
+          initMobileMenu();
+          initGoToTopButton();
+          setActiveMenuItem();
+        }, 100);
+        
+        console.log('Site components initialized successfully');
+      } catch (error) {
+        console.error('Failed to initialize site components:', error);
+      }
+    }
+  };
+
+})();
+
+document.addEventListener('DOMContentLoaded', () => {
+  SiteComponents.init();
+});
+
   // JS Toggle (inline — paste near </body> or in your script file) 
 document.querySelectorAll('.ec-article-image').forEach(function(box) {
   box.addEventListener('click', function() {
