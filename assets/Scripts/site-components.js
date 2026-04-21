@@ -396,21 +396,27 @@ sections.forEach(s => observer.observe(s));
 // BACK TO TOP BUTTON CODE - DELETE THIS ENTIRE SECTION TO REMOVE THE BUTTON
 // ============================================
 function initBackToTop() {
+    // Check if button already exists
+    if (document.querySelector('.back-to-top')) return;
+    
     const backToTop = document.createElement('button');
     backToTop.className = 'back-to-top';
-    backToTop.innerHTML = '<i class="fas fa-arrow-up"></i>';
     backToTop.setAttribute('aria-label', 'Back to top');
     
     document.body.appendChild(backToTop);
     
     window.addEventListener('scroll', () => {
-      const shouldShow = window.scrollY > 500;
-      backToTop.style.opacity = shouldShow ? '1' : '0';
-      backToTop.style.visibility = shouldShow ? 'visible' : 'hidden';
+        if (window.scrollY > 500) {
+            backToTop.style.opacity = '1';
+            backToTop.style.visibility = 'visible';
+        } else {
+            backToTop.style.opacity = '0';
+            backToTop.style.visibility = 'hidden';
+        }
     });
     
     backToTop.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 }
 
