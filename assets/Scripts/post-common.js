@@ -291,47 +291,7 @@ const PostCommon = (function() {
     });
   }
 
-  // ============================================
-  // BACK TO TOP BUTTON
-  // ============================================
-  function initBackToTop() {
-    const backToTop = document.createElement('button');
-    backToTop.className = 'back-to-top';
-    backToTop.innerHTML = '<i class="fas fa-arrow-up"></i>';
-    backToTop.style.position = 'fixed';
-    backToTop.style.bottom = '30px';
-    backToTop.style.right = '30px';
-    backToTop.style.width = '50px';
-    backToTop.style.height = '50px';
-    backToTop.style.borderRadius = '50%';
-    backToTop.style.background = 'linear-gradient(135deg, #3b82f6, #8b5cf6)';
-    backToTop.style.color = 'white';
-    backToTop.style.border = 'none';
-    backToTop.style.cursor = 'pointer';
-    backToTop.style.fontSize = '20px';
-    backToTop.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
-    backToTop.style.transition = 'all 0.3s ease';
-    backToTop.style.opacity = '0';
-    backToTop.style.visibility = 'hidden';
-    backToTop.style.zIndex = '999';
-    
-    document.body.appendChild(backToTop);
-    
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 500) {
-        backToTop.style.opacity = '1';
-        backToTop.style.visibility = 'visible';
-      } else {
-        backToTop.style.opacity = '0';
-        backToTop.style.visibility = 'hidden';
-      }
-    });
-    
-    backToTop.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
-
+  
   // ============================================
   // PRINT FRIENDLY VERSION
   // ============================================
