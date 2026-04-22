@@ -47,47 +47,28 @@
     }
 
     /* ── TOC EQUAL-HEIGHT COLUMNS FIX ──
- /* ── TOC ── */
-    .toc-wrapper {
-      background:#fff; border:1px solid var(--border-subtle);
-      border-top:4px solid var(--gold); border-radius:0 0 10px 10px;
-      margin:32px 0 40px; overflow:hidden;
-      box-shadow:0 4px 20px rgba(26,35,126,.06);
+       Override common CSS grid to use align-items: stretch
+       so all toc-chapter cells stretch to equal height.
+       The toc-body grid is defined in style.css as repeat(3,1fr).
+    ── */
+    .toc-body {
+      align-items: stretch;       /* make all grid cells equal height */
     }
-    .toc-header {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 20px; background:var(--gold-pale);
-      border-bottom:1px solid var(--border-subtle);
-      cursor:pointer; user-select:none;
+    .toc-chapter {
+      margin-bottom: 0;           /* remove bottom margin so cells truly fill */
+      padding-bottom: 18px;       /* replace margin with padding so bg fills */
+      display: flex;
+      flex-direction: column;
     }
-    .toc-header-left { display:flex; align-items:center; gap:10px; }
-    .toc-icon { width:30px; height:30px; background:var(--rule-blue); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:14px; color:#ffeb3b; flex-shrink:0; }
-    .toc-title-text { font-family:"Segoe UI",sans-serif; font-size:13px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--rule-blue); }
-    .toc-toggle-btn { font-family:"Segoe UI",sans-serif; font-size:11px; font-weight:600; color:var(--gold); background:none; border:1px solid var(--gold); border-radius:20px; padding:3px 12px; cursor:pointer; transition:all .2s; }
-    .toc-toggle-btn:hover { background:var(--gold); color:#fff; }
-    .toc-body { padding:20px 24px 24px; display:grid; grid-template-columns:repeat(3,1fr); gap:0 24px; }
-    .toc-body.collapsed { display:none; }
-    .toc-chapter { break-inside:avoid; margin-bottom:18px; }
-    .toc-chapter-title { font-family:"Segoe UI",sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold); padding:4px 0; margin-bottom:6px; border-bottom:1px solid var(--border-subtle); }
-    .toc-list { list-style:none; padding:0; margin:0; }
-    .toc-list li { margin-bottom:3px; }
-    .toc-list a { display:flex; align-items:baseline; gap:6px; font-family:"Segoe UI",sans-serif; font-size:12.5px; color:var(--ink-mid); text-decoration:none; padding:3px 6px; border-radius:4px; transition:all .18s; border-bottom:none; line-height:1.4; }
-    .toc-list a:hover { background:var(--gold-light); color:var(--rule-blue); border-bottom:none; }
-    .toc-num { font-size:10px; font-weight:700; color:var(--gold); background:var(--gold-pale); border-radius:3px; padding:1px 5px; flex-shrink:0; }
-    @media(max-width:900px){ .toc-body{grid-template-columns:repeat(2,1fr);} }
-    @media(max-width:600px){ .toc-body{grid-template-columns:1fr;padding:16px;} }
-   /* Add this to your <style> section - scroll offset for TOC links */
-.toc-list a[href^="#"] {
-    scroll-margin-top: 40px;
-}
+    .toc-list {
+      flex: 1;                    /* push list to fill remaining height */
+    }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .toc-body {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-}
+    /* ── TOC SCROLL OFFSET ── */
+    .toc-list a[href^="#"] {
+      scroll-margin-top: 40px;
+    }
+
     /* ── WARNING BOX ── */
     .warning-box {
       border: 2px solid #e53935; border-radius: 10px;
@@ -112,7 +93,8 @@
     /* ── HORIZONTAL RULE DIVIDER ── */
     .rule-divider { border: none; border-top: 2px solid #e8eaf6; margin: 28px 0; }
 
-    
+ 
+   
   </style>
 </head>
 <body>
@@ -136,88 +118,99 @@
   <div class="gazette-header">
     <p><strong>Legal Background:</strong> Draft published on <strong>October 13, 2015</strong> under the Explosives Act, 1884. Public invited to file objections &amp; suggestions for 45 days. Final rules enacted by the Central Government in 2016, replacing the Gas Cylinders Rules, 2004.</p>
   </div>
- <!-- ========== TOC COMPONENT ========== -->
-  <div class="toc-wrapper" id="tocWrapper">
-    <div class="toc-header" id="tocHeader">
+
+  <!-- ══ TABLE OF CONTENTS ══ -->
+  <div class="toc-wrapper">
+    <div class="toc-header" onclick="toggleTOC()">
       <div class="toc-header-left">
-        <div class="toc-icon">☰</div>
-        <div class="toc-title-text">TABLE OF RULES & ARTICLES</div>
+        <div class="toc-icon">📋</div>
+        <span class="toc-title-text">Table of Contents</span>
       </div>
-      <div class="toc-toggle-btn" id="tocToggleBtn">COLLAPSE</div>
+      <button class="toc-toggle-btn" id="toc-btn">Collapse ▲</button>
     </div>
-    <div class="toc-body" id="tocBody">
-      <!-- CHAPTER 1 -->
+    <div class="toc-body" id="toc-body">
       <div class="toc-chapter">
-        <div class="toc-chapter-title">CHAPTER I · FOUNDATIONS</div>
+        <div class="toc-chapter-title">Chapter I</div>
         <ul class="toc-list">
-          <li><a href="#"><span class="toc-num">§1.01</span> Preamble & Sovereignty</a></li>
-          <li><a href="#"><span class="toc-num">§1.02</span> Golden Mean Principle</a></li>
-          <li><a href="#"><span class="toc-num">§1.03</span> Rule of Clarity</a></li>
-          <li><a href="#"><span class="toc-num">§1.04</span> Hierarchical Order</a></li>
-          <li><a href="#"><span class="toc-num">§1.05</span> Equitable Enforcement</a></li>
-          <li><a href="#"><span class="toc-num">§1.06</span> Public Trust Covenant</a></li>
+          <li><a href="#ch1-intro"><span class="toc-num">§1</span> Introduction &amp; Background</a></li>
+          <li><a href="#ch1-title"><span class="toc-num">§1</span> Short Title &amp; Commencement</a></li>
+          <li><a href="#ch1-defs"><span class="toc-num">§2</span> Definitions (i–liv)</a></li>
         </ul>
       </div>
-      <!-- CHAPTER 2 -->
       <div class="toc-chapter">
-        <div class="toc-chapter-title">CHAPTER II · ADMINISTRATION</div>
+        <div class="toc-chapter-title">Chapter II – Part A</div>
         <ul class="toc-list">
-          <li><a href="#"><span class="toc-num">§2.01</span> Council of the Gilded Quill</a></li>
-          <li><a href="#"><span class="toc-num">§2.02</span> Duties of the Arbiter</a></li>
-          <li><a href="#"><span class="toc-num">§2.03</span> Fiscal Transparency</a></li>
-          <li><a href="#"><span class="toc-num">§2.04</span> Annual Conclave</a></li>
-          <li><a href="#"><span class="toc-num">§2.05</span> Emergency Provisions</a></li>
-          <li><a href="#"><span class="toc-num">§2.06</span> Succession Protocol</a></li>
-          <li><a href="#"><span class="toc-num">§2.07</span> Audit & Oversight</a></li>
+          <li><a href="#r3"><span class="toc-num">§3</span> Filling, Owning, Importing</a></li>
+          <li><a href="#r4"><span class="toc-num">§4</span> Cylinder Valves</a></li>
+          <li><a href="#r5"><span class="toc-num">§5</span> Safety Relief Devices</a></li>
+          <li><a href="#r6"><span class="toc-num">§6</span> Markings on Cylinders</a></li>
+          <li><a href="#r7"><span class="toc-num">§7</span> Markings on Valves</a></li>
+          <li><a href="#r8"><span class="toc-num">§8</span> Identification Colours</a></li>
+          <li><a href="#r9"><span class="toc-num">§9</span> Labelling of Cylinders</a></li>
+          <li><a href="#r10"><span class="toc-num">§10</span> Sending/Receiving Cylinders</a></li>
         </ul>
       </div>
-      <!-- CHAPTER 3 -->
       <div class="toc-chapter">
-        <div class="toc-chapter-title">CHAPTER III · RIGHTS & DUTIES</div>
+        <div class="toc-chapter-title">Chapter II – Part B</div>
         <ul class="toc-list">
-          <li><a href="#"><span class="toc-num">§3.01</span> Individual Liberties</a></li>
-          <li><a href="#"><span class="toc-num">§3.02</span> Duty of Contribution</a></li>
-          <li><a href="#"><span class="toc-num">§3.03</span> Right to Petition</a></li>
-          <li><a href="#"><span class="toc-num">§3.04</span> Protection from Coercion</a></li>
-          <li><a href="#"><span class="toc-num">§3.05</span> Collective Welfare Clause</a></li>
-          <li><a href="#"><span class="toc-num">§3.06</span> Environmental Stewardship</a></li>
+          <li><a href="#r11"><span class="toc-num">§11</span> Repairing Seamless Cylinders</a></li>
+          <li><a href="#r12"><span class="toc-num">§12</span> Repairing Welded Cylinders</a></li>
+          <li><a href="#r13"><span class="toc-num">§13</span> Employment Restrictions</a></li>
+          <li><a href="#r14"><span class="toc-num">§14</span> Fire &amp; Smoking Bans</a></li>
+          <li><a href="#r15"><span class="toc-num">§15</span> General Precautions</a></li>
+          <li><a href="#r16"><span class="toc-num">§16</span> Accident Prevention</a></li>
+          <li><a href="#r17"><span class="toc-num">§17</span> Competent Person</a></li>
+          <li><a href="#r18"><span class="toc-num">§18</span> Handling and Use</a></li>
+          <li><a href="#r19"><span class="toc-num">§19</span> Filling Restrictions</a></li>
+          <li><a href="#r20"><span class="toc-num">§20</span> Loading &amp; Transport</a></li>
+          <li><a href="#r21"><span class="toc-num">§21</span> Storage Rules</a></li>
+          <li><a href="#r22"><span class="toc-num">§22</span> Electrical Installations</a></li>
+          <li><a href="#r23"><span class="toc-num">§23</span> Purity of Gas</a></li>
+          <li><a href="#r24"><span class="toc-num">§24</span> Cylinders Exposed to Fire</a></li>
+          <li><a href="#r25"><span class="toc-num">§25</span> Ownership</a></li>
+          <li><a href="#r26"><span class="toc-num">§26</span> Re-testing</a></li>
+          <li><a href="#r27"><span class="toc-num">§27</span> Owner's Record</a></li>
+          <li><a href="#r28"><span class="toc-num">§28</span> Conversion of Cylinders</a></li>
         </ul>
       </div>
-      <!-- CHAPTER 4 -->
       <div class="toc-chapter">
-        <div class="toc-chapter-title">CHAPTER IV · JUDICATURE</div>
+        <div class="toc-chapter-title">Chapter III</div>
         <ul class="toc-list">
-          <li><a href="#"><span class="toc-num">§4.01</span> Establishment of Courts</a></li>
-          <li><a href="#"><span class="toc-num">§4.02</span> Impartial Hearings</a></li>
-          <li><a href="#"><span class="toc-num">§4.03</span> Burden of Proof</a></li>
-          <li><a href="#"><span class="toc-num">§4.04</span> Appellate Review</a></li>
-          <li><a href="#"><span class="toc-num">§4.05</span> Sanctions & Remedies</a></li>
-          <li><a href="#"><span class="toc-num">§4.06</span> Judicial Ethics</a></li>
-          <li><a href="#"><span class="toc-num">§4.07</span> Public Proceedings</a></li>
-          <li><a href="#"><span class="toc-num">§4.08</span> Alternative Resolution</a></li>
+          <li><a href="#r29"><span class="toc-num">§29</span> Licence for Import</a></li>
+          <li><a href="#r30"><span class="toc-num">§30</span> Importation by Sea</a></li>
+          <li><a href="#r31"><span class="toc-num">§31</span> Production of Licence</a></li>
+          <li><a href="#r32"><span class="toc-num">§32</span> Customs Permission</a></li>
+          <li><a href="#r33"><span class="toc-num">§33</span> Importation by Land</a></li>
+          <li><a href="#r34"><span class="toc-num">§34</span> Importation by Air</a></li>
         </ul>
       </div>
-      <!-- CHAPTER 5 -->
       <div class="toc-chapter">
-        <div class="toc-chapter-title">CHAPTER V · COMMERCE & TREASURY</div>
+        <div class="toc-chapter-title">Chapters IV–VI</div>
         <ul class="toc-list">
-          <li><a href="#"><span class="toc-num">§5.01</span> Coinage Standards</a></li>
-          <li><a href="#"><span class="toc-num">§5.02</span> Fair Trade Mandate</a></li>
-          <li><a href="#"><span class="toc-num">§5.03</span> Tariff Regulations</a></li>
-          <li><a href="#"><span class="toc-num">§5.04</span> Public Contracts</a></li>
-          <li><a href="#"><span class="toc-num">§5.05</span> Anti-Monopoly Statutes</a></li>
+          <li><a href="#r35"><span class="toc-num">§35</span> Periodicity of Testing</a></li>
+          <li><a href="#ch5"><span class="toc-num">§37</span> Acetylene Cylinders</a></li>
+          <li><a href="#r38"><span class="toc-num">§38</span> Filling Restrictions</a></li>
+          <li><a href="#r43"><span class="toc-num">§43</span> Licence Requirements</a></li>
+          <li><a href="#r44"><span class="toc-num">§44</span> When No Licence Needed</a></li>
+          <li><a href="#r45"><span class="toc-num">§45</span> Strict Filling Rules</a></li>
+          <li><a href="#r47"><span class="toc-num">§47</span> Facility Approval</a></li>
+          <li><a href="#r48"><span class="toc-num">§48</span> NOC Requirements</a></li>
+          <li><a href="#r50"><span class="toc-num">§50</span> Grant of Licence</a></li>
+          <li><a href="#r51"><span class="toc-num">§51</span> Validity Periods</a></li>
+          <li><a href="#r55"><span class="toc-num">§55</span> Renewal</a></li>
         </ul>
       </div>
-      <!-- CHAPTER 6 -->
       <div class="toc-chapter">
-        <div class="toc-chapter-title">CHAPTER VI · AMENDMENTS</div>
+        <div class="toc-chapter-title">Chapters VII–IX</div>
         <ul class="toc-list">
-          <li><a href="#"><span class="toc-num">§6.01</span> Proposal by Council</a></li>
-          <li><a href="#"><span class="toc-num">§6.02</span> Ratification Process</a></li>
-          <li><a href="#"><span class="toc-num">§6.03</span> Emergency Amendments</a></li>
-          <li><a href="#"><span class="toc-num">§6.04</span> Review & Sunset Clause</a></li>
-          <li><a href="#"><span class="toc-num">§6.05</span> Supremacy of Core Tenets</a></li>
-          <li><a href="#"><span class="toc-num">§6.06</span> Publication Mandate</a></li>
+          <li><a href="#ch7"><span class="toc-num">§66</span> Power to Exempt</a></li>
+          <li><a href="#r67"><span class="toc-num">§67</span> Reporting Accidents</a></li>
+          <li><a href="#r68"><span class="toc-num">§68</span> Inquiry Into Accidents</a></li>
+          <li><a href="#r70"><span class="toc-num">§70</span> Dangerous Practices</a></li>
+          <li><a href="#r71"><span class="toc-num">§71</span> Inspection Powers</a></li>
+          <li><a href="#r72"><span class="toc-num">§72</span> Legal Protection</a></li>
+          <li><a href="#r73"><span class="toc-num">§73</span> Repeal &amp; Savings</a></li>
+          <li><a href="#sch1"><span class="toc-num">Sch</span> Schedule I – Approved Standards</a></li>
         </ul>
       </div>
     </div>
@@ -1285,11 +1278,11 @@
     <span>— End of Gas Cylinders Rules, 2016 —</span>
   </div>
 
-</div>
-  <!-- /.container.ec-article -->
+</div><!-- /.container.ec-article -->
 
 <!-- FOOTER -->
 <div id="site-footer"></div>
+
 
 
 <script>
