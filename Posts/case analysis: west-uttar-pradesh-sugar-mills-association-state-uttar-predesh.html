@@ -14,44 +14,45 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
-  <!-- Site CSS -->
+  <!-- Site CSS (shared) -->
   <link rel="stylesheet" href="../style.css"/>
   <link rel="stylesheet" href="../post-styles.css"/>
 
- <style>
-    /* minimal reset + base styles (emulating typical site structure) */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <!-- Blog metadata (for post-common.js) -->
+  <meta name="blog:title" content="West U.P. Sugar Mills Association vs State of U.P. — Supreme Court 2020">
+  <meta name="blog:excerpt" content="A landmark five-judge Constitution Bench judgment settling the constitutional validity of State Advised Price (SAP) for sugarcane above the Central SMP.">
+  <meta name="blog:category" content="legal">
+  <meta name="blog:tags" content="supreme-court,SAP,SMP,sugarcane,Article-254,repugnancy,UP,Constitution-Bench">
+  <meta name="blog:author" content="Legal Desk">
+  <meta name="blog:date" content="2020-04-22">
+  <meta name="blog:readTime" content="12">
+  <meta name="blog:icon" content="fa-gavel">
 
-    body {
-      background: #fdfbf6;
-      font-family: 'Source Serif 4', Georgia, serif;
-    }
-
-    /* header/footer placeholders (just to match the component pattern) */
-    #site-header, #site-footer {
-      display: block;
-    }
-
-    /* =========================================
-       PAGE-LEVEL OVERRIDES & LEGAL STYLES
-       ========================================= */
+  <style>
+    /* ====================================================
+       PAGE-SPECIFIC VARIABLES & OVERRIDES
+       All shared layout/card/table classes come from
+       style.css + post-styles.css. Only legal-specific
+       components are defined here.
+    ==================================================== */
     :root {
-      --navy:      #0d1f3c;
-      --navy-mid:  #1a3460;
-      --gold:      #c8922a;
-      --gold-pale: #fdf6e9;
-      --gold-light:#fef3d0;
-      --cream:     #fdfbf6;
-      --ink:       #1a1a1a;
-      --ink-mid:   #3d3d3d;
-      --ink-soft:  #5a5a5a;
+      --navy:          #0d1f3c;
+      --navy-mid:      #1a3460;
+      --gold:          #c8922a;
+      --gold-pale:     #fdf6e9;
+      --gold-light:    #fef3d0;
+      --cream:         #fdfbf6;
+      --ink:           #1a1a1a;
+      --ink-mid:       #3d3d3d;
+      --ink-soft:      #5a5a5a;
       --border-subtle: #e8e0d0;
-      --rule-blue: #1a237e;
+      --rule-blue:     #1a237e;
+
+      /* Override shared primary to match legal palette */
+      --primary: var(--gold);
     }
+
+    body { background: var(--cream); font-family: 'Source Serif 4', Georgia, serif; }
 
     /* ── Reading Progress Bar ── */
     .reading-progress {
@@ -62,7 +63,9 @@
       transition: width 0.1s ease;
     }
 
-    /* ── HERO ── */
+    /* ══════════════════════════════════════
+       HERO  (page-specific, full-bleed)
+    ══════════════════════════════════════ */
     .hero-wrap {
       position: relative;
       width: 100%;
@@ -70,69 +73,55 @@
       overflow: hidden;
       background: var(--navy);
     }
-
     .hero-wrap img {
       width: 100%; height: 100%;
-      object-fit: cover;
-      object-position: center 30%;
-      display: block;
-      opacity: 0.42;
+      object-fit: cover; object-position: center 30%;
+      display: block; opacity: 0.42;
     }
-
     .hero-overlay {
       position: absolute; inset: 0;
       background: linear-gradient(160deg,
-        rgba(13,31,60,0.55) 0%,
-        rgba(13,31,60,0.85) 60%,
-        rgba(13,31,60,0.97) 100%);
+        rgba(13,31,60,.55) 0%,
+        rgba(13,31,60,.85) 60%,
+        rgba(13,31,60,.97) 100%);
       display: flex; flex-direction: column;
       justify-content: flex-end;
       padding: 3rem 5%;
     }
-
     .hero-eyebrow {
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.72rem; font-weight: 700;
+      font-size: .72rem; font-weight: 700;
       letter-spacing: 2.5px; text-transform: uppercase;
       color: var(--gold); margin-bottom: 1rem;
       display: flex; align-items: center; gap: 10px;
     }
-
     .hero-eyebrow::before {
       content: ''; display: inline-block;
       width: 32px; height: 2px; background: var(--gold);
     }
-
     .hero-title {
       font-family: 'Playfair Display', Georgia, serif;
       font-size: clamp(1.75rem, 4vw, 3rem);
       font-weight: 900; line-height: 1.15;
       color: #fff; margin: 0 0 1.2rem;
       max-width: 820px;
-      text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+      text-shadow: 0 2px 20px rgba(0,0,0,.4);
     }
-
-    .hero-pills {
-      display: flex; flex-wrap: wrap; gap: 8px;
-    }
-
+    /* Reuse .post-tags chip pattern from post-styles.css */
+    .hero-pills { display: flex; flex-wrap: wrap; gap: 8px; }
     .hero-pill {
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.7rem; font-weight: 600;
+      font-size: .7rem; font-weight: 600;
       padding: 5px 14px; border-radius: 4px;
-      background: rgba(200,146,42,0.18);
-      border: 1px solid rgba(200,146,42,0.5);
-      color: #f0d49a; letter-spacing: 0.4px;
+      background: rgba(200,146,42,.18);
+      border: 1px solid rgba(200,146,42,.5);
+      color: #f0d49a; letter-spacing: .4px;
     }
 
-    /* ── MAIN LAYOUT ── */
-    .article-shell {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 2.5rem 1.5rem 4rem;
-    }
-
-    /* ── META BAR ── */
+    /* ══════════════════════════════════════
+       META BAR  — reuses .post-meta pattern
+       from post-styles.css; tiny additions only
+    ══════════════════════════════════════ */
     .meta-bar {
       display: flex; flex-wrap: wrap; gap: 1.4rem;
       align-items: center;
@@ -140,198 +129,188 @@
       border-bottom: 1px solid var(--border-subtle);
       margin-bottom: 2rem;
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.82rem; color: var(--ink-soft);
+      font-size: .82rem; color: var(--ink-soft);
     }
-
     .meta-bar i { color: var(--gold); margin-right: 5px; }
-
-    .meta-bar .bench-badge {
+    .bench-badge {
       margin-left: auto;
-      background: var(--navy);
-      color: #e8c97a;
-      font-size: 0.7rem; font-weight: 700;
+      background: var(--navy); color: #e8c97a;
+      font-size: .7rem; font-weight: 700;
       letter-spacing: 1px; padding: 5px 14px;
       border-radius: 20px; text-transform: uppercase;
     }
 
-    /* ── INTRO CARD ── */
+    /* ══════════════════════════════════════
+       INTRO CARD  — dark featured panel
+       (equivalent of .summary-box in post-styles)
+    ══════════════════════════════════════ */
     .intro-card {
       background: var(--navy);
-      border-radius: 14px;
+      border-radius: 24px;
       padding: 2rem 2.2rem;
       margin-bottom: 2.5rem;
       position: relative; overflow: hidden;
     }
-
     .intro-card::before {
       content: '"';
       position: absolute; right: 1.5rem; top: -1rem;
       font-size: 9rem; line-height: 1;
       font-family: 'Playfair Display', serif;
-      color: rgba(200,146,42,0.12);
+      color: rgba(200,146,42,.12);
       pointer-events: none;
     }
-
     .intro-card p {
       font-family: 'Source Serif 4', serif;
       font-size: 1.1rem; color: #dbeafe;
-      line-height: 1.8; margin: 0;
-      font-style: italic;
-      text-indent: 0;
+      line-height: 1.8; margin: 0; font-style: italic;
     }
-
     .intro-card strong { color: #f0d49a; font-style: normal; }
 
-    /* ===== TABLE OF CONTENTS (elegant, anchored) ===== */
+    /* ══════════════════════════════════════
+       TABLE OF CONTENTS
+       Reuses .toc + .toc-grid from post-styles
+       with legal-specific colour overrides
+    ══════════════════════════════════════ */
     .legal-toc {
       background: #ffffffec;
       border: 1px solid var(--border-subtle);
-      border-radius: 18px;
+      border-top: 4px solid var(--gold);
+      border-radius: 0 0 18px 18px;
       padding: 1.4rem 1.8rem;
       margin: 2rem 0 2.2rem;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.03);
+      box-shadow: 0 6px 16px rgba(0,0,0,.03);
     }
-
     .legal-toc h4 {
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      font-size: .85rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
       color: var(--navy);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 0 0 1rem 0;
+      display: flex; align-items: center; gap: 8px;
+      margin: 0 0 1rem;
       border-bottom: 1px dashed var(--border-subtle);
-      padding-bottom: 0.65rem;
+      padding-bottom: .65rem;
     }
-
-    .legal-toc h4 i {
-      color: var(--gold);
-      font-size: 1rem;
-    }
-
+    .legal-toc h4 i { color: var(--gold); font-size: 1rem; }
     .toc-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 0.75rem 1.2rem;
+      gap: .75rem 1.2rem;
     }
-
-    .toc-item {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-    }
-
+    .toc-item { font-family: 'DM Sans', sans-serif; font-size: .9rem; }
     .toc-item a {
-      text-decoration: none;
-      color: var(--ink-mid);
+      text-decoration: none; color: var(--ink-mid);
       font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.15s;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all .15s;
       border-bottom: 1px dotted transparent;
     }
-
-    .toc-item a:hover {
-      color: var(--gold);
-      border-bottom-color: var(--gold);
+    .toc-item a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+    .toc-num {
+      font-weight: 800; font-size: .7rem;
+      background: var(--gold-pale); color: var(--navy);
+      padding: 2px 8px; border-radius: 20px;
     }
 
-    .toc-item .toc-num {
-      font-weight: 800;
-      font-size: 0.7rem;
-      background: var(--gold-pale);
-      color: var(--navy);
-      padding: 2px 8px;
-      border-radius: 20px;
+    /* ══════════════════════════════════════
+       CASE TABLE
+       Extends .table-container / table from
+       post-styles.css with legal styling
+    ══════════════════════════════════════ */
+    .case-table {
+      width: 100%; border-collapse: collapse;
+      margin: 2rem 0;
+      font-family: 'DM Sans', sans-serif; font-size: .92rem;
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 6px 24px rgba(13,31,60,.1);
+    }
+    .case-table tr:first-child td {
+      background: var(--navy); color: #e8c97a;
+      font-weight: 700; font-size: 1rem;
+    }
+    .case-table td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .case-table tr:nth-child(even) td { background: var(--gold-pale); }
+    .case-table tr:nth-child(odd):not(:first-child) td { background: #fff; }
+    .case-table td:first-child {
+      font-weight: 600; color: var(--navy);
+      width: 38%; border-right: 2px solid var(--border-subtle);
     }
 
-    /* section headings anchored */
-    .anchor-head {
-      scroll-margin-top: 90px;
-    }
+    /* ══════════════════════════════════════
+       SECTION HEADINGS
+       anchor-head + scroll offset
+    ══════════════════════════════════════ */
+    .anchor-head { scroll-margin-top: 90px; }
 
-    .article-shell h2 {
+    /* Override post-content h2 for legal style */
+    .post-content h2 {
       font-family: 'Playfair Display', serif;
       font-size: 1.55rem; font-weight: 700;
-      color: var(--navy); margin: 2.5rem 0 1rem;
-      padding-bottom: 0.5rem;
+      color: var(--navy);
+      margin: 2.5rem 0 1rem;
+      padding-bottom: .5rem;
       border-bottom: 2px solid var(--gold);
+      /* override the blue gradient from post-styles */
+      border-image: none;
+      border-image-slice: unset;
       line-height: 1.3;
     }
-
-    .article-shell h3 {
+    .post-content h3 {
       font-family: 'DM Sans', sans-serif;
       font-size: 1.05rem; font-weight: 700;
       color: var(--rule-blue);
-      margin: 1.8rem 0 0.7rem;
+      margin: 1.8rem 0 .7rem;
       padding: 8px 14px;
       background: #eef2ff;
       border-left: 4px solid #7986cb;
       border-radius: 0 6px 6px 0;
     }
 
-    .article-shell p {
+    /* Post-content paragraph — Source Serif override */
+    .post-content p {
       font-family: 'Source Serif 4', serif;
-      font-size: 1.05rem;
-      line-height: 1.85;
+      font-size: 1.05rem; line-height: 1.85;
       color: var(--ink-mid);
-      margin: 0 0 1.1rem;
-      text-align: justify;
-      text-indent: 2em;
+      text-align: justify; text-indent: 2em;
     }
+    .post-content h2 + p,
+    .post-content h3 + p,
+    .post-content .no-indent { text-indent: 0; }
 
-    .article-shell p.no-indent,
-    .article-shell h3 + p,
-    .article-shell h2 + p { text-indent: 0; }
-
-    /* ── CLICKABLE FULL-IMAGE MODAL & FEATURE IMAGES ── */
+    /* ══════════════════════════════════════
+       FEATURE IMAGE
+       Extends .feature-image from post-styles
+    ══════════════════════════════════════ */
     .feat-img-wrap {
-      border-radius: 16px;
-      overflow: hidden;
+      border-radius: 20px; overflow: hidden;
       margin: 2rem 0;
-      box-shadow: 0 18px 40px rgba(13,31,60,0.18);
-      position: relative;
-      cursor: pointer;
-      transition: transform 0.2s ease;
+      box-shadow: 0 18px 40px rgba(13,31,60,.18);
+      position: relative; cursor: pointer;
+      transition: transform .2s ease;
     }
-
-    .feat-img-wrap:hover { transform: scale(0.99); }
-
+    .feat-img-wrap:hover { transform: scale(.99); }
     .feat-img-wrap img {
       width: 100%; display: block;
       max-height: 420px; object-fit: cover;
-      transition: transform 0.6s ease;
     }
+    /* reuse .feature-caption from post-styles.css */
 
-    .feat-img-caption {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      background: linear-gradient(to top, rgba(13,31,60,0.85), transparent);
-      color: #ddd; font-family: 'DM Sans', sans-serif;
-      font-size: 0.8rem; font-style: italic;
-      padding: 1.5rem 1.2rem 0.9rem;
-      pointer-events: none;
-    }
-
-    /* fullscreen lightbox */
+    /* Lightbox modal */
     .image-modal {
-      display: none;
-      position: fixed; top:0; left:0; width:100%; height:100%;
-      background: rgba(0,0,0,0.92);
+      display: none; position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,.92);
       z-index: 10000;
-      justify-content: center;
-      align-items: center;
+      justify-content: center; align-items: center;
       cursor: pointer;
     }
     .image-modal.active { display: flex; }
     .image-modal img {
-      max-width: 92vw;
-      max-height: 92vh;
-      object-fit: contain;
-      border-radius: 8px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      max-width: 92vw; max-height: 92vh;
+      object-fit: contain; border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,.5);
     }
     .modal-close {
       position: absolute; top: 24px; right: 32px;
@@ -340,22 +319,10 @@
       font-family: monospace;
     }
 
-    /* CASE TABLE */
-    .case-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 2rem 0;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.92rem;
-      border-radius: 12px; overflow: hidden;
-      box-shadow: 0 6px 24px rgba(13,31,60,0.1);
-    }
-    .case-table tr:first-child td { background: var(--navy); color: #e8c97a; font-weight: 700; font-size: 1rem; }
-    .case-table td { padding: 10px 16px; border-bottom: 1px solid var(--border-subtle); }
-    .case-table tr:nth-child(even) td { background: var(--gold-pale); }
-    .case-table tr:nth-child(odd):not(:first-child) td { background: #fff; }
-    .case-table td:first-child { font-weight: 600; color: var(--navy); width: 38%; border-right: 2px solid var(--border-subtle); }
-
+    /* ══════════════════════════════════════
+       HIGHLIGHT BOX
+       Extends .info-box from post-styles.css
+    ══════════════════════════════════════ */
     .highlight-box {
       background: var(--gold-pale);
       border-left: 5px solid var(--gold);
@@ -364,7 +331,8 @@
       margin: 1.8rem 0;
     }
     .highlight-box .hb-label {
-      font-size: 0.7rem; font-weight: 700;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .7rem; font-weight: 700;
       letter-spacing: 1.8px; text-transform: uppercase;
       color: var(--gold); margin-bottom: 6px;
     }
@@ -374,9 +342,13 @@
       text-indent: 0; text-align: left;
     }
 
+    /* ══════════════════════════════════════
+       DECISION BOX
+       Extends .summary-box from post-styles
+    ══════════════════════════════════════ */
     .decision-box {
       background: var(--navy);
-      border-radius: 14px;
+      border-radius: 24px;
       padding: 1.8rem 2rem;
       margin: 2rem 0;
       color: #d8cfc0;
@@ -385,41 +357,52 @@
       font-family: 'Playfair Display', serif;
       color: #f0d49a; font-size: 1.1rem;
       margin: 0 0 1rem;
-      border-bottom: 1px solid rgba(200,146,42,0.3);
-      padding-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(200,146,42,.3);
+      padding-bottom: .6rem;
     }
     .decision-box ol { margin: 0; padding-left: 1.4rem; }
     .decision-box li {
-      font-size: 0.96rem; line-height: 1.75;
-      margin-bottom: 0.75rem; color: #d8cfc0;
+      font-size: .96rem; line-height: 1.75;
+      margin-bottom: .75rem; color: #d8cfc0;
     }
     .decision-box li strong { color: #f0d49a; }
 
+    /* ══════════════════════════════════════
+       PRICE COMPARISON DIAGRAM
+    ══════════════════════════════════════ */
     .price-diagram {
-      display: flex; gap: 0; margin: 2rem 0;
+      display: flex; gap: 0;
+      margin: 2rem 0;
       border-radius: 12px; overflow: hidden;
-      box-shadow: 0 6px 24px rgba(13,31,60,0.12);
+      box-shadow: 0 6px 24px rgba(13,31,60,.12);
       font-family: 'DM Sans', sans-serif;
     }
-    .pd-central { flex:1; background: var(--navy); padding:1.4rem; color:#fff; text-align:center; }
-    .pd-state { flex:1; background: var(--gold); padding:1.4rem; color:#1a1a1a; text-align:center; }
-    .pd-label { font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; opacity:0.75; margin-bottom:6px; }
-    .pd-name { font-size:1rem; font-weight:700; margin-bottom:8px; }
-    .pd-desc { font-size:0.82rem; line-height:1.55; opacity:0.88; }
-    .pd-arrow { background:#e8e0d0; display: flex; align-items: center; justify-content: center; padding: 0 12px; font-size:1.4rem; color: var(--navy); }
+    .pd-central { flex: 1; background: var(--navy); padding: 1.4rem; color: #fff; text-align: center; }
+    .pd-state   { flex: 1; background: var(--gold);  padding: 1.4rem; color: #1a1a1a; text-align: center; }
+    .pd-label   { font-size: .68rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; opacity: .75; margin-bottom: 6px; }
+    .pd-name    { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .pd-desc    { font-size: .82rem; line-height: 1.55; opacity: .88; }
+    .pd-arrow   {
+      background: #e8e0d0;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 12px; font-size: 1.4rem; color: var(--navy);
+    }
 
-    .judges-row {
-      display: flex; flex-wrap: wrap; gap: 10px;
-      margin: 1.5rem 0;
-    }
+    /* ══════════════════════════════════════
+       JUDGE CHIPS  — reuses .badge from post-styles
+    ══════════════════════════════════════ */
+    .judges-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 1.5rem 0; }
     .judge-chip {
-      background: var(--navy);
-      color: #e8c97a;
+      background: var(--navy); color: #e8c97a;
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.8rem; font-weight: 600;
+      font-size: .8rem; font-weight: 600;
       padding: 7px 16px; border-radius: 30px;
     }
+    .judge-chip i { margin-right: 6px; }
 
+    /* ══════════════════════════════════════
+       END BADGE  — matches style.css .end-badge
+    ══════════════════════════════════════ */
     .act-end {
       text-align: center;
       padding: 2.5rem 0 1.5rem;
@@ -430,18 +413,21 @@
       display: inline-block;
       background: var(--navy); color: #f0d49a;
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.72rem; font-weight: 700;
+      font-size: .72rem; font-weight: 700;
       letter-spacing: 2px; padding: 8px 28px;
       border-radius: 24px; text-transform: uppercase;
     }
 
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
     @media (max-width: 768px) {
-      .hero-wrap { height: 380px; }
-      .hero-title { font-size: 1.55rem; }
+      .hero-wrap   { height: 380px; }
+      .hero-title  { font-size: 1.55rem; }
       .price-diagram { flex-direction: column; }
-      .pd-arrow { padding: 10px; transform: rotate(90deg); }
-      .meta-bar .bench-badge { margin-left: 0; }
-      .toc-grid { grid-template-columns: 1fr; }
+      .pd-arrow    { padding: 10px; font-size: 1.2rem; }
+      .bench-badge { margin-left: 0; }
+      .toc-grid    { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -453,13 +439,15 @@
   <!-- Header placeholder -->
   <header id="site-header"></header>
 
- <!-- HERO SECTION -->
+  <!-- ═══════════════════════════════════════
+       HERO — full-bleed, page-specific
+  ═══════════════════════════════════════ -->
   <div class="hero-wrap">
     <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1400&q=80&auto=format&fit=crop"
          alt="Supreme Court of India – sugarcane price judgment" />
     <div class="hero-overlay">
       <p class="hero-eyebrow">Supreme Court of India &nbsp;|&nbsp; Constitutional Law</p>
-      <h1 class="hero-title">West U.P. Sugar Mills Association &amp; Ors. vs. The State of Uttar Pradesh &amp; Ors.</h1>
+      <h1 class="hero-title">West U.P. Sugar Mills Association &amp; Ors.<br>vs. The State of Uttar Pradesh &amp; Ors.</h1>
       <div class="hero-pills">
         <span class="hero-pill">Civil Appeal No. 7508 of 2005</span>
         <span class="hero-pill">Decided: 22 April 2020</span>
@@ -470,140 +458,284 @@
     </div>
   </div>
 
-  <main class="article-shell">
+  <!-- ═══════════════════════════════════════
+       MAIN — reuses .blog-post-section shell
+  ═══════════════════════════════════════ -->
+  <section class="blog-post-section">
 
-    <!-- META BAR -->
-    <div class="meta-bar">
-      <span><i class="fa-regular fa-calendar"></i> 22 April 2020</span>
-      <span><i class="fa-solid fa-gavel"></i> Supreme Court of India</span>
-      <span><i class="fa-solid fa-book-open"></i> Civil Appellate Jurisdiction</span>
-      <span><i class="fa-solid fa-pen-nib"></i> Authored by: J. M.R. Shah</span>
-      <span class="bench-badge">5-Judge Bench</span>
-    </div>
+    <!-- Back link — shared from post-styles.css -->
+    <a href="../blogs.html" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to all articles
+    </a>
 
-    <!-- INTRO CARD -->
-    <div class="intro-card">
-      <p style="color:#dbeafe;">
-        Can a State Government fix a sugarcane price <strong>higher</strong> than the minimum price set by the Central Government? Does that amount to a conflict — or repugnancy — under the Indian Constitution? This landmark five-judge Supreme Court bench answered both questions with a decisive <strong>yes</strong> and <strong>no</strong> respectively, settling a long-standing controversy between sugar mills and cane growers in Uttar Pradesh.
+    <!-- post-header block — shared from post-styles.css -->
+    <div class="post-header">
+      <h1 class="post-title" style="font-family:'Playfair Display',serif;">
+        West U.P. Sugar Mills Association vs State of U.P.
+      </h1>
+      <p style="font-size:1.05rem;color:#475569;margin:.3rem 0 0;font-family:'DM Sans',sans-serif;">
+        Supreme Court of India — Civil Appeal No. 7508 of 2005 — Decided 22 April 2020
       </p>
-    </div>
-
-    <!-- ========== TABLE OF CONTENTS (anchored style, modern) ========== -->
-    <div class="legal-toc">
-      <h4><i class="fas fa-list-ul"></i> Table of Contents</h4>
-      <div class="toc-grid">
-        <div class="toc-item"><a href="#sec-background"><span class="toc-num">1</span> Background &amp; Dispute</a></div>
-        <div class="toc-item"><a href="#sec-legislative"><span class="toc-num">2</span> Legislative History</a></div>
-        <div class="toc-item"><a href="#sec-conflict"><span class="toc-num">3</span> The Alleged Conflict: Tika Ramji vs. UP Cane Unions</a></div>
-        <div class="toc-item"><a href="#sec-2020-analysis"><span class="toc-num">4</span> 2020 Court’s Repugnancy Analysis</a></div>
-        <div class="toc-item"><a href="#sec-sap-factors"><span class="toc-num">5</span> SAP: Factors &amp; Farmer Protection</a></div>
-        <div class="toc-item"><a href="#sec-conclusions"><span class="toc-num">6</span> Final Conclusions &amp; Significance</a></div>
+      <div class="post-meta">
+        <span><i class="fas fa-gavel"></i> J. M.R. Shah (Author)</span>
+        <span><i class="fas fa-calendar"></i> 22 April 2020</span>
+        <span><i class="fas fa-clock"></i> 12 min read</span>
+        <span class="category-tag"><i class="fas fa-tag"></i> Constitutional Law</span>
       </div>
     </div>
 
-    <!-- Case at a glance table -->
-    <table class="case-table">
-      <tr><td colspan="2">Case at a Glance</td></tr>
-      <tr><td>Case Name</td><td>West U.P. Sugar Mills Association &amp; Ors. vs. State of Uttar Pradesh &amp; Ors.</td></tr>
-      <tr><td>Citation</td><td>Civil Appeal No. 7508 of 2005</td></tr>
-      <tr><td>Court</td><td>Supreme Court of India – Constitution Bench (5 Judges)</td></tr>
-      <tr><td>Date of Decision</td><td>22 April 2020</td></tr>
-      <tr><td>Core Question</td><td>Whether U.P. can fix SAP for sugarcane above Central SMP?</td></tr>
-      <tr><td>Result</td><td>SAP upheld. No repugnancy. Reference to 7 judges declined.</td></tr>
-    </table>
+    <!-- ── post-content: uses all shared classes ── -->
+    <div class="post-content">
 
-    <!-- ========== SECTION 1: BACKGROUND ========== -->
-    <h2 class="anchor-head" id="sec-background">Background: The Dispute in Simple Terms</h2>
-    <p>Sugarcane is the lifeline of millions of small farmers across Uttar Pradesh. Every year, they supply their cane to large sugar mills under government-supervised arrangements. To protect farmers from being underpaid by powerful mill owners, the U.P. Government has long fixed a State Advised Price — a price higher than the Central Government's minimum.</p>
-    <p>Sugar mills challenged this practice before the Supreme Court. Their main argument was that the Central Government already has the exclusive power to fix the price of sugarcane under the Essential Commodities Act. The State's separate price fixation, they said, was unconstitutional and conflicted with Central law.</p>
+      <!-- META BAR -->
+      <div class="meta-bar">
+        <span><i class="fa-regular fa-calendar"></i> 22 April 2020</span>
+        <span><i class="fa-solid fa-gavel"></i> Supreme Court of India</span>
+        <span><i class="fa-solid fa-book-open"></i> Civil Appellate Jurisdiction</span>
+        <span><i class="fa-solid fa-pen-nib"></i> J. M.R. Shah</span>
+        <span class="bench-badge">5-Judge Bench</span>
+      </div>
 
-    <!-- FIRST CLICKABLE IMAGE (fullscreen on click) -->
-    <div class="feat-img-wrap" data-fullimg="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=1200&q=80&auto=format&fit=crop">
-      <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=1200&q=80&auto=format&fit=crop" alt="Sugarcane farmers in Uttar Pradesh" loading="lazy"/>
-      <div class="feat-img-caption">Sugarcane farmers in U.P. — the SAP mechanism exists to protect small growers who lack bargaining power.</div>
-    </div>
+      <!-- INTRO CARD -->
+      <div class="intro-card">
+        <p>
+          Can a State Government fix a sugarcane price <strong>higher</strong> than the minimum price set by the Central Government? Does that amount to a conflict — or repugnancy — under the Indian Constitution? This landmark five-judge Supreme Court bench answered both questions with a decisive <strong>yes</strong> and <strong>no</strong> respectively, settling a long-standing controversy between sugar mills and cane growers in Uttar Pradesh.
+        </p>
+      </div>
 
-    <!-- ========== SECTION 2: LEGISLATIVE HISTORY ========== -->
-    <h2 class="anchor-head" id="sec-legislative">A Brief Legislative History: How We Got Here</h2>
-    <p>To fully understand the judgment, it is important to trace the evolution of sugarcane price regulation in India — from the British era to independent India.</p>
-    <p>The 1932 Sugar Industry Act fostered sugarcane cultivation; the 1934 Sugarcane Act empowered provinces to fix minimum prices. Later, the Essential Commodities Act 1955 gave the Centre control. The 1966 Sugarcane (Control) Order deliberately omitted the word “price” and only retained the power to fix a “minimum price” — leaving scope for State-advised higher prices.</p>
-    
-    <!-- SECOND CLICKABLE IMAGE -->
-    <div class="feat-img-wrap" data-fullimg="https://images.unsplash.com/photo-1591922714033-be2c2c5c3f98?w=1200&q=80&auto=format&fit=crop">
-      <img src="https://cdn.jsdelivr.net/gh/saratoffice/site-resources/assets/images/other/Supreme-Court-India-banner.webp?w=1200&q=80&auto=format&fit=crop" alt="Supreme Court of India, New Delhi" loading="lazy"/>
-      <div class="feat-img-caption">The Supreme Court of India, New Delhi — a five-judge Constitution Bench resolved the reference on 22 April 2020.</div>
-    </div>
+      <!-- TABLE OF CONTENTS -->
+      <div class="legal-toc">
+        <h4><i class="fas fa-list-ul"></i> Table of Contents</h4>
+        <div class="toc-grid">
+          <div class="toc-item"><a href="#sec-background"><span class="toc-num">1</span> Background &amp; Dispute</a></div>
+          <div class="toc-item"><a href="#sec-legislative"><span class="toc-num">2</span> Legislative History</a></div>
+          <div class="toc-item"><a href="#sec-conflict"><span class="toc-num">3</span> The Alleged Conflict</a></div>
+          <div class="toc-item"><a href="#sec-2020-analysis"><span class="toc-num">4</span> 2020 Court's Analysis</a></div>
+          <div class="toc-item"><a href="#sec-sap-factors"><span class="toc-num">5</span> SAP: Factors &amp; Protection</a></div>
+          <div class="toc-item"><a href="#sec-conclusions"><span class="toc-num">6</span> Final Conclusions</a></div>
+        </div>
+      </div>
 
-    <!-- ========== SECTION 3: CONFLICT ========== -->
-    <h2 class="anchor-head" id="sec-conflict">The Alleged Conflict: Tika Ramji vs. U.P. Cane Unions Federations</h2>
-    <p>A three-judge bench that originally heard the case felt there was a genuine conflict between two Constitution Bench decisions and referred it to a larger bench. Understanding the alleged conflict is the heart of this judgment.</p>
-    <div class="highlight-box"><div class="hb-label">Tika Ramji (1956) – Core Finding</div><p>The U.P. Act of 1953 contained no provision for price fixation. U.P. had never fixed a price, so there was no question of repugnancy.</p></div>
-    <div class="highlight-box"><div class="hb-label">U.P. Cane Unions Federations (2004)</div><p>After 1966 Order, Centre fixes only “minimum price”. State can fix a higher “advised price”. Both laws can be obeyed simultaneously → no repugnancy.</p></div>
+      <!-- CASE AT A GLANCE — reuses .table-container + shared table styles -->
+      <div class="table-container">
+        <table class="case-table">
+          <tr><td colspan="2">Case at a Glance</td></tr>
+          <tr><td>Case Name</td><td>West U.P. Sugar Mills Association &amp; Ors. vs. State of Uttar Pradesh &amp; Ors.</td></tr>
+          <tr><td>Citation</td><td>Civil Appeal No. 7508 of 2005</td></tr>
+          <tr><td>Court</td><td>Supreme Court of India – Constitution Bench (5 Judges)</td></tr>
+          <tr><td>Date of Decision</td><td>22 April 2020</td></tr>
+          <tr><td>Core Question</td><td>Whether U.P. can fix SAP for sugarcane above Central SMP?</td></tr>
+          <tr><td>Result</td><td>SAP upheld. No repugnancy. Reference to 7 judges declined.</td></tr>
+        </table>
+      </div>
 
-    <!-- ========== SECTION 4: 2020 ANALYSIS ========== -->
-    <h2 class="anchor-head" id="sec-2020-analysis">How the 2020 Court Resolved the Conflict</h2>
-    <p>The 2020 bench, authored by Justice M.R. Shah, concluded there was no real conflict. Different legal orders were under consideration (1955 Order vs 1966 Order). The deliberate deletion of the word “price” from the 1966 Order shows Parliament’s intent to vacate the field above the minimum, leaving room for State intervention.</p>
-    <p>Repugnancy under Article 254 arises only when two laws are completely inconsistent — impossible to obey both. A state SAP that is higher than the Central SMP creates no inconsistency.</p>
-    
-    <div class="price-diagram">
-      <div class="pd-central"><div class="pd-label">Central Government</div><div class="pd-name">Statutory Minimum Price (SMP)</div><div class="pd-desc">Floor price — can't pay less</div></div>
-      <div class="pd-arrow">≤</div>
-      <div class="pd-state"><div class="pd-label">State Government (U.P.)</div><div class="pd-name">State Advised Price (SAP)</div><div class="pd-desc">Always higher than SMP — valid & protective</div></div>
-    </div>
+      <!-- ═══ SECTION 1 ═══ -->
+      <h2 class="anchor-head" id="sec-background">Background: The Dispute in Simple Terms</h2>
 
-    <!-- ========== SECTION 5: SAP FACTORS ========== -->
-    <h2 class="anchor-head" id="sec-sap-factors">Why the SAP Matters: Protecting the Weaker Party</h2>
-    <p>The Court emphasised that sugarcane growers cannot negotiate on equal terms with large sugar mills. State intervention is constitutionally necessary. U.P. fixes SAP based on cost of cultivation, transport, reasonable return, market demand, and preventing diversion to gur/khandsari units — it is therefore a guided, non-arbitrary price.</p>
+      <p>Sugarcane is the lifeline of millions of small farmers across Uttar Pradesh. Every year, they supply their cane to large sugar mills under government-supervised arrangements. To protect farmers from being underpaid by powerful mill owners, the U.P. Government has long fixed a State Advised Price — a price higher than the Central Government's minimum.</p>
 
-    <!-- ========== SECTION 6: CONCLUSIONS ========== -->
-    <h2 class="anchor-head" id="sec-conclusions">Final Conclusions of the Court</h2>
-    <div class="decision-box">
-      <h4>The Constitution Bench held unanimously —</h4>
-      <ol>
-        <li><strong>Both Centre and State can fix sugarcane price</strong> under List III entries. However, State can only fix an "advised price" higher than Central minimum.</li>
-        <li><strong>Section 16 of the 1953 U.P. Act</strong> read with the 1966 Order empowers the State to fix a remunerative SAP.</li>
-        <li><strong>No repugnancy exists</strong> between the U.P. Act and Central laws. The SAP fixes a price above the SMP, obeying both laws simultaneously.</li>
-        <li><strong>No conflict between Tika Ramji (1956) and 2004 decision</strong>; they dealt with different factual contexts.</li>
-        <li><strong>No reference to a seven-judge bench</strong> is necessary. SAP mechanism remains constitutionally valid.</li>
-      </ol>
-    </div>
+      <p>Sugar mills challenged this practice before the Supreme Court. Their main argument was that the Central Government already has the exclusive power to fix the price of sugarcane under the Essential Commodities Act. The State's separate price fixation, they said, was unconstitutional and conflicted with Central law.</p>
 
-    <div class="judges-row">
-      <span class="judge-chip"><i class="fa-solid fa-scale-balanced"></i> Justice Arun Mishra</span>
-      <span class="judge-chip"><i class="fa-solid fa-scale-balanced"></i> Justice Indira Banerjee</span>
-      <span class="judge-chip"><i class="fa-solid fa-scale-balanced"></i> Justice Vineet Saran</span>
-      <span class="judge-chip"><i class="fa-solid fa-scale-balanced"></i> Justice M. R. Shah</span>
-      <span class="judge-chip"><i class="fa-solid fa-scale-balanced"></i> Justice Aniruddha Bose</span>
-    </div>
+      <!-- Feature image — reuses .feature-image + .feature-caption from post-styles.css -->
+      <div class="feat-img-wrap" data-fullimg="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=1200&q=80&auto=format&fit=crop">
+        <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=1200&q=80&auto=format&fit=crop"
+             alt="Sugarcane farmers in Uttar Pradesh" loading="lazy"/>
+        <div class="feature-caption">Sugarcane farmers in U.P. — the SAP mechanism exists to protect small growers who lack bargaining power.</div>
+      </div>
 
-    <p style="margin-top: 1rem;">This judgment reaffirms India's cooperative federalism: the Central law sets the floor, and State law builds above it to protect farmers. The ruling protects millions of sugarcane growers in U.P. and validates SAP as a constitutional instrument of agricultural welfare.</p>
+      <!-- ═══ SECTION 2 ═══ -->
+      <h2 class="anchor-head" id="sec-legislative">A Brief Legislative History: How We Got Here</h2>
 
-    <div class="act-end">
-      <span class="act-end-badge">— Judgment Ends —</span>
-      <p style="margin-top:1rem; font-size:0.8rem; text-align:center;">Civil Appeal No. 7508 of 2005 | Decided: 22 April 2020</p>
-    </div>
-  </main>
+      <p>To fully understand the judgment, it is important to trace the evolution of sugarcane price regulation in India — from the British era to independent India.</p>
 
-  <!-- FULLSCREEN MODAL (click on any .feat-img-wrap) -->
+      <p>The 1932 Sugar Industry Act fostered sugarcane cultivation; the 1934 Sugarcane Act empowered provinces to fix minimum prices. Later, the Essential Commodities Act 1955 gave the Centre control. The 1966 Sugarcane (Control) Order deliberately omitted the word "price" and only retained the power to fix a "minimum price" — leaving scope for State-advised higher prices.</p>
+
+      <!-- reuse .info-box from post-styles.css -->
+      <div class="info-box">
+        <h4><i class="fas fa-landmark"></i> Key Legislative Milestones</h4>
+        <p><strong>1932:</strong> Sugar Industry Act — promoted cultivation. <strong>1934:</strong> Sugarcane Act — empowered provinces to fix minimum prices. <strong>1955:</strong> Essential Commodities Act — Central control. <strong>1966:</strong> Sugarcane (Control) Order — omits "price", retains only "minimum price", leaving room for SAP.</p>
+      </div>
+
+      <!-- Second clickable image -->
+      <div class="feat-img-wrap" data-fullimg="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&q=80">
+        <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&q=80&auto=format&fit=crop"
+             alt="Supreme Court of India, New Delhi" loading="lazy"/>
+        <div class="feature-caption">The Supreme Court of India, New Delhi — a five-judge Constitution Bench resolved the reference on 22 April 2020.</div>
+      </div>
+
+      <!-- ═══ SECTION 3 ═══ -->
+      <h2 class="anchor-head" id="sec-conflict">The Alleged Conflict: Tika Ramji vs. U.P. Cane Unions Federations</h2>
+
+      <p>A three-judge bench that originally heard the case felt there was a genuine conflict between two Constitution Bench decisions and referred it to a larger bench. Understanding the alleged conflict is the heart of this judgment.</p>
+
+      <!-- reuses .highlight-box (extended in page CSS with gold border) -->
+      <div class="highlight-box">
+        <div class="hb-label">Tika Ramji (1956) — Core Finding</div>
+        <p>The U.P. Act of 1953 contained no provision for price fixation. U.P. had never fixed a price, so there was no question of repugnancy with Central law.</p>
+      </div>
+
+      <div class="highlight-box">
+        <div class="hb-label">U.P. Cane Unions Federations (2004)</div>
+        <p>After the 1966 Order, the Centre fixes only a "minimum price". The State can fix a higher "advised price". Both laws can be obeyed simultaneously — therefore no repugnancy arises.</p>
+      </div>
+
+      <!-- two-column layout — reuses .two-column from post-styles.css -->
+      <div class="two-column">
+        <div class="column-item">
+          <h4 style="color:var(--navy);font-family:'DM Sans',sans-serif;margin-bottom:.7rem;"><i class="fas fa-university" style="color:var(--gold);margin-right:6px;"></i>Central Authority (SMP)</h4>
+          <p style="text-indent:0;font-size:.95rem;">Sets a statutory <strong>minimum</strong> price — the absolute floor below which no payment can be made. Derived from the Essential Commodities Act 1955 and the 1966 Control Order.</p>
+        </div>
+        <div class="column-item">
+          <h4 style="color:var(--navy);font-family:'DM Sans',sans-serif;margin-bottom:.7rem;"><i class="fas fa-building-columns" style="color:var(--gold);margin-right:6px;"></i>State Authority (SAP)</h4>
+          <p style="text-indent:0;font-size:.95rem;">Sets an <strong>advised</strong> price always above the SMP. Protects farmers who lack bargaining power. Found constitutionally valid by the 2020 bench.</p>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION 4 ═══ -->
+      <h2 class="anchor-head" id="sec-2020-analysis">How the 2020 Court Resolved the Conflict</h2>
+
+      <p>The 2020 bench, authored by Justice M.R. Shah, concluded there was no real conflict between the two earlier Constitution Bench decisions. Different legal orders were under consideration in each case — the 1955 Order in Tika Ramji and the 1966 Order in the 2004 decision.</p>
+
+      <p>The deliberate deletion of the word "price" from the 1966 Order shows Parliament's clear intent to vacate the field above the minimum, expressly leaving room for State intervention. Repugnancy under Article 254 arises only when two laws are completely inconsistent — impossible to obey both simultaneously. A state SAP that is simply higher than the Central SMP creates no such inconsistency.</p>
+
+      <!-- PRICE DIAGRAM — page-specific component -->
+      <div class="price-diagram">
+        <div class="pd-central">
+          <div class="pd-label">Central Government</div>
+          <div class="pd-name">Statutory Minimum Price (SMP)</div>
+          <div class="pd-desc">Absolute floor — mills cannot pay less</div>
+        </div>
+        <div class="pd-arrow">≤</div>
+        <div class="pd-state">
+          <div class="pd-label">State Government (U.P.)</div>
+          <div class="pd-name">State Advised Price (SAP)</div>
+          <div class="pd-desc">Always higher than SMP — valid &amp; protective</div>
+        </div>
+      </div>
+
+      <!-- reuses .note-box from post-styles.css -->
+      <div class="note-box">
+        <strong style="font-family:'DM Sans',sans-serif;color:var(--rule-blue);">Article 254 — Repugnancy Test</strong>
+        <p style="text-indent:0;margin-top:.5rem;font-size:.97rem;">Repugnancy arises only when (i) both Parliament and State legislate on a Concurrent List subject, and (ii) it is impossible to obey both simultaneously. Where a State law merely provides a higher standard, no repugnancy exists — both the SMP and SAP can be complied with by paying the SAP, which automatically satisfies the SMP.</p>
+      </div>
+
+      <!-- ═══ SECTION 5 ═══ -->
+      <h2 class="anchor-head" id="sec-sap-factors">Why the SAP Matters: Protecting the Weaker Party</h2>
+
+      <p>The Court emphasised that sugarcane growers cannot negotiate on equal terms with large, organised sugar mills. State intervention is therefore not merely permissible — it is constitutionally necessary to give effect to the directive principles of state policy under Part IV of the Constitution.</p>
+
+      <p>U.P. fixes SAP based on multiple protective factors — cost of cultivation including input costs, transport and headload charges, reasonable return on capital, current market demand, and the need to prevent diversion of cane to gur/khandsari units. The SAP is therefore a guided, non-arbitrary exercise of State price-fixing power.</p>
+
+      <!-- reuses .function-grid + .function-card from post-styles.css -->
+      <div class="function-grid">
+        <div class="function-card">
+          <h4><i class="fas fa-seedling"></i> Cost of Cultivation</h4>
+          <p>Includes seed, fertiliser, irrigation, labour and input costs, ensuring farmers recover production expenses.</p>
+        </div>
+        <div class="function-card">
+          <h4><i class="fas fa-truck"></i> Transport Charges</h4>
+          <p>Headload and cartage from field to mill gate are factored into the SAP calculation to protect remote growers.</p>
+        </div>
+        <div class="function-card">
+          <h4><i class="fas fa-chart-line"></i> Reasonable Return</h4>
+          <p>Farmers are entitled to a fair profit margin beyond mere cost recovery — recognised as a fundamental fairness principle.</p>
+        </div>
+        <div class="function-card">
+          <h4><i class="fas fa-balance-scale"></i> Market Demand</h4>
+          <p>Current demand conditions and competing uses (gur, khandsari) are assessed to prevent suppression of cane price.</p>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION 6 ═══ -->
+      <h2 class="anchor-head" id="sec-conclusions">Final Conclusions of the Court</h2>
+
+      <!-- DECISION BOX — extends .summary-box from post-styles -->
+      <div class="decision-box">
+        <h4>The Constitution Bench held unanimously —</h4>
+        <ol>
+          <li><strong>Both Centre and State can fix sugarcane price</strong> under List III entries. However, the State can only fix an "advised price" higher than the Central minimum — not lower.</li>
+          <li><strong>Section 16 of the 1953 U.P. Act</strong> read with the 1966 Order empowers the State Government to fix a remunerative SAP above the Central SMP.</li>
+          <li><strong>No repugnancy exists</strong> between the U.P. Act and Central laws. The SAP merely fixes a price above the SMP; both laws can be complied with simultaneously.</li>
+          <li><strong>No conflict between Tika Ramji (1956) and the 2004 decision</strong> — they dealt with different factual and legislative contexts and are fully reconcilable.</li>
+          <li><strong>No reference to a seven-judge bench</strong> is warranted. The SAP mechanism remains constitutionally valid and enforceable.</li>
+        </ol>
+      </div>
+
+      <!-- JUDGES BENCH — reuses .badge pattern + page-specific chip styling -->
+      <h3>The Five-Judge Constitution Bench</h3>
+      <div class="judges-row">
+        <span class="judge-chip"><i class="fa-solid fa-scale-balanced"></i> Justice Arun Mishra</span>
+        <span class="judge-chip"><i class="fa-solid fa-scale-balanced"></i> Justice Indira Banerjee</span>
+        <span class="judge-chip"><i class="fa-solid fa-scale-balanced"></i> Justice Vineet Saran</span>
+        <span class="judge-chip"><i class="fa-solid fa-scale-balanced"></i> Justice M. R. Shah</span>
+        <span class="judge-chip"><i class="fa-solid fa-scale-balanced"></i> Justice Aniruddha Bose</span>
+      </div>
+
+      <p>This judgment reaffirms India's cooperative federalism: the Central law sets the floor, and State law builds above it to protect farmers. The ruling protects millions of sugarcane growers in U.P. and validates SAP as a constitutional instrument of agricultural welfare, one that cannot be challenged simply because it exceeds the Central minimum.</p>
+
+      <!-- TAGS — reuses .post-tags from post-styles.css -->
+      <div class="post-tags">
+        <span class="post-tag"><i class="fas fa-tag"></i> Supreme Court</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> SAP</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> Sugarcane</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> Article 254</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> Repugnancy</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> Constitution Bench</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> Uttar Pradesh</span>
+        <span class="post-tag"><i class="fas fa-tag"></i> Essential Commodities Act</span>
+      </div>
+
+      <!-- END BADGE -->
+      <div class="act-end">
+        <span class="act-end-badge">— Judgment Ends —</span>
+        <p style="margin-top:1rem;font-size:.8rem;text-align:center;font-family:'DM Sans',sans-serif;color:#64748b;">
+          Civil Appeal No. 7508 of 2005 &nbsp;|&nbsp; Decided: 22 April 2020
+        </p>
+      </div>
+
+    </div><!-- /post-content -->
+
+    <!-- Shared share footer injected by post-common.js -->
+    <div id="post-footer-share-container"></div>
+
+  </section>
+
+  <!-- FULLSCREEN IMAGE MODAL -->
   <div id="imageModal" class="image-modal">
     <button class="modal-close" id="closeModalBtn">&times;</button>
-    <img id="modalImg" src="" alt="Fullscreen">
+    <img id="modalImg" src="" alt="Fullscreen view">
   </div>
 
   <footer id="site-footer"></footer>
-
 
   <!-- Site Scripts -->
   <script src="../assets/Scripts/site-components.js" defer></script>
   <script src="../assets/Scripts/post-common.js" defer></script>
 
   <script>
-    // Reading progress bar
-    window.addEventListener('scroll', () => {
-      const el = document.getElementById('readingProgress');
-      if (!el) return;
-      const docH = document.documentElement.scrollHeight - window.innerHeight;
-      el.style.width = (window.scrollY / docH * 100) + '%';
+    
+    /* Lightbox for clickable images */
+    document.querySelectorAll('.feat-img-wrap').forEach(wrap => {
+      wrap.addEventListener('click', () => {
+        const modal = document.getElementById('imageModal');
+        const img   = document.getElementById('modalImg');
+        img.src = wrap.dataset.fullimg || wrap.querySelector('img').src;
+        modal.classList.add('active');
+      });
+    });
+    document.getElementById('closeModalBtn').addEventListener('click', () => {
+      document.getElementById('imageModal').classList.remove('active');
+    });
+    document.getElementById('imageModal').addEventListener('click', e => {
+      if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
+    });
+
+    /* Smooth scroll for TOC links */
+    document.querySelectorAll('.toc-item a').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      });
     });
   </script>
 
