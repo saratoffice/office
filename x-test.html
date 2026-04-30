@@ -1,1561 +1,831 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Industrial Sector Stock Analysis — April 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@300;400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0a0c10;
-    --surface: #111318;
-    --surface2: #181c24;
-    --border: #252b38;
-    --accent: #c8a84b;
-    --accent2: #5b8dee;
-    --green: #3ecf8e;
-    --red: #f05252;
-    --amber: #f59e0b;
-    --text: #e8eaf0;
-    --muted: #8892a4;
-    --faint: #4a5568;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 14px;
-    line-height: 1.7;
-  }
-  /* ── HERO ── */
-  .hero {
-    background: linear-gradient(135deg, #0a0c10 0%, #0f1520 50%, #0a0c10 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 56px 60px 40px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -80px; right: -80px;
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(200,168,75,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .hero-tag {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 16px;
-  }
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 42px;
-    font-weight: 900;
-    line-height: 1.15;
-    color: #fff;
-    margin-bottom: 12px;
-  }
-  .hero h1 span { color: var(--accent); }
-  .hero-sub {
-    color: var(--muted);
-    font-size: 14px;
-    max-width: 600px;
-  }
-  .hero-date {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--faint);
-    margin-top: 24px;
-    letter-spacing: 1px;
-  }
-  /* ── LAYOUT ── */
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
-  .section { padding: 52px 0; border-bottom: 1px solid var(--border); }
-  .section:last-child { border-bottom: none; }
-  .section-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    color: #fff;
-    margin-bottom: 32px;
-  }
-  /* ── SHORTLIST BANNER ── */
-  .shortlist-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
-    margin-bottom: 40px;
-  }
-  .shortlist-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 18px 16px;
-    position: relative;
-    overflow: hidden;
-  }
-  .shortlist-card.rank1 { border-color: var(--accent); }
-  .shortlist-card.rank2 { border-color: #8899bb; }
-  .rank-badge {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    margin-bottom: 6px;
-  }
-  .shortlist-card .ticker {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--accent);
-    margin-bottom: 2px;
-  }
-  .shortlist-card .name {
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 10px;
-  }
-  .rating-pill {
-    display: inline-block;
-    font-size: 10px;
-    font-family: 'IBM Plex Mono', monospace;
-    padding: 2px 8px;
-    border-radius: 20px;
-    background: rgba(62,207,142,0.12);
-    color: var(--green);
-    border: 1px solid rgba(62,207,142,0.3);
-  }
-  .rating-pill.neutral { background: rgba(245,158,11,0.12); color: var(--amber); border-color: rgba(245,158,11,0.3); }
-  .rating-pill.skip { background: rgba(240,82,82,0.12); color: var(--red); border-color: rgba(240,82,82,0.3); }
-  /* ── MAIN COMPARISON TABLE ── */
-  .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
-  table { width: 100%; border-collapse: collapse; }
-  th {
-    background: var(--surface2);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 1px;
-    color: var(--muted);
-    padding: 12px 14px;
-    text-align: left;
-    white-space: nowrap;
-    border-bottom: 1px solid var(--border);
-    text-transform: uppercase;
-  }
-  td {
-    padding: 12px 14px;
-    border-bottom: 1px solid rgba(37,43,56,0.6);
-    vertical-align: middle;
-    white-space: nowrap;
-    font-size: 13px;
-  }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(255,255,255,0.02); }
-  .ticker-cell {
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 600;
-    color: var(--accent);
-  }
-  .good { color: var(--green); }
-  .bad { color: var(--red); }
-  .neutral-val { color: var(--amber); }
-  /* ── STOCK DEEP-DIVE CARDS ── */
-  .stock-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    margin-bottom: 28px;
-    overflow: hidden;
-  }
-  .card-header {
-    background: var(--surface2);
-    padding: 22px 28px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    border-bottom: 1px solid var(--border);
-  }
-  .card-rank {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--faint);
-    min-width: 40px;
-  }
-  .card-title-block .ticker {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 18px;
-    color: var(--accent);
-    font-weight: 600;
-  }
-  .card-title-block .name {
-    font-size: 13px;
-    color: var(--muted);
-  }
-  .card-cmp {
-    margin-left: auto;
-    text-align: right;
-  }
-  .card-cmp .price {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 20px;
-    color: #fff;
-  }
-  .card-cmp .mcap {
-    font-size: 11px;
-    color: var(--muted);
-  }
-  .outlook-badge {
-    padding: 4px 14px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-family: 'IBM Plex Mono', monospace;
-    letter-spacing: 1px;
-    border: 1px solid;
-  }
-  .outlook-badge.bullish { color: var(--green); border-color: rgba(62,207,142,0.4); background: rgba(62,207,142,0.08); }
-  .outlook-badge.neutral { color: var(--amber); border-color: rgba(245,158,11,0.4); background: rgba(245,158,11,0.08); }
-  .outlook-badge.bearish { color: var(--red); border-color: rgba(240,82,82,0.4); background: rgba(240,82,82,0.08); }
-  .card-body {
-    padding: 24px 28px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 24px;
-  }
-  .card-col h4 {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .card-col ul { list-style: none; }
-  .card-col ul li {
-    font-size: 12px;
-    color: var(--text);
-    padding: 4px 0;
-    padding-left: 14px;
-    position: relative;
-    line-height: 1.5;
-  }
-  .card-col ul li::before {
-    content: '▸';
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-size: 10px;
-  }
-  .col-risks ul li::before { color: var(--red); }
-  .entry-exit {
-    grid-column: 1/-1;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px 20px;
-    display: flex;
-    gap: 40px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .ee-item { display: flex; flex-direction: column; gap: 2px; }
-  .ee-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
-  .ee-val {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 16px;
-    color: #fff;
-  }
-  .ee-val.entry { color: var(--green); }
-  .ee-val.exit { color: var(--accent); }
-  .ee-val.stop { color: var(--red); }
-  /* ── RISK MEMOS ── */
-  .risk-card {
-    background: var(--surface);
-    border-left: 3px solid var(--faint);
-    border-radius: 0 8px 8px 0;
-    padding: 22px 26px;
-    margin-bottom: 20px;
-  }
-  .risk-card.high { border-left-color: var(--red); }
-  .risk-card.med { border-left-color: var(--amber); }
-  .risk-card.low { border-left-color: var(--green); }
-  .risk-header { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
-  .risk-ticker {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--accent);
-  }
-  .risk-score {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    padding: 3px 12px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-  }
-  .risk-score.high { color: var(--red); border-color: rgba(240,82,82,0.4); background: rgba(240,82,82,0.1); }
-  .risk-score.med { color: var(--amber); border-color: rgba(245,158,11,0.4); background: rgba(245,158,11,0.1); }
-  .risk-score.low { color: var(--green); border-color: rgba(62,207,142,0.4); background: rgba(62,207,142,0.1); }
-  .risk-verdict {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 10px;
-    padding: 8px 12px;
-    background: var(--bg);
-    border-radius: 4px;
-  }
-  .risk-body { font-size: 13px; color: var(--text); line-height: 1.7; }
-  .risk-links { margin-top: 12px; font-size: 11px; color: var(--faint); font-family: 'IBM Plex Mono', monospace; }
-  /* ── BUFFETT SECTION ── */
-  .buffett-intro {
-    background: linear-gradient(135deg, rgba(200,168,75,0.06), transparent);
-    border: 1px solid rgba(200,168,75,0.2);
-    border-radius: 10px;
-    padding: 24px 28px;
-    margin-bottom: 32px;
-  }
-  .buffett-intro p { color: var(--muted); font-size: 13px; font-style: italic; }
-  .buffett-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-  .buffett-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 18px;
-  }
-  .buffett-card .b-ticker {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    color: var(--accent);
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-  .scorecard-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 0;
-    border-bottom: 1px solid rgba(37,43,56,0.5);
-    font-size: 11px;
-  }
-  .scorecard-row:last-child { border-bottom: none; }
-  .scorecard-row .principle { color: var(--muted); }
-  .dot-score { display: flex; gap: 3px; }
-  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); }
-  .dot.on { background: var(--accent); }
-  .total-score {
-    margin-top: 12px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    text-align: center;
-    padding: 8px;
-    background: var(--bg);
-    border-radius: 6px;
-  }
-  .verdict-row {
-    margin-top: 8px;
-    font-size: 11px;
-    color: var(--muted);
-    text-align: center;
-    font-style: italic;
-  }
-  /* ── DCF TABLE ── */
-  .dcf-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); margin-top: 12px; }
-  .dcf-title {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--accent);
-    padding: 14px 18px;
-    background: var(--surface2);
-    border-bottom: 1px solid var(--border);
-    letter-spacing: 1px;
-  }
-  .dcf-table { width: 100%; border-collapse: collapse; }
-  .dcf-table th {
-    font-size: 10px;
-    color: var(--muted);
-    padding: 10px 14px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    text-align: center;
-  }
-  .dcf-table td {
-    text-align: center;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    padding: 9px 14px;
-    border-bottom: 1px solid rgba(37,43,56,0.5);
-  }
-  .dcf-table tr:last-child td { border-bottom: none; }
-  .dcf-table .row-label { text-align: left; color: var(--muted); font-size: 11px; }
-  .dcf-table td.cmp-col { color: var(--accent); font-weight: 600; }
-  .dcf-table td.above { color: var(--green); }
-  .dcf-table td.below { color: var(--red); }
-  /* ── SUMMARY TABLE ── */
-  .summary-tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid; display: inline-block; }
-  .tag-buy { color: var(--green); border-color: rgba(62,207,142,0.3); background: rgba(62,207,142,0.08); }
-  .tag-watch { color: var(--amber); border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.08); }
-  .tag-avoid { color: var(--red); border-color: rgba(240,82,82,0.3); background: rgba(240,82,82,0.08); }
-  /* ── MISC ── */
-  .divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
-  .mono { font-family: 'IBM Plex Mono', monospace; }
-  .footer {
-    padding: 32px 60px;
-    border-top: 1px solid var(--border);
-    color: var(--faint);
-    font-size: 11px;
-    line-height: 1.8;
-  }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-  .meta-chip {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 3px 8px;
-    display: inline-block;
-    margin-right: 6px;
-    margin-bottom: 6px;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EC Article — All List Styles</title>
+  <style>
+
+    /* ── Page base ── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f0;
+      color: #1a1a1a;
+      padding: 40px 20px;
+    }
+    .page-wrapper {
+      max-width: 760px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      padding: 40px 48px 56px;
+      border: 1px solid #e5e5e0;
+    }
+    .page-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #111;
+    }
+    .page-subtitle {
+      font-size: 13px;
+      color: #aaa;
+      margin-bottom: 40px;
+    }
+    .section-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #bbb;
+      margin: 36px 0 2px;
+    }
+    .section-label:first-of-type { margin-top: 0; }
+    .section-desc {
+      font-size: 12.5px;
+      color: #aaa;
+      margin-bottom: 10px;
+      font-family: monospace;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #f0f0ec;
+      margin: 32px 0 0;
+    }
+
+    /* ==============================================
+       EC ARTICLE — COMPLETE LIST STYLE SYSTEM
+       ============================================== */
+
+    /* Global reset — prevents inherited margin bleed on nested lists */
+    .ec-article ol,
+    .ec-article ul {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ────────────────────────────────────────────
+       A. NATIVE ORDERED  <ol>
+       1.  →  a.  →  i.
+    ──────────────────────────────────────────── */
+    .ec-article > ol {
+      margin: 0.9rem 0 0.9rem 2rem;
+      padding-left: 0.25rem;
+      list-style-type: decimal;
+      list-style-position: outside;
+    }
+    .ec-article > ol > li {
+      margin-bottom: 0.9rem;
+      font-size: 17px;
+      line-height: 1.8;
+      padding-left: 0.5rem;
+    }
+    .ec-article > ol > li:last-child { margin-bottom: 0; }
+
+    .ec-article ol ol {
+      list-style-type: lower-alpha;
+      margin: 0.55rem 0 0.35rem 1.75rem;
+      padding-left: 0.25rem;
+      list-style-position: outside;
+    }
+    .ec-article ol ol > li {
+      margin-bottom: 0.5rem;
+      font-size: 16px;
+      line-height: 1.75;
+      padding-left: 0.4rem;
+    }
+    .ec-article ol ol > li:last-child { margin-bottom: 0; }
+
+    .ec-article ol ol ol {
+      list-style-type: lower-roman;
+      margin: 0.45rem 0 0.25rem 1.5rem;
+      padding-left: 0.25rem;
+      list-style-position: outside;
+    }
+    .ec-article ol ol ol > li {
+      margin-bottom: 0.4rem;
+      font-size: 15px;
+      line-height: 1.7;
+      padding-left: 0.3rem;
+    }
+
+    /* [type] overrides for manual level control */
+    .ec-article ol[type="1"] { list-style-type: decimal; }
+    .ec-article ol[type="a"] { list-style-type: lower-alpha; }
+    .ec-article ol[type="A"] { list-style-type: upper-alpha; }
+    .ec-article ol[type="i"] { list-style-type: lower-roman; }
+    .ec-article ol[type="I"] { list-style-type: upper-roman; }
+
+    /* ────────────────────────────────────────────
+       B. NATIVE UNORDERED  <ul>
+       •  →  ○  →  ▪
+    ──────────────────────────────────────────── */
+    .ec-article ul {
+      margin: 0.75rem 0 0.75rem 1.75rem;
+      padding-left: 0.25rem;
+      list-style-type: disc;
+      list-style-position: outside;
+    }
+    .ec-article ul > li {
+      margin-bottom: 0.5rem;
+      font-size: 17px;
+      line-height: 1.8;
+      padding-left: 0.4rem;
+    }
+    .ec-article ul > li:last-child { margin-bottom: 0; }
+    .ec-article ul ul {
+      list-style-type: circle;
+      margin: 0.4rem 0 0.25rem 1.5rem;
+    }
+    .ec-article ul ul > li { font-size: 16px; margin-bottom: 0.4rem; }
+    .ec-article ul ul ul {
+      list-style-type: square;
+      margin-left: 1.25rem;
+    }
+    .ec-article ul ul ul > li { font-size: 15px; }
+
+    /* ────────────────────────────────────────────
+       C. .numbered-list    →   1.  2.  3.
+    ──────────────────────────────────────────── */
+    .ec-article .numbered-list {
+      list-style: none; padding-left: 0;
+      margin: 0.9rem 0; counter-reset: num-c;
+    }
+    .ec-article .numbered-list > li {
+      counter-increment: num-c;
+      position: relative; padding-left: 2.1rem;
+      margin-bottom: 0.9rem; font-size: 17px; line-height: 1.8;
+    }
+    .ec-article .numbered-list > li:last-child { margin-bottom: 0; }
+    .ec-article .numbered-list > li::before {
+      content: counter(num-c) ".";
+      position: absolute; left: 0; font-weight: 700; color: #444;
+    }
+
+    /* ────────────────────────────────────────────
+       D. .letter-list    →   a.  b.  c.
+    ──────────────────────────────────────────── */
+    .ec-article .letter-list {
+      list-style: none; padding-left: 0;
+      margin: 0.55rem 0 0.55rem 1.5rem; counter-reset: let-c;
+    }
+    .ec-article .letter-list > li {
+      counter-increment: let-c;
+      position: relative; padding-left: 2rem;
+      margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
+    }
+    .ec-article .letter-list > li:last-child { margin-bottom: 0; }
+    .ec-article .letter-list > li::before {
+      content: counter(let-c, lower-alpha) ".";
+      position: absolute; left: 0; color: #555;
+    }
+
+    /* ────────────────────────────────────────────
+       E. .upper-letter-list    →   A.  B.  C.
+    ──────────────────────────────────────────── */
+    .ec-article .upper-letter-list {
+      list-style: none; padding-left: 0;
+      margin: 0.55rem 0 0.55rem 1.5rem; counter-reset: ulet-c;
+    }
+    .ec-article .upper-letter-list > li {
+      counter-increment: ulet-c;
+      position: relative; padding-left: 2rem;
+      margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
+    }
+    .ec-article .upper-letter-list > li:last-child { margin-bottom: 0; }
+    .ec-article .upper-letter-list > li::before {
+      content: counter(ulet-c, upper-alpha) ".";
+      position: absolute; left: 0; color: #555;
+    }
+
+    /* ────────────────────────────────────────────
+       F. .roman-list    →   i.  ii.  iii.
+    ──────────────────────────────────────────── */
+    .ec-article .roman-list {
+      list-style: none; padding-left: 0;
+      margin: 0.55rem 0 0.55rem 1.5rem; counter-reset: rom-c;
+    }
+    .ec-article .roman-list > li {
+      counter-increment: rom-c;
+      position: relative; padding-left: 2.25rem;
+      margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
+    }
+    .ec-article .roman-list > li:last-child { margin-bottom: 0; }
+    .ec-article .roman-list > li::before {
+      content: counter(rom-c, lower-roman) ".";
+      position: absolute; left: 0; color: #555;
+    }
+
+    /* ────────────────────────────────────────────
+       G. .upper-roman-list    →   I.  II.  III.
+    ──────────────────────────────────────────── */
+    .ec-article .upper-roman-list {
+      list-style: none; padding-left: 0;
+      margin: 0.55rem 0 0.55rem 1.5rem; counter-reset: urom-c;
+    }
+    .ec-article .upper-roman-list > li {
+      counter-increment: urom-c;
+      position: relative; padding-left: 2.5rem;
+      margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
+    }
+    .ec-article .upper-roman-list > li:last-child { margin-bottom: 0; }
+    .ec-article .upper-roman-list > li::before {
+      content: counter(urom-c, upper-roman) ".";
+      position: absolute; left: 0; color: #555;
+    }
+
+    /* ────────────────────────────────────────────
+       H. .paren-num-list    →   (1)  →  1)  →  i.
+    ──────────────────────────────────────────── */
+    .ec-article .paren-num-list,
+    .ec-article .paren-num-list ol { list-style: none; padding-left: 0; margin-left: 0; }
+
+    .ec-article .paren-num-list { counter-reset: pn1; margin: 0.9rem 0; }
+    .ec-article .paren-num-list > li {
+      counter-increment: pn1; position: relative;
+      padding-left: 2.5rem; margin-bottom: 0.85rem; font-size: 17px; line-height: 1.8;
+    }
+    .ec-article .paren-num-list > li:last-child { margin-bottom: 0; }
+    .ec-article .paren-num-list > li::before {
+      content: "(" counter(pn1) ")"; position: absolute; left: 0; font-weight: 700; color: #444;
+    }
+    .ec-article .paren-num-list > li > ol { counter-reset: pn2; margin: 0.5rem 0 0.25rem 0; }
+    .ec-article .paren-num-list > li > ol > li {
+      counter-increment: pn2; position: relative;
+      padding-left: 2.1rem; margin-left: 1.25rem; margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
+    }
+    .ec-article .paren-num-list > li > ol > li::before {
+      content: counter(pn2) ")"; position: absolute; left: 0; font-weight: 600; color: #555;
+    }
+    .ec-article .paren-num-list > li > ol > li > ol { counter-reset: pn3; margin: 0.4rem 0 0.2rem 0; }
+    .ec-article .paren-num-list > li > ol > li > ol > li {
+      counter-increment: pn3; position: relative;
+      padding-left: 2rem; margin-left: 1.25rem; margin-bottom: 0.4rem; font-size: 15px; line-height: 1.7;
+    }
+    .ec-article .paren-num-list > li > ol > li > ol > li::before {
+      content: counter(pn3, lower-roman) "."; position: absolute; left: 0; color: #777;
+    }
+
+    /* ────────────────────────────────────────────
+       I. .paren-alpha-list    →   (a)  →  (i)  →  1.
+    ──────────────────────────────────────────── */
+    .ec-article .paren-alpha-list,
+    .ec-article .paren-alpha-list ol { list-style: none; padding-left: 0; margin-left: 0; }
+
+    .ec-article .paren-alpha-list { counter-reset: pa1; margin: 0.9rem 0; }
+    .ec-article .paren-alpha-list > li {
+      counter-increment: pa1; position: relative;
+      padding-left: 2.5rem; margin-bottom: 0.85rem; font-size: 17px; line-height: 1.8;
+    }
+    .ec-article .paren-alpha-list > li:last-child { margin-bottom: 0; }
+    .ec-article .paren-alpha-list > li::before {
+      content: "(" counter(pa1, lower-alpha) ")"; position: absolute; left: 0; font-weight: 700; color: #444;
+    }
+    .ec-article .paren-alpha-list > li > ol { counter-reset: pa2; margin: 0.5rem 0 0.25rem 0; }
+    .ec-article .paren-alpha-list > li > ol > li {
+      counter-increment: pa2; position: relative;
+      padding-left: 2.25rem; margin-left: 1.25rem; margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
+    }
+    .ec-article .paren-alpha-list > li > ol > li::before {
+      content: "(" counter(pa2, lower-roman) ")"; position: absolute; left: 0; font-weight: 600; color: #555;
+    }
+    .ec-article .paren-alpha-list > li > ol > li > ol { counter-reset: pa3; margin: 0.4rem 0 0.2rem 0; }
+    .ec-article .paren-alpha-list > li > ol > li > ol > li {
+      counter-increment: pa3; position: relative;
+      padding-left: 2rem; margin-left: 1.25rem; margin-bottom: 0.4rem; font-size: 15px; line-height: 1.7;
+    }
+    .ec-article .paren-alpha-list > li > ol > li > ol > li::before {
+      content: counter(pa3) "."; position: absolute; left: 0; color: #777;
+    }
+
+    /* ────────────────────────────────────────────
+       J. .paren-roman-list    →   (i)  →  1)  →  a.
+    ──────────────────────────────────────────── */
+    .ec-article .paren-roman-list,
+    .ec-article .paren-roman-list ol { list-style: none; padding-left: 0; margin-left: 0; }
+
+    .ec-article .paren-roman-list { counter-reset: pr1; margin: 0.9rem 0; }
+    .ec-article .paren-roman-list > li {
+      counter-increment: pr1; position: relative;
+      padding-left: 2.75rem; margin-bottom: 0.85rem; font-size: 17px; line-height: 1.8;
+    }
+    .ec-article .paren-roman-list > li:last-child { margin-bottom: 0; }
+    .ec-article .paren-roman-list > li::before {
+      content: "(" counter(pr1, lower-roman) ")"; position: absolute; left: 0; font-weight: 700; color: #444;
+    }
+    .ec-article .paren-roman-list > li > ol { counter-reset: pr2; margin: 0.5rem 0 0.25rem 0; }
+    .ec-article .paren-roman-list > li > ol > li {
+      counter-increment: pr2; position: relative;
+      padding-left: 2.1rem; margin-left: 1.25rem; margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
+    }
+    .ec-article .paren-roman-list > li > ol > li::before {
+      content: counter(pr2) ")"; position: absolute; left: 0; font-weight: 600; color: #555;
+    }
+    .ec-article .paren-roman-list > li > ol > li > ol { counter-reset: pr3; margin: 0.4rem 0 0.2rem 0; }
+    .ec-article .paren-roman-list > li > ol > li > ol > li {
+      counter-increment: pr3; position: relative;
+      padding-left: 2rem; margin-left: 1.25rem; margin-bottom: 0.4rem; font-size: 15px; line-height: 1.7;
+    }
+    .ec-article .paren-roman-list > li > ol > li > ol > li::before {
+      content: counter(pr3, lower-alpha) "."; position: absolute; left: 0; color: #777;
+    }
+
+    /* ────────────────────────────────────────────
+       K. .mixed-list    →   1.  →  (a)  →  (i)
+    ──────────────────────────────────────────── */
+    .ec-article .mixed-list,
+    .ec-article .mixed-list ol { list-style: none; padding-left: 0; margin-left: 0; }
+
+    .ec-article .mixed-list { counter-reset: mx1; margin: 0.9rem 0; }
+    .ec-article .mixed-list > li {
+      counter-increment: mx1; position: relative;
+      padding-left: 2.1rem; margin-bottom: 0.85rem; font-size: 17px; line-height: 1.8;
+    }
+    .ec-article .mixed-list > li:last-child { margin-bottom: 0; }
+    .ec-article .mixed-list > li::before {
+      content: counter(mx1) "."; position: absolute; left: 0; font-weight: 700; color: #444;
+    }
+    .ec-article .mixed-list > li > ol { counter-reset: mx2; margin: 0.5rem 0 0.25rem 0; }
+    .ec-article .mixed-list > li > ol > li {
+      counter-increment: mx2; position: relative;
+      padding-left: 2.5rem; margin-left: 1.25rem; margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
+    }
+    .ec-article .mixed-list > li > ol > li::before {
+      content: "(" counter(mx2, lower-alpha) ")"; position: absolute; left: 0; font-weight: 600; color: #555;
+    }
+    .ec-article .mixed-list > li > ol > li > ol { counter-reset: mx3; margin: 0.4rem 0 0.2rem 0; }
+    .ec-article .mixed-list > li > ol > li > ol > li {
+      counter-increment: mx3; position: relative;
+      padding-left: 2.5rem; margin-left: 1.25rem; margin-bottom: 0.4rem; font-size: 15px; line-height: 1.7;
+    }
+    .ec-article .mixed-list > li > ol > li > ol > li::before {
+      content: "(" counter(mx3, lower-roman) ")"; position: absolute; left: 0; color: #777;
+    }
+
+    /* ────────────────────────────────────────────
+       L. .paren-roman-only    →   (i)  (ii)  (iii)
+          Single-level, no nesting
+    ──────────────────────────────────────────── */
+    .ec-article .paren-roman-only {
+      list-style: none; padding-left: 0;
+      margin: 0.9rem 0; counter-reset: pro-c;
+    }
+    .ec-article .paren-roman-only > li {
+      counter-increment: pro-c;
+      position: relative; padding-left: 2.75rem;
+      margin-bottom: 0.85rem; font-size: 17px; line-height: 1.8;
+    }
+    .ec-article .paren-roman-only > li:last-child { margin-bottom: 0; }
+    .ec-article .paren-roman-only > li::before {
+      content: "(" counter(pro-c, lower-roman) ")";
+      position: absolute; left: 0; font-weight: 700; color: #444;
+    }
+
+    /* ────────────────────────────────────────────
+       M. .paren-num-alpha    →   (1)  →  (a) (b) (c)
+    ──────────────────────────────────────────── */
+    .ec-article .paren-num-alpha,
+    .ec-article .paren-num-alpha ol { list-style: none; padding-left: 0; margin-left: 0; }
+
+    .ec-article .paren-num-alpha { counter-reset: pna1; margin: 0.9rem 0; }
+    .ec-article .paren-num-alpha > li {
+      counter-increment: pna1; position: relative;
+      padding-left: 2.5rem; margin-bottom: 0.85rem; font-size: 17px; line-height: 1.8;
+    }
+    .ec-article .paren-num-alpha > li:last-child { margin-bottom: 0; }
+    .ec-article .paren-num-alpha > li::before {
+      content: "(" counter(pna1) ")";
+      position: absolute; left: 0; font-weight: 700; color: #444;
+    }
+
+    /* Sub-level: (a) (b) (c) */
+    .ec-article .paren-num-alpha > li > ol { counter-reset: pna2; margin: 0.5rem 0 0.25rem 0; }
+    .ec-article .paren-num-alpha > li > ol > li {
+      counter-increment: pna2; position: relative;
+      padding-left: 2.5rem; margin-left: 1.25rem;
+      margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
+    }
+    .ec-article .paren-num-alpha > li > ol > li:last-child { margin-bottom: 0; }
+    .ec-article .paren-num-alpha > li > ol > li::before {
+      content: "(" counter(pna2, lower-alpha) ")";
+      position: absolute; left: 0; font-weight: 600; color: #555;
+    }
+
+    /* ────────────────────────────────────────────
+       N. .paren-alpha-num    →   (a)  →  (1)  →  i.
+    ──────────────────────────────────────────── */
+    .ec-article .paren-alpha-num,
+    .ec-article .paren-alpha-num ol { list-style: none; padding-left: 0; margin-left: 0; }
+
+    .ec-article .paren-alpha-num { counter-reset: pan1; margin: 0.9rem 0; }
+    .ec-article .paren-alpha-num > li {
+      counter-increment: pan1; position: relative;
+      padding-left: 2.5rem; margin-bottom: 0.85rem; font-size: 17px; line-height: 1.8;
+    }
+    .ec-article .paren-alpha-num > li:last-child { margin-bottom: 0; }
+    .ec-article .paren-alpha-num > li::before {
+      content: "(" counter(pan1, lower-alpha) ")";
+      position: absolute; left: 0; font-weight: 700; color: #444;
+    }
+
+    /* Level 2: (1) (2) (3) */
+    .ec-article .paren-alpha-num > li > ol { counter-reset: pan2; margin: 0.5rem 0 0.25rem 0; }
+    .ec-article .paren-alpha-num > li > ol > li {
+      counter-increment: pan2; position: relative;
+      padding-left: 2.5rem; margin-left: 1.25rem;
+      margin-bottom: 0.5rem; font-size: 16px; line-height: 1.75;
+    }
+    .ec-article .paren-alpha-num > li > ol > li:last-child { margin-bottom: 0; }
+    .ec-article .paren-alpha-num > li > ol > li::before {
+      content: "(" counter(pan2) ")";
+      position: absolute; left: 0; font-weight: 600; color: #555;
+    }
+
+    /* Level 3: i. ii. iii. */
+    .ec-article .paren-alpha-num > li > ol > li > ol { counter-reset: pan3; margin: 0.4rem 0 0.2rem 0; }
+    .ec-article .paren-alpha-num > li > ol > li > ol > li {
+      counter-increment: pan3; position: relative;
+      padding-left: 2.25rem; margin-left: 1.25rem;
+      margin-bottom: 0.4rem; font-size: 15px; line-height: 1.7;
+    }
+    .ec-article .paren-alpha-num > li > ol > li > ol > li:last-child { margin-bottom: 0; }
+    .ec-article .paren-alpha-num > li > ol > li > ol > li::before {
+      content: counter(pan3, lower-roman) ".";
+      position: absolute; left: 0; color: #777;
+    }
+
+  </style>
 </head>
 <body>
 
-<!-- ══════════════ HERO ══════════════ -->
-<div class="hero">
-  <div class="hero-tag">📊 Equity Research — Industrial Sector India</div>
-  <h1>Compressors, Pumps &<br><span>Diesel Engines</span> — Deep Analysis</h1>
-  <p class="hero-sub">8-stock screening across short-term momentum, governance risk, and Warren Buffett's value investing principles. Sector: Capital Goods / Engineering.</p>
-  <div class="hero-date">REPORT DATE: APRIL 28, 2026 &nbsp;|&nbsp; DATA AS OF Q3 FY2025–26 &nbsp;|&nbsp; ALL PRICES IN INR</div>
-</div>
+  <div class="page-wrapper">
 
-<!-- ══════════════ SECTION 1 — MASTER COMPARISON ══════════════ -->
-<div class="section">
-<div class="container">
-  <div class="section-label">Section 01</div>
-  <div class="section-title">Master Comparison — All 8 Stocks</div>
+    <h1 class="page-title">EC Article — All List Styles</h1>
+    <p class="page-subtitle">Complete reference. Every list needs <code>&lt;div class="ec-article"&gt;</code> as wrapper.</p>
 
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Ticker</th>
-          <th>CMP (₹)</th>
-          <th>M.Cap (Cr)</th>
-          <th>P/E</th>
-          <th>PEG</th>
-          <th>ROCE %</th>
-          <th>ROE %</th>
-          <th>D/E</th>
-          <th>OPM %</th>
-          <th>CFO/PAT</th>
-          <th>Piotroski</th>
-          <th>Pledged %</th>
-          <th>1Yr Ret %</th>
-          <th>3Yr Ret %</th>
-          <th>IV (₹)</th>
-          <th>Graham (₹)</th>
-          <th>Short-Term View</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="ticker-cell">CUMMINSIND</td>
-          <td>5266</td>
-          <td>145,993</td>
-          <td class="bad">62.7</td>
-          <td class="neutral-val">1.80</td>
-          <td class="good">36.3</td>
-          <td class="good">28.2</td>
-          <td class="good">0.00</td>
-          <td class="good">21.4</td>
-          <td class="good">0.84</td>
-          <td class="good">8/9</td>
-          <td class="good">0.0</td>
-          <td class="neutral-val">80.0</td>
-          <td class="good">86.7</td>
-          <td>1363</td>
-          <td>720</td>
-          <td><span class="summary-tag tag-watch">WATCH</span></td>
-        </tr>
-        <tr>
-          <td class="ticker-cell">KIRLOSENG</td>
-          <td>1726</td>
-          <td>25,104</td>
-          <td class="neutral-val">46.2</td>
-          <td class="good">1.20</td>
-          <td class="neutral-val">13.7</td>
-          <td class="neutral-val">15.4</td>
-          <td class="bad">1.64</td>
-          <td class="neutral-val">18.4</td>
-          <td class="bad">−1.67</td>
-          <td class="neutral-val">3/9</td>
-          <td class="good">0.0</td>
-          <td class="bad">−50.8</td>
-          <td class="bad">63.6</td>
-          <td>611</td>
-          <td>443</td>
-          <td><span class="summary-tag tag-avoid">AVOID</span></td>
-        </tr>
-        <tr>
-          <td class="ticker-cell">ELGIEQUIP</td>
-          <td>552</td>
-          <td>17,447</td>
-          <td class="bad">42.1</td>
-          <td class="neutral-val">1.54</td>
-          <td class="good">21.9</td>
-          <td class="good">20.1</td>
-          <td class="good">0.26</td>
-          <td class="neutral-val">14.5</td>
-          <td class="good">1.12</td>
-          <td class="good">8/9</td>
-          <td class="neutral-val">0.9</td>
-          <td class="neutral-val">12.3</td>
-          <td class="good">63.3</td>
-          <td>167</td>
-          <td>135</td>
-          <td><span class="summary-tag tag-buy">BUY</span></td>
-        </tr>
-        <tr>
-          <td class="ticker-cell">KSB</td>
-          <td>990</td>
-          <td>17,217</td>
-          <td class="bad">59.6</td>
-          <td class="bad">3.57</td>
-          <td class="good">24.5</td>
-          <td class="good">18.3</td>
-          <td class="good">0.00</td>
-          <td class="neutral-val">13.9</td>
-          <td class="good">0.32</td>
-          <td class="good">7/9</td>
-          <td class="good">0.0</td>
-          <td class="neutral-val">30.0</td>
-          <td class="good">117.7</td>
-          <td>376</td>
-          <td>184</td>
-          <td><span class="summary-tag tag-watch">WATCH</span></td>
-        </tr>
-        <tr>
-          <td class="ticker-cell">KIRLOSBROS</td>
-          <td>1718</td>
-          <td>13,651</td>
-          <td class="neutral-val">33.0</td>
-          <td class="good">0.51</td>
-          <td class="good">27.6</td>
-          <td class="good">21.6</td>
-          <td class="good">0.10</td>
-          <td class="neutral-val">12.5</td>
-          <td class="good">0.94</td>
-          <td class="good">8/9</td>
-          <td class="good">0.0</td>
-          <td class="good">48.6</td>
-          <td class="good">40.0</td>
-          <td>813</td>
-          <td>561</td>
-          <td><span class="summary-tag tag-watch">WATCH ⚠</span></td>
-        </tr>
-        <tr>
-          <td class="ticker-cell">INGERSOLLRAND</td>
-          <td>4257</td>
-          <td>13,442</td>
-          <td class="bad">48.6</td>
-          <td class="neutral-val">1.41</td>
-          <td class="good">60.0</td>
-          <td class="good">45.0</td>
-          <td class="good">0.02</td>
-          <td class="good">24.6</td>
-          <td class="good">0.99</td>
-          <td class="good">7/9</td>
-          <td class="good">0.0</td>
-          <td class="good">83.9</td>
-          <td class="good">82.1</td>
-          <td>1239</td>
-          <td>616</td>
-          <td><span class="summary-tag tag-buy">BUY</span></td>
-        </tr>
-        <tr>
-          <td class="ticker-cell">KIRLPNU</td>
-          <td>1525</td>
-          <td>9,903</td>
-          <td class="neutral-val">36.8</td>
-          <td class="good">1.01</td>
-          <td class="good">30.4</td>
-          <td class="good">22.9</td>
-          <td class="good">0.00</td>
-          <td class="neutral-val">20.5</td>
-          <td class="good">0.85</td>
-          <td class="good">6/9</td>
-          <td class="good">0.0</td>
-          <td class="good">108.0</td>
-          <td class="good">90.0</td>
-          <td>849</td>
-          <td>415</td>
-          <td><span class="summary-tag tag-buy">BUY</span></td>
-        </tr>
-        <tr>
-          <td class="ticker-cell">SHAKTIPUMP</td>
-          <td>569</td>
-          <td>7,027</td>
-          <td class="good">21.3</td>
-          <td class="good">0.25</td>
-          <td class="good">55.3</td>
-          <td class="good">42.6</td>
-          <td class="good">0.38</td>
-          <td class="good">20.1</td>
-          <td class="good">0.05</td>
-          <td class="good">6/9</td>
-          <td class="good">0.0</td>
-          <td class="neutral-val">1.7</td>
-          <td class="good">152.1</td>
-          <td>908</td>
-          <td>284</td>
-          <td><span class="summary-tag tag-buy">BUY</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-</div>
 
-<!-- ══════════════ SECTION 2 — SHORTLIST ══════════════ -->
-<div class="section">
-<div class="container">
-  <div class="section-label">Section 02</div>
-  <div class="section-title">5–7 Stock Shortlist for Short-Term (3–6 Months)</div>
-  <p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Shortlisted on: Momentum + Earnings Growth + Valuation Sanity + Financial Health + Risk Check. Heavy penalty for negative CFO/PAT, governance issues, and stretched PEG.</p>
+    <!-- A. NATIVE ORDERED -->
+    <p class="section-label">A — Native ordered &lt;ol&gt;</p>
+    <p class="section-desc">1. → a. → i.</p>
+    <div class="ec-article">
+      <ol>
+        <li>Project planning and initiation
+          <ol>
+            <li>Define scope and objectives
+              <ol>
+                <li>Identify primary stakeholders</li>
+                <li>Set success metrics and KPIs</li>
+              </ol>
+            </li>
+            <li>Allocate resources and budget</li>
+            <li>Define timeline and milestones</li>
+          </ol>
+        </li>
+        <li>Execution and delivery
+          <ol>
+            <li>Sprint planning cycles</li>
+            <li>Code review and QA process</li>
+          </ol>
+        </li>
+        <li>Post-launch review and iteration</li>
+      </ol>
+    </div>
 
-  <div class="shortlist-grid">
-    <div class="shortlist-card rank1">
-      <div class="rank-badge">RANK #1 — TOP PICK</div>
-      <div class="ticker">INGERSOLLRAND</div>
-      <div class="name">Ingersoll-Rand India</div>
-      <span class="rating-pill">BULLISH</span>
-    </div>
-    <div class="shortlist-card rank1">
-      <div class="rank-badge">RANK #2</div>
-      <div class="ticker">SHAKTIPUMP</div>
-      <div class="name">Shakti Pumps</div>
-      <span class="rating-pill">BULLISH</span>
-    </div>
-    <div class="shortlist-card rank2">
-      <div class="rank-badge">RANK #3</div>
-      <div class="ticker">KIRLPNU</div>
-      <div class="name">Kirloskar Pneumatic</div>
-      <span class="rating-pill">BULLISH</span>
-    </div>
-    <div class="shortlist-card rank2">
-      <div class="rank-badge">RANK #4</div>
-      <div class="ticker">ELGIEQUIP</div>
-      <div class="name">Elgi Equipments</div>
-      <span class="rating-pill neutral">NEUTRAL-BULL</span>
-    </div>
-    <div class="shortlist-card rank2">
-      <div class="rank-badge">RANK #5</div>
-      <div class="ticker">CUMMINSIND</div>
-      <div class="name">Cummins India</div>
-      <span class="rating-pill neutral">NEUTRAL</span>
-    </div>
-  </div>
 
-  <p style="color:var(--faint);font-size:11px;font-family:'IBM Plex Mono',monospace;">⚠ EXCLUDED: KIRLOSENG (negative CFO/PAT, D/E 1.64, −50% 1Y return, weak Piotroski), KIRLOSBROS (SEBI insider trading history, bearish technicals), KSB (PEG 3.57, overvalued at P/E 59.6).</p>
-</div>
-</div>
+    <hr>
+    <!-- B. NATIVE UNORDERED -->
+    <p class="section-label">B — Native unordered &lt;ul&gt;</p>
+    <p class="section-desc">• → ○ → ▪</p>
+    <div class="ec-article">
+      <ul>
+        <li>Frontend stack
+          <ul>
+            <li>React with TypeScript
+              <ul>
+                <li>Component-driven architecture</li>
+                <li>Custom hooks for state management</li>
+              </ul>
+            </li>
+            <li>Tailwind CSS for utility-first styling</li>
+          </ul>
+        </li>
+        <li>Backend stack
+          <ul>
+            <li>Node.js and Express</li>
+            <li>PostgreSQL with Prisma ORM</li>
+          </ul>
+        </li>
+        <li>Cloud infrastructure on AWS</li>
+      </ul>
+    </div>
 
-<!-- ══════════════ SECTION 3 — DEEP DIVE CARDS ══════════════ -->
-<div class="section">
-<div class="container">
-  <div class="section-label">Section 03</div>
-  <div class="section-title">Stock-by-Stock Deep Dive</div>
 
-  <!-- INGERSOLL-RAND -->
-  <div class="stock-card">
-    <div class="card-header">
-      <div class="card-rank">#1</div>
-      <div class="card-title-block">
-        <div class="ticker">INGERSOLLRAND</div>
-        <div class="name">Ingersoll-Rand (India) Ltd — Air Compressors & Pumps</div>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:16px;">
-        <div class="card-cmp">
-          <div class="price">₹4,257</div>
-          <div class="mcap">M.Cap ₹13,442 Cr</div>
-        </div>
-        <div class="outlook-badge bullish">BULLISH</div>
-      </div>
+    <hr>
+    <!-- C. NUMBERED LIST -->
+    <p class="section-label">C — Numbered list</p>
+    <p class="section-desc">class="numbered-list" → 1. 2. 3.</p>
+    <div class="ec-article">
+      <ol class="numbered-list">
+        <li>Identify the root cause before implementing any fix</li>
+        <li>Write failing tests that reproduce the issue clearly</li>
+        <li>Implement the minimal fix required to pass tests</li>
+        <li>Refactor and document the change for future reference</li>
+      </ol>
     </div>
-    <div class="card-body">
-      <div class="card-col">
-        <h4>Key Strengths</h4>
-        <ul>
-          <li>Highest ROCE (60%) & ROE (45%) in the peer set — exceptional capital efficiency</li>
-          <li>Virtually debt-free (D/E: 0.02); zero pledging</li>
-          <li>OPM of 24.6% — superior margins, near Cummins</li>
-          <li>CFO/PAT of 0.99 → earnings are real cash</li>
-          <li>1Y return: 83.9%; 3Y return: 82.1% — consistent momentum</li>
-          <li>Foreign parent (Ingersoll Rand Inc.) provides global tech moat</li>
-          <li>Expanding data centre & manufacturing capex cycle — primary demand driver</li>
-          <li>Excellent management quality (Piotroski 7/9)</li>
-        </ul>
-      </div>
-      <div class="card-col col-risks">
-        <h4>Key Risks</h4>
-        <ul>
-          <li>P/E of 48.6x — expensive if growth disappoints</li>
-          <li>Promoter holding 75% (MNC) — low float, illiquidity</li>
-          <li>Customs fine flagged in Cummins India peer data suggests sector-wide compliance risk</li>
-          <li>Earnings yield only 2.84% — opportunity cost vs bonds</li>
-          <li>Short-term consolidation possible after 84% run-up</li>
-          <li>FII hold change −0.24% (modest trimming)</li>
-        </ul>
-      </div>
-      <div class="card-col">
-        <h4>3–6 Month Outlook</h4>
-        <ul>
-          <li>Capex super-cycle in India (data centres, warehousing, F&B) drives compressed air demand</li>
-          <li>Strong order book visibility through FY27</li>
-          <li>FII trimming modest; DII buying offsetting</li>
-          <li>Likely to re-rate higher if Q4 FY26 results beat</li>
-          <li>Watch: US parent policy, PLI for capital goods</li>
-        </ul>
-      </div>
-      <div class="entry-exit">
-        <div class="ee-item">
-          <span class="ee-label">Suggest Entry Zone</span>
-          <span class="ee-val entry">₹3,800 – ₹4,100</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Target (3–6M)</span>
-          <span class="ee-val exit">₹4,800 – ₹5,200</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Stop Loss</span>
-          <span class="ee-val stop">₹3,550</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Upside Potential</span>
-          <span class="ee-val" style="color:var(--green)">~15–25%</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Risk/Reward</span>
-          <span class="ee-val">1 : 2.8</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- SHAKTI PUMPS -->
-  <div class="stock-card">
-    <div class="card-header">
-      <div class="card-rank">#2</div>
-      <div class="card-title-block">
-        <div class="ticker">SHAKTIPUMP</div>
-        <div class="name">Shakti Pumps (India) Ltd — Solar & Stainless Steel Pumps</div>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:16px;">
-        <div class="card-cmp">
-          <div class="price">₹569</div>
-          <div class="mcap">M.Cap ₹7,027 Cr</div>
-        </div>
-        <div class="outlook-badge bullish">BULLISH</div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div class="card-col">
-        <h4>Key Strengths</h4>
-        <ul>
-          <li>Lowest P/E in group (21.3x) with fastest earnings growth — best value-momentum combo</li>
-          <li>PEG of 0.25 — deeply undervalued relative to growth</li>
-          <li>ROCE 55.3%, ROE 42.6% — outstanding returns on capital</li>
-          <li>Solar pump beneficiary of PM-KUSUM scheme (₹34,000 Cr govt programme)</li>
-          <li>Profit CAGR 3Y: 84.7%; Sales 3Y: 28.8% — explosive growth</li>
-          <li>Intrinsic value ₹908 vs CMP ₹569 — 60% discount to IV</li>
-          <li>5Y return: 152% (peer-best among shortlist)</li>
-        </ul>
-      </div>
-      <div class="card-col col-risks">
-        <h4>Key Risks</h4>
-        <ul>
-          <li>Q-o-Q profit −69.5% — sharp quarterly volatility, government order lumpiness</li>
-          <li>CFO/PAT only 0.05 — poor cash conversion despite stated profits (watch receivables)</li>
-          <li>SEBI found insider trading (2010, 2018) — historical governance overhang</li>
-          <li>Negative net cash flow in FY25 (−₹138 Cr)</li>
-          <li>Government policy dependency — any PM-KUSUM slowdown hurts</li>
-          <li>FII holding modest 5.72%; liquidity thin</li>
-        </ul>
-      </div>
-      <div class="card-col">
-        <h4>3–6 Month Outlook</h4>
-        <ul>
-          <li>Q3 FY26 showed record profit surge — headline catalyst</li>
-          <li>PM-KUSUM Phase-2 tendering ongoing, Shakti is preferred vendor</li>
-          <li>Solar pump export opportunity — Uganda operations commenced</li>
-          <li>VFD & inverter capacity doubled (2→4 lakh units/yr)</li>
-          <li>Near-term risk: if Q4 FY26 results disappoint, sharp correction likely</li>
-        </ul>
-      </div>
-      <div class="entry-exit">
-        <div class="ee-item">
-          <span class="ee-label">Suggest Entry Zone</span>
-          <span class="ee-val entry">₹520 – ₹565</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Target (3–6M)</span>
-          <span class="ee-val exit">₹680 – ₹750</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Stop Loss</span>
-          <span class="ee-val stop">₹470</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Upside Potential</span>
-          <span class="ee-val" style="color:var(--green)">~20–32%</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Risk/Reward</span>
-          <span class="ee-val">1 : 2.5</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- KIRLOSKAR PNEUMATIC -->
-  <div class="stock-card">
-    <div class="card-header">
-      <div class="card-rank">#3</div>
-      <div class="card-title-block">
-        <div class="ticker">KIRLPNU</div>
-        <div class="name">Kirloskar Pneumatic Company Ltd — Air Compressors & Defence</div>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:16px;">
-        <div class="card-cmp">
-          <div class="price">₹1,525</div>
-          <div class="mcap">M.Cap ₹9,903 Cr</div>
-        </div>
-        <div class="outlook-badge bullish">BULLISH</div>
-      </div>
+    <hr>
+    <!-- D. LETTER LIST (lowercase) -->
+    <p class="section-label">D — Letter list (lowercase)</p>
+    <p class="section-desc">class="letter-list" → a. b. c.</p>
+    <div class="ec-article">
+      <ol class="letter-list">
+        <li>Review pull request for code quality and standards</li>
+        <li>Run automated tests and verify coverage thresholds</li>
+        <li>Obtain two approvals before merging to main branch</li>
+        <li>Tag the release and update the changelog accordingly</li>
+      </ol>
     </div>
-    <div class="card-body">
-      <div class="card-col">
-        <h4>Key Strengths</h4>
-        <ul>
-          <li>ROCE 30.4%, debt-free (D/E: 0.00)</li>
-          <li>Massive interest coverage: 1,782x — exceptional financial safety</li>
-          <li>1Y return: 108%, 3Y: 90% — strong sustained momentum</li>
-          <li>Defence & railways segment provides order book visibility</li>
-          <li>Profit growth 26% YoY, sales 21% YoY — solid acceleration</li>
-          <li>OPM stable at 20.5%; PEG of 1.01 (fairly valued for growth)</li>
-          <li>Zero pledging; promoter holdng 74.9% — aligned</li>
-        </ul>
-      </div>
-      <div class="card-col col-risks">
-        <h4>Key Risks</h4>
-        <ul>
-          <li>6-month return: +27% — already had a strong run, needs consolidation</li>
-          <li>Small market cap (₹9,903 Cr) — can be volatile</li>
-          <li>FII selling: −1.71% change; DII offsetting with +2.83%</li>
-          <li>Kirloskar group name association (see governance note for KIRLOSBROS)</li>
-          <li>Concentration in industrial/defence — cyclicality risk</li>
-        </ul>
-      </div>
-      <div class="card-col">
-        <h4>3–6 Month Outlook</h4>
-        <ul>
-          <li>Defence indigenisation push benefits pneumatic & hydraulic systems</li>
-          <li>Refrigeration compressor segment growing with cold-chain expansion</li>
-          <li>DII buying signals institutional conviction at current levels</li>
-          <li>Q4 FY26 results key: watch for margin improvement</li>
-          <li>Entry on dips preferred — stock needs to cool from recent highs</li>
-        </ul>
-      </div>
-      <div class="entry-exit">
-        <div class="ee-item">
-          <span class="ee-label">Suggest Entry Zone</span>
-          <span class="ee-val entry">₹1,380 – ₹1,480</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Target (3–6M)</span>
-          <span class="ee-val exit">₹1,750 – ₹1,950</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Stop Loss</span>
-          <span class="ee-val stop">₹1,280</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Upside Potential</span>
-          <span class="ee-val" style="color:var(--green)">~18–28%</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Risk/Reward</span>
-          <span class="ee-val">1 : 2.4</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- ELGI EQUIPMENTS -->
-  <div class="stock-card">
-    <div class="card-header">
-      <div class="card-rank">#4</div>
-      <div class="card-title-block">
-        <div class="ticker">ELGIEQUIP</div>
-        <div class="name">Elgi Equipments Ltd — Air Compressors, Global</div>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:16px;">
-        <div class="card-cmp">
-          <div class="price">₹552</div>
-          <div class="mcap">M.Cap ₹17,447 Cr</div>
-        </div>
-        <div class="outlook-badge neutral">NEUTRAL-BULL</div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div class="card-col">
-        <h4>Key Strengths</h4>
-        <ul>
-          <li>Piotroski 8/9 — best financial health score in the set</li>
-          <li>CFO/PAT: 1.12 — excellent cash conversion</li>
-          <li>Global footprint: Australia, Brazil, Malaysia, Gulf, Europe</li>
-          <li>ROCE 21.9%, ROE 20.1% — consistent compounders</li>
-          <li>New "Demand=Match" tech launch (Sep 2025) — product differentiation</li>
-          <li>Revenue target: USD 750 Mn by FY31 — ambitious but credible</li>
-          <li>Minimal debt (D/E 0.26), no pledging</li>
-        </ul>
-      </div>
-      <div class="card-col col-risks">
-        <h4>Key Risks</h4>
-        <ul>
-          <li>P/E 42.1x, EV/EBITDA 25.4 — categorised "very expensive" by analysts</li>
-          <li>Capacity expansion delayed due to regulatory approvals (Coimbatore)</li>
-          <li>1Y return only 12.3% — underperforming peers</li>
-          <li>Gulf market logistics issues noted in recent disclosures</li>
-          <li>OPM contracted slightly (15.07%→14.48%) — margin pressure</li>
-          <li>FII: −0.91% change; moderate selling pressure</li>
-        </ul>
-      </div>
-      <div class="card-col">
-        <h4>3–6 Month Outlook</h4>
-        <ul>
-          <li>International business acceleration key catalyst</li>
-          <li>Demand=Match technology adoption can drive ASP improvement</li>
-          <li>India manufacturing capex benefits domestic order book</li>
-          <li>Buy on weakness — stock has corrected ~15% from peak</li>
-          <li>Dec 2025: Revenue +21.7% YoY; Net profit +12% YoY</li>
-        </ul>
-      </div>
-      <div class="entry-exit">
-        <div class="ee-item">
-          <span class="ee-label">Suggest Entry Zone</span>
-          <span class="ee-val entry">₹490 – ₹530</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Target (3–6M)</span>
-          <span class="ee-val exit">₹620 – ₹680</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Stop Loss</span>
-          <span class="ee-val stop">₹450</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Upside Potential</span>
-          <span class="ee-val" style="color:var(--green)">~15–25%</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Risk/Reward</span>
-          <span class="ee-val">1 : 2.0</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- CUMMINS -->
-  <div class="stock-card">
-    <div class="card-header">
-      <div class="card-rank">#5</div>
-      <div class="card-title-block">
-        <div class="ticker">CUMMINSIND</div>
-        <div class="name">Cummins India Ltd — Engines, Power Systems, Distribution</div>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:16px;">
-        <div class="card-cmp">
-          <div class="price">₹5,266</div>
-          <div class="mcap">M.Cap ₹1,45,993 Cr</div>
-        </div>
-        <div class="outlook-badge neutral">NEUTRAL</div>
-      </div>
+    <hr>
+    <!-- E. UPPER LETTER LIST (uppercase) -->
+    <p class="section-label">E — Letter list (uppercase)</p>
+    <p class="section-desc">class="upper-letter-list" → A. B. C.</p>
+    <div class="ec-article">
+      <ol class="upper-letter-list">
+        <li>Discovery phase — research and requirements gathering</li>
+        <li>Design phase — wireframes, prototypes, and sign-off</li>
+        <li>Build phase — development, testing, and staging</li>
+        <li>Launch phase — deployment and post-launch monitoring</li>
+      </ol>
     </div>
-    <div class="card-body">
-      <div class="card-col">
-        <h4>Key Strengths</h4>
-        <ul>
-          <li>Largest in peer group — liquidity & stability premium</li>
-          <li>ROCE 36.3%, ROE 28.2% — consistently superior</li>
-          <li>Zero debt, zero pledging — fortress balance sheet</li>
-          <li>1Y: +80%, 3Y: +87% — excellent sustained returns</li>
-          <li>Sales CAGR 5Y: 14.9%; Profit CAGR 5Y: 22.5% — quality compounder</li>
-          <li>Acquisition of CleanMax Yellowstone (Dec 2025) — clean energy pivot</li>
-          <li>Piotroski 8/9 — top financial health</li>
-        </ul>
-      </div>
-      <div class="card-col col-risks">
-        <h4>Key Risks</h4>
-        <ul>
-          <li>P/E 62.7x — most expensive in peer set, CMP ≈ 4× intrinsic value</li>
-          <li>EV/EBITDA 44.4 — priced to perfection</li>
-          <li>FII selling: −1.17%; DII: −4.18% over 3Y — institutional trimming</li>
-          <li>Customs fine (Q3 FY25) — minor regulatory blemish</li>
-          <li>Down 6.93% from recent highs — momentum softening</li>
-          <li>Diesel engine exposure in an EV transition world</li>
-        </ul>
-      </div>
-      <div class="card-col">
-        <h4>3–6 Month Outlook</h4>
-        <ul>
-          <li>Data centre power backup demand — Cummins major beneficiary</li>
-          <li>Standalone IPP & industrial genset orders strong</li>
-          <li>Clean energy acquisition signals strategic pivot — new growth leg</li>
-          <li>At current P/E, upside is moderate; wait for 10–15% correction</li>
-          <li>Long-term compounder; short-term entry at ₹4,800–5,000 zone preferred</li>
-        </ul>
-      </div>
-      <div class="entry-exit">
-        <div class="ee-item">
-          <span class="ee-label">Suggest Entry Zone</span>
-          <span class="ee-val entry">₹4,800 – ₹5,100</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Target (3–6M)</span>
-          <span class="ee-val exit">₹5,700 – ₹6,200</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Stop Loss</span>
-          <span class="ee-val stop">₹4,550</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Upside Potential</span>
-          <span class="ee-val" style="color:var(--green)">~10–18%</span>
-        </div>
-        <div class="ee-item">
-          <span class="ee-label">Risk/Reward</span>
-          <span class="ee-val">1 : 1.8</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
-</div>
-</div>
 
-<!-- ══════════════ SECTION 4 — RISK MEMOS ══════════════ -->
-<div class="section">
-<div class="container">
-  <div class="section-label">Section 04 — Web Search Enhanced</div>
-  <div class="section-title">Governance & Regulatory Risk Memos</div>
+    <hr>
+    <!-- F. ROMAN LIST (lowercase) -->
+    <p class="section-label">F — Roman list (lowercase)</p>
+    <p class="section-desc">class="roman-list" → i. ii. iii.</p>
+    <div class="ec-article">
+      <ol class="roman-list">
+        <li>Initial deposit payable upon execution of agreement</li>
+        <li>Second instalment due upon delivery of first milestone</li>
+        <li>Third instalment due upon completion of user acceptance testing</li>
+        <li>Final payment due upon successful production deployment</li>
+      </ol>
+    </div>
 
-  <!-- KIRLOSKAR BROTHERS -->
-  <div class="risk-card high">
-    <div class="risk-header">
-      <div class="risk-ticker">KIRLOSBROS — Kirloskar Brothers Ltd</div>
-      <div class="risk-score high">Risk Score: 7/10 — HIGH</div>
-    </div>
-    <div class="risk-body">
-      <strong>Issue:</strong> SEBI, in October 2020, issued three separate orders against the Kirloskar family promoters (Atul, Rahul, and Sanjay Kirloskar factions) for insider trading and fraud against public shareholders. The investigation covered March 2010 – April 2011. <br><br>
-      <strong>Material Facts:</strong> Six promoter entities sold 1.07 Cr shares (block deal) while in possession of unpublished price-sensitive information (UPSI) relating to Kirloskar Industries' decision to invest ₹275 Cr in KBL shares. Promoters submitted incorrect declarations claiming they held no UPSI. SEBI ordered disgorgement of ₹16.6 Cr (ill-gotten gains) plus ₹14.5 Cr penalty = <strong>₹31.21 Cr total</strong>. Atul and Rahul Kirloskar were barred from markets for 6 months; Sanjay's entities for 3 months.<br><br>
-      <strong>Current Status (2025–26):</strong> The case is old (2010 vintage) but the inter-family dispute between Sanjay vs Atul/Rahul factions remains an ongoing corporate governance risk. Market Smojo currently rates KIRLOSBROS as <em>Sell</em> with bearish technicals (Nov 2025 downgrade). The 6-month return is −22.41% with a fresh 52-week low in March 2026.<br><br>
-      <strong>Investment Risk:</strong> Dual risk — historical governance concern and current bearish price momentum. Ongoing family tensions can resurface in board-level decisions affecting minority shareholders.
-    </div>
-    <div class="risk-links">
-      Primary: SEBI Order (Oct 2020) — https://www.sebi.gov.in | Business Standard (Oct 21, 2020) — https://www.business-standard.com | Moneylife (Oct 22, 2020)
-    </div>
-    <div class="risk-verdict">⚠ VERDICT: AVOID for short-term. Governance overhang + bearish momentum + family dispute risk outweigh reasonable valuation. Revisit only on family resolution news or >30% further correction.</div>
-  </div>
 
-  <!-- SHAKTI PUMPS -->
-  <div class="risk-card med">
-    <div class="risk-header">
-      <div class="risk-ticker">SHAKTIPUMP — Shakti Pumps (India) Ltd</div>
-      <div class="risk-score med">Risk Score: 4/10 — MODERATE</div>
+    <hr>
+    <!-- G. UPPER ROMAN LIST (uppercase) -->
+    <p class="section-label">G — Roman list (uppercase)</p>
+    <p class="section-desc">class="upper-roman-list" → I. II. III.</p>
+    <div class="ec-article">
+      <ol class="upper-roman-list">
+        <li>General provisions and definitions</li>
+        <li>Scope of work and deliverables</li>
+        <li>Payment terms and invoicing schedule</li>
+        <li>Confidentiality and intellectual property rights</li>
+        <li>Dispute resolution and governing law</li>
+      </ol>
     </div>
-    <div class="risk-body">
-      <strong>Issue 1 (2010):</strong> SEBI fined 34 entities ₹1.5 Cr for synchronised and reversal trades in Shakti Pumps during Feb–Jul 2010, creating artificial volumes. Shakti Pumps' price surged 141% during the period vs Sensex +9.25%.<br><br>
-      <strong>Issue 2 (2018):</strong> SEBI fined 8 entities ₹22 lakh for insider trading violations (March–October 2018). Designated employees Goutam, Sanjay and Mukesh Patidar traded without pre-clearances and executed contra trades within 6 months, gaining ₹9.19 lakh unlawfully. The company itself was penalised for not disgorging unlawful gains.<br><br>
-      <strong>Issue 3 (Nov 2023):</strong> SEBI passed an order under SAST Regulations regarding Shakti Pumps' shareholding structure (specific details public on SEBI website, routine compliance matter).<br><br>
-      <strong>Current Status:</strong> No active SEBI investigation as of 2025–26. Promoter family (Patidar) has clean chit on recent filings. Company has a Vigil Mechanism/Whistle Blower Policy in place.<br><br>
-      <strong>Investment Risk:</strong> Historical issues are old (2010, 2018). Thin CFO/PAT (0.05) and negative net cash flow in FY25 warrant monitoring. Government order lumpiness creates quarterly earnings volatility.
-    </div>
-    <div class="risk-links">
-      Primary: SEBI SAST Order Nov 2023 — sebi.gov.in/enforcement/orders/nov-2023 | Zee News (Dec 3, 2022) | Business Standard (Sep 10, 2018)
-    </div>
-    <div class="risk-verdict">✔ VERDICT: PROCEED WITH CAUTION. Past issues are historical and settled. Monitor CFO/PAT closely each quarter. Position size accordingly — this is a high-beta, high-reward play.</div>
-  </div>
 
-  <!-- CUMMINS INDIA -->
-  <div class="risk-card low">
-    <div class="risk-header">
-      <div class="risk-ticker">CUMMINSIND — Cummins India Ltd</div>
-      <div class="risk-score low">Risk Score: 2/10 — LOW</div>
-    </div>
-    <div class="risk-body">
-      <strong>Issue:</strong> A customs fine/penalty from the Office of the Commissioner of Customs (Maharashtra — Additional Commissioner) was disclosed via BSE Reg 30 (visible in investor notices). This is a routine import/export classification dispute — not fraud or criminal in nature.<br><br>
-      <strong>Other Findings:</strong> No SEBI enforcement orders, no CBI/ED filings, no court cases found against Cummins India management. The company is a subsidiary of Cummins Inc. (NYSE: CMI), a Fortune 500 US corporation with global compliance standards. Statutory auditors (deloitte) have issued clean reports.<br><br>
-      <strong>Current Status:</strong> The ITAT order passed in Cummins India's favour (Dec 2025) on a tax matter, indicating legal robustness. Regular and timely SEBI disclosures. CFO resignation (2024) was disclosed properly per Reg 30; replacement appointed.
-    </div>
-    <div class="risk-links">
-      Primary: BSE Reg 30 disclosures — bseindia.com | Cummins India Annual Report 2024–25 — cummins.com | Screener.in
-    </div>
-    <div class="risk-verdict">✔ VERDICT: PROCEED. Clean governance record. The customs matter is immaterial. MNC parent provides institutional checks. Valuation (not governance) is the only risk here.</div>
-  </div>
 
-  <!-- ELGI -->
-  <div class="risk-card low">
-    <div class="risk-header">
-      <div class="risk-ticker">ELGIEQUIP — Elgi Equipments Ltd</div>
-      <div class="risk-score low">Risk Score: 1/10 — VERY LOW</div>
+    <hr>
+    <!-- H. PAREN NUMERIC -->
+    <p class="section-label">H — Paren numeric list</p>
+    <p class="section-desc">class="paren-num-list" → (1) → 1) → i.</p>
+    <div class="ec-article">
+      <ol class="paren-num-list">
+        <li>Contractual obligations and terms of engagement
+          <ol>
+            <li>Payment schedule and milestones
+              <ol>
+                <li>Initial deposit upon signing</li>
+                <li>Milestone-based instalments</li>
+                <li>Final payment on delivery</li>
+              </ol>
+            </li>
+            <li>Intellectual property rights and ownership</li>
+            <li>Termination clauses and exit conditions</li>
+          </ol>
+        </li>
+        <li>Compliance and regulatory requirements
+          <ol>
+            <li>Data protection regulations
+              <ol>
+                <li>GDPR obligations and user consent</li>
+                <li>Data retention and deletion policy</li>
+              </ol>
+            </li>
+            <li>Audit and reporting obligations</li>
+          </ol>
+        </li>
+        <li>Dispute resolution and escalation process</li>
+      </ol>
     </div>
-    <div class="risk-body">
-      <strong>Finding:</strong> No SEBI enforcement orders, no CBI/ED/court actions found against Elgi Equipments or its promoters (Varadaraj family). The company has PWC as statutory auditor — a Big 4 firm with high scrutiny standards. Annual AGM held on Aug 12, 2025. Investor one-on-one meetings confirmed no UPSI shared (Regulation 30 compliant).<br><br>
-      <strong>Recent News:</strong> Capacity expansion at Coimbatore delayed by regulatory approvals — a legitimate business risk, not a governance issue. Gulf market logistics disruptions disclosed proactively.<br><br>
-      <strong>ESG:</strong> Company has investor relations, ESG reporting, and regular analyst access. FY31 revenue target of USD 750 Mn disclosed in public transcript. No adverse media (Reuters/ET/Bloomberg) found.
-    </div>
-    <div class="risk-links">
-      Primary: NSE/BSE Filings 2025 — bseindia.com | Groww / Screener disclosures | Elgi Annual Report
-    </div>
-    <div class="risk-verdict">✔ VERDICT: PROCEED. Cleanest governance record in the peer set. Family-owned but professionally managed. Regulatory delays are operational — not ethical.</div>
-  </div>
 
-  <!-- INGERSOLL RAND -->
-  <div class="risk-card low">
-    <div class="risk-header">
-      <div class="risk-ticker">INGERSOLLRAND — Ingersoll-Rand (India) Ltd</div>
-      <div class="risk-score low">Risk Score: 1/10 — VERY LOW</div>
-    </div>
-    <div class="risk-body">
-      <strong>Finding:</strong> No SEBI enforcement, no CBI/ED action, no court proceedings found. Ingersoll-Rand (India) is a listed subsidiary of Ingersoll Rand Inc. (NYSE: IR), subject to SEC reporting, SOX compliance, and US corporate governance standards.<br><br>
-      <strong>Promoter (MNC) Governance:</strong> 75% stake held by parent — no pledging, no inter-se conflict. Statutory auditors are reputable; annual reports are clean. Regular BSE/NSE filings found — all routine compliance.<br><br>
-      <strong>Key Note:</strong> MNC-controlled listed subsidiaries in India historically have among the lowest governance risks, as they are subject to dual regulatory oversight (SEBI + SEC/NYSE rules).
-    </div>
-    <div class="risk-links">
-      Primary: BSE disclosures | Ingersoll Rand Inc. SEC filings | SEBI SCORES — no pending complaints found
-    </div>
-    <div class="risk-verdict">✔ VERDICT: PROCEED WITH CONFIDENCE. Lowest governance risk in the peer set. MNC parent and dual oversight virtually eliminates fraud risk.</div>
-  </div>
 
-  <!-- KIRLOSKAR OIL -->
-  <div class="risk-card med">
-    <div class="risk-header">
-      <div class="risk-ticker">KIRLOSENG — Kirloskar Oil Engines Ltd</div>
-      <div class="risk-score med">Risk Score: 4/10 — MODERATE</div>
+    <hr>
+    <!-- I. PAREN ALPHA -->
+    <p class="section-label">I — Paren alpha list</p>
+    <p class="section-desc">class="paren-alpha-list" → (a) → (i) → 1.</p>
+    <div class="ec-article">
+      <ol class="paren-alpha-list">
+        <li>General terms and definitions applicable to this agreement
+          <ol>
+            <li>Meaning of key terms used throughout
+              <ol>
+                <li>Definition of "services" and "deliverables"</li>
+                <li>Definition of "confidential information"</li>
+              </ol>
+            </li>
+            <li>Governing law and jurisdiction</li>
+            <li>Amendments and modification procedure</li>
+          </ol>
+        </li>
+        <li>Roles and responsibilities of each party
+          <ol>
+            <li>Client obligations and access requirements
+              <ol>
+                <li>Timely provision of feedback and approvals</li>
+                <li>Access to required systems and data</li>
+              </ol>
+            </li>
+            <li>Vendor obligations and service levels</li>
+          </ol>
+        </li>
+        <li>Confidentiality and non-disclosure obligations</li>
+      </ol>
     </div>
-    <div class="risk-body">
-      <strong>Issue:</strong> Kirloskar Oil Engines (KOEL) is a separate listed entity from Kirloskar Brothers Ltd but shares the Kirloskar group heritage, which carries reputational overhang from the 2020 SEBI order against the Kirloskar family. KOEL itself is under Sanjay Kirloskar's control — who was fined (but in a lesser capacity) in the KBL insider trading case.<br><br>
-      <strong>Business Risk:</strong> D/E of 1.64 (highest in peer set), below-average capital structure rating, and negative CFO/PAT (−1.67) are fundamental red flags beyond governance. The company incorporated a new subsidiary "Kirloskar Advanced Systems Pvt Ltd" in March 2026.<br><br>
-      <strong>Stock Risk:</strong> 1Y return −50.8% — worst performer; P/E 46.2x despite weak returns; Piotroski only 3/9.
+
+
+    <hr>
+    <!-- J. PAREN ROMAN -->
+    <p class="section-label">J — Paren roman list</p>
+    <p class="section-desc">class="paren-roman-list" → (i) → 1) → a.</p>
+    <div class="ec-article">
+      <ol class="paren-roman-list">
+        <li>Definitions and interpretation of this agreement
+          <ol>
+            <li>Meaning of technical terms used
+              <ol>
+                <li>Software and platform definitions</li>
+                <li>Service level terminology explained</li>
+              </ol>
+            </li>
+            <li>Rules of construction and precedence</li>
+            <li>References to applicable statutes and regulations</li>
+          </ol>
+        </li>
+        <li>Scope of services and deliverables
+          <ol>
+            <li>Core service obligations in detail
+              <ol>
+                <li>Primary deliverables and timelines</li>
+                <li>Acceptance criteria and sign-off process</li>
+              </ol>
+            </li>
+            <li>Exclusions and out-of-scope items</li>
+          </ol>
+        </li>
+        <li>Liability limitations and indemnity provisions</li>
+      </ol>
     </div>
-    <div class="risk-links">
-      Primary: SEBI 2020 KBL Order (family-wide context) | Screener.in KIRLOSENG | BSE filings
+
+
+    <hr>
+    <!-- K. MIXED LIST -->
+    <p class="section-label">K — Mixed list</p>
+    <p class="section-desc">class="mixed-list" → 1. → (a) → (i)</p>
+    <div class="ec-article">
+      <ol class="mixed-list">
+        <li>System architecture and design decisions
+          <ol>
+            <li>Frontend layer structure
+              <ol>
+                <li>Component hierarchy and reuse strategy</li>
+                <li>Routing and navigation patterns</li>
+              </ol>
+            </li>
+            <li>Backend API design
+              <ol>
+                <li>RESTful endpoint naming conventions</li>
+                <li>Authentication and authorisation flow</li>
+              </ol>
+            </li>
+            <li>Database schema and entity relationships</li>
+          </ol>
+        </li>
+        <li>Testing and quality assurance strategy
+          <ol>
+            <li>Unit and integration testing
+              <ol>
+                <li>Coverage thresholds and CI enforcement</li>
+                <li>Mocking strategies for external dependencies</li>
+              </ol>
+            </li>
+            <li>End-to-end testing with Playwright</li>
+          </ol>
+        </li>
+        <li>Deployment pipeline and release management</li>
+      </ol>
     </div>
-    <div class="risk-verdict">⚠ VERDICT: AVOID. Poor fundamentals (negative CFO/PAT, high D/E, low Piotroski) and group-level governance concerns combine for a poor short-term risk/reward. Not investable at current levels.</div>
-  </div>
 
-  <!-- KSB -->
-  <div class="risk-card low">
-    <div class="risk-header">
-      <div class="risk-ticker">KSB — KSB Ltd (formerly Mather & Platt)</div>
-      <div class="risk-score low">Risk Score: 2/10 — LOW</div>
+
+    <hr>
+    <!-- L. PAREN ROMAN ONLY -->
+    <p class="section-label">L — Paren roman only</p>
+    <p class="section-desc">class="paren-roman-only" → (i) (ii) (iii)</p>
+    <div class="ec-article">
+      <ol class="paren-roman-only">
+        <li>The vendor shall deliver the software within the agreed timeline</li>
+        <li>The client shall provide timely feedback within five business days</li>
+        <li>Both parties agree to maintain strict confidentiality of shared data</li>
+        <li>Any amendments must be agreed in writing by authorised representatives</li>
+        <li>This agreement shall be governed by the laws of the applicable jurisdiction</li>
+      </ol>
     </div>
-    <div class="risk-body">
-      <strong>Finding:</strong> No SEBI enforcement orders, no CBI/ED filings found for KSB Ltd or its promoters (KSB SE & Co. KGaA, Germany). KSB is a German MNC subsidiary — similar dual regulatory oversight as Ingersoll-Rand.<br><br>
-      <strong>Valuation Risk (not governance):</strong> KSB's primary risk is valuation — P/E 59.6x, PEG 3.57, EV/EBITDA 37.9x (categorised "very expensive"). Despite a 200% dividend declared in 2025, the stock is priced well above any reasonable intrinsic value basis.<br><br>
-      <strong>Recent Positives:</strong> 6-month total return +4.41% (including 0.48% dividend). 5Y return: 743%. Excellent 3-year ROCE of 23.9%. Clean BSE disclosures.
+
+
+    <hr>
+    <!-- M. PAREN NUM → ALPHA -->
+    <p class="section-label">M — Paren numeric with alpha sub-items</p>
+    <p class="section-desc">class="paren-num-alpha" → (1) → (a) (b) (c)</p>
+    <div class="ec-article">
+      <ol class="paren-num-alpha">
+        <li>Obligations of the vendor under this agreement
+          <ol>
+            <li>Deliver all agreed software modules on schedule</li>
+            <li>Provide documentation for all deliverables</li>
+            <li>Assign a dedicated project manager throughout</li>
+          </ol>
+        </li>
+        <li>Obligations of the client under this agreement
+          <ol>
+            <li>Provide timely access to required systems and data</li>
+            <li>Review and approve deliverables within five business days</li>
+            <li>Make payments in accordance with the agreed schedule</li>
+          </ol>
+        </li>
+        <li>Shared responsibilities and collaboration expectations
+          <ol>
+            <li>Attend weekly progress review meetings</li>
+            <li>Escalate blockers within one business day of identification</li>
+          </ol>
+        </li>
+      </ol>
     </div>
-    <div class="risk-links">
-      Primary: BSE filings KSB Ltd | MarketsMojo KSB analysis | KSB SE parent (Frankfurt listed)
+
+
+    <hr>
+    <!-- N. PAREN ALPHA → NUM → ROMAN -->
+    <p class="section-label">N — Paren alpha with numeric and roman sub-items</p>
+    <p class="section-desc">class="paren-alpha-num" → (a) → (1) → i.</p>
+    <div class="ec-article">
+      <ol class="paren-alpha-num">
+        <li>General conditions applicable to this agreement
+          <ol>
+            <li>Definitions and key terms used throughout
+              <ol>
+                <li>Meaning of "services" and "deliverables"</li>
+                <li>Meaning of "confidential information"</li>
+                <li>Meaning of "intellectual property rights"</li>
+              </ol>
+            </li>
+            <li>Governing law and applicable jurisdiction
+              <ol>
+                <li>Choice of law provisions</li>
+                <li>Dispute resolution forum</li>
+              </ol>
+            </li>
+            <li>Amendments and modifications to this agreement</li>
+          </ol>
+        </li>
+        <li>Obligations and responsibilities of each party
+          <ol>
+            <li>Vendor obligations during the project term
+              <ol>
+                <li>Timely delivery of all agreed milestones</li>
+                <li>Maintenance of adequate staffing levels</li>
+              </ol>
+            </li>
+            <li>Client obligations during the project term
+              <ol>
+                <li>Provision of access to systems and data</li>
+                <li>Approval of deliverables within agreed timelines</li>
+              </ol>
+            </li>
+            <li>Joint obligations and shared responsibilities</li>
+          </ol>
+        </li>
+        <li>Confidentiality and data protection obligations</li>
+      </ol>
     </div>
-    <div class="risk-verdict">⚠ VERDICT: HOLD/ACCUMULATE ON DIPS. Clean governance (German MNC parent). Valuation is the deterrent — wait for 20–25% correction to ₹750–800 before initiating fresh position.</div>
-  </div>
 
-</div>
-</div>
 
-<!-- ══════════════ SECTION 5 — WARREN BUFFETT ══════════════ -->
-<div class="section">
-<div class="container">
-  <div class="section-label">Section 05</div>
-  <div class="section-title">Warren Buffett's Lens — Scorecard & DCF Analysis</div>
-
-  <div class="buffett-intro">
-    <p>"It's far better to buy a wonderful company at a fair price than a fair company at a wonderful price." — Warren Buffett. We evaluate each stock against Buffett's 12 key investing principles: (1) Understandable Business, (2) Consistent Operating History, (3) Favourable Long-term Prospects / Moat, (4) Rational Management, (5) Candour (governance), (6) Return on Equity (≥15%), (7) Owner Earnings (CFO quality), (8) High Profit Margins, (9) Low Debt, (10) Margin of Safety (CMP vs intrinsic value), (11) Long-term Earnings Growth, (12) Shareholder Friendliness (buybacks/dividends).</p>
-  </div>
-
-  <div class="buffett-grid">
-    <!-- CUMMINS -->
-    <div class="buffett-card">
-      <div class="b-ticker">CUMMINSIND</div>
-      <div class="scorecard-row"><span class="principle">1. Understandable</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">2. Consistent History</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">3. Moat/Prospects</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">4. Rational Mgmt</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">5. Governance</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">6. ROE ≥15%</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">7. Owner Earnings</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div></div>
-      <div class="scorecard-row"><span class="principle">8. High Margins</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">9. Low Debt</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">10. Margin of Safety</span><div class="dot-score"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-      <div class="scorecard-row"><span class="principle">11. Earnings Growth</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">12. Shareholder</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="total-score"><span style="color:var(--amber)">32 / 36</span> pts — <span style="color:var(--green)">EXCELLENT</span></div>
-      <div class="verdict-row">Buffett: "Would buy at right price. Current price has no margin of safety — would wait."</div>
-    </div>
-    <!-- INGERSOLL -->
-    <div class="buffett-card">
-      <div class="b-ticker">INGERSOLLRAND</div>
-      <div class="scorecard-row"><span class="principle">1. Understandable</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">2. Consistent History</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">3. Moat/Prospects</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">4. Rational Mgmt</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">5. Governance</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">6. ROE ≥15%</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">7. Owner Earnings</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">8. High Margins</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">9. Low Debt</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">10. Margin of Safety</span><div class="dot-score"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-      <div class="scorecard-row"><span class="principle">11. Earnings Growth</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">12. Shareholder</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="total-score"><span style="color:var(--amber)">33 / 36</span> pts — <span style="color:var(--green)">OUTSTANDING</span></div>
-      <div class="verdict-row">Buffett: "This is the kind of business I love. Price is premium but quality justifies it."</div>
-    </div>
-    <!-- ELGI -->
-    <div class="buffett-card">
-      <div class="b-ticker">ELGIEQUIP</div>
-      <div class="scorecard-row"><span class="principle">1. Understandable</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">2. Consistent History</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">3. Moat/Prospects</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div></div>
-      <div class="scorecard-row"><span class="principle">4. Rational Mgmt</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">5. Governance</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">6. ROE ≥15%</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">7. Owner Earnings</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">8. High Margins</span><div class="dot-score"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div></div>
-      <div class="scorecard-row"><span class="principle">9. Low Debt</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">10. Margin of Safety</span><div class="dot-score"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-      <div class="scorecard-row"><span class="principle">11. Earnings Growth</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">12. Shareholder</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div></div>
-      <div class="total-score"><span style="color:var(--amber)">28 / 36</span> pts — <span style="color:var(--green)">GOOD</span></div>
-      <div class="verdict-row">Buffett: "Good global business with thin moat vs Ingersoll-Rand. Would accumulate on weakness."</div>
-    </div>
-    <!-- SHAKTI -->
-    <div class="buffett-card">
-      <div class="b-ticker">SHAKTIPUMP</div>
-      <div class="scorecard-row"><span class="principle">1. Understandable</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">2. Consistent History</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div></div>
-      <div class="scorecard-row"><span class="principle">3. Moat/Prospects</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div></div>
-      <div class="scorecard-row"><span class="principle">4. Rational Mgmt</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div></div>
-      <div class="scorecard-row"><span class="principle">5. Governance</span><div class="dot-score"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div></div>
-      <div class="scorecard-row"><span class="principle">6. ROE ≥15%</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">7. Owner Earnings</span><div class="dot-score"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-      <div class="scorecard-row"><span class="principle">8. High Margins</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div></div>
-      <div class="scorecard-row"><span class="principle">9. Low Debt</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">10. Margin of Safety</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">11. Earnings Growth</span><div class="dot-score"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-      <div class="scorecard-row"><span class="principle">12. Shareholder</span><div class="dot-score"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div></div>
-      <div class="total-score"><span style="color:var(--amber)">24 / 36</span> pts — <span style="color:var(--amber)">FAIR</span></div>
-      <div class="verdict-row">Buffett: "Too government-dependent. Cash conversion poor. Not my style — but cheap enough to interest a special situations buyer."</div>
-    </div>
-  </div>
-
-  <!-- DCF SENSITIVITY TABLE — CUMMINS (primary Buffett pick) -->
-  <div class="dcf-wrap">
-    <div class="dcf-title">DCF SENSITIVITY — CUMMINS INDIA LTD (Buffett's Preferred Pick) | Base: FY26E EPS ₹84, WACC 10–12%, Terminal Growth 4–6%</div>
-    <table class="dcf-table">
-      <thead>
-        <tr>
-          <th>WACC / g→</th>
-          <th>g = 4%</th>
-          <th>g = 5%</th>
-          <th>g = 6%</th>
-          <th>g = 7%</th>
-          <th>g = 8%</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="row-label">WACC = 10%</td>
-          <td>₹3,650</td>
-          <td>₹4,120</td>
-          <td class="cmp-col">₹4,810</td>
-          <td>₹5,820</td>
-          <td>₹7,400</td>
-        </tr>
-        <tr>
-          <td class="row-label">WACC = 11%</td>
-          <td>₹2,980</td>
-          <td>₹3,310</td>
-          <td>₹3,780</td>
-          <td class="cmp-col">₹4,410</td>
-          <td>₹5,260</td>
-        </tr>
-        <tr>
-          <td class="row-label">WACC = 12%</td>
-          <td class="below">₹2,420</td>
-          <td class="below">₹2,680</td>
-          <td class="below">₹3,020</td>
-          <td class="below">₹3,470</td>
-          <td class="below">₹4,060</td>
-        </tr>
-        <tr>
-          <td class="row-label">WACC = 13%</td>
-          <td class="below">₹1,950</td>
-          <td class="below">₹2,160</td>
-          <td class="below">₹2,420</td>
-          <td class="below">₹2,780</td>
-          <td class="below">₹3,210</td>
-        </tr>
-        <tr>
-          <td class="row-label">WACC = 9%</td>
-          <td>₹4,620</td>
-          <td>₹5,390</td>
-          <td class="above">₹6,530</td>
-          <td class="above">₹8,440</td>
-          <td class="above">₹12,100</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <p style="font-size:11px;color:var(--faint);font-family:'IBM Plex Mono',monospace;margin-top:10px;">CMP ₹5,266 is highlighted above. Green = DCF above CMP (undervalued scenario). Red = DCF below CMP (overvalued). At WACC 10–11% and g 6–7%, fair value is ₹4,400–4,800 — CMP is ~10–20% premium. Buffett would demand a 25–30% margin of safety → entry at ₹3,500–4,000.</p>
-
-  <hr class="divider">
-
-  <!-- DCF — INGERSOLL RAND -->
-  <div class="dcf-wrap">
-    <div class="dcf-title">DCF SENSITIVITY — INGERSOLL-RAND INDIA | Base: FY26E EPS ₹88, WACC 10–12%, Terminal Growth 5–7%</div>
-    <table class="dcf-table">
-      <thead>
-        <tr>
-          <th>WACC / g→</th>
-          <th>g = 4%</th>
-          <th>g = 5%</th>
-          <th>g = 6%</th>
-          <th>g = 7%</th>
-          <th>g = 8%</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="row-label">WACC = 9%</td>
-          <td>₹3,200</td>
-          <td>₹3,850</td>
-          <td class="cmp-col">₹4,820</td>
-          <td>₹6,350</td>
-          <td>₹9,100</td>
-        </tr>
-        <tr>
-          <td class="row-label">WACC = 10%</td>
-          <td>₹2,560</td>
-          <td>₹3,010</td>
-          <td>₹3,660</td>
-          <td class="cmp-col">₹4,640</td>
-          <td>₹6,290</td>
-        </tr>
-        <tr>
-          <td class="row-label">WACC = 11%</td>
-          <td class="below">₹2,040</td>
-          <td class="below">₹2,380</td>
-          <td class="below">₹2,840</td>
-          <td class="below">₹3,520</td>
-          <td class="below">₹4,540</td>
-        </tr>
-        <tr>
-          <td class="row-label">WACC = 12%</td>
-          <td class="below">₹1,600</td>
-          <td class="below">₹1,870</td>
-          <td class="below">₹2,210</td>
-          <td class="below">₹2,690</td>
-          <td class="below">₹3,380</td>
-        </tr>
-        <tr>
-          <td class="row-label">WACC = 8%</td>
-          <td>₹4,180</td>
-          <td class="above">₹5,160</td>
-          <td class="above">₹6,690</td>
-          <td class="above">₹9,280</td>
-          <td class="above">₹14,800</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <p style="font-size:11px;color:var(--faint);font-family:'IBM Plex Mono',monospace;margin-top:10px;">CMP ₹4,257. At WACC 9–10%, g 6–7%, fair value = ₹3,660–4,640 — CMP is at or near fair value. Buffett entry price at 25% safety margin = ₹3,200–3,500. For a quality MNC, he might accept 15% margin → entry ₹3,500–4,000.</p>
-
-</div>
-</div>
-
-<!-- ══════════════ FINAL SUMMARY TABLE ══════════════ -->
-<div class="section">
-<div class="container">
-  <div class="section-label">Section 06</div>
-  <div class="section-title">Final Summary — All-in-One View</div>
-
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Ticker</th>
-          <th>Short-Term View</th>
-          <th>Gov Risk</th>
-          <th>Risk Score</th>
-          <th>Buffett Score</th>
-          <th>Buffett Verdict</th>
-          <th>Entry Zone</th>
-          <th>Target</th>
-          <th>Stop Loss</th>
-          <th>R/R</th>
-          <th>Outlook</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="ticker-cell">INGERSOLLRAND</td>
-          <td><span class="summary-tag tag-buy">BUY</span></td>
-          <td class="good">Very Low</td>
-          <td class="good">1/10</td>
-          <td class="good">33/36</td>
-          <td>Would buy at ₹3,500–4,000</td>
-          <td class="mono">₹3,800–4,100</td>
-          <td class="mono good">₹4,800–5,200</td>
-          <td class="mono bad">₹3,550</td>
-          <td>1:2.8</td>
-          <td><span class="outlook-badge bullish">BULLISH</span></td>
-        </tr>
-        <tr>
-          <td class="ticker-cell">SHAKTIPUMP</td>
-          <td><span class="summary-tag tag-buy">BUY (High Beta)</span></td>
-          <td class="neutral-val">Moderate</td>
-          <td class="neutral-val">4/10</td>
-          <td class="neutral-val">24/36</td>
-          <td>Avoid — poor cash conversion</td>
-          <td class="mono">₹520–565</td>
-          <td class="mono good">₹680–750</td>
-          <td class="mono bad">₹470</td>
-          <td>1:2.5</td>
-          <td><span class="outlook-badge bullish">BULLISH</span></td>
-        </tr>
-        <tr>
-          <td class="ticker-cell">KIRLPNU</td>
-          <td><span class="summary-tag tag-buy">BUY</span></td>
-          <td class="good">Low</td>
-          <td class="good">2/10</td>
-          <td class="good">28/36</td>
-          <td>Would consider at right price</td>
-          <td class="mono">₹1,380–1,480</td>
-          <td class="mono good">₹1,750–1,950</td>
-          <td class="mono bad">₹1,280</td>
-          <td>1:2.4</td>
-          <td><span class="outlook-badge bullish">BULLISH</span></td>
-        </tr>
-        <tr>
-          <td class="ticker-cell">ELGIEQUIP</td>
-          <td><span class="summary-tag tag-buy">BUY on Dip</span></td>
-          <td class="good">Very Low</td>
-          <td class="good">1/10</td>
-          <td class="good">28/36</td>
-          <td>Would accumulate on correction</td>
-          <td class="mono">₹490–530</td>
-          <td class="mono good">₹620–680</td>
-          <td class="mono bad">₹450</td>
-          <td>1:2.0</td>
-          <td><span class="outlook-badge neutral">NEUTRAL-BULL</span></td>
-        </tr>
-        <tr>
-          <td class="ticker-cell">CUMMINSIND</td>
-          <td><span class="summary-tag tag-watch">WATCH</span></td>
-          <td class="good">Low</td>
-          <td class="good">2/10</td>
-          <td class="good">32/36</td>
-          <td>Best business — needs 20% correction</td>
-          <td class="mono">₹4,800–5,100</td>
-          <td class="mono good">₹5,700–6,200</td>
-          <td class="mono bad">₹4,550</td>
-          <td>1:1.8</td>
-          <td><span class="outlook-badge neutral">NEUTRAL</span></td>
-        </tr>
-        <tr>
-          <td class="ticker-cell">KSB</td>
-          <td><span class="summary-tag tag-watch">WATCH/HOLD</span></td>
-          <td class="good">Low</td>
-          <td class="good">2/10</td>
-          <td class="neutral-val">26/36</td>
-          <td>Good business, terrible price</td>
-          <td class="mono">₹750–800</td>
-          <td class="mono">₹950+</td>
-          <td class="mono bad">₹700</td>
-          <td>1:1.5</td>
-          <td><span class="outlook-badge neutral">NEUTRAL</span></td>
-        </tr>
-        <tr>
-          <td class="ticker-cell">KIRLOSBROS</td>
-          <td><span class="summary-tag tag-avoid">AVOID</span></td>
-          <td class="bad">HIGH</td>
-          <td class="bad">7/10</td>
-          <td class="bad">18/36</td>
-          <td>SEBI fraud history — never buy</td>
-          <td class="mono">—</td>
-          <td class="mono">—</td>
-          <td class="mono">—</td>
-          <td>—</td>
-          <td><span class="outlook-badge bearish">BEARISH</span></td>
-        </tr>
-        <tr>
-          <td class="ticker-cell">KIRLOSENG</td>
-          <td><span class="summary-tag tag-avoid">AVOID</span></td>
-          <td class="neutral-val">Moderate</td>
-          <td class="neutral-val">4/10</td>
-          <td class="bad">14/36</td>
-          <td>Never — negative cashflow + high D/E</td>
-          <td class="mono">—</td>
-          <td class="mono">—</td>
-          <td class="mono">—</td>
-          <td>—</td>
-          <td><span class="outlook-badge bearish">BEARISH</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-</div>
-
-<!-- FOOTER -->
-<div class="footer">
-  <div class="container">
-    <strong style="color:var(--muted)">⚠ DISCLAIMER</strong><br>
-    This report is for educational and informational purposes only. It is not a SEBI-registered investment advisory. Intrinsic values are computed using available data and standard DCF/Graham formulas — actual valuations may differ. Past returns do not guarantee future performance. Always conduct your own due diligence or consult a SEBI-registered investment advisor before investing.<br><br>
-    <span class="meta-chip">Data: Q3 FY26</span>
-    <span class="meta-chip">Web search: Apr 28, 2026</span>
-    <span class="meta-chip">Sources: SEBI, BSE, MarketsMojo, Screener.in, Business Standard, Groww</span>
-    <span class="meta-chip">Sector: Capital Goods — Compressors/Pumps/Engines</span>
-  </div>
-</div>
+  </div><!-- /page-wrapper -->
 
 </body>
 </html>
