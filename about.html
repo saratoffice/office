@@ -1885,6 +1885,141 @@
                 animation: none;
             }
         }
+        /* ===== Education: horizontal timeline ===== */
+.edu-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+}
+
+.edu-link {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 500;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid #20B2AA;
+    transition: var(--transition);
+}
+
+.edu-link i { margin-left: 0.4rem; font-size: 0.85rem; }
+.edu-link:hover { color: #00FFFF; border-color: #00FFFF; }
+
+.edu-track {
+    display: flex;
+    gap: 2.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.5rem 0 1.75rem;
+    cursor: grab;
+    scrollbar-width: thin;                              /* Firefox */
+    scrollbar-color: #20B2AA rgba(255, 255, 255, 0.1);
+}
+
+.edu-track.is-dragging { cursor: grabbing; scroll-snap-type: none; scroll-behavior: auto; user-select: none; }
+.edu-track:focus-visible { outline-offset: 0.5rem; }
+
+/* Chrome / Edge / Safari scrollbar */
+.edu-track::-webkit-scrollbar { height: 8px; }
+.edu-track::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 8px; }
+.edu-track::-webkit-scrollbar-thumb { background: linear-gradient(90deg, #00FFFF, #20B2AA); border-radius: 8px; }
+
+.edu-item {
+    flex: 0 0 clamp(16rem, 28%, 22rem);
+    scroll-snap-align: start;
+}
+
+.edu-label {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 1rem;
+}
+
+.edu-marker {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.edu-dot {
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    border: 2px solid var(--white);
+    background: transparent;
+    transition: var(--transition);
+}
+
+.edu-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin-right: -2.5rem;      /* bridges the gap so the line looks continuous */
+}
+
+.edu-item:last-child .edu-line { margin-right: 0; }
+
+.edu-item:hover .edu-dot,
+.edu-item.is-current .edu-dot {
+    background: #20B2AA;
+    border-color: #20B2AA;
+    box-shadow: 0 0 0 0.25rem rgba(32, 178, 170, 0.25);
+}
+
+.edu-item h3 {
+    font-size: 1.6rem;
+    line-height: 1.3;
+    margin-bottom: 0.6rem;
+    color: var(--white);
+}
+
+.edu-item h3 i {
+    font-size: 1.1rem;
+    color: #20B2AA;
+    margin-right: 0.4rem;
+}
+
+.edu-degree { color: #00FFFF; font-weight: 600; font-size: 1.05rem; margin-bottom: 0.35rem; }
+.edu-years  { color: rgba(255, 255, 255, 0.6); font-size: 0.95rem; margin-bottom: 0.9rem; }
+.edu-description { color: rgba(255, 255, 255, 0.85); line-height: 1.8; font-size: 1.05rem; }
+
+.edu-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.edu-btn {
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: var(--white);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.edu-btn:hover:not(:disabled) { background: #20B2AA; border-color: #20B2AA; transform: scale(1.08); }
+.edu-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+@media (max-width: 768px) {
+    .edu-item { flex-basis: 80%; }
+    .edu-track { gap: 1.5rem; }
+    .edu-line { margin-right: -1.5rem; }
+    .edu-toolbar { justify-content: center; }
+}
     </style>
 </head>
 <body>
@@ -2603,53 +2738,67 @@
     </section>
 
     <!-- EDUCATION SECTION -->
-    <section class="education-section animate-on-scroll">
-        <div class="container">
-            <h2 class="section-title">Education & Foundation</h2>
-            <p class="section-subtitle">The learning journey that shaped my perspective</p>
-            
-            <div class="education-cards">
-                <article class="education-card">
-                    <div class="education-icon">
-                        <i class="fas fa-university" aria-hidden="true"></i>
-                    </div>
-                    <h3>Upendra Nath College</h3>
-                    <div class="education-degree">Bachelor of Science (Mathematics)</div>
-                    <div class="education-years">Higher Education</div>
-                    <p class="education-description">
-                        Completed my graduation in Mathematics, developing analytical and problem-solving 
-                        skills that I apply in my administrative work.
-                    </p>
-                </article>
-                
-                <article class="education-card">
-                    <div class="education-icon">
-                        <i class="fas fa-school" aria-hidden="true"></i>
-                    </div>
-                    <h3>Sabira High School</h3>
-                    <div class="education-degree">Secondary Education</div>
-                    <div class="education-years">8th, 9th and 10th Standards</div>
-                    <p class="education-description">
-                        Completed my high school education, building the foundation for higher studies and 
-                        developing values of discipline and hard work.
-                    </p>
-                </article>
-                
-                <article class="education-card">
-                    <div class="education-icon">
-                        <i class="fas fa-book-reader" aria-hidden="true"></i>
-                    </div>
-                    <h3>Early Education</h3>
-                    <div class="education-degree">Primary & Upper Primary</div>
-                    <div class="education-years">Salampur M.E. & U.P. School</div>
-                    <p class="education-description">
-                        Studied 6th and 7th standards at Salampur M.E. School and completed upper primary 
-                        education at Salampur U.P. School.
-                    </p>
-                </article>
-            </div>
+<section class="education-section animate-on-scroll">
+    <div class="container">
+        <h2 class="section-title">Education & Foundation</h2>
+        <p class="section-subtitle">The learning journey that shaped my perspective</p>
+
+        <div class="edu-toolbar">
+            <a href="#" class="edu-link">The full journey <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
         </div>
-    </section>
+
+        <div class="edu-track" id="eduTrack" tabindex="0" role="region" aria-label="Education timeline, scroll horizontally">
+
+            <article class="edu-item">
+                <div class="edu-label">Early years</div>
+                <div class="edu-marker"><span class="edu-dot"></span><span class="edu-line"></span></div>
+                <h3><i class="fas fa-book-reader" aria-hidden="true"></i> Early Education</h3>
+                <div class="edu-degree">Primary & Upper Primary</div>
+                <div class="edu-years">Salampur M.E. & U.P. School</div>
+                <p class="edu-description">
+                    Studied 6th and 7th standards at Salampur M.E. School and completed upper primary
+                    education at Salampur U.P. School.
+                </p>
+            </article>
+
+            <article class="edu-item">
+                <div class="edu-label">Secondary</div>
+                <div class="edu-marker"><span class="edu-dot"></span><span class="edu-line"></span></div>
+                <h3><i class="fas fa-school" aria-hidden="true"></i> Sabira High School</h3>
+                <div class="edu-degree">Secondary Education</div>
+                <div class="edu-years">8th, 9th and 10th Standards</div>
+                <p class="edu-description">
+                    Completed my high school education, building the foundation for higher studies and
+                    developing values of discipline and hard work.
+                </p>
+            </article>
+
+            <article class="edu-item is-current">
+                <div class="edu-label">Graduation</div>
+                <div class="edu-marker"><span class="edu-dot"></span><span class="edu-line"></span></div>
+                <h3><i class="fas fa-university" aria-hidden="true"></i> Upendra Nath College</h3>
+                <div class="edu-degree">Bachelor of Science (Mathematics)</div>
+                <div class="edu-years">Higher Education</div>
+                <p class="edu-description">
+                    Completed my graduation in Mathematics, developing analytical and problem-solving
+                    skills that I apply in my administrative work.
+                </p>
+            </article>
+
+            <!-- ADD MORE: copy any <article class="edu-item"> block above and paste it here -->
+
+        </div>
+
+        <div class="edu-controls">
+            <button class="edu-btn" id="eduPrev" aria-label="Previous">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i>
+            </button>
+            <button class="edu-btn" id="eduNext" aria-label="Next">
+                <i class="fas fa-arrow-right" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</section>
 
     <!-- SOCIAL SECTION -->
     <section class="social-section animate-on-scroll">
@@ -3231,6 +3380,44 @@
                 if (carousel) carousel.classList.remove('paused');
             }
         });
+        // Education horizontal scroller
+document.addEventListener('DOMContentLoaded', () => {
+    const track = document.getElementById('eduTrack');
+    const prev  = document.getElementById('eduPrev');
+    const next  = document.getElementById('eduNext');
+    if (!track || !prev || !next) return;
+
+    const stepSize = () => {
+        const item = track.querySelector('.edu-item');
+        const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+        return item ? item.getBoundingClientRect().width + gap : 300;
+    };
+
+    const updateButtons = () => {
+        const max = track.scrollWidth - track.clientWidth - 2;
+        prev.disabled = track.scrollLeft <= 2;
+        next.disabled = track.scrollLeft >= max;
+    };
+
+    prev.addEventListener('click', () => track.scrollBy({ left: -stepSize(), behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left:  stepSize(), behavior: 'smooth' }));
+    track.addEventListener('scroll', updateButtons, { passive: true });
+    window.addEventListener('resize', updateButtons);
+    updateButtons();
+
+    // Click-and-drag scrolling with the mouse
+    let down = false, startX = 0, startLeft = 0;
+    track.addEventListener('mousedown', (e) => {
+        down = true; startX = e.pageX; startLeft = track.scrollLeft;
+    });
+    window.addEventListener('mouseup', () => { down = false; track.classList.remove('is-dragging'); });
+    window.addEventListener('mousemove', (e) => {
+        if (!down) return;
+        const dx = e.pageX - startX;
+        if (Math.abs(dx) > 5) track.classList.add('is-dragging');
+        track.scrollLeft = startLeft - dx;
+    });
+});
     </script>
     <!-- Add this line just before </body> -->
 <script src="/assets/Scripts/gototop.js"></script>
