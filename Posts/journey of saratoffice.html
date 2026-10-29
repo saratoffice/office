@@ -31,10 +31,15 @@
 
   <style>
     /* ============================================================
-       JOURNEY POST STYLES — prefixed jo- to avoid conflicts
+       JOURNEY POST STYLES (page-only, all scoped under .jo-story
+       or prefixed jo- so common CSS is never affected)
        ============================================================ */
 
-    /* ── Feature image — matches Legal Pleaders page ── */
+    .jo-story { font-size: 1.05rem; }
+    .jo-story p { line-height: 1.85; color: #2b3141; margin: 0 0 1.15rem; }
+    .jo-story h2 { scroll-margin-top: 90px; margin: 0.25rem 0 1rem; }
+
+    /* ── Feature image ── */
     .feature-image {
       width: 100%;
       height: 420px;
@@ -43,48 +48,79 @@
       position: relative;
       margin: 2rem 0;
     }
-    .feature-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+    .feature-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .feature-caption {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(transparent, rgba(0,0,0,0.55));
-      color: rgba(255,255,255,0.85);
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.6));
+      color: rgba(255,255,255,0.9);
       font-size: 0.8rem;
       padding: 1.5rem 1.25rem 0.85rem;
     }
 
-    /* ── Two-column image grid — matches Legal Pleaders page ── */
+    /* ── Chapter label (ties each section into one story) ── */
+    .jo-chapter {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #b45309;
+      background: rgba(245,158,11,0.12);
+      padding: 0.3rem 0.85rem;
+      border-radius: 30px;
+      margin-top: 2.75rem;
+    }
+    .jo-chapter:first-of-type { margin-top: 1.5rem; }
+
+    /* ── Image grid + single figure ── */
     .image-grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
-      margin: 1.75rem 0;
+      margin: 1.5rem 0 1.75rem;
     }
-    .image-grid-2 .grid-item {
-      border-radius: 12px;
-      overflow: hidden;
-    }
+    .image-grid-2 .grid-item { border-radius: 12px; overflow: hidden; }
     .image-grid-2 .grid-item img {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      display: block;
+      width: 100%; height: 220px; object-fit: cover; display: block; border-radius: 12px;
     }
-    .image-grid-2 .image-caption {
+    .image-caption, .jo-figure figcaption {
       font-size: 0.78rem;
       color: #64748b;
       padding: 0.5rem 0.25rem 0;
       text-align: center;
+      line-height: 1.5;
+    }
+    .jo-figure { margin: 1.5rem 0 1.75rem; }
+    .jo-figure img {
+      width: 100%; max-height: 360px; object-fit: cover; display: block; border-radius: 14px;
     }
 
-    /* ── TOC — matches Legal Pleaders page ── */
+    /* ── Timeline "at a glance" ── */
+    .jo-timeline {
+      list-style: none;
+      margin: 1.5rem 0 2rem;
+      padding: 0 0 0 1.5rem;
+      border-left: 3px solid #fbbf24;
+    }
+    .jo-timeline li { position: relative; padding: 0 0 1.1rem 1rem; }
+    .jo-timeline li:last-child { padding-bottom: 0; }
+    .jo-timeline li::before {
+      content: '';
+      position: absolute;
+      left: -2.05rem; top: 0.35rem;
+      width: 14px; height: 14px;
+      background: #f59e0b;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px #f59e0b;
+    }
+    .jo-timeline .jo-when { display: block; font-weight: 800; color: #b45309; font-size: 0.95rem; }
+    .jo-timeline .jo-what { font-size: 0.92rem; color: #475569; line-height: 1.6; }
+
+    /* ── TOC ── */
     .jo-toc {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
@@ -93,81 +129,29 @@
       margin: 1.5rem 0 2rem;
     }
     .jo-toc h4 {
-      margin: 0 0 0.75rem;
-      font-size: 0.95rem;
-      color: #1e3a5f;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      margin: 0 0 0.75rem; font-size: 0.95rem; color: #1e3a5f;
+      display: flex; align-items: center; gap: 0.5rem;
     }
-    .jo-toc ol {
-      margin: 0;
-      padding-left: 1.2rem;
-    }
-    .jo-toc ol li {
-      margin-bottom: 0.3rem;
-      font-size: 0.88rem;
-      line-height: 1.5;
-    }
-    .jo-toc ol li a {
-      color: #0284c7;
-      text-decoration: none;
-    }
+    .jo-toc ol { margin: 0; padding-left: 1.2rem; }
+    .jo-toc ol li { margin-bottom: 0.3rem; font-size: 0.88rem; line-height: 1.5; }
+    .jo-toc ol li a { color: #0284c7; text-decoration: none; }
     .jo-toc ol li a:hover { text-decoration: underline; }
 
     /* ── Insight / quote box ── */
     .jo-insight {
       background: #1e293b;
       color: #e2e8f0;
-      padding: 1.5rem 1.75rem;
+      padding: 1.4rem 1.75rem;
       border-radius: 16px;
       margin: 1.5rem 0;
       border-left: 6px solid #f59e0b;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       line-height: 1.7;
     }
     .jo-insight strong { color: #fbbf24; }
     .jo-insight i { color: #fbbf24; margin-right: 0.5rem; }
 
-    /* ── Milestone cards ── */
-    .jo-milestone-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.25rem;
-      margin: 1.5rem 0 2rem;
-    }
-    .jo-milestone {
-      background: #f8fafc;
-      border-radius: 16px;
-      padding: 1.5rem;
-      border-left: 6px solid #fbbf24;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .jo-milestone:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 24px rgba(0,0,0,0.09);
-    }
-    .jo-milestone-year {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: #f59e0b;
-      margin-bottom: 0.5rem;
-      line-height: 1;
-    }
-    .jo-milestone h4 {
-      font-size: 1rem;
-      color: #0f172a;
-      margin: 0 0 0.5rem;
-    }
-    .jo-milestone p {
-      font-size: 0.88rem;
-      color: #475569;
-      margin: 0;
-      line-height: 1.65;
-    }
-
-    /* ── Domain highlight pill ── */
+    /* ── Domain pill ── */
     .jo-domain-pill {
       background: rgba(245,158,11,0.12);
       border: 2px dashed #f59e0b;
@@ -179,80 +163,59 @@
       padding: 1rem 2rem;
       margin: 1.5rem 0;
       letter-spacing: 0.02em;
+      word-break: break-word;
     }
 
-    /* ── Journey badges ── */
-    .jo-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin: 1.5rem 0;
-    }
-    .jo-badge {
-      background: #1e293b;
-      color: #fff;
-      padding: 0.45rem 1.25rem;
-      border-radius: 40px;
-      font-size: 0.88rem;
-      font-weight: 500;
-    }
-
-    /* ── Info box (light) ── */
+    /* ── Info box ── */
     .jo-info-box {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 14px;
       padding: 1.4rem 1.6rem;
-      margin: 1.25rem 0;
-      font-size: 0.91rem;
+      margin: 1.25rem 0 1.5rem;
+      font-size: 0.95rem;
       color: #374151;
       line-height: 1.7;
     }
-    .jo-info-box ul {
-      padding-left: 1.2rem;
-      margin: 0.5rem 0 0;
-    }
+    .jo-info-box ul { padding-left: 1.2rem; margin: 0.5rem 0 0.75rem; }
     .jo-info-box li { margin-bottom: 0.3rem; }
+    .jo-info-box > :last-child { margin-bottom: 0; }
+
+    /* ── Badges ── */
+    .jo-badges { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0; }
+    .jo-badge {
+      background: #1e293b; color: #fff;
+      padding: 0.45rem 1.25rem; border-radius: 40px;
+      font-size: 0.88rem; font-weight: 500;
+    }
 
     /* ── Closing panel ── */
     .jo-closing {
       background: #1e293b;
       border-radius: 18px;
       padding: 2rem;
-      margin: 2.5rem 0;
+      margin: 2.5rem 0 1.5rem;
       text-align: center;
     }
-    .jo-closing p {
-      font-size: 1.25rem;
-      font-style: italic;
-      color: #fbbf24;
-      margin: 0;
-      line-height: 1.7;
-    }
+    .jo-closing p { font-size: 1.25rem; font-style: italic; color: #fbbf24; margin: 0; line-height: 1.7; }
+    .jo-closing small { display: block; margin-top: 1rem; color: #cbd5e1; font-size: 0.92rem; font-style: normal; line-height: 1.7; }
 
     /* ── Tags ── */
-    .jo-post-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin: 2rem 0;
-    }
+    .jo-post-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 2rem 0; }
     .jo-post-tag {
-      background: #e2e8f0;
-      padding: 0.3rem 1rem;
-      border-radius: 30px;
-      font-size: 0.85rem;
-      color: #475569;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
+      background: #e2e8f0; padding: 0.3rem 1rem; border-radius: 30px;
+      font-size: 0.85rem; color: #475569;
+      display: inline-flex; align-items: center; gap: 0.3rem;
     }
 
     /* ── Responsive ── */
     @media (max-width: 640px) {
-      .image-grid-2  { grid-template-columns: 1fr; }
+      .jo-story { font-size: 1rem; }
+      .image-grid-2 { grid-template-columns: 1fr; }
+      .image-grid-2 .grid-item img { height: 200px; }
       .feature-image { height: 260px; }
-      .jo-milestone-grid { grid-template-columns: 1fr; }
+      .jo-domain-pill { font-size: 1.3rem; padding: 0.9rem 1rem; }
+      .jo-insight { padding: 1.2rem 1.25rem; font-size: 1.02rem; }
     }
   </style>
 </head>
@@ -262,12 +225,11 @@
 
   <section class="blog-post-section">
 
-    <!-- Back link -->
     <a href="../blogs.html" class="back-link">
       <i class="fas fa-arrow-left"></i> Back to all articles
     </a>
 
-    <!-- ── POST HEADER — matches Legal Pleaders page structure ── -->
+    <!-- POST HEADER -->
     <div class="post-header">
       <h1 class="post-title">The Journey of <span style="color:#f59e0b;">saratoffice.in</span> — From Curiosity to Creation</h1>
       <div class="post-meta">
@@ -278,20 +240,28 @@
       </div>
     </div>
 
-    <!-- ── FEATURE IMAGE — matches Legal Pleaders page exactly ── -->
+    <!-- FEATURE IMAGE -->
     <div class="feature-image">
       <img src="https://cdn.jsdelivr.net/gh/saratoffice/site-resources/assets/images/other/saratoffice_domain.webp"
            alt="Buying of the domain saratoffice.in"
            loading="lazy">
       <div class="feature-caption">
-        <i class="fas fa-camera"></i> The domain saratoffice.in — purchased on 23 August 2013, the starting point of this journey
+        <i class="fas fa-camera"></i> The domain saratoffice.in, purchased on 23 August 2013: the starting point of this journey
       </div>
     </div>
 
-    <!-- Main content -->
-    <div class="post-content">
+    <!-- MAIN CONTENT -->
+    <div class="post-content jo-story">
 
-      <p style="line-height:1.78; color:#2b3141;">What does it take to go from asking <em>"how does a website work?"</em> to actually owning and running one? For me, the answer was a decade of curiosity, a few dead ends, a lot of patient learning, and eventually — <strong>saratoffice.in</strong>. This is that story.</p>
+      <p>What does it take to go from asking <em>"how does a website work?"</em> to actually owning and running one? For me, the answer was a decade of curiosity, a few dead ends, a lot of patient learning, and eventually <strong>saratoffice.in</strong>. This is that story, told in the order it happened.</p>
+
+      <!-- At a glance -->
+      <ul class="jo-timeline" aria-label="The story at a glance">
+        <li><span class="jo-when">Early 2010s</span><span class="jo-what">Social media grows, and one question starts to nag: how does a website really work?</span></li>
+        <li><span class="jo-when">23 August 2013</span><span class="jo-what">I buy the domain saratoffice.in from BigRock, then meet an error page.</span></li>
+        <li><span class="jo-when">2016</span><span class="jo-what">Honest advice from a developer in Bhubaneswar makes me pause, but not quit.</span></li>
+        <li><span class="jo-when">12 October 2016</span><span class="jo-what">The site is rebuilt on WordPress and becomes the platform it is today.</span></li>
+      </ul>
 
       <!-- TOC -->
       <div class="jo-toc">
@@ -299,192 +269,192 @@
         <ol>
           <li><a href="#jo-s1">The First Spark: How It All Began</a></li>
           <li><a href="#jo-s2">The First Curiosity: Understanding Websites</a></li>
-          <li><a href="#jo-s3">Discovering the Concept of Domains (2013)</a></li>
+          <li><a href="#jo-s3">Discovering Domains (2013) and Choosing a Name</a></li>
           <li><a href="#jo-s4">Learning About Web Hosting</a></li>
           <li><a href="#jo-s5">The Challenge of Website Design</a></li>
           <li><a href="#jo-s6">Advice From Web Developers (2016)</a></li>
           <li><a href="#jo-s7">Finally Seeing the Website Live</a></li>
           <li><a href="#jo-s8">Discovering WordPress</a></li>
-          <li><a href="#jo-s9">Conclusion</a></li>
+          <li><a href="#jo-s9">Conclusion: Thank You for Visiting</a></li>
         </ol>
       </div>
 
-
-      <!-- 1. First Spark -->
+      <!-- 1 -->
+      <span class="jo-chapter"><i class="fas fa-bolt"></i> Chapter 1 · The spark</span>
       <h2 id="jo-s1">1. The First Spark: How It All Began</h2>
 
       <div class="image-grid-2">
         <div class="grid-item">
-          <img src="/assets/images/other/facebook-2010.webp" alt="Facebook 2010 interface" loading="lazy">
-          <div class="image-caption">Facebook circa 2010 — where the question first took root</div>
+          <img src="/assets/images/other/facebook-2010.webp" alt="Facebook 2010 interface" loading="lazy" onerror="this.closest('.grid-item').style.display='none'">
+          <div class="image-caption">Facebook circa 2010, where the question first took root</div>
         </div>
         <div class="grid-item">
-          <img src="https://miro.medium.com/v2/resize:fit:1400/1*IJPqiy7NMzGtGtF9DEZoTw.jpeg" alt="Early social media era" loading="lazy">
-          <div class="image-caption">The early social media era sparked curiosity about how the web really worked</div>
+          <img src="https://miro.medium.com/v2/resize:fit:1400/1*IJPqiy7NMzGtGtF9DEZoTw.jpeg" alt="Early social media era" loading="lazy" onerror="this.closest('.grid-item').style.display='none'">
+          <div class="image-caption">The early social media era made me wonder how the web really worked</div>
         </div>
       </div>
 
-      <p style="line-height:1.78; color:#2b3141;">In the early <strong>2010s</strong>, social media was rapidly growing and platforms like <strong>Facebook</strong> were becoming a major part of everyday online life. People were sharing photos, writing posts, and communicating with friends in a completely new way.</p>
+      <p>In the early <strong>2010s</strong>, social media was growing fast and platforms like <strong>Facebook</strong> were becoming part of everyday life. People were sharing photos, writing posts and talking to friends in a completely new way.</p>
 
-      <p style="line-height:1.78; color:#2b3141;">While using these platforms, one question repeatedly came to my mind:</p>
+      <p>But I noticed something. Social media posts disappear into endless feeds, while a personal website gives you a lasting space to organise ideas and preserve knowledge. And while scrolling, one question kept coming back:</p>
 
       <div class="jo-insight">
         <i class="fas fa-quote-left"></i> How does a website actually work behind the scenes?
       </div>
 
-      <p style="line-height:1.78; color:#2b3141;">Whenever I visited websites — especially <strong>government portals and informational sites</strong> — I became curious about how content appears online and how people publish text, images, and documents for others to see.</p>
+      <p>Whenever I visited websites, especially <strong>government portals and informational sites</strong>, I wondered how their content got online and how people published text, images and documents for the world to see. That curiosity was the first step of a long road that eventually led to this blog.</p>
 
-      <p style="line-height:1.78; color:#2b3141;">This curiosity eventually started a long journey that led to the creation of <strong>saratoffice.in</strong>.</p>
-
-
-      <!-- 2. Understanding Websites -->
+      <!-- 2 -->
+      <span class="jo-chapter"><i class="fas fa-search"></i> Chapter 2 · Looking for answers</span>
       <h2 id="jo-s2">2. The First Curiosity: Understanding Websites</h2>
 
-      <p style="line-height:1.78; color:#2b3141;">At that time, many of my friends had studied <strong>technical subjects</strong> and were working in well-known IT companies such as <strong>Tata Consultancy Services</strong> and <strong>Infosys</strong>. Naturally, I assumed they would know about website development.</p>
+      <p>So I went looking for answers close to home. Many of my friends had studied <strong>technical subjects</strong> and worked in well-known IT companies such as <strong>Tata Consultancy Services</strong> and <strong>Infosys</strong>. Surely they would know how websites are built.</p>
 
-      <p style="line-height:1.78; color:#2b3141;">However, when I asked them about <strong>how websites are created or how the backend works</strong>, surprisingly most of them could not guide me. Even though they were working in technology companies, web design was not part of their day-to-day work.</p>
+      <p>Surprisingly, when I asked <strong>how websites are created or how the backend works</strong>, most of them could not guide me. Working in a technology company, I learned, does not automatically mean working on web design.</p>
 
-      <p style="line-height:1.78; color:#2b3141;">Despite this, my curiosity remained strong. I wanted to understand <strong>how a website could display information for the entire world to see</strong>.</p>
+      <p>My curiosity stayed strong anyway. I still wanted to understand <strong>how a website could show information to the entire world</strong>. The answer came from an unexpected place: a colleague.</p>
 
-
-      <!-- 3. Domains -->
-      <h2 id="jo-s3">3. Discovering the Concept of Domains (2013)</h2>
+      <!-- 3 -->
+      <span class="jo-chapter"><i class="fas fa-globe"></i> Chapter 3 · A name of my own (2013)</span>
+      <h2 id="jo-s3">3. Discovering Domains (2013) and Choosing a Name</h2>
 
       <div class="image-grid-2">
         <div class="grid-item">
-          <img src="https://www.ionos.com/digitalguide/fileadmin/_processed_/d/b/csm_ionos-domain-choose-product_4169262b43.webp" alt="Choosing a domain name" loading="lazy">
-          <div class="image-caption">Choosing a domain name — the very first step to owning a piece of the web</div>
+          <img src="https://www.ionos.com/digitalguide/fileadmin/_processed_/d/b/csm_ionos-domain-choose-product_4169262b43.webp" alt="Choosing a domain name" loading="lazy" onerror="this.closest('.grid-item').style.display='none'">
+          <div class="image-caption">Choosing a domain name, the first step to owning a piece of the web</div>
         </div>
         <div class="grid-item">
-          <img src="/assets/images/other/saratoffice-domain-hd.png" alt="saratoffice.in domain purchase" loading="lazy">
-          <div class="image-caption">The saratoffice.in domain — purchased from BigRock on 23 August 2013 for 10 years</div>
+          <img src="/assets/images/other/saratoffice-domain-hd.png" alt="saratoffice.in domain purchase" loading="lazy" onerror="this.closest('.grid-item').style.display='none'">
+          <div class="image-caption">saratoffice.in, bought from BigRock on 23 August 2013 for 10 years</div>
         </div>
       </div>
 
-      <p style="line-height:1.78; color:#2b3141;">In <strong>2013</strong>, one of my colleagues told me that he owned a <strong>blog website</strong>. This immediately caught my interest. I asked him if he could show me how the website works from the backend.</p>
-
-      <p style="line-height:1.78; color:#2b3141;">He explained that the site was maintained by a web designer, and he had only purchased the <strong>domain name</strong>. That was the first time I learned that:</p>
+      <p>In <strong>2013</strong>, a colleague mentioned that he owned a <strong>blog website</strong>. I immediately asked whether he could show me how it worked from the backend. He explained that a web designer looked after the site and that he had only bought the <strong>domain name</strong>. That was the first time I learned:</p>
 
       <div class="jo-insight">
         <strong>Every website starts with a domain name.</strong>
       </div>
 
-      <p style="line-height:1.78; color:#2b3141;">The very next day, I searched on Google about how to buy a domain. After comparing options, I purchased my domain from <strong>BigRock</strong> on <strong>23 August 2013</strong> — for a 10-year term, because long-term plans were more economical.</p>
+      <p>The very next day I searched Google on how to buy one. After comparing options, I bought my domain from <strong>BigRock</strong> on <strong>23 August 2013</strong>, for a 10-year term because the long-term plan was more economical.</p>
 
-      <p style="line-height:1.78; color:#2b3141;">Without much deliberation, I chose the name:</p>
+      <p>As for the name, I wanted a personal space that reflected my professional interests, curiosity and love of learning: administration, office productivity, technology and personal growth, all in one place. So I chose:</p>
 
       <div class="jo-domain-pill">saratoffice.in</div>
 
-      <p style="line-height:1.78; color:#2b3141;">After completing the purchase, I excitedly typed the address in my browser, expecting to see my website live. Instead, I encountered an <strong>error page</strong>.</p>
+      <p>Excited, I typed the address into my browser, expecting to see my website. Instead I got an <strong>error page</strong>.</p>
 
-
-      <!-- 4. Web Hosting -->
+      <!-- 4 -->
+      <span class="jo-chapter"><i class="fas fa-server"></i> Chapter 4 · The missing piece</span>
       <h2 id="jo-s4">4. Learning About Web Hosting</h2>
 
-      <p style="line-height:1.78; color:#2b3141;">For many days, I kept trying to open the website, assuming it would become active automatically. Finally, I contacted <strong>BigRock's customer support</strong>. After confirming the domain purchase was successful, the executive asked a question that changed everything:</p>
+      <p>For many days I kept refreshing, assuming the site would switch on by itself. Finally I contacted <strong>BigRock's customer support</strong>. They confirmed the domain purchase was fine, and then the executive asked a question that changed everything:</p>
 
       <div class="jo-insight">
         <i class="fas fa-question-circle"></i> <strong>"Where have you purchased the hosting?"</strong>
       </div>
 
-      <p style="line-height:1.78; color:#2b3141;">I had never heard the term before. She explained that a <strong>domain name alone cannot run a website</strong>. To store website files and make them accessible on the internet, <strong>web hosting is required</strong>.</p>
+      <p>I had never heard the term. She explained that a <strong>domain name alone cannot run a website</strong>: you also need <strong>web hosting</strong> to store the files and make them reachable on the internet.</p>
 
-      <p style="line-height:1.78; color:#2b3141;">Once again, my research journey began. After months of comparing providers and plans, I purchased <strong>shared hosting from BigRock</strong> — economical and compatible with my existing domain.</p>
+      <p>So the research began again. After months of comparing providers and plans, I bought <strong>shared hosting from BigRock</strong>, economical and compatible with my domain. Surely now the site would appear. It did not.</p>
 
-
-      <!-- 5. Website Design -->
+      <!-- 5 -->
+      <span class="jo-chapter"><i class="fas fa-pencil-ruler"></i> Chapter 5 · Another missing piece</span>
       <h2 id="jo-s5">5. The Challenge of Website Design</h2>
 
       <div class="image-grid-2">
         <div class="grid-item">
-          <img src="https://custom-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/9653016/30488_768754.png" alt="Website design process" loading="lazy">
-          <div class="image-caption">Designing a website involves far more than just buying a domain and hosting</div>
+          <img src="https://custom-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/9653016/30488_768754.png" alt="Website design process" loading="lazy" onerror="this.closest('.grid-item').style.display='none'">
+          <div class="image-caption">Designing a website takes far more than a domain and hosting</div>
         </div>
         <div class="grid-item">
-          <img src="https://cdn.sanity.io/images/599r6htc/regionalized/4c8605ad998d69b03a6eefb850cce5e23a0a96dc-2880x1440.png" alt="Design and coding tools" loading="lazy">
-          <div class="image-caption">Code, layout, and content — three pillars every website needs before going live</div>
+          <img src="https://cdn.sanity.io/images/599r6htc/regionalized/4c8605ad998d69b03a6eefb850cce5e23a0a96dc-2880x1440.png" alt="Design and coding tools" loading="lazy" onerror="this.closest('.grid-item').style.display='none'">
+          <div class="image-caption">Code, layout and content: three pillars every site needs before going live</div>
         </div>
       </div>
 
-      <p style="line-height:1.78; color:#2b3141;">Even after purchasing hosting, my website still did not appear online. When I contacted technical support again, they explained another important fact:</p>
+      <p>When I contacted technical support again, they explained one more important fact:</p>
 
       <div class="jo-insight">
         <strong>A website also needs to be designed.</strong>
       </div>
 
-      <p style="line-height:1.78; color:#2b3141;">Without design and content, the domain and hosting would remain empty. The support team suggested hiring a web designer — but I was hesitant about sharing login credentials with someone unfamiliar. So I continued searching for guidance.</p>
+      <p>Without design and content, my domain and hosting would stay empty. Support suggested hiring a web designer, but I was hesitant to share login details with someone I did not know. So I kept searching for guidance, and a few years later that search took me to a web development office in Bhubaneswar.</p>
 
-
-      <!-- 6. Developer Advice -->
+      <!-- 6 -->
+      <span class="jo-chapter"><i class="fas fa-comments"></i> Chapter 6 · A dose of honesty (2016)</span>
       <h2 id="jo-s6">6. Advice From Web Developers (2016)</h2>
 
       <div class="image-grid-2">
         <div class="grid-item">
-          <img src="https://hoist.digital/user/pages/06.content/blog/what-to-know-before-your-first-meeting-with-a-web-designer/workplace-1245776_640.jpg" alt="Meeting with web designer" loading="lazy">
-          <div class="image-caption">At a web development office in Bhubaneswar — honest advice that made me pause</div>
+          <img src="https://hoist.digital/user/pages/06.content/blog/what-to-know-before-your-first-meeting-with-a-web-designer/workplace-1245776_640.jpg" alt="Meeting with web designer" loading="lazy" onerror="this.closest('.grid-item').style.display='none'">
+          <div class="image-caption">At a web development office in Bhubaneswar: honest advice that made me pause</div>
         </div>
         <div class="grid-item">
-          <img src="https://miro.medium.com/v2/resize:fit:1400/1*0JY9lMe7sobLnbovE2mT-w.png" alt="Web development discussion" loading="lazy">
-          <div class="image-caption">Many developers pointed to alternatives — Facebook, Google Drive, browser bookmarks</div>
+          <img src="https://miro.medium.com/v2/resize:fit:1400/1*0JY9lMe7sobLnbovE2mT-w.png" alt="Web development discussion" loading="lazy" onerror="this.closest('.grid-item').style.display='none'">
+          <div class="image-caption">Many developers pointed to simpler alternatives for my needs</div>
         </div>
       </div>
 
-      <p style="line-height:1.78; color:#2b3141;">In <strong>2016</strong>, a friend and I visited a web development office in Bhubaneswar called <strong>Ratna Technology</strong>. When I explained my idea for the website, the developer gave surprisingly honest advice.</p>
+      <p>In <strong>2016</strong>, a friend and I visited <strong>Ratna Technology</strong> in Bhubaneswar. When I explained my idea, the developer gave surprisingly honest advice:</p>
 
       <div class="jo-info-box">
-        He explained that:
         <ul>
-          <li>Posting photos and text could easily be done on <strong>Facebook</strong></li>
-          <li>Saving important websites could be done through <strong>browser bookmarks</strong></li>
-          <li>Sharing PDF files could be handled through <strong>Google Drive</strong></li>
+          <li>Photos and text could easily be posted on <strong>Facebook</strong></li>
+          <li>Important websites could be saved with <strong>browser bookmarks</strong></li>
+          <li>PDF files could be shared through <strong>Google Drive</strong></li>
         </ul>
-        He even said that if I insisted, they could design a website — but I should first decide whether it was really necessary.
+        He added that if I insisted, they could design the website, but I should first decide whether it was really necessary.
       </div>
 
-      <p style="line-height:1.78; color:#2b3141;">His honest suggestion made me pause the project for some time. But the underlying curiosity never faded.</p>
+      <p>His honesty made me pause the project for a while. But the curiosity that started it all never faded, and soon enough it found a way forward.</p>
 
-
-      <!-- 7. Website Live -->
+      <!-- 7 -->
+      <span class="jo-chapter"><i class="fas fa-check-circle"></i> Chapter 7 · It's alive</span>
       <h2 id="jo-s7">7. Finally Seeing the Website Live</h2>
 
-      <p style="line-height:1.78; color:#2b3141;">After several attempts with different developers, one designer finally helped activate my domain. The day I typed <strong>saratoffice.in</strong> and saw it open successfully was a moment of genuine satisfaction. It confirmed that the domain and hosting were functioning correctly.</p>
+      <p>After several attempts with different developers, one designer finally helped activate my domain. The day I typed <strong>saratoffice.in</strong> and watched it open was a moment of genuine satisfaction. It proved that the domain and hosting were working.</p>
 
-      <p style="line-height:1.78; color:#2b3141;">Although the first version of the website was only a <strong>basic static page</strong>, it marked an important milestone in the journey — the domain was alive.</p>
+      <figure class="jo-figure">
+        <img src="https://cdn.jsdelivr.net/gh/saratoffice/site-resources/assets/images/other/saratoffice_domain.webp" alt="saratoffice.in domain" loading="lazy" onerror="this.closest('.jo-figure').style.display='none'">
+        <figcaption>From error page to a live address, the domain finally came alive</figcaption>
+      </figure>
 
+      <p>The first version was only a <strong>basic static page</strong>, but it was a real milestone. The domain was alive. What I still lacked was an easy way to manage and grow it myself.</p>
 
-      <!-- 8. WordPress -->
+      <!-- 8 -->
+      <span class="jo-chapter"><i class="fab fa-wordpress"></i> Chapter 8 · Taking control (2016)</span>
       <h2 id="jo-s8">8. Discovering WordPress</h2>
 
       <div class="image-grid-2">
         <div class="grid-item">
-          <img src="https://wordpress.org/documentation/files/2018/10/administrations_screen_4.9.4_with_note.jpg" alt="WordPress dashboard" loading="lazy">
-          <div class="image-caption">WordPress dashboard — publish articles, manage pages, upload media without writing code</div>
+          <img src="https://wordpress.org/documentation/files/2018/10/administrations_screen_4.9.4_with_note.jpg" alt="WordPress dashboard" loading="lazy" onerror="this.closest('.grid-item').style.display='none'">
+          <div class="image-caption">The WordPress dashboard: publish articles, manage pages and upload media without code</div>
         </div>
         <div class="grid-item">
-          <img src="https://kindredtechnology.com/storage/2024/08/wordpress-dashboard.webp" alt="WordPress admin panel" loading="lazy">
+          <img src="https://kindredtechnology.com/storage/2024/08/wordpress-dashboard.webp" alt="WordPress admin panel" loading="lazy" onerror="this.closest('.grid-item').style.display='none'">
           <div class="image-caption">On 12 October 2016, saratoffice.in was officially rebuilt on WordPress</div>
         </div>
       </div>
 
-      <p style="line-height:1.78; color:#2b3141;">Later, while helping a friend who needed a website for his business, I learned about <strong>WordPress</strong>. The developer explained that WordPress allows website owners to:</p>
+      <p>Later, while helping a friend who needed a website for his business, I learned about <strong>WordPress</strong>. The developer explained that it lets a website owner:</p>
 
       <div class="jo-info-box">
         <ul>
           <li>Upload photos and videos directly from a browser</li>
           <li>Publish articles and manage pages without any coding</li>
-          <li>Update content easily using a login dashboard</li>
+          <li>Update content easily from a login dashboard</li>
           <li>Manage documents and PDFs on your own domain</li>
         </ul>
-        In many ways, it works <strong>similar to posting on social media platforms</strong> — but on your own website.
+        In many ways it feels <strong>similar to posting on social media</strong>, but on a space that belongs entirely to you.
       </div>
 
-      <p style="line-height:1.78; color:#2b3141;">I began exploring WordPress tutorials on <strong>YouTube</strong>, and gradually started understanding how websites can be managed independently. That exploration shaped <strong>saratoffice.in</strong> into the platform it is today — officially rebuilt on <strong>12 October 2016</strong>.</p>
+      <p>That was the answer to the question that started everything. I began following WordPress tutorials on <strong>YouTube</strong> and gradually learned to manage a site on my own. That exploration shaped <strong>saratoffice.in</strong> into the platform it is today, officially rebuilt on <strong>12 October 2016</strong>.</p>
 
+      <!-- 9 -->
+      <span class="jo-chapter"><i class="fas fa-flag-checkered"></i> Chapter 9 · Looking back</span>
+      <h2 id="jo-s9">9. Conclusion: Thank You for Visiting</h2>
 
-      <!-- 9. Conclusion -->
-      <h2 id="jo-s9">9. Conclusion</h2>
-
-      <p style="line-height:1.78; color:#2b3141;">The story of <strong>saratoffice.in</strong> is not simply about creating a website. It is a journey driven by:</p>
+      <p>The story of <strong>saratoffice.in</strong> is not simply about creating a website. It is a journey driven by:</p>
 
       <div class="jo-badges">
         <span class="jo-badge">🔍 Curiosity</span>
@@ -492,15 +462,15 @@
         <span class="jo-badge">📚 Continuous Learning</span>
       </div>
 
-      <p style="line-height:1.78; color:#2b3141;">What began as a simple question about how content appears online gradually evolved into a personal platform for organising knowledge, sharing resources, and learning about web technology — one step at a time.</p>
+      <p>What began as a simple question about how content appears online grew, one step at a time, into a personal platform for organising knowledge, sharing resources and learning about web technology.</p>
 
       <div class="jo-closing">
         <p>Sometimes, curiosity alone is enough to start a meaningful journey.</p>
+        <small>This is my digital space for knowledge, technology, public service and personal growth. Thank you for being a part of this journey, and this is just the beginning.</small>
       </div>
 
-      <p style="line-height:1.78; color:#2b3141; margin-top:1.5rem;">Thank you for being a part of this journey.</p>
-
-    </div><!-- /post-content -->
+    </div>
+    <!-- /post-content -->
 
     <!-- Tags -->
     <div class="jo-post-tags">
