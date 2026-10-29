@@ -936,7 +936,16 @@
         .element-6 { bottom: 20%; left: 10%; }
         .element-7 { top: 50%; left: 0%; transform: translateY(-50%); }
         .element-8 { top: 20%; left: 10%; }
+.elements-section .element-1 .element-icon { color: #38bdf8 !important; } /* Air – Sky blue */
+.elements-section .element-2 .element-icon { color: #a3e635 !important; } /* Earth – Green */
+.elements-section .element-3 .element-icon { color: #3b82f6 !important; } /* Water – Blue */
+.elements-section .element-4 .element-icon { color: #c084fc !important; } /* Space – Purple */
+.elements-section .element-5 .element-icon { color: #fb923c !important; } /* Fire – Orange */
 
+.elements-section .element-icon i {
+    color: inherit !important;
+    filter: drop-shadow(0 0 8px currentColor);
+}
         /* Nature Section */
         .nature-section {
             background: 
@@ -1782,11 +1791,13 @@
                 padding: 0.5rem;
             }
             
-            .element-icon {
-                font-size: 1.5rem;
-                margin-bottom: 0.3rem;
-            }
-            
+            /* Elements Section – Icon Colours */
+.elements-section .element-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.625rem;
+}
+
+
             .element-name {
                 font-size: 0.9rem;
             }
@@ -1885,25 +1896,7 @@
                 animation: none;
             }
         }
-        /* ===== Education: horizontal timeline ===== */
-.edu-toolbar {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 2rem;
-}
-
-.edu-link {
-    color: var(--white);
-    text-decoration: none;
-    font-weight: 500;
-    padding-bottom: 0.3rem;
-    border-bottom: 2px solid #20B2AA;
-    transition: var(--transition);
-}
-
-.edu-link i { margin-left: 0.4rem; font-size: 0.85rem; }
-.edu-link:hover { color: #00FFFF; border-color: #00FFFF; }
-
+      /* ===== Education: horizontal timeline ===== */
 .edu-track {
     display: flex;
     gap: 2.5rem;
@@ -1913,15 +1906,15 @@
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     padding: 0.5rem 0 1.75rem;
-    cursor: grab;
-    scrollbar-width: thin;                              /* Firefox */
+    scrollbar-width: thin;
     scrollbar-color: #20B2AA rgba(255, 255, 255, 0.1);
 }
 
-.edu-track.is-dragging { cursor: grabbing; scroll-snap-type: none; scroll-behavior: auto; user-select: none; }
+.edu-track.is-dragging { scroll-snap-type: none; scroll-behavior: auto; user-select: none; }
+.edu-track.is-dragging,
+.edu-track.is-dragging * { cursor: grabbing; }
 .edu-track:focus-visible { outline-offset: 0.5rem; }
 
-/* Chrome / Edge / Safari scrollbar */
 .edu-track::-webkit-scrollbar { height: 8px; }
 .edu-track::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 8px; }
 .edu-track::-webkit-scrollbar-thumb { background: linear-gradient(90deg, #00FFFF, #20B2AA); border-radius: 8px; }
@@ -1939,11 +1932,13 @@
     margin-bottom: 1rem;
 }
 
+/* Only the dot + horizontal line is draggable */
 .edu-marker {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
+    cursor: grab;
 }
 
 .edu-dot {
@@ -1953,23 +1948,28 @@
     border-radius: 50%;
     border: 2px solid var(--white);
     background: transparent;
-    transition: var(--transition);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .edu-line {
     flex: 1;
     height: 1px;
     background: rgba(255, 255, 255, 0.2);
-    margin-right: -2.5rem;      /* bridges the gap so the line looks continuous */
+    margin-right: -2.5rem;
 }
 
 .edu-item:last-child .edu-line { margin-right: 0; }
 
-.edu-item:hover .edu-dot,
 .edu-item.is-current .edu-dot {
     background: #20B2AA;
     border-color: #20B2AA;
     box-shadow: 0 0 0 0.25rem rgba(32, 178, 170, 0.25);
+}
+
+.edu-item:hover .edu-dot {
+    background: #f59e0b;
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 0.25rem rgba(245, 158, 11, 0.3);
 }
 
 .edu-item h3 {
@@ -1987,7 +1987,15 @@
 
 .edu-degree { color: #00FFFF; font-weight: 600; font-size: 1.05rem; margin-bottom: 0.35rem; }
 .edu-years  { color: rgba(255, 255, 255, 0.6); font-size: 0.95rem; margin-bottom: 0.9rem; }
-.edu-description { color: rgba(255, 255, 255, 0.85); line-height: 1.8; font-size: 1.05rem; }
+
+.edu-description {
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.8;
+    font-size: 1.05rem;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+}
 
 .edu-controls {
     display: flex;
@@ -2018,54 +2026,6 @@
     .edu-item { flex-basis: 80%; }
     .edu-track { gap: 1.5rem; }
     .edu-line { margin-right: -1.5rem; }
-    .edu-toolbar { justify-content: center; }
-}
-
-/* ===== Divine Connection: circles 1.5x bigger + colorful icons ===== */
-.elements-orb { width: 56rem; height: 56rem; }          /* was 37.5rem, enlarged so bigger circles don't overlap */
-.element-item { width: 13.125rem; height: 13.125rem; }  /* was 8.75rem (x1.5) */
-.element-icon { font-size: 3.75rem; margin-bottom: 0.9rem; }
-.element-name { font-size: 1.8rem; }
-.element-desc { font-size: 1.35rem; max-width: 11rem; }
-
-/* Colorful icons (Air, Earth, Water, Space, Fire) */
-.element-1 .element-icon { color: #38bdf8; }  /* Air   - sky blue */
-.element-2 .element-icon { color: #a3e635; }  /* Earth - green */
-.element-3 .element-icon { color: #3b82f6; }  /* Water - blue */
-.element-4 .element-icon { color: #c084fc; }  /* Space - purple */
-.element-5 .element-icon { color: #fb923c; }  /* Fire  - orange */
-.element-icon i { filter: drop-shadow(0 0 8px currentColor); }
-
-@media (max-width: 1200px) {
-  .elements-orb { width: 46.875rem; height: 46.875rem; }
-  .element-item { width: 11.25rem; height: 11.25rem; }
-}
-@media (max-width: 992px) {
-  .elements-orb { width: 37.5rem; height: 37.5rem; }
-  .element-item { width: 9.375rem; height: 9.375rem; }
-  .element-icon { font-size: 2.8rem; }
-  .element-name { font-size: 1.4rem; }
-  .element-desc { font-size: 1rem; max-width: 8rem; }
-}
-@media (max-width: 768px) {
-  .elements-orb { width: 30rem; height: 30rem; }
-  .element-item { width: 8.25rem; height: 8.25rem; }
-  .element-icon { font-size: 2.2rem; }
-  .element-name { font-size: 1.1rem; }
-  .element-desc { font-size: 0.85rem; max-width: 6.5rem; }
-}
-@media (max-width: 576px) {
-  .elements-orb { width: 21rem; height: 21rem; }   /* limited so it fits phone screens */
-  .element-item { width: 6.75rem; height: 6.75rem; }
-  .element-icon { font-size: 1.8rem; }
-  .element-name { font-size: 0.95rem; }
-}
-
-/* ===== Education & Foundation: justified paragraphs ===== */
-.edu-description {
-  text-align: justify;
-  text-justify: inter-word;
-  hyphens: auto;
 }
     </style>
 </head>
@@ -2118,11 +2078,10 @@
                     <div class="profile-title">Asst. Civil Supplies Officer</div>
                     <blockquote class="profile-quote">"Service to the public is carried out with dedication and integrity"</blockquote>
                     <div class="profile-bio">
-                        A state of peace is maintained through sincere intentions and a pure conscience. 
-                        My work in the Civil Supplies Department is not just a job, but a commitment to the public 
-                        welfare. With a clear focus on making essential commodities accessible to all and upholding 
-                        transparent and accountable governance, I strive to reflect a commitment to fairness, 
-                        responsibility, and the greater good of society.
+                        For me, public service in the Food Supplies & Consumer Welfare Department is far more than a profession—it is 
+                        a personal commitment to grassroots welfare. Guided by sincere intentions, I work to ensure equitable access 
+                        to essential commodities through transparent, accountable, and vigilant governance. Every day is an 
+                        opportunity to uphold fairness, public trust, and the greater good.
                     </div>
                     <div class="profile-contact">
                         <div class="contact-item">
@@ -2194,13 +2153,14 @@
                         
                         <div class="wisdom-content">
                             <p>
-                                True devotion is expressed through our actions. <strong>"Work is God,"</strong> for in every task we undertake, 
-                                we invoke the divine energy and align with the greater purpose of creation.
+                                True devotion is in our actions. <strong>"Work is Workship,"</strong> —for whenever duty 
+                                is discharged with sincere intent, we awaken the divine within and harmonise our humble efforts with
+                                the cosmic order of creation.
                             </p>
                             
                             <div class="wisdom-quote">
-                                "Instead of plucking flowers to adorn transient spaces, let us cherish them in their 
-                                sanctified place of growth."
+                                "Rather than severing blossoms to grace fleeting altars, let us honour them alive in the sacred cradle where they 
+                                bloom."
                             </div>
                         </div>
                     </div>
@@ -2318,13 +2278,12 @@
                         
                         <div class="wisdom-content">
                             <p>
-                                The five elements teach us about interdependence. Just as Earth, Water, Fire, Air, and Space 
-                                work in harmony, so must different government departments collaborate for public welfare.
+                                The five elements teach us about interdependence as they work in harmony. No effort thrives in 
+                                isolation; true resilience comes from balancing complementary roles.
                             </p>
                             
                             <div class="wisdom-quote">
-                                "Nature reminds us that growth takes time, that strength comes from roots, and that 
-                                the most beautiful things often emerge from struggle."
+                                "Nature teaches patience: deep roots build enduring strength, and the greatest beauty blooms through struggle."
                             </div>
                         </div>
                     </div>
@@ -2349,9 +2308,9 @@
                         
                         <div class="wisdom-content">
                             <p>
-                                True leadership is not about authority but about service. It's about empowering others, 
-                                listening more than speaking, and leading by example. In public service, leadership 
-                                means putting people first.
+                                Authentic leadership is rooted not in dominion, but in dedicated stewardship. It thrives on elevating 
+                                others, honoring dialogue over edict, and exemplifying integrity through conduct. In the sphere of 
+                                governance, to lead is simply to place the welfare of the people above all else.
                             </p>
                             
                             <div class="wisdom-quote">
@@ -2488,8 +2447,10 @@
                              alt="Food distribution to those in need" 
                              loading="lazy">
                         <div class="slide-content">
-                            <h3 class="slide-title">Essential Commodities Distribution</h3>
-                            <p class="slide-description">Ensuring fair and transparent distribution of food grains and essential commodities to families through the public distribution system.</p>
+                            <h3 class="slide-title">Public Distribution</h3>
+                            <p class="slide-description">Managing end-to-end logistics from storage hubs to local fair-price outlets.
+                                By integrating verified inventories and transparent distribution protocols, it minimizes transit
+                                leakages and ensures allocated resources reach intended beneficiaries without deviation.</p>
                         </div>
                     </div>
                     
@@ -2500,7 +2461,9 @@
                              loading="lazy">
                         <div class="slide-content">
                             <h3 class="slide-title">Team Coordination</h3>
-                            <p class="slide-description">Working closely with district administration and field staff to plan and execute efficient supply chain management for public welfare.</p>
+                            <p class="slide-description">Great plans mean nothing if the ground reality doesn't match. True 
+                                coordination is translating high-level strategy into everyday execution—ensuring every link in 
+                                the chain knows not just what to do, but why it matters. </p>
                         </div>
                     </div>
                     
@@ -2511,7 +2474,9 @@
                              loading="lazy">
                         <div class="slide-content">
                             <h3 class="slide-title">Transparent Governance</h3>
-                            <p class="slide-description">Maintaining meticulous records and ensuring transparency in all government schemes and public distribution systems.</p>
+                            <p class="slide-description">Giving citizens direct visibility into administrative pipelines. By replacing
+                                administrative secrecy with open information sharing, communities can track welfare commitments and 
+                                actively participate in the development of their regions.</p>
                         </div>
                     </div>
                     
@@ -2522,7 +2487,9 @@
                              loading="lazy">
                         <div class="slide-content">
                             <h3 class="slide-title">Rural Outreach</h3>
-                            <p class="slide-description">Extending essential services to remote villages and ensuring that government schemes reach the most marginalized communities.</p>
+                            <p class="slide-description">Navigating geographical and institutional divides to ensure public benefits
+                                don't halt at urban borders. It anchors governance where life happens, providing remote hamlets with 
+                                equitable access to vital resources and social safety nets.</p>
                         </div>
                     </div>
                     
@@ -2532,8 +2499,10 @@
                              alt="Problem solving and conflict resolution" 
                              loading="lazy">
                         <div class="slide-content">
-                            <h3 class="slide-title">Problem Resolution</h3>
-                            <p class="slide-description">Addressing public grievances and resolving issues related to ration cards, food distribution, and other civil supplies matters.</p>
+                            <h3 class="slide-title">Operational Troubleshooting</h3>
+                            <p class="slide-description">Diagnosing root causes rather than treating surface symptoms. It demands 
+                                swift, pragmatic decision-making under pressure, turning unexpected administrative gridlocks and 
+                                field friction into durable, long-term operational improvements.</p>
                         </div>
                     </div>
                     
@@ -2544,7 +2513,9 @@
                              loading="lazy">
                         <div class="slide-content">
                             <h3 class="slide-title">Leadership Development</h3>
-                            <p class="slide-description">Mentoring junior staff and building capable teams to ensure sustainable and effective public service delivery.</p>
+                            <p class="slide-description">True leadership isn't about holding authority; it’s about multiplying 
+                                capability. By cultivating decision-making, resilience, and ethical judgment across teams, 
+                                organizations build grassroots problem-solvers ready to handle complex public challenges.</p>
                         </div>
                     </div>
                     
@@ -2555,7 +2526,9 @@
                              loading="lazy">
                         <div class="slide-content">
                             <h3 class="slide-title">Digital Governance</h3>
-                            <p class="slide-description">Implementing technology solutions for efficient monitoring, transparent tracking, and improved delivery of essential services.</p>
+                            <p class="slide-description">Replacing bureaucratic bottlenecks with transparent digital pipelines. It 
+                                connects citizens directly to essential services, ensuring speed, integrity, and fair access across 
+                                every level of administration.</p>
                         </div>
                     </div>
                 </div>
@@ -2630,34 +2603,36 @@
             <p class="section-subtitle">The principles that guide my work and life</p>
             
             <div class="philosophy-grid">
+                <!-- 1. Purpose Through Service -->
                 <article class="philosophy-card">
-                    <div class="philosophy-icon">
-                        <i class="fas fa-hands-helping" aria-hidden="true"></i>
+                    <div class="passion-icon">
+                        <i class="fas fa-hand-holding-heart" aria-hidden="true"></i>
                     </div>
-                    <h3>Service Before Self</h3>
-                    <p>I believe true fulfillment comes from serving others. My role in civil supplies is about ensuring that essential commodities reach every citizen, especially those in need.</p>
+                    <h3>Purpose Through Service</h3>
+                    <p>Meaningful work begins where personal convenience ends. My daily commitment is to ensure essential public resources reach the last mile with dependability, fairness, and care.</p>
                 </article>
                 
+                <!-- 2. Uncompromising Integrity -->
                 <article class="philosophy-card">
-                    <div class="philosophy-icon">
-                        <i class="fas fa-balance-scale" aria-hidden="true"></i>
+                    <div class="passion-icon">
+                        <i class="fas fa-shield-alt" aria-hidden="true"></i>
                     </div>
-                    <h3>Integrity in Action</h3>
-                    <p>Transparency and honesty are not just professional requirements but personal values. Every decision I make is guided by ethical principles and fairness.</p>
+                    <h3>Uncompromising Integrity</h3>
+                    <p>True credibility is earned through transparency and quiet consistency. I treat ethical conduct and statutory duty not as formal checkboxes, but as personal non-negotiables.</p>
                 </article>
                 
+                <!-- 3. Harmony with Nature -->
                 <article class="philosophy-card">
-                    <div class="philosophy-icon">
+                    <div class="passion-icon">
                         <i class="fas fa-seedling" aria-hidden="true"></i>
                     </div>
-                    <h3>Nature & Spirituality</h3>
-                    <p>Nature is my sanctuary and spiritual guide. It teaches resilience, balance, and the importance of nurturing life in all its forms.</p>
+                    <h3>Nature & the Living Divine</h3>
+                    <p>Nature sustains every form of life. Guided by reverence for the five sacred elements, I believe living responsibly means protecting and preserving the natural world around us.</p>
                 </article>
             </div>
         </div>
     </section>
-
-    <!-- ELEMENTS SECTION -->
+     <!-- ELEMENTS SECTION -->
     <section class="elements-section animate-on-scroll">
         <div class="container">
             <h2 class="section-title">Divine Connection</h2>
@@ -2694,37 +2669,40 @@
             </div>
         </div>
     </section>
+ 
 
-    <!-- PASSIONS SECTION -->
+  <!-- PASSIONS SECTION -->
     <section class="passions-section animate-on-scroll">
         <div class="container">
             <h2 class="section-title">Beyond Blogging</h2>
-            <p class="section-subtitle">My passions and inspirations</p>
+            <p class="section-subtitle">Exploring ideas, timeless epics, and market insights.</p>
             
             <div class="passions-grid">
+                <!-- 1. Daily News & Blogs -->
                 <article class="passion-card">
                     <div class="passion-icon">
-                        <i class="fas fa-book" aria-hidden="true"></i>
+                        <i class="fas fa-newspaper" aria-hidden="true"></i>
                     </div>
-                    <h3>Reading & Learning</h3>
-                    <p>When I'm not blogging, I enjoy reading books on mythology and biographies of successful individuals. These stories inspire me and provide wisdom for my own journey.</p>
+                    <h3>Staying Informed</h3>
+                    <p>I begin each day keeping pace with the world through daily newspapers and insightful blogs, following current affairs and public developments to broaden my perspective.</p>
                 </article>
                 
+                <!-- 2. Cinema & Mythology -->
                 <article class="passion-card">
                     <div class="passion-icon">
-                        <i class="fas fa-pen-fancy" aria-hidden="true"></i>
+                        <i class="fas fa-film" aria-hidden="true"></i>
                     </div>
-                    <h3>Writing & Blogging</h3>
-                    <p>Through my blog, I aim to inspire and inform, sharing insights about design, spirituality, and creating meaningful impact through thoughtful content.</p>
+                    <h3>Cinema & Lore</h3>
+                    <p>In my downtime, I enjoy watching compelling cinema and exploring mythological narratives, drawing timeless wisdom, moral depth, and creative inspiration from ancient epics and visual stories.</p>
                 </article>
                 
+                <!-- 3. Stock Market Fundamentals -->
                 <article class="passion-card">
                     <div class="passion-icon">
-                        <i class="fas fa-leaf" aria-hidden="true"></i>
+                        <i class="fas fa-chart-line" aria-hidden="true"></i>
                     </div>
-                    <h3>Nature Connection</h3>
-                    <p>Nature is my sanctuary and greatest teacher. It reminds me of the divine beauty in simplicity and the 
-                        importance of living in harmony with all beings.</p>
+                    <h3>Market Analysis</h3>
+                    <p>A keen student of equity markets, I spend my leisure hours analyzing balance sheets, evaluating valuation metrics, and studying business fundamentals through sound financial principles.</p>
                 </article>
             </div>
         </div>
@@ -2851,10 +2829,9 @@
                     Master of Science (M.Sc.) (Math)
                 </div>
                 <p class="edu-description">
-                    Pursued my post-graduation in Mathematics at
-                    F.M. College, Baleswar, which strengthened my
-                    analytical thinking, logical reasoning, and
-                    problem-solving abilities.
+                    Pursued my post-graduation in Mathematics at F.M. College, Baleswar, honing advanced analytical, logical
+                    reasoning, and coding skills. Alongside my studies, delivered rigorous academic coaching to secondary, higher 
+                    secondary, and degree-level students to independently support my education.
                 </p>
             </article>
             
@@ -2905,8 +2882,9 @@
                     Bachelor of Science (Mathematics)
                 </div>
                 <p class="edu-description">
-                    Completing my Higher Secondary (+2) and graduation in Mathematics built the analytical and problem-solving 
-                    skills that drive my administrative work today.
+                    My Higher Secondary (+2) and undergraduate studies in Mathematics formed the foundation of 
+                    problem-solving capabilities essential to my administrative responsibilities today. Alongside my studies, I 
+                    provided home tuitions to secondary students to self-support my education.
                 </p>
             </article>
 
@@ -2927,8 +2905,9 @@
 
                 <div class="edu-degree">Secondary Education</div>
                 <p class="edu-description">
-                   Our school had no doors, windows, or power, and broken bricks lined the unfinished floor. Amidst fierce 
-                    competition and sheer hard work, I emerged as the Board Examination topper.
+                  Studied in an unfinished school lacking electricity, doors, and windows, 
+                    alongside a daily 1.5 km commute through waterlogged paddy fields during the monsoon. Driven by exceptional 
+                    discipline, I earned the highest attendance record and emerged as the school topper.
                 </p>
             </article>
 
@@ -2951,8 +2930,9 @@
                 </div>
         <div class="edu-degree">Primary & Upper Primary Education</div>
                 <p class="edu-description">
-                    We had no uniform, just a cloth bag for books and a sitting mat. I always left home early, eager to squeeze
-                    in as much playtime as possible before classes started.
+                    Schooling began with the bare essentials—no uniform, just a cloth bag of books and a woven sitting mat. Eager to 
+                    steal every spare moment of playtime with friends, I set out early each morning. During the monsoons, our daily 1 km commute meant braving a swollen river aboard handmade boats to 
+                    reach the classroom.
                 </p>
             </article>
 
@@ -2973,9 +2953,9 @@
                 <div class="edu-years">10th August 1981</div>
              <div class="edu-degree">The day my story began</div>
                 <p class="edu-description">
-                    It was just another Monday in Sunari, Soro, Baleswar. While my own world was beginning,
-                    the world beyond Sunari stood on the
-                    threshold of massive transformation.
+                    To the village of Sunari in Soro, it was just another turn of the calendar. The midday sun tilted westward, paddy 
+                    swayed in the monsoon air, and life moved at its timeless pace. My journey
+                    quietly took root—born into simplicity while the modern world beyond was preparing to reshape itself.
                 </p>
             </article>
 
