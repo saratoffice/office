@@ -1896,7 +1896,25 @@
                 animation: none;
             }
         }
-    /* ===== Education: horizontal timeline ===== */
+        /* ===== Education: horizontal timeline ===== */
+.edu-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+}
+
+.edu-link {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 500;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid #20B2AA;
+    transition: var(--transition);
+}
+
+.edu-link i { margin-left: 0.4rem; font-size: 0.85rem; }
+.edu-link:hover { color: #00FFFF; border-color: #00FFFF; }
+
 .edu-track {
     display: flex;
     gap: 2.5rem;
@@ -1906,15 +1924,15 @@
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     padding: 0.5rem 0 1.75rem;
-    scrollbar-width: thin;
+    cursor: grab;
+    scrollbar-width: thin;                              /* Firefox */
     scrollbar-color: #20B2AA rgba(255, 255, 255, 0.1);
 }
 
-.edu-track.is-dragging { scroll-snap-type: none; scroll-behavior: auto; user-select: none; }
-.edu-track.is-dragging,
-.edu-track.is-dragging * { cursor: grabbing; }
+.edu-track.is-dragging { cursor: grabbing; scroll-snap-type: none; scroll-behavior: auto; user-select: none; }
 .edu-track:focus-visible { outline-offset: 0.5rem; }
 
+/* Chrome / Edge / Safari scrollbar */
 .edu-track::-webkit-scrollbar { height: 8px; }
 .edu-track::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 8px; }
 .edu-track::-webkit-scrollbar-thumb { background: linear-gradient(90deg, #00FFFF, #20B2AA); border-radius: 8px; }
@@ -1932,13 +1950,11 @@
     margin-bottom: 1rem;
 }
 
-/* Only the dot + horizontal line is draggable */
 .edu-marker {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
-    cursor: grab;
 }
 
 .edu-dot {
@@ -1948,30 +1964,36 @@
     border-radius: 50%;
     border: 2px solid var(--white);
     background: transparent;
-    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: var(--transition);
 }
 
 .edu-line {
     flex: 1;
     height: 1px;
     background: rgba(255, 255, 255, 0.2);
-    margin-right: -2.5rem;
+    margin-right: -2.5rem;      /* bridges the gap so the line looks continuous */
 }
 
 .edu-item:last-child .edu-line { margin-right: 0; }
 
+/* 1. Base active/current state (Teal) */
 .edu-item.is-current .edu-dot {
     background: #20B2AA;
     border-color: #20B2AA;
     box-shadow: 0 0 0 0.25rem rgba(32, 178, 170, 0.25);
 }
 
+/* 2. Smooth transition on the dot */
+.edu-dot {
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 3. On hover: Change dot to Yellow (works on both regular & current cards) */
 .edu-item:hover .edu-dot {
     background: #f59e0b;
     border-color: #f59e0b;
     box-shadow: 0 0 0 0.25rem rgba(245, 158, 11, 0.3);
 }
-
 .edu-item h3 {
     font-size: 1.6rem;
     line-height: 1.3;
@@ -1987,16 +2009,12 @@
 
 .edu-degree { color: #00FFFF; font-weight: 600; font-size: 1.05rem; margin-bottom: 0.35rem; }
 .edu-years  { color: rgba(255, 255, 255, 0.6); font-size: 0.95rem; margin-bottom: 0.9rem; }
-
+.edu-description { color: rgba(255, 255, 255, 0.85); line-height: 1.8; font-size: 1.05rem; }
 .edu-description {
-    color: rgba(255, 255, 255, 0.85);
-    line-height: 1.8;
-    font-size: 1.05rem;
-    text-align: justify;
-    text-justify: inter-word;
-    hyphens: auto;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
 }
-
 .edu-controls {
     display: flex;
     justify-content: flex-end;
@@ -2026,6 +2044,7 @@
     .edu-item { flex-basis: 80%; }
     .edu-track { gap: 1.5rem; }
     .edu-line { margin-right: -1.5rem; }
+    .edu-toolbar { justify-content: center; }
 }
     </style>
 </head>
@@ -3583,19 +3602,18 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', updateButtons);
     updateButtons();
 
-   // Click-and-drag scrolling, only from the dot/line (.edu-marker)
-let down = false, startX = 0, startLeft = 0;
-track.addEventListener('mousedown', (e) => {
-    if (!e.target.closest('.edu-marker')) return;
-    down = true; startX = e.pageX; startLeft = track.scrollLeft;
-    e.preventDefault();
-});
-window.addEventListener('mouseup', () => { down = false; track.classList.remove('is-dragging'); });
-window.addEventListener('mousemove', (e) => {
-    if (!down) return;
-    const dx = e.pageX - startX;
-    if (Math.abs(dx) > 5) track.classList.add('is-dragging');
-    track.scrollLeft = startLeft - dx;
+    // Click-and-drag scrolling with the mouse
+    let down = false, startX = 0, startLeft = 0;
+    track.addEventListener('mousedown', (e) => {
+        down = true; startX = e.pageX; startLeft = track.scrollLeft;
+    });
+    window.addEventListener('mouseup', () => { down = false; track.classList.remove('is-dragging'); });
+    window.addEventListener('mousemove', (e) => {
+        if (!down) return;
+        const dx = e.pageX - startX;
+        if (Math.abs(dx) > 5) track.classList.add('is-dragging');
+        track.scrollLeft = startLeft - dx;
+    });
 });
     </script>
     <!-- Add this line just before </body> -->
