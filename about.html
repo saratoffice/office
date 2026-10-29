@@ -3602,18 +3602,19 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', updateButtons);
     updateButtons();
 
-    // Click-and-drag scrolling with the mouse
-    let down = false, startX = 0, startLeft = 0;
-    track.addEventListener('mousedown', (e) => {
-        down = true; startX = e.pageX; startLeft = track.scrollLeft;
-    });
-    window.addEventListener('mouseup', () => { down = false; track.classList.remove('is-dragging'); });
-    window.addEventListener('mousemove', (e) => {
-        if (!down) return;
-        const dx = e.pageX - startX;
-        if (Math.abs(dx) > 5) track.classList.add('is-dragging');
-        track.scrollLeft = startLeft - dx;
-    });
+   // Click-and-drag scrolling, only from the dot/line (.edu-marker)
+let down = false, startX = 0, startLeft = 0;
+track.addEventListener('mousedown', (e) => {
+    if (!e.target.closest('.edu-marker')) return;
+    down = true; startX = e.pageX; startLeft = track.scrollLeft;
+    e.preventDefault();
+});
+window.addEventListener('mouseup', () => { down = false; track.classList.remove('is-dragging'); });
+window.addEventListener('mousemove', (e) => {
+    if (!down) return;
+    const dx = e.pageX - startX;
+    if (Math.abs(dx) > 5) track.classList.add('is-dragging');
+    track.scrollLeft = startLeft - dx;
 });
     </script>
     <!-- Add this line just before </body> -->
