@@ -1,287 +1,708 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Track upcoming and announced quarterly and annual financial results of Indian listed companies on NSE and BSE.">
-  <title>Company Results Calendar | Sarat Office</title>
-
-  <!-- Common site CSS and header/footer components -->
-  <link rel="stylesheet" href="style.css">
-  <script src="assets/Scripts/site-components.js" defer></script>
-
-  <style>
-    /* Stock Results Calendar - page-specific styles only */
-    .sr-page, .sr-page * { box-sizing: border-box; }
-    .sr-page {
-      --sr-accent: #d65b2a;
-      --sr-ink: #24211e;
-      --sr-muted: #716d67;
-      --sr-line: #e9e5df;
-      --sr-soft: #f7f4ef;
-      max-width: 1500px;
-      margin: 0 auto;
-      padding: 28px 22px 55px;
-      color: var(--sr-ink);
-      font-family: inherit;
-    }
-    .sr-intro { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin: 12px 0 26px; }
-    .sr-eyebrow { color:var(--sr-accent); font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; }
-    .sr-title { margin:7px 0 8px; font-size:clamp(30px,4vw,44px); line-height:1.08; letter-spacing:-1.2px; }
-    .sr-subtitle { margin:0; max-width:680px; color:var(--sr-muted); font-size:16px; line-height:1.65; }
-    .sr-source { border:1px solid var(--sr-line); background:#fff; border-radius:14px; padding:13px 16px; color:var(--sr-muted); font-size:13px; line-height:1.6; min-width:245px; }
-    .sr-source strong { color:var(--sr-ink); }
-    .sr-source a { color:var(--sr-accent); text-decoration:none; font-weight:700; }
-    .sr-stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin:24px 0; }
-    .sr-stat { background:#fff; border:1px solid var(--sr-line); border-radius:15px; padding:18px 20px; box-shadow:0 5px 18px rgba(30,25,20,.035); }
-    .sr-stat-label { color:var(--sr-muted); font-size:13px; }
-    .sr-stat-value { color:var(--sr-accent); font-size:32px; line-height:1.2; font-weight:750; margin-top:5px; }
-    .sr-stat-note { color:var(--sr-muted); font-size:12px; margin-top:3px; }
-    .sr-layout { display:grid; grid-template-columns:minmax(280px, .82fr) minmax(0, 2fr); gap:20px; align-items:start; }
-    .sr-panel { background:#fff; border:1px solid var(--sr-line); border-radius:17px; box-shadow:0 6px 22px rgba(30,25,20,.035); overflow:hidden; }
-    .sr-calendar { padding:20px; }
-    .sr-cal-head { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:18px; }
-    .sr-cal-month { font-size:23px; font-weight:750; letter-spacing:-.5px; text-align:center; }
-    .sr-icon-btn { border:1px solid var(--sr-line); background:#fff; color:var(--sr-ink); width:36px; height:36px; border-radius:10px; cursor:pointer; font-size:20px; }
-    .sr-icon-btn:hover { border-color:var(--sr-accent); color:var(--sr-accent); }
-    .sr-weekdays, .sr-days { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); text-align:center; }
-    .sr-weekdays span { color:var(--sr-muted); font-size:12px; font-weight:700; padding:8px 0; }
-    .sr-day { min-height:48px; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:3px; border:0; background:transparent; border-radius:11px; cursor:pointer; color:var(--sr-ink); font:inherit; font-size:14px; }
-    .sr-day:hover { background:var(--sr-soft); }
-    .sr-day.is-outside { color:#c3beb7; }
-    .sr-day.is-selected { background:var(--sr-accent); color:#fff; font-weight:750; }
-    .sr-day.is-today:not(.is-selected) { outline:1px solid var(--sr-accent); }
-    .sr-dot { width:5px; height:5px; border-radius:50%; background:#43865a; }
-    .sr-day.is-selected .sr-dot { background:#fff; }
-    .sr-legend { display:flex; flex-wrap:wrap; gap:14px; border-top:1px solid var(--sr-line); padding-top:15px; margin-top:16px; color:var(--sr-muted); font-size:12px; }
-    .sr-legend span { display:flex; align-items:center; gap:6px; }
-    .sr-legend i { width:7px; height:7px; border-radius:50%; background:#43865a; display:inline-block; }
-    .sr-legend .sr-upcoming-dot { background:var(--sr-accent); }
-    .sr-results-head { display:flex; justify-content:space-between; align-items:center; gap:14px; padding:20px 22px; border-bottom:1px solid var(--sr-line); }
-    .sr-results-title { margin:0; font-size:clamp(20px,2.4vw,27px); line-height:1.25; }
-    .sr-results-title span { color:var(--sr-accent); }
-    .sr-controls { display:grid; grid-template-columns:minmax(180px,1.5fr) repeat(3,minmax(120px,1fr)); gap:10px; padding:15px 20px; background:#fcfbf9; border-bottom:1px solid var(--sr-line); }
-    .sr-control { width:100%; min-width:0; border:1px solid #ded9d2; border-radius:9px; padding:10px 11px; background:#fff; color:var(--sr-ink); font:inherit; font-size:13px; }
-    .sr-control:focus { outline:2px solid rgba(214,91,42,.18); border-color:var(--sr-accent); }
-    .sr-result-content { padding:18px 22px 22px; }
-    .sr-section-label { color:var(--sr-muted); font-size:11px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase; padding:0 0 10px; }
-    .sr-result { display:flex; justify-content:space-between; align-items:center; gap:18px; padding:15px 0; border-top:1px solid var(--sr-line); }
-    .sr-company { font-size:16px; font-weight:700; margin-bottom:5px; }
-    .sr-meta { color:var(--sr-muted); font-size:12px; line-height:1.6; }
-    .sr-result-right { text-align:right; flex-shrink:0; }
-    .sr-status { display:inline-block; padding:5px 9px; border-radius:30px; font-size:11px; font-weight:750; }
-    .sr-status.announced { color:#287044; background:#e8f4eb; }
-    .sr-status.upcoming { color:#b65027; background:#fff0e8; }
-    .sr-doc-link { display:inline-block; margin-top:7px; color:var(--sr-accent); font-size:12px; font-weight:750; text-decoration:none; }
-    .sr-doc-link:hover { text-decoration:underline; }
-    .sr-empty { border:1px dashed #d9d3cb; border-radius:13px; padding:25px 18px; text-align:center; color:var(--sr-muted); line-height:1.6; }
-    .sr-empty strong { display:block; color:var(--sr-ink); margin-bottom:4px; }
-    .sr-disclaimer { margin:18px 2px 0; color:var(--sr-muted); font-size:12px; line-height:1.6; }
-    .sr-disclaimer a { color:var(--sr-accent); }
-    @media(max-width:950px) {
-      .sr-layout { grid-template-columns:1fr; }
-      .sr-calendar { max-width:none; }
-    }
-    @media(max-width:700px) {
-      .sr-page { padding:20px 13px 40px; }
-      .sr-intro { display:block; }
-      .sr-source { margin-top:17px; }
-      .sr-stats { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
-      .sr-stat { padding:14px; }
-      .sr-stat-value { font-size:27px; }
-      .sr-results-head { align-items:flex-start; flex-direction:column; }
-      .sr-controls { grid-template-columns:1fr 1fr; padding:12px; }
-      .sr-controls .sr-search { grid-column:1/-1; }
-      .sr-result-content { padding:15px; }
-    }
-    @media(max-width:420px) {
-      .sr-controls { grid-template-columns:1fr; }
-      .sr-controls .sr-search { grid-column:auto; }
-      .sr-result { align-items:flex-start; flex-direction:column; gap:8px; }
-      .sr-result-right { text-align:left; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Company Results Calendar | Sarat Office</title>
+<meta name="description" content="View financial results announcements of NSE and BSE listed companies by date.">
+<style>
+:root {
+    --primary: #174ea6;
+    --primary-dark: #123b7a;
+    --background: #f5f7fb;
+    --surface: #ffffff;
+    --border: #e3e8ef;
+    --text: #202938;
+    --muted: #697586;
+    --green: #16834a;
+    --red: #c0392b;
+    --radius: 12px;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+.page {
+    max-width: 1200px;
+    margin: 28px auto;
+    padding: 0 18px 40px;
+}
+.page-header {
+    margin-bottom: 22px;
+}
+.page-header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    color: var(--primary-dark);
+}
+.page-header p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.5;
+}
+.updated {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--muted);
+}
+.layout {
+    display: grid;
+    grid-template-columns: 340px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 8px rgba(20, 40, 70, .04);
+}
+.calendar-panel { padding: 18px; }
+.results-panel { padding: 20px; min-width: 0; }
+.calendar-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+.calendar-heading h2 {
+    margin: 0;
+    font-size: 18px;
+}
+.nav-buttons { display: flex; gap: 6px; }
+button {
+    cursor: pointer;
+    font: inherit;
+}
+.nav-btn {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--border);
+    background: #fff;
+    border-radius: 7px;
+    color: var(--text);
+}
+.nav-btn:hover { background: #edf3fc; }
+.weekdays, .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+.weekdays {
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+}
+.day {
+    min-height: 39px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    background: transparent;
+    position: relative;
+    color: var(--text);
+    font-size: 13px;
+}
+.day:hover { background: #edf3fc; }
+.day.outside { color: #b8c0cc; }
+.day.today { border-color: var(--primary); }
+.day.selected {
+    background: var(--primary);
+    color: #fff;
+    font-weight: bold;
+}
+.day.has-results:not(.selected)::after {
+    content: "";
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+}
+.day.selected.has-results::after { background: #fff; }
+.calendar-legend {
+    margin-top: 15px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    color: var(--muted);
+    font-size: 11px;
+}
+.legend-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    margin-right: 5px;
+}
+.legend-outline {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border: 1px solid var(--primary);
+    border-radius: 3px;
+    margin-right: 5px;
+}
+.results-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+.results-heading h2 {
+    margin: 0 0 5px;
+    font-size: 20px;
+}
+.results-heading p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+.search {
+    width: 100%;
+    max-width: 270px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+}
+.search:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(23,78,166,.1);
+}
+.summary {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+.summary-item {
+    padding: 9px 12px;
+    background: #f4f7fc;
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--muted);
+}
+.summary-item strong {
+    color: var(--text);
+    font-size: 15px;
+    margin-right: 4px;
+}
+.table-wrap { overflow-x: auto; }
+table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 600px;
+    font-size: 13px;
+}
+th {
+    background: #f5f7fb;
+    color: #536174;
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+}
+th, td {
+    padding: 13px 11px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+tbody tr:hover { background: #fafcff; }
+.company-name {
+    font-weight: bold;
+    color: var(--text);
+}
+.symbol {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 4px;
+}
+.exchange {
+    display: inline-block;
+    padding: 4px 7px;
+    border-radius: 5px;
+    background: #edf3fc;
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: bold;
+}
+.filing-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+.filing-links a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 12px;
+}
+.filing-links a:hover { text-decoration: underline; }
+.empty {
+    padding: 45px 15px;
+    text-align: center;
+    color: var(--muted);
+}
+.empty strong {
+    display: block;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+.status {
+    margin-top: 15px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+.error { color: var(--red); }
+.footer-note {
+    margin-top: 22px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
+}
+@media(max-width: 850px) {
+    .layout { grid-template-columns: 1fr; }
+    .calendar-panel { max-width: none; }
+}
+@media(max-width: 520px) {
+    .page { margin-top: 18px; padding: 0 12px 30px; }
+    .page-header h1 { font-size: 23px; }
+    .results-panel { padding: 14px; }
+    .results-heading { display: block; }
+    .search { max-width: none; margin-top: 14px; }
+}
+</style>
 </head>
 <body>
-  <div id="site-header"></div>
 
-  <main class="sr-page">
-    <section class="sr-intro">
-      <div>
-        <div class="sr-eyebrow">Trading &amp; Markets</div>
-        <h1 class="sr-title">Company Results Calendar</h1>
-        <p class="sr-subtitle">Track upcoming and announced quarterly, half-yearly and annual financial results of companies listed on the Indian stock exchanges.</p>
-      </div>
-      <aside class="sr-source">
-        <strong>Financial results tracker</strong><br>
-        Exchange disclosures: <a href="https://www.bseindia.com/corporates/Comp_Resultsnew.aspx" target="_blank" rel="noopener">BSE</a> &nbsp;|&nbsp;
-        <a href="https://www.nseindia.com/companies-listing/corporate-filings-financial-results" target="_blank" rel="noopener">NSE</a><br>
-        <span id="sr-last-updated">Calendar data is maintained separately.</span>
-      </aside>
-    </section>
+<!-- Existing website header -->
+<div id="site-header"></div>
 
-    <section class="sr-stats" aria-label="Results summary">
-      <article class="sr-stat"><div class="sr-stat-label">Selected Date</div><div class="sr-stat-value" id="sr-stat-selected">0</div><div class="sr-stat-note">Companies listed</div></article>
-      <article class="sr-stat"><div class="sr-stat-label">Upcoming</div><div class="sr-stat-value" id="sr-stat-upcoming">0</div><div class="sr-stat-note">Scheduled announcements</div></article>
-      <article class="sr-stat"><div class="sr-stat-label">This Month</div><div class="sr-stat-value" id="sr-stat-month">0</div><div class="sr-stat-note">Result entries</div></article>
-      <article class="sr-stat"><div class="sr-stat-label">Announced</div><div class="sr-stat-value" id="sr-stat-announced">0</div><div class="sr-stat-note">In selected month</div></article>
-    </section>
+<main class="page">
+    <header class="page-header">
+        <h1>Company Results Calendar</h1>
+        <p>
+            Track financial results announcements of companies listed on
+            the National Stock Exchange (NSE) and Bombay Stock Exchange (BSE).
+            Select a date to view the announcements.
+        </p>
+        <div class="updated" id="updatedAt">Last updated: Not available</div>
+    </header>
 
-    <section class="sr-layout">
-      <aside class="sr-panel sr-calendar" aria-label="Results calendar">
-        <div class="sr-cal-head">
-          <button class="sr-icon-btn" id="sr-prev" aria-label="Previous month">&#8249;</button>
-          <div class="sr-cal-month" id="sr-month-label">Month Year</div>
-          <button class="sr-icon-btn" id="sr-next" aria-label="Next month">&#8250;</button>
-        </div>
-        <div class="sr-weekdays"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
-        <div class="sr-days" id="sr-calendar-days"></div>
-        <div class="sr-legend"><span><i></i> Results announced</span><span><i class="sr-upcoming-dot"></i> Upcoming</span></div>
-      </aside>
+    <div class="layout">
+        <section class="panel calendar-panel">
+            <div class="calendar-heading">
+                <h2 id="monthTitle">November 2026</h2>
+                <div class="nav-buttons">
+                    <button class="nav-btn" id="prevMonth" aria-label="Previous month">‹</button>
+                    <button class="nav-btn" id="nextMonth" aria-label="Next month">›</button>
+                </div>
+            </div>
 
-      <section class="sr-panel">
-        <header class="sr-results-head">
-          <h2 class="sr-results-title">Results for <span id="sr-selected-date">—</span></h2>
-          <label>
-            <span class="sr-meta">Sort: </span>
-            <select class="sr-control" id="sr-sort" style="width:auto;display:inline-block">
-              <option value="name">Company name</option>
-              <option value="exchange">Exchange</option>
-              <option value="latest">Latest first</option>
-            </select>
-          </label>
-        </header>
+            <div class="weekdays">
+                <span>Sun</span><span>Mon</span><span>Tue</span>
+                <span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
 
-        <div class="sr-controls">
-          <input class="sr-control sr-search" id="sr-search" type="search" placeholder="Search company or symbol…" aria-label="Search company or symbol">
-          <select class="sr-control" id="sr-exchange" aria-label="Filter by exchange">
-            <option value="all">All exchanges</option><option value="BSE">BSE</option><option value="NSE">NSE</option>
-          </select>
-          <select class="sr-control" id="sr-period" aria-label="Filter by period">
-            <option value="all">All periods</option><option value="Q1">Q1</option><option value="Q2">Q2</option><option value="Q3">Q3</option><option value="Q4">Q4</option><option value="FY">Annual</option><option value="HY">Half-yearly</option>
-          </select>
-          <select class="sr-control" id="sr-status" aria-label="Filter by status">
-            <option value="all">All statuses</option><option value="announced">Announced</option><option value="upcoming">Upcoming</option>
-          </select>
-        </div>
+            <div class="calendar-legend">
+                <span><i class="legend-dot"></i>Results available</span>
+                <span><i class="legend-outline"></i>Today</span>
+            </div>
+        </section>
 
-        <div class="sr-result-content">
-          <div class="sr-section-label" id="sr-section-label">COMPANY FINANCIAL RESULTS</div>
-          <div id="sr-results-list" aria-live="polite"></div>
-          <p class="sr-disclaimer">Dates and filing links should be verified against the relevant exchange disclosure. This page is an independent information tool and is not affiliated with BSE or NSE. Company information and documents remain subject to the exchanges' terms of use.</p>
-        </div>
-      </section>
-    </section>
-  </main>
+        <section class="panel results-panel">
+            <div class="results-heading">
+                <div>
+                    <h2 id="selectedDateTitle">Company Results</h2>
+                    <p id="resultCount">Select a date on the calendar</p>
+                </div>
+                <input
+                    type="search"
+                    class="search"
+                    id="searchInput"
+                    placeholder="Search company or symbol..."
+                    aria-label="Search company or symbol"
+                >
+            </div>
 
-  <div id="site-footer"></div>
-  <script src="/assets/Scripts/gototop.js"></script>
+            <div class="summary">
+                <div class="summary-item">
+                    <strong id="totalCount">0</strong> Announcements
+                </div>
+                <div class="summary-item">
+                    <strong id="nseCount">0</strong> NSE
+                </div>
+                <div class="summary-item">
+                    <strong id="bseCount">0</strong> BSE
+                </div>
+            </div>
 
-  <script>
-    /*
-      DATA MAINTENANCE:
-      Add or update records in this array. Use YYYY-MM-DD for dates.
-      status: "upcoming" or "announced"
-      period: "Q1", "Q2", "Q3", "Q4", "FY" or "HY"
-      pdf: direct official exchange document URL (optional)
-      The page starts with an empty dataset; no sample/live data is fabricated.
-    */
-    const companyResults = [
-      // Example record (replace with a verified company disclosure):
-      // { company:"Company Name Ltd", symbol:"COMPANY", code:"500000", exchange:"BSE",
-      //   date:"2026-11-28", period:"Q2", year:"FY 2026-27", status:"upcoming",
-      //   type:"Consolidated", pdf:"https://official-exchange-document-link" }
-    ];
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>Exchange</th>
+                            <th>Announcement Time</th>
+                            <th>Official Filing</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsBody"></tbody>
+                </table>
+            </div>
+
+            <div class="empty" id="emptyMessage">
+                <strong>No results loaded</strong>
+                Results will appear here when the data source is connected.
+            </div>
+
+            <div class="status" id="statusMessage">
+                Waiting for results data.
+            </div>
+        </section>
+    </div>
+
+    <div class="footer-note">
+        Data should be verified against official NSE and BSE corporate filings.
+        Announcement dates and times are displayed in Indian Standard Time (IST).
+        This page is an independent information service and is not affiliated
+        with NSE or BSE.
+    </div>
+</main>
+
+<!-- Existing website footer -->
+<div id="site-footer"></div>
+
+<script src="assets/Scripts/site-components.js" defer></script>
+
+<script>
+/*
+=========================================================
+COMPANY RESULTS CALENDAR
+=========================================================
+
+DATA CONNECTION:
+Set RESULTS_API_URL to an authorised provider's API endpoint.
+
+The API should return JSON in this format:
+
+{
+  "updated_at": "2026-11-25T20:00:00+05:30",
+  "results": [
+    {
+      "date": "2026-11-25",
+      "company": "Example Limited",
+      "symbol": "EXAMPLE",
+      "exchange": "NSE",
+      "time": "14:16 IST",
+      "links": [
+        {
+          "label": "NSE Filing",
+          "url": "https://official-filing-url"
+        }
+      ]
+    }
+  ]
+}
+
+Do not use this page to scrape NSE/BSE websites.
+Use an authorised data provider or licensed exchange feed.
+*/
+
+const RESULTS_API_URL = ""; // Add authorised API URL here.
+
+let allResults = [];
+let selectedDate = new Date();
+let calendarMonth = new Date(
+    selectedDate.getFullYear(),
+    selectedDate.getMonth(),
+    1
+);
+
+const calendarGrid = document.getElementById("calendarGrid");
+const resultsBody = document.getElementById("resultsBody");
+const emptyMessage = document.getElementById("emptyMessage");
+const searchInput = document.getElementById("searchInput");
+
+function dateKey(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+}
+
+function formatDate(date) {
+    return date.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+}
+
+function renderCalendar() {
+    const year = calendarMonth.getFullYear();
+    const month = calendarMonth.getMonth();
+
+    document.getElementById("monthTitle").textContent =
+        calendarMonth.toLocaleDateString("en-IN", {
+            month: "long",
+            year: "numeric"
+        });
+
+    calendarGrid.innerHTML = "";
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const previousMonthDays = new Date(year, month, 0).getDate();
 
     const today = new Date();
-    today.setHours(0,0,0,0);
-    let visibleMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    let selectedDate = new Date(today);
+    const selectedKey = dateKey(selectedDate);
 
-    const $ = id => document.getElementById(id);
-    const dateKey = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    const parseDate = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y,m-1,d); };
-    const prettyDate = d => d.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
-    const monthKey = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    for (let i = 0; i < 42; i++) {
+        let dayNumber;
+        let dayDate;
+        let outside = false;
 
-    function renderCalendar() {
-      $('sr-month-label').textContent = visibleMonth.toLocaleDateString('en-IN',{month:'long',year:'numeric'});
-      const first = new Date(visibleMonth.getFullYear(),visibleMonth.getMonth(),1);
-      const start = new Date(first);
-      start.setDate(1-first.getDay());
-      let html = '';
-      for(let i=0;i<42;i++) {
-        const d = new Date(start); d.setDate(start.getDate()+i);
-        const key = dateKey(d);
-        const entries = companyResults.filter(r=>r.date===key);
-        const hasAnnounced = entries.some(r=>r.status==='announced');
-        const hasUpcoming = entries.some(r=>r.status==='upcoming');
-        const classes = ['sr-day'];
-        if(d.getMonth()!==visibleMonth.getMonth()) classes.push('is-outside');
-        if(key===dateKey(selectedDate)) classes.push('is-selected');
-        if(key===dateKey(today)) classes.push('is-today');
-        const dot = hasUpcoming ? '<i class="sr-dot" style="background:#d65b2a"></i>' : hasAnnounced ? '<i class="sr-dot"></i>' : '';
-        html += `<button class="${classes.join(' ')}" data-date="${key}" aria-label="${prettyDate(d)}${entries.length ? ', '+entries.length+' results' : ''}"><span>${d.getDate()}</span>${dot}</button>`;
-      }
-      $('sr-calendar-days').innerHTML = html;
-      $('sr-calendar-days').querySelectorAll('[data-date]').forEach(btn=>btn.addEventListener('click',()=>{
-        selectedDate=parseDate(btn.dataset.date);
-        visibleMonth=new Date(selectedDate.getFullYear(),selectedDate.getMonth(),1);
-        renderAll();
-      }));
+        if (i < firstDay) {
+            dayNumber = previousMonthDays - firstDay + i + 1;
+            dayDate = new Date(year, month - 1, dayNumber);
+            outside = true;
+        } else if (i >= firstDay + daysInMonth) {
+            dayNumber = i - firstDay - daysInMonth + 1;
+            dayDate = new Date(year, month + 1, dayNumber);
+            outside = true;
+        } else {
+            dayNumber = i - firstDay + 1;
+            dayDate = new Date(year, month, dayNumber);
+        }
+
+        const key = dateKey(dayDate);
+        const hasResults = allResults.some(item => item.date === key);
+        const isToday = key === dateKey(today);
+        const isSelected = key === selectedKey;
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "day";
+
+        if (outside) button.classList.add("outside");
+        if (isToday) button.classList.add("today");
+        if (isSelected) button.classList.add("selected");
+        if (hasResults) button.classList.add("has-results");
+
+        button.textContent = dayNumber;
+        button.setAttribute("aria-label", formatDate(dayDate));
+
+        button.addEventListener("click", () => {
+            selectedDate = dayDate;
+            calendarMonth = new Date(
+                dayDate.getFullYear(),
+                dayDate.getMonth(),
+                1
+            );
+            searchInput.value = "";
+            renderCalendar();
+            renderResults();
+        });
+
+        calendarGrid.appendChild(button);
+    }
+}
+
+function safeUrl(url) {
+    try {
+        const parsed = new URL(url);
+        if (parsed.protocol === "https:" || parsed.protocol === "http:") {
+            return parsed.href;
+        }
+    } catch (error) {}
+    return null;
+}
+
+function renderResults() {
+    const key = dateKey(selectedDate);
+    const query = searchInput.value.trim().toLowerCase();
+
+    document.getElementById("selectedDateTitle").textContent =
+        formatDate(selectedDate);
+
+    let rows = allResults.filter(item => item.date === key);
+
+    if (query) {
+        rows = rows.filter(item =>
+            String(item.company || "").toLowerCase().includes(query) ||
+            String(item.symbol || "").toLowerCase().includes(query)
+        );
     }
 
-    function filteredResults() {
-      const search=$('sr-search').value.trim().toLowerCase();
-      const exchange=$('sr-exchange').value, period=$('sr-period').value, status=$('sr-status').value;
-      let list=companyResults.filter(r=>{
-        const matchesDate=r.date===dateKey(selectedDate);
-        const matchesSearch=!search || [r.company,r.symbol,r.code].some(v=>String(v||'').toLowerCase().includes(search));
-        return matchesDate && matchesSearch && (exchange==='all'||r.exchange===exchange) &&
-          (period==='all'||r.period===period) && (status==='all'||r.status===status);
-      });
-      const sort=$('sr-sort').value;
-      list.sort((a,b)=>sort==='name' ? a.company.localeCompare(b.company) : sort==='exchange' ? a.exchange.localeCompare(b.exchange) : b.date.localeCompare(a.date));
-      return list;
-    }
+    const nse = rows.filter(item =>
+        String(item.exchange || "").toUpperCase().includes("NSE")
+    ).length;
 
-    function renderResults() {
-      $('sr-selected-date').textContent=prettyDate(selectedDate);
-      $('sr-section-label').textContent=selectedDate.toDateString()===today.toDateString() ? "RESULTS SCHEDULED / ANNOUNCED TODAY" : "COMPANY FINANCIAL RESULTS";
-      const list=filteredResults();
-      if(!list.length) {
-        $('sr-results-list').innerHTML='<div class="sr-empty"><strong>No results found for this date.</strong>Choose another date on the calendar or change the filters. Upcoming dates and published results will appear here when records are added.</div>';
+    const bse = rows.filter(item =>
+        String(item.exchange || "").toUpperCase().includes("BSE")
+    ).length;
+
+    document.getElementById("totalCount").textContent = rows.length;
+    document.getElementById("nseCount").textContent = nse;
+    document.getElementById("bseCount").textContent = bse;
+    document.getElementById("resultCount").textContent =
+        `${rows.length} announcement${rows.length === 1 ? "" : "s"} found`;
+
+    resultsBody.innerHTML = "";
+
+    if (rows.length === 0) {
+        emptyMessage.style.display = "block";
+        emptyMessage.innerHTML = query
+            ? "<strong>No matching companies</strong>Try another company name or symbol."
+            : "<strong>No announcements found</strong>No company results are available for this date.";
         return;
-      }
-      $('sr-results-list').innerHTML=list.map(r=>{
-        const status=r.status==='announced'?'announced':'upcoming';
-        const statusText=status==='announced'?'Announced':'Upcoming';
-        const exchangeLabel=escapeHTML(r.exchange||'');
-        const identifier=r.exchange==='BSE' ? `BSE: ${escapeHTML(r.code||'—')}` : `NSE: ${escapeHTML(r.symbol||'—')}`;
-        const doc=r.pdf ? `<a class="sr-doc-link" href="${escapeHTML(r.pdf)}" target="_blank" rel="noopener">View official filing ↗</a>` : '';
-        return `<article class="sr-result">
-          <div><div class="sr-company">${escapeHTML(r.company)}</div>
-          <div class="sr-meta">${identifier} · ${exchangeLabel} · ${escapeHTML(r.period||'')} ${escapeHTML(r.year||'')} · ${escapeHTML(r.type||'')}</div></div>
-          <div class="sr-result-right"><span class="sr-status ${status}">${statusText}</span><br>${doc}</div>
-        </article>`;
-      }).join('');
     }
 
-    function renderStats() {
-      const month=monthKey(visibleMonth);
-      const inMonth=companyResults.filter(r=>r.date.startsWith(month));
-      $('sr-stat-selected').textContent=companyResults.filter(r=>r.date===dateKey(selectedDate)).length;
-      $('sr-stat-upcoming').textContent=companyResults.filter(r=>r.status==='upcoming' && r.date>=dateKey(today)).length;
-      $('sr-stat-month').textContent=inMonth.length;
-      $('sr-stat-announced').textContent=inMonth.filter(r=>r.status==='announced').length;
+    emptyMessage.style.display = "none";
+
+    rows.sort((a, b) =>
+        String(a.time || "").localeCompare(String(b.time || ""))
+    );
+
+    rows.forEach(item => {
+        const tr = document.createElement("tr");
+
+        const companyCell = document.createElement("td");
+        const companyName = document.createElement("div");
+        companyName.className = "company-name";
+        companyName.textContent = item.company || "Company name unavailable";
+
+        const symbol = document.createElement("div");
+        symbol.className = "symbol";
+        symbol.textContent = item.symbol || "";
+
+        companyCell.append(companyName, symbol);
+
+        const exchangeCell = document.createElement("td");
+        const exchange = document.createElement("span");
+        exchange.className = "exchange";
+        exchange.textContent = item.exchange || "N/A";
+        exchangeCell.appendChild(exchange);
+
+        const timeCell = document.createElement("td");
+        timeCell.textContent = item.time || "Not available";
+
+        const linkCell = document.createElement("td");
+        const links = document.createElement("div");
+        links.className = "filing-links";
+
+        (Array.isArray(item.links) ? item.links : []).forEach(link => {
+            const url = safeUrl(link.url);
+            if (!url) return;
+
+            const anchor = document.createElement("a");
+            anchor.href = url;
+            anchor.target = "_blank";
+            anchor.rel = "noopener noreferrer";
+            anchor.textContent = link.label || "View filing";
+            links.appendChild(anchor);
+        });
+
+        if (!links.children.length) {
+            linkCell.textContent = "Not available";
+        } else {
+            linkCell.appendChild(links);
+        }
+
+        tr.append(companyCell, exchangeCell, timeCell, linkCell);
+        resultsBody.appendChild(tr);
+    });
+}
+
+async function loadResults() {
+    if (!RESULTS_API_URL) {
+        document.getElementById("statusMessage").textContent =
+            "The calendar is ready. Connect an authorised NSE/BSE data provider to display live announcements.";
+        document.getElementById("updatedAt").textContent =
+            "Last updated: Data source not connected";
+        renderCalendar();
+        renderResults();
+        return;
     }
 
-    function renderAll(){ renderCalendar(); renderResults(); renderStats(); }
-    $('sr-prev').addEventListener('click',()=>{visibleMonth.setMonth(visibleMonth.getMonth()-1); selectedDate=new Date(visibleMonth.getFullYear(),visibleMonth.getMonth(),1); renderAll();});
-    $('sr-next').addEventListener('click',()=>{visibleMonth.setMonth(visibleMonth.getMonth()+1); selectedDate=new Date(visibleMonth.getFullYear(),visibleMonth.getMonth(),1); renderAll();});
-    ['sr-search','sr-exchange','sr-period','sr-status','sr-sort'].forEach(id=>$(id).addEventListener(id==='sr-search'?'input':'change',renderResults));
-    renderAll();
-  </script>
+    try {
+        document.getElementById("statusMessage").textContent =
+            "Loading results data...";
+
+        const response = await fetch(RESULTS_API_URL, {
+            cache: "no-store"
+        });
+
+        if (!response.ok) {
+            throw new Error(`Data request failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data.results)) {
+            throw new Error("Invalid data format: results array not found.");
+        }
+
+        allResults = data.results.filter(item =>
+            /^\d{4}-\d{2}-\d{2}$/.test(item.date || "")
+        );
+
+        document.getElementById("updatedAt").textContent =
+            "Last updated: " + (
+                data.updated_at
+                    ? new Date(data.updated_at).toLocaleString("en-IN", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                        timeZone: "Asia/Kolkata"
+                    }) + " IST"
+                    : "Not provided by data source"
+            );
+
+        document.getElementById("statusMessage").textContent =
+            `${allResults.length} announcements loaded successfully.`;
+
+        renderCalendar();
+        renderResults();
+
+    } catch (error) {
+        console.error(error);
+        document.getElementById("statusMessage").textContent =
+            "Unable to load results data. Please try again later.";
+        document.getElementById("statusMessage").classList.add("error");
+        renderCalendar();
+        renderResults();
+    }
+}
+
+document.getElementById("prevMonth").addEventListener("click", () => {
+    calendarMonth.setMonth(calendarMonth.getMonth() - 1);
+    renderCalendar();
+});
+
+document.getElementById("nextMonth").addEventListener("click", () => {
+    calendarMonth.setMonth(calendarMonth.getMonth() + 1);
+    renderCalendar();
+});
+
+searchInput.addEventListener("input", renderResults);
+
+loadResults();
+</script>
 </body>
 </html>
